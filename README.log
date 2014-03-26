@@ -1,0 +1,17 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdftex 2013.5.30)  26 MAR 2014 17:34
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**README.md
+(./README.md
+./README.md:5: You can't use `macro parameter character #' in vertical mode.
+l.5 #
+     ## By Alex Weissman
+? 
+./README.md:5: Emergency stop.
+l.5 #
+     ## By Alex Weissman
+End of file on the terminal!
+
+./README.md:5:  ==> Fatal error occurred, no output PDF file produced!
