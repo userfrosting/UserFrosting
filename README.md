@@ -1,5 +1,5 @@
 
-UserFrosting Version: 0.1
+UserFrosting 0.1
 ===================
 
 ### By Alex Weissman
@@ -7,13 +7,15 @@ Copyright (c) 2014
 Based on the UserCake user management system, v2.0.2.  http://usercake.com
 Copyright (c) 2009-2012
 
-Welcome to UserFrosting!  The back end account management system is derived from [UserCake 2.0.2](http://usercake.com), while the dashboard and admin account features are based on the SB Admin Template by Start Bootstrap. Other key frameworks and plugins used in this system are:
+Welcome to UserFrosting!  The back end account management system is derived from [UserCake 2.0.2](http://usercake.com), while the dashboard and admin account features are based on the SB Admin Template by [Start Bootstrap](http://startbootstrap.com). Other key frameworks and plugins used in this system are:
 
 *  jQuery 1.10.2
 *  Twitter Bootstrap 3.0
-*  Font Awesome
-*  Tablesorter 2.0
-*  Bootstrap Switch component by Mattia Larentis,Peter Stein, and Emanuele Marchi
+*  [Font Awesome](http://fontawesome.io)
+*  [Handlebars templating](http://handlebarsjs.com/)
+*  [Tablesorter 2.0](http://tablesorter.com)
+*  [DateJS](http://www.datejs.com)
+*  [Bootstrap Switch](http://bootstrap-switch.org) component by Mattia Larentis,Peter Stein, and Emanuele Marchi
 
 All components are copyright of their respective creators.
            
