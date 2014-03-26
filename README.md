@@ -3,9 +3,9 @@ UserFrosting Version: 0.1
 ===================
 
 ### By Alex Weissman
-#### Copyright (c) 2014
-#### Based on the UserCake user management system, v2.0.2.  http://usercake.com
-#### Copyright (c) 2009-2012
+Copyright (c) 2014
+Based on the UserCake user management system, v2.0.2.  http://usercake.com
+Copyright (c) 2009-2012
 
 Welcome to UserFrosting!  The back end account management system is derived from [UserCake 2.0.2](http://usercake.com), while the dashboard and admin account features are based on the SB Admin Template by Start Bootstrap. Other key frameworks and plugins used in this system are:
 
@@ -19,12 +19,19 @@ All components are copyright of their respective creators.
            
 Screenshots
 -----------------
+#### Login page
 ![Login page](/screenshots/login.png "Login page")
+#### Admin dashboard
 ![Admin dashboard](/screenshots/dashboard.png "Admin dashboard")
+#### User list page
 ![User list](/screenshots/users.png "User list page")
+#### Create user dialog
 ![Create user](/screenshots/create_user.png "Create user dialog")
+#### User details
 ![User details](/screenshots/user_details.png "User details page")
+#### Site settings
 ![Site settings](/screenshots/site_settings.png "Site settings page")
+#### Page management
 ![Site pages](/screenshots/site_pages.png "Page management")
 
 Installation
