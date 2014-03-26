@@ -2,19 +2,23 @@
 UserFrosting Version: 0.1
 ===================
 
-# By Alex Weissman
-## Copyright (c) 2014
-## Based on the UserCake user management system, v2.0.2.  http://usercake.com
-## Copyright (c) 2009-2012
+### By Alex Weissman
+#### Copyright (c) 2014
+#### Based on the UserCake user management system, v2.0.2.  http://usercake.com
+#### Copyright (c) 2009-2012
 
 Welcome to UserFrosting!  The back end account management system is derived from [UserCake 2.0.2](http://usercake.com), while the dashboard and admin account features are based on the SB Admin Template by Start Bootstrap. Other key frameworks and plugins used in this system are:
-jQuery 1.10.2
-Twitter Bootstrap 3.0
-Font Awesome
-Tablesorter 2.0
-Bootstrap Switch component by Mattia Larentis,Peter Stein, and Emanuele Marchi
+
+*  jQuery 1.10.2
+*  Twitter Bootstrap 3.0
+*  Font Awesome
+*  Tablesorter 2.0
+*  Bootstrap Switch component by Mattia Larentis,Peter Stein, and Emanuele Marchi
+
 All components are copyright of their respective creators.
-              
+           
+Screenshots
+-----------------
 ![Login page](/screenshots/login.png "Login page")
 ![Admin dashboard](/screenshots/dashboard.png "Admin dashboard")
 ![User list](/screenshots/users.png "User list page")
@@ -23,6 +27,8 @@ All components are copyright of their respective creators.
 ![Site settings](/screenshots/site_settings.png "Site settings page")
 ![Site pages](/screenshots/site_pages.png "Page management")
 
+Installation
+--------------
 To install, follow these instructions:
 
 1. Create a database on your server / web hosting package. UserFrosting supports MySQLi and requires MySQL server version 4.1.3 or newer, as well as PHP 5.4 or later with PDO database connections enabled.
