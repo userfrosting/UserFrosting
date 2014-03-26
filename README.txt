@@ -6,6 +6,9 @@ Copyright (c) 2014
 Based on the UserCake user management system, v2.0.2.  http://usercake.com
 Copyright (c) 2009-2012
 
+![Login page](/screenshots/login.png "Login page")
+
+
 UserFrosting, like UserCake, is 100% free and open-source.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
