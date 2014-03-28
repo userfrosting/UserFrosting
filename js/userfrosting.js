@@ -289,22 +289,6 @@ function validateFormFields(dialog_id) {
 	return errorMessages;
 }
 
-function addAlert(type, msg) {
-	var url = 'user_alerts.php';
-	$.ajax({  
-	  type: "POST",  
-	  url: url,  
-	  data: {
-		type: type,
-		message: msg
-	  },		  
-	  success: function() {
-		//alert("Added alert successfully");
-		// Do nothing.  What, you want an alert that your alert posted successfully?
-	  }
-	}); 
-}
-
 function loadPermissions(div_id) {
   var url = "load_permissions.php";
   $.getJSON( url, {})
@@ -399,14 +383,30 @@ function loadCurrentUser() {
 	  async: false
 	}).responseText;
 	
-	// If no one is logged in, redirect to the login page
-	if (result) {
-		return jQuery.parseJSON(result);
+	if (!result) {
+		addAlert("danger", "Oops, we couldn't load your account. We'll try to get this fixed right away!");
+		window.location.replace('404.php');
 	} else {
-		window.location.replace('login.php');
+		try {
+			var resultJSON = jQuery.parseJSON(result);
+			if (resultJSON['errors']) {
+				addAlert("warning", resultJSON['errors']);
+			}
+			if (resultJSON['data']) {
+				return resultJSON['data'];
+			} else {
+				addAlert("danger", "Oops, we couldn't load your account. We'll try to get this fixed right away!");
+				window.location.replace('404.php');
+				return;
+			}		
+		} catch (err) {
+			console.log("Backend error: " + result);
+			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+			window.location.replace('404.php');
+			return;
+		}	
 	}
-
-	return false;
+	return;
 }
 
 // Enable/disable the specified user
@@ -494,6 +494,22 @@ function loadAllPermissions() {
 	return jQuery.parseJSON(result);
 }
 
+function addAlert(type, msg) {
+	var url = 'user_alerts.php';
+	$.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: {
+		type: type,
+		message: msg
+	  },		  
+	  success: function() {
+		//alert("Added alert successfully");
+		// Do nothing.  What, you want an alert that your alert posted successfully?
+	  }
+	}); 
+}
+
 // Load alerts from $_SESSION['userAlerts'] variable
 function alertWidget(widget_id){
 	var url = 'user_alerts.php';
@@ -513,5 +529,6 @@ function alertWidget(widget_id){
 		});	
 		$('#' + widget_id).html(alertHTML);
 		return false;
+
 	});
 }

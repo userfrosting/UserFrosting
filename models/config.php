@@ -29,6 +29,15 @@ THE SOFTWARE.
 
 */
 
+// Used to force backend scripts to log errors rather than print them as output
+function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
+	ini_set("log_errors", 1);
+	ini_set("display_errors", 0);
+	
+    error_log("Error ($errno): $errstr in $errfile on line $errline");
+	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+
 require_once("db-settings.php"); //Require DB connection
 
 //Retrieve settings

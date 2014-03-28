@@ -372,14 +372,13 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
     </div><!-- /#wrapper -->
     
     <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="http://cdn.oesmith.co.uk/morris-0.4.3.min.js"></script>
+    <script src="js/morris/morris-0.4.3.js"></script>
     <script src="js/morris/chart-data-morris.js"></script>
     <script>
         $(document).ready(function() {
           // Get id of the logged in user to determine how to render this page.
           var user = loadCurrentUser();
           var user_id = user['id'];
-          var admin_flag = user['admin'];
           
           // Load the header
           $('.navbar').load('header.php', function() {

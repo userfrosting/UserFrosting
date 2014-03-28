@@ -32,46 +32,66 @@ THE SOFTWARE.
 include('models/db-settings.php');
 include('models/config.php');
 
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+set_error_handler('logAllErrors');
 
-// Check permissions status
-$user_id = null;
-if(isUserLoggedIn()) {
-	$user_id = $loggedInUser->user_id;
-} else {
-    exit();
+$response = array();
+
+try {	
+	if (!securePage($_SERVER['PHP_SELF'])){die();}
+	
+	// Check permissions status
+	$user_id = null;
+	if(isUserLoggedIn()) {
+		$user_id = $loggedInUser->user_id;
+	} else {
+		exit();
+	}
+	
+	extract($_POST);
+	
+	// Fetch information for currently logged in user
+	// Parameters: none
+	
+	$results = array();
+	
+	$db = pdoConnect();
+	
+	$sqlVars = array();
+	
+	$query = "select id, user_name, display_name, email, title, sign_up_stamp from uc_use where id = :user_id";
+	
+	// Required parameters
+	$sqlVars[':user_id'] = $user_id;
+	
+	//echo $query;
+	if (!($stmt = $db->prepare($query)))
+		throw new RuntimeException("Oops, looks like our database encountered an error.");
+	$stmt->execute($sqlVars);
+	
+	$results = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+	$stmt = null;
+	
+	// Also, set account type flag.  This flag should be used for rendering purposes only, never for authentication.
+	if ($loggedInUser->checkPermission(array(2))){
+		$results['admin'] = "true";
+	} else {
+		$results['admin'] = "false"; 
+	}
+	
+	$response['data'] = $results;
+
+		
+} catch (RuntimeException $e) {
+  $response['errors'] = array();
+  $response['errors'][] = $e->getMessage();
+} catch (ErrorException $e) {
+  $response['errors'] = array();
+  $response['errors'][] = "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.";
 }
 
-extract($_POST);
+restore_error_handler();
 
-// Fetch information for currently logged in user
-// Parameters: none
+echo json_encode($response);
 
-$results = array();
-
-$db = pdoConnect();
-
-$sqlVars = array();
-
-$query = "select id, user_name, display_name, email, title, sign_up_stamp from uc_users where id = :user_id";
-
-// Required parameters
-$sqlVars[':user_id'] = $user_id;
-
-//echo $query;
-$stmt = $db->prepare($query);
-$stmt->execute($sqlVars);
-
-$results = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$stmt = null;
-
-// Also, set account type flag.  This flag should be used for rendering purposes only, never for authentication.
-if ($loggedInUser->checkPermission(array(2))){
-    $results['admin'] = "true";
-} else {
-    $results['admin'] = "false"; 
-}
-
-echo json_encode($results);
 ?>

@@ -90,7 +90,7 @@ $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
 `page` varchar(150) NOT NULL,
 `private` tinyint(1) NOT NULL DEFAULT '0',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
 ";
 
 $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`) VALUES
@@ -139,7 +139,8 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (43, 'template-permissions-row.php', 1),
 (44, 'delete_user_dialog.php', 1),
 (45, 'load_user.php', 1),
-(46, 'delete_user.php', 1);
+(46, 'delete_user.php', 1),
+(47, '404.php', 0);
 ";
 
 $permission_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."permission_page_matches` (
