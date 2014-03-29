@@ -88,5 +88,11 @@ try {
 
 restore_error_handler();
 
+<<<<<<< HEAD
 echo json_encode($results);
 ?>
+=======
+echo json_encode($response);
+
+?>
+>>>>>>> FETCH_HEAD
