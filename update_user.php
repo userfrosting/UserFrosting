@@ -29,12 +29,28 @@ THE SOFTWARE.
 
 */
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+set_error_handler('logAllErrors');
+
+// Recommended admin-only access
+if (!securePage($_SERVER['PHP_SELF'])){
+	addAlert("danger", "Whoops, looks like you don't have permission to update a user.");
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header("Location: " . getReferralPage());
+	}
+	exit();
+}
 
 //Check if selected user exists
 if(!isset($_POST['id']) or !userIdExists($_POST['id'])){
-	echo "Please specify a valid user id!";
-	die();
+	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header("Location: " . getReferralPage());
+	}
+	exit();
 }
 
 // Required: id
@@ -122,12 +138,13 @@ if(!empty($_POST['remove_permissions'])){
 		if (isset($userPermissions[$permission_id]))
 			$remove[$permission_id] = $permission_id;
 	}
-	//echo var_dump($remove);
-	if ($deletion_count = removePermission($remove, $id)){
-		$successes[] = lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count));
-	}
-	else {
-		$errors[] = lang("SQL_ERROR");
+	if (count($remove) > 0) {
+		if ($deletion_count = removePermission($remove, $id)){
+			$successes[] = lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count));
+		}
+		else {
+			$errors[] = lang("SQL_ERROR");
+		}
 	}
 }
 
@@ -141,17 +158,34 @@ if(!empty($_POST['add_permissions'])){
 		if (!isset($userPermissions[$permission_id]))
 			$add[$permission_id] = $permission_id;
 	}
-	//echo var_dump($add);
-	if ($addition_count = addPermission($add, $id)){
-		$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
+	if (count($add) > 0) {
+		if ($addition_count = addPermission($add, $id)){
+			$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
+		}
+		else {
+			$errors[] = lang("SQL_ERROR");
+		}
 	}
-	else {
-		$errors[] = lang("SQL_ERROR");
-	}
-	
-echo json_encode($errors);
-echo json_encode($successes);
+} else {
+	$errors[] = lang("NO_DATA");
+}
 
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+  
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
 }
 
 ?>

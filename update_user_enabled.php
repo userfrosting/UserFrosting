@@ -32,8 +32,18 @@ THE SOFTWARE.
 // UserCake authentication
 include('models/db-settings.php');
 include('models/config.php');
+set_error_handler('logAllErrors');
 
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+	addAlert("danger", "Whoops, looks like you don't have permission to disable/enable users.");
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header("Location: " . getReferralPage());
+	}
+	exit();
+}
+
 
 $user_id = requiredPostVar('user_id');
 $enabled = requiredPostVar('enabled');
@@ -51,10 +61,30 @@ else
 	$sqlVars[':enabled'] = '0';
 
 if (!$stmt->execute($sqlVars)){
-	error_log(var_dump($db->errorInfo()));
-	echo var_dump($db->errorInfo());
-	die();
+	$errors[] = lang("SQL_ERROR");
+} else {
+	if ($enabled == 'true')
+		$successes[] = "Account successfully enabled";
+	else
+		$successes[] = "Account successfully disabled";
 }
+
 $stmt = null;
 
-return true;
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+  
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
+}

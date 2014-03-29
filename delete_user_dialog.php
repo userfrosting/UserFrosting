@@ -29,8 +29,16 @@ THE SOFTWARE.
 
 */
 
+// Request method: GET
+
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+    // Generate AJAX error
+    addAlert("danger", "Whoops, looks like you don't have permission to access this component.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
+}
+
 ?>
 
 <div class='modal-dialog modal-sm'>
@@ -46,7 +54,7 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
       <br>
       <input type='hidden' name='user_id'>
       <div class='btn-group-action'>
-        <button type="button" class="btn btn-danger btn-lg btn-block btn-confirm-disable">Yes, delete user</button>
+        <button type="button" class="btn btn-danger btn-lg btn-block btn-confirm-delete">Yes, delete user</button>
         <button type="button" class="btn btn-default btn-lg btn-block" data-dismiss='modal'>Cancel</button>
       </div>
     </div>

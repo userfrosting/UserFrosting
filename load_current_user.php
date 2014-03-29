@@ -34,10 +34,12 @@ include('models/config.php');
 
 set_error_handler('logAllErrors');
 
-$response = array();
-
 try {	
-	if (!securePage($_SERVER['PHP_SELF'])){die();}
+	if (!securePage($_SERVER['PHP_SELF'])){
+	  addAlert("danger", "Whoops, looks like you don't have permission to use a protected component.");
+	  echo json_encode("error");
+	  exit();
+	}
 	
 	// Check permissions status
 	$user_id = null;
@@ -58,7 +60,7 @@ try {
 	
 	$sqlVars = array();
 	
-	$query = "select id, user_name, display_name, email, title, sign_up_stamp from uc_use where id = :user_id";
+	$query = "select id, user_name, display_name, email, title, sign_up_stamp from uc_users where id = :user_id";
 	
 	// Required parameters
 	$sqlVars[':user_id'] = $user_id;
@@ -78,20 +80,13 @@ try {
 	} else {
 		$results['admin'] = "false"; 
 	}
-	
-	$response['data'] = $results;
-
-		
 } catch (RuntimeException $e) {
-  $response['errors'] = array();
-  $response['errors'][] = $e->getMessage();
+  addAlert("danger", $e->getMessage());
 } catch (ErrorException $e) {
-  $response['errors'] = array();
-  $response['errors'][] = "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.";
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
 }
 
 restore_error_handler();
 
-echo json_encode($response);
-
+echo json_encode($results);
 ?>

@@ -29,13 +29,35 @@ THE SOFTWARE.
 
 */
 
+// Update a permission group
+// Request method: POST
+
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+set_error_handler('logAllErrors');
+
+// Recommended admin-only access
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to update permission groups.");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: " . getReferralPage());
+  }
+  exit();
+}
+
 $permissionId = $_GET['id'];
 
 //Check if selected permission level exists
 if(!permissionIdExists($permissionId)){
-	header("Location: admin_permissions.php"); die();	
+	addAlert("danger", "I'm sorry, the permission id you specified is invalid!");
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header("Location: " . getReferralPage());
+	}
+	exit();
 }
 
 $permissionDetails = fetchPermissionDetails($permissionId); //Fetch information specific to permission level
@@ -122,4 +144,23 @@ if(!empty($_POST)){
 			$permissionDetails = fetchPermissionDetails($permissionId);
 	}
 }
+
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
+}
+
 ?>

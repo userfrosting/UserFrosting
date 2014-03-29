@@ -29,8 +29,17 @@ THE SOFTWARE.
 
 */
 
+// TODO: Client-side validation and AJAX submission
+
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 // If registration is disabled, send them back to the home page with an error message
 if ($can_register != "true"){

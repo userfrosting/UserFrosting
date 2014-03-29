@@ -289,6 +289,24 @@ function validateFormFields(dialog_id) {
 	return errorMessages;
 }
 
+function loadCurrentUser() {
+	var url = 'load_current_user.php';
+	var result = $.ajax({  
+	  type: "GET",  
+	  url: url,
+	  async: false
+	}).responseText;	
+	var resultJSON = processJSONResult(result);
+	
+	if (resultJSON['id']) {
+		return resultJSON;
+	} else {
+		addAlert("danger", "We couldn't load your account. We'll try to get this fixed right away!");
+		window.location.replace('404.php');
+		return;
+	}
+}
+
 function loadPermissions(div_id) {
   var url = "load_permissions.php";
   $.getJSON( url, {})
@@ -317,27 +335,14 @@ function addNewPermission(permission_name) {
 	data: {
 	  new_permission:		permission_name,
 	  ajaxMode:				"true"
-	},		  
-	success: function(result) {
-	  $('#display-alerts').html("");
-	  resultJSON = jQuery.parseJSON(result);
-	  //console.log(resultJSON);
-	  var successes = resultJSON['successes'];
-	  if (successes.length > 0) { // Don't bother unless there are some results found
-		jQuery.each(successes, function(idx, record) {
-		  $('#display-alerts').append("<div class='alert alert-success'>" + record + "</div>");
-		});
-	  }
-	  var errors = resultJSON['errors'];
-	  if (errors.length > 0) { // Don't bother unless there are some results found
-		jQuery.each(errors, function(idx, record) {
-		  $('#display-alerts').append("<div class='alert alert-danger'>" + record + "</div>");
-		});
-	  } else {
+	}		  
+  }).done( function(result) {
+	var resultJSON = processJSONResult(result);
+	alertWidget('display-alerts');
+	if (resultJSON['errors'] == 0) {
 		// If no errors, reload the newly added permission as a new element in the list
 		$('#permission-groups').html("");
 		loadPermissions('permission-groups');
-	  }
 	}
   });
 }
@@ -350,112 +355,16 @@ function deletePermission(id) {
 	data: {
 	  permission_id:		id,
 	  ajaxMode:				"true"
-	},		  
-	success: function(result) {
-	  $('#display-alerts').html("");
-	  resultJSON = jQuery.parseJSON(result);
-	  //console.log(resultJSON);
-	  var successes = resultJSON['successes'];
-	  if (successes.length > 0) { // Don't bother unless there are some results found
-		jQuery.each(successes, function(idx, record) {
-		  $('#display-alerts').append("<div class='alert alert-success'>" + record + "</div>");
-		});
-	  }
-	  var errors = resultJSON['errors'];
-	  if (errors.length > 0) { // Don't bother unless there are some results found
-		jQuery.each(errors, function(idx, record) {
-		  $('#display-alerts').append("<div class='alert alert-danger'>" + record + "</div>");
-		});
-	  } else {
+	}
+  }).done( function(result) {
+	var resultJSON = processJSONResult(result);
+	alertWidget('display-alerts');
+	if (resultJSON['errors'] == 0) { 
 		// If no errors, reload the permissions list
 		$('#permission-groups').html("");
 		loadPermissions('permission-groups');
-	  }
 	}
   });		  
-}
-
-function loadCurrentUser() {
-	var url = 'load_current_user.php';
-	var result = $.ajax({  
-	  type: "GET",  
-	  url: url,
-	  async: false
-	}).responseText;
-	
-	if (!result) {
-		addAlert("danger", "Oops, we couldn't load your account. We'll try to get this fixed right away!");
-		window.location.replace('404.php');
-	} else {
-		try {
-			var resultJSON = jQuery.parseJSON(result);
-			if (resultJSON['errors']) {
-				addAlert("warning", resultJSON['errors']);
-			}
-			if (resultJSON['data']) {
-				return resultJSON['data'];
-			} else {
-				addAlert("danger", "Oops, we couldn't load your account. We'll try to get this fixed right away!");
-				window.location.replace('404.php');
-				return;
-			}		
-		} catch (err) {
-			console.log("Backend error: " + result);
-			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-			window.location.replace('404.php');
-			return;
-		}	
-	}
-	return;
-}
-
-// Enable/disable the specified user
-function updateUserEnabledStatus(user_id, enabled) {
-	enabled = typeof enabled !== 'undefined' ? enabled : true;
-	var data = {
-		user_id: user_id,
-		enabled: enabled
-	}
-	
-	url = "update_user_enabled.php";
-	$.ajax({  
-	  type: "POST",  
-	  url: url,  
-	  data: data,		  
-	  success: function() {
-		addAlert("success", "User successfully disabled.");
-		location.reload();
-	  }
-	});
-}
-
-function deleteUser(user_id) {
-  var url = 'delete_user.php';
-  $.ajax({  
-	type: "POST",  
-	url: url,  
-	data: {
-	  user_id:	user_id,
-	  ajaxMode:	"true"
-	}
-  }).done(function(result) {
-	  $('#display-alerts').html("");
-	  resultJSON = jQuery.parseJSON(result);
-	  //console.log(resultJSON);
-	  var successes = resultJSON['successes'];
-	  if (successes.length > 0) { // Don't bother unless there are some results found
-		location.reload();
-		jQuery.each(successes, function(idx, record) {
-		  $('#display-alerts').append("<div class='alert alert-success'>" + record + "</div>");
-		});
-	  }
-	  var errors = resultJSON['errors'];
-	  if (errors.length > 0) { // Don't bother unless there are some results found
-		jQuery.each(errors, function(idx, record) {
-		  $('#display-alerts').append("<div class='alert alert-danger'>" + record + "</div>");
-		});
-	  }
-  });
 }
 
 // Load permissions for the logged in user
@@ -466,7 +375,8 @@ function userLoadPermissions() {
 	  url: url,
 	  async: false
 	}).responseText;
-	return jQuery.parseJSON(result);
+	var resultJSON = processJSONResult(result);
+	return resultJSON;
 }
 
 // Load permissions for a specified user in admin mode
@@ -480,7 +390,8 @@ function adminLoadPermissions(user_id) {
 		user_id: user_id
 	  }
 	}).responseText;
-	return jQuery.parseJSON(result);
+	var resultJSON = processJSONResult(result);
+	return resultJSON;
 }
 
 function loadAllPermissions() {
@@ -491,14 +402,16 @@ function loadAllPermissions() {
 	  async: false,
 	  data: {}
 	}).responseText;
-	return jQuery.parseJSON(result);
+	var resultJSON = processJSONResult(result);
+	return resultJSON;
 }
 
 function addAlert(type, msg) {
 	var url = 'user_alerts.php';
 	$.ajax({  
 	  type: "POST",  
-	  url: url,  
+	  url: url,
+	  async: false,
 	  data: {
 		type: type,
 		message: msg
@@ -510,11 +423,11 @@ function addAlert(type, msg) {
 	}); 
 }
 
-// Load alerts from $_SESSION['userAlerts'] variable
+// Load alerts from $_SESSION['userAlerts'] variable into specified element
 function alertWidget(widget_id){
 	var url = 'user_alerts.php';
 	$.getJSON( url, {})
-	.done(function( data ) {	
+	.done(function( data ) {
 		var alertHTML = "";
 		jQuery.each(data, function(alert_idx, alert_message) {
 			if (alert_message['type'] == "success"){
@@ -528,7 +441,20 @@ function alertWidget(widget_id){
 			}
 		});	
 		$('#' + widget_id).html(alertHTML);
-		return false;
-
 	});
+}
+
+function processJSONResult(result) {
+	if (!result) {
+		addAlert("danger", "Oops, this feature doesn't seem to be working at the moment.  Totally our bad.");
+		return {"errors": 1, "successes": 0};
+	} else {
+		try {
+			return jQuery.parseJSON(result);
+		} catch (err) {
+			console.log("Backend error: " + result);
+			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+			return {"errors": 1, "successes": 0};
+		}	
+	}
 }

@@ -28,8 +28,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+
+// Landing page for email-based activation
+
+set_error_handler('logAllErrors');
+
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 //Get token param
 if(isset($_GET["token"]))
@@ -61,19 +73,21 @@ if(count($errors) == 0) {
 	$successes[] = lang("ACCOUNT_ACTIVATION_COMPLETE");
 }
 
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+  
 // Send successes and errors to the login page.
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  $result = array();
-  $result['errors'] = $errors;
-  $result['successes'] = $successes;
-  echo json_encode($result);
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
 } else {
-  foreach ($errors as $error){
-	addAlert("danger", $error);
-  }
-  foreach ($successes as $success){
-	addAlert("success", $success);
-  }
   header('Location: login.php');
   exit();	
 }

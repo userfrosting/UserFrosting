@@ -28,21 +28,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+
+// Request method: POST
+
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+set_error_handler('logAllErrors');
+
+if (!securePage($_SERVER['PHP_SELF'])){
+	addAlert("danger", "Whoops, looks like you don't have permission to resend activation.");
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header("Location: " . getReferralPage());
+	}
+	exit();
+}
 
 // If registration is disabled, send them back to the home page with an error message
 if (!$emailActivation){
 	addAlert("danger", "I'm sorry, email activation has been disabled.  You will need an administrator to activate your account.");
-	header("Location: login.php");
-	exit();
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+        header("Location: login.php");
+    }
+    exit();
 }
 
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	header("Location: account.php");
-	exit();
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+        header("Location: account.php");
+    }
+    exit();
 }
 
 //Forms posted
@@ -146,19 +168,21 @@ if(!empty($_POST) && $emailActivation)
 	}
 }
 
-// Send successes to the home page, while errors should return them to the activation page.
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  $result = array();
-  $result['errors'] = $errors;
-  $result['successes'] = $successes;
-  echo json_encode($result);
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
 } else {
-  foreach ($errors as $error){
-	addAlert("danger", $error);
-  }
-  foreach ($successes as $success){
-	addAlert("success", $success);
-  }
+  // Send successes to the home page, while errors should return them to the activation page.
   if(count($errors) == 0) {
 	header('Location: index.php');
 	exit();

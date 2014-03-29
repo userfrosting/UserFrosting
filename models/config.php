@@ -64,6 +64,7 @@ $language = $settings['language']['value'];
 $template = $settings['template']['value'];
 $new_user_title = $settings['new_user_title']['value'];
 
+// For debugging account, change to 1.  This will allow everyone access to everything!
 $master_account = -1;
 
 $default_hooks = array("#WEBSITENAME#","#WEBSITEURL#","#DATE#");

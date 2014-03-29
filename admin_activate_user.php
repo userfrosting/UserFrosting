@@ -29,10 +29,24 @@ THE SOFTWARE.
 
 */
 
+// Activate the specified user account
+// Request method: POST
+
 require_once("models/config.php");
 
 // Recommended access level: admin only
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+set_error_handler('logAllErrors');
+
+// Recommended admin-only access
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to create a user.");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: " . getReferralPage());
+  }
+  exit();
+}
 
 //Check if selected user exists
 if(!isset($_POST['id']) or !userIdExists($_POST['id'])){
@@ -55,14 +69,22 @@ if(!isset($_POST['id']) or !userIdExists($_POST['id'])){
     }
 }
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  $result = array();
-  $result['errors'] = $errors;
-  $result['successes'] = $successes;
-  echo json_encode($result);
-} else {
-  header('Location: users.php');
-  exit;
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
 }
 
+// Allows for functioning in either ajax mode or graceful degradation to PHP/HTML only
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header("Location: " . getReferralPage());
+  exit();
+}
 ?>

@@ -29,15 +29,27 @@ THE SOFTWARE.
 
 */
 
-// Create a user from the admin panel
+
+// Create a user from the admin panel.
+// Request method: POST
 
 require_once("./models/config.php");
 
+set_error_handler('logAllErrors');
+
 // Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to create a user.");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: " . getReferralPage());
+  }
+  exit();
+}
 
 //Forms posted
-if(!empty($_POST)) {
+if (!empty($_POST)) {
 	$errors = array();
 	$username = trim($_POST["user_name"]);
 	$displayname = trim($_POST["display_name"]);
@@ -114,18 +126,27 @@ if(!empty($_POST)) {
 		}
 
 		$successes[] = lang("ACCOUNT_CREATION_COMPLETE", array($username));
-	}
-	
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  $result = array();
-	  $result['errors'] = $errors;
-	  $result['successes'] = $successes;
-	  echo json_encode($result);
-	} else {
-	  header('Location: account.php');
-	  exit;
-	}
-	
+	}	
+} else {
+	$errors[] = lang("NO_DATA");
+}
+
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+  
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
 }
 
 ?>

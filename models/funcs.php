@@ -169,42 +169,29 @@ function replaceDefaultHook($str)
 	return (str_replace($default_hooks,$default_replace,$str));
 }
 
-//Displays error and success messages
-function resultBlock($errors,$successes){
-	//Error block
-	if(count($errors) > 0)
-	{
-		/*echo "<div id='error'>
-		<a href='#' onclick=\"showHide('error');\">[X]</a>
-		<ul>";*/
-		foreach($errors as $error)
-		{
-			echo "<div class='alert alert-danger'>".$error."</div>";
-		}
-		echo "</ul>";
-		/*echo "</div>";*/
-	}
-	//Success block
-	if(count($successes) > 0)
-	{
-		/*echo "<div id='success'>
-		<a href='#' onclick=\"showHide('success');\">[X]</a>
-		<ul>";*/
-		foreach($successes as $success)
-		{
-			echo "<div class='alert alert-success'>".$success."</div>";
-		}
-		/*echo "</ul>";
-		echo "</div>";*/
-	}
-}
-
 //Completely sanitizes text
 function sanitize($str)
 {
 	return strtolower(strip_tags(trim(($str))));
 }
 
+// Get the last referral page.
+function getReferralPage(){
+	if (isset($_SESSION['referral_page'])){
+		return $_SESSION['referral_page'];
+	} else {
+		if(isUserLoggedIn()) {
+			return 'account.php';
+		} else {
+			return 'login.php';
+		}
+	}
+}
+
+// Set the referral page to the specified page.
+function setReferralPage($page){
+	$_SESSION['referral_page'] = $page;
+}
 
 function requiredPostVar($varname){
 	// Confirm that data has been submitted via POST
@@ -244,6 +231,7 @@ function requiredGetVar($varname){
 	}
 }
 
+// Add a session alert to the queue
 function addAlert($type, $message){
     if (!isset($_SESSION["userAlerts"])){
 		$_SESSION["userAlerts"] = array();
@@ -1204,7 +1192,7 @@ function securePage($uri){
 	//Separate document name from uri
 	$tokens = explode('/', $uri);
 	$page = $tokens[sizeof($tokens)-1];
-	global $mysqli,$db_table_prefix,$loggedInUser;
+	global $mysqli,$db_table_prefix,$loggedInUser,$master_account;
 	//retrieve page details
 	$stmt = $mysqli->prepare("SELECT 
 		id,
@@ -1223,20 +1211,21 @@ function securePage($uri){
 	$stmt->close();
 	//If page does not exist in DB, disallow access		//Modified by Alex 9/18/2013 to NOT allow access by default
 	if (empty($pageDetails)){
-		echo "Access denied: " . $page . " not found in DB.";
+		//echo "Access denied: " . $page . " not found in DB.";
 		return false;
 	}
 	//If page is public, allow access
 	elseif ($pageDetails['private'] == 0) {
 		return true;	
 	}
-	//If user is not logged in, deny access and forward to login page
+	//If user is not logged in, deny access
 	elseif(!isUserLoggedIn()) 
 	{
-		header("Location: login.php");
+		//header("Location: login.php");
 		return false;
 	}
 	else {
+		$pagePermissions = array();
 		//Retrieve list of permission levels with access to page
 		$stmt = $mysqli->prepare("SELECT
 			permission_id
@@ -1259,7 +1248,7 @@ function securePage($uri){
 			return true;
 		}
 		else {
-			header("Location: account.php");
+			//header("Location: account.php");
 			return false;	
 		}
 	}

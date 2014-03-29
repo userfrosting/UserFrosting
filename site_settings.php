@@ -30,7 +30,14 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -191,24 +198,10 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 				language:						form.find('select[name="language"] option:selected').val(),
 				template:						form.find('select[name="template"] option:selected').val(),
 				ajaxMode:						"true"
-			  },		  
-			  success: function(result) {
-				$('#display-alerts').html("");
-				resultJSON = jQuery.parseJSON(result);
-				//console.log(resultJSON);
-				var successes = resultJSON['successes'];
-				if (successes.length > 0) { // Don't bother unless there are some results found
-				  jQuery.each(successes, function(idx, record) {
-					$('#display-alerts').append("<div class='alert alert-success'>" + record + "</div>");
-				  });
-				}
-				var errors = resultJSON['errors'];
-				if (errors.length > 0) { // Don't bother unless there are some results found
-				  jQuery.each(errors, function(idx, record) {
-					$('#display-alerts').append("<div class='alert alert-danger'>" + record + "</div>");
-				  });
-				}
-			  }
+			  }		  
+			}).done(function(result) {
+			  resultJSON = processJSONResult(result);
+			  alertWidget('display-alerts');
 			});
 			return false;
 		  });
@@ -274,6 +267,8 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 			  addNewPermission($('#permission-groups input').val());
 			});
 		  });
+		  
+		  alertWidget('display-alerts');
 		});
 	</script>
   </body>

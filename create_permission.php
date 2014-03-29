@@ -30,7 +30,19 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+set_error_handler('logAllErrors');
+
+// Recommended admin-only access
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to create a permission group.");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: " . getReferralPage());
+  }
+  exit();
+}
 
 //Forms posted
 if(!empty($_POST))
@@ -57,16 +69,25 @@ if(!empty($_POST))
 	} else {
 		$errors[] = lang("PERMISSION_CHAR_LIMIT", array(1, 50));	
 	}
-}
-
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  $result = array();
-  $result['errors'] = $errors;
-  $result['successes'] = $successes;
-  echo json_encode($result);
 } else {
-  header('Location: site_settings.php');
-  exit;
+	$errors[] = lang("NO_DATA");
 }
 
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+  
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
+}
 ?>

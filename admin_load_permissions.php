@@ -29,38 +29,59 @@ THE SOFTWARE.
 
 */
 
+// Load permissions for the specified user
+// Request method: GET
+
 include('models/db-settings.php');
 include('models/config.php');
 
+set_error_handler('logAllErrors');
+
 // Recommended access restriction: admin only
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to access permission settings.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
 
 // Parameters: user_id
 if (isset($_GET['user_id']))
 	$user_id = $_GET['user_id'];
 else {
-	echo "user_id must be specified!";	
+	addAlert("danger", "user_id must be specified!");
+	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }
 
 $results = array();
 
-$db = pdoConnect();
+try {
+	$db = pdoConnect();
+	
+	$sqlVars = array();
+	
+	$query = "select uc_permissions.*, uc_user_permission_matches.user_id as user_id from uc_permissions, uc_user_permission_matches where uc_user_permission_matches.permission_id = uc_permissions.id and uc_user_permission_matches.user_id = :user_id";    
+	// Required
+	$sqlVars[':user_id'] = $user_id;
+	
+	
+	if (!($stmt = $db->prepare($query)))
+		throw new RuntimeException("Oops, looks like our database encountered an error.");
+	
+	if (!($stmt->execute($sqlVars)))
+		throw new RuntimeException("Oops, looks like our database encountered an error.");
+	
+	while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		$id = $r['id'];
+		$results[$id] = $r;
+	}
+	$stmt = null;
 
-$sqlVars = array();
-
-$query = "select uc_permissions.*, uc_user_permission_matches.user_id as user_id from uc_permissions, uc_user_permission_matches where uc_user_permission_matches.permission_id = uc_permissions.id and uc_user_permission_matches.user_id = :user_id";    
-// Required
-$sqlVars[':user_id'] = $user_id;
-
-$stmt = $db->prepare($query);
-$stmt->execute($sqlVars);
-
-while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $id = $r['id'];
-    $results[$id] = $r;
+} catch (RuntimeException $e) {
+  addAlert("danger", $e->getMessage());
 }
-$stmt = null;
+
+restore_error_handler();
 
 echo json_encode($results);
 

@@ -30,7 +30,15 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+set_error_handler('logAllErrors');
+
+// Recommended access restriction: admin only
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to access site settings.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
 
 $result = array();
 $languages = getLanguageFiles(); //Retrieve list of language files
@@ -55,6 +63,8 @@ if (!file_exists($language)) {
 }
 
 if(!isset($language)) $language = "models/languages/en.php";
+
+restore_error_handler();
 
 echo json_encode($result, JSON_FORCE_OBJECT);
 

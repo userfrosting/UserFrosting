@@ -30,13 +30,19 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
 
 // Look up specified user
 $selected_user_id = $_GET['id'];
 
-if (!is_numeric($selected_user_id)){
-	echo "Error: Please specify a numeric user id!";
+if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
+	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
+	header("Location: " . getReferralPage());
 	exit();
 }
 
@@ -88,7 +94,7 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
 
 	<div id="page-wrapper">
 		<div class="row">
-		  <div id='widget-action-response' class="col-lg-12">
+		  <div id='display-alerts' class="col-lg-12">
   
 		  </div>
 		</div>
@@ -110,8 +116,6 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
 			$('.navbar').load('header.php', function() {
 				$('#user_logged_in_name').html('<i class="fa fa-user"></i> ' + user['user_name'] + ' <b class="caret"></b>');          
 			});
-													
-			alertWidget('widget-action-response');
 
 			userInfoBox('widget-user-info', {
 			  user_id: selected_user_id,
@@ -119,6 +123,8 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
 				showDates: 'true',
 				view: 'panel'
 			});
+			
+			alertWidget('display-alerts');
 
     });
 

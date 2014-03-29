@@ -30,7 +30,14 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 ?>
 
 <!DOCTYPE html>
@@ -70,7 +77,7 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
       </nav>
       <div id="page-wrapper">
 	  	<div class="row">
-		  <div id='widget-action-response' class="col-lg-12">
+		  <div id='display-alerts' class="col-lg-12">
   
 		  </div>
 		</div>
@@ -97,7 +104,7 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 			$('.navitem-site-pages').addClass('active');
           });
 
-		  sitePagesWidget('widget-site-pages', { display_errors_id: 'widget-action-response'});
+		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts'});
 		});
 	</script>
   </body>

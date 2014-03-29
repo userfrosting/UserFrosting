@@ -29,11 +29,19 @@ THE SOFTWARE.
 
 */
 
+// Request method: GET
+
 include('models/db-settings.php');
 include('models/config.php');
 
+set_error_handler('logAllErrors');
+
 // Load all permissions settings.  Recommended access level: admin only.
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to access permission settings.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
 
 extract($_GET);
 
@@ -61,6 +69,8 @@ while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
     $i++;
 }
 $stmt = null;
+
+restore_error_handler();
 
 echo json_encode($results);
 

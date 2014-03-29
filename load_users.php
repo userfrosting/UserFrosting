@@ -28,10 +28,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+
+// Request method: GET
+
 include('models/db-settings.php');
 include('models/config.php');
 
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+set_error_handler('logAllErrors');
+
+// Recommended admin-only access
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to load user data.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
 
 extract($_GET);
 
@@ -61,6 +71,8 @@ while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
     $i++;
 }
 $stmt = null;
+
+restore_error_handler();
 
 echo json_encode($results);
 

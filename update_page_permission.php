@@ -30,18 +30,38 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+set_error_handler('logAllErrors');
+
+// Recommended admin-only access
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to update page permissions.");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: " . getReferralPage());
+  }
+  exit();
+}
+
 
 $pageId = $_POST['page_id'];
 $permissionId = $_POST['permission_id'];
 $checked = $_POST['checked'];
 
-
 //Check if selected pages exist
 if(!pageIdExists($pageId)){
-	echo "Page does not exist!";
-	die();	
+	addAlert("danger", "I'm sorry, the page id you specified is invalid!");
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header("Location: " . getReferralPage());
+	}
+	exit();
 }
+
+$errors = array();
+$successes = array();
 
 $pageDetails = fetchPageDetails($pageId); //Fetch information specific to page
 
@@ -63,5 +83,23 @@ if ($permissionId == "private"){
 			removePage($pageId, $permissionId);
 		}
 	}
+}
+
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
 }
 ?>

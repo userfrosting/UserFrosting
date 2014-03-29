@@ -30,18 +30,27 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 // Automatically forward to appropriate start page based on permissions level
 // Admin users
+// Note that "2" is the default id for the "Admin" permission group
 if ($loggedInUser->checkPermission(array(2))){
 	header( "Location: dashboard_admin.php" ) ;
-	exit;
+	exit();
 } 
 // Other users
 else {
 	header( "Location: dashboard.php" ) ;
-	exit;
+	exit();
 }
 
 ?>

@@ -475,6 +475,22 @@ function userInfoBox(box_id, options) {
     });
 }
 
+function deleteUserDialog(dialog_id, user_id, name){
+	// First, create the dialog div
+	var parentDiv = "<div id='" + dialog_id + "' class='modal fade'></div>";
+	$( "body" ).append( parentDiv );
+	
+	$('#' + dialog_id).load('delete_user_dialog.php', function () {
+		// Set the student_id
+		$('#' + dialog_id + ' input[name="user_id"]').val(user_id);
+		// Set the student_name
+		$('#' + dialog_id + ' .user_name').html(name);
+		$('#' + dialog_id + ' .btn-group-action .btn-confirm-delete').click(function(){
+			deleteUser(user_id);
+		});	
+	});
+}
+
 // Update user with specified data from the dialog
 function updateUser(dialog_id, user_id) {
 	var errorMessages = validateFormFields(dialog_id);
@@ -506,7 +522,8 @@ function updateUser(dialog_id, user_id) {
 		user_title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
 		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
 		add_permissions: add_permissions.join(','),
-		remove_permissions: remove_permissions.join(',')
+		remove_permissions: remove_permissions.join(','),
+		ajaxMode:	"true"
 	}
 	
 	var url = "update_user.php";
@@ -514,13 +531,11 @@ function updateUser(dialog_id, user_id) {
 	  type: "POST",  
 	  url: url,  
 	  data: data,		  
-	  success: function() {
-		// TODO: Load messages from php script
-		addAlert("success", "User details updated successfully.");
-		location.reload();
-	  }
+	}).done(function(result) {
+		processJSONResult(result);
+		window.location.reload();
 	});
-	return true;
+	return;
 }
 
 // Create user with specified data from the dialog
@@ -561,25 +576,10 @@ function createUser(dialog_id) {
 	  url: url,  
 	  data: data
 	}).done(function(result) {
-		console.log(result);
-		resultJSON = jQuery.parseJSON(result);
-		//console.log(resultJSON);
-		var successes = resultJSON['successes'];
-		if (successes.length > 0) { // Don't bother unless there are some results found
-		  jQuery.each(successes, function(idx, record) {
-			addAlert("success", record);
-		  });
-		}
-		var errors = resultJSON['errors'];
-		if (errors.length > 0) { // Don't bother unless there are some results found
-		  jQuery.each(errors, function(idx, record) {
-			addAlert("danger", record);
-		  });
-		}
-		location.reload();
+		processJSONResult(result);
+		window.location.reload();
 	});
-	
-	return true;
+	return;
 }
 
 // Activate new user account
@@ -594,40 +594,43 @@ function activateUser(user_id) {
 		ajaxMode: 'true'
 	  }
 	}).done(function(result) {
-		console.log(result);
-		resultJSON = jQuery.parseJSON(result);
-		//console.log(resultJSON);
-		var successes = resultJSON['successes'];
-		if (successes.length > 0) { // Don't bother unless there are some results found
-		  jQuery.each(successes, function(idx, record) {
-			addAlert("success", record);
-		  });
-		}
-		var errors = resultJSON['errors'];
-		if (errors.length > 0) { // Don't bother unless there are some results found
-		  jQuery.each(errors, function(idx, record) {
-			addAlert("danger", record);
-		  });
-		}
+		processJSONResult(result)
 		location.reload();
 	});
-	return true;
+	return;
 }
 
-function deleteUserDialog(dialog_id, user_id, name){
-	// First, create the dialog div
-	var parentDiv = "<div id='" + dialog_id + "' class='modal fade'></div>";
-	$( "body" ).append( parentDiv );
+// Enable/disable the specified user
+function updateUserEnabledStatus(user_id, enabled) {
+	enabled = typeof enabled !== 'undefined' ? enabled : true;
+	var data = {
+		user_id: user_id,
+		enabled: enabled,
+		ajaxMode:	"true"
+	}
 	
-	$('#' + dialog_id).load('delete_user_dialog.php', function () {
-		// Set the student_id
-		$('#' + dialog_id + ' input[name="user_id"]').val(user_id);
-		// Set the student_name
-		$('#' + dialog_id + ' .user_name').html(name);
-		$('#' + dialog_id + ' .btn-group-action .btn-confirm-disable').click(function(){
-			deleteUser(user_id);
-		});	
+	url = "update_user_enabled.php";
+	$.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: data	  
+    }).done(function(result) {
+		processJSONResult(result);
+		window.location.reload();
 	});
 }
 
-
+function deleteUser(user_id) {
+	var url = 'delete_user.php';
+	$.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: {
+		user_id:	user_id,
+		ajaxMode:	"true"
+	  }
+	}).done(function(result) {
+		processJSONResult(result);
+		window.location.reload();
+	});
+}

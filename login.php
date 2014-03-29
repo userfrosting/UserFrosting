@@ -30,10 +30,19 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 //Forward the user to their default page if he/she is already logged in
 if(isUserLoggedIn()) {
+	addAlert("warning", "You're already logged in!");
 	header("Location: account.php");
 	exit();
 }
@@ -116,16 +125,16 @@ if(isUserLoggedIn()) {
 
 	<script>
         $(document).ready(function() {          
-			// Load navigation bar
-			$(".navbar").load("header-loggedout.php", function() {
-				$(".navbar .navitem-login").addClass('active');
-			});
-		  	// Load jumbotron links
-			$(".jumbotron-links").load("jumbotron_links.php");
-		
-			alertWidget('display-alerts');
+		  // Load navigation bar
+		  $(".navbar").load("header-loggedout.php", function() {
+			  $(".navbar .navitem-login").addClass('active');
+		  });
+		  // Load jumbotron links
+		  $(".jumbotron-links").load("jumbotron_links.php");
+	  
+		  alertWidget('display-alerts');
 			  
-		  	$("form[name='login']").submit(function(e){
+		  $("form[name='login']").submit(function(e){
 			var form = $(this);
 			var url = 'process_login.php';
 			$.ajax({  
@@ -137,20 +146,16 @@ if(isUserLoggedIn()) {
 				ajaxMode:	"true"
 			  },		  
 			  success: function(result) {
-				console.log(result);
-				$('#display-alerts').html("");
-				resultJSON = jQuery.parseJSON(result);
-				var errors = resultJSON['errors'];
-				if (errors.length > 0) { // Don't bother unless there are some results found
-				  jQuery.each(errors, function(idx, record) {
-					$('#display-alerts').append("<div class='alert alert-danger'>" + record + "</div>");
-				  });
+				var resultJSON = processJSONResult(result);
+				if (resultJSON['errors'] > 0){
+				  alertWidget('display-alerts');
 				} else {
 				  window.location.replace("account.php");
 				}
 			  }
 			});
-			return false;
+			// Prevent form from submitting twice
+			e.preventDefault();
 		  });
 		  
 		});

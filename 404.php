@@ -30,7 +30,8 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+// Always a public page!
 
 ?>
 

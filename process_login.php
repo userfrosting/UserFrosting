@@ -29,12 +29,32 @@ THE SOFTWARE.
 
 */
 
-require_once("./models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+// Request method: POST
 
-// Send the user to the main page if they're already logged in
+require_once("./models/config.php");
+
+set_error_handler('logAllErrors');
+
+// Recommend public access
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to log in.  Strange...");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: index.php");
+  }
+  exit();
+}
+
+//Forward the user to their default page if he/she is already logged in
 if(isUserLoggedIn()) {
-  header("Location: account.php"); die();
+	addAlert("warning", "You're already logged in!");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: account.php");
+  }
+	exit();
 }
 
 //Forms posted
@@ -102,27 +122,34 @@ if(!empty($_POST))
 					$loggedInUser->updateLastSignIn();
 					$_SESSION["userCakeUser"] = $loggedInUser;
 					
-					//Redirect to user account page
-					if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-					  $result = array();
-					  $result['errors'] = $errors;
-					  echo json_encode($result);
-					  exit;
-					} else {
-					  header("Location: account.php");
-					  exit;
-					}
+					$successes = array();
+					$successes[] = "Welcome back, " . $loggedInUser->displayname;
 				}
 			}
 		}
 	}
+} else {
+	$errors[] = lang("NO_DATA");
+}
+
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
 }
 
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  $result = array();
-  $result['errors'] = $errors;
-  echo json_encode($result);
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
 } else {
-  header('Location: login.php');
-  exit;
+  // Always redirect to login page on error
+  if (count($errors) > 0)
+	header('Location: login.php');
+  else
+	header('Location: account.php');
+  exit();
 }

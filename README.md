@@ -1,5 +1,5 @@
 
-UserFrosting 0.1
+UserFrosting 0.1.2
 ===================
 
 ### By Alex Weissman
@@ -7,6 +7,13 @@ UserFrosting 0.1
 Copyright (c) 2014
 
 Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
+
+Change Log - v0.1.2 
+-------------------
+- Improved error and exception handling
+- Added 404 error page
+- Standardized JSON interface for backend scripts
+- Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
 
 Why UserFrosting?
 -----------------

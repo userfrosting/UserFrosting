@@ -30,11 +30,19 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 //Forward the user to their default page if he/she is already logged in
 if(isUserLoggedIn()) {
-	header("Location: account.php");
+	addAlert("warning", "You're already logged in!");
+    header("Location: account.php");
 	exit();
 }
 

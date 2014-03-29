@@ -32,8 +32,14 @@ THE SOFTWARE.
 include('models/db-settings.php');
 include('models/config.php');
 
+set_error_handler('logAllErrors');
+
 // Load information for a user.  Recommend admin-only access.
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to load user data.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
 
 // Parameters: id
 extract($_GET);
@@ -51,16 +57,13 @@ $sqlVars[':user_id'] = $id;
 $stmt = $db->prepare($query);
 $stmt->execute($sqlVars);
 
-if ($results = $stmt->fetch(PDO::FETCH_ASSOC)){
-	echo json_encode($results);
-} else {	
-	$result = array();
-	$result['errors'] = array('Invalid user id.');
-	echo json_encode($result);
+if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
+	addAlert("danger", "Invalid user id specified");
 }
 
 $stmt = null;
 
+restore_error_handler();
 
-
+echo json_encode($results);
 ?>

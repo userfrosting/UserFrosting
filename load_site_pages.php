@@ -29,8 +29,18 @@ THE SOFTWARE.
 
 */
 
+// Request method: GET
+
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+set_error_handler('logAllErrors');
+
+// Load list of site pages.  Recommended access level: admin only
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to load site pages.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
 
 $pages = getPageFiles(); //Retrieve list of pages in root usercake folder
 $dbpages = fetchAllPages(); //Retrieve list of pages in pages table
@@ -89,6 +99,8 @@ foreach ($allPages as $page){
 if (count($deletions) > 0) {
 	deletePages($deletions);
 }
+
+restore_error_handler();
 
 echo json_encode($allPages);
 ?>

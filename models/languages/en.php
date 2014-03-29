@@ -121,7 +121,8 @@ $lang = array_merge($lang,array(
 
 //Miscellaneous
 $lang = array_merge($lang,array(
-	"CAPTCHA_FAIL"				=> "Failed security question",
+	"NO_DATA"				=> "No data/bad data sent",
+    "CAPTCHA_FAIL"				=> "Failed security question",
 	"CONFIRM"				=> "Confirm",
 	"DENY"					=> "Deny",
 	"SUCCESS"				=> "Success",

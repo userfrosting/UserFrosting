@@ -30,7 +30,15 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 ?>
 
@@ -121,6 +129,8 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
           var user_id = user['id'];
           var admin_flag = user['admin'];
           
+		  alertWidget('display-alerts');
+		  
           // Load the header
           $('.navbar').load('header.php', function() {
             $('#user_logged_in_name').html('<i class="fa fa-user"></i> ' + user['user_name'] + ' <b class="caret"></b>');
@@ -151,23 +161,15 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 				data: serializedData
 			})
 			.done(function (result, textStatus, jqXHR){
-				$('#display-alerts').html("");
-				resultJSON = jQuery.parseJSON(result);
-				var successes = resultJSON['successes'];
-				if (successes.length > 0) { // Don't bother unless there are some results found
-				  jQuery.each(successes, function(idx, record) {
-					$('#display-alerts').append("<div class='alert alert-success'>" + record + "</div>");
-				  });
-				  // Clear password input fields
+				var resultJSON = processJSONResult(result);
+				// Render alerts
+				alertWidget('display-alerts');
+				
+				// Clear password input fields on success
+				if (resultJSON['successes'] > 0) {
 				  $form.find("input[name='password']").val("");
 				  $form.find("input[name='passwordc']").val("");
 				  $form.find("input[name='passwordcheck']").val("");
-				}
-				var errors = resultJSON['errors'];
-				if (errors.length > 0) { // Don't bother unless there are some results found
-				  jQuery.each(errors, function(idx, record) {
-					$('#display-alerts').append("<div class='alert alert-danger'>" + record + "</div>");
-				  });
 				}
 			}).fail(function (jqXHR, textStatus, errorThrown){
 				// log the error to the console

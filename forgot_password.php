@@ -30,7 +30,14 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 ?>
 
@@ -114,34 +121,24 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 		  	
 			alertWidget('display-alerts');
 			  
-		  	$("form[name='reset_password']").submit(function(e){
-			var form = $(this);
-			var url = 'user_reset_password.php';
-			$.ajax({  
-			  type: "POST",  
-			  url: url,  
-			  data: {
-				username:	form.find('input[name="username"]').val(),
-				email:	form.find('input[name="email"]').val(),
-				ajaxMode:	"true"
-			  },		  
-			  success: function(result) {
-				console.log(result);
-				$('#display-alerts').html("");
-				resultJSON = jQuery.parseJSON(result);
-				var errors = resultJSON['errors'];
-				if (errors.length > 0) { // Don't bother unless there are some results found
-				  jQuery.each(errors, function(idx, record) {
-					$('#display-alerts').append("<div class='alert alert-danger'>" + record + "</div>");
-				  });
-				} else {
-				  window.location.replace("login.php");
-				}
-			  }
-			});
-			return false;
-		  });
-		  
+			$("form[name='reset_password']").submit(function(e){
+				var form = $(this);
+				var url = 'user_reset_password.php';
+				$.ajax({  
+				  type: "POST",  
+				  url: url,  
+				  data: {
+					username:	form.find('input[name="username"]').val(),
+					email:		form.find('input[name="email"]').val(),
+					ajaxMode:	"true"
+				  }
+				}).done(function(result) {
+				  resultJSON = processJSONResult(result);
+				  alertWidget('display-alerts');
+				});
+				// Prevent form from submitting twice
+				e.preventDefault();	
+			});  
 		});
 	</script>
   </body>

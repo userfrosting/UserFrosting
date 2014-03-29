@@ -29,8 +29,17 @@ THE SOFTWARE.
 
 */
 
+// Request method: GET or POST
+
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+
+set_error_handler('logAllErrors');
+
+if (!securePage($_SERVER['PHP_SELF'])){
+	addAlert("danger", "Whoops, looks like you don't have permission to reset your password.");
+	header("Location: " . getReferralPage());
+	exit();
+}
 
 //User has confirmed they want their password changed.  Generate a random password and email it to them.
 if(!empty($_GET["confirm"]))
@@ -198,19 +207,21 @@ if(!empty($_POST))
 	}
 }
 
-// Send successes to the login page, while errors should return them to the forgot_password page.
+restore_error_handler();
+
+foreach ($errors as $error){
+  addAlert("danger", $error);
+}
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  $result = array();
-  $result['errors'] = $errors;
-  $result['successes'] = $successes;
-  echo json_encode($result);
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
 } else {
-  foreach ($errors as $error){
-	addAlert("danger", $error);
-  }
-  foreach ($successes as $success){
-	addAlert("success", $success);
-  }
+  // Send successes to the login page, while errors should return them to the forgot_password page.
   if(count($errors) == 0) {
 	header('Location: login.php');
 	exit();

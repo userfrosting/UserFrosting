@@ -29,17 +29,24 @@ THE SOFTWARE.
 
 */
 
+// Request method: GET
+
 include('models/db-settings.php');
 include('models/config.php');
 
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+	addAlert("danger", "Whoops, looks like you don't have permission to load your permissions.");
+	echo json_encode(array("errors" => 1, "successes" => 0));
+	exit();
+}
 
 // Fetch id of logged in user
 $user_id_logged_in = null;
 if(isUserLoggedIn()) {
 	$user_id_logged_in = $loggedInUser->user_id;
 } else {
-    echo "You must be logged in to perform this action.";
+	addAlert("danger", "Whoops, you need to be logged in to perform this action!");
+	echo json_encode(array("errors" => 1, "successes" => 0));
     exit();
 }
 

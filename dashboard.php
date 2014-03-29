@@ -30,7 +30,14 @@ THE SOFTWARE.
 */
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to 404 page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: 404.php");
+  exit();
+}
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 ?>
 
@@ -152,6 +159,8 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
           var user = loadCurrentUser();
           var user_id = user['id'];
           var admin_flag = user['admin'];
+          
+          alertWidget('display-alerts');
           
           // Load the header
           $('.navbar').load('header.php', function() {
