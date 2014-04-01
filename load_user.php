@@ -51,7 +51,7 @@ $db = pdoConnect();
 $sqlVars = array();
 
 $query = "select uc_users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from uc_users where uc_users.id = :user_id";    
-$sqlVars[':user_id'] = $id;
+$sqlVars[':user_id'] = $user_id;
 
 //echo $query;
 $stmt = $db->prepare($query);
@@ -59,6 +59,7 @@ $stmt->execute($sqlVars);
 
 if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
 	addAlert("danger", "Invalid user id specified");
+	$results = array("errors" => 1, "successes" => 0);
 }
 
 $stmt = null;

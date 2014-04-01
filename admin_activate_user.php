@@ -49,23 +49,21 @@ if (!securePage($_SERVER['PHP_SELF'])){
 }
 
 //Check if selected user exists
-if(!isset($_POST['id']) or !userIdExists($_POST['id'])){
+if(!isset($_POST['user_id']) or !userIdExists($_POST['user_id'])){
 	$errors[] = lang("ACCOUNT_INVALID_USER_ID");
 } else {
     // Required: id
-    $id = $_POST['id'];
+    $id = $_POST['user_id'];
     
     $userdetails = fetchUserDetails(NULL, NULL, $id); //Fetch user details
     $displayname = $userdetails['display_name'];
     
     //Activate account
-    if(isset($_POST['activate']) && $_POST['activate'] == "activate"){
-        if (setUserActive($userdetails['activation_token'])){
-            $successes[] = lang("ACCOUNT_MANUALLY_ACTIVATED", array($displayname));
-        }
-        else {
-            $errors[] = lang("SQL_ERROR");
-        }
+    if (setUserActive($userdetails['activation_token'])){
+        $successes[] = lang("ACCOUNT_MANUALLY_ACTIVATED", array($displayname));
+    }
+    else {
+        $errors[] = lang("SQL_ERROR");
     }
 }
 

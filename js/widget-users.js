@@ -289,7 +289,7 @@ function userInfoBox(box_id, options) {
         // If a user_id is specified, load them - we're in panel or update mode.
         if (options['user_id']) {
             var url = 'load_user.php';
-            $.getJSON( url, { id: user_id })
+            $.getJSON( url, { user_id: user_id })
             .done(function( data ) {
 				// If no data found, redirect to users list page
 				if (data['errors']) {
@@ -589,8 +589,7 @@ function activateUser(user_id) {
 	  type: "POST",  
 	  url: url,  
 	  data: {
-		id: user_id,
-		activate: 'activate',
+		user_id: user_id,
 		ajaxMode: 'true'
 	  }
 	}).done(function(result) {

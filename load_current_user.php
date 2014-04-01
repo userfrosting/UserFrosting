@@ -37,7 +37,7 @@ set_error_handler('logAllErrors');
 try {	
 	if (!securePage($_SERVER['PHP_SELF'])){
 	  addAlert("danger", "Whoops, looks like you don't have permission to use a protected component.");
-	  echo json_encode("error");
+	  echo json_encode(array("errors" => 1, "successes" => 0));
 	  exit();
 	}
 	
@@ -46,6 +46,8 @@ try {
 	if(isUserLoggedIn()) {
 		$user_id = $loggedInUser->user_id;
 	} else {
+		addAlert("danger", "Whoops, looks like you're not logged in!");
+		echo json_encode(array("errors" => 1, "successes" => 0));
 		exit();
 	}
 	
@@ -88,11 +90,5 @@ try {
 
 restore_error_handler();
 
-<<<<<<< HEAD
 echo json_encode($results);
 ?>
-=======
-echo json_encode($response);
-
-?>
->>>>>>> FETCH_HEAD

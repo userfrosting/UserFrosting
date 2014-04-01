@@ -72,10 +72,6 @@ if (count($dbpages) > 0){
 	}
 }
 
-//echo var_dump($creations);
-//echo var_dump($originals);
-//echo var_dump($deletions);
-
 $allPages = fetchAllPages();
 // Merge the newly created pages, plus the pages slated for deletion, load their permissions, and set a flag (C)reated, (U)pdated, (D)eleted
 foreach ($allPages as $page){

@@ -50,8 +50,10 @@ if(!empty($_POST))
 	if(!empty($_POST['permission_id'])){
 		$permission_id = $_POST['permission_id'];
 		if ($name = deletePermission($permission_id)){
-		$successes[] = lang("PERMISSION_DELETION_SUCCESSFUL_NAME", array($name));
+			$successes[] = lang("PERMISSION_DELETION_SUCCESSFUL_NAME", array($name));
 		}
+	} else {
+		$errors[] = lang("NO_DATA");
 	}
 }
 
