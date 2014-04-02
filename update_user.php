@@ -43,7 +43,7 @@ if (!securePage($_SERVER['PHP_SELF'])){
 }
 
 //Check if selected user exists
-if(!isset($_POST['id']) or !userIdExists($_POST['id'])){
+if(!isset($_POST['user_id']) or !userIdExists($_POST['user_id'])){
 	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
 	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 	  echo json_encode(array("errors" => 1, "successes" => 0));
@@ -54,7 +54,7 @@ if(!isset($_POST['id']) or !userIdExists($_POST['id'])){
 }
 
 // Required: id
-$id = $_POST['id'];
+$id = $_POST['user_id'];
 
 $userdetails = fetchUserDetails(NULL, NULL, $id); //Fetch user details
 $userPermissions = fetchUserPermissions($id);
@@ -110,8 +110,8 @@ if ($userdetails['email'] != $_POST['email']){
 }
 
 //Update title
-if ($userdetails['title'] != $_POST['user_title']){
-	$title = trim($_POST['user_title']);
+if ($userdetails['title'] != $_POST['title']){
+	$title = trim($_POST['title']);
 	
 	//Validate title
 	if(minMaxRange(1,50,$title))

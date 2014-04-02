@@ -182,6 +182,8 @@ if(!empty($_POST))
 	  $stmt->close();	
 	  $successes[] = lang("CONFIG_UPDATE_SUCCESSFUL");		
 	}
+} else {
+	$errors[] = lang("NO_DATA");
 }
 
 restore_error_handler();

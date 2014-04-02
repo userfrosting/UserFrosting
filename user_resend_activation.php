@@ -166,6 +166,8 @@ if(!empty($_POST) && $emailActivation)
 			}
 		}
 	}
+} else {
+	$errors[] = lang("NO_DATA");
 }
 
 restore_error_handler();

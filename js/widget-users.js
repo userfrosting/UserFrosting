@@ -517,9 +517,9 @@ function updateUser(dialog_id, user_id) {
 	console.log("Removing permissions: " + remove_permissions.join(','));
 	
 	var data = {
-		id: user_id,
+		user_id: user_id,
 		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
-		user_title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
+		title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
 		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
 		add_permissions: add_permissions.join(','),
 		remove_permissions: remove_permissions.join(','),
