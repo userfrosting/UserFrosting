@@ -107,12 +107,12 @@ table.tablesorter thead tr th:hover {
 	height: 100%;
 	border-radius: 0;
 	border: none;
-	background-color: #222222;
+	background-color: #d9534f;
 	overflow-y: auto;
   }
 
   /* Bootstrap Default Overrides - Customized Dropdowns for the Side Nav */
-
+  
   .side-nav>li.dropdown>ul.dropdown-menu {
 	position: relative;
 	min-width: 225px;
@@ -126,26 +126,118 @@ table.tablesorter thead tr th:hover {
   }
 
   .side-nav>li.dropdown>ul.dropdown-menu>li>a {
-	color: #999999;
+	color: #ffffff;
 	padding: 15px 15px 15px 25px;
   }
-
+  
   .side-nav>li.dropdown>ul.dropdown-menu>li>a:hover,
-  .side-nav>li.dropdown>ul.dropdown-menu>li>a.active,
+  .side-nav>li.dropdown>ul.dropdown-menu>li.active>a,
   .side-nav>li.dropdown>ul.dropdown-menu>li>a:focus {
-	color: #fff;
-	background-color: #080808;
+	color: #ffffff;
+	background-color: #c0534f;
   }
 
   .side-nav>li>a {
 	width: 225px;
   }
+
+  .navbar-inverse {
+	color: #ffffff;
+	background-color: #d9534f;
+  }
   
-  .navbar-inverse .navbar-nav>li>a:hover,
-  .navbar-inverse .navbar-nav>li>a:focus {
-	background-color: #080808;
+  .navbar-inverse .navbar-brand {
+	color: #ffffff;
   }
 
+  .navbar-inverse .navbar-brand:hover,
+  .navbar-inverse .navbar-brand:focus {
+	color: #ffffff;
+	background-color: transparent;
+  }
+
+  .navbar-inverse .navbar-text {
+	color: #ffffff;
+  }
+
+  .navbar-inverse .navbar-nav > li > a {
+	color: #ffffff;
+  }
+  
+  .navbar-inverse .navbar-nav > li > a:hover,
+  .navbar-inverse .navbar-nav > li > a:focus {
+	color: #ffffff;
+	background-color: #c0534f;
+  }
+
+  .navbar-inverse .navbar-nav > .active > a,
+  .navbar-inverse .navbar-nav > .active > a:hover,
+  .navbar-inverse .navbar-nav > .active > a:focus {
+	color: #ffffff;
+	background-color: #c0534f;
+  }
+  
+  .navbar-inverse .navbar-nav > .disabled > a,
+  .navbar-inverse .navbar-nav > .disabled > a:hover,
+  .navbar-inverse .navbar-nav > .disabled > a:focus {
+	color: #444444;
+	background-color: transparent;
+  }
+  
+  .navbar-inverse .navbar-toggle {
+	border-color: #333333;
+  }
+  
+  .navbar-inverse .navbar-toggle:hover,
+  .navbar-inverse .navbar-toggle:focus {
+	background-color: #c0534f;
+  }
+  
+  .navbar-inverse .navbar-toggle .icon-bar {
+	background-color: #ffffff;
+  }
+  
+  .navbar-inverse .navbar-collapse,
+  .navbar-inverse .navbar-form {
+	border-color: #101010;
+  }
+  
+  .navbar-inverse .navbar-nav > .open > a,
+  .navbar-inverse .navbar-nav > .open > a:hover,
+  .navbar-inverse .navbar-nav > .open > a:focus {
+	color: #ffffff;
+	background-color: #c0534f;
+  }
+  
+  .navbar-inverse .navbar-nav > .dropdown > a:hover .caret {
+	border-top-color: #ffffff;
+	border-bottom-color: #ffffff;
+  }
+  
+  .navbar-inverse .navbar-nav > .dropdown > a .caret {
+	border-top-color: #ffffff;
+	border-bottom-color: #ffffff;
+  }
+  
+  .navbar-inverse .navbar-nav > .open > a .caret,
+  .navbar-inverse .navbar-nav > .open > a:hover .caret,
+  .navbar-inverse .navbar-nav > .open > a:focus .caret {
+	border-top-color: #ffffff;
+	border-bottom-color: #ffffff;
+  }
+  
+  /* From https://stackoverflow.com/questions/19733447/bootstrap-navbar-with-left-center-and-right-aligned-items */
+  .navbar-inverse .navbar-center {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin-left: auto;
+	margin-right: auto;
+	font-weight: bolder;
+	font-size: 16px;
+  }
+  
   /* Nav Messages */
 
   .messages-dropdown .dropdown-menu {

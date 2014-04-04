@@ -41,7 +41,7 @@ if (!securePage($_SERVER['PHP_SELF'])){
     exit();
 }
 
-if ($can_register == "true"){
+if ($can_register){
 	echo "
 		  <div class='row'>
 			  <div class='col-md-12'>

@@ -55,7 +55,7 @@ class User
 		$this->clean_email = sanitize($email);
 		$this->clean_password = trim($pass);
 		$this->username = sanitize($user);
-		$this->title = sanitize($title);
+		$this->title = trim($title);
 		
 		if(usernameExists($this->username))
 		{
@@ -91,7 +91,7 @@ class User
 			$this->activation_token = generateActivationToken();
 			
 			//Do we need to send out an activation email?
-			if($emailActivation == "true")
+			if($emailActivation)
 			{
 				//User must activate their account first
 				$this->user_active = 0;

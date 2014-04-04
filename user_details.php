@@ -58,24 +58,13 @@ if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
 
     <title>UserFrosting Admin - User Details</title>
 
-	<link rel="icon" type="image/x-icon" href="css/favicon.ico" />
-	
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-
-    <!-- Add custom CSS here -->
-    <link href="css/sb-admin.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/bootstrap-switch.min.css" type="text/css" />
-	 
-    <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.min.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<script src="js/userfrosting.js"></script>
-	<script src="js/date.min.js"></script>
-    <script src="js/handlebars-v1.2.0.js"></script> 
+	<?php require_once("includes.php");  ?>
 
     <!-- Page Specific Plugins -->
+	<link rel="stylesheet" href="css/bootstrap-switch.min.css" type="text/css" />
+
+	<script src="js/date.min.js"></script>
+    <script src="js/handlebars-v1.2.0.js"></script> 
     <script src="js/bootstrap-switch.min.js"></script>
 	<script src="js/widget-users.js"></script>
   </head>

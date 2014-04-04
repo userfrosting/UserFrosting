@@ -52,20 +52,8 @@ setReferralPage($_SERVER['PHP_SELF']);
 
     <title>UserFrosting Admin - Settings</title>
 
-	<link rel="icon" type="image/x-icon" href="css/favicon.ico" />
+	<?php require_once("includes.php");  ?>
 	
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-
-    <!-- Add custom CSS here -->
-    <link href="css/sb-admin.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    
-    <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-	<script src="js/userfrosting.js"></script>
-
   </head>
 
   <body>

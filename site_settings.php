@@ -48,22 +48,13 @@ setReferralPage($_SERVER['PHP_SELF']);
     <meta name="author" content="">
 
     <title>UserFrosting Admin - Settings</title>
-
-	<link rel="icon" type="image/x-icon" href="css/favicon.ico" />
 		
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-
-    <!-- Add custom CSS here -->
-    <link href="css/sb-admin.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
+	<?php require_once("includes.php");  ?>
+	
+	<!-- Page Specific Plugins -->
 	<link rel="stylesheet" href="css/bootstrap-switch.min.css" type="text/css" />
-	 
-    <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.min.js"></script>
-	<script src="js/bootstrap.js"></script>
+
 	<script src="js/bootstrap-switch.min.js"></script>
-	<script src="js/userfrosting.js"></script>
 	<script src="js/jquery.tablesorter.js"></script>
 	<script src="js/tables.js"></script>
 
@@ -113,14 +104,20 @@ setReferralPage($_SERVER['PHP_SELF']);
 			<div class="form-group">
 			  <label for="userRegistration" class="col-sm-4 control-label">User Registration</label>
 			  <div class="col-sm-8">
-				<input type="checkbox" id ="userRegistration" name='can_register' value='on'/>
+				<input type="checkbox" id ="userRegistration" name='can_register' value='1'/>
 				<br><small>Specify whether users can create new accounts by themselves.</small>
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label for="newUserTitle" class="col-sm-4 control-label">Default New User Title</label>
+			  <div class="col-sm-8">
+				<input type='text' id="newUserTitle" class="form-control" name='new_user_title'/>
 			  </div>
 			</div>
 			<div class="form-group">
 			  <label for="checkEmailActivation" class="col-sm-4 control-label">Email Activation</label>
 			  <div class="col-sm-8">
-				<input type="checkbox" id ="checkEmailActivation" name='activation' value='on'/>
+				<input type="checkbox" id ="checkEmailActivation" name='activation' value='1'/>
 				<br><small>Specify whether email activation is required for newly registered accounts.</small>
 			  </div>
 			</div>
@@ -193,6 +190,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 				website_url:					form.find('input[name="website_url"]').val(),
 				email:							form.find('input[name="email"]').val(),
 				resend_activation_threshold:	form.find('input[name="resend_activation_threshold"]').val(),
+				new_user_title:					form.find('input[name="new_user_title"]').val(),
 				can_register: 					form.find('input[name="can_register"]:checked').val(),
 				activation: 					form.find('input[name="activation"]:checked').val(),
 				language:						form.find('select[name="language"] option:selected').val(),
@@ -215,13 +213,14 @@ setReferralPage($_SERVER['PHP_SELF']);
 			  $('#regbox input[name="website_name"]').val(data['website_name']);
 			  $('#regbox input[name="website_url"]').val(data['website_url']);
 			  $('#regbox input[name="email"]').val(data['email']);
+			  $('#regbox input[name="new_user_title"]').val(data['new_user_title']);
 			  $('#regbox input[name="resend_activation_threshold"]').val(data['resend_activation_threshold']);
-			  if (data['can_register'] == "true")  {
+			  if (data['can_register'] == "1")  {
 				$('#regbox input[name="can_register"]').bootstrapSwitch('setState', true);
 			  } else {
 				$('#regbox input[name="can_register"]').bootstrapSwitch('setState', false);
 			  }
-			  if (data['activation'] == "true")  {
+			  if (data['activation'] == "1")  {
 				$('#regbox input[name="activation"]').bootstrapSwitch('setState', true);
 			  } else {
 				$('#regbox input[name="activation"]').bootstrapSwitch('setState', false);

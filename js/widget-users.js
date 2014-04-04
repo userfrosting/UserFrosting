@@ -439,7 +439,7 @@ function userInfoBox(box_id, options) {
                     
             $('#' + box_id + ' input[name="sign_up_date"]').val( sign_up_date ).prop('disabled',true);
             $('#' + box_id + ' input[name="last_sign_in_date"]').prop('disabled',true);
-    
+	
             // Load permission checkboxes
             var url = 'load_permissions.php';
             $.getJSON( url, { })
@@ -593,7 +593,7 @@ function activateUser(user_id) {
 		ajaxMode: 'true'
 	  }
 	}).done(function(result) {
-		processJSONResult(result)
+		processJSONResult(result);
 		location.reload();
 	});
 	return;

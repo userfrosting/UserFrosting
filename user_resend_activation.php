@@ -29,6 +29,8 @@ THE SOFTWARE.
 
 */
 
+// Resend the activation email for a user that has registered an account.  Note that this is enabled regardless of whether or not email activation is enabled.
+// This is to prevent "orphaned" accounts, who registered while email activation was still required.
 // Request method: POST
 
 require_once("models/config.php");
@@ -45,17 +47,6 @@ if (!securePage($_SERVER['PHP_SELF'])){
 	exit();
 }
 
-// If registration is disabled, send them back to the home page with an error message
-if (!$emailActivation){
-	addAlert("danger", "I'm sorry, email activation has been disabled.  You will need an administrator to activate your account.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-        header("Location: login.php");
-    }
-    exit();
-}
-
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
@@ -68,7 +59,7 @@ if(isUserLoggedIn()) {
 }
 
 //Forms posted
-if(!empty($_POST) && $emailActivation)
+if(!empty($_POST))
 {
 	$email = $_POST["email"];
 	$username = $_POST["username"];

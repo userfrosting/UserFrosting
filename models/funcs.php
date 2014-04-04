@@ -196,7 +196,8 @@ function setReferralPage($page){
 function requiredPostVar($varname){
 	// Confirm that data has been submitted via POST
 	if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
-		echo "Error: data must be submitted via POST.";
+		addAlert("danger", "Error: data must be submitted via POST.");
+		echo json_encode(array("errors" => "1", "successes" => "0"));
 		exit();
 	}
 	
@@ -204,7 +205,8 @@ function requiredPostVar($varname){
 		return $_POST[$varname];
 	else {
 		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-			echo json_encode("{errors: ['$varname must be specified!']}");	
+			addAlert("danger", "$varname must be specified!");
+			echo json_encode(array("errors" => "1", "successes" => "0"));
 		} else {
 			echo "$varname must be specified!";	
 		}
@@ -215,18 +217,15 @@ function requiredPostVar($varname){
 function requiredGetVar($varname){
 	// Confirm that data has been submitted via GET
 	if (!($_SERVER['REQUEST_METHOD'] == 'GET')) {
-		echo "Error: data must be submitted via GET.";
+		addAlert("danger", "Error: data must be submitted via GET.");
 		exit();
 	}
 	
 	if (isset($_GET[$varname]))
 		return $_GET[$varname];
 	else {
-		if (isset($_GET['ajaxMode']) and $_GET['ajaxMode'] == "true" ){
-			echo json_encode("{errors: ['$varname must be specified!']}");	
-		} else {
-			echo "$varname must be specified!";	
-		}
+		addAlert("danger", "$varname must be specified!");
+		echo json_encode(array("errors" => "1", "successes" => "0"));
 		exit();
 	}
 }
@@ -404,15 +403,20 @@ function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
 		WHERE
 		$column = ?
 		LIMIT 1");
-		$stmt->bind_param("s", $data);
+		
+	if (!$stmt)
+		return false;
+		
+	$stmt->bind_param("s", $data);
 	
 	$stmt->execute();
 	$stmt->bind_result($id, $user, $display, $password, $email, $token, $activationRequest, $passwordRequest, $active, $title, $signUp, $signIn, $enabled);
-	while ($stmt->fetch()){
-		$row = array('id' => $id, 'user_name' => $user, 'display_name' => $display, 'password' => $password, 'email' => $email, 'activation_token' => $token, 'last_activation_request' => $activationRequest, 'lost_password_request' => $passwordRequest, 'active' => $active, 'title' => $title, 'sign_up_stamp' => $signUp, 'last_sign_in_stamp' => $signIn, 'enabled' => $enabled);
+	if($stmt->fetch()){
+		return array('id' => $id, 'user_name' => $user, 'display_name' => $display, 'password' => $password, 'email' => $email, 'activation_token' => $token, 'last_activation_request' => $activationRequest, 'lost_password_request' => $passwordRequest, 'active' => $active, 'title' => $title, 'sign_up_stamp' => $signUp, 'last_sign_in_stamp' => $signIn, 'enabled' => $enabled);
+		$stmt->close();
+	} else {
+		return false;
 	}
-	$stmt->close();
-	return ($row);
 }
 
 //Toggle if lost password request flag on or off
@@ -674,30 +678,24 @@ function createPermission($permission, $is_default = 0, $can_delete = 1) {
 function deletePermission($id) {
 	global $mysqli,$db_table_prefix,$errors; 
 	$permissionDetails = fetchPermissionDetails($id);
-	$i = 0;
+	
+	if ($permissionDetails['can_delete'] == '0'){
+		$errors[] = lang("CANNOT_DELETE_PERMISSION_GROUP", array($permissionDetails['name']));
+		return false;
+	}
+	
 	$stmt = $mysqli->prepare("DELETE FROM ".$db_table_prefix."permissions 
 		WHERE id = ?");
 	$stmt2 = $mysqli->prepare("DELETE FROM ".$db_table_prefix."user_permission_matches 
 		WHERE permission_id = ?");
 	$stmt3 = $mysqli->prepare("DELETE FROM ".$db_table_prefix."permission_page_matches 
 		WHERE permission_id = ?");
-	if ($id == 1){
-		$errors[] = lang("CANNOT_DELETE_NEWUSERS");
-		return false;
-	}
-	elseif ($id == 2){
-		$errors[] = lang("CANNOT_DELETE_ADMIN");
-		return false;
-	}
-	else{
-		$stmt->bind_param("i", $id);
-		$stmt->execute();
-		$stmt2->bind_param("i", $id);
-		$stmt2->execute();
-		$stmt3->bind_param("i", $id);
-		$stmt3->execute();
-		$i++;
-	}
+	$stmt->bind_param("i", $id);
+	$stmt->execute();
+	$stmt2->bind_param("i", $id);
+	$stmt2->execute();
+	$stmt3->bind_param("i", $id);
+	$stmt3->execute();
 	$stmt->close();
 	$stmt2->close();
 	$stmt3->close();
@@ -729,16 +727,18 @@ function fetchPermissionDetails($id)
 	global $mysqli,$db_table_prefix; 
 	$stmt = $mysqli->prepare("SELECT 
 		id,
-		name
+		name,
+		is_default,
+		can_delete 
 		FROM ".$db_table_prefix."permissions
 		WHERE
 		id = ?
 		LIMIT 1");
 	$stmt->bind_param("i", $id);
 	$stmt->execute();
-	$stmt->bind_result($id, $name);
+	$stmt->bind_result($id, $name, $is_default, $can_delete);
 	while ($stmt->fetch()){
-		$row = array('id' => $id, 'name' => $name);
+		$row = array('id' => $id, 'name' => $name, 'is_default' => $is_default, 'can_delete' => $can_delete);
 	}
 	$stmt->close();
 	return ($row);
@@ -954,6 +954,40 @@ function updateConfig($id, $value)
 		$stmt->execute();
 	}
 	$stmt->close();	
+}
+
+function fetchConfigParameter($name){
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("SELECT id, value
+		FROM ".$db_table_prefix."configuration WHERE name = ?");	
+	if (!$stmt)
+		return false;
+	$stmt->bind_param("s", $name);
+	$stmt->execute();
+	$stmt->bind_result($id, $value);
+	
+	if ($stmt->fetch()){
+		$stmt->close();
+		return array('id' => $id, 'name' => $name, 'value' => $value);
+	} else {
+		$stmt->close();
+		return false;
+	}
+	
+}
+
+function deleteConfigParameter($name){
+	global $mysqli,$db_table_prefix; 
+	$stmt = $mysqli->prepare("DELETE
+		FROM ".$db_table_prefix."configuration WHERE name = ?");	
+	$stmt->bind_param("s", $name);
+	if ($stmt->execute()){
+		$stmt->close();
+		return true;
+	} else {
+		$stmt->close();
+		return false;
+	}
 }
 
 //Functions that interact mainly with .pages table
@@ -1224,7 +1258,7 @@ function securePage($uri){
 		//header("Location: login.php");
 		return false;
 	}
-	else {
+	else {	
 		$pagePermissions = array();
 		//Retrieve list of permission levels with access to page
 		$stmt = $mysqli->prepare("SELECT
@@ -1243,7 +1277,7 @@ function securePage($uri){
 		if ($loggedInUser->checkPermission($pagePermissions)){ 
 			return true;
 		}
-		//Grant access if master user
+		//Grant access if master (root) user
 		elseif ($loggedInUser->user_id == $master_account){
 			return true;
 		}

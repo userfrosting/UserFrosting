@@ -64,8 +64,9 @@ $language = $settings['language']['value'];
 $template = $settings['template']['value'];
 $new_user_title = $settings['new_user_title']['value'];
 
-// For debugging account, change to 1.  This will allow everyone access to everything!
-$master_account = -1;
+// This is the user id of the master (root) account.
+// The root user cannot be deleted, and automatically has permissions to everything regardless of permission group membership.
+$master_account = 1;
 
 $default_hooks = array("#WEBSITENAME#","#WEBSITEURL#","#DATE#");
 $default_replace = array($websiteName,$websiteUrl,$emailDate);

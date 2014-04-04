@@ -44,6 +44,7 @@ if (!securePage($_SERVER['PHP_SELF'])){
 ?>
 
 <!-- Brand and toggle get grouped for better mobile display -->
+
 <div class="navbar-header">
   <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
     <span class="sr-only">Toggle navigation</span>
@@ -51,7 +52,17 @@ if (!securePage($_SERVER['PHP_SELF'])){
     <span class="icon-bar"></span>
     <span class="icon-bar"></span>
   </button>
-  <a class="navbar-brand" href="account.php">UserFrosting Admin</a>
+  <a class="navbar-brand" href="account.php">
+  <?php
+	echo $websiteName;
+  ?>
+  </a>
+  <?php
+	if ($loggedInUser->user_id == $master_account){
+		echo  '<span class="navbar-text navbar-center">YOU ARE CURRENTLY LOGGED IN AS ROOT USER</span>';
+	}
+  ?>
+	
 </div>
 <div class="collapse navbar-collapse navbar-ex1-collapse">
 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -83,7 +94,7 @@ if ($loggedInUser->checkPermission(array(2))){
 }
 ?>
 	</ul>
-  <ul class="nav navbar-nav navbar-right navbar-user">
+  <ul class="nav navbar-master navbar-nav navbar-right navbar-user">
     <li class="dropdown user-dropdown">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="user_logged_in_name"></a>
       <ul class="dropdown-menu">

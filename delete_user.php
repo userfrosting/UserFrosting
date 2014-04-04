@@ -48,13 +48,18 @@ if (!securePage($_SERVER['PHP_SELF'])){
 
 $user_id = requiredPostVar('user_id');
 
-// Delete the user entirely.  This action cannot be undone!
-$deletions = array($user_id);
-if ($deletion_count = deleteUsers($deletions)) {
-	$successes[] = lang("ACCOUNT_DELETIONS_SUCCESSFUL", array($deletion_count));
-}
-else {
-	$errors[] = lang("SQL_ERROR");
+// Cannot delete master account
+if ($user_id == $master_account){
+	$errors[] = lang("ACCOUNT_DELETE_MASTER");
+} else {
+	// Delete the user entirely.  This action cannot be undone!
+	$deletions = array($user_id);
+	if ($deletion_count = deleteUsers($deletions)) {
+		$successes[] = lang("ACCOUNT_DELETIONS_SUCCESSFUL", array($deletion_count));
+	}
+	else {
+		$errors[] = lang("SQL_ERROR");
+	}
 }
 
 restore_error_handler();

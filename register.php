@@ -41,9 +41,15 @@ if (!securePage($_SERVER['PHP_SELF'])){
 
 setReferralPage($_SERVER['PHP_SELF']);
 
+if (!fetchUserDetails(NULL, NULL, '1')){
+	addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
+	header("Location: install/register_root.php");
+	exit();
+}
+
 // If registration is disabled, send them back to the home page with an error message
-if ($can_register != "true"){
-	addAlert("danger", "I'm sorry, registration has been disabled.");
+if (!$can_register){
+	addAlert("danger", lang("ACCOUNT_REGISTRATION_DISABLED"));
 	header("Location: login.php");
 	exit();
 }

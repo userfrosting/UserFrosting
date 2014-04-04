@@ -39,13 +39,6 @@ if (!securePage($_SERVER['PHP_SELF'])){
 
 setReferralPage($_SERVER['PHP_SELF']);
 
-// If registration is disabled, send them back to the home page with an error message
-if (!$emailActivation){
-	addAlert("danger", "I'm sorry, email activation has been disabled.  You will need an administrator to activate your account.");
-	header("Location: login.php");
-	exit();
-}
-
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");

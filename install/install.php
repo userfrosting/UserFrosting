@@ -5,8 +5,18 @@ http://usercake.com
 */
 require_once("../models/db-settings.php");
 require_once("../models/funcs.php");
+require_once("../models/languages/en.php");
+require_once("../models/class.mail.php");
+require_once("../models/class.user.php");
+require_once("../models/class.newuser.php");
 
 session_start();
+
+if (fetchUserDetails(NULL, NULL, '1')){
+	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
+	header('Location: complete.php');
+	exit();
+}
 
 $db_issue = false;
 $errors = array();
@@ -77,12 +87,13 @@ INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
 (1, 'website_name', 'UserCake'),
 (2, 'website_url', 'localhost/'),
 (3, 'email', 'noreply@ILoveUserCake.com'),
-(4, 'activation', 'false'),
+(4, 'activation', '0'),
 (5, 'resend_activation_threshold', '0'),
 (6, 'language', 'models/languages/en.php'),
 (7, 'template', 'models/site-templates/default.css'),
-(8, 'can_register', 'true'),
-(9, 'new_user_title', 'New Member');
+(8, 'can_register', '1'),
+(9, 'new_user_title', 'New Member'),
+(10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "');
 ";
 
 $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
@@ -320,10 +331,12 @@ else
 }
 
 $result = array();
-if(!$db_issue)
-    $successes[] = "<p><strong>Database setup complete, please delete the install folder and create your admin account.</strong></p>";
+
+if(!$db_issue) {
+    $successes[] = "<p><strong>Database setup complete, please create the master (root) account.  The configuration token can be found in the 'uc_configuration' table of your database, as the value for 'root_account_config_token'.</strong></p>";
+}
 else
-    $errors[] = "<p><strong>Database setup did not complete successfully.  Please try again.</strong></p>";
+    $errors[] = "<p><strong>Database setup did not complete successfully.  Please delete all tables and try again.</strong></p>";
 
 $result['errors'] = $errors;
 $result['successes'] = $successes;
@@ -333,7 +346,11 @@ foreach ($errors as $error){
 foreach ($successes as $success){
   addAlert("success", $success);
 }
-header('Location: index.php');
+
+if (count($errors) == 0)
+    header('Location: register_root.php');
+else
+    header('Location: index.php');
 exit();	
 
 ?>

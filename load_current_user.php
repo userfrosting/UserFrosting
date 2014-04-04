@@ -91,5 +91,4 @@ try {
 restore_error_handler();
 
 echo json_encode($results);
-
 ?>

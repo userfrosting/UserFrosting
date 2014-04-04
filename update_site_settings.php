@@ -47,24 +47,24 @@ if (!securePage($_SERVER['PHP_SELF'])){
 if(!empty($_POST))
 {
 	$newSettings = $_POST;
-	$newWebsiteName = $newSettings['website_name'];
-	$newWebsiteUrl = $newSettings['website_url'];
-	$newEmail = $newSettings['email'];
-	if (isset($newSettings['activation']) and $newSettings['activation'] == "on"){
-	  $newSettings['activation'] = "true";
+	$newWebsiteName = requiredPostVar('website_name');
+	$newWebsiteUrl = requiredPostVar('website_url');
+	$newEmail = requiredPostVar('email');
+	$newTitle = requiredPostVar('new_user_title');
+	if (isset($newSettings['activation'])){
+		$newActivation = $newSettings['activation'];
 	} else {
-	  $newSettings['activation'] = "false";
+		$newSettings['activation'] = $newActivation = "0";
 	}
-	$newActivation = $newSettings['activation'];
-	if (isset($newSettings['can_register']) and $newSettings['can_register'] == "on"){
-	  $newSettings['can_register'] = "true";
+	
+	if (isset($newSettings['can_register'])){
+		$newRegistration = $newSettings['can_register'];
 	} else {
-	  $newSettings['can_register'] = "false";
+		$newSettings['can_register'] = $newRegistration = "0";
 	}
-	$newRegistration = $newSettings['can_register'];
-	$newResend_activation_threshold = $newSettings['resend_activation_threshold'];
-	$newLanguage = $newSettings['language'];
-	$newTemplate = $newSettings['template'];
+	$newResend_activation_threshold = requiredPostVar('resend_activation_threshold');
+	$newLanguage = requiredPostVar('language');
+	$newTemplate = requiredPostVar('template');
 	
 	//Validate new site name
 	if ($newWebsiteName != $websiteName) {
@@ -105,10 +105,21 @@ if(!empty($_POST))
 			$emailAddress = $newEmail;
 		}
 	}
-	
+
+	//Validate new default title
+	if ($newTitle != $new_user_title) {
+		if(minMaxRange(1,150,$newTitle))
+		{
+			$errors[] = lang("CONFIG_TITLE_CHAR_LIMIT",array(1,150));
+		}
+		else if (count($errors) == 0) {
+			$new_user_title = $newTitle;
+		}
+	}
+		
 	//Validate registration enable/disable selection
 	if ($newRegistration != $can_register) {
-		if($newRegistration != "true" AND $newRegistration != "false")
+		if($newRegistration != "0" AND $newRegistration != "1")
 		{
 			$errors[] = lang("CONFIG_REGISTRATION_TRUE_FALSE");
 		}
@@ -119,7 +130,7 @@ if(!empty($_POST))
 
 	//Validate email activation selection
 	if ($newActivation != $emailActivation) {
-		if($newActivation != "true" AND $newActivation != "false")
+		if($newActivation != "0" AND $newActivation != "1")
 		{
 			$errors[] = lang("CONFIG_ACTIVATION_TRUE_FALSE");
 		}

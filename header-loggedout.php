@@ -41,8 +41,7 @@ if (!securePage($_SERVER['PHP_SELF'])){
     exit();
 }
 
-//Links for permission level 2 (default admin)
-if ($can_register == "true"){
+if ($can_register){
 	echo "
 		<li class='navitem-home'><a href='index.php'>Home</a></li>
         <li class='navitem-login'><a href='login.php'>Login</a></li>

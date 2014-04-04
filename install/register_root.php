@@ -29,17 +29,29 @@ THE SOFTWARE.
 
 */
 
+// TODO: Client-side validation and AJAX submission
 require_once("../models/db-settings.php");
 require_once("../models/funcs.php");
 require_once("../models/languages/en.php");
 require_once("../models/class.mail.php");
 require_once("../models/class.user.php");
 require_once("../models/class.newuser.php");
+
 session_start();
+
+// To register the root account, two conditions apply:
+// 1. the root config token (root_account_config_token) must exist
+// 2. the uc_users table must not have a user with id=1
 
 if (fetchUserDetails(NULL, NULL, '1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
-	header('Location: complete.php');
+	header('Location: index.php');
+	exit();
+}
+
+if (!($root_account_config_token = fetchConfigParameter('root_account_config_token'))){
+	addAlert("danger", lang("INSTALLER_INCOMPLETE"));
+	header('Location: index.php');
 	exit();
 }
 
@@ -53,8 +65,9 @@ if (fetchUserDetails(NULL, NULL, '1')){
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="shortcut icon" href="css/favicon.ico">
 
-    <title>Welcome to UserFrosting!</title>
+    <title>UserFrosting - Register Master Account</title>
 
 	<link rel="icon" type="image/x-icon" href="../css/favicon.ico" />
 	
@@ -81,31 +94,67 @@ if (fetchUserDetails(NULL, NULL, '1')){
         <h3 class="text-muted">UserFrosting</h3>
       </div>
       <div class="jumbotron">
-        <h1>Welcome to UserFrosting!</h1>
-        <p class="lead">A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</p>
-	  
-		<div class="row">
-			<div id='display-alerts' class="col-lg-12">
-
+        <h1>Master Account Setup</h1>
+        <p class="lead">Please set up the master (root) account for UserFrosting.</p>
+		<small>The configuration token can be found in the 'uc_configuration' table of your database, as the value for 'root_account_config_token'.</small>
+		<form name='newUser' class='form-horizontal' role='form' action='create_root_user.php' method='post'>
+		  <div class="row">
+				<div id='display-alerts' class="col-lg-12">
+		  
+				</div>
+		  </div>		
+		  <div class="form-group">
+			<label class="col-sm-4 control-label">User Name</label>
+			<div class="col-sm-8">
+			  <input type="text" class="form-control" placeholder="User Name" name = 'username' value=''>
 			</div>
-		</div>
-	      </div>	
-		<div class="row">
+		  </div>
+		  <div class="row form-group">
+			<label class="col-sm-4 control-label">Display Name</label>
+			<div class="col-sm-8">
+			  <input type="text" class="form-control" placeholder="Display Name" name='displayname'>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<label class="col-sm-4 control-label">Email</label>
+			<div class="col-sm-8">
+			  <input type="email" class="form-control" placeholder="Email" name='email'>
+			</div>
+		  </div>		  
+		  <div class="form-group">
+			<label class="col-sm-4 control-label">Password</label>
+			<div class="col-sm-8">
+			  <input type="password" class="form-control" placeholder="Password" name='password'>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<label class="col-sm-4 control-label">Confirm Password</label>
+			<div class="col-sm-8">
+			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc'>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<label class="col-sm-4 control-label">Configuration Token</label>
+			<div class="col-sm-8">
+			  <input type="text" class="form-control" name='token'>
+			</div>
+		  </div>
+		  <br>
+		  <div class="form-group">
 			<div class="col-sm-12">
-			<h2>To install, follow these instructions:</h2>
-			<ul class="list-group">
-				<li class="list-group-item">1. Create a database on your server / web hosting package. UserFrosting supports MySQLi and requires MySQL server version 4.1.3 or newer, as well as PHP 5.4 or later with PDO database connections enabled.</li>
-				<li class="list-group-item">2. Open up models/db-settings.php and fill out the connection details for your database.</li>
-				<li class="list-group-item">3. Click <a href="install.php">here</a> to run the UserFrosting installer.  UserFrosting will attempt to build the database for you, and generate a registration code to create the master (root) account.</li>
-				<li class="list-group-item">4. After the installer successfully completes, delete the install folder.</li>
-			</ul>
+			  <button type="submit" class="btn btn-danger submit" value='Register'>Register Master Account</button>
 			</div>
-        </div>	
+		  </div>
+		</form>
+	  </div>	
       <div class="footer">
         <p>&copy; Your Website, 2014</p>
       </div>
 
     </div> <!-- /container -->
+
+  </body>
+</html>
 
 	<script>
         $(document).ready(function() {
@@ -130,5 +179,4 @@ if (fetchUserDetails(NULL, NULL, '1')){
 		  });
 		});
 	</script>
-  </body>
-</html>
+

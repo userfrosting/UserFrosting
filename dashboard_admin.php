@@ -51,31 +51,20 @@ setReferralPage($_SERVER['PHP_SELF']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <link rel="icon" type="image/x-icon" href="css/favicon.ico" />
     
     <title>UserFrosting Admin - Admin Dashboard</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <?php require_once("includes.php");  ?>
 
-    <!-- Add custom CSS here -->
-    <link href="css/sb-admin.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <!-- Page-specific CSS -->
     <link rel="stylesheet" href="css/typeahead.css" type="text/css" />
-    <link rel="stylesheet" href="css/bootstrap-switch.min.css" type="text/css" />  
+    <link rel="stylesheet" href="css/bootstrap-switch.min.css" type="text/css" />
     
-    <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-
     <!-- Page Specific Plugins -->
 	<script src="js/jquery.tablesorter.js"></script>
 	<script src="js/tables.js"></script>
-    <script src="js/userfrosting.js"></script>
     <script src="js/bootstrap-switch.min.js"></script>
-
-    
+ 
   </head>
 
   <body>

@@ -30,18 +30,7 @@ THE SOFTWARE.
 */
 
 require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/class.newuser.php");
 session_start();
-
-if (fetchUserDetails(NULL, NULL, '1')){
-	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
-	header('Location: complete.php');
-	exit();
-}
 
 ?>
 
@@ -81,26 +70,15 @@ if (fetchUserDetails(NULL, NULL, '1')){
         <h3 class="text-muted">UserFrosting</h3>
       </div>
       <div class="jumbotron">
-        <h1>Welcome to UserFrosting!</h1>
-        <p class="lead">A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</p>
+        <h1>Installation Complete!</h1>
+        <p class="lead">Please delete the installation folder.  You will then be able to log in via login.php.</p>
 	  
 		<div class="row">
 			<div id='display-alerts' class="col-lg-12">
 
 			</div>
 		</div>
-	      </div>	
-		<div class="row">
-			<div class="col-sm-12">
-			<h2>To install, follow these instructions:</h2>
-			<ul class="list-group">
-				<li class="list-group-item">1. Create a database on your server / web hosting package. UserFrosting supports MySQLi and requires MySQL server version 4.1.3 or newer, as well as PHP 5.4 or later with PDO database connections enabled.</li>
-				<li class="list-group-item">2. Open up models/db-settings.php and fill out the connection details for your database.</li>
-				<li class="list-group-item">3. Click <a href="install.php">here</a> to run the UserFrosting installer.  UserFrosting will attempt to build the database for you, and generate a registration code to create the master (root) account.</li>
-				<li class="list-group-item">4. After the installer successfully completes, delete the install folder.</li>
-			</ul>
-			</div>
-        </div>	
+	  </div>	
       <div class="footer">
         <p>&copy; Your Website, 2014</p>
       </div>

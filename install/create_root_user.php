@@ -31,45 +31,24 @@ THE SOFTWARE.
 
 // Request method: POST
 
-require_once("models/config.php");
+require_once("../models/db-settings.php");
+require_once("../models/funcs.php");
+require_once("../models/languages/en.php");
+require_once("../models/class.mail.php");
+require_once("../models/class.user.php");
+require_once("../models/class.newuser.php");
 
-set_error_handler('logAllErrors');
+session_start();
 
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to create an account.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
-  }
-  exit();
-}
-
-if (!fetchUserDetails(NULL, NULL, '1')){
-	addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
-	header("Location: install/register_root.php");
+if (!($root_account_config_token = fetchConfigParameter('root_account_config_token'))){
+	addAlert("danger", lang("INSTALLER_INCOMPLETE"));
+	header('Location: index.php');
 	exit();
 }
 
-// If registration is disabled, send them back to the home page with an error message
-if (!$can_register){
-	addAlert("danger", lang("ACCOUNT_REGISTRATION_DISABLED"));
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-		header("Location: login.php");
-	}
-	exit();
-}
-
-//Prevent the user visiting the logged in page if he/she is already logged in
-if(isUserLoggedIn()) {
-	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-		header("Location: account.php");
-	}
+if (fetchUserDetails(NULL, NULL, '1')){
+	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
+	header('Location: index.php');
 	exit();
 }
 
@@ -83,12 +62,11 @@ if(!empty($_POST))
 	$displayname = trim($_POST["displayname"]);
 	$password = trim($_POST["password"]);
 	$confirm_pass = trim($_POST["passwordc"]);
-	$captcha = md5($_POST["captcha"]);
+	$token = trim($_POST["token"]);
 	
-	
-	if ($captcha != $_SESSION['captcha'])
+	if ($token != $root_account_config_token['value'])
 	{
-		$errors[] = lang("CAPTCHA_FAIL");
+		$errors[] = lang("CONFIG_TOKEN_MISMATCH");
 	}
 	if(minMaxRange(1,25,$username))
 	{
@@ -120,7 +98,7 @@ if(!empty($_POST))
 	if(count($errors) == 0)
 	{	
 		//Construct a user object
-		$user = new User($username, $displayname, $new_user_title, $password, $email);
+		$user = new User($username, $displayname, 'Master Account', $password, $email);
 		
 		//Checking this flag tells us whether there were any errors such as possible data duplication occured
 		if(!$user->status)
@@ -163,11 +141,11 @@ if(!empty($_POST))
 	}
 
 	if(count($errors) == 0) {
-		$successes[] = $user->success;
+		// On success, create the success message and delete the activation token
+		deleteConfigParameter('root_account_config_token');
+		$successes[] = "You have successfully created the root account.  Please delete this installation folder and log in via login.php.";
 	}	
 }
-
-restore_error_handler();
 
 foreach ($errors as $error){
   addAlert("danger", $error);
@@ -176,17 +154,17 @@ foreach ($successes as $success){
   addAlert("success", $success);
 }
 
-// Send successfully registered users to the login page, while errors should return them to the registration page.
+// Send successfully registered users to the completion page, while errors should return them to the registration page.
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
 	"errors" => count($errors),
 	"successes" => count($successes)));
 } else {
   if(count($errors) == 0) {
-	header('Location: login.php');
+	header('Location: complete.php');
 	exit();
   } else {
-	header('Location: register.php');
+	header('Location: register_root.php');
 	exit();	
   }
 }
