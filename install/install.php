@@ -152,6 +152,7 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (45, 'load_user.php', 1),
 (46, 'delete_user.php', 1),
 (47, '404.php', 0);
+(48, 'includes.php', 0);
 ";
 
 $permission_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."permission_page_matches` (
