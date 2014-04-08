@@ -79,14 +79,14 @@ CREATE TABLE IF NOT EXISTS `".$db_table_prefix."configuration` (
 `name` varchar(150) NOT NULL,
 `value` varchar(150) NOT NULL,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 ";
 
 $configuration_entry = "
 INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
-(1, 'website_name', 'UserCake'),
+(1, 'website_name', 'UserFrosting'),
 (2, 'website_url', 'localhost/'),
-(3, 'email', 'noreply@ILoveUserCake.com'),
+(3, 'email', 'noreply@myfrosting.com'),
 (4, 'activation', '0'),
 (5, 'resend_activation_threshold', '0'),
 (6, 'language', 'models/languages/en.php'),
@@ -101,7 +101,7 @@ $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
 `page` varchar(150) NOT NULL,
 `private` tinyint(1) NOT NULL DEFAULT '0',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 ";
 
 $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`) VALUES

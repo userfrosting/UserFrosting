@@ -630,6 +630,7 @@ TODO Tasks
 ----------
 
 These are features to be added in future releases.
+
 1. Add support for `https`.  Live users will need to purchase an SSL certificate, but we also need to see what changes must be made to the code to support https.
 2. Add **OAuth** support, for users to create accounts and log in via Facebook/Google.
 3. Associate permission groups with allowed actions, rather than individual pages.  Actions, in turn, are linked to pages (on the backend) and features (on the frontend).  Automatically hide features for which a user does not have permission.
