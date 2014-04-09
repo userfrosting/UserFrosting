@@ -68,8 +68,7 @@ try {
 	$sqlVars[':user_id'] = $user_id;
 	
 	//echo $query;
-	if (!($stmt = $db->prepare($query)))
-		throw new RuntimeException("Oops, looks like our database encountered an error.");
+	$stmt = $db->prepare($query);
 	$stmt->execute($sqlVars);
 	
 	$results = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -82,11 +81,15 @@ try {
 	} else {
 		$results['admin'] = "false"; 
 	}
-} catch (RuntimeException $e) {
-  addAlert("danger", $e->getMessage());
+} catch (PDOException $e) {
+  addAlert("danger", "Oops, looks like our database encountered an error.");
+  error_log($e->getMessage());
 } catch (ErrorException $e) {
   addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-}
+} catch (RuntimeException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+  error_log($e->getMessage());
+} 
 
 restore_error_handler();
 
