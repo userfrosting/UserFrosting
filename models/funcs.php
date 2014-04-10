@@ -91,19 +91,18 @@ function generateActivationToken($gen = null)
 	return $gen;
 }
 
-//@ Thanks to - http://phpsec.org
+//secure password hashing.
 function generateHash($plainText, $salt = null)
 {
-	if ($salt === null)
-	{
-		$salt = substr(md5(uniqid(rand(), true)), 0, 25);
-	}
-	else
-	{
-		$salt = substr($salt, 0, 25);
-	}
-	
-	return $salt . sha1($salt . $plainText);
+	if ($encdata) { 
+		if (password_verify($plainText, $encdata)) { 
+		  return true; 
+		} else { 
+		  return false; 
+		} 
+	} else {	 
+		return password_hash($plainText, PASSWORD_DEFAULT);
+	} 
 }
 
 //Checks if an email is valid
