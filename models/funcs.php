@@ -455,41 +455,34 @@ function flagLostPasswordRequest($username,$value)
 	return $result;
 }
 
-//Check if a user is logged in
+//optimized version of is user logged in
 function isUserLoggedIn()
 {
-	global $loggedInUser,$mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT 
-		id,
-		password
-		FROM ".$db_table_prefix."users
-		WHERE
-		id = ?
-		AND 
-		password = ? 
-		AND
-		active = 1
-		LIMIT 1");
-	$stmt->bind_param("is", $loggedInUser->user_id, $loggedInUser->hash_pw);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if($loggedInUser == NULL)
-	{
-		return false;
-	}
-	else
-	{
-		if ($num_returns > 0)
-		{
-			return true;
-		}
-		else
-		{
-			destroySession("userCakeUser");
-			return false;	
+	global $loggedInUser,$mysqli;
+	if($loggedInUser == NULL){
+		return false;//if $loggedInUser is null, we don't need to check the database. KISS
+	}else{
+		$stmt = $mysqli->prepare("SELECT 
+			id,
+			password
+			FROM uc_users
+			WHERE
+			id = ?
+			AND 
+			password = ? 
+			AND
+			active = 1
+			LIMIT 1");
+		$stmt->bind_param('is', $loggedInUser->user_id, $loggedInUser->hash_pw);	
+		$stmt->execute();
+		$stmt->store_result();
+		$num_returns = $stmt->num_rows;
+		$stmt->close();
+		if ($num_returns > 0) {
+			return true;//success
+		}else{
+			destroySession("userCakeUser");//user may have been deleted but a session lingers. delete it.
+			return false;//not loggedin	
 		}
 	}
 }
