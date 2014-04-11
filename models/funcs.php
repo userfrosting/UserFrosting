@@ -92,7 +92,7 @@ function generateActivationToken($gen = null)
 }
 
 //secure password hashing.
-function generateHash($plainText, $salt = null)
+function generateHash($plainText, $encdata = false)
 {
 	if ($encdata) { 
 		if (password_verify($plainText, $encdata)) { 
