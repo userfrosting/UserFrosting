@@ -155,7 +155,6 @@ class loggedInUser {
         }
     }
 	
-	
     //validate token
     public function csrf_validate($token)
     {
