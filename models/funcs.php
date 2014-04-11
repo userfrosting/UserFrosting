@@ -94,15 +94,36 @@ function generateActivationToken($gen = null)
 //secure password hashing.
 function generateHash($plainText, $encdata = false)
 {
-	if ($encdata) { 
-		if (password_verify($plainText, $encdata)) { 
-		  return true; 
-		} else { 
-		  return false; 
+	if(function_exists('password_hash') && function_exists('password_verify')) {
+		if ($encdata) { 
+			if (password_verify($plainText, $encdata)) { 
+			  return true; 
+			} else { 
+			  return false; 
+			} 
+		} else {	 
+			return password_hash($plainText, PASSWORD_DEFAULT);
 		} 
-	} else {	 
-		return password_hash($plainText, PASSWORD_DEFAULT);
-	} 
+	}else{
+		$strength = "10"; 
+		//if encrypted data is passed, check it against input
+		if ($encdata) { 
+			if (substr($encdata, 0, 60) == crypt($plainText, "$2y$".$strength."$".substr($encdata, 60))) { 
+			  return true; 
+			} else { 
+			  return false; 
+			} 
+		} else {	 
+			//make a salt and hash it with input, and add salt to end 
+			$salt = ""; 
+			for ($i = 0; $i < 22; $i++) { 
+			$salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 63), 1); 
+			} 
+			//return 82 char string (60 char hash & 22 char salt) 
+			return crypt($plainText, "$2y$".$strength."$".$salt).$salt; 
+		} 
+	}
+	
 }
 
 //Checks if an email is valid
