@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `".$db_table_prefix."users` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `user_name` varchar(50) NOT NULL,
 `display_name` varchar(50) NOT NULL,
-`password` varchar(225) NOT NULL,
+`password` varchar(255) NOT NULL,
 `email` varchar(150) NOT NULL,
 `activation_token` varchar(225) NOT NULL,
 `last_activation_request` int(11) NOT NULL,

@@ -91,19 +91,39 @@ function generateActivationToken($gen = null)
 	return $gen;
 }
 
-//@ Thanks to - http://phpsec.org
-function generateHash($plainText, $salt = null)
+//secure password hashing.
+function generateHash($plainText, $encdata = false)
 {
-	if ($salt === null)
-	{
-		$salt = substr(md5(uniqid(rand(), true)), 0, 25);
-	}
-	else
-	{
-		$salt = substr($salt, 0, 25);
+	if(function_exists('password_hash') && function_exists('password_verify')) {
+		if ($encdata) { 
+			if (password_verify($plainText, $encdata)) { 
+			  return true; 
+			} else { 
+			  return false; 
+			} 
+		} else {	 
+			return password_hash($plainText, PASSWORD_DEFAULT);
+		} 
+	}else{
+		$strength = "10"; 
+		//if encrypted data is passed, check it against input
+		if ($encdata) { 
+			if (substr($encdata, 0, 60) == crypt($plainText, "$2y$".$strength."$".substr($encdata, 60))) { 
+			  return true; 
+			} else { 
+			  return false; 
+			} 
+		} else {	 
+			//make a salt and hash it with input, and add salt to end 
+			$salt = ""; 
+			for ($i = 0; $i < 22; $i++) { 
+			$salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 63), 1); 
+			} 
+			//return 82 char string (60 char hash & 22 char salt) 
+			return crypt($plainText, "$2y$".$strength."$".$salt).$salt; 
+		} 
 	}
 	
-	return $salt . sha1($salt . $plainText);
 }
 
 //Checks if an email is valid
@@ -435,41 +455,34 @@ function flagLostPasswordRequest($username,$value)
 	return $result;
 }
 
-//Check if a user is logged in
+//optimized version of is user logged in
 function isUserLoggedIn()
 {
-	global $loggedInUser,$mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT 
-		id,
-		password
-		FROM ".$db_table_prefix."users
-		WHERE
-		id = ?
-		AND 
-		password = ? 
-		AND
-		active = 1
-		LIMIT 1");
-	$stmt->bind_param("is", $loggedInUser->user_id, $loggedInUser->hash_pw);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if($loggedInUser == NULL)
-	{
-		return false;
-	}
-	else
-	{
-		if ($num_returns > 0)
-		{
-			return true;
-		}
-		else
-		{
-			destroySession("userCakeUser");
-			return false;	
+	global $loggedInUser,$mysqli;
+	if($loggedInUser == NULL){
+		return false;//if $loggedInUser is null, we don't need to check the database. KISS
+	}else{
+		$stmt = $mysqli->prepare("SELECT 
+			id,
+			password
+			FROM uc_users
+			WHERE
+			id = ?
+			AND 
+			password = ? 
+			AND
+			active = 1
+			LIMIT 1");
+		$stmt->bind_param('is', $loggedInUser->user_id, $loggedInUser->hash_pw);	
+		$stmt->execute();
+		$stmt->store_result();
+		$num_returns = $stmt->num_rows;
+		$stmt->close();
+		if ($num_returns > 0) {
+			return true;//success
+		}else{
+			destroySession("userCakeUser");//user may have been deleted but a session lingers. delete it.
+			return false;//not loggedin	
 		}
 	}
 }
@@ -1307,4 +1320,108 @@ $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
 return $num;
 }
 
+
+//multipurpose security function. works on strings, array's etc.
+
+function security($value) {
+   if(is_array($value)) {
+      $value = array_map('security', $value);
+   } else {
+      if(!get_magic_quotes_gpc()) {
+         $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+      } else {
+         $value = htmlspecialchars(stripslashes($value), ENT_QUOTES, 'UTF-8');
+      }
+      $value = str_replace("\\", "\\\\", $value);
+   }
+   return $value;
+}
+
+//get ip address
+//taken from https://gist.github.com/cballou/2201933
+function get_ip_address() {
+    $ip_keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR');
+    foreach ($ip_keys as $key) {
+        if (array_key_exists($key, $_SERVER) === true) {
+            foreach (explode(',', $_SERVER[$key]) as $ip) {
+                $ip = trim($ip);
+                if (validate_ip($ip)) {
+                    return $ip;
+                }
+            }
+        }
+    }
+    return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
+}
+
+//validate ip address
+function validate_ip($ip)
+{
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        return false;
+    }
+    return true;
+}
+
+//getuseragent
+//taken from comments @ php.net
+function getBrowser() 
+{ 
+    $u_agent = $_SERVER['HTTP_USER_AGENT']; 
+    $bname = 'Unknown';
+    $platform = 'Unknown';
+    $version= "";
+    if (preg_match('/linux/i', $u_agent)) {
+        $platform = 'linux';
+    }
+    elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
+        $platform = 'mac';
+    }
+    elseif (preg_match('/windows|win32/i', $u_agent)) {
+        $platform = 'windows';
+    }
+    if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) { 
+        $bname = 'Internet Explorer'; 
+        $ub = "MSIE"; 
+    } 
+    elseif(preg_match('/Firefox/i',$u_agent)) { 
+        $bname = 'Mozilla Firefox'; 
+        $ub = "Firefox"; 
+    } 
+    elseif(preg_match('/Chrome/i',$u_agent)) { 
+        $bname = 'Google Chrome'; 
+        $ub = "Chrome"; 
+    } 
+    elseif(preg_match('/Safari/i',$u_agent)) { 
+        $bname = 'Apple Safari'; 
+        $ub = "Safari"; 
+    } 
+    elseif(preg_match('/Opera/i',$u_agent)) { 
+        $bname = 'Opera'; 
+        $ub = "Opera"; 
+    } 
+    elseif(preg_match('/Netscape/i',$u_agent))  { 
+        $bname = 'Netscape'; 
+        $ub = "Netscape"; 
+    } 
+    $known = array('Version', $ub, 'other');
+    $pattern = '#(?<browser>' . join('|', $known) .
+    ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
+    if (!preg_match_all($pattern, $u_agent, $matches)) {
+        //no match
+    }
+    $i = count($matches['browser']);
+    if ($i != 1) {
+        if (strripos($u_agent,"Version") < strripos($u_agent,$ub)){ $version= $matches['version'][0];}else{ $version= $matches['version'][1];}
+    }
+    else { $version= $matches['version'][0];}
+    if ($version==null || $version=="") {$version="?";}
+    return array(
+        'userAgent' => $u_agent,
+        'name'      => $bname,
+        'version'   => $version,
+        'platform'  => $platform,
+        'pattern'    => $pattern
+    );
+}
 ?>

@@ -33,6 +33,7 @@ class loggedInUser {
 	public $email = NULL;
 	public $hash_pw = NULL;
 	public $user_id = NULL;
+	public $csrf_token = NULL;
 	
 	//Simple function to update the last sign in of a user
 	public function updateLastSignIn()
@@ -133,6 +134,38 @@ class loggedInUser {
 		}
 		$stmt->close();
 	}
+	
+	//csrf tokens
+	public function csrf_token($regen = false)
+    {
+        if($regen === true) {
+			//we need to give the user a token
+            unset($_SESSION["csrf_token"]);
+			$max = mt_rand(0, mt_getrandmax());//get a max number from mt_rand
+			do{
+				$result = floor($max*(hexdec(bin2hex(openssl_random_pseudo_bytes(4)))/0xffffffff));//generate a random 32 bit int with the seed from mt_rand
+			}
+			while($result == $max);
+            $_SESSION["csrf_token"] = hash("sha256", $max . $this->username . $this->hash_pw);//hash the 32bit int, username, and password into the csrf token.
+            $this->csrf_token = $_SESSION["csrf_token"];
+            return $this->csrf_token;
+        }else{
+			//the user already has a token
+            return $this->csrf_token;
+        }
+    }
+	
+    //validate token
+    public function csrf_validate($token)
+    {
+        if($token !== $this->csrf_token)
+        {
+            $this->csrf_token(true);//regenerate token
+            return false;//let the view handle the error.
+        }else{
+            return true;//cookin with gas
+        }
+    }
 	
 	//Logout
 	public function userLogOut()
