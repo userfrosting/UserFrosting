@@ -126,6 +126,24 @@ function generateHash($plainText, $encdata = false)
 	
 }
 
+// Deprecated, but provided for compatibility with older databases
+// Hashes passwords based on the md5 algorithm.  Please note that md5 is considered a "broken" encryption scheme.
+// Accounts with md5 passwords should be immediately upgraded as per password_hash when your users log in!
+function generateHashMD5($plainText, $salt = null) {
+	if ($salt === null)
+	{
+		$salt = substr(md5(uniqid(rand(), true)), 0, 25);
+	}
+	else
+	{
+		$salt = substr($salt, 0, 25);
+	}
+	
+	// Returns a 65-character hexadecimal string
+	return $salt . sha1($salt . $plainText);
+}
+
+
 //Checks if an email is valid
 function isValidEmail($email)
 {
