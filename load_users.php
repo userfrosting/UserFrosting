@@ -36,41 +36,53 @@ include('models/config.php');
 
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to load user data.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
+try {
+  // Recommended admin-only access
+  if (!securePage($_SERVER['PHP_SELF'])){
+    addAlert("danger", "Whoops, looks like you don't have permission to load user data.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
+  }
+  
+  extract($_GET);
+  
+  // Load information for all users.  TODO: also load permissions
+  
+  // Parameters: limit
+  
+  $results = array();
+  
+  $db = pdoConnect();
+  global $db_table_prefix;
+  
+  $sqlVars = array();
+  
+  $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from {$db_table_prefix}users";    
+  
+  //echo $query;
+  $stmt = $db->prepare($query);
+  $stmt->execute($sqlVars);
+  
+  if (!isset($limit)){
+      $limit = 9999999;
+  }
+  $i = 0;
+  while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
+      $id = $r['user_id'];
+      $results[$id] = $r;
+      $i++;
+  }
+  $stmt = null;
+
+} catch (PDOException $e) {
+  addAlert("danger", "Oops, looks like our database encountered an error.");
+  error_log($e->getMessage());
+} catch (ErrorException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+} catch (RuntimeException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+  error_log($e->getMessage());
 }
-
-extract($_GET);
-
-// Load information for all users.  TODO: also load permissions
-
-// Parameters: limit
-
-$results = array();
-
-$db = pdoConnect();
-
-$sqlVars = array();
-
-$query = "select uc_users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from uc_users";    
-
-//echo $query;
-$stmt = $db->prepare($query);
-$stmt->execute($sqlVars);
-
-if (!isset($limit)){
-    $limit = 9999999;
-}
-$i = 0;
-while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
-    $id = $r['user_id'];
-    $results[$id] = $r;
-    $i++;
-}
-$stmt = null;
 
 restore_error_handler();
 

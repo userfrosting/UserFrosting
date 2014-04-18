@@ -290,8 +290,12 @@ function userInfoBox(box_id, options) {
         if (options['user_id']) {
             var url = 'load_user.php';
             $.getJSON( url, { user_id: user_id })
-            .done(function( data ) {
-				// If no data found, redirect to users list page
+			.fail(function(result) {
+			  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+			  alertWidget('display-alerts');
+			})
+			.done(function( result ) {
+				var data = processJSONResult(result);
 				if (data['errors']) {
 					console.log("No user found.");
 					window.location.replace("users.php");
@@ -326,7 +330,12 @@ function userInfoBox(box_id, options) {
                 // Load permission checkboxes
                 var url = 'load_permissions.php';
                 $.getJSON( url, { })
-                .done(function( data ) {
+				.fail(function(result) {
+				  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+				  alertWidget('display-alerts');
+				})
+				.done(function( result ) {
+					var data = processJSONResult(result);
                     var template = getTemplateAjax("template-permissions-row.php");
                     jQuery.each(data, function(id, record) {
                         var formattedData = {};
@@ -443,7 +452,12 @@ function userInfoBox(box_id, options) {
             // Load permission checkboxes
             var url = 'load_permissions.php';
             $.getJSON( url, { })
-            .done(function( data ) {
+			.fail(function(result) {
+			  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+			  alertWidget('display-alerts');
+			})
+			.done(function( result ) {
+				var data = processJSONResult(result);
                 var template = getTemplateAjax("template-permissions-row.php");
                 jQuery.each(data, function(id, record) {
                     var formattedData = {};

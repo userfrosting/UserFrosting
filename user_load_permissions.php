@@ -34,40 +34,56 @@ THE SOFTWARE.
 include('models/db-settings.php');
 include('models/config.php');
 
-if (!securePage($_SERVER['PHP_SELF'])){
-	addAlert("danger", "Whoops, looks like you don't have permission to load your permissions.");
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+set_error_handler('logAllErrors');
+
+try {
+	if (!securePage($_SERVER['PHP_SELF'])){
+		addAlert("danger", "Whoops, looks like you don't have permission to load your permissions.");
+		echo json_encode(array("errors" => 1, "successes" => 0));
+		exit();
+	}
+	
+	// Fetch id of logged in user
+	$user_id_logged_in = null;
+	if(isUserLoggedIn()) {
+		$user_id_logged_in = $loggedInUser->user_id;
+	} else {
+		addAlert("danger", "Whoops, you need to be logged in to perform this action!");
+		echo json_encode(array("errors" => 1, "successes" => 0));
+		exit();
+	}
+	
+	$results = array();
+	
+	$db = pdoConnect();
+	global $db_table_prefix;
+	
+	$sqlVars = array();
+	
+	$query = "select {$db_table_prefix}permissions.*, {$db_table_prefix}user_permission_matches.user_id as user_id from {$db_table_prefix}permissions, {$db_table_prefix}user_permission_matches where {$db_table_prefix}user_permission_matches.permission_id = {$db_table_prefix}permissions.id and {$db_table_prefix}user_permission_matches.user_id = :user_id";    
+	// Required
+	$sqlVars[':user_id'] = $user_id_logged_in;
+	
+	$stmt = $db->prepare($query);
+	$stmt->execute($sqlVars);
+	
+	while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		$id = $r['id'];
+		$results[$id] = $r;
+	}
+	$stmt = null;
+
+} catch (PDOException $e) {
+  addAlert("danger", "Oops, looks like our database encountered an error.");
+  error_log($e->getMessage());
+} catch (ErrorException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+} catch (RuntimeException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+  error_log($e->getMessage());
 }
 
-// Fetch id of logged in user
-$user_id_logged_in = null;
-if(isUserLoggedIn()) {
-	$user_id_logged_in = $loggedInUser->user_id;
-} else {
-	addAlert("danger", "Whoops, you need to be logged in to perform this action!");
-	echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
-}
-
-$results = array();
-
-$db = pdoConnect();
-
-$sqlVars = array();
-
-$query = "select uc_permissions.*, uc_user_permission_matches.user_id as user_id from uc_permissions, uc_user_permission_matches where uc_user_permission_matches.permission_id = uc_permissions.id and uc_user_permission_matches.user_id = :user_id";    
-// Required
-$sqlVars[':user_id'] = $user_id_logged_in;
-
-$stmt = $db->prepare($query);
-$stmt->execute($sqlVars);
-
-while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $id = $r['id'];
-    $results[$id] = $r;
-}
-$stmt = null;
+restore_error_handler();
 
 echo json_encode($results);
 

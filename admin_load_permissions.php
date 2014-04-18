@@ -37,39 +37,36 @@ include('models/config.php');
 
 set_error_handler('logAllErrors');
 
-// Recommended access restriction: admin only
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to access permission settings.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
-
-// Parameters: user_id
-if (isset($_GET['user_id']))
-	$user_id = $_GET['user_id'];
-else {
-	addAlert("danger", "user_id must be specified!");
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
-}
-
-$results = array();
-
 try {
+
+	// Recommended access restriction: admin only
+	if (!securePage($_SERVER['PHP_SELF'])){
+	  addAlert("danger", "Whoops, looks like you don't have permission to access permission settings.");
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	  exit();
+	}
+	
+	// Parameters: user_id
+	if (isset($_GET['user_id']))
+		$user_id = $_GET['user_id'];
+	else {
+		addAlert("danger", "user_id must be specified!");
+		echo json_encode(array("errors" => 1, "successes" => 0));
+		exit();
+	}
+	
+	$results = array();
+
 	$db = pdoConnect();
+	global $db_table_prefix;
 	
 	$sqlVars = array();
 	
-	$query = "select uc_permissions.*, uc_user_permission_matches.user_id as user_id from uc_permissions, uc_user_permission_matches where uc_user_permission_matches.permission_id = uc_permissions.id and uc_user_permission_matches.user_id = :user_id";    
+	$query = "select {$db_table_prefix}permissions.*, {$db_table_prefix}user_permission_matches.user_id as user_id from {$db_table_prefix}permissions, {$db_table_prefix}user_permission_matches where {$db_table_prefix}user_permission_matches.permission_id = {$db_table_prefix}permissions.id and {$db_table_prefix}user_permission_matches.user_id = :user_id";    
 	// Required
 	$sqlVars[':user_id'] = $user_id;
-	
-	
-	if (!($stmt = $db->prepare($query)))
-		throw new RuntimeException("Oops, looks like our database encountered an error.");
-	
-	if (!($stmt->execute($sqlVars)))
-		throw new RuntimeException("Oops, looks like our database encountered an error.");
+	$stmt = $db->prepare($query);
+	$stmt->execute($sqlVars);
 	
 	while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		$id = $r['id'];
@@ -77,10 +74,15 @@ try {
 	}
 	$stmt = null;
 
+} catch (PDOException $e) {
+  addAlert("danger", "Oops, looks like our database encountered an error.");
+  error_log($e->getMessage());
+} catch (ErrorException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
 } catch (RuntimeException $e) {
-  addAlert("danger", $e->getMessage());
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+  error_log($e->getMessage());
 }
-
 restore_error_handler();
 
 echo json_encode($results);

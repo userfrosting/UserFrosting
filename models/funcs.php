@@ -92,16 +92,13 @@ function generateActivationToken($gen = null)
 }
 
 //secure password hashing.
-function generateHash($plainText, $encdata = false)
-{
+function generateHash($plainText, $encdata = false){
 
-/*used for standard implementation of bcrypt*/
-$options = [
-		'cost' => 12,
-	];
-	
-/*used for manual implementation of bcrypt*/
-$cost = '12'; 
+	/*used for standard implementation of bcrypt*/
+	$options = ['cost' => 12];
+		
+	/*used for manual implementation of bcrypt*/
+	$cost = '12'; 
 
 	if(function_exists('password_hash') && function_exists('password_verify')) {
 		if ($encdata) { 
@@ -504,14 +501,14 @@ function form_protect($token)
 //optimized version of is user logged in
 function isUserLoggedIn()
 {
-	global $loggedInUser,$mysqli;
+	global $loggedInUser,$mysqli,$db_table_prefix;
 	if($loggedInUser == NULL){
 		return false;//if $loggedInUser is null, we don't need to check the database. KISS
 	}else{
 		$stmt = $mysqli->prepare("SELECT 
 			id,
 			password
-			FROM uc_users
+			FROM {$db_table_prefix}users
 			WHERE
 			id = ?
 			AND 

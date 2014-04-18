@@ -56,14 +56,14 @@ if (!securePage($_SERVER['PHP_SELF'])){
         <h5>Password</h5>
         <div class='input-group'>
             <span class='input-group-addon'><i class='fa fa-lock'></i></span>
-            <input type='password' name='password' class='form-control' data-validate='{"minLength": 8, "maxLength": 50, "passwordMatch": "passwordc", "label": "Password"}'>
+            <input type='password' name='password' class='form-control'  autocomplete='off' data-validate='{"minLength": 8, "maxLength": 50, "passwordMatch": "passwordc", "label": "Password"}'>
         </div>
     </div>
     <div class='input-group'>
         <h5>Confirm password</h5>
         <div class='input-group'>
             <span class='input-group-addon'><i class='fa fa-lock'></i></span>
-            <input type='password' name='passwordc' class='form-control' data-validate='{"minLength": 8, "maxLength": 50, "label": "Confirm password"}'>
+            <input type='password' name='passwordc' class='form-control'  autocomplete='off' data-validate='{"minLength": 8, "maxLength": 50, "label": "Confirm password"}'>
         </div>
     </div>         
 </div>
