@@ -96,7 +96,14 @@ if(!empty($_POST))
 			} else
 			{
 				//Hash the password and use the salt from the database to compare the password.
-				$entered_pass = generateHash($password,$userdetails["password"]);
+				
+				// If the password in the db is 65 characters long, match against the md5-hashed password.
+				// Otherwise, match against the bcrypt-hashed password.
+				if (strlen($userdetails["password"]) == 65){
+				  $entered_pass = generateHashMD5($password,$userdetails["password"]);
+				} else {
+				  $entered_pass = generateHash($password,$userdetails["password"]);
+				}
 				
 				if($entered_pass != $userdetails["password"])
 				{
@@ -120,6 +127,12 @@ if(!empty($_POST))
 					
 					//Update last sign in
 					$loggedInUser->updateLastSignIn();
+					
+					// Update password if we had encountered an md5-encoded password at login
+					if (strlen($userdetails["password"]) == 65){
+					  $loggedInUser->updatePassword($password);
+					}
+					
 					$_SESSION["userCakeUser"] = $loggedInUser;
 					
 					$successes = array();

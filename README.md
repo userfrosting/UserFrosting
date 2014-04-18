@@ -1,12 +1,17 @@
 
-UserFrosting 0.1.3
-===================
+UserFrosting 0.1.4
+==================
 
 ### By Alex Weissman
 
 Copyright (c) 2014
 
 Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
+
+Change Log - v0.1.4 
+-------------------
+- Updated password hashing from md5 to modern bcrypt (more secure) - thanks to contributor r3wt
+- Included better functions for sanitizing user input, validating user ip, generating csrf (cross-site request forgery) tokens - thanks to contributor r3wt
 
 Change Log - v0.1.3 
 -------------------
@@ -641,6 +646,12 @@ These are features to be added in future releases.
 8. Add ability for admins to add/remove user account fields, without having to modify code.
 9. Deploy the `jqueryvalidator` plugin for client-side validation (as opposed to our own, clunkier validator).
 10. Admin-side user account creation should bypass activation process.
+
+Possible additional features as suggested on UserCake forums:
+1. "Remember me" feature
+2. Admin control over session timeout
+3. Auto-redirect to last visited page on login
+4. Admin can allow users to log in via email address instead of username
 
 Creds
 -----
