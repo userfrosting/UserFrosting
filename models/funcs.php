@@ -128,7 +128,7 @@ $cost = '12';
 			$salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 63), 1); 
 			} 
 			//return 82 char string (60 char hash & 22 char salt) 
-			return crypt($plainText, "$2y$".$strength."$".$salt).$salt; 
+			return crypt($plainText, "$2y$".$cost."$".$salt).$salt; 
 		} 
 	}
 	
