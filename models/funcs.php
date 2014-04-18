@@ -473,6 +473,26 @@ function flagLostPasswordRequest($username,$value)
 	return $result;
 }
 
+//to be used with csrf token system
+
+/*
+	simply add inside of a form tag like so:
+	form_protect($loggedInUser->csrf_token);
+	
+	then in the processing script:
+	
+	require_once __DIR__ . '/models/post.php';
+	
+	< OR >
+	
+	require_once 'models/post.php';
+*/
+function form_protect($token)
+{
+	if(isUserLoggedIn())
+	{echo '<input type="hidden" name="csrf_token" value="'. $token .'">';}	
+}
+
 //optimized version of is user logged in
 function isUserLoggedIn()
 {

@@ -159,7 +159,7 @@ class loggedInUser {
 				$rand_num = str_shuffle($rand * 64); //multiply the rand number by 64 and shuffle the string.
 			}
 			if(isset($rand_num)) {
-				$build_string = $rand_num . $this->hash_pw . time();
+				$build_string = $rand_num . $this->username . time();
 				if(isset($build_string)) {
 					$_SESSION["__csrf_token"] = hash('whirlpool', str_shuffle($build_string));
 					$this->csrf_token = $_SESSION["__csrf_token"];
