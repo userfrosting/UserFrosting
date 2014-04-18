@@ -155,7 +155,7 @@ class loggedInUser {
 					$random = mt_rand(rand(0,65012), mt_getrandmax());//get a random number between rand(0,65012) and mt rand max
 					$rand[$i] = mt_rand($i, $random); //add an array key of $i and a value of a number between $i and the first random number
 				}
-				$rand = array_sum(shuffle($rand)); //shuffle the random number, then sum the values
+				$rand = array_sum($rand); //shuffle the random number, then sum the values
 				$rand_num = str_shuffle($rand * 64); //multiply the rand number by 64 and shuffle the string.
 			}
 			if(isset($rand_num)) {
