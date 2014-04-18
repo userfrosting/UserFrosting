@@ -94,6 +94,15 @@ function generateActivationToken($gen = null)
 //secure password hashing.
 function generateHash($plainText, $encdata = false)
 {
+
+/*used for standard implementation of bcrypt*/
+$options = [
+		'cost' => 12,
+	];
+	
+/*used for manual implementation of bcrypt*/
+$cost = '12'; 
+
 	if(function_exists('password_hash') && function_exists('password_verify')) {
 		if ($encdata) { 
 			if (password_verify($plainText, $encdata)) { 
@@ -102,13 +111,12 @@ function generateHash($plainText, $encdata = false)
 			  return false; 
 			} 
 		} else {	 
-			return password_hash($plainText, PASSWORD_DEFAULT);
+			return password_hash($plainText, PASSWORD_BCRYPT, $options);
 		} 
 	}else{
-		$strength = "10"; 
 		//if encrypted data is passed, check it against input
 		if ($encdata) { 
-			if (substr($encdata, 0, 60) == crypt($plainText, "$2y$".$strength."$".substr($encdata, 60))) { 
+			if (substr($encdata, 0, 60) == crypt($plainText, "$2y$".$cost."$".substr($encdata, 60))) { 
 			  return true; 
 			} else { 
 			  return false; 
