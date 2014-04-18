@@ -139,16 +139,33 @@ class loggedInUser {
 	public function csrf_token($regen = false)
     {
         if($regen === true) {
-			//we need to give the user a token
-            unset($_SESSION["csrf_token"]);
-			$max = mt_rand(0, mt_getrandmax());//get a max number from mt_rand
-			do{
-				$result = floor($max*(hexdec(bin2hex(openssl_random_pseudo_bytes(4)))/0xffffffff));//generate a random 32 bit int with the seed from mt_rand
+			//*make sure token is set, if so unset*//
+			if(isset($_SESSION["__csrf_token"])) {
+				unset($_SESSION["__csrf_token"]);
 			}
-			while($result == $max);
-            $_SESSION["csrf_token"] = hash("sha256", $max . $this->username . $this->hash_pw);//hash the 32bit int, username, and password into the csrf token.
-            $this->csrf_token = $_SESSION["csrf_token"];
-            return $this->csrf_token;
+			if (function_exists('openssl_random_pseudo_bytes')) {
+				$rand_num = openssl_random_pseudo_bytes(16);//pull 16 bytes from /dev/random
+			}else{
+				/*
+					RYO(Roll Your Own) random number gen.
+					only used in the event openssl isn't available
+				*/
+				$rand = array();
+				for($i = 0; $i < 64; $i++) {
+					$random = mt_rand(rand(0,65012), mt_getrandmax());//get a random number between rand(0,65012) and mt rand max
+					$rand[$i] = mt_rand($i, $random); //add an array key of $i and a value of a number between $i and the first random number
+				}
+				$rand = array_sum(shuffle($rand)); //shuffle the random number, then sum the values
+				$rand_num = str_shuffle($rand * 64); //multiply the rand number by 64 and shuffle the string.
+			}
+			if(isset($rand_num)) {
+				$build_string = $rand_num . $this->hash_pw . time();
+				if(isset($build_string)) {
+					$_SESSION["__csrf_token"] = hash('whirlpool', str_shuffle($build_string));
+					$this->csrf_token = $_SESSION["__csrf_token"];
+					return $this->csrf_token;
+				}
+			}
         }else{
 			//the user already has a token
             return $this->csrf_token;
