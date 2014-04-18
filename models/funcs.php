@@ -94,6 +94,15 @@ function generateActivationToken($gen = null)
 //secure password hashing.
 function generateHash($plainText, $encdata = false)
 {
+
+/*used for standard implementation of bcrypt*/
+$options = [
+		'cost' => 12,
+	];
+	
+/*used for manual implementation of bcrypt*/
+$cost = '12'; 
+
 	if(function_exists('password_hash') && function_exists('password_verify')) {
 		if ($encdata) { 
 			if (password_verify($plainText, $encdata)) { 
@@ -102,13 +111,12 @@ function generateHash($plainText, $encdata = false)
 			  return false; 
 			} 
 		} else {	 
-			return password_hash($plainText, PASSWORD_DEFAULT);
+			return password_hash($plainText, PASSWORD_BCRYPT, $options);
 		} 
 	}else{
-		$strength = "10"; 
 		//if encrypted data is passed, check it against input
 		if ($encdata) { 
-			if (substr($encdata, 0, 60) == crypt($plainText, "$2y$".$strength."$".substr($encdata, 60))) { 
+			if (substr($encdata, 0, 60) == crypt($plainText, "$2y$".$cost."$".substr($encdata, 60))) { 
 			  return true; 
 			} else { 
 			  return false; 
@@ -471,6 +479,26 @@ function flagLostPasswordRequest($username,$value)
 	$result = $stmt->execute();
 	$stmt->close();
 	return $result;
+}
+
+//to be used with csrf token system
+
+/*
+	simply add inside of a form tag like so:
+	form_protect($loggedInUser->csrf_token);
+	
+	then in the processing script:
+	
+	require_once __DIR__ . '/models/post.php';
+	
+	< OR >
+	
+	require_once 'models/post.php';
+*/
+function form_protect($token)
+{
+	if(isUserLoggedIn())
+	{echo '<input type="hidden" name="csrf_token" value="'. $token .'">';}	
 }
 
 //optimized version of is user logged in
