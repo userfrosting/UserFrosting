@@ -58,7 +58,11 @@ if (!empty($_POST)) {
 	$add_permissions = trim($_POST["add_permissions"]);
 	$password = trim($_POST["password"]);
 	$confirm_pass = trim($_POST["passwordc"]);
-
+	$csrf_token = trim($_POST["csrf_token"]);
+	
+	if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["csrf_token"]))){
+	  $errors[] = lang("ACCESS_DENIED");
+	}
 	if(minMaxRange(1,25,$username))
 	{
 		$errors[] = lang("ACCOUNT_USER_CHAR_LIMIT",array(1,25));

@@ -177,7 +177,7 @@ class loggedInUser {
     {
         if($token !== $this->csrf_token)
         {
-            $this->csrf_token(true);//regenerate token
+            $this->csrf_token(false); //do not regenerate token, as user may have multiple instances of the site open, with different forms.
             return false;//let the view handle the error.
         }else{
             return true;//cookin with gas

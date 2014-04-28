@@ -21,3 +21,13 @@
 <script src="js/jquery-1.10.2.min.js"></script>
 <script src="js/bootstrap.js"></script>
 <script src="js/userfrosting.js"></script>
+
+<!-- Adjust padding for fixed navbars -->
+<script>
+    $(document).ready(function(){
+        $(document.body).css('padding-top', $('.navbar-fixed-top').height() + 10);
+        $(window).resize(function(){
+            $(document.body).css('padding-top', $('.navbar-fixed-top').height() + 10);
+        });
+    });
+</script>

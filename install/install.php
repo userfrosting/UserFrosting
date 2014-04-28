@@ -101,7 +101,7 @@ $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
 `page` varchar(150) NOT NULL,
 `private` tinyint(1) NOT NULL DEFAULT '0',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
 ";
 
 $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`) VALUES
@@ -121,7 +121,7 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (14, 'logout.php', 1),
 (15, 'dashboard.php', 1),
 (16, 'user_update_account_settings.php', 1),
-(17, 'form-components.php', 1),
+(17, 'load_form_user.php', 1),
 (18, 'user_alerts.php', 1),
 (19, 'header.php', 1),
 (20, 'account_settings.php', 1),
@@ -144,15 +144,13 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (37, 'admin_activate_user.php', 1),
 (38, 'users.php', 1),
 (39, 'user_details.php', 1),
-(40, 'create_update_display_user_form.php', 1),
+(40, 'includes.php', 0),
 (41, 'update_user_enabled.php', 1),
 (42, 'admin_load_permissions.php', 1),
-(43, 'template-permissions-row.php', 1),
+(43, '404.php', 0),
 (44, 'delete_user_dialog.php', 1),
 (45, 'load_user.php', 1),
-(46, 'delete_user.php', 1),
-(47, '404.php', 0),
-(48, 'includes.php', 0);
+(46, 'delete_user.php', 1);
 ";
 
 $permission_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."permission_page_matches` (
@@ -166,7 +164,8 @@ PRIMARY KEY (`id`)
 $permission_page_matches_entry = "INSERT INTO `".$db_table_prefix."permission_page_matches` (`id`, `permission_id`, `page_id`) VALUES
 (1, 1, 13),
 (2, 1, 14),
-(4, 2, 13),
+(3, 2, 13),
+(4, 2, 17),
 (12, 2, 14),
 (23, 2, 34),
 (24, 2, 29),
@@ -187,10 +186,6 @@ $permission_page_matches_entry = "INSERT INTO `".$db_table_prefix."permission_pa
 (45, 2, 38),
 (47, 1, 18),
 (48, 2, 18),
-(49, 2, 40),
-(54, 2, 43),
-(55, 1, 17),
-(56, 2, 17),
 (57, 2, 45),
 (58, 1, 22),
 (59, 2, 22),

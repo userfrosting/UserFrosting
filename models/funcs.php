@@ -245,7 +245,7 @@ function requiredPostVar($varname){
 	}
 	
 	if (isset($_POST[$varname]))
-		return $_POST[$varname];
+		return htmlentities($_POST[$varname]);
 	else {
 		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 			addAlert("danger", "$varname must be specified!");
@@ -265,7 +265,7 @@ function requiredGetVar($varname){
 	}
 	
 	if (isset($_GET[$varname]))
-		return $_GET[$varname];
+		return htmlentities($_GET[$varname]);
 	else {
 		addAlert("danger", "$varname must be specified!");
 		echo json_encode(array("errors" => "1", "successes" => "0"));

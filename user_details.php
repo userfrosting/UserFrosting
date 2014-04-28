@@ -105,13 +105,8 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
 			$('.navbar').load('header.php', function() {
 				$('#user_logged_in_name').html('<i class="fa fa-user"></i> ' + user['user_name'] + ' <b class="caret"></b>');          
 			});
-
-			userInfoBox('widget-user-info', {
-			  user_id: selected_user_id,
-				disabled: 'true',
-				showDates: 'true',
-				view: 'panel'
-			});
+			
+			userDisplay('widget-user-info', selected_user_id);
 			
 			alertWidget('display-alerts');
 

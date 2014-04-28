@@ -11,7 +11,7 @@ For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap
 /* Global Styles */
 
 body {
-  margin-top: 50px;
+  padding-top: 50px;
 }
 
 #wrapper {
@@ -21,6 +21,16 @@ body {
 #page-wrapper {
   width: 100%;
   padding: 5px 15px;
+}
+
+/* Override button nowrap */
+.btn {
+  white-space: normal;
+}
+
+/* Add vertical padding to components */
+.vert-pad {
+  padding: 10px 0px;
 }
 
 /* Nav Messages */
@@ -89,7 +99,7 @@ table.tablesorter thead tr th:hover {
   /* Wrappers */
 
   #wrapper {
-	padding-left: 225px;
+	padding-left: 200px;
   }
 
   #page-wrapper {
@@ -115,7 +125,7 @@ table.tablesorter thead tr th:hover {
 
   .side-nav>li.dropdown>ul.dropdown-menu {
 	position: relative;
-	min-width: 225px;
+	min-width: 200px;
 	margin: 0;
 	padding: 0;
 	border: none;
@@ -138,7 +148,7 @@ table.tablesorter thead tr th:hover {
   }
 
   .side-nav>li>a {
-	width: 225px;
+	width: 200px;
   }
   
   .navbar-inverse .navbar-nav>li>a:hover,

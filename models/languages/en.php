@@ -147,6 +147,7 @@ $lang = array_merge($lang,array(
 	"PAGE_PRIVATE_TOGGLED"			=> "This page is now %m1%",
 	"PAGE_ACCESS_REMOVED"			=> "Page access removed for %m1% permission level(s)",
 	"PAGE_ACCESS_ADDED"			=> "Page access added for %m1% permission level(s)",
+    "ACCESS_DENIED" => "Hmm, looks like you don't have permission to do that.",
 	));
 
 //Permissions
