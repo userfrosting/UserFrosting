@@ -1,0 +1,4 @@
+
+*.komodoproject
+
+models/db-settings.php

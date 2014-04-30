@@ -441,6 +441,7 @@ function alertWidget(widget_id){
 			}
 		});	
 		$('#' + widget_id).html(alertHTML);
+		$("html, body").animate({ scrollTop: 0 }, "fast");		// Scroll back to top of page
 	});
 }
 

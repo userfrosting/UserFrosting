@@ -1,5 +1,5 @@
 
-UserFrosting 0.1.6
+UserFrosting 0.1.7
 ==================
 
 ### By Alex Weissman
@@ -8,36 +8,14 @@ Copyright (c) 2014
 
 Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
 
-Change Log - v0.1.6
----------------------
-- Implemented CSRF token checking for creating and updating users
-- Moved much of the nuts and bolts for generating the user-create and user-update forms to the server side, so as to streamline rendering process and require fewer requests by the client (see `load_form_user.php`)
-- Improved responsive layout for rendering nicely on mobile devices
-
-Change Log - v0.1.5 
+Change Log - v0.1.7
 -------------------
-- More improvements to error-handling/rendering
-- HTTPS/SSL compatible
-- Fixed bug with different table name prefixes
-- Improvements to CSRF tokens
+- Page scrolls back to top after AJAX submit.
+- "Website url" is automatically suffixed with "/" if necessary.
+- Fixed bad link to forgot_password.php.
+- Began implementing action authorization scheme.
 
-Change Log - v0.1.4 
--------------------
-- Updated password hashing from md5 to modern bcrypt (more secure) - thanks to contributor @r3wt
-- Included better functions for sanitizing user input, validating user ip, generating csrf (cross-site request forgery) tokens - thanks to contributor @r3wt
-
-Change Log - v0.1.3 
--------------------
-- Root account (user id = 1) : created upon installation, cannot be deleted or disabled.  Special color scheme for when logged in as root user.
-- Installer now guides user through creation of root account
-- Moved common JS and CSS includes to "includes.php"
-
-Change Log - v0.1.2 
--------------------
-- Improved error and exception handling
-- Added 404 error page
-- Standardized JSON interface for backend scripts
-- Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
+[Older changes](CHANGELOG.md)
 
 Why UserFrosting?
 -----------------
@@ -719,7 +697,7 @@ These are features to be added in future releases.
 9. Deploy the `jqueryvalidator` plugin for client-side validation (as opposed to our own, clunkier validator).
 10. Admin-side user account creation should bypass activation process.
 11. Continue improving error-handling and rendering system.
-12. Reduce number of requests necessary to construct forms.
+12. Finish documenting all functions and pages.
 
 Possible additional features as suggested on UserCake forums:
 

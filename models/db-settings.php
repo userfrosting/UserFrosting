@@ -33,7 +33,7 @@ THE SOFTWARE.
 $db_host = "localhost"; //Host address (most likely localhost)
 $db_name = "userfrosting"; //Name of Database
 $db_user = "userfrosting"; //Name of database user
-$db_pass = ""; //Password for database user
+$db_pass = "C4JLAhXPuYFyWNaF"; //Password for database user
 $db_table_prefix = "uc_";
 
 function pdoConnect(){
