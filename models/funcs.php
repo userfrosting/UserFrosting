@@ -95,7 +95,7 @@ function generateActivationToken($gen = null)
 function generateHash($plainText, $encdata = false){
 
 	/*used for standard implementation of bcrypt*/
-	$options = ['cost' => 12];
+	$options = array("cost" => 12 );
 		
 	/*used for manual implementation of bcrypt*/
 	$cost = '12'; 
