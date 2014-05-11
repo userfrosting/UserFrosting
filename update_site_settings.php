@@ -49,6 +49,12 @@ if(!empty($_POST))
 	$newSettings = $_POST;
 	$newWebsiteName = requiredPostVar('website_name');
 	$newWebsiteUrl = requiredPostVar('website_url');
+	// Append a slash to the end, if not present
+	if (substr($newWebsiteUrl, -1) != "/"){
+	  $newWebsiteUrl = $newWebsiteUrl . "/";
+	  $newSettings['website_url'] = $newWebsiteUrl;
+	}
+	
 	$newEmail = requiredPostVar('email');
 	$newTitle = requiredPostVar('new_user_title');
 	if (isset($newSettings['activation'])){
@@ -78,13 +84,10 @@ if(!empty($_POST))
 	}
 	
 	//Validate new URL
-	if ($newWebsiteUrl != $websiteUrl) {
+	if ($newWebsiteUrl != $websiteUrl) {		
 		if(minMaxRange(1,150,$newWebsiteUrl))
 		{
 			$errors[] = lang("CONFIG_URL_CHAR_LIMIT",array(1,150));
-		}
-		else if (substr($newWebsiteUrl, -1) != "/"){
-			$errors[] = lang("CONFIG_INVALID_URL_END");
 		}
 		else if (count($errors) == 0) {
 			$websiteUrl = $newWebsiteUrl;

@@ -441,6 +441,7 @@ function alertWidget(widget_id){
 			}
 		});	
 		$('#' + widget_id).html(alertHTML);
+		$("html, body").animate({ scrollTop: 0 }, "fast");		// Scroll back to top of page
 	});
 }
 
@@ -450,7 +451,11 @@ function processJSONResult(result) {
 		return {"errors": 1, "successes": 0};
 	} else {
 		try {
-			return jQuery.parseJSON(result);
+			if (typeof result == 'string') {
+				return jQuery.parseJSON(result);
+			} else {
+				return result;
+			}
 		} catch (err) {
 			console.log("Backend error: " + result);
 			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");

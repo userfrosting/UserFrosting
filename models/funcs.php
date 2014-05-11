@@ -92,16 +92,13 @@ function generateActivationToken($gen = null)
 }
 
 //secure password hashing.
-function generateHash($plainText, $encdata = false)
-{
+function generateHash($plainText, $encdata = false){
 
-/*used for standard implementation of bcrypt*/
-$options = [
-		'cost' => 12,
-	];
-	
-/*used for manual implementation of bcrypt*/
-$cost = '12'; 
+	/*used for standard implementation of bcrypt*/
+	$options = array("cost" => 12 );
+		
+	/*used for manual implementation of bcrypt*/
+	$cost = '12'; 
 
 	if(function_exists('password_hash') && function_exists('password_verify')) {
 		if ($encdata) { 
@@ -128,7 +125,7 @@ $cost = '12';
 			$salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 63), 1); 
 			} 
 			//return 82 char string (60 char hash & 22 char salt) 
-			return crypt($plainText, "$2y$".$strength."$".$salt).$salt; 
+			return crypt($plainText, "$2y$".$cost."$".$salt).$salt; 
 		} 
 	}
 	
@@ -248,7 +245,7 @@ function requiredPostVar($varname){
 	}
 	
 	if (isset($_POST[$varname]))
-		return $_POST[$varname];
+		return htmlentities($_POST[$varname]);
 	else {
 		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 			addAlert("danger", "$varname must be specified!");
@@ -268,7 +265,7 @@ function requiredGetVar($varname){
 	}
 	
 	if (isset($_GET[$varname]))
-		return $_GET[$varname];
+		return htmlentities($_GET[$varname]);
 	else {
 		addAlert("danger", "$varname must be specified!");
 		echo json_encode(array("errors" => "1", "successes" => "0"));
@@ -504,14 +501,14 @@ function form_protect($token)
 //optimized version of is user logged in
 function isUserLoggedIn()
 {
-	global $loggedInUser,$mysqli;
+	global $loggedInUser,$mysqli,$db_table_prefix;
 	if($loggedInUser == NULL){
 		return false;//if $loggedInUser is null, we don't need to check the database. KISS
 	}else{
 		$stmt = $mysqli->prepare("SELECT 
 			id,
 			password
-			FROM uc_users
+			FROM {$db_table_prefix}users
 			WHERE
 			id = ?
 			AND 

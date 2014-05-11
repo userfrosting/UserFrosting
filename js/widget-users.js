@@ -156,7 +156,7 @@ function usersWidget(widget_id, options) {
 							"' class='activateUser'><i class='fa fa-bolt'></i> Activate user</a></li>" +
 							"<li class='divider'></li>";
 						}
-						formattedRowData['menu'] += "<li><a href='#' data-target='#user-edit-dialog' data-toggle='modal' data-id='" + record['user_id'] +
+						formattedRowData['menu'] += "<li><a href='#' data-target='#user-update-dialog' data-toggle='modal' data-id='" + record['user_id'] +
 						"' class='editUserDetails'><i class='fa fa-edit'></i> Edit user</a></li>" +
 						"<li class='divider'></li>";
 						if (record['enabled'] == 1) {
@@ -200,20 +200,14 @@ function usersWidget(widget_id, options) {
 		
 		// Link the "Create User" buttons
 		widget.on('click', '.createUser', function () {
-			userInfoBox('user-create-dialog', {
-				disabled: 'false',
-				view: 'modal'
-			});
+			userForm('user-create-dialog'); 
         });
 		
 		// Link the dropdown buttons from table of users
 		widget.on('click', '.editUserDetails', function () {
             var btn = $(this);
             var user_id = btn.data('id');
-			userInfoBox('user-edit-dialog', {
-				user_id: user_id,
-				view: 'modal'
-			});
+			userForm('user-update-dialog', user_id);
         });
 		
 		widget.on('click', '.enableUser', function () {
@@ -244,237 +238,6 @@ function usersWidget(widget_id, options) {
 	});
 }
 
-// Load user info and print appropriate box
-function userInfoBox(box_id, options) {
-	options = typeof options !== 'undefined' ? options : {};	
-	var user_id = '';
-    if (options['user_id']) {
-        user_id = options['user_id'];
-    }
-
-    var disabled = 'false';
-    if (options['disabled']) {
-        disabled = options['disabled'];
-    }
-    
-    // Determine whether this is a panel or modal view
-    var view = 'panel';
-    if (options['view']) {
-        view = options['view'];
-    }
-    
-	var showDates = "false";
-	if (options['showDates']) {
-        showDates = options['showDates'];
-    }
-	
-    // First, create the appropriate div if it doesn't exist already, and load the box
-    var box_element = "";
-    if (view == 'modal') {
-        if(!$('#' + box_id).length ) {
-            var parentDiv = "<div id='" + box_id + "' class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header '>" +
-                            "<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button><h4 class='modal-title'>Edit User Details</h4>" +
-                            "</div><div class='modal-body'><form method='post' action='create_user.php'></form></div></div></div></div>";
-            $( "body" ).append( parentDiv );
-        }
-        box_element = '#' + box_id + ' .modal-body form';      
-    } else {
-        var parentDiv = "<div class='panel panel-primary'><div class='panel-heading'><h2 class='panel-title pull-left' id='user-name'></h2>" + 
-                        "<div class='clearfix'></div></div><div class='panel-body'></div></div>";
-        $('#' + box_id).append( parentDiv );
-        box_element = '#' + box_id + ' .panel-body';  
-	}
-    
-    $(box_element).load('create_update_display_user_form.php', function () {
-        // If a user_id is specified, load them - we're in panel or update mode.
-        if (options['user_id']) {
-            var url = 'load_user.php';
-            $.getJSON( url, { user_id: user_id })
-            .done(function( data ) {
-				// If no data found, redirect to users list page
-				if (data['errors']) {
-					console.log("No user found.");
-					window.location.replace("users.php");
-				}
-                $('#' + box_id + ' #user-name').html( "<i class='fa fa-user fa-lg'></i> " + data['user_name'] );
-                $('#' + box_id + ' input[name="user_name"]').val(data['user_name'] );
-                $('#' + box_id + ' input[name="display_name"]').val(data['display_name'] );
-                $('#' + box_id + ' input[name="user_title"]').val( data['title'] );
-                $('#' + box_id + ' input[name="email"]').val( data['email'] );
-                $('#' + box_id + ' .email-link').attr('href', 'mailto:' + data['email'] );
-                
-				// Always disable modification of user name
-				$('#' + box_id + ' input[name="user_name"]').val(data['user_name'] ).prop('disabled',true);
-				
-				// Display dates if specified
-				if (showDates == 'true') {
-					$('#' + box_id + ' .input-group-dates').load('form-components.php #input-group-display-user-dates', function () {
-						var sign_up_date_time = new Date(data['sign_up_stamp']*1000);
-						var sign_up_date = sign_up_date_time.toString("dddd, MMM dS, yyyy");
-						var last_sign_in_date = "";
-						if (data['last_sign_in_stamp'] == '0')
-							last_sign_in_date = "Brand new!";
-						else {
-							var last_sign_in_date_time = new Date(data['last_sign_in_stamp']*1000);
-							last_sign_in_date = last_sign_in_date_time.toString("dddd, MMM dS, yyyy");
-						}
-						$('#' + box_id + ' input[name="sign_up_date"]').val( sign_up_date ).prop('disabled',true);
-						$('#' + box_id + ' input[name="last_sign_in_date"]').val( last_sign_in_date ).prop('disabled',true);					
-					});
-				}
-				
-                // Load permission checkboxes
-                var url = 'load_permissions.php';
-                $.getJSON( url, { })
-                .done(function( data ) {
-                    var template = getTemplateAjax("template-permissions-row.php");
-                    jQuery.each(data, function(id, record) {
-                        var formattedData = {};
-                        formattedData['permission_id'] = record['id'];
-                        formattedData['permission_name'] = record['name'];
-                        var row = template(formattedData);
-                        $('#' + box_id + ' .permission-summary-rows').append(row);
-                    });
-                    
-                    $('#' + box_id + ' .select_permissions').bootstrapSwitch();
-                
-                    // Go through and check/uncheck each permission as necessary
-                    $('#' + box_id + ' .select_permissions').bootstrapSwitch('setAnimated', false);
-                    $('#' + box_id + ' .select_permissions').bootstrapSwitch('setSizeClass', 'switch-mini' );
-                    $('#' + box_id + ' .select_permissions').bootstrapSwitch('setState', false);
-        
-                    var user_permissions = adminLoadPermissions(user_id);
-                    var permission_switches = $('#' + box_id + ' .select_permissions');
-                    permission_switches.each(function(idx, element) {
-                        var permission_id = $(element).data('id');
-                        if (user_permissions[permission_id]) {
-                            $(element).bootstrapSwitch('setState', true);
-                        }
-                    });
-                    $('#' + box_id + ' .select_permissions').bootstrapSwitch('setAnimated', true);
-                    
-                    if (disabled == 'true') {
-                        $('#' + box_id + ' .select_permissions').bootstrapSwitch('setReadOnly', true);
-                    }
-                });
-                
-                // Disable inputs if specified
-                if (disabled == 'true') {
-                    var $fields = $('#' + box_id + ' .form-control');
-                    $fields.each(function(idx, input) {
-                       $( this ).prop('disabled', true);
-                    });
-                    $('#' + box_id + ' .btn-group').addClass('disabled').prop('disabled',true);
-                }
-                // Load buttons for panel (display), create, or update modes
-                if (view == 'modal') {
-                    $('#' + box_id + ' .btn-group-action').load('form-components.php #btn-group-update-user', function() {
-                        $('#' + box_id + ' form').submit(function(e){
-                            updateUser(box_id, user_id);
-							e.preventDefault();
-						});      
-                    });    
-                } else {
-                    // Create the edit button
-                    $('#' + box_id + ' .btn-group-action').append("<div class='col-md-3'>" +
-					"<button class='btn btn-primary btn-edit-dialog-user' data-toggle='modal'><i class='fa fa-edit'></i> Edit user</button>" +
-					"</div>");
-
-					// Create the activate button if the user is inactive
-					if (data['active'] == '0') {
-						console.log("User is inactive");
-						$('#' + box_id + ' .btn-group-action').append("<div class='col-md-3'>" +
-						"<button class='btn btn-success btn-activate-user' data-toggle='modal'><i class='fa fa-bolt'></i> Activate user</button>" +
-						"</div>");
-					}
-					
-					// Create the disable/enable buttons
-					if (data['enabled'] == '1') {
-						$('#' + box_id + ' .btn-group-action').append("<div class='col-md-3'>" +
-						"<button class='btn btn-warning btn-disable-user' data-toggle='modal'><i class='fa fa-minus-circle'></i> Disable user</button>" +
-						"</div>");
-					} else {
-						$('#' + box_id + ' .btn-group-action').append("<div class='col-md-3'>" +
-						"<button class='btn btn-warning btn-enable-user' data-toggle='modal'><i class='fa fa-plus-circle'></i> Re-enable user</button>" +
-						"</div>");
-					}
-					
-					// Create the deletion button
-					$('#' + box_id + ' .btn-group-action').append("<div class='col-md-3'>" +
-					"<button class='btn btn-danger btn-delete-user' data-toggle='modal'><i class='fa fa-trash-o'></i> Delete user</button>" +
-					"</div>");
-					
-					// Link buttons
-					$('#' + box_id + ' .btn-group-action .btn-edit-dialog-user').click(function(){                    
-						userInfoBox('user-update-dialog', {
-							user_id: user_id,
-							disabled: 'false',
-							view: 'modal'
-						});
-						$('#user-update-dialog').modal('show');
-					});
-
-					$('#' + box_id + ' .btn-group-action .btn-activate-user').click(function(){    
-						activateUser(user_id);
-					});
-					
-					$('#' + box_id + ' .btn-group-action .btn-enable-user').click(function () {
-						updateUserEnabledStatus(user_id, true);
-					});
-					
-					$('#' + box_id + ' .btn-group-action .btn-disable-user').click(function () {
-						updateUserEnabledStatus(user_id, false);
-					});	
-					
-					$('#' + box_id + ' .btn-group-action .btn-delete-user').click(function(){                    
-						deleteUserDialog('delete-user-dialog', user_id, data['user_name']);
-						$('#delete-user-dialog').modal('show');
-					});					
-                }
-            });
-        } else {            // Otherwise we're in create mode
-            $('#' + box_id + ' .modal-title').html("New User");
-            var sign_up_date_time = new Date();
-            var sign_up_date = sign_up_date_time.toString("dddd, MMM dS, yyyy");
-                    
-            $('#' + box_id + ' input[name="sign_up_date"]').val( sign_up_date ).prop('disabled',true);
-            $('#' + box_id + ' input[name="last_sign_in_date"]').prop('disabled',true);
-	
-            // Load permission checkboxes
-            var url = 'load_permissions.php';
-            $.getJSON( url, { })
-            .done(function( data ) {
-                var template = getTemplateAjax("template-permissions-row.php");
-                jQuery.each(data, function(id, record) {
-                    var formattedData = {};
-                    formattedData['permission_id'] = record['id'];
-                    formattedData['permission_name'] = record['name'];			
-                    var row = $(template(formattedData)).appendTo('#' + box_id + ' .permission-summary-rows');
-					var switchEl = row.find('.select_permissions');
-					switchEl.bootstrapSwitch();
-					switchEl.bootstrapSwitch('setSizeClass', 'switch-mini' );
-					if (record['is_default'] == 1) {
-						switchEl.bootstrapSwitch('setState', true);	
-					} else {
-						switchEl.bootstrapSwitch('setState', false);	
-					}
-                });
-			});
-            // Load create password fields
-            $('#' + box_id + ' .input-group-password').load('form-components.php #input-group-create-user-password');       
-                
-            // Load buttons
-            $('#' + box_id + ' .btn-group-action').load('form-components.php #btn-group-create-user', function() {
-                $('#' + box_id + ' form').submit(function(e){                    
-                    createUser(box_id);
-					e.preventDefault();
-                });
-            });        
-        }
-        return false;
-    });
-}
-
 function deleteUserDialog(dialog_id, user_id, name){
 	// First, create the dialog div
 	var parentDiv = "<div id='" + dialog_id + "' class='modal fade'></div>";
@@ -491,6 +254,168 @@ function deleteUserDialog(dialog_id, user_id, name){
 	});
 }
 
+/* Display a modal form for updating/creating a user */
+function userForm(box_id, user_id) {	
+	user_id = typeof user_id !== 'undefined' ? user_id : "";
+	
+	// Delete any existing instance of the form with the same name
+	if($('#' + box_id).length ) {
+		$('#' + box_id).remove();
+	}
+	
+	var data = {
+		box_id: box_id,
+		render_mode: 'modal'
+	};
+	
+	if (user_id != "") {
+		console.log("Update mode");
+		data['user_id'] = user_id;
+		data['show_passwords'] = false;
+		data['show_dates'] = true;
+	}
+	  
+	// Generate the form
+	$.ajax({  
+	  type: "GET",  
+	  url: "load_form_user.php",  
+	  data: data,
+	  dataType: 'json',
+	  cache: false
+	})
+	.fail(function(result) {
+		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+		alertWidget('display-alerts');
+	})
+	.done(function(result) {
+		// Append the form as a modal dialog to the body
+		$( "body" ).append(result['data']);
+		$('#' + box_id).modal('show');
+		
+		// Initialize bootstrap switches
+		var switches = $('#' + box_id + ' input[name="select_permissions"]');
+		switches.data('on-label', '<i class="fa fa-check"></i>');
+		switches.data('off-label', '<i class="fa fa-times"></i>');
+		switches.bootstrapSwitch();
+		switches.bootstrapSwitch('setSizeClass', 'switch-mini' );
+	
+		// Link submission buttons
+		$('#' + box_id + ' form').submit(function(e){ 
+			var errorMessages = validateFormFields(box_id);
+			if (errorMessages.length > 0) {
+				$('#' + box_id + ' .dialog-alert').html("");
+				$.each(errorMessages, function (idx, msg) {
+					$('#' + box_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
+				});	
+			} else {
+				if (user_id != "")
+					updateUser(box_id, user_id);
+				else
+					createUser(box_id);
+			}
+			e.preventDefault();
+		});    	
+	});
+}
+
+// Display user info in a panel
+function userDisplay(box_id, user_id) {
+	// Generate the form
+	$.ajax({  
+	  type: "GET",  
+	  url: "load_form_user.php",  
+	  data: {
+		box_id: box_id,
+		render_mode: 'panel',
+		user_id: user_id,
+		disabled: true,
+		show_dates: true,
+		show_passwords: false,
+		button_submit: false,
+		button_edit: true,
+		button_disable: true,
+		button_activate: true,
+		button_delete: true
+	  },
+	  dataType: 'json',
+	  cache: false
+	})
+	.fail(function(result) {
+		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+		alertWidget('display-alerts');
+	})
+	.done(function(result) {
+		$('#' + box_id).html(result['data']);
+
+		// Initialize bootstrap switches
+		var switches = $('#' + box_id + ' input[name="select_permissions"]');
+		switches.data('on-label', '<i class="fa fa-check"></i>');
+		switches.data('off-label', '<i class="fa fa-times"></i>');
+		switches.bootstrapSwitch();
+		switches.bootstrapSwitch('setSizeClass', 'switch-mini' );
+	
+		// Link buttons
+		$('#' + box_id + ' .btn-edit-dialog').click(function() { 
+			userForm('user-update-dialog', user_id);
+		});
+
+		$('#' + box_id + ' .btn-activate-user').click(function() {    
+			activateUser(user_id);
+		});
+		
+		$('#' + box_id + ' .btn-enable-user').click(function () {
+			updateUserEnabledStatus(user_id, true);
+		});
+		
+		$('#' + box_id + ' .btn-disable-user').click(function () {
+			updateUserEnabledStatus(user_id, false);
+		});	
+		
+		$('#' + box_id + ' .btn-delete-user').click(function() {
+			var user_name = $('#' + box_id + ' .btn-delete-user').data('user_name');
+			deleteUserDialog('delete-user-dialog', user_id, user_name);
+			$('#delete-user-dialog').modal('show');
+		});	
+		
+	});
+}
+
+// Create user with specified data from the dialog
+function createUser(dialog_id) {	
+	var add_permissions = [];
+	var permission_switches = $('#' + dialog_id + ' input[name="select_permissions"]');
+	permission_switches.each(function(idx, element) {
+		permission_id = $(element).data('id');
+		if ($(element).prop('checked')) {
+			add_permissions.push(permission_id);
+		}
+	});
+	console.log("Adding permissions: " + add_permissions.join(','));
+
+	var data = {
+		user_name: $('#' + dialog_id + ' input[name="user_name"]' ).val(),
+		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
+		user_title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
+		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
+		add_permissions: add_permissions.join(','),
+		password: $('#' + dialog_id + ' input[name="password"]' ).val(),
+		passwordc: $('#' + dialog_id + ' input[name="passwordc"]' ).val(),
+		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
+		ajaxMode: "true"
+	}
+	
+	var url = "create_user.php";
+	$.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: data
+	}).done(function(result) {
+		processJSONResult(result);
+		window.location.reload();
+	});
+	return;
+}
+
 // Update user with specified data from the dialog
 function updateUser(dialog_id, user_id) {
 	var errorMessages = validateFormFields(dialog_id);
@@ -504,7 +429,7 @@ function updateUser(dialog_id, user_id) {
 	
 	var add_permissions = [];
 	var remove_permissions = [];
-	var permission_switches = $('#' + dialog_id + ' .select_permissions');
+	var permission_switches = $('#' + dialog_id + ' input[name="select_permissions"]');
 	permission_switches.each(function(idx, element) {
 		permission_id = $(element).data('id');
 		if ($(element).prop('checked')) {
@@ -523,6 +448,7 @@ function updateUser(dialog_id, user_id) {
 		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
 		add_permissions: add_permissions.join(','),
 		remove_permissions: remove_permissions.join(','),
+		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
 		ajaxMode:	"true"
 	}
 	
@@ -531,50 +457,6 @@ function updateUser(dialog_id, user_id) {
 	  type: "POST",  
 	  url: url,  
 	  data: data,		  
-	}).done(function(result) {
-		processJSONResult(result);
-		window.location.reload();
-	});
-	return;
-}
-
-// Create user with specified data from the dialog
-function createUser(dialog_id) {
-	var errorMessages = validateFormFields(dialog_id);
-	if (errorMessages.length > 0) {
-		$('#' + dialog_id + ' .dialog-alert').html("");
-		$.each(errorMessages, function (idx, msg) {
-			$('#' + dialog_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
-		});	
-		return false;
-	}
-	
-	var add_permissions = [];
-	var permission_switches = $('#' + dialog_id + ' .select_permissions');
-	permission_switches.each(function(idx, element) {
-		permission_id = $(element).data('id');
-		if ($(element).prop('checked')) {
-			add_permissions.push(permission_id);
-		}
-	});
-	console.log("Adding permissions: " + add_permissions.join(','));
-
-	var data = {
-		user_name: $('#' + dialog_id + ' input[name="user_name"]' ).val(),
-		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
-		user_title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
-		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
-		add_permissions: add_permissions.join(','),
-		password: $('#' + dialog_id + ' input[name="password"]' ).val(),
-		passwordc: $('#' + dialog_id + ' input[name="passwordc"]' ).val(),
-		ajaxMode: "true"
-	}
-	
-	var url = "create_user.php";
-	$.ajax({  
-	  type: "POST",  
-	  url: url,  
-	  data: data
 	}).done(function(result) {
 		processJSONResult(result);
 		window.location.reload();

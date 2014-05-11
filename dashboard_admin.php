@@ -368,7 +368,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 
     </div><!-- /#wrapper -->
     
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="js/raphael/2.1.0/raphael-min.js"></script>
     <script src="js/morris/morris-0.4.3.js"></script>
     <script src="js/morris/chart-data-morris.js"></script>
     <script>

@@ -133,6 +133,9 @@ if(!empty($_POST))
 					  $loggedInUser->updatePassword($password);
 					}
 					
+					// Create the user's CSRF token
+					$loggedInUser->csrf_token(true);
+					
 					$_SESSION["userCakeUser"] = $loggedInUser;
 					
 					$successes = array();

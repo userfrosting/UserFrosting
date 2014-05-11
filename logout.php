@@ -45,13 +45,20 @@ if(isUserLoggedIn())
 	$loggedInUser->userLogOut();
 }
 
+$url_prefix = "http://";
+// Determine if connection is http or https
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+    // SSL connection
+	$url_prefix = "https://";
+}
+
 if(!empty($websiteUrl)) 
 {
 	$add_http = "";
 	
-	if(strpos($websiteUrl,"http://") === false)
+	if(strpos($websiteUrl,$url_prefix) === false)
 	{
-		$add_http = "http://";
+		$add_http = $url_prefix;
 	}
 	
 	header("Location: ".$add_http.$websiteUrl);
@@ -59,7 +66,7 @@ if(!empty($websiteUrl))
 }
 else
 {
-	header("Location: http://".$_SERVER['HTTP_HOST']);
+	header("Location: ".$url_prefix.$_SERVER['HTTP_HOST']);
 	die();
 }	
 

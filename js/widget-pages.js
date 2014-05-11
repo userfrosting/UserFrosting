@@ -32,7 +32,7 @@ function sitePagesWidget(widget_id, options) {
 	if (options['display_errors_id'])
 		display_errors_id = options['display_errors_id'];		
 	
-	console.log(display_errors_id);
+	//console.log(display_errors_id);
 	// Ok, set up the widget with its columns
 	var html =
 	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +
@@ -42,7 +42,13 @@ function sitePagesWidget(widget_id, options) {
 	var url = 'load_site_pages.php';
 	$.getJSON( url, {
 	})
-	.done(function( data ) {
+	.fail(function(result) {
+		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+		alertWidget('display-alerts');
+	})
+	.done(function( result ) {
+		var data = processJSONResult(result);	
+		alertWidget('display-alerts');
 		var permissions = {};
 		// Don't bother unless there are some records found
 		if (Object.keys(data).length > 0) { 
@@ -153,7 +159,7 @@ function sitePagesWidget(widget_id, options) {
 				success: function() {
 				  row.addClass('success');
 				  //addAlert("success", "Permissions updated for page " + page_id + ".");
-				  //alertWidget('display-alerts');
+				  //
 				}
 			});
 		});

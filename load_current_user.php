@@ -56,13 +56,15 @@ try {
 	// Fetch information for currently logged in user
 	// Parameters: none
 	
+	global $db_table_prefix;
+	
 	$results = array();
 	
 	$db = pdoConnect();
 	
 	$sqlVars = array();
 	
-	$query = "select id, user_name, display_name, email, title, sign_up_stamp from uc_users where id = :user_id";
+	$query = "select id, user_name, display_name, email, title, sign_up_stamp from {$db_table_prefix}users where id = :user_id";
 	
 	// Required parameters
 	$sqlVars[':user_id'] = $user_id;

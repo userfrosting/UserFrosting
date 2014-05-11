@@ -1,5 +1,5 @@
 
-UserFrosting 0.1.4
+UserFrosting 0.1.7
 ==================
 
 ### By Alex Weissman
@@ -8,23 +8,14 @@ Copyright (c) 2014
 
 Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
 
-Change Log - v0.1.4 
+Change Log - v0.1.7
 -------------------
-- Updated password hashing from md5 to modern bcrypt (more secure) - thanks to contributor r3wt
-- Included better functions for sanitizing user input, validating user ip, generating csrf (cross-site request forgery) tokens - thanks to contributor r3wt
+- Page scrolls back to top after AJAX submit.
+- "Website url" is automatically suffixed with "/" if necessary.
+- Fixed bad link to forgot_password.php.
+- Began implementing action authorization scheme.
 
-Change Log - v0.1.3 
--------------------
-- Root account (user id = 1) : created upon installation, cannot be deleted or disabled.  Special color scheme for when logged in as root user.
-- Installer now guides user through creation of root account
-- Moved common JS and CSS includes to "includes.php"
-
-Change Log - v0.1.2 
--------------------
-- Improved error and exception handling
-- Added 404 error page
-- Standardized JSON interface for backend scripts
-- Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
+[Older changes](CHANGELOG.md)
 
 Why UserFrosting?
 -----------------
@@ -52,7 +43,38 @@ UserFrosting offers all of the features of UserCake, plus several new ones:
 - Client-side data validation
 - Default permissions for new accounts
 - Table view for easily editing page permissions
-           
+
+Security Features
+-----------------
+UserFrosting is designed to address the most common security issues with websites that handle sensitive user data:
+
+#### SSL/HTTPS compatibility
+Unsecured ("http") websites exchange data between the user and the server in plain text.  If the connection between the user and server is not secure, this data can be intercepted, and possibly even altered and/or rerouted.  And, even if the sensitive data itself is encrypted, the user's session on the website can be stolen and impersonated unless ALL communication between the user and server is handled over SSL ("https" websites).  If you walk into any coffee shop with an unsecured wireless network, and launch a simple program such as [Firesheep](http://codebutler.com/firesheep/), you will see how huge of a problem this is, and why [Google and other companies are pushing for _everyone_ to use SSL](http://www.wired.com/2014/04/https/).
+
+This is also why there are strict standards about websites that handle sensitive user data such as credit card numbers!  We strongly encourage anyone planning to deploy a website that handles user passwords and sessions (such as ones based on UserFrosting) to purchase an SSL certificate and deploy it on their web server.  [Namecheap](https://www.namecheap.com/support/knowledgebase/article.aspx/794/67/how-to-activate-ssl-certificate) offers basic, inexpensive certs for $9/year (you do not need to have Namecheap hosting or domain registration to use their certificates on your site).  If your web hosting happens to use cPanel, this is easy to [set up yourself](http://docs.cpanel.net/twiki/bin/view/AllDocumentation/WHMDocs/InstallCert) without needing to contact your hosting provider.  Please note that SSL on shared hosting accounts may create false security warnings for end-users with [older browsers](https://en.wikipedia.org/wiki/Server_Name_Indication#No_support).
+
+For __local testing purposes only__ you may create a self-signed certificate.  For instructions on how to do this for XAMPP/Apache in OSX, see [this blog post](http://shahpunyerblog.blogspot.com/2007/10/create-self-signed-ssl-certificate-in.html).
+
+#### Strong password hashing
+UserFrosting uses the `password_hash` and `password_verify` functions to hash and validate passwords (new in PHP v5.5.0).  `password_hash` uses the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a 22-character salt to user passwords, protecting against dictionary attacks.
+
+UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with MD5.  User accounts that have been hashed with MD5 will automatically be updated to the new encryption standard when the user successfully logs in.
+
+#### Protection against cross-site request forgery (CSRF)
+CSRF is an attack that relies on a user unwittingly submitting malicious data from another source while logged in to their account.  The malicious data can be embedded in an image, link, or other javascript content, on another website or in an email.  Because the user has a valid session with a website, the external content is accepted and processed.  Thus, attackers can easily change passwords or delete a user's account with this attack.
+
+To guard against this, UserFrosting provides the `csrf_token` function (courtesy of @r3wt).  By generating a new, random CSRF token for users when they log in, inserting it into legitimate forms as a hidden field, and then having the backend form processing links check for this token before taking any action, CSRF attacks can be thwarted.
+
+#### Protection against cross-site scripting (XSS)
+XSS is another variety of attack that tricks a user, but instead of tricking the user into submitting malicious data (CSRF), it tricks the user into running malicious scripts.  This vulnerability usually appears when you allow arbitrary content (including javascript and HTML tags) to be processed and then regurgitated back to other users.  Thus, an attacker on a forum could create a new "post" that contains javascript commands.  When anyone else on the site goes to view that post, the javascript commands are executed.  Those commands could easily be instructions to transmit the user's session data to a remote server, where attackers can use it to impersonate the user.
+
+UserFrosting guards against this by sanitizing user input before storing or otherwise acting upon it.  Please let us know if you find a place where input is not properly sanitized.
+
+#### Protection against SQL injection
+Whereas XSS tricks the _user_ into executing malicious code, SQL injection tricks the _server_ into executing malicious code; in this case, SQL statements.  Thus, sites vulnerable to SQL injection can end up executing code that, for example, deletes a table or database.
+
+UserFrosting protects against this by using parameterized queries, which do not allow user-supplied data to be executed as code.  However there are always exceptions, and we would be glad to have some contributors test and/or help patch any possible remaining SQL injection vulnerabilities.
+        
 Screenshots
 -----------------
 #### Login page
@@ -177,7 +199,8 @@ These are pages which accept a POST or GET request, perform some action, and the
     * `password` : the password for the new user.  Must be between 8 and 50 characters.
     * `confirm_pass` : the password for the new user.  Must match the `password` field.
     * `add_permissions` : a comma-separated string of permission id's to be associated with the new user.
-    * `ajaxMode` : specify whether to access in AJAX/JSON mode.  `"true"` or `"false"`. 
+    * `ajaxMode` : specify whether to access in AJAX/JSON mode.  `"true"` or `"false"`.
+    * `csrf_token` : the csrf token for the user's session.  Must be set, or the request will automatically fail.    
   + Response (JSON):
     * `errors` : the number of errors generated by the request.
     * `successes` : the number of successes generated by the request.
@@ -261,6 +284,32 @@ These are pages which accept a POST or GET request, perform some action, and the
     * `SQL_ERROR` : Database error.
 
     
+- **load_form_user.php**
+  + Loads a customized form/panel for creating, updating, or displaying a user.
+  + Default permission level: *admin only*
+  + Request method: *GET*
+  + Request parameters:
+    * `box_id`: the desired name of the div that will contain the form.
+    * `render_mode`: `modal` or `panel`
+    * `user_id` (optional): if specified, will load the relevant data for the user into the form.  Form will then be in "update" mode.
+    * `show_dates` (optional): if set to `"true"`, will show the registered and last signed in date fields (fields will be read-only)
+    * `show_passwords` (optional): if set to `"true"`, will show the password creation fields
+    * `disabled` (optional): if set to `"true"`, disable all fields
+    * `button_submit`: If set to `"true"`, display the submission button for this form.
+    * `button_edit`: If set to `"true"`, display the edit button for panel mode.
+    * `button_disable`: If set to `"true"`, display the enable/disable button.
+    * `button_activate`: If set to `"true"`, display the activate button for inactive users.
+    * `button_delete`: If set to `"true"`, display the deletion button for deletable users.
+  + Response on failure (JSON):
+    * `errors` : the number of errors generated by the request.
+    * `successes` : the number of successes generated by the request.  Set to 0.
+  + Response on success (JSON):
+    * A JSON object containing the requested form/panel:
+        * `data` : the fully rendered HTML for the form/panel.
+  + Possible errors generated (stored in `$_SESSION['userAlerts']`):
+    * Page access denied.
+    
+
 - **load_permissions.php**
   + Returns a list of data for all permission levels.
   + Default permission level: *admin only*
@@ -466,7 +515,8 @@ These are pages which accept a POST or GET request, perform some action, and the
     * `email` : the new email address for the user.  Must be between 1 and 150 characters and a valid email format.
     * `add_permissions` : a comma-separated string of permission id's to be associated with the user.
     * `remove_permissions` : a comma-separated string of permission id's to be removed from the user.
-    * `ajaxMode` : specify whether to access in AJAX/JSON mode.  `"true"` or `"false"`. 
+    * `ajaxMode` : specify whether to access in AJAX/JSON mode.  `"true"` or `"false"`.
+    * `csrf_token` : the csrf token for the user's session.  Must be set, or the request will automatically fail.
   + Response (JSON):
     * `errors` : the number of errors generated by the request.
     * `successes` : the number of successes generated by the request.
@@ -636,7 +686,7 @@ TODO Tasks
 
 These are features to be added in future releases.
 
-1. Add support for `https`.  Live users will need to purchase an SSL certificate, but we also need to see what changes must be made to the code to support https.
+1. Deploy CSRF tokens on all forms and add "bulletproof sessions" as per http://blog.teamtreehouse.com/how-to-create-bulletproof-sessions.
 2. Add **OAuth** support, for users to create accounts and log in via Facebook/Google.
 3. Associate permission groups with allowed actions, rather than individual pages.  Actions, in turn, are linked to pages (on the backend) and features (on the frontend).  Automatically hide features for which a user does not have permission.
 4. Convert to standard REST architecture, implementing updates as PUT and deletes as DELETE.  This could mean that different backend pages that act on the same type of object (users, pages, etc) could be combined into a single page that takes different actions depending on the request method.
@@ -646,8 +696,11 @@ These are features to be added in future releases.
 8. Add ability for admins to add/remove user account fields, without having to modify code.
 9. Deploy the `jqueryvalidator` plugin for client-side validation (as opposed to our own, clunkier validator).
 10. Admin-side user account creation should bypass activation process.
+11. Continue improving error-handling and rendering system.
+12. Finish documenting all functions and pages.
 
 Possible additional features as suggested on UserCake forums:
+
 1. "Remember me" feature
 2. Admin control over session timeout
 3. Auto-redirect to last visited page on login

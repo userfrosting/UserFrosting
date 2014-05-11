@@ -34,35 +34,49 @@ include('models/config.php');
 
 set_error_handler('logAllErrors');
 
-// Load information for a user.  Recommend admin-only access.
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to load user data.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
+try {
+  // Load information for a user.  Recommend admin-only access.
+  if (!securePage($_SERVER['PHP_SELF'])){
+	addAlert("danger", "Whoops, looks like you don't have permission to load user data.");
+	echo json_encode(array("errors" => 1, "successes" => 0));
+	exit();
+  }
+  
+  // Parameters: id
+  extract($_GET);
+  
+  global $db_table_prefix;
+  
+  $results = array();
+  
+  $db = pdoConnect();
+  
+  $sqlVars = array();
+  
+  $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from {$db_table_prefix}users where {$db_table_prefix}users.id = :user_id";
+  
+  $sqlVars[':user_id'] = $user_id;
+  
+  //echo $query;
+  $stmt = $db->prepare($query);
+  $stmt->execute($sqlVars);
+  
+  if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
+	  addAlert("danger", "Invalid user id specified");
+	  $results = array("errors" => 1, "successes" => 0);
+  }
+  
+  $stmt = null;
+
+} catch (PDOException $e) {
+  addAlert("danger", "Oops, looks like our database encountered an error.");
+  error_log($e->getMessage());
+} catch (ErrorException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+} catch (RuntimeException $e) {
+  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+  error_log($e->getMessage());
 }
-
-// Parameters: id
-extract($_GET);
-
-$results = array();
-
-$db = pdoConnect();
-
-$sqlVars = array();
-
-$query = "select uc_users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from uc_users where uc_users.id = :user_id";    
-$sqlVars[':user_id'] = $user_id;
-
-//echo $query;
-$stmt = $db->prepare($query);
-$stmt->execute($sqlVars);
-
-if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
-	addAlert("danger", "Invalid user id specified");
-	$results = array("errors" => 1, "successes" => 0);
-}
-
-$stmt = null;
 
 restore_error_handler();
 

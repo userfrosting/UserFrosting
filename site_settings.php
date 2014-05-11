@@ -172,7 +172,7 @@ setReferralPage($_SERVER['PHP_SELF']);
           var user = loadCurrentUser();
           var user_id = user['id'];
           var admin_flag = user['admin'];
-          
+
           // Load the header
           $('.navbar').load('header.php', function() {
             $('#user_logged_in_name').html('<i class="fa fa-user"></i> ' + user['user_name'] + ' <b class="caret"></b>');
@@ -198,7 +198,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 				ajaxMode:						"true"
 			  }		  
 			}).done(function(result) {
-			  resultJSON = processJSONResult(result);
+			  var resultJSON = processJSONResult(result);
 			  alertWidget('display-alerts');
 			});
 			return false;
@@ -208,7 +208,13 @@ setReferralPage($_SERVER['PHP_SELF']);
 		  $('#regbox input[type="checkbox"]').bootstrapSwitch();
 		  var url = "load_site_settings.php";
 		  $.getJSON( url, {})
-		  .done(function( data ) {
+		  .fail(function(result) {
+			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+			alertWidget('display-alerts');
+		  })
+		  .done(function( result ) {
+			var data = processJSONResult(result);
+			alertWidget('display-alerts');
 			if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
 			  $('#regbox input[name="website_name"]').val(data['website_name']);
 			  $('#regbox input[name="website_url"]').val(data['website_url']);
@@ -267,7 +273,8 @@ setReferralPage($_SERVER['PHP_SELF']);
 			});
 		  });
 		  
-		  alertWidget('display-alerts');
+		  //alertWidget('display-alerts');
+		  
 		});
 	</script>
   </body>

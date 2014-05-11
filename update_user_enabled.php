@@ -50,6 +50,7 @@ $enabled = requiredPostVar('enabled');
 
 // Disable the specified user, but leave their information intact in case the account is re-enabled.
 $db = pdoConnect();
+global $db_table_prefix;
 
 // Cannot delete master account
 if ($user_id == $master_account){
@@ -57,7 +58,7 @@ if ($user_id == $master_account){
 } else {
 	// Set enabled status to '0' or '1'
 	$sqlVars = array();
-	$stmt = $db->prepare("UPDATE uc_users SET enabled = :enabled WHERE id = :user_id LIMIT 1");
+	$stmt = $db->prepare("UPDATE {$db_table_prefix}users SET enabled = :enabled WHERE id = :user_id LIMIT 1");
 	$sqlVars[':user_id'] = $user_id;
 	if ($enabled == 'true')
 		$sqlVars[':enabled'] = '1';

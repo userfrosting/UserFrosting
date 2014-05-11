@@ -11,7 +11,7 @@ For more info and more free Bootstrap 3 HTML themes, visit http://startbootstrap
 /* Global Styles */
 
 body {
-  margin-top: 50px;
+  padding-top: 50px;
 }
 
 #wrapper {
@@ -21,6 +21,16 @@ body {
 #page-wrapper {
   width: 100%;
   padding: 5px 15px;
+}
+
+/* Override button nowrap */
+.btn {
+  white-space: normal;
+}
+
+/* Add vertical padding around components */
+.vert-pad {
+  padding: 10px 0px;
 }
 
 /* Nav Messages */
@@ -89,7 +99,7 @@ table.tablesorter thead tr th:hover {
   /* Wrappers */
 
   #wrapper {
-	padding-left: 225px;
+	padding-left: 200px;
   }
 
   #page-wrapper {
@@ -115,7 +125,7 @@ table.tablesorter thead tr th:hover {
   
   .side-nav>li.dropdown>ul.dropdown-menu {
 	position: relative;
-	min-width: 225px;
+	min-width: 200px;
 	margin: 0;
 	padding: 0;
 	border: none;
@@ -138,104 +148,7 @@ table.tablesorter thead tr th:hover {
   }
 
   .side-nav>li>a {
-	width: 225px;
-  }
-
-  .navbar-inverse {
-	color: #ffffff;
-	background-color: #d9534f;
-  }
-  
-  .navbar-inverse .navbar-brand {
-	color: #ffffff;
-  }
-
-  .navbar-inverse .navbar-brand:hover,
-  .navbar-inverse .navbar-brand:focus {
-	color: #ffffff;
-	background-color: transparent;
-  }
-
-  .navbar-inverse .navbar-text {
-	color: #ffffff;
-  }
-
-  .navbar-inverse .navbar-nav > li > a {
-	color: #ffffff;
-  }
-  
-  .navbar-inverse .navbar-nav > li > a:hover,
-  .navbar-inverse .navbar-nav > li > a:focus {
-	color: #ffffff;
-	background-color: #c0534f;
-  }
-
-  .navbar-inverse .navbar-nav > .active > a,
-  .navbar-inverse .navbar-nav > .active > a:hover,
-  .navbar-inverse .navbar-nav > .active > a:focus {
-	color: #ffffff;
-	background-color: #c0534f;
-  }
-  
-  .navbar-inverse .navbar-nav > .disabled > a,
-  .navbar-inverse .navbar-nav > .disabled > a:hover,
-  .navbar-inverse .navbar-nav > .disabled > a:focus {
-	color: #444444;
-	background-color: transparent;
-  }
-  
-  .navbar-inverse .navbar-toggle {
-	border-color: #333333;
-  }
-  
-  .navbar-inverse .navbar-toggle:hover,
-  .navbar-inverse .navbar-toggle:focus {
-	background-color: #c0534f;
-  }
-  
-  .navbar-inverse .navbar-toggle .icon-bar {
-	background-color: #ffffff;
-  }
-  
-  .navbar-inverse .navbar-collapse,
-  .navbar-inverse .navbar-form {
-	border-color: #101010;
-  }
-  
-  .navbar-inverse .navbar-nav > .open > a,
-  .navbar-inverse .navbar-nav > .open > a:hover,
-  .navbar-inverse .navbar-nav > .open > a:focus {
-	color: #ffffff;
-	background-color: #c0534f;
-  }
-  
-  .navbar-inverse .navbar-nav > .dropdown > a:hover .caret {
-	border-top-color: #ffffff;
-	border-bottom-color: #ffffff;
-  }
-  
-  .navbar-inverse .navbar-nav > .dropdown > a .caret {
-	border-top-color: #ffffff;
-	border-bottom-color: #ffffff;
-  }
-  
-  .navbar-inverse .navbar-nav > .open > a .caret,
-  .navbar-inverse .navbar-nav > .open > a:hover .caret,
-  .navbar-inverse .navbar-nav > .open > a:focus .caret {
-	border-top-color: #ffffff;
-	border-bottom-color: #ffffff;
-  }
-  
-  /* From https://stackoverflow.com/questions/19733447/bootstrap-navbar-with-left-center-and-right-aligned-items */
-  .navbar-inverse .navbar-center {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    text-align: center;
-    margin-left: auto;
-	margin-right: auto;
-	font-weight: bolder;
-	font-size: 16px;
+	width: 200px;
   }
   
   /* Nav Messages */
@@ -248,4 +161,106 @@ table.tablesorter thead tr th:hover {
 	white-space: normal;
   }
 
+}
+
+/* Custom colors */
+.navbar-inverse {
+  color: #ffffff;
+  background-color: #d9534f;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #ffffff;
+}
+
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+  color: #ffffff;
+  background-color: transparent;
+}
+
+.navbar-inverse .navbar-text {
+  color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+  color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+  color: #ffffff;
+  background-color: #c0534f;
+}
+
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  color: #ffffff;
+  background-color: #c0534f;
+}
+
+.navbar-inverse .navbar-nav > .disabled > a,
+.navbar-inverse .navbar-nav > .disabled > a:hover,
+.navbar-inverse .navbar-nav > .disabled > a:focus {
+  color: #444444;
+  background-color: transparent;
+}
+
+.navbar-inverse .navbar-toggle {
+  border-color: #333333;
+}
+
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+  background-color: #c0534f;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color: #ffffff;
+}
+
+.navbar-inverse .navbar-collapse,
+.navbar-inverse .navbar-form {
+  border-color: #101010;
+}
+
+.navbar-inverse .navbar-nav > .open > a,
+.navbar-inverse .navbar-nav > .open > a:hover,
+.navbar-inverse .navbar-nav > .open > a:focus {
+  color: #ffffff;
+  background-color: #c0534f;
+}
+
+.navbar-inverse .navbar-nav > .dropdown > a:hover .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav > .dropdown > a .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav > .open > a .caret,
+.navbar-inverse .navbar-nav > .open > a:hover .caret,
+.navbar-inverse .navbar-nav > .open > a:focus .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+/* From https://stackoverflow.com/questions/19733447/bootstrap-navbar-with-left-center-and-right-aligned-items */
+.navbar-inverse .navbar-center {
+  left: 0;
+  text-align: center;
+  font-weight: bolder;
+  font-size: 16px;
+}
+
+.vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
