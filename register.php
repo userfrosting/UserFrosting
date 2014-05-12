@@ -73,7 +73,7 @@ if(isUserLoggedIn()) {
     <meta name="author" content="">
     <link rel="shortcut icon" href="css/favicon.ico">
 
-    <title>UserFrosting - Register</title>
+    <title>FadedGaming - Register</title>
 
 	<link rel="icon" type="image/x-icon" href="css/favicon.ico" />
 	
@@ -100,7 +100,7 @@ if(isUserLoggedIn()) {
       <div class="header">
         <ul class="nav nav-pills navbar pull-right">
         </ul>
-        <h3 class="text-muted">UserFrosting</h3>
+        <h3 class="text-muted">FadedGaming</h3>
       </div>
       <div class="jumbotron">
         <h1>Let's get started!</h1>
@@ -159,7 +159,7 @@ if(isUserLoggedIn()) {
 		</form>
 	  </div>	
       <div class="footer">
-        <p>&copy; Your Website, 2014</p>
+        <p>&copy; FadedGaming.co, 2014</p>
       </div>
 
     </div> <!-- /container -->

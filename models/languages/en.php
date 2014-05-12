@@ -98,6 +98,11 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
 	));
 
+//Characters
+$lang = array_merge($lang,array(
+	"ACCOUNT_CHARACTERNAME_IN_USE"	=> "Character name %m1% already in use please enter a new one",
+	));
+	
 //Configuration
 $lang = array_merge($lang,array(
 	"CONFIG_NAME_CHAR_LIMIT"		=> "Site name must be between %m1% and %m2% characters in length",

@@ -69,24 +69,38 @@ if (!securePage($_SERVER['PHP_SELF'])){
 
   <ul class="nav navbar-nav side-nav">
 	  
-  <?php
-  //Links for permission level 2 (default admin)
-  if ($loggedInUser->checkPermission(array(2))){
-	  echo "
-	  <li class='navitem-dashboard-admin'><a href='dashboard_admin.php'><i class='fa fa-dashboard'></i> Admin Dashboard</a></li>
-	  <li class='navitem-users'><a href='users.php'><i class='fa fa-users'></i> Users</a></li>";
-  }
-  ?>
-	  <li class="navitem-dashboard"><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+
+	  <li class="navitem-dashboard"><a href="dashboard.php"><i class="fa fa-dashboard"></i> User Dashboard</a></li>
+	  
+	  <li class='dropdown'>
+	  <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-users'></i> Guild Members <b class='caret'></b></a>
+		  <ul class='dropdown-menu'>
+	  <li class="navitem-character"><a href="character.php"><i class="fa fa-user"></i> Characters</a></li>
+	  <li class="navitem-calender"><i class="fa fa-calendar"></i> Calendar</li>
+	  <li class="navitem-roster"><a href="roster.php"><i class="fa fa-list"></i> Roster</a></li>
+	  </ul>
+	  </li>
+	  
+	  <li class='dropdown'>
+	  <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-users'></i> Raid Members <b class='caret'></b></a>
+	  <ul class='dropdown-menu'>
+	  <li class="navitem-character"><i class="fa fa-user"></i> Raid Characters</li>
+	  <li class="navitem-calender"><i class="fa fa-calendar"></i> Attendance Tracker</li>
+	  <li class="navitem-roster"><i class="fa fa-list"></i> Loot Wish list</li>
+	  </ul>
+	  </li>
+	  
 	  <li class='navitem-settings'><a href="account_settings.php"><i class="fa fa-gear"></i> Account Settings</a></li>
-  
-  <?php
+  <hr />
+    <?php
 	  //Links for permission level 2 (default admin)
 	  if ($loggedInUser->checkPermission(array(2))){
 	  echo "
 	  <li class='dropdown'>
-	  <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-wrench'></i> Site Settings <b class='caret'></b></a>
+	  <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-wrench'></i> Administrator Settings <b class='caret'></b></a>
 		  <ul class='dropdown-menu'>
+			  <li class='navitem-dashboard-admin'><a href='dashboard_admin.php'><i class='fa fa-dashboard'></i> Admin Dashboard</a></li>
+        	  <li class='navitem-users'><a href='users.php'><i class='fa fa-users'></i> Users</a></li>
 			  <li class='navitem-site-settings'><a href='site_settings.php'><i class='fa fa-globe'></i> Site Configuration</a></li>
 			  <li class='navitem-site-pages'><a href='site_pages.php'><i class='fa fa-files-o'></i> Site Pages</a></li>
 		  </ul>

@@ -45,7 +45,7 @@ require_once("models/config.php");
     <meta name="author" content="">
     <link rel="shortcut icon" href="css/favicon.ico">
 
-    <title>UserFrosting - 404 Oh Noes!</title>
+    <title>FadedGaming - 404 Oh Noes!</title>
 
     <link rel="icon" type="image/x-icon" href="css/favicon.ico" />
     
@@ -67,7 +67,9 @@ require_once("models/config.php");
   <body>
     <div class="container">
       <div class="header">
-        <h3 class="text-muted">UserFrosting</h3>
+	  <ul class="nav nav-pills navbar pull-right">
+        </ul>
+        <h3 class="text-muted">FadedGaming</h3>
       </div>
       <div class="jumbotron">
         <h1>Well dang.</h1>
@@ -80,7 +82,7 @@ require_once("models/config.php");
         </div>
       </div>	
       <div class="footer">
-        <p>&copy; Your Website, 2014</p>
+        <p>&copy; FadedGaming.co, 2014</p>
       </div>
 
     </div> <!-- /container -->
@@ -91,5 +93,9 @@ require_once("models/config.php");
 <script>
 	$(document).ready(function() {
 		alertWidget('display-alerts');  
+		// Load navigation bar
+        $(".navbar").load("header-loggedout.php", function() {
+            $(".navbar .navitem-home").addClass('active');
+        });
 	});
 </script>

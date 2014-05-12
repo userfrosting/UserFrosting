@@ -49,7 +49,7 @@ setReferralPage($_SERVER['PHP_SELF']);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>UserFrosting - Dashboard</title>
+    <title>FadedGaming - Dashboard</title>
 
     <?php require_once("includes.php");  ?>
     
@@ -75,7 +75,7 @@ setReferralPage($_SERVER['PHP_SELF']);
             <ol class="breadcrumb">
               <li class="active"><i class="fa fa-dashboard"></i> Dashboard</li>
             </ol>
-            <div class="alert alert-success alert-dismissable">
+            <!--<div class="alert alert-success alert-dismissable">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
               Welcome to UserFrosting!  The back end account management system is derived from <a class="alert-link" href="http://usercake.com">UserCake 2.0.2</a>, while the dashboard and admin account features are based on the SB Admin Template by <a class="alert-link" href="http://startbootstrap.com">Start Bootstrap</a>. Other key frameworks and plugins used in this system are:
               <br><a class="alert-link" href='http://http://jquery.com/'>jQuery 1.10.2</a>
@@ -84,12 +84,21 @@ setReferralPage($_SERVER['PHP_SELF']);
               <br><a class="alert-link" href='http://tablesorter.com/docs/'>Tablesorter 2.0</a>
               <br>The <a class="alert-link" href='http://www.bootstrap-switch.org/'>Bootstrap Switch</a> component by Mattia Larentis,Peter Stein, and Emanuele Marchi
               <br>All components are copyright of their respective creators.
+            </div>-->
+			<div class="alert alert-success alert-dismissable">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+              Welcome to FadedGaming. This is the future website of the Stonemaul (and connected realms) WoW Guild <Nightfury>.
             </div>
           </div>
         </div><!-- /.row -->
-
-
-        <div class="row">
+ 
+		<div class="row">
+          <div class="col-lg-12">
+            <h1>Thanks for coming to visit the new website and registering.</h1>
+			<p>Please take a small moment to update your characters by clicking on the character link to the left and adding them to your list. Doing this will allow the officers and staff to better understand who you are and what experience you have and give us a understanding of where you stand currently.</p>
+		  </div>
+		</div>
+        <!--<div class="row">
           <div class="col-lg-4">
             <div class="panel panel-primary">
               <div class="panel-heading">
@@ -136,7 +145,7 @@ setReferralPage($_SERVER['PHP_SELF']);
               </div>
             </div>
           </div>
-        </div><!-- /.row -->
+        </div>--><!-- /.row -->
 
       </div><!-- /#page-wrapper -->
 

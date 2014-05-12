@@ -1,0 +1,112 @@
+.module-content ~ .module-content{
+border-top:1px solid #d6d6d6;
+}
+.module-content{
+padding:9px;
+min-height:20px;
+}
+.module-footer{
+background-color:#F1F1F1;
+border-top:1px solid #d6d6d6;
+padding:5px 10px;
+color:black;
+font-weight:bold;
+}
+.module-header{
+color:white;
+border-bottom:1px solid #d6d6d6;
+background-color:#222222;
+font-weight:bold;
+padding:5px 10px;
+}
+.module{
+margin:10px 0 20px 0;
+background-color:#ffffff;
+border:1px solid #d6d6d6;
+border-bottom-width:2px;
+box-sizing:border-box;
+}
+
+.module-headernews{
+color:black;
+border-bottom:1px solid #d6d6d6;
+background-color:#ffffff;
+font-weight:bold;
+padding:5px 10px;
+}
+
+.recentvistors-vistor:first-of-type{
+margin-top:0 !important;
+padding-top:0 !important;
+}
+.recentvistors-details{
+line-height:18px;
+margin-left:40px;
+}
+.recentvistors-vistor{
+border-bottom:1px solid #d5d5d5;
+padding-bottom:4px;
+padding-top:7px;
+}
+/* Start Module CSS */
+.m_recentThreads:first-of-type, .m_recentMembers:first-of-type, .m_recentVisitors:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+}
+.m_recentThreads, .m_recentMembers, .m_recentVisitors {
+    border-bottom: 1px solid #d5d5d5;
+    padding-bottom: 4px;
+    padding-top: 7px;
+}
+.m_recentThreads .details, .m_recentMembers .details, .m_recentVisitors .details {
+    line-height: 18px;
+    margin-left: 40px;
+}
+.m_staffMembers h3 {
+    margin: 0;
+    border-bottom: 1px solid #dcdcdc;
+    margin-bottom: 10px;
+}
+.m_staffMembers a {
+    margin-right:10px;
+}
+.m_rankSorter span i {
+    cursor: pointer;
+    color: transparent;
+    margin: 0 3px;
+}
+.m_rankSorter li:hover i {
+    color: white;
+}
+/* End Module CSS */
+
+.avatar>img[src*="/16"]{
+padding:2px !important;
+}
+.avatar>img{
+border:1px solid lightgray;
+padding:3px;
+background-color:white;
+-webkit-transition:border ease 0.4s;
+-moz-transition:border ease 0.4s;
+-o-transition:border ease 0.4s;
+transition:border ease 0.4s;
+}
+.avatar>img:hover{
+border:1px solid blue;
+}
+
+.news-header{
+font-weight:700;
+font-size:21px;
+}
+
+.news-post{
+border-bottom:1px solid #d6d6d6;
+margin-bottom:7px;
+word-wrap:break-word;
+}
+
+::selection {
+background: #79A5F5;
+}

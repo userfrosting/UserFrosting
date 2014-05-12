@@ -29,20 +29,35 @@ THE SOFTWARE.
 
 */
 
-require_once("../models/funcs.php");
+// Request method: GET
 
-session_start();
-
-// Always a publically accessible script
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    addAlert($_POST['type'], $_POST['message']);
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-    echo json_encode($_SESSION["userAlerts"]);
-    
-    // Reset alerts after they have been delivered
-    $_SESSION["userAlerts"] = array();
+require_once("models/config.php");
+if (!securePage($_SERVER['PHP_SELF'])){
+    // Generate AJAX error
+    addAlert("danger", "Whoops, looks like you don't have permission to access this component.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
 }
 
 ?>
+
+<div class='modal-dialog modal-sm'>
+  <div class='modal-content'>
+    <div class='modal-header '>
+      <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+      <h4 class='modal-title'>Delete Character</h4>
+    </div>
+    <div class='modal-body'>
+      <div class='dialog-alert'>
+      </div>
+      <h4>Are you sure you want to delete the character <span class='user_name'></span>?<br><small>This action cannot be undone.</small></h4>
+      <br>
+      <input type='hidden' name='user_id'>
+      <div class='btn-group-action'>
+        <button type="button" class="btn btn-danger btn-lg btn-block btn-confirm-delete">Yes, delete character</button>
+        <button type="button" class="btn btn-default btn-lg btn-block" data-dismiss='modal'>Cancel</button>
+      </div>
+    </div>
+    </div>
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

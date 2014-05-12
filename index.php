@@ -58,7 +58,7 @@ if(isUserLoggedIn()) {
     <meta name="author" content="">
     <link rel="shortcut icon" href="css/favicon.ico">
 
-    <title>Welcome to UserFrosting!</title>
+    <title>Welcome to FadedGaming!</title>
 
     <link rel="icon" type="image/x-icon" href="css/favicon.ico" />
     
@@ -85,21 +85,16 @@ if(isUserLoggedIn()) {
       <div class="header">
         <ul class="nav nav-pills navbar pull-right">
         </ul>
-        <h3 class="text-muted">UserFrosting</h3>
+        <h3 class="text-muted">FadedGaming</h3>
       </div>
       <div class="jumbotron">
-        <h1>Welcome to UserFrosting!</h1>
-        <p class="lead">A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</p>
-		<div class="row">
-			<div class="col-sm-12">
-			  <a href="login.php" class="btn btn-success" role="button" value='Login'>Login</a>
-			</div>
-        </div>
-        <div class="jumbotron-links">
-        </div>
+        <p><b>Welcome to FadedGaming!</b></p>
+        <p class="lead">Home of &#60;Nightfury&#62; Guild on Stonemaul US <br />
+		(and connected servers)</p>
+		
       </div>	
       <div class="footer">
-        <p>&copy; Your Website, 2014</p>
+        <p>&copy; FadedGaming.co, 2014</p>
       </div>
 
     </div> <!-- /container -->
