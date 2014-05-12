@@ -1,31 +1,13 @@
 /*
-
-UserFrosting Version: 0.1
-By Alex Weissman
+Create Character Version: 0.1
+By Lilfade (Bryson Shepard)
 Copyright (c) 2014
 
-Based on the UserCake user management system, v2.0.2.
-Copyright (c) 2009-2012
+Based on the UserFrosting User Script v0.1.
+Copyright (c) 2014
 
-UserFrosting, like UserCake, is 100% free and open-source.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
+Licensed Under the MIT License : http://www.opensource.org/licenses/mit-license.php
+Removing this copyright notice is a violation of the license.
 */
 
 /* Widget for displaying users.  Options include:
@@ -454,15 +436,15 @@ function characterForm(box_id, character_id) {
 }
 
 // Display user info in a panel
-function userDisplay(box_id, user_id) {
+function characterDisplay(box_id, character_id) {
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: "load_form_user.php",  
+	  url: "load_form_character.php",  
 	  data: {
 		box_id: box_id,
 		render_mode: 'panel',
-		user_id: user_id,
+		character_id: character_id,
 		disabled: true,
 		show_dates: true,
 		show_passwords: false,
@@ -518,23 +500,6 @@ function userDisplay(box_id, user_id) {
 // Create user with specified data from the dialog
 function createCharacter(dialog_id, user_id) {	
 	var data = {
-		/*user_name: $('#' + dialog_id + ' input[name="user_name"]' ).val(),
-		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
-		user_title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
-		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
-		add_permissions: add_permissions.join(','),
-		password: $('#' + dialog_id + ' input[name="password"]' ).val(),
-		passwordc: $('#' + dialog_id + ' input[name="passwordc"]' ).val(),
-		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
-		
-		character_id: character_id,
-		character_name: $('#' + dialog_id + ' input[name="character_name"]' ).val(),
-		character_server: $('#' + dialog_id + ' input[name="character_server"]' ).val(),
-		character_ilvl: $('#' + dialog_id + ' input[name="character_ilvl"]' ).val(),
-		character_level: $('#' + dialog_id + ' input[name="character_level"]' ).val(),
-		character_spec: $('#' + dialog_id + ' input[name="character_spec"]' ).val(),
-		character_class: $('#' + dialog_id + ' input[name="character_class"]' ).val(),
-		character_race: $('#' + dialog_id + ' input[name="character_race"]' ).val(),*/
 		user_id: $('#' + dialog_id + ' input[name="user_id"]' ).val(),
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
 		armory_link: $('#' + dialog_id + ' input[name="armory_link"]' ).val(),

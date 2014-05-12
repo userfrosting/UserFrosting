@@ -75,16 +75,6 @@ setReferralPage($_SERVER['PHP_SELF']);
             <ol class="breadcrumb">
               <li class="active"><i class="fa fa-dashboard"></i> Dashboard</li>
             </ol>
-            <!--<div class="alert alert-success alert-dismissable">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-              Welcome to UserFrosting!  The back end account management system is derived from <a class="alert-link" href="http://usercake.com">UserCake 2.0.2</a>, while the dashboard and admin account features are based on the SB Admin Template by <a class="alert-link" href="http://startbootstrap.com">Start Bootstrap</a>. Other key frameworks and plugins used in this system are:
-              <br><a class="alert-link" href='http://http://jquery.com/'>jQuery 1.10.2</a>
-              <br><a class="alert-link" href='http://getbootstrap.com/'>Twitter Bootstrap 3.0</a>
-              <br><a class="alert-link" href='http://fontawesome.io/'>Font Awesome</a>
-              <br><a class="alert-link" href='http://tablesorter.com/docs/'>Tablesorter 2.0</a>
-              <br>The <a class="alert-link" href='http://www.bootstrap-switch.org/'>Bootstrap Switch</a> component by Mattia Larentis,Peter Stein, and Emanuele Marchi
-              <br>All components are copyright of their respective creators.
-            </div>-->
 			<div class="alert alert-success alert-dismissable">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
               Welcome to FadedGaming. This is the future website of the Stonemaul (and connected realms) WoW Guild <Nightfury>.
@@ -98,7 +88,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 			<p>Please take a small moment to update your characters by clicking on the character link to the left and adding them to your list. Doing this will allow the officers and staff to better understand who you are and what experience you have and give us a understanding of where you stand currently.</p>
 		  </div>
 		</div>
-        <!--<div class="row">
+        <div class="row">
           <div class="col-lg-4">
             <div class="panel panel-primary">
               <div class="panel-heading">
@@ -107,45 +97,25 @@ setReferralPage($_SERVER['PHP_SELF']);
               <div class="panel-body">
                 <div class="list-group">
                   <a href="#" class="list-group-item">
-                    <span class="badge">just now</span>
-                    <i class="fa fa-calendar"></i> Calendar updated
+                    <span class="badge">Today</span>
+                    <i class="fa fa-comment"></i> Roster Added
                   </a>
                   <a href="#" class="list-group-item">
-                    <span class="badge">4 minutes ago</span>
-                    <i class="fa fa-comment"></i> Commented on a post
+                    <span class="badge">Yesterday</span>
+                    <i class="fa fa-comment"></i> Fixed errors on character import script
                   </a>
                   <a href="#" class="list-group-item">
-                    <span class="badge">23 minutes ago</span>
-                    <i class="fa fa-truck"></i> Order 392 shipped
-                  </a>
-                  <a href="#" class="list-group-item">
-                    <span class="badge">46 minutes ago</span>
-                    <i class="fa fa-money"></i> Invoice 653 has been paid
-                  </a>
-                  <a href="#" class="list-group-item">
-                    <span class="badge">1 hour ago</span>
-                    <i class="fa fa-user"></i> A new user has been added
-                  </a>
-                  <a href="#" class="list-group-item">
-                    <span class="badge">2 hours ago</span>
-                    <i class="fa fa-check"></i> Completed task: "pick up dry cleaning"
-                  </a>
-                  <a href="#" class="list-group-item">
-                    <span class="badge">yesterday</span>
-                    <i class="fa fa-globe"></i> Saved the world
-                  </a>
-                  <a href="#" class="list-group-item">
-                    <span class="badge">two days ago</span>
-                    <i class="fa fa-check"></i> Completed task: "fix error on sales page"
+                    <span class="badge">5/09/2014</span>
+                    <i class="fa fa-comment"></i> Alot of various changes with database and characters imports
                   </a>
                 </div>
-                <div class="text-right">
+                <!--<div class="text-right">
                   <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>
-        </div>--><!-- /.row -->
+        </div><!-- /.row -->
 
       </div><!-- /#page-wrapper -->
 

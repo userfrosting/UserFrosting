@@ -1,32 +1,14 @@
 <?php
 /*
-
-UserFrosting Version: 0.1
-By Alex Weissman
+Create Character Version: 0.1
+By Lilfade (Bryson Shepard)
 Copyright (c) 2014
 
-Based on the UserCake user management system, v2.0.2.
-Copyright (c) 2009-2012
+Based on the UserFrosting User Script v0.1.
+Copyright (c) 2014
 
-UserFrosting, like UserCake, is 100% free and open-source.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
+Licensed Under the MIT License : http://www.opensource.org/licenses/mit-license.php
+Removing this copyright notice is a violation of the license.
 */
 
 // Request method: GET
@@ -140,162 +122,158 @@ if ($populate_fields){
     $added_date_obj = new DateTime();
     $added_date_obj->setTimestamp($character['added_stamp']);
     $added_date = $added_date_obj->format('l, F j Y');  
-	}
+}
 
 $response = "";
 if ($character_id != ""){
-if ($render_mode == "modal"){
-    $response .=
-    "<div id='$box_id' class='modal fade'>
-        <div class='modal-dialog'>
-            <div class='modal-content'>
-                <div class='modal-header'>
-                    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-                    <h4 class='modal-title'>$box_title</h4>
-                </div>
-                <div class='modal-body'>
-                    <form method='post' action='$target'>";        
-} else if ($render_mode == "panel"){
-    $response .=
-    "<div class='panel panel-primary'>
-        <div class='panel-heading'>
-            <h2 class='panel-title pull-left'>$box_title</h2>
-            <div class='clearfix'></div>
-            </div>
-            <div class='panel-body'>
-                <form method='post' action='$target'>";
-} else {
-    echo "Invalid render mode.";
-    exit();
-}
+	if ($render_mode == "modal"){
+		$response .=
+		"<div id='$box_id' class='modal fade'>
+			<div class='modal-dialog'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+						<h4 class='modal-title'>$box_title</h4>
+					</div>
+					<div class='modal-body'>
+						<form method='post' action='$target'>";        
+	} else if ($render_mode == "panel"){
+		$response .=
+		"<div class='panel panel-primary'>
+			<div class='panel-heading'>
+				<h2 class='panel-title pull-left'>$box_title</h2>
+				<div class='clearfix'></div>
+				</div>
+				<div class='panel-body'>
+					<form method='post' action='$target'>";
+	} else {
+		echo "Invalid render mode.";
+		exit();
+	}
 
-// Load CSRF token
-$csrf_token = $loggedInUser->csrf_token;
-$response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
+	// Load CSRF token
+	$csrf_token = $loggedInUser->csrf_token;
+	$response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
 
-$response .= "
-<div class='dialog-alert'>
-</div>
-<div class='row'>
-    <div class='col-sm-6'>
-        <h5>Character Name</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='character_name' autocomplete='off' value='$character_name' data-validate='{\"minLength\": 1, \"maxLength\": 25, \"label\": \"Character Name\" }' $disable_str>
-        </div>
-    </div>
-    <div class='col-sm-6'>
-        <h5>Character Server</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='character_server' autocomplete='off' value='$character_server' data-validate='{\"minLength\": 1, \"maxLength\": 50, \"label\": \"Character Server\" }' $disable_str>
-        </div>
-    </div>
-</div>
-<div class='row'>
-    <div class='col-sm-6'>
-        <h5>Item Level</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='character_ilvl' autocomplete='off' value='$character_ilvl' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Item Level\" }' $disable_str>
-        </div>
-    </div>
-    <div class='col-sm-6'>
-        <h5>Character Level</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='character_level' autocomplete='off' value='$character_level' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Level\" }' $disable_str>
-        </div>
-    </div>
-</div>
-<div class='row'>
-    <div class='col-sm-6'>
-        <h5>Character Class</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='character_class' autocomplete='off' value='$character_class' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Class\" }' $disable_str>
-        </div>
-    </div>
-    <div class='col-sm-6'>
-        <h5>Character Spec</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='character_spec' autocomplete='off' value='$character_spec' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Spec\" }' $disable_str>
-        </div>
-    </div>
-</div>
-<div class='row'>
-    <div class='col-sm-6'>
-        <h5>Character Race</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='character_race' autocomplete='off' value='$character_race' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Race\" }' $disable_str>
-        </div>
-    </div>
+	$response .= "
+	<div class='dialog-alert'>
+	</div>
+	<div class='row'>
+		<div class='col-sm-6'>
+			<h5>Character Name</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_name' autocomplete='off' value='$character_name' data-validate='{\"minLength\": 1, \"maxLength\": 25, \"label\": \"Character Name\" }' $disable_str>
+			</div>
+		</div>
+		<div class='col-sm-6'>
+			<h5>Character Server</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_server' autocomplete='off' value='$character_server' data-validate='{\"minLength\": 1, \"maxLength\": 50, \"label\": \"Character Server\" }' $disable_str>
+			</div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-sm-6'>
+			<h5>Item Level</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_ilvl' autocomplete='off' value='$character_ilvl' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Item Level\" }' $disable_str>
+			</div>
+		</div>
+		<div class='col-sm-6'>
+			<h5>Character Level</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_level' autocomplete='off' value='$character_level' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Level\" }' $disable_str>
+			</div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-sm-6'>
+			<h5>Character Class</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_class' autocomplete='off' value='$character_class' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Class\" }' $disable_str>
+			</div>
+		</div>
+		<div class='col-sm-6'>
+			<h5>Character Spec</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_spec' autocomplete='off' value='$character_spec' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Spec\" }' $disable_str>
+			</div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-sm-6'>
+			<h5>Character Race</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_race' autocomplete='off' value='$character_race' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Character Race\" }' $disable_str>
+			</div>
+		</div>
 
+		<div class='col-sm-6'>
+			<h5>Armory Link</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='armory_link' autocomplete='off' value='$armory_link' data-validate='{\"minLength\": 1, \"maxLength\": 300, \"label\": \"Armory Link\" }' $disable_str>
+			</div>
+		</div>
+	</div>";
 
-    <div class='col-sm-6'>
-        <h5>Armory Link</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='armory_link' autocomplete='off' value='$armory_link' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Armory Link\" }' $disable_str>
-        </div>
-    </div>
+	if ($show_dates){
+		$response .= "
+		<div class='row'>
+			<div class='col-sm-6'>
+				<h5>Last Sign-in</h5>
+				<div class='input-group optional'>
+					<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
+					<input type='text' class='form-control' name='last_update_date' value='$last_update_date' disabled>
+				</div>
+			</div>
+			<div class='col-sm-6'>
+				<h5>Registered Since</h5>
+				<div class='input-group optional'>
+					<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
+					<input type='text' class='form-control' name='added_date' value='$added_date' disabled>
+				</div>
+			</div>
+		</div>";
+	}
 
-</div>";
-
-if ($show_dates){
-    $response .= "
-    <div class='row'>
-        <div class='col-sm-6'>
-        <h5>Last Sign-in</h5>
-        <div class='input-group optional'>
-            <span class='input-group-addon'><i class='fa fa-calendar'></i></span>
-            <input type='text' class='form-control' name='last_update_date' value='$last_update_date' disabled>
-        </div>
-        </div>
-        <div class='col-sm-6'>
-        <h5>Registered Since</h5>
-        <div class='input-group optional'>
-            <span class='input-group-addon'><i class='fa fa-calendar'></i></span>
-            <input type='text' class='form-control' name='added_date' value='$added_date' disabled>
-        </div>
-        </div>
-    </div>";
-}
-
-$response .= "";
+	$response .= "";
       
-$response .= "
-        <div class='row'>
-		</ul>
-    
-</div>";
+	$response .= "
+		<div class='row'>
+	</ul>
+	</div>";
 
-// Buttons
-$response .= "
-<br><div class='row'>
-";
+	// Buttons
+	$response .= "
+	<br>
+	<div class='row'>";
 
-if ($button_submit){
-    $response .= "<div class='col-xs-8'><div class='vert-pad'><button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success'>$button_submit_text</button></div></div>";
-}
+	if ($button_submit){
+		$response .= "<div class='col-xs-8'><div class='vert-pad'><button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success'>$button_submit_text</button></div></div>";
+	}
 
-// Create the cancel button for modal mode
-if ($render_mode == 'modal'){
-    $response .= "<div class='col-xs-4 col-sm-3 pull-right'><div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
-}
-$response .= "</div>";
+	// Create the cancel button for modal mode
+	if ($render_mode == 'modal'){
+		$response .= "<div class='col-xs-4 col-sm-3 pull-right'><div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
+	}
+	$response .= "</div>";
 
-// Add closing tags as appropriate
-if ($render_mode == "modal")
-    $response .= "</form></div></div></div></div>";
-else
-    $response .= "</form></div></div>";
+	// Add closing tags as appropriate
+	if ($render_mode == "modal")
+		$response .= "</form></div></div></div></div>";
+	else
+		$response .= "</form></div></div>";
 }else{
-   if ($render_mode == "modal"){
-    $response .=
-    "<div id='$box_id' class='modal fade'>
+	if ($render_mode == "modal"){
+		$response .="<div id='$box_id' class='modal fade'>
         <div class='modal-dialog'>
             <div class='modal-content'>
                 <div class='modal-header'>
@@ -304,68 +282,66 @@ else
                 </div>
                 <div class='modal-body'>
                     <form method='post' action='$target'>";        
-} else if ($render_mode == "panel"){
-    $response .=
-    "<div class='panel panel-primary'>
-        <div class='panel-heading'>
-            <h2 class='panel-title pull-left'>$box_title</h2>
-            <div class='clearfix'></div>
+	} else if ($render_mode == "panel"){
+		$response .=
+		"<div class='panel panel-primary'>
+			<div class='panel-heading'>
+				<h2 class='panel-title pull-left'>$box_title</h2>
+					<div class='clearfix'></div>
             </div>
             <div class='panel-body'>
                 <form method='post' action='$target'>";
-} else {
-    echo "Invalid render mode.";
-    exit();
-}
+	} else {
+		echo "Invalid render mode.";
+		exit();
+	}
 
-// Load CSRF token
-$csrf_token = $loggedInUser->csrf_token;
-$current_user_id = $loggedInUser->user_id;
+	// Load CSRF token
+	$csrf_token = $loggedInUser->csrf_token;
+	$current_user_id = $loggedInUser->user_id;
 
-$response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
-$response .= "<input type='hidden' name='user_id' value='$current_user_id'/>";
-$response .= "
-<div class='dialog-alert'>
-</div>
-<div class='row'>
-    <div class='col-sm-12'>
-        <h5>Armory Link</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='armory_link' autocomplete='off' value='$armory_link' data-validate='{\"minLength\": 1, \"maxLength\": 150, \"label\": \"Armory Link\" }' $disable_str>
-        </div>
-    </div>
-</div>";
-$response .= "";
+	$response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
+	$response .= "<input type='hidden' name='user_id' value='$current_user_id'/>";
+	$response .= "
+	<div class='dialog-alert'>
+	</div>
+	<div class='row'>
+		<div class='col-sm-12'>
+			<h5>Armory Link</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='armory_link' autocomplete='off' value='$armory_link' data-validate='{\"minLength\": 1, \"maxLength\": 300, \"label\": \"Armory Link\" }' $disable_str>
+			</div>
+		</div>
+	</div>";
+	$response .= "";
       
-$response .= "
-        <div class='row'>
+	$response .= "
+    <div class='row'>
 		</ul>
-    
-</div>";
+	</div>";
 
-// Buttons
-$response .= "
-<br><div class='row'>
-";
+	// Buttons
+	$response .= "
+	<br>
+	<div class='row'>";
 
-if ($button_submit){
-    $response .= "<div class='col-xs-8'><div class='vert-pad'><button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success'>$button_submit_text</button></div></div>";
-}
+	if ($button_submit){
+		$response .= "<div class='col-xs-8'><div class='vert-pad'><button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success'>$button_submit_text</button></div></div>";
+	}
 
-// Create the cancel button for modal mode
-if ($render_mode == 'modal'){
-    $response .= "<div class='col-xs-4 col-sm-3 pull-right'><div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
-}
-$response .= "</div>";
+	// Create the cancel button for modal mode
+	if ($render_mode == 'modal'){
+		$response .= "<div class='col-xs-4 col-sm-3 pull-right'><div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
+	}
+	$response .= "</div>";
 
-// Add closing tags as appropriate
-if ($render_mode == "modal")
-    $response .= "</form></div></div></div></div>";
-else
-    $response .= "</form></div></div>";
+	// Add closing tags as appropriate
+	if ($render_mode == "modal")
+		$response .= "</form></div></div></div></div>";
+	else
+		$response .= "</form></div></div>";
 }
    
-echo json_encode(array("data" => $response), JSON_FORCE_OBJECT);
-
+	echo json_encode(array("data" => $response), JSON_FORCE_OBJECT);
 ?>

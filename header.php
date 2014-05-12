@@ -105,8 +105,32 @@ if (!securePage($_SERVER['PHP_SELF'])){
 			  <li class='navitem-site-pages'><a href='site_pages.php'><i class='fa fa-files-o'></i> Site Pages</a></li>
 		  </ul>
 	  </li>";
-  }
-  ?>
+	}
+	echo '<hr />';
+	//Links for permission level 3 (default officer)
+	if ($loggedInUser->checkPermission(array(3))){
+		echo "
+		<li class='dropdown'>
+		<a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-wrench'></i> Officer Settings <b class='caret'></b></a>
+		<ul class='dropdown-menu'>
+			<li class='navitem-place-holder-officer'><a href='#'><i class='fa fa-files-o'></i> Placeholder</a></li>
+		</ul>
+	</li>";
+	}
+	echo '<hr />';
+	  //Links for permission level 4 (default guild master)
+	  if ($loggedInUser->checkPermission(array(4))){
+	  echo "
+	  <li class='dropdown'>
+	  <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-wrench'></i> Guild Master Settings <b class='caret'></b></a>
+		  <ul class='dropdown-menu'>
+			  <li class='navitem-place-holder-gm'><a href='#'><i class='fa fa-files-o'></i> Placeholder</a></li>
+		  </ul>
+	  </li>";
+	}
+	?>
+	
+	
   </ul>
   <ul class="nav navbar-master navbar-nav navbar-right">
 	<li class="dropdown user-dropdown">
