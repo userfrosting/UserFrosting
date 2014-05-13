@@ -83,6 +83,7 @@ require_once("class.mail.php");
 require_once("class.user.php");
 require_once("class.newuser.php");
 require_once("class.newcharacter.php");
+require_once("class.massupdate_character.php");
 require_once("chrome.php");
 require_once("funcs.php");
 

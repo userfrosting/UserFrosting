@@ -22,9 +22,9 @@ echo 'error happened';
 $json = file_get_contents('https://us.battle.net/api/wow/character/Stonemaul/Allfaded?fields=guild,items,talents,professions,pvp,progression,titles,feed,audit');
 $obj = json_decode($json);
 //echo $obj->access_token;
-//echo '<pre>';
-//var_dump($obj);
-//echo '</pre>';
+echo '<pre>';
+var_dump($obj);
+echo '</pre>';
 
 $name = $obj->name;
 $server = $obj->realm;
@@ -376,8 +376,13 @@ echo '<br /><br />';
 					[flexKills]
 					[flexTimestamp]
 */
+
+/* gather feed data from character $obj->feed->
+
+*/
+
 echo '<pre>';
-var_dump($obj->pvp->brackets);
+var_dump($obj->pvp);
 echo '</pre>';
 
 /* get class color based on class name
