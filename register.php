@@ -73,7 +73,7 @@ if(isset($_SESSION['dname'])) {
 	$dname = '';
 }
 
-if(isset($_SESSION['email'];)) {
+if(isset($_SESSION['email'])) {
 	$email = $_SESSION['email'];
 }else{
 	$email = '';
