@@ -76,6 +76,7 @@ if(isUserLoggedIn()) {
 //Forms posted
 if(!empty($_POST))
 {
+	$_SESSION = array();//overwrite the session array
 	$new_user_id = "";
 	$errors = array();
 	$email = trim($_POST["email"]);
@@ -141,7 +142,6 @@ if(!empty($_POST))
 		}
 	}else{
 		//we set throw away session with username/displayname/pass
-		$_SESSION = array();//overwrite previous failed attempts
 		$_SESSION['uname'] = $username;
 		$_SESSION['dname'] = $displayname;
 		$_SESSION['email'] = $email;
