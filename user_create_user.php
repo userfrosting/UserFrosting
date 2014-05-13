@@ -184,7 +184,8 @@ foreach ($successes as $success){
 }
 
 // Send successfully registered users to the login page, while errors should return them to the registration page.
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+if (isset($_POST['ajaxMode']) && $_POST['ajaxMode'] == "true" ){
+  $_SESSION = array();//overwrite any failed sessions and destroy them, so that the session can be reused by php without fragmenting.
   echo json_encode(array(
 	"errors" => count($errors),
 	"successes" => count($successes)));
