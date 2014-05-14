@@ -61,6 +61,36 @@ if(isUserLoggedIn()) {
 	exit();
 }
 
+if(isset($_SESSION['uname'])) {
+	$uname = $_SESSION['uname'];
+}else{
+	$uname = '';
+}
+
+if(isset($_SESSION['dname'])) {
+	$dname = $_SESSION['dname'];
+}else{
+	$dname = '';
+}
+
+if(isset($_SESSION['email'])) {
+	$email = $_SESSION['email'];
+}else{
+	$email = '';
+}
+
+if(isset($_SESSION['pword'])) {
+	$pword = $_SESSION['pword'];
+}else{
+	$pword = '';
+}
+
+if(isset($_SESSION['cpass'])) {
+	$cpass = $_SESSION['cpass'];
+}else{
+	$cpass = '';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -114,31 +144,30 @@ if(isUserLoggedIn()) {
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">User Name</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="User Name" name = 'username' value=''>
+			  <input type="text" class="form-control" placeholder="User Name" name = 'username' value='<?php echo htmlentities($uname) ?>' />
 			</div>
 		  </div>
 		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Display Name</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="Display Name" name='displayname'>
-			</div>
+			  <input type="text" class="form-control" placeholder="Display Name" name='displayname' value='<?php echo htmlentities($dname) ?>' />
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Email</label>
 			<div class="col-sm-8">
-			  <input type="email" class="form-control" placeholder="Email" name='email'>
+			  <input type="email" class="form-control" placeholder="Email" name='email' value='<?php echo htmlentities($email) ?>' />
 			</div>
 		  </div>		  
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Password" name='password'>
+			  <input type="password" class="form-control" placeholder="Password" name='password' value='<?php echo htmlentities($pword) ?>' />
 			</div>
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Confirm Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc'>
+			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc' value='<?php echo htmlentities($cpass) ?>' />
 			</div>
 		  </div>
 		  <div class="form-group">

@@ -313,8 +313,12 @@ function loadRoster($character_id){
     }
 }
 
+//dont think this function is even being used anymore - look into this
+/*
 function updateFileCache() 
-{ 	//only grab data from database here
+{ 	
+	//change name of this function it dosen't update anything
+	//only grab data from database here
 	//rip out rest and put into mass_update_characters.php asap to make this all work ... hopefully
 	global $mysqli,$db_table_prefix;	
 	$stmt = $mysqli->prepare("SELECT character_id, armory_link
@@ -327,18 +331,80 @@ function updateFileCache()
 
 	if($stmt->fetch()){
 		return array('character_id' => $cid, 'armory_link' => $alink);
-		
-		/*while ($stmt->fetch()){
-			$res[] = ['character_id' => $cid, 'armory_link' => $alink];
-		}*/
-		
 		$stmt->close();
 	} else {
 		return false;
 	}
 }
+*/
 
-function updateToon() {
+function updateFileCache(array $characterdetails, $bnet_string, $locale_string)
+{
+
+	$errors = array();
+	$successes = array();
+
+	$d = $characterdetails['character_id']; //$res[$l]['character_id'];
+	$a = $characterdetails['armory_link']; //$res[$l]['armory_link'];
+	$n = $characterdetails['character_name'];
+//grab the armory data from here
+	$newURL = explode("/", $a);
+
+	if($newURL[2] !== $bnet_string) {
+		$errors[] = 'error happened';
+	}else{
+		//check for .json file for character or grab newest one
+		//check if we have a copy already or not, if not cache the file before we go further
+		$filename = 'chars/'.$n.'.json';
+		
+		//check if locale?= is set
+		//&locale=es_MX
+		if (isset($locale_string)) {
+			$ls = $locale_string;
+		}else{
+			$ls = 'en_US';
+		}
+		
+		if (!file_exists($filename)) {
+			//echo "The file dosent exist";
+			$errors = 'no file found grabbing one for cache';
+			$json = file_get_contents('https://'.$bnet_string.'/api/wow/character/'.$newURL[6].'/'.$newURL[7].'?fields=guild,items,talents,professions,pvp,progression,titles,feed,audit&amp;locale='.$ls);
+			$new = json_decode($json);
+			$file = fopen($filename, "w");
+			fwrite($file, json_encode($new));
+			fclose($file);
+			
+			$json = file_get_contents($filename);
+			$obj = json_decode($json);
+		} else {
+			//echo "file found";
+			$successes[] = 'we found a cache file';
+			$json = file_get_contents($filename);
+			$obj = json_decode($json);
+				
+			//check version of lastModified
+			$json_check = file_get_contents('https://'.$bnet_string.'/api/wow/character/'.$newURL[6].'/'.$newURL[7]);
+			$obj_check = json_decode($json_check);
+			
+			//check and see if the file we have is the latest version
+			if($obj->lastModified !== $obj_check->lastModified) {
+				//echo 'old file found, updated';
+				$errors[] = 'old file found, updated';
+				//if not delete file then grab a new one
+				unlink($filename);
+				$json = file_get_contents('https://'.$bnet_string.'/api/wow/character/'.$newURL[6].'/'.$newURL[7].'?fields=guild,items,talents,professions,pvp,progression,titles,feed,audit&amp;locale='.$ls);
+				$new = json_decode($json);
+				$file = fopen($filename, "w");
+				fwrite($file, json_encode($new));
+				fclose($file);
+			}
+		}
+	}
+	return [$obj, $errors, $successes];
+}
+
+function updateToon($obj) 
+{
 		//--------------------------------
 		//set up the vars for the new data
 		//--------------------------------

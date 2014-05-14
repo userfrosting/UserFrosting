@@ -37,7 +37,7 @@ set_error_handler('logAllErrors');
 
 if (!securePage($_SERVER['PHP_SELF'])){
   addAlert("danger", "Whoops, looks like you don't have permission to create an account.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  if (isset($_POST['ajaxMode']) && $_POST['ajaxMode'] == "true" ){
 	echo json_encode(array("errors" => 1, "successes" => 0));
   } else {
 	header("Location: " . getReferralPage());
@@ -54,7 +54,7 @@ if (!fetchUserDetails(NULL, NULL, '1')){
 // If registration is disabled, send them back to the home page with an error message
 if (!$can_register){
 	addAlert("danger", lang("ACCOUNT_REGISTRATION_DISABLED"));
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	if (isset($_POST['ajaxMode']) && $_POST['ajaxMode'] == "true" ){
 	  echo json_encode(array("errors" => 1, "successes" => 0));
 	} else {
 		header("Location: login.php");
@@ -65,7 +65,7 @@ if (!$can_register){
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	if (isset($_POST['ajaxMode']) && $_POST['ajaxMode'] == "true" ){
 	  echo json_encode(array("errors" => 1, "successes" => 0));
 	} else {
 		header("Location: account.php");
@@ -132,7 +132,6 @@ if(!empty($_POST))
 		else
 		{
 			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
-			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
 			$new_user_id = $user->userCakeAddUser();
 			if($new_user_id == -1)
 			{
@@ -140,6 +139,14 @@ if(!empty($_POST))
 				if($user->sql_failure)  $errors[] = lang("SQL_ERROR");
 			}
 		}
+	}else{
+		//we set throw away session with username/displayname/pass
+		$_SESSION = array();//overwrite the session array
+		$_SESSION['uname'] = $username;
+		$_SESSION['dname'] = $displayname;
+		$_SESSION['email'] = $email;
+		$_SESSION['pword'] = $password;
+		$_SESSION['cpass'] = $confirm_pass;
 	}
 	
 	// If everything went well, add default permissions for the new user
@@ -177,12 +184,18 @@ foreach ($successes as $success){
 }
 
 // Send successfully registered users to the login page, while errors should return them to the registration page.
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+if (isset($_POST['ajaxMode']) && $_POST['ajaxMode'] == "true" ){
+  
   echo json_encode(array(
 	"errors" => count($errors),
 	"successes" => count($successes)));
 } else {
   if(count($errors) == 0) {
+	destroySession('uname');
+	destroySession('dname');
+	destroySession('email');
+	destroySession('pword');
+	destroySession('cpass');
 	header('Location: login.php');
 	exit();
   } else {

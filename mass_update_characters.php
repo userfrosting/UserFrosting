@@ -53,11 +53,7 @@ try {
 	  $name = $r['character_name'];
 	  $armory = $r['armory_link'];
       $results[$id] = $r;
-	  //not needed here
-	  //$results[$name] = $r;
-	  //$results[$armory] = $r;
       $i++;
-	  //print_r($results);
   }
   $stmt = null;
 
