@@ -145,8 +145,6 @@ if(!empty($_POST))
 		$_SESSION['uname'] = $username;
 		$_SESSION['dname'] = $displayname;
 		$_SESSION['email'] = $email;
-		$_SESSION['pword'] = $password;
-		$_SESSION['cpass'] = $confirm_pass;
 	}
 	
 	// If everything went well, add default permissions for the new user
@@ -194,8 +192,6 @@ if (isset($_POST['ajaxMode']) && $_POST['ajaxMode'] == "true" ){
 	destroySession('uname');
 	destroySession('dname');
 	destroySession('email');
-	destroySession('pword');
-	destroySession('cpass');
 	header('Location: login.php');
 	exit();
   } else {
