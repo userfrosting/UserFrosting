@@ -1,0 +1,78 @@
+-- phpMyAdmin SQL Dump
+-- version 4.0.9deb1.precise~ppa.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: May 13, 2014 at 10:58 AM
+-- Server version: 5.5.37-0ubuntu0.12.04.1
+-- PHP Version: 5.5.12-1+deb.sury.org~precise+1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `uf`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `uc_characters`
+--
+
+CREATE TABLE IF NOT EXISTS `uc_characters` (
+  `character_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `character_name` varchar(150) CHARACTER SET latin1 NOT NULL,
+  `character_server` varchar(75) CHARACTER SET latin1 NOT NULL,
+  `character_ilvl` int(4) NOT NULL,
+  `character_level` int(4) NOT NULL,
+  `character_spec` varchar(25) CHARACTER SET latin1 NOT NULL,
+  `character_class` varchar(25) CHARACTER SET latin1 NOT NULL,
+  `character_race` varchar(25) CHARACTER SET latin1 NOT NULL,
+  `armory_link` varchar(300) CHARACTER SET latin1 NOT NULL,
+  `class_color` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `character_raider` int(11) NOT NULL,
+  `added_stamp` int(11) NOT NULL,
+  `last_update_stamp` int(11) NOT NULL,
+  PRIMARY KEY (`character_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=39 ;
+
+--
+-- Dumping data for table `uc_characters`
+--
+
+INSERT INTO `uc_characters` (`character_id`, `user_id`, `character_name`, `character_server`, `character_ilvl`, `character_level`, `character_spec`, `character_class`, `character_race`, `armory_link`, `class_color`, `character_raider`, `added_stamp`, `last_update_stamp`) VALUES
+(1, 1, 'Allfaded', 'Stonemaul', 530, 90, 'Shadow', 'Priest', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Allfaded/simple', '#FFFFFF', 0, 1399649998, 1399649998),
+(2, 1, 'Lilfade', 'Stonemaul', 544, 90, 'Destruction', 'Warlock', 'Human', 'http://us.battle.net/wow/en/character/stonemaul/Lilfade/simple', '#9482C9', 0, 1399650012, 1399650012),
+(3, 1, 'Ungodlyfaded', 'Stonemaul', 504, 90, 'Blood', 'Death Knight', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Ungodlyfaded/simple', '#C41F3B', 0, 1399650031, 1399650031),
+(4, 3, 'Devasty', 'Stonemaul', 540, 90, 'Frost', 'Death Knight', 'Human', 'http://us.battle.net/wow/en/character/stonemaul/Devasty/simple', '#C41F3B', 0, 1399654875, 1399654875),
+(5, 3, 'Chübbs', 'Stonemaul', 518, 90, 'Windwalker', 'Monk', 'Human', 'http://us.battle.net/wow/en/character/stonemaul/Ch%C3%BCbbs/simple', '#558A84', 0, 1399654908, 1399654908),
+(6, 3, 'Fümanchü', 'Stonemaul', 496, 90, 'Restoration', 'Shaman', 'Alliance  Pandaren', 'http://us.battle.net/wow/en/character/stonemaul/F%C3%BCmanch%C3%BC/simple', '#0070DE', 0, 1399655085, 1399655085),
+(10, 3, 'Grumpynugget', 'Stonemaul', 502, 90, 'Frost', 'Mage', 'Human', 'http://us.battle.net/wow/en/character/stonemaul/Grumpynugget/simple', '#69CCF0', 0, 1399661276, 1399661276),
+(11, 4, 'ßuddy', 'Stonemaul', 532, 90, 'Destruction', 'Warlock', 'Human', 'http://us.battle.net/wow/en/character/stonemaul/%C3%9Fuddy/simple', '#9482C9', 0, 1399694345, 1399694345),
+(12, 5, 'Shaianna', 'Stonemaul', 530, 90, 'Marksmanship', 'Hunter', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/Shaianna/simple', '#ABD473', 0, 1399703955, 1399703955),
+(13, 5, 'Snomage', 'Stonemaul', 527, 90, 'Frost', 'Mage', 'Alliance  Pandaren', 'http://us.battle.net/wow/en/character/stonemaul/Snomage/simple', '#69CCF0', 0, 1399703998, 1399703998),
+(14, 5, 'Snocone', 'Stonemaul', 509, 90, 'Guardian', 'Druid', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/Snocone/simple', '#FF7D0A', 0, 1399704381, 1399704381),
+(15, 6, 'Calilay', 'Stonemaul', 561, 90, 'Marksmanship', 'Hunter', 'Worgan', 'http://us.battle.net/wow/en/character/stonemaul/Calilay/advanced', '#ABD473', 0, 1399749703, 1399749703),
+(16, 6, 'Auroralei', 'Stonemaul', 540, 90, 'Discipline', 'Priest', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/Auroralei/advanced', '#FFFFFF', 0, 1399750116, 1399750116),
+(17, 6, 'Evalangel', 'Stonemaul', 539, 90, 'Restoration', 'Druid', 'Worgan', 'http://us.battle.net/wow/en/character/stonemaul/Evalangel/advanced', '#FF7D0A', 0, 1399750179, 1399750179),
+(18, 6, 'Arìane', 'Stonemaul', 517, 90, 'Protection', 'Paladin', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Ar%C3%ACane/advanced', '#F58CBA', 0, 1399750255, 1399750255),
+(19, 6, 'Chaosiara', 'Stonemaul', 515, 90, 'Arms', 'Warrior', 'Worgan', 'http://us.battle.net/wow/en/character/stonemaul/Chaosiara/advanced', '#C79C6E', 0, 1399750330, 1399750330),
+(20, 6, 'Saraì', 'Stonemaul', 528, 90, 'Destruction', 'Warlock', 'Worgan', 'http://us.battle.net/wow/en/character/stonemaul/Sara%C3%AC/advanced', '#9482C9', 0, 1399750400, 1399750400),
+(21, 6, 'Icesiis', 'Stonemaul', 476, 90, 'Blood', 'Death Knight', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Icesiis/advanced', '#C41F3B', 0, 1399750498, 1399750498),
+(22, 6, 'Rävën', 'Stonemaul', 517, 90, 'Arcane', 'Mage', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/R%C3%A4v%C3%ABn/advanced', '#69CCF0', 0, 1399751035, 1399751035),
+(23, 6, 'Shàdów', 'Stonemaul', 492, 90, 'Assassination', 'Rogue', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/Sh%C3%A0d%C3%B3w/advanced', '#FFF569', 0, 1399751121, 1399751121),
+(25, 6, 'Litheiara', 'Stonemaul', 500, 90, 'Windwalker', 'Monk', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Litheiara/advanced', '#558A84', 0, 1399751166, 1399751166),
+(26, 7, 'Demorius', 'Stonemaul', 538, 90, 'Mistweaver', 'Monk', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/Demorius/simple', '#558A84', 0, 1399751170, 1399751170),
+(27, 7, 'Feritas', 'Stonemaul', 493, 90, 'Restoration', 'Druid', 'Worgan', 'http://us.battle.net/wow/en/character/stonemaul/Feritas/simple', '#FF7D0A', 0, 1399751205, 1399751205),
+(28, 7, 'Lysias', 'Stonemaul', 533, 90, 'Protection', 'Warrior', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Lysias/simple', '#C79C6E', 0, 1399751229, 1399751229),
+(29, 7, 'Sîç', 'Stonemaul', 507, 90, 'Elemental', 'Shaman', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/S%C3%AE%C3%A7/simple', '#0070DE', 0, 1399751278, 1399751278),
+(30, 7, 'Sudeas', 'Stonemaul', 505, 90, 'Shadow', 'Priest', 'Human', 'http://us.battle.net/wow/en/character/stonemaul/Sudeas/simple', '#FFFFFF', 0, 1399751295, 1399751295),
+(31, 7, 'Alëxandrös', 'Stonemaul', 567, 90, 'Protection', 'Paladin', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Al%C3%ABxandr%C3%B6s/simple', '#F58CBA', 0, 1399751640, 1399751640),
+(32, 7, 'Qwikshotz', 'Greymane', 476, 90, 'Survival', 'Hunter', 'Night Elf', 'http://us.battle.net/wow/en/character/greymane/Qwikshotz/simple', '#ABD473', 0, 1399751659, 1399751659),
+(33, 7, 'Mälphäs', 'Dalaran', 548, 90, 'Affliction', 'Warlock', 'Worgan', 'http://us.battle.net/wow/en/character/dalaran/M%C3%A4lph%C3%A4s/simple', '#9482C9', 0, 1399751677, 1399751677),
+(34, 7, 'Mürðër', 'Stonemaul', 522, 90, 'Subtlety', 'Rogue', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/M%C3%BCr%C3%B0%C3%ABr/simple', '#FFF569', 0, 1399751700, 1399751700),
+(35, 7, 'Flamme', 'Greymane', 467, 90, 'Frost', 'Mage', 'Gnome', 'http://us.battle.net/wow/en/character/greymane/Flamme/simple', '#69CCF0', 0, 1399751737, 1399751737),
+(36, 7, 'Ðïsæse', 'Stonemaul', 508, 90, 'Blood', 'Death Knight', 'Night Elf', 'http://us.battle.net/wow/en/character/stonemaul/%C3%90%C3%AFs%C3%A6se/simple', '#C41F3B', 0, 1399751832, 1399751832),
+(37, 6, 'Zylara', 'Stonemaul', 566, 90, 'Enhancement', 'Shaman', 'Draenei', 'http://us.battle.net/wow/en/character/stonemaul/Zylara/advanced', '#0070DE', 0, 1399751953, 1399751953);

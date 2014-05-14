@@ -378,8 +378,10 @@ function deleteCharacterDialog(dialog_id, character_id, name){
 }
 
 /* Display a modal form for updating/creating a character */
-function characterForm(box_id, character_id) {	
+function characterForm(box_id, character_id, character_name, armory_link) {	
 	character_id = typeof character_id !== 'undefined' ? character_id : "";
+	character_name = typeof character_name !== 'undefined' ? character_name : "";
+	armory_link = typeof armory_link !== 'undefined' ? armory_link : "";
 	
 	// Delete any existing instance of the form with the same name
 	if($('#' + box_id).length ) {
@@ -394,6 +396,8 @@ function characterForm(box_id, character_id) {
 	if (character_id != "") {
 		console.log("Update mode");
 		data['character_id'] = character_id;
+		data['character_name'] = character_name;
+		data['armory_link'] = armory_link;
 		//data['show_passwords'] = false;
 		data['show_dates'] = true;
 	}
@@ -426,7 +430,7 @@ function characterForm(box_id, character_id) {
 				});	
 			} else {
 				if (character_id != "")
-					updateCharacter(box_id, character_id);
+					updateCharacter(box_id, character_id, character_name, armory_link);
 				else
 					createCharacter(box_id);
 			}
@@ -520,7 +524,7 @@ function createCharacter(dialog_id, user_id) {
 }
 
 // Update user with specified data from the dialog
-function updateCharacter(dialog_id, character_id) {
+function updateCharacter(dialog_id, character_id, character_name, armory_link) {
 	var errorMessages = validateFormFields(dialog_id);
 	if (errorMessages.length > 0) {
 		$('#' + dialog_id + ' .dialog-alert').html("");
@@ -532,14 +536,14 @@ function updateCharacter(dialog_id, character_id) {
 	
 	var data = {
 		character_id: character_id,
-		character_name: $('#' + dialog_id + ' input[name="character_name"]' ).val(),
-		character_server: $('#' + dialog_id + ' input[name="character_server"]' ).val(),
-		character_ilvl: $('#' + dialog_id + ' input[name="character_ilvl"]' ).val(),
-		character_level: $('#' + dialog_id + ' input[name="character_level"]' ).val(),
-		character_spec: $('#' + dialog_id + ' input[name="character_spec"]' ).val(),
-		character_class: $('#' + dialog_id + ' input[name="character_class"]' ).val(),
-		character_race: $('#' + dialog_id + ' input[name="character_race"]' ).val(),
-		armory_link: $('#' + dialog_id + ' input[name="armory_link"]' ).val(),
+		character_name: character_name,//$('#' + dialog_id + ' input[name="character_name"]' ).val(),
+		//character_server: $('#' + dialog_id + ' input[name="character_server"]' ).val(),
+		//character_ilvl: $('#' + dialog_id + ' input[name="character_ilvl"]' ).val(),
+		//character_level: $('#' + dialog_id + ' input[name="character_level"]' ).val(),
+		//character_spec: $('#' + dialog_id + ' input[name="character_spec"]' ).val(),
+		//character_class: $('#' + dialog_id + ' input[name="character_class"]' ).val(),
+		//character_race: $('#' + dialog_id + ' input[name="character_race"]' ).val(),
+		armory_link: armory_link, //$('#' + dialog_id + ' input[name="armory_link"]' ).val(),
 		
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
 		ajaxMode:	"true"
@@ -555,6 +559,158 @@ function updateCharacter(dialog_id, character_id) {
 		window.location.reload();
 	});
 	return;
+}
+
+//perform a mass character update
+function massUpdate(widget_id, options) {
+	var widget = $('#' + widget_id);
+	var sort = "asc";
+	if (options['sort'] && options['sort'] == 'asc') {
+        sort = [[0,0]];
+	}
+    else {
+        sort = [[0,1]];
+    }
+
+	var title = "<i class='fa fa-users'></i> Characters";
+	if (options['title'])
+		title = "<i class='fa fa-users'></i> " + options['title'];
+		
+	var limit = 10;
+	if (options['limit'])
+		limit = options['limit'];
+		
+	// Default columns to display:
+	var columns = {
+		character_info: 'Character Name',
+		character_id: 'Character ID',
+		armory_link: 'Armory Link',
+		action: 'Update Character'
+	};
+	
+	if (options['columns'])
+		columns = options['columns'];		
+
+	console.debug(options);	
+	// Ok, set up the widget with its columns
+	var html =
+	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +
+    "<div class='panel-body'>";
+	
+	// Load the data and generate the rows.
+	var url = 'mass_update_characters.php';
+	$.getJSON( url, {
+		limit: limit
+	})
+	.done(function( data ) {
+		// Don't bother unless there are some records found
+		if (Object.keys(data).length > 0) { 
+			html+= "<div class='table-responsive'><table class='table table-bordered table-hover table-striped tablesorter'>" + 
+			"<thead><tr>";
+			jQuery.each(columns, function(name, header) {
+				html += "<th>" + header + " <i class='fa fa-sort'></th>";
+			});
+			html += "</tr></thead><tbody></tbody></table>";
+		} else {
+			console.log("No characters found.");
+			html += "<div class='alert alert-info'>No characters found.</div>";
+		}	
+		
+			html += "<div class='row'><div class='col-md-6'>" +
+            "<button type='button' class='btn btn-success createCharacter' data-toggle='modal' data-target='#character-create-dialog'>" +
+			"<i class='fa fa-plus-square'></i>  Add New Character</button></div>" +
+			"</div></div></div>";
+		
+		$('#' + widget_id).html(html);
+		if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
+			jQuery.each(data, function(idx, record) {
+				var row = "<tr>";
+				jQuery.each(columns, function(name, header) {
+					//this will show the character information on the page
+					if (name == 'character_info') {
+						var formattedRowData = {};
+						formattedRowData['character_name'] = record['character_name'];
+						var template = Handlebars.compile("<td data-text={{character_name}}'><div class='h4'><small>{{character_name}}</small></div></td>");
+						row += template(formattedRowData);
+					}
+					
+					if (name =='character_id') {
+						var formattedRowData = {};
+						formattedRowData['character_id'] = record['character_id'];
+						var template = Handlebars.compile("<td data-date='{{character_id}}'>{{character_id}}</td>");
+						row += template(formattedRowData);
+					}
+					
+					if (name =='armory_link') {
+						var formattedRowData = {};
+						formattedRowData['armory_link'] = record['armory_link'];
+						var template = Handlebars.compile("<td data-date='{{armory_link}}'><small>{{armory_link}}</small></td>");
+						//<div><i class='fa fa-envelope'></i> <a href='{{armory_link}}'>Armory Link</a></div>
+						row += template(formattedRowData);
+					}
+					
+					//this will show the button to either edit or delete the character from out db
+					//"<a href='#' data-target='update-character-dialog' class='btn {{button-class}} btn-sm btn-info'>Update Character</a>
+					if (name == 'action') {
+						var template = Handlebars.compile("<td><div class='btn-group'>" +
+							"<button type='button' class='btn {{btn-class}} btn-sm btn-info'>Character Options</button>" +
+							"<button type='button' class='btn {{btn-class}} btn-sm btn-info dropdown-toggle' data-toggle='dropdown'>" +
+							"<span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></button>" +
+							"{{{menu}}}</div></td>");
+						var formattedRowData = {};
+						formattedRowData['menu'] 
+						formattedRowData['menu'] = "<ul class='dropdown-menu' role='menu'>";
+						//disabled for now need to fix the updating of the character name without changing name triggering
+						formattedRowData['menu'] += "<li><a href='#' data-target='#update-character-dialog' data-toggle='modal' data-id='" + record['character_id'] + 
+						"' data-name='" + record['character_name'] + "' data-armory='" + record['armory_link'] +
+						"' class='editCharacterDetails'><i class='fa fa-edit'></i> Update Character</a></li>" +
+						"<li class='divider'></li>";
+						if (record['added_stamp'] > 1) {
+							formattedRowData['btn-class'] = 'btn-primary';
+						}
+						formattedRowData['menu'] += "<li><a href='#' data-target='#delete-character-dialog' data-toggle='modal' data-id='" + record['character_id'] +
+							"' data-name='" + record['character_name'] + "' class='deleteCharacter'><i class='fa fa-trash-o'></i> Delete Character</a></li>";
+						formattedRowData['menu'] += "</ul>";
+						row += template(formattedRowData);
+					}		
+				
+				});
+
+				// Add the row to the table
+				row += "</tr>";
+				$('#' + widget_id + ' .table > tbody:last').append(row);
+			});
+			
+			// Initialize the tablesorter
+			$('#' + widget_id + ' .table').tablesorter({
+				debug: false,
+				sortList: sort,
+				headers: {
+						0: {sorter: 'metatext'},
+						1: {sorter: 'metadate'}
+					}    
+			});
+		}
+		
+		// Link the edit character button
+		widget.on('click', '.editCharacterDetails', function () {
+            var btn = $(this);
+            var character_id = btn.data('id');
+			var character_name = btn.data('name');
+			var armory_link = btn.data('armory');
+			characterForm('character-update-dialog', character_id, character_name, armory_link);
+        });
+		
+		//Link the delete character button
+		widget.on('click', '.deleteCharacter', function () {
+            var btn = $(this);
+            var character_id = btn.data('id');
+			var name = btn.data('name');
+			deleteCharacterDialog('delete-character-dialog', character_id, name);
+        });  		
+		
+		return false;
+	});
 }
 
 // Activate new user account

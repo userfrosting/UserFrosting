@@ -101,6 +101,7 @@ if (!securePage($_SERVER['PHP_SELF'])){
 		  <ul class='dropdown-menu'>
 			  <li class='navitem-dashboard-admin'><a href='dashboard_admin.php'><i class='fa fa-dashboard'></i> Admin Dashboard</a></li>
         	  <li class='navitem-users'><a href='users.php'><i class='fa fa-users'></i> Users</a></li>
+			  <li class='navitem-mass'><a href='mass_update_character.php'><i class='fa fa-users'></i> Mass character update</a></li>
 			  <li class='navitem-site-settings'><a href='site_settings.php'><i class='fa fa-globe'></i> Site Configuration</a></li>
 			  <li class='navitem-site-pages'><a href='site_pages.php'><i class='fa fa-files-o'></i> Site Pages</a></li>
 		  </ul>

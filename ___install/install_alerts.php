@@ -29,50 +29,20 @@ THE SOFTWARE.
 
 */
 
-class CharacterUpdate
-{
-	/*public $status = false;
-	private $current_user_id;
-	private $name;
-	private $server;
-	private $ilvl;
-	private $level;
-	private $class;
-	private $spec;
-	private $race;
-	private $armory_link;
-	private $classColor;
-	public $sql_failure = false;
-	public $name_taken = false;
-	public $success = NULL;
-	*/
-	
-	function __construct() //$current_user_id, $name, $server, $ilvl, $level, $class, $spec, $race, $armory_link, $classColor)
-	{
-		/*//Used for display only
-		$this->current_user_id = $current_user_id;
-		$this->name = $name;
-		$this->server = $server;
-		$this->ilvl = $ilvl;
-		$this->level = $level;
-		$this->class = $class;
-		$this->spec = $spec;
-		$this->race = $race;
-		$this->armory_link = $armory_link;
-		$this->class_color = $classColor;
-		
-		if(characterNameExists($this->name))
-		{
-			$this->name_taken = true;
-		}
-		else
-		{
-			//No problems have been found.
-			$this->status = true;
-		}*/
-		
-	}
-	
-	
+require_once("../models/funcs.php");
+
+session_start();
+
+// Always a publically accessible script
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+    addAlert($_POST['type'], $_POST['message']);
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET'){
+    echo json_encode($_SESSION["userAlerts"]);
+    
+    // Reset alerts after they have been delivered
+    $_SESSION["userAlerts"] = array();
+}
+
 ?>

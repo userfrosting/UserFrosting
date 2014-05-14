@@ -97,11 +97,16 @@ setReferralPage($_SERVER['PHP_SELF']);
               <div class="panel-body">
                 <div class="list-group">
                   <a href="#" class="list-group-item">
-                    <span class="badge">Today</span>
+                    <span class="badge">5/13/2014</span>
+                    <i class="fa fa-comment"></i> Functions added for mass character update
+                  </a>
+                  
+				  <a href="#" class="list-group-item">
+                    <span class="badge">5/12/2014</span>
                     <i class="fa fa-comment"></i> Roster Added
                   </a>
                   <a href="#" class="list-group-item">
-                    <span class="badge">Yesterday</span>
+                    <span class="badge">5/11/2014</span>
                     <i class="fa fa-comment"></i> Fixed errors on character import script
                   </a>
                   <a href="#" class="list-group-item">

@@ -38,176 +38,78 @@ if(!isset($_POST['character_id']) or !characterIdExists($_POST['character_id']))
 
 // Required: id
 $id = $_POST['character_id'];
+$name = $_POST['character_name'];
+$armory_link = $_POST['armory_link'];
 
 //list of stuff to update
 //character_name, character_server, character_ilvl, character_level, character_class, character_spec, character_race, armory_link 
 if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["csrf_token"]))){
-  $errors[] = lang("ACCESS_DENIED");
+	$errors[] = lang("ACCESS_DENIED");
 } else {
 	
 	//grab character details based on character id
 	$characterdetails = fetchCharacterDetails(NULL, NULL, $id); //Fetch character details
-	/*
-	find out why the why this is even firing on a regular update of character information besides the character name...
-	*/
-	//Update character name
-	if ($characterdetails['character_name'] != $_POST['character_name']){
-		$charactername = trim($_POST['character_name']);
-		
-		//Validate display name
-		if(characterNameExists($charactername))
-		{
-			$errors[] = lang("ACCOUNT_CHARACTERNAME_IN_USE",array($charactername));
-		}
-		elseif(minMaxRange(1,50,$charactername))
-		{
-			$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateCharacterName($id, $charactername)){
-				$successes[] = lang("ACCOUNT_CHARACTERNAME_UPDATED", array($charactername));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-		
-	}
-	else {
-		$charactername = $characterdetails['character_name'];
-	}
 
-	//Update server
-	if ($characterdetails['character_server'] != $_POST['character_server']){
-		$cserver = trim($_POST['character_server']);
+	$d = $characterdetails['character_id']; //$res[$l]['character_id'];
+	$a = $characterdetails['armory_link']; //$res[$l]['armory_link'];
+	$n = $characterdetails['character_name'];
 		
-		//Validate server
-		if(minMaxRange(1,50,$cserver))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateServer($id, $cserver)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($charactername, $cserver));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
-	
-	//Update ilvl
-	if ($characterdetails['character_ilvl'] != $_POST['character_ilvl']){
-		$cilvl = trim($_POST['character_ilvl']);
+	//grab the armory data from here
+	$newURL = explode("/", $a);
+
+	if($newURL[2] !== $bnet_string) {
+		$errors[] = 'error happened';
+	}else{
+		//check for .json file for character or grab newest one
+		//check if we have a copy already or not, if not cache the file before we go further
+		$filename = 'chars/'.$n.'.json';
 		
-		//Validate ilvl
-		if(minMaxRange(1,50,$cilvl))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
+		//check if locale?= is set
+		//&locale=es_MX
+		if (isset($locale_string)) {
+			$ls = $locale_string;
+		}else{
+			$ls = 'en_US';
 		}
-		else {
-			if (updateIlvl($id, $cilvl)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($charactername, $cilvl));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
-	
-	//Update level
-	if ($characterdetails['character_level'] != $_POST['character_level']){
-		$clevel = trim($_POST['character_level']);
 		
-		//Validate level
-		if(minMaxRange(1,50,$clevel))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateLevel($id, $clevel)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($charactername, $clevel));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
-	
-	//Update class
-	if ($characterdetails['character_class'] != $_POST['character_class']){
-		$cclass = trim($_POST['character_class']);
-		
-		//Validate title
-		if(minMaxRange(1,50,$cclass))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateClass($id, $cclass)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($charactername, $cclass));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
-	
-	//Update spec
-	if ($characterdetails['character_spec'] != $_POST['character_spec']){
-		$cspec = trim($_POST['character_spec']);
-		
-		//Validate title
-		if(minMaxRange(1,50,$cspec))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateSpec($id, $cspec)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($charactername, $cspec));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
+		if (!file_exists($filename)) {
+			//echo "The file dosent exist";
+			$errors = 'no file found grabbing one for cache';
+			$json = file_get_contents('https://'.$bnet_string.'/api/wow/character/'.$newURL[6].'/'.$newURL[7].'?fields=guild,items,talents,professions,pvp,progression,titles,feed,audit&amp;locale='.$ls);
+			$new = json_decode($json);
+			$file = fopen($filename, "w");
+			fwrite($file, json_encode($new));
+			fclose($file);
+			
+			$json = file_get_contents($filename);
+			$obj = json_decode($json);
+		} else {
+			//echo "file found";
+			$successes[] = 'we found a cache file';
+			$json = file_get_contents($filename);
+			$obj = json_decode($json);
+				
+			//check version of lastModified
+			$json_check = file_get_contents('https://'.$bnet_string.'/api/wow/character/'.$newURL[6].'/'.$newURL[7]);
+			$obj_check = json_decode($json_check);
+			
+			//check and see if the file we have is the latest version
+			if($obj->lastModified !== $obj_check->lastModified) {
+				//echo 'old file found, updated';
+				$errors[] = 'old file found, updated';
+				//if not delete file then grab a new one
+				unlink($filename);
+				$json = file_get_contents('https://'.$bnet_string.'/api/wow/character/'.$newURL[6].'/'.$newURL[7].'?fields=guild,items,talents,professions,pvp,progression,titles,feed,audit&amp;locale='.$ls);
+				$new = json_decode($json);
+				$file = fopen($filename, "w");
+				fwrite($file, json_encode($new));
+				fclose($file);
 			}
 		}
-	}
-	
-	//Update race
-	if ($characterdetails['character_race'] != $_POST['character_race']){
-		$crace = trim($_POST['character_race']);
-		
-		//Validate title
-		if(minMaxRange(1,50,$crace))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateRace($id, $crace)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($charactername, $crace));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
-	
-	//Update armory link
-	if ($characterdetails['armory_link'] != $_POST['armory_link']){
-		$alink = trim($_POST['armory_link']);
-		
-		//Validate title
-		if(minMaxRange(1,50,$alink))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateArmory($id, $alink)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($charactername, $alink));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
+			//------------------------------------
+			//update based on information provided
+			//------------------------------------
+			
 	}
 }
 

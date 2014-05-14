@@ -64,6 +64,35 @@ $language = $settings['language']['value'];
 $template = $settings['template']['value'];
 $new_user_title = $settings['new_user_title']['value'];
 
+//set string for armory from battle.net
+/*
+optional $_GET prams: ?locale=fr_FR
+
+Listing of vaules for $bnet_string and locals
+
+Region		Host				Available Locales
+US			us.battle.net			en_US
+									es_MX
+									pt_BR
+									
+Europe		eu.battle.net			en_GB
+									es_ES
+									fr_FR
+									ru_RU
+									de_DE
+									pt_PT
+									it_IT
+									
+Korea		kr.battle.net			ko_KR
+
+Taiwan		tw.battle.net			zh_TW
+
+China		www.battlenet.com.cn	zh_CN
+*/
+$bnet_string = 'us.battle.net';
+//set like ?locale=fr_FR
+$locale_string = '';
+
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of permission group membership.
 $master_account = 1;
@@ -83,9 +112,9 @@ require_once("class.mail.php");
 require_once("class.user.php");
 require_once("class.newuser.php");
 require_once("class.newcharacter.php");
-require_once("class.massupdate_character.php");
 require_once("chrome.php");
 require_once("funcs.php");
+require_once("wow_funcs.php");
 
 session_start();
 

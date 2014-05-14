@@ -69,10 +69,12 @@ function optionalBooleanGetVar($var_name, $default_value){
 }
     
 // Create appropriate labels
-if (isset($_GET['character_id']) and is_numeric($_GET['character_id'])){
+if (isset($_GET['character_id']) && is_numeric($_GET['character_id'])){
     $populate_fields = true;
     $button_submit_text = "Update Character";
     $character_id = htmlentities($_GET['character_id']);
+	$character_name = htmlentities($_GET['character_name']);
+	$armory_link = htmlentities($_GET['armory_link']);
     $target = "update_character.php";
     $box_title = "Update Character";
     $username_disable_str = "disabled";
@@ -87,6 +89,8 @@ if (isset($_GET['character_id']) and is_numeric($_GET['character_id'])){
 }
 //set default variables
 $character_name = "";
+$armory_link = "";
+/*
 $character_server = "";
 $character_ilvl = "";
 $character_level = "";
@@ -94,7 +98,8 @@ $character_spec = "";
 $character_class = "";
 $character_race = "";
 $character_raider = "0";
-$armory_link = "";
+*/
+
 
 // If we're in update mode, load character data
 //sql for character table
@@ -103,13 +108,13 @@ $armory_link = "";
 if ($populate_fields){
     $character = loadCharacter($character_id);
     $character_name = $character['character_name'];
-    $character_server = $character['character_server'];
-    $character_ilvl = $character['character_ilvl'];
-    $character_level = $character['character_level'];
-	$character_spec = $character['character_spec'];
-	$character_class = $character['character_class'];
-	$character_race = $character['character_race'];
-	$character_raider = $character['character_raider'];
+    //$character_server = $character['character_server'];
+    //$character_ilvl = $character['character_ilvl'];
+    //$character_level = $character['character_level'];
+	//$character_spec = $character['character_spec'];
+	//$character_class = $character['character_class'];
+	//$character_race = $character['character_race'];
+	//$character_raider = $character['character_raider'];
 	$armory_link = $character['armory_link'];
     
     if ($character['last_update_stamp'] == '0'){
@@ -125,6 +130,107 @@ if ($populate_fields){
 }
 
 $response = "";
+if ($character_id != ""){
+	if ($render_mode == "modal"){
+		$response .=
+		"<div id='$box_id' class='modal fade'>
+			<div class='modal-dialog'>
+				<div class='modal-content'>
+					<div class='modal-header'>
+						<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+						<h4 class='modal-title'>$box_title</h4>
+					</div>
+					<div class='modal-body'>
+						<form method='post' action='$target'>";        
+	} else if ($render_mode == "panel"){
+		$response .=
+		"<div class='panel panel-primary'>
+			<div class='panel-heading'>
+				<h2 class='panel-title pull-left'>$box_title</h2>
+				<div class='clearfix'></div>
+				</div>
+				<div class='panel-body'>
+					<form method='post' action='$target'>";
+	} else {
+		echo "Invalid render mode.";
+		exit();
+	}
+
+	// Load CSRF token
+	$csrf_token = $loggedInUser->csrf_token;
+	$response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
+
+	$response .= "
+	<div class='dialog-alert'>
+	</div>
+	<div class='row'>
+		<div class='col-sm-12'>
+			<h5>Character Name</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='character_name' autocomplete='off' value='$character_name' data-validate='{\"minLength\": 1, \"maxLength\": 25, \"label\": \"Character Name\" }' $disable_str>
+			</div>
+		</div>
+	</div>
+	<div class='row'>
+		<div class='col-sm-12'>
+			<h5>Armory Link</h5>
+			<div class='input-group'>
+				<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+				<input type='text' class='form-control' name='armory_link' autocomplete='off' value='$armory_link' data-validate='{\"minLength\": 1, \"maxLength\": 300, \"label\": \"Armory Link\" }' $disable_str>
+			</div>
+		</div>
+	</div>";
+
+	/*if ($show_dates){
+		$response .= "
+		<div class='row'>
+			<div class='col-sm-6'>
+				<h5>Last Sign-in</h5>
+				<div class='input-group optional'>
+					<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
+					<input type='text' class='form-control' name='last_update_date' value='$last_update_date' disabled>
+				</div>
+			</div>
+			<div class='col-sm-6'>
+				<h5>Registered Since</h5>
+				<div class='input-group optional'>
+					<span class='input-group-addon'><i class='fa fa-calendar'></i></span>
+					<input type='text' class='form-control' name='added_date' value='$added_date' disabled>
+				</div>
+			</div>
+		</div>";
+	}*/
+
+	$response .= "";
+      
+	$response .= "
+		<div class='row'>
+	</ul>
+	</div>";
+
+	// Buttons
+	$response .= "
+	<br>
+	<div class='row'>";
+
+	if ($button_submit){
+		$response .= "<div class='col-xs-8'><div class='vert-pad'><button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success'>$button_submit_text</button></div></div>";
+	}
+
+	// Create the cancel button for modal mode
+	if ($render_mode == 'modal'){
+		$response .= "<div class='col-xs-4 col-sm-3 pull-right'><div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
+	}
+	$response .= "</div>";
+
+	// Add closing tags as appropriate
+	if ($render_mode == "modal")
+		$response .= "</form></div></div></div></div>";
+	else
+		$response .= "</form></div></div>";
+
+/* old date remove
 if ($character_id != ""){
 	if ($render_mode == "modal"){
 		$response .=
@@ -271,6 +377,9 @@ if ($character_id != ""){
 		$response .= "</form></div></div></div></div>";
 	else
 		$response .= "</form></div></div>";
+		
+*/		
+//not editing character
 }else{
 	if ($render_mode == "modal"){
 		$response .="<div id='$box_id' class='modal fade'>

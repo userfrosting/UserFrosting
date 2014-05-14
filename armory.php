@@ -19,12 +19,14 @@ if($newURL[2] !== "us.battle.net") {
 echo 'error happened';
 }else{
 //$json = file_get_contents('https://us.battle.net/api/wow/character/'.$newURL[6].'/'.$newURL[7].'?fields=items,talents,professions');
-$json = file_get_contents('https://us.battle.net/api/wow/character/Stonemaul/Allfaded?fields=guild,items,talents,professions,pvp,progression,titles,feed,audit');
+$json = file_get_contents('https://us.battle.net/api/wow/character/Stonemaul/Lilfade?fields=guild,items,talents,professions,pvp,progression,titles,feed,audit');
 $obj = json_decode($json);
 //echo $obj->access_token;
 echo '<pre>';
-var_dump($obj);
+var_dump($obj->guild);
 echo '</pre>';
+
+//echo 'last mod'. $obj->lastModified;
 
 $name = $obj->name;
 $server = $obj->realm;
@@ -98,6 +100,8 @@ if (isset($obj->talents[0]->selected)) {
 	var_dump($obj->talents[1]->talents);
 	echo '</pre>';
 }
+
+
 
 /* professions $obj->professions->primary/secondary[id]->field
 	[id] int //id of profession
@@ -381,9 +385,9 @@ echo '<br /><br />';
 
 */
 
-echo '<pre>';
-var_dump($obj->pvp);
-echo '</pre>';
+//echo '<pre>';
+//var_dump($obj->professions);
+//echo '</pre>';
 
 /* get class color based on class name
 if($className == "6") { $classColor = "#C41F3B"; //Death Knight
@@ -408,7 +412,7 @@ if($className == "6") { $class = "Death Knight"; //Death Knight
  }elseif($className == "11") { $class = "Druid"; //Druid
  }elseif($className == "3") { $class = "Hunter"; //Hunter
  }elseif($className == "8") { $class = "Mage"; //Mage
- }elseif($className == "12") { $class = "Monk"; //Monk
+ }elseif($className == "10") { $class = "Monk"; //Monk
  }elseif($className == "2") { $class = "Paladin"; //Paladin
  }elseif($className == "5") { $class = "Priest"; //Priest
  }elseif($className == "4") { $class = "Rogue"; //Rogue
@@ -435,6 +439,18 @@ if($raceName == "11") { $race = "Draenei"; //Death Knight
  }elseif($raceName == "9") { $race = "Goblin"; //Warrior
  }else { $race = "none"; } 
  
-echo 'Your character is '.$name.' of '.$server.', a level:'.$level.' '.$spec.' '.$race.' '.$class.' with a ilvl of: '.$ilvl;
+
+$i = 0;
+while (!isset($obj->titles[$i]->selected)) {
+	$i++;
+}
+$tid = $i;
+$title = $obj->titles[$tid]->name;
+
+//$patt = ["%s"];
+//$rep = [$name];
+$named_title = preg_replace('/\%s/', $name, $title);
+
+echo 'Your character is '.$named_title.' of '.$server.', a level:'.$level.' '.$spec.' '.$race.' '.$class.' with a ilvl of: '.$ilvl;
 }
 ?>
