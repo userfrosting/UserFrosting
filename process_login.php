@@ -61,15 +61,34 @@ if(isUserLoggedIn()) {
 if(!empty($_POST))
 {
 	$errors = array();
+	
 	$username = sanitize(trim($_POST["username"]));
 	$password = trim($_POST["password"]);
 	
-	//Perform some validation
-	//Feel free to edit / change as required
-	if($username == "")
-	{
-		$errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
+	$user_or_email = explode('@', $username);
+	
+	//check if its a email rather then a username && the email login function is enabled
+	if(count($user_or_email) == 2 && $email_login == 1) {
+		//Perform some validation
+		//Feel free to edit / change as required
+		$usermail = $username;
+		if($usermail == "")
+		{
+			$errors[] = lang("ACCOUNT_SPECIFY_EMAIL");
+		}
+	}else if(count($user_or_email) == 2 && $email_login == 0){
+		//got a email to login with but email login is disabled
+		$errors[] = lang("ACCOUNT_EMAIL_LOGIN_DISABLED");
+	}else{
+		//email login is off || username wasn't a email 
+		//Perform some validation
+		//Feel free to edit / change as required
+		if($username == "")
+		{
+			$errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
+		}
 	}
+	//check if password was left blank
 	if($password == "")
 	{
 		$errors[] = lang("ACCOUNT_SPECIFY_PASSWORD");
@@ -77,14 +96,9 @@ if(!empty($_POST))
 
 	if(count($errors) == 0)
 	{
-		//A security note here, never tell the user which credential was incorrect
-		if(!usernameExists($username))
-		{
-			$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
-		}
-		else
-		{
-			$userdetails = fetchUserDetails($username);
+		if(isset($usermail)) {
+			$username = NULL;
+			$userdetails = fetchUserDetails($username, $usermail);
 			//See if the user's account is activated
 			if($userdetails["active"]==0)
 			{
@@ -92,9 +106,9 @@ if(!empty($_POST))
 			}
 			// See if user's account is enabled
 			else if ($userdetails["enabled"]==0){
-				$errors[] = lang("ACCOUNT_DISABLED");
-			} else
-			{
+				$errors[] = lang("ACCOUNT_DISABLED");			
+			//got data log em' in
+			} else {
 				//Hash the password and use the salt from the database to compare the password.
 				
 				// If the password in the db is 65 characters long, match against the md5-hashed password.
@@ -142,6 +156,70 @@ if(!empty($_POST))
 					$successes[] = "Welcome back, " . $loggedInUser->displayname;
 				}
 			}
+		}
+		else
+		{
+			//start login with username
+			$userdetails = fetchUserDetails($username);
+			//See if the user's account is activated
+			if($userdetails["active"]==0)
+			{
+				$errors[] = lang("ACCOUNT_INACTIVE");
+			}
+			// See if user's account is enabled
+			else if ($userdetails["enabled"]==0){
+				$errors[] = lang("ACCOUNT_DISABLED");
+			
+			//got data log em' in
+			} else {
+				//Hash the password and use the salt from the database to compare the password.
+				
+				// If the password in the db is 65 characters long, match against the md5-hashed password.
+				// Otherwise, match against the bcrypt-hashed password.
+				if (strlen($userdetails["password"]) == 65){
+				  $entered_pass = generateHashMD5($password,$userdetails["password"]);
+				} else {
+				  $entered_pass = generateHash($password,$userdetails["password"]);
+				}
+				
+				if($entered_pass != $userdetails["password"])
+				{
+					//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
+					$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
+				}
+				else
+				{
+					//Passwords match! we're good to go'
+					
+					//Construct a new logged in user object
+					//Transfer some db data to the session object
+					$loggedInUser = new loggedInUser();
+					$loggedInUser->email = $userdetails["email"];
+					$loggedInUser->user_id = $userdetails["id"];
+					$loggedInUser->hash_pw = $userdetails["password"];
+					$loggedInUser->title = $userdetails["title"];
+					$loggedInUser->displayname = $userdetails["display_name"];
+					$loggedInUser->username = $userdetails["user_name"];
+					$loggedInUser->alerts = array();
+					
+					//Update last sign in
+					$loggedInUser->updateLastSignIn();
+					
+					// Update password if we had encountered an md5-encoded password at login
+					if (strlen($userdetails["password"]) == 65){
+					  $loggedInUser->updatePassword($password);
+					}
+					
+					// Create the user's CSRF token
+					$loggedInUser->csrf_token(true);
+					
+					$_SESSION["userCakeUser"] = $loggedInUser;
+					
+					$successes = array();
+					$successes[] = "Welcome back, " . $loggedInUser->displayname;
+				}
+			}
+
 		}
 	}
 } else {

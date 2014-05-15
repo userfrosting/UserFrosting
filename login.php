@@ -98,7 +98,13 @@ if(isUserLoggedIn()) {
 		  </div>
 		  <div class="form-group">
 			<div class="col-md-offset-3 col-md-6">
-			  <input type="text" class="form-control" id="inputUserName" placeholder="Username" name = 'username' value=''>
+			<?php
+			if($email_login == 1) {
+				echo '<input type="text" class="form-control" id="inputUserName" placeholder="Username or Email" name = \'username\' value=\'\'>';
+			}else{
+				echo '<input type="text" class="form-control" id="inputUserName" placeholder="Username" name = \'username\' value=\'\'>';
+			}
+			?>
 			</div>
 		  </div>
 		  <div class="form-group">
