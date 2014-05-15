@@ -63,7 +63,7 @@ $emailDate = date('dmy');
 $language = $settings['language']['value'];
 $template = $settings['template']['value'];
 $new_user_title = $settings['new_user_title']['value'];
-$email_login = 0;
+$email_login = $settings['email_login']['value'];
 //set string for armory from battle.net
 /*
 optional $_GET prams: ?locale=fr_FR
