@@ -56,6 +56,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_ALREADY_ACTIVE"		=> "Your account is already activated",
 	"ACCOUNT_REGISTRATION_DISABLED" => "We're sorry, account registration has been disabled.",
     "ACCOUNT_INACTIVE"			=> "Your account is in-active. Check your emails / spam folder for account activation instructions",
+    "ACCOUNT_EMAIL_LOGIN_DISABLED"	=> "Sorry but the Administrator has email login disabled",
 	"ACCOUNT_DISABLED"			=> "This account has been disabled.  Please contact us for more information.",
     "ACCOUNT_USER_CHAR_LIMIT"		=> "Your username must be between %m1% and %m2% characters in length",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT"		=> "Your display name must be between %m1% and %m2% characters in length",
@@ -97,11 +98,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PERMISSION_REMOVED"		=> "Removed access from %m1% permission levels",
 	"ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
 	));
-
-//Characters
-$lang = array_merge($lang,array(
-	"ACCOUNT_CHARACTERNAME_IN_USE"	=> "Character name %m1% already in use please enter a new one",
-	));
+	
 	
 //Configuration
 $lang = array_merge($lang,array(

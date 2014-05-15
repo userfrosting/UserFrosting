@@ -360,6 +360,31 @@ function emailExists($email)
 	}
 }
 
+//Checks if a username exists in the DB
+function usernameExists($username)
+{
+	global $mysqli,$db_table_prefix;
+	$stmt = $mysqli->prepare("SELECT active
+		FROM ".$db_table_prefix."users
+		WHERE
+		user_name = ?
+		LIMIT 1");
+	$stmt->bind_param("s", $username);	
+	$stmt->execute();
+	$stmt->store_result();
+	$num_returns = $stmt->num_rows;
+	$stmt->close();
+	
+	if ($num_returns > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;	
+	}
+}
+
 //Check if a user name and email belong to the same user
 function emailUsernameLinked($email,$username)
 {
@@ -416,11 +441,15 @@ function fetchAllUsers()
 }
 
 //Retrieve complete user information by username, token or ID
-function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
+function fetchUserDetails($username=NULL,$usermail=NULL,$token=NULL, $id=NULL)
 {
 	if($username!=NULL) {
 		$column = "user_name";
 		$data = $username;
+	}
+	elseif($usermail!=NULL) {
+		$column = "email";
+		$data = $usermail;
 	}
 	elseif($token!=NULL) {
 		$column = "activation_token";
@@ -430,6 +459,7 @@ function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
 		$column = "id";
 		$data = $id;
 	}
+
 	global $mysqli,$db_table_prefix; 
 	$stmt = $mysqli->prepare("SELECT 
 		id,
@@ -452,7 +482,7 @@ function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
 		
 	if (!$stmt)
 		return false;
-		
+	
 	$stmt->bind_param("s", $data);
 	
 	$stmt->execute();
@@ -635,31 +665,6 @@ function userIdExists($id)
 		id = ?
 		LIMIT 1");
 	$stmt->bind_param("i", $id);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
-}
-
-//Checks if a username exists in the DB
-function usernameExists($username)
-{
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		user_name = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $username);	
 	$stmt->execute();
 	$stmt->store_result();
 	$num_returns = $stmt->num_rows;
