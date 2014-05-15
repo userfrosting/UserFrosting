@@ -79,18 +79,6 @@ if(isset($_SESSION['email'])) {
 	$email = '';
 }
 
-if(isset($_SESSION['pword'])) {
-	$pword = $_SESSION['pword'];
-}else{
-	$pword = '';
-}
-
-if(isset($_SESSION['cpass'])) {
-	$cpass = $_SESSION['cpass'];
-}else{
-	$cpass = '';
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -161,13 +149,13 @@ if(isset($_SESSION['cpass'])) {
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Password" name='password' value='<?php echo htmlentities($pword) ?>' />
+			  <input type="password" class="form-control" placeholder="Password" name='password' value='' />
 			</div>
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Confirm Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc' value='<?php echo htmlentities($cpass) ?>' />
+			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc' value='' />
 			</div>
 		  </div>
 		  <div class="form-group">
