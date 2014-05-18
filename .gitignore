@@ -2,3 +2,7 @@
 *.komodoproject
 
 models/db-settings.php
+models/db-settings_local.php
+models/db-settings.php
+models/db-settings.php
+models/db-settings.php

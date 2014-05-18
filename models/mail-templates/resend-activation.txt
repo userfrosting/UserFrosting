@@ -1,9 +1,0 @@
-Hello #USERNAME#
-
-We have received a new activation request for your account. Please follow the link below to activate.
-
-If you did not request this e-mail, please disregard this message.
-
-#ACTIVATION-URL
-
--Regards
