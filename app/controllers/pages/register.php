@@ -61,24 +61,6 @@ if(isUserLoggedIn()) {
 	exit();
 }
 
-if(isset($_SESSION['uname'])) {
-	$uname = $_SESSION['uname'];
-}else{
-	$uname = '';
-}
-
-if(isset($_SESSION['dname'])) {
-	$dname = $_SESSION['dname'];
-}else{
-	$dname = '';
-}
-
-if(isset($_SESSION['email'])) {
-	$email = $_SESSION['email'];
-}else{
-	$email = '';
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +73,7 @@ if(isset($_SESSION['email'])) {
     <meta name="author" content="">
     <link rel="shortcut icon" href="css/favicon.ico">
 
-    <title>FadedGaming - Register</title>
+    <title>UserFrosting - Register</title>
 
 	<link rel="icon" type="image/x-icon" href="css/favicon.ico" />
 	
@@ -118,7 +100,7 @@ if(isset($_SESSION['email'])) {
       <div class="header">
         <ul class="nav nav-pills navbar pull-right">
         </ul>
-        <h3 class="text-muted">FadedGaming</h3>
+        <h3 class="text-muted">UserFrosting</h3>
       </div>
       <div class="jumbotron">
         <h1>Let's get started!</h1>
@@ -132,30 +114,31 @@ if(isset($_SESSION['email'])) {
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">User Name</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="User Name" name = 'username' value='<?php echo htmlentities($uname) ?>' />
+			  <input type="text" class="form-control" placeholder="User Name" name = 'username' value=''>
 			</div>
 		  </div>
 		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Display Name</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="Display Name" name='displayname' value='<?php echo htmlentities($dname) ?>' />
+			  <input type="text" class="form-control" placeholder="Display Name" name='displayname'>
+			</div>
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Email</label>
 			<div class="col-sm-8">
-			  <input type="email" class="form-control" placeholder="Email" name='email' value='<?php echo htmlentities($email) ?>' />
+			  <input type="email" class="form-control" placeholder="Email" name='email'>
 			</div>
 		  </div>		  
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Password" name='password' value='' />
+			  <input type="password" class="form-control" placeholder="Password" name='password'>
 			</div>
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Confirm Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc' value='' />
+			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc'>
 			</div>
 		  </div>
 		  <div class="form-group">
@@ -176,7 +159,7 @@ if(isset($_SESSION['email'])) {
 		</form>
 	  </div>	
       <div class="footer">
-        <p>&copy; FadedGaming.co, 2014</p>
+        <p>&copy; Your Website, 2014</p>
       </div>
 
     </div> <!-- /container -->

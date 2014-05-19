@@ -43,13 +43,11 @@ if (!securePage($_SERVER['PHP_SELF'])){
 
 if ($can_register){
 	echo "
-		<li class='navitem-news'><a href='news.php'>News</a></li>
 		<li class='navitem-home'><a href='index.php'>Home</a></li>
         <li class='navitem-login'><a href='login.php'>Login</a></li>
         <li class='navitem-register'><a href='register.php'>Register</a></li>";
 } else {
 	echo "
-		<li class='navitem-news'><a href='news.php'>News</a></li>
 		<li class='navitem-home'><a href='index.php'>Home</a></li>
         <li class='navitem-login'><a href='login.php'>Login</a></li>";
 }

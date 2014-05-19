@@ -59,7 +59,7 @@ if(isUserLoggedIn()) {
     <meta name="author" content="">
     <link rel="shortcut icon" href="css/favicon.ico">
 
-    <title>Welcome to FadedGaming!</title>
+    <title>Welcome to UserFrosting!</title>
 
 	<link rel="icon" type="image/x-icon" href="css/favicon.ico" />
 	
@@ -86,10 +86,12 @@ if(isUserLoggedIn()) {
       <div class="header">
         <ul class="nav nav-pills navbar pull-right">
         </ul>
-        <h3 class="text-muted">FadedGaming</h3>
+        <h3 class="text-muted">UserFrosting</h3>
       </div>
       <div class="jumbotron">
-        <small>Please sign in here:</small>
+        <h1>Welcome to UserFrosting!</h1>
+        <p class="lead">A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</p>
+		<small>Please sign in here:</small>
 		<form class='form-horizontal' role='form' name='login' action='process_login.php' method='post'>
 		  <div class="row">
 			<div id='display-alerts' class="col-lg-12">
@@ -98,13 +100,7 @@ if(isUserLoggedIn()) {
 		  </div>
 		  <div class="form-group">
 			<div class="col-md-offset-3 col-md-6">
-			<?php
-			if($email_login == 1) {
-				echo '<input type="text" class="form-control" id="inputUserName" placeholder="Username or Email" name = \'username\' value=\'\'>';
-			}else{
-				echo '<input type="text" class="form-control" id="inputUserName" placeholder="Username" name = \'username\' value=\'\'>';
-			}
-			?>
+			  <input type="text" class="form-control" id="inputUserName" placeholder="Username" name = 'username' value=''>
 			</div>
 		  </div>
 		  <div class="form-group">
@@ -122,7 +118,7 @@ if(isUserLoggedIn()) {
 		</form>
       </div>	
       <div class="footer">
-        <p>&copy; FadedGaming.co, 2014</p>
+        <p>&copy; Your Website, 2014</p>
       </div>
 
     </div> <!-- /container -->

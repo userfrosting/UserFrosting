@@ -407,7 +407,7 @@ function loadAllPermissions() {
 }
 
 function addAlert(type, msg) {
-	var url = 'user_alerts.php';
+	var url = 'UserFrosting/app/controllers/pages/user_alerts.php';
 	$.ajax({  
 	  type: "POST",  
 	  url: url,
@@ -425,7 +425,7 @@ function addAlert(type, msg) {
 
 // Load alerts from $_SESSION['userAlerts'] variable into specified element
 function alertWidget(widget_id){
-	var url = 'user_alerts.php';
+	var url = 'app/controllers/pages/user_alerts.php';
 	$.getJSON( url, {})
 	.done(function( data ) {
 		var alertHTML = "";

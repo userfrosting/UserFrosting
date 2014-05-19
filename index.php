@@ -4,6 +4,7 @@
 //===============================================
 ini_set('display_errors','On');
 error_reporting(E_ALL);
+
 function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
     ini_set("log_errors", 1);
     ini_set("display_errors", 0);
@@ -21,7 +22,8 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 // Madatory UFMVC Settings (please configure)
 //===============================================
 define('APP_PATH','app/'); //with trailing slash pls
-define('WEB_FOLDER','/ufmvc/'); //with trailing slash pls
+define('WEB_FOLDER','/UserFrosting/'); //with trailing slash pls
+define('VIEW_PATH', 'app/views/');
 define('myUrl', 'localhost');
 
 //===============================================
@@ -32,9 +34,10 @@ $GLOBALS['sitename']='UserFrosting - MVC';
 
 $db_host = "localhost"; //Host address (most likely localhost)
 $db_name = "dbname"; //Name of Database
-$db_user = "user"; //Name of database user
+$db_user = "username"; //Name of database user
 $db_pass = "password"; //Password for database user
 $db_table_prefix = "uc_";
+
 
 function pdoConnect(){
     global $db_host, $db_name, $db_user, $db_pass;

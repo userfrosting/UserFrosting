@@ -46,71 +46,7 @@ if(isUserLoggedIn()) {
 	exit();
 }
 
+$data['body'][]=View::do_fetch(VIEW_PATH.'main/index.php');
+View::do_dump(VIEW_PATH.'main/index.php',$data);
 
-
-echo '<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="../../../css/favicon.ico">
-
-    <title>Welcome to FadedGaming!</title>
-
-    <link rel="icon" type="image/x-icon" href="../../../css/favicon.ico" />
-    
-    <!-- Bootstrap core CSS -->
-    <link href="../../../css/bootstrap.css" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link href="../../../css/jumbotron-narrow.css" rel="stylesheet">
-	
-	<link rel="stylesheet" href="../../../css/font-awesome.min.css">
-	<link rel="stylesheet" href="../../../css/bootstrap-switch.min.css" type="text/css" />
-	 
-    <!-- JavaScript -->
-    <script src="../../../js/jquery-1.10.2.min.js"></script>
-	<script src="../../../js/bootstrap.js"></script>
-	<script src="../../../js/userfrosting.js"></script>
-	<script src="../../../js/date.min.js"></script>
-    <script src="../../../js/handlebars-v1.2.0.js"></script>
-
-  </head>
-
-  <body>
-    <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills navbar pull-right">
-        </ul>
-        <h3 class="text-muted">FadedGaming</h3>
-      </div>
-      <div class="jumbotron">
-        <p><b>Welcome to FadedGaming!</b></p>
-        <p class="lead">Home of &#60;Nightfury&#62; Guild on Stonemaul US <br />
-		(and connected servers)</p>
-		
-      </div>	
-      <div class="footer">
-        <p>&copy; FadedGaming.co, 2014</p>
-      </div>
-
-    </div> <!-- /container -->
-
-  </body>
-</html>
-
-<script>
-	$(document).ready(function() {
-		alertWidget(\'display-alerts\');
-        // Load navigation bar
-        $(".navbar").load("../pages/header-loggedout.php", function() {
-            $(".navbar .navitem-home").addClass(\'active\');
-        });
-        // Load jumbotron links
-        $(".jumbotron-links").load("../pages/jumbotron_links.php");
-	});
-</script>
-';
 }
