@@ -70,10 +70,10 @@ try {
 	
 	
 	if (!file_exists($language)) {
-		$language = "models/languages/en.php";
+		$language = "../models/languages/en.php";
 	}
 	
-	if(!isset($language)) $language = "models/languages/en.php";
+	if(!isset($language)) $language = "../models/languages/en.php";
 	
 } catch (PDOException $e) {
   addAlert("danger", "Oops, looks like our database encountered an error.");

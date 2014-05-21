@@ -31,11 +31,11 @@ THE SOFTWARE.
 
 //Functions that do not interact with DB
 //------------------------------------------------------------------------------
-
+global $css_js_url;
 //Retrieve a list of all .php files in models/languages
 function getLanguageFiles()
 {
-	$directory = "models/languages/";
+	$directory = "../models/languages/";
 	$languages = glob($directory . "*.php");
 	//print each file name
 	return $languages;
@@ -44,7 +44,7 @@ function getLanguageFiles()
 //Retrieve a list of all .css files in models/site-templates 
 function getTemplateFiles()
 {
-	$directory = "models/site-templates/";
+	$directory = "../models/site-templates/";
 	$languages = glob($directory . "*.css");
 	//print each file name
 	return $languages;
@@ -60,6 +60,17 @@ function getPageFiles()
 		$row[$page] = $page;
 	}
 	return $row;
+}
+
+function getAdminPageFiles()
+{
+    $directory = "adm/";
+    $admin_pages = glob($directory . "*.php");
+    //print each file name
+    foreach ($admin_pages as $page){
+        $row[$page] = $page;
+    }
+    return $row;
 }
 
 //Destroys a session as part of logout

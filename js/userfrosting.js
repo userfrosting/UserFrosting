@@ -308,7 +308,7 @@ function loadCurrentUser() {
 }
 
 function loadPermissions(div_id) {
-  var url = "/adm/load_permissions.php";
+  var url = "load_permissions.php";
   $.getJSON( url, {})
   .done(function( data ) {		  
 	if (Object.keys(data).length > 0) { // Don't bother unless there are some records found

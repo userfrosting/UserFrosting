@@ -37,13 +37,14 @@ set_error_handler('logAllErrors');
 
 try {
   // Load list of site pages.  Recommended access level: admin only
-  if (!securePage($_SERVER['PHP_SELF'])){
-	addAlert("danger", "Whoops, looks like you don't have permission to load site pages.");
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
-  }
+  //if (!securePage($_SERVER['PHP_SELF'])){
+//	addAlert("danger", "Whoops, looks like you don't have permission to load site pages.");
+//	echo json_encode(array("errors" => 1, "successes" => 0));
+//	exit();
+//  }
   
   $pages = getPageFiles(); //Retrieve list of pages in root usercake folder
+  $admin_pages = getAdminPageFiles();
   $dbpages = fetchAllPages(); //Retrieve list of pages in pages table
   $creations = array();
   $deletions = array();
@@ -55,7 +56,13 @@ try {
 		  $creations[] = $page;	
 	  }
   }
-  
+
+  foreach ($admin_pages as $page){
+      if(!isset($dbpages[$page])){
+          $creations[] = $page;
+      }
+  }
+    ChromePhp::log("admin pages fires");
   //Enter new pages in DB if found
   if (count($creations) > 0) {
 	  createPages($creations)	;

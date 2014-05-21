@@ -52,7 +52,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 	<?php require_once("../includes.php");  ?>
 	
 	<!-- Page Specific Plugins -->
-	<link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
+	<link rel="stylesheet" href="<?php echo $css_js_url; ?>css/bootstrap-switch.min.css" type="text/css" />
 
 	<script src="<?php echo $css_js_url; ?>js/bootstrap-switch.min.js"></script>
 	<script src="<?php echo $css_js_url; ?>js/jquery.tablesorter.js"></script>
