@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 */
 
-require_once("models/config.php");
+require_once("../models/config.php");
 if (!securePage($_SERVER['PHP_SELF'])){
   // Forward to 404 page
   addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
@@ -49,14 +49,14 @@ setReferralPage($_SERVER['PHP_SELF']);
 
     <title>UserFrosting Admin - Settings</title>
 		
-	<?php require_once("includes.php");  ?>
+	<?php require_once("../includes.php");  ?>
 	
 	<!-- Page Specific Plugins -->
 	<link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
 
-	<script src="../js/bootstrap-switch.min.js"></script>
-	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/tables.js"></script>
+	<script src="<?php echo $css_js_url; ?>js/bootstrap-switch.min.js"></script>
+	<script src="<?php echo $css_js_url; ?>js/jquery.tablesorter.js"></script>
+	<script src="<?php echo $css_js_url; ?>js/tables.js"></script>
 
   </head>
 
@@ -174,7 +174,7 @@ setReferralPage($_SERVER['PHP_SELF']);
           var admin_flag = user['admin'];
 
           // Load the header
-          $('.navbar').load('header.php', function() {
+          $('.navbar').load('../header.php', function() {
             $('#user_logged_in_name').html('<i class="fa fa-user"></i> ' + user['user_name'] + ' <b class="caret"></b>');
 			$('.navitem-site-settings').addClass('active');
           });

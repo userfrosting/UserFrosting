@@ -32,7 +32,7 @@ THE SOFTWARE.
 // Activate the specified user account
 // Request method: POST
 
-require_once("models/config.php");
+require_once("../models/config.php");
 
 // Recommended access level: admin only
 set_error_handler('logAllErrors');

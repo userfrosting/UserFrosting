@@ -30,8 +30,8 @@ THE SOFTWARE.
 */
 
 // UserCake authentication
-include('models/db-settings.php');
-include('models/config.php');
+include('../models/db-settings.php');
+include('../models/config.php');
 
 set_error_handler('logAllErrors');
 

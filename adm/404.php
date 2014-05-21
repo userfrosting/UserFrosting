@@ -43,24 +43,24 @@ require_once("../models/config.php");
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="css/favicon.ico">
+    <link rel="shortcut icon" href="<?php echo $css_js_url; ?>css/favicon.ico">
 
     <title>UserFrosting - 404 Oh Noes!</title>
 
-    <link rel="icon" type="image/x-icon" href="css/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="<?php echo $css_js_url; ?>css/favicon.ico" />
     
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="<?php echo $css_js_url; ?>css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/jumbotron-narrow.css" rel="stylesheet">
+    <link href="<?php echo $css_js_url; ?>css/jumbotron-narrow.css" rel="stylesheet">
 	
-	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="<?php echo $css_js_url; ?>css/font-awesome.min.css">
 	 
     <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.min.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<script src="js/userfrosting.js"></script>
+    <script src="<?php echo $css_js_url; ?>js/jquery-1.10.2.min.js"></script>
+	<script src="<?php echo $css_js_url; ?>js/bootstrap.js"></script>
+	<script src="<?php echo $css_js_url; ?>js/userfrosting.js"></script>
 
   </head>
 

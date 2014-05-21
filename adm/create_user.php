@@ -33,7 +33,7 @@ THE SOFTWARE.
 // Create a user from the admin panel.
 // Request method: POST
 
-require_once("./models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 

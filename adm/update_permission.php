@@ -32,7 +32,7 @@ THE SOFTWARE.
 // Update a permission group
 // Request method: POST
 
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 

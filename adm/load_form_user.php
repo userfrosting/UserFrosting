@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 // Request method: GET
 
-require_once("models/pdo_queries.php");
+require_once("../models/pdo_queries.php");
 
 if (!securePage($_SERVER['PHP_SELF'])){
     // Generate AJAX error
@@ -91,13 +91,13 @@ if (isset($_GET['user_id']) and is_numeric($_GET['user_id'])){
     $populate_fields = true;
     $button_submit_text = "Update user";
     $user_id = htmlentities($_GET['user_id']);
-    $target = "update_user.php";
+    $target = "./update_user.php";
     $box_title = "Update User";
     $username_disable_str = "disabled";
 } else {
     $populate_fields = false;
     $button_submit_text = "Create user";
-    $target = "create_user.php";
+    $target = "./create_user.php";
     $box_title = "New User";
     $username_disable_str = "";
 }

@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 // Request method: GET
 
-require_once("models/config.php");
+require_once("../models/config.php");
 if (!securePage($_SERVER['PHP_SELF'])){
     // Generate AJAX error
     addAlert("danger", "Whoops, looks like you don't have permission to access this component.");

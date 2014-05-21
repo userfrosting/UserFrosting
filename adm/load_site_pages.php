@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 // Request method: GET
 
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 

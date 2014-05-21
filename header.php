@@ -73,12 +73,12 @@ if (!securePage($_SERVER['PHP_SELF'])){
   //Links for permission level 2 (default admin)
   if ($loggedInUser->checkPermission(array(2))){
 	  echo "
-	  <li class='navitem-dashboard-admin'><a href='dashboard_admin.php'><i class='fa fa-dashboard'></i> Admin Dashboard</a></li>
-	  <li class='navitem-users'><a href='users.php'><i class='fa fa-users'></i> Users</a></li>";
+	  <li class='navitem-dashboard-admin'><a href='".$css_js_url."adm/dashboard_admin.php'><i class='fa fa-dashboard'></i> Admin Dashboard</a></li>
+	  <li class='navitem-users'><a href='".$css_js_url."adm/users.php'><i class='fa fa-users'></i> Users</a></li>";
   }
   ?>
-	  <li class="navitem-dashboard"><a href="dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-	  <li class='navitem-settings'><a href="account_settings.php"><i class="fa fa-gear"></i> Account Settings</a></li>
+	  <li class="navitem-dashboard"><a href="<?php echo $css_js_url; ?>dashboard.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+	  <li class='navitem-settings'><a href="<?php echo $css_js_url; ?>account_settings.php"><i class="fa fa-gear"></i> Account Settings</a></li>
   
   <?php
 	  //Links for permission level 2 (default admin)
@@ -87,8 +87,8 @@ if (!securePage($_SERVER['PHP_SELF'])){
 	  <li class='dropdown'>
 	  <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-wrench'></i> Site Settings <b class='caret'></b></a>
 		  <ul class='dropdown-menu'>
-			  <li class='navitem-site-settings'><a href='adm/site_settings.php'><i class='fa fa-globe'></i> Site Configuration</a></li>
-			  <li class='navitem-site-pages'><a href='adm/site_pages.php'><i class='fa fa-files-o'></i> Site Pages</a></li>
+			  <li class='navitem-site-settings'><a href='".$css_js_url."adm/site_settings.php'><i class='fa fa-globe'></i> Site Configuration</a></li>
+			  <li class='navitem-site-pages'><a href='".$css_js_url."adm/site_pages.php'><i class='fa fa-files-o'></i> Site Pages</a></li>
 		  </ul>
 	  </li>";
   }
@@ -98,9 +98,9 @@ if (!securePage($_SERVER['PHP_SELF'])){
 	<li class="dropdown user-dropdown">
 	  <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="user_logged_in_name"></a>
 	  <ul class="dropdown-menu">
-		<li><a href="account_settings.php"><i class="fa fa-gear"></i> Account Settings</a></li>
+		<li><a href="<?php echo $css_js_url; ?>account_settings.php"><i class="fa fa-gear"></i> Account Settings</a></li>
 		<li class="divider"></li>
-		<li><a href="logout.php"><i class="fa fa-power-off"></i> Log Out</a></li>
+		<li><a href="<?php echo $css_js_url; ?>logout.php"><i class="fa fa-power-off"></i> Log Out</a></li>
 	  </ul>
 	</li>
   </ul>

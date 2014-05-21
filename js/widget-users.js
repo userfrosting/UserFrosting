@@ -74,7 +74,7 @@ function usersWidget(widget_id, options) {
 	var html =
 	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +
     "<div class='panel-body'>";
-	
+	console.log("loading php file for users");
 	// Load the data and generate the rows.
 	var url = 'load_users.php';
 	$.getJSON( url, {
@@ -108,7 +108,8 @@ function usersWidget(widget_id, options) {
 		
 		$('#' + widget_id).html(html);
 		if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
-			jQuery.each(data, function(idx, record) {
+		    console.log("seems to work")
+				jQuery.each(data, function(idx, record) {
 				var row = "<tr>";
 				jQuery.each(columns, function(name, header) {
 					if (name == 'user_info') {
@@ -323,7 +324,7 @@ function userDisplay(box_id, user_id) {
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: "/adm/load_form_user.php",
+	  url: "load_form_user.php",
 	  data: {
 		box_id: box_id,
 		render_mode: 'panel',

@@ -1,7 +1,7 @@
 <?php
 
-include('models/db-settings.php');
-include('models/config.php');
+include('../models/db-settings.php');
+include('../models/config.php');
 
 function loadPermissions(){
     try {

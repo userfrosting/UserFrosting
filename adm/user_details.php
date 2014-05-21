@@ -37,7 +37,15 @@ if (!securePage($_SERVER['PHP_SELF'])){
   exit();
 }
 
-setReferralPage($_SERVER['PHP_SELF']);
+// Look up specified user
+$selected_user_id = $_GET['id'];
+
+if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
+	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
+	header("Location: " . getReferralPage());
+	exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,54 +56,63 @@ setReferralPage($_SERVER['PHP_SELF']);
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>UserFrosting Admin - Site Pages</title>
+    <title>UserFrosting Admin - User Details</title>
 
 	<?php require_once("../includes.php");  ?>
-	 
+
     <!-- Page Specific Plugins -->
-	<script src="<?php echo $css_js_url; ?>js/jquery.tablesorter.js"></script>
-	<script src="<?php echo $css_js_url; ?>js/tables.js"></script>
-	<script src="<?php echo $css_js_url; ?>js/widget-pages.js"></script>
+	<link rel="stylesheet" href="<?php echo $css_js_url; ?>css/bootstrap-switch.min.css" type="text/css" />
+
+	<script src="<?php echo $css_js_url; ?>js/date.min.js"></script>
+    <script src="<?php echo $css_js_url; ?>js/handlebars-v1.2.0.js"></script>
+    <script src="<?php echo $css_js_url; ?>js/bootstrap-switch.min.js"></script>
+	<script src="<?php echo $css_js_url; ?>js/widget-users.js"></script>
   </head>
+<body>
+  
+<?php
+echo "<script>selected_user_id = $selected_user_id;</script>";
+?>
+  
+<!-- Begin page contents here -->
+<div id="wrapper">
 
-  <body>
+<!-- Sidebar -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+</nav>
 
-    <div id="wrapper">
-
-      <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      </nav>
-      <div id="page-wrapper">
-	  	<div class="row">
+	<div id="page-wrapper">
+		<div class="row">
 		  <div id='display-alerts' class="col-lg-12">
   
 		  </div>
 		</div>
 		<div class="row">
-		  <div id="widget-site-pages" class="col-lg-12">
-		  
-		  </div>
-		</div>  
-	  </div>
-	</div>
-	
-	</div>
-	</div>
-	<script>
-        $(document).ready(function() {
-          // Get id of the logged in user to determine how to render this page.
-          var user = loadCurrentUser();
-          var user_id = user['id'];
-          var admin_flag = user['admin'];
-          
-          // Load the header
-          $('.navbar').load('../header.php', function() {
-            $('#user_logged_in_name').html('<i class="fa fa-user"></i> ' + user['user_name'] + ' <b class="caret"></b>');
-			$('.navitem-site-pages').addClass('active');
-          });
+			<div id='widget-user-info' class="col-lg-6">          
 
-		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts'});
-		});
-	</script>
+			</div>
+		</div>
+  </div><!-- /#page-wrapper -->
+
+</div><!-- /#wrapper -->
+    
+    <script>
+		$(document).ready(function() {
+			// Get id of the logged in user
+			var user = loadCurrentUser();
+
+			// Load the header
+			$('.navbar').load('../header.php', function() {
+				$('#user_logged_in_name').html('<i class="fa fa-user"></i> ' + user['user_name'] + ' <b class="caret"></b>');          
+			});
+			
+			userDisplay('widget-user-info', selected_user_id);
+			
+			alertWidget('display-alerts');
+
+    });
+
+    </script>
   </body>
 </html>
+
