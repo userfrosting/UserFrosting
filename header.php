@@ -87,8 +87,8 @@ if (!securePage($_SERVER['PHP_SELF'])){
 	  <li class='dropdown'>
 	  <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='fa fa-wrench'></i> Site Settings <b class='caret'></b></a>
 		  <ul class='dropdown-menu'>
-			  <li class='navitem-site-settings'><a href='site_settings.php'><i class='fa fa-globe'></i> Site Configuration</a></li>
-			  <li class='navitem-site-pages'><a href='site_pages.php'><i class='fa fa-files-o'></i> Site Pages</a></li>
+			  <li class='navitem-site-settings'><a href='adm/site_settings.php'><i class='fa fa-globe'></i> Site Configuration</a></li>
+			  <li class='navitem-site-pages'><a href='adm/site_pages.php'><i class='fa fa-files-o'></i> Site Pages</a></li>
 		  </ul>
 	  </li>";
   }

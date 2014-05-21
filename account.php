@@ -29,7 +29,7 @@ THE SOFTWARE.
 
 */
 
-require_once("models/config.php");
+require_once("./models/config.php");
 
 if (!securePage($_SERVER['PHP_SELF'])){
   // Forward to 404 page
@@ -44,7 +44,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 // Admin users
 // Note that "2" is the default id for the "Admin" permission group
 if ($loggedInUser->checkPermission(array(2))){
-	header( "Location: dashboard_admin.php" ) ;
+	header( "Location: adm/dashboard_admin.php" ) ;
 	exit();
 } 
 // Other users

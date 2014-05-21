@@ -64,7 +64,7 @@ if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
 	<link rel="stylesheet" href="css/bootstrap-switch.min.css" type="text/css" />
 
 	<script src="js/date.min.js"></script>
-    <script src="js/handlebars-v1.2.0.js"></script> 
+    <script src="js/handlebars-v1.2.0.js"></script>
     <script src="js/bootstrap-switch.min.js"></script>
 	<script src="js/widget-users.js"></script>
   </head>

@@ -243,7 +243,7 @@ function deleteUserDialog(dialog_id, user_id, name){
 	var parentDiv = "<div id='" + dialog_id + "' class='modal fade'></div>";
 	$( "body" ).append( parentDiv );
 	
-	$('#' + dialog_id).load('delete_user_dialog.php', function () {
+	$('#' + dialog_id).load('/adm/delete_user_dialog.php', function () {
 		// Set the student_id
 		$('#' + dialog_id + ' input[name="user_id"]').val(user_id);
 		// Set the student_name
@@ -278,7 +278,7 @@ function userForm(box_id, user_id) {
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: "load_form_user.php",  
+	  url: "/adm/load_form_user.php",
 	  data: data,
 	  dataType: 'json',
 	  cache: false
@@ -323,7 +323,7 @@ function userDisplay(box_id, user_id) {
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: "load_form_user.php",  
+	  url: "/adm/load_form_user.php",
 	  data: {
 		box_id: box_id,
 		render_mode: 'panel',
@@ -404,7 +404,7 @@ function createUser(dialog_id) {
 		ajaxMode: "true"
 	}
 	
-	var url = "create_user.php";
+	var url = "/adm/create_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
@@ -452,7 +452,7 @@ function updateUser(dialog_id, user_id) {
 		ajaxMode:	"true"
 	}
 	
-	var url = "update_user.php";
+	var url = "/adm/update_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
@@ -466,7 +466,7 @@ function updateUser(dialog_id, user_id) {
 
 // Activate new user account
 function activateUser(user_id) {
-	var url = "admin_activate_user.php";
+	var url = "/adm/admin_activate_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
@@ -490,7 +490,7 @@ function updateUserEnabledStatus(user_id, enabled) {
 		ajaxMode:	"true"
 	}
 	
-	url = "update_user_enabled.php";
+	url = "/adm/update_user_enabled.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
@@ -502,7 +502,7 @@ function updateUserEnabledStatus(user_id, enabled) {
 }
 
 function deleteUser(user_id) {
-	var url = 'delete_user.php';
+	var url = '/adm/delete_user.php';
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
