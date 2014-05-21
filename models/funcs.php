@@ -64,7 +64,7 @@ function getPageFiles()
 
 function getAdminPageFiles()
 {
-    $directory = "adm/";
+    $directory = "/adm/";
     $admin_pages = glob($directory . "*.php");
     //print each file name
     foreach ($admin_pages as $page){
@@ -1286,10 +1286,11 @@ function removePage($page, $permission) {
 	$stmt->close();
 	return $i;
 }
-
+function securePageAdmin($uri){
+    securePage($uri);
+}
 //Check if a user has access to a page
 function securePage($uri){
-	
 	//Separate document name from uri
 	$tokens = explode('/', $uri);
 	$page = $tokens[sizeof($tokens)-1];

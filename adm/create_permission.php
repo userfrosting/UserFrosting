@@ -32,7 +32,7 @@ THE SOFTWARE.
 require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
-
+ChromePhp::log(!securePage($_SERVER['PHP_SELF']));
 // Recommended admin-only access
 if (!securePage($_SERVER['PHP_SELF'])){
   addAlert("danger", "Whoops, looks like you don't have permission to create a permission group.");

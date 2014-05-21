@@ -32,7 +32,7 @@ function sitePagesWidget(widget_id, options) {
 	if (options['display_errors_id'])
 		display_errors_id = options['display_errors_id'];		
 	
-	//console.log(display_errors_id);
+	// console.log(display_errors_id);
 	// Ok, set up the widget with its columns
 	var html =
 	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +

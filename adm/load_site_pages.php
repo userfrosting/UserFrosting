@@ -44,12 +44,13 @@ try {
 //  }
   
   $pages = getPageFiles(); //Retrieve list of pages in root usercake folder
-  $admin_pages = getAdminPageFiles();
+  $admin_pages = getAdminPageFiles(); //Retrieve list of admin pages
   $dbpages = fetchAllPages(); //Retrieve list of pages in pages table
   $creations = array();
   $deletions = array();
   $originals = array();
-  
+  //ChromePhp::log($dbpages);
+  //ChromePhp::log($admin_pages);
   //Check if any pages exist which are not in DB
   foreach ($pages as $page){
 	  if(!isset($dbpages[$page])){
@@ -62,7 +63,7 @@ try {
           $creations[] = $page;
       }
   }
-    ChromePhp::log("admin pages fires");
+  //ChromePhp::log("admin pages fires");
   //Enter new pages in DB if found
   if (count($creations) > 0) {
 	  createPages($creations)	;
