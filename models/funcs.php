@@ -54,18 +54,17 @@ function getTemplateFiles()
 function getPageFiles()
 {
 	$directory = "";
-	$pages = glob($directory . "*.php");
-	//print each file name
+    $pages = glob($directory . "*.php");
 	foreach ($pages as $page){
 		$row[$page] = $page;
-	}
-	return $row;
+    }return $row;
 }
 
+//get all .php files in the adm directory
 function getAdminPageFiles()
 {
-    $directory = "/adm/";
-    $admin_pages = glob($directory . "*.php");
+    $directory = "adm";
+    $admin_pages = glob(preg_replace('/(\*|\?|\[)/', '[$1]', $directory) . "*.php");
     //print each file name
     foreach ($admin_pages as $page){
         $row[$page] = $page;

@@ -50,11 +50,12 @@ function sitePagesWidget(widget_id, options) {
 		var data = processJSONResult(result);	
 		alertWidget('display-alerts');
 		var permissions = {};
+
 		// Don't bother unless there are some records found
 		if (Object.keys(data).length > 0) { 
 			html+= "<div class='table-responsive'><table class='table table-bordered table-hover table-striped tablesorter'>" + 
 			"<thead><tr>";
-			jQuery.each(columns, function(name, header) {
+            jQuery.each(columns, function(name, header) {
 				html += "<th>" + header + " <i class='fa fa-sort'></th>";
 			});
 			// Load list of permissions
@@ -107,9 +108,10 @@ function sitePagesWidget(widget_id, options) {
 				// Add checkboxes for permissions
 				jQuery.each(permissions, function(perm_id, perm) {
 					row += "<td><input type='checkbox' class = 'checkbox-page-permission' data-page-id='" + record['id'] + "' data-permission-id='" + perm_id + "'";
-					if (record['status'] == 'D') {
+                    if (record['status'] == 'D') {
 						row += " disabled ";
 					}
+                    //console.log(record['permissions'][perm_id]);
 					if (record['permissions'][perm_id]) {
 						row += " checked></td>";
 					} else {
