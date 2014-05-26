@@ -37,7 +37,7 @@ require_once("../models/class.user.php");
 require_once("../models/class.newuser.php");
 session_start();
 
-if (fetchUserDetails(NULL, NULL, '1')){
+if (fetchUserAuthById('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
 	header('Location: complete.php');
 	exit();

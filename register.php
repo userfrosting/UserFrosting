@@ -41,7 +41,7 @@ if (!securePage($_SERVER['PHP_SELF'])){
 
 setReferralPage($_SERVER['PHP_SELF']);
 
-if (!fetchUserDetails(NULL, NULL, '1')){
+if (!fetchUserAuthById('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
 	header("Location: install/register_root.php");
 	exit();

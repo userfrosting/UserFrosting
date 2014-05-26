@@ -97,7 +97,7 @@ class loggedInUser {
 		$stmt->close();	
 	}
 	
-	//Is a user has a permission
+	// Check whether a user is part of a particular group
 	public function checkPermission($permission)
 	{
 		global $mysqli,$db_table_prefix,$master_account;
@@ -105,9 +105,9 @@ class loggedInUser {
 		//Grant access if master user
 		
 		$stmt = $mysqli->prepare("SELECT id 
-			FROM ".$db_table_prefix."user_permission_matches
+			FROM ".$db_table_prefix."user_group_matches
 			WHERE user_id = ?
-			AND permission_id = ?
+			AND group_id = ?
 			LIMIT 1
 			");
 		$access = 0;

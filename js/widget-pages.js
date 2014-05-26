@@ -38,8 +38,8 @@ function sitePagesWidget(widget_id, options) {
 	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +
     "<div class='panel-body'>";
 	
-	// Load the data and generate the rows.  Load sessions by student or by tutor, depending on whether the student_id parameter is set.
-	var url = 'load_site_pages.php';
+	// Load the data and generate the rows.
+	var url = APIPATH + 'load_site_pages.php';
 	$.getJSON( url, {
 	})
 	.fail(function(result) {
@@ -146,7 +146,7 @@ function sitePagesWidget(widget_id, options) {
 			var page_id = btn.data('page-id');
 			var permission_id = btn.data('permission-id');
 			var checked = $(this).prop('checked') ? 1 : 0;
-			var url = "update_page_permission.php";
+			var url = APIPATH + "update_page_permission.php";
 			$.ajax({  
 				type: "POST",  
 				url: url,  
