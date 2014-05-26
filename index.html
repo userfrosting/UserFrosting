@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Userfrosting : A secure, modern user management system based on UserCake, jQuery, and Bootstrap." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Userfrosting</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/alexweissman/UserFrosting">View on GitHub</a>
+
+          <h1 id="project_title">Userfrosting</h1>
+          <h2 id="project_tagline">A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/alexweissman/UserFrosting/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/alexweissman/UserFrosting/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="userfrosting-017" class="anchor" href="#userfrosting-017"><span class="octicon octicon-link"></span></a>UserFrosting 0.1.7</h1>
+
+<h3>
+<a name="by-alex-weissman" class="anchor" href="#by-alex-weissman"><span class="octicon octicon-link"></span></a>By Alex Weissman</h3>
+
+<p>Copyright (c) 2014</p>
+
+<p>Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.</p>
+
+<h2>
+<a name="change-log---v017" class="anchor" href="#change-log---v017"><span class="octicon octicon-link"></span></a>Change Log - v0.1.7</h2>
+
+<ul>
+<li>Page scrolls back to top after AJAX submit.</li>
+<li>"Website url" is automatically suffixed with "/" if necessary.</li>
+<li>Fixed bad link to forgot_password.php.</li>
+<li>Began implementing action authorization scheme.</li>
+</ul><p><a href="CHANGELOG.md">Older changes</a></p>
+
+<h2>
+<a name="why-userfrosting" class="anchor" href="#why-userfrosting"><span class="octicon octicon-link"></span></a>Why UserFrosting?</h2>
+
+<p>This project grew out of a need for a simple user management system for my tutoring business, <a href="http://bloomingtontutors.com">Bloomington Tutors</a>.  I wanted something that I could develop rapidly and easily customize for the needs of my business.  Since my <a href="http://alexanderweissman.com/completed-projects/">prior web development experience</a> was in pure PHP, I decided to go with the PHP-based UserCake system.  Over time I modified and expanded the codebase, turning it into the UserFrosting project. </p>
+
+<h2>
+<a name="why-not-use-nodedrupaldjangororinsert-favorite-framework-here" class="anchor" href="#why-not-use-nodedrupaldjangororinsert-favorite-framework-here"><span class="octicon octicon-link"></span></a>Why not use Node/Drupal/Django/RoR/(insert favorite framework here)?</h2>
+
+<p>I chose PHP because PHP is what I know from my prior experience as a web developer. Additionally, PHP remains extremely popular and well-supported.  I chose not to use a framework because I wanted something that I could understand easily and develop rapidly from an existing PHP codebase.</p>
+
+<h2>
+<a name="developer-features" class="anchor" href="#developer-features"><span class="octicon octicon-link"></span></a>Developer Features</h2>
+
+<ul>
+<li>No need to learn a special framework!  The backend of UserFrosting is based on native PHP5, allowing for rapid development and deployment.</li>
+<li>Clean separation of backend and frontend code.  Easily interact with the backend via AJAX calls.</li>
+<li>Automated installation tool for initializing the database.</li>
+<li>Frontend built with jQuery and Twitter Bootstrap.  Javascript components for typical database CRUD operations provided with this distribution!</li>
+</ul><h2>
+<a name="user-features" class="anchor" href="#user-features"><span class="octicon octicon-link"></span></a>User Features</h2>
+
+<p>UserFrosting offers all of the features of UserCake, plus several new ones:</p>
+
+<ul>
+<li>Account creation/deletion from the admin interface</li>
+<li>Admin can disable/enable individual accounts</li>
+<li>Admin can disable/enable new account registration</li>
+<li>Dropdown menus for easier account modifications</li>
+<li>Client-side data validation</li>
+<li>Default permissions for new accounts</li>
+<li>Table view for easily editing page permissions</li>
+</ul><h2>
+<a name="security-features" class="anchor" href="#security-features"><span class="octicon octicon-link"></span></a>Security Features</h2>
+
+<p>UserFrosting is designed to address the most common security issues with websites that handle sensitive user data:</p>
+
+<h4>
+<a name="sslhttps-compatibility" class="anchor" href="#sslhttps-compatibility"><span class="octicon octicon-link"></span></a>SSL/HTTPS compatibility</h4>
+
+<p>Unsecured ("http") websites exchange data between the user and the server in plain text.  If the connection between the user and server is not secure, this data can be intercepted, and possibly even altered and/or rerouted.  And, even if the sensitive data itself is encrypted, the user's session on the website can be stolen and impersonated unless ALL communication between the user and server is handled over SSL ("https" websites).  If you walk into any coffee shop with an unsecured wireless network, and launch a simple program such as <a href="http://codebutler.com/firesheep/">Firesheep</a>, you will see how huge of a problem this is, and why <a href="http://www.wired.com/2014/04/https/">Google and other companies are pushing for <em>everyone</em> to use SSL</a>.</p>
+
+<p>This is also why there are strict standards about websites that handle sensitive user data such as credit card numbers!  We strongly encourage anyone planning to deploy a website that handles user passwords and sessions (such as ones based on UserFrosting) to purchase an SSL certificate and deploy it on their web server.  <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/794/67/how-to-activate-ssl-certificate">Namecheap</a> offers basic, inexpensive certs for $9/year (you do not need to have Namecheap hosting or domain registration to use their certificates on your site).  If your web hosting happens to use cPanel, this is easy to <a href="http://docs.cpanel.net/twiki/bin/view/AllDocumentation/WHMDocs/InstallCert">set up yourself</a> without needing to contact your hosting provider.  Please note that SSL on shared hosting accounts may create false security warnings for end-users with <a href="https://en.wikipedia.org/wiki/Server_Name_Indication#No_support">older browsers</a>.</p>
+
+<p>For <strong>local testing purposes only</strong> you may create a self-signed certificate.  For instructions on how to do this for XAMPP/Apache in OSX, see <a href="http://shahpunyerblog.blogspot.com/2007/10/create-self-signed-ssl-certificate-in.html">this blog post</a>.</p>
+
+<h4>
+<a name="strong-password-hashing" class="anchor" href="#strong-password-hashing"><span class="octicon octicon-link"></span></a>Strong password hashing</h4>
+
+<p>UserFrosting uses the <code>password_hash</code> and <code>password_verify</code> functions to hash and validate passwords (new in PHP v5.5.0).  <code>password_hash</code> uses the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a 22-character salt to user passwords, protecting against dictionary attacks.</p>
+
+<p>UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with MD5.  User accounts that have been hashed with MD5 will automatically be updated to the new encryption standard when the user successfully logs in.</p>
+
+<h4>
+<a name="protection-against-cross-site-request-forgery-csrf" class="anchor" href="#protection-against-cross-site-request-forgery-csrf"><span class="octicon octicon-link"></span></a>Protection against cross-site request forgery (CSRF)</h4>
+
+<p>CSRF is an attack that relies on a user unwittingly submitting malicious data from another source while logged in to their account.  The malicious data can be embedded in an image, link, or other javascript content, on another website or in an email.  Because the user has a valid session with a website, the external content is accepted and processed.  Thus, attackers can easily change passwords or delete a user's account with this attack.</p>
+
+<p>To guard against this, UserFrosting provides the <code>csrf_token</code> function (courtesy of <a href="https://github.com/r3wt" class="user-mention">@r3wt</a>).  By generating a new, random CSRF token for users when they log in, inserting it into legitimate forms as a hidden field, and then having the backend form processing links check for this token before taking any action, CSRF attacks can be thwarted.</p>
+
+<h4>
+<a name="protection-against-cross-site-scripting-xss" class="anchor" href="#protection-against-cross-site-scripting-xss"><span class="octicon octicon-link"></span></a>Protection against cross-site scripting (XSS)</h4>
+
+<p>XSS is another variety of attack that tricks a user, but instead of tricking the user into submitting malicious data (CSRF), it tricks the user into running malicious scripts.  This vulnerability usually appears when you allow arbitrary content (including javascript and HTML tags) to be processed and then regurgitated back to other users.  Thus, an attacker on a forum could create a new "post" that contains javascript commands.  When anyone else on the site goes to view that post, the javascript commands are executed.  Those commands could easily be instructions to transmit the user's session data to a remote server, where attackers can use it to impersonate the user.</p>
+
+<p>UserFrosting guards against this by sanitizing user input before storing or otherwise acting upon it.  Please let us know if you find a place where input is not properly sanitized.</p>
+
+<h4>
+<a name="protection-against-sql-injection" class="anchor" href="#protection-against-sql-injection"><span class="octicon octicon-link"></span></a>Protection against SQL injection</h4>
+
+<p>Whereas XSS tricks the <em>user</em> into executing malicious code, SQL injection tricks the <em>server</em> into executing malicious code; in this case, SQL statements.  Thus, sites vulnerable to SQL injection can end up executing code that, for example, deletes a table or database.</p>
+
+<p>UserFrosting protects against this by using parameterized queries, which do not allow user-supplied data to be executed as code.  However there are always exceptions, and we would be glad to have some contributors test and/or help patch any possible remaining SQL injection vulnerabilities.</p>
+
+<h2>
+<a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h2>
+
+<h4>
+<a name="login-page" class="anchor" href="#login-page"><span class="octicon octicon-link"></span></a>Login page</h4>
+
+<p><img src="/screenshots/login.png" alt="Login page" title="Login page"></p>
+
+<h4>
+<a name="admin-dashboard-thanks-to-start-bootstrap" class="anchor" href="#admin-dashboard-thanks-to-start-bootstrap"><span class="octicon octicon-link"></span></a>Admin dashboard (thanks to <a href="http://startbootstrap.com">Start Bootstrap</a>)</h4>
+
+<p><img src="/screenshots/dashboard.png" alt="Admin dashboard" title="Admin dashboard"></p>
+
+<h4>
+<a name="user-list-page" class="anchor" href="#user-list-page"><span class="octicon octicon-link"></span></a>User list page</h4>
+
+<p><img src="/screenshots/users.png" alt="User list" title="User list page"></p>
+
+<h4>
+<a name="create-user-dialog" class="anchor" href="#create-user-dialog"><span class="octicon octicon-link"></span></a>Create user dialog</h4>
+
+<p><img src="/screenshots/create_user.png" alt="Create user" title="Create user dialog"></p>
+
+<h4>
+<a name="user-details" class="anchor" href="#user-details"><span class="octicon octicon-link"></span></a>User details</h4>
+
+<p><img src="/screenshots/user_details.png" alt="User details" title="User details page"></p>
+
+<h4>
+<a name="site-settings" class="anchor" href="#site-settings"><span class="octicon octicon-link"></span></a>Site settings</h4>
+
+<p><img src="/screenshots/site_settings.png" alt="Site settings" title="Site settings page"></p>
+
+<h4>
+<a name="page-management" class="anchor" href="#page-management"><span class="octicon octicon-link"></span></a>Page management</h4>
+
+<p><img src="/screenshots/site_pages.png" alt="Site pages" title="Page management"></p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>To install, follow these instructions:</p>
+
+<ol>
+<li>Create a database on your server / web hosting package. UserFrosting supports MySQLi and requires MySQL server version 4.1.3 or newer, as well as PHP 5.4 or later with PDO database connections enabled.</li>
+<li>Open up models/db-settings.php and fill out the connection details for your database.</li>
+<li>Run the UserFrosting installer at install/install.php. UserFrosting will attempt to build the database for you.</li>
+<li>After the installer successfully completes, delete the install folder.</li>
+<li>Register your admin account, which will by default be the first account that is registered.</li>
+</ol><h2>
+<a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<h3>
+<a name="backend-pages" class="anchor" href="#backend-pages"><span class="octicon octicon-link"></span></a>Backend pages</h3>
+
+<p>These are pages which accept a POST or GET request, perform some action, and then return a response in the form of a JSON object.  Success, error, and warning messages are stored in the <code>$_SESSION['userAlerts']</code> object, and can be fetched via <strong>user_alerts.php</strong>.</p>
+
+<ul>
+<li>
+<p><strong>activate_account.php</strong></p>
+
+<ul>
+<li>Activates a newly registered user account, using the activation token that was emailed to the user upon account registration.</li>
+<li>Default permission level: <em>public</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>token</code> : a user's account activation token </li>
+<li>
+<code>ajaxMode</code> : Specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>FORGOTPASS_INVALID_TOKEN</code> : Token not specified</li>
+<li>
+<code>ACCOUNT_TOKEN_NOT_FOUND</code> : Invalid token</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_ACTIVATION_COMPLETE</code> : Account successfully activated.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>admin_activate_user.php</strong></p>
+
+<ul>
+<li>Manually activates a newly registered user account, using the user's user id (<code>id</code> column in <code>uc_users</code>).</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>user_id</code> : a user's user id.</li>
+<li>
+<code>ajaxMode</code> : Specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>ACCOUNT_INVALID_USER_ID</code> : Invalid user id specified</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_MANUALLY_ACTIVATED</code> : Manual account activation successful.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>admin_load_permissions.php</strong></p>
+
+<ul>
+<li>Load permissions for a specified user, using the user's user id (<code>id</code> column in <code>uc_users</code>).</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>user_id</code> : a user's user id.</li>
+</ul>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Obviously set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object with permission id's (from <code>uc_permissions</code>) as keys, mapping to permission objects for each permission group that the user has access to.  Each permission object contains the following fields:
+
+<ul>
+<li>
+<code>id</code> : the unique id for this permission group.</li>
+<li>
+<code>name</code> : the name of the permission group.</li>
+<li>
+<code>is_default</code> : specify whether the permission group is automatically added when a new account is registered. (<code>"1"</code> or <code>"0"</code>).</li>
+<li>
+<code>can_delete</code> : specify whether the permission group can be deleted via "delete_permission.php". (<code>"1"</code> or <code>"0"</code>).</li>
+<li>
+<code>user_id</code> : the id of the queried user.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>User id not specified</li>
+<li>Database error</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>create_permission.php</strong></p>
+
+<ul>
+<li>Create a new permission group.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>new_permission</code> : the name of the new permission group.  Must be between 1 and 50 characters long.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>PERMISSION_NAME_IN_USE</code> : Permission group name already in use.</li>
+<li>
+<code>PERMISSION_CHAR_LIMIT</code> : Permission group name too short/long.</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>PERMISSION_CREATION_SUCCESSFUL</code> : Permission group successfully created.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>create_user.php</strong></p>
+
+<ul>
+<li>Create a new user.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>username</code> : the username for the new user.  Must be between 1 and 25 characters long, letters and numbers only (no whitespace).</li>
+<li>
+<code>displayname</code> : the display name for the new user.  Must be between 1 and 50 characters long.</li>
+<li>
+<code>title</code> : the title for the new user.  Must be between 1 and 150 characters long.</li>
+<li>
+<code>email</code> : the email address for the new user.  Must be between 1 and 150 characters and a valid email format.</li>
+<li>
+<code>password</code> : the password for the new user.  Must be between 8 and 50 characters.</li>
+<li>
+<code>confirm_pass</code> : the password for the new user.  Must match the <code>password</code> field.</li>
+<li>
+<code>add_permissions</code> : a comma-separated string of permission id's to be associated with the new user.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>.</li>
+<li>
+<code>csrf_token</code> : the csrf token for the user's session.  Must be set, or the request will automatically fail.<br>
+</li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>ACCOUNT_USER_CHAR_LIMIT</code> : <code>username</code> too short/long.</li>
+<li>
+<code>ACCOUNT_USER_INVALID_CHARACTERS</code> : <code>username</code> must be letters and numbers only.</li>
+<li>
+<code>ACCOUNT_DISPLAY_CHAR_LIMIT</code> : <code>displayname</code> too short/long.</li>
+<li>
+<code>ACCOUNT_PASS_CHAR_LIMIT</code> : <code>password</code> too short/long.</li>
+<li>
+<code>ACCOUNT_PASS_MISMATCH</code> : <code>password</code> and <code>confirm_pass</code> do not match.</li>
+<li>
+<code>ACCOUNT_INVALID_EMAIL</code> : <code>email</code> is not a valid email address format.</li>
+<li>
+<code>ACCOUNT_USERNAME_IN_USE</code> : <code>username</code> already in use.</li>
+<li>
+<code>ACCOUNT_DISPLAYNAME_IN_USE</code> : <code>displayname</code> already in use.  TODO: relax this restriction?</li>
+<li>
+<code>ACCOUNT_EMAIL_IN_USE</code> : <code>email</code> already in use.</li>
+<li>
+<code>MAIL_ERROR</code> : Error sending activation email (if enabled).</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_CREATION_COMPLETE</code> : User account successfully created.</li>
+<li>
+<code>ACCOUNT_PERMISSION_ADDED</code> : Permissions successfully added for new user.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>delete_permission.php</strong></p>
+
+<ul>
+<li>Delete a permission group, and all it's page and user associations.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>permission_id</code> : the id of the permission group to delete.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>CANNOT_DELETE_PERMISSION_GROUP</code> : The specified group is undeletable (<code>can_delete</code>=0)</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>PERMISSION_DELETION_SUCCESSFUL_NAME</code> : Permission group successfully deleted.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>delete_user.php</strong></p>
+
+<ul>
+<li>Delete a user account, and all their permission associations.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>user_id</code> : the id of the user to delete.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>SQL_ERROR</code> : Database error.</li>
+<li>
+<code>ACCOUNT_DELETE_MASTER</code> : The master (id=1) account cannot be deleted.</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_DELETIONS_SUCCESSFUL</code> : User account successfully deleted.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>load_current_user.php</strong></p>
+
+<ul>
+<li>Loads data for the currently logged in user.</li>
+<li>Default permission level: <em>public</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters: <em>none</em>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object containing relevant data for the user's account:
+
+<ul>
+<li>
+<code>id</code> : the id of the currently logged in user.</li>
+<li>
+<code>username</code> : the username of the currently logged in user.</li>
+<li>
+<code>displayname</code> : the display name of the currently logged in user.</li>
+<li>
+<code>title</code> : the title of the currently logged in user.</li>
+<li>
+<code>email</code> : the email address of the currently logged in user.</li>
+<li>
+<code>sign_up_stamp</code> : the UNIX timestamp (seconds since Jan 1, 1970) of the time when the currently logged in user's account was created.</li>
+<li>
+<code>admin</code> : specify whether or not this user is an admin.  Useful for frontend rendering purposes.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied.</li>
+<li>User not logged in.</li>
+<li>Account data not found.</li>
+<li>
+<code>SQL_ERROR</code> : Database error.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>load_form_user.php</strong></p>
+
+<ul>
+<li>Loads a customized form/panel for creating, updating, or displaying a user.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>box_id</code>: the desired name of the div that will contain the form.</li>
+<li>
+<code>render_mode</code>: <code>modal</code> or <code>panel</code>
+</li>
+<li>
+<code>user_id</code> (optional): if specified, will load the relevant data for the user into the form.  Form will then be in "update" mode.</li>
+<li>
+<code>show_dates</code> (optional): if set to <code>"true"</code>, will show the registered and last signed in date fields (fields will be read-only)</li>
+<li>
+<code>show_passwords</code> (optional): if set to <code>"true"</code>, will show the password creation fields</li>
+<li>
+<code>disabled</code> (optional): if set to <code>"true"</code>, disable all fields</li>
+<li>
+<code>button_submit</code>: If set to <code>"true"</code>, display the submission button for this form.</li>
+<li>
+<code>button_edit</code>: If set to <code>"true"</code>, display the edit button for panel mode.</li>
+<li>
+<code>button_disable</code>: If set to <code>"true"</code>, display the enable/disable button.</li>
+<li>
+<code>button_activate</code>: If set to <code>"true"</code>, display the activate button for inactive users.</li>
+<li>
+<code>button_delete</code>: If set to <code>"true"</code>, display the deletion button for deletable users.</li>
+</ul>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object containing the requested form/panel:
+
+<ul>
+<li>
+<code>data</code> : the fully rendered HTML for the form/panel.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>load_permissions.php</strong></p>
+
+<ul>
+<li>Returns a list of data for all permission levels.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>limit</code> : (optional).  Limit how many results to return.</li>
+</ul>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object with permission id's (from <code>uc_permissions</code>) as keys, mapping to permission objects for each permission group.  Each permission object contains the following fields:
+
+<ul>
+<li>
+<code>id</code> : the unique id for this permission group.</li>
+<li>
+<code>name</code> : the name of the permission group.</li>
+<li>
+<code>is_default</code> : specify whether the permission group is automatically added when a new account is registered. (<code>"1"</code> or <code>"0"</code>).</li>
+<li>
+<code>can_delete</code> : specify whether the permission group can be deleted via "delete_permission.php". (<code>"1"</code> or <code>"0"</code>).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied.</li>
+<li>Database error.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>load_site_pages.php</strong></p>
+
+<ul>
+<li>Scans the root directory for new and missing PHP pages, and updates the database accordingly (new pages are made public by default).  Then, returns a list of data objects corresponding to website pages.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters: <em>none</em>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object with file names as keys, mapping to page objects for each page.  Each page object contains the following fields:
+
+<ul>
+<li>
+<code>id</code> : the unique id for this page.</li>
+<li>
+<code>page</code> : the file name of the page, relative to the root directory.</li>
+<li>
+<code>private</code> : specify whether the page is public or private (logged in users only). (<code>"1"</code> or <code>"0"</code>).</li>
+<li>
+<code>status</code> : returns the status of the page after the most recent call to this function, indicating whether it was created, deleted, or updated. (<code>"C"</code>, <code>"D"</code>, or <code>"U"</code>).</li>
+<li>
+<code>permissions</code> : A list of permissions associated with this page, as per load_permissions.php.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied.</li>
+<li>Database error.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>load_site_settings.php</strong></p>
+
+<ul>
+<li>Returns a list of site configuration parameters, indexed by the parameter name.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters: <em>none</em>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object with parameter names as keys, mapping to their values.  The default parameters for UserFrosting are as follows:
+
+<ul>
+<li>
+<code>website_name</code> : the name of your site.</li>
+<li>
+<code>website_url</code> : the root url for your UserFrosting installation.</li>
+<li>
+<code>email</code> : the email address to use for sending administrative emails.</li>
+<li>
+<code>new_user_title</code> : The default title for newly registered users.</li>
+<li>
+<code>can_register</code> : <code>"1"</code> if account self-registration is enabled (from "register.php"), <code>"0"</code> otherwise.</li>
+<li>
+<code>activation</code> : <code>"1"</code> if email activation for new accounts is enabled, <code>"0"</code> otherwise.</li>
+<li>
+<code>resend_activation_threshold</code> : number of hours required between consecutive requests from a user to resend their account activation link.  Default is 0.</li>
+<li>
+<code>language</code> : The language template to use for generating site messages, etc.  Default: english.</li>
+<li>
+<code>template</code> : The default site CSS template.  TODO: expand to include Bootstrap templates.</li>
+<li>
+<code>language_options</code> : A list of language template options, based on scanning the <code>models/languages</code> folder.</li>
+<li>
+<code>template_options</code> : A list of CSS template options, based on scanning the <code>models/site-templates</code> folder.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied.</li>
+<li>Database error.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>load_user.php</strong></p>
+
+<ul>
+<li>Load data for a specified user, using the user's user id (<code>id</code> column in <code>uc_users</code>).</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>user_id</code> : a user's user id.</li>
+</ul>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Obviously set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object containing the user's data.  Contains the following fields:
+
+<ul>
+<li>
+<code>user_id</code> : the unique id of the specified user.</li>
+<li>
+<code>user_name</code> : the username of the specified user.</li>
+<li>
+<code>display_name</code> : the display name of the specified user.</li>
+<li>
+<code>title</code> : the title of the specified user.</li>
+<li>
+<code>email</code> : the email address of the specified user.</li>
+<li>
+<code>sign_up_stamp</code> : the UNIX timestamp (seconds since Jan 1, 1970) of the time when the specified user's account was created.</li>
+<li>
+<code>last_sign_in_stamp</code> : the UNIX timestamp (seconds since Jan 1, 1970) of the time when the user last logged in.</li>
+<li>
+<code>active</code> : <code>"1"</code> if the user's account has been activated, <code>"0"</code> otherwise.</li>
+<li>
+<code>enabled</code> : <code>"1"</code> if the user's account is enabled, <code>"0"</code> otherwise.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>Invalid user id specified</li>
+<li>Database error</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>load_users.php</strong></p>
+
+<ul>
+<li>Load data objects for all users.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>limit</code> : (optional).  Limit how many results to return.</li>
+</ul>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Obviously set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object with user id's (from <code>uc_users</code>) as keys, mapping to user objects.  Each user object contains the same fields as specified in "load_user.php".</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>Database error</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>process_login.php</strong></p>
+
+<ul>
+<li>Processes a user login request, and creates a session for the user upon success.</li>
+<li>Default permission level: <em>public</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>username</code> : the username for the login request.</li>
+<li>
+<code>password</code> : the password for the login request.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>ACCOUNT_SPECIFY_USERNAME</code> : username not specified.</li>
+<li>
+<code>ACCOUNT_SPECIFY_PASSWORD</code> : password not specified.</li>
+<li>
+<code>ACCOUNT_USER_OR_PASS_INVALID</code> : either the username could not be found in the database, or the password was not correct.</li>
+<li>
+<code>ACCOUNT_INACTIVE</code> : the account has not yet been activated (when email activation is enabled).</li>
+<li>
+<code>ACCOUNT_DISABLED</code> : the account has been disabled by an administrator.</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>Login successful (welcome message).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>update_page_permission.php</strong></p>
+
+<ul>
+<li>Update permissions for a site page, and private/public status.  TODO: implement "public" pages as just another permission group.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>page_id</code> : the id of the page to be updated (from <code>uc_pages</code>)</li>
+<li>
+<code>permission_id</code> : the id of the permission group to be associated with this page (from <code>uc_permissions</code>)</li>
+<li>
+<code>checked</code> : <code>"1"</code> if the page is to be set as a private page, <code>"0"</code> for a public page.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li><em>none</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>update_permission.php</strong></p>
+
+<ul>
+<li>Update settings for a permission group.  Not yet implemented.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>TODO: Implement this properly.</li>
+</ul>
+</li>
+<li>
+<p><strong>update_site_settings.php</strong></p>
+
+<ul>
+<li>Update site configuration settings.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>website_name</code> : the name of your site.  Must be between 1 and 150 characters.</li>
+<li>
+<code>website_url</code> : the root url for your UserFrosting installation.  Must be between 1 and 150 characters and end with a '/'.</li>
+<li>
+<code>email</code> : the email address to use for sending administrative emails.  Must be between 1 and 150 characters and a valid email format.</li>
+<li>
+<code>can_register</code> : <code>"1"</code> if account self-registration is enabled (from "register.php"), <code>"0"</code> otherwise.</li>
+<li>
+<code>new_user_title</code> : the default title for new users.  Must be between 1 and 150 characters.</li>
+<li>
+<code>activation</code> : <code>"1"</code> if email activation for new accounts is enabled, <code>"0"</code> otherwise.</li>
+<li>
+<code>resend_activation_threshold</code> : number of hours required between consecutive requests from a user to resend their account activation link.  Default is 0.</li>
+<li>
+<code>language</code> : The language template to use for generating site messages, etc.  Default: english.</li>
+<li>
+<code>template</code> : The default site CSS template.  TODO: expand to include Bootstrap templates.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>CONFIG_NAME_CHAR_LIMIT</code> : Site name must be between 1 and 150 characters.</li>
+<li>
+<code>CONFIG_URL_CHAR_LIMIT</code> : Site url must be between 1 and 150 characters.</li>
+<li>
+<code>CONFIG_INVALID_URL_END</code> : Site url must end with '/'.</li>
+<li>
+<code>CONFIG_EMAIL_CHAR_LIMIT</code> : Email must be between 1 and 150 characters.</li>
+<li>
+<code>CONFIG_TITLE_CHAR_LIMIT</code> : Default new user title must be between 1 and 150 characters.</li>
+<li>
+<code>CONFIG_EMAIL_INVALID</code> : Email must a valid format.</li>
+<li>
+<code>CONFIG_REGISTRATION_TRUE_FALSE</code> : Registration must have either the value <code>"true"</code> or <code>"false"</code>. </li>
+<li>
+<code>CONFIG_ACTIVATION_TRUE_FALSE</code>: Registration must have either the value <code>"true"</code> or <code>"false"</code>. </li>
+<li>
+<code>CONFIG_ACTIVATION_RESEND_RANGE</code> : Email activation resend wait period must be between 0 and 72 hours.</li>
+<li>
+<code>CONFIG_LANGUAGE_CHAR_LIMIT</code>: Language template filename must be between 1 and 150 characters.</li>
+<li>
+<code>CONFIG_LANGUAGE_INVALID</code> : The language template specified could not be found.</li>
+<li>
+<code>CONFIG_TEMPLATE_CHAR_LIMIT</code> : Site template filename must be between 1 and 150 characters.</li>
+<li>
+<code>CONFIG_TEMPLATE_INVALID</code> : The site template specified could not be found.</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>CONFIG_UPDATE_SUCCESSFUL</code> : Site configuration was successfully updated.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>update_user.php</strong></p>
+
+<ul>
+<li>Update an existing user's account.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters (all except <code>user_id</code> are optional):
+
+<ul>
+<li>
+<code>user_id</code> : the id of the user (in <code>uc_users</code>).</li>
+<li>
+<code>display_name</code> : the new display name for the user.  Must be between 1 and 50 characters long.</li>
+<li>
+<code>title</code> : the new title for the user.  Must be between 1 and 150 characters long.</li>
+<li>
+<code>email</code> : the new email address for the user.  Must be between 1 and 150 characters and a valid email format.</li>
+<li>
+<code>add_permissions</code> : a comma-separated string of permission id's to be associated with the user.</li>
+<li>
+<code>remove_permissions</code> : a comma-separated string of permission id's to be removed from the user.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>.</li>
+<li>
+<code>csrf_token</code> : the csrf token for the user's session.  Must be set, or the request will automatically fail.</li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>ACCOUNT_USER_CHAR_LIMIT</code> : <code>username</code> too short/long.</li>
+<li>
+<code>ACCOUNT_USER_INVALID_CHARACTERS</code> : <code>username</code> must be letters and numbers only.</li>
+<li>
+<code>ACCOUNT_DISPLAY_CHAR_LIMIT</code> : <code>displayname</code> too short/long.</li>
+<li>
+<code>ACCOUNT_INVALID_EMAIL</code> : <code>email</code> is not a valid email address format.</li>
+<li>
+<code>ACCOUNT_USERNAME_IN_USE</code> : <code>username</code> already in use.</li>
+<li>
+<code>ACCOUNT_DISPLAYNAME_IN_USE</code> : <code>displayname</code> already in use.  TODO: relax this restriction?</li>
+<li>
+<code>ACCOUNT_TITLE_CHAR_LIMIT</code> : <code>title</code> too short/long.</li>
+<li>
+<code>ACCOUNT_EMAIL_IN_USE</code> : <code>email</code> already in use.</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_DISPLAYNAME_UPDATED</code> : User display name successfully updated.</li>
+<li>
+<code>ACCOUNT_EMAIL_UPDATED</code> : User email successfully updated.</li>
+<li>
+<code>ACCOUNT_TITLE_UPDATED</code> : User title successfully updated.</li>
+<li>
+<code>ACCOUNT_PERMISSION_ADDED</code> : Permissions successfully added for the user.</li>
+<li>
+<code>ACCOUNT_PERMISSION_REMOVED</code> : Permissions successfully removed for the user.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>update_user_enabled.php</strong></p>
+
+<ul>
+<li>Enable or disable a user's account.</li>
+<li>Default permission level: <em>admin only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>user_id</code> : the id of the user (in <code>uc_users</code>).</li>
+<li>
+<code>enabled</code> : <code>"1"</code> to enable the account, <code>"0"</code> to disable the account.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>Account successfully enabled.</li>
+<li>Account successfully disabled.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>user_create_user.php</strong></p>
+
+<ul>
+<li>Allows a newly registered user to create their account.  Sets their title automatically to the <code>new_user_title</code> specified in site settings.  Adds all default permission levels (<code>is_default</code> set to <code>1</code> in <code>uc_permissions</code>) to the newly registered account.</li>
+<li>Default permission level: <em>public</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>username</code> : the username for the new user.  Must be between 1 and 25 characters long, letters and numbers only (no whitespace).</li>
+<li>
+<code>displayname</code> : the display name for the new user.  Must be between 1 and 50 characters long.</li>
+<li>
+<code>email</code> : the email address for the new user.  Must be between 1 and 150 characters and a valid email format.</li>
+<li>
+<code>password</code> : the password for the new user.  Must be between 8 and 50 characters.</li>
+<li>
+<code>confirm_pass</code> : the password for the new user.  Must match the <code>password</code> field.</li>
+<li>
+<code>captcha</code> : the captcha code displayed on the registration form.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>ACCOUNT_USER_CHAR_LIMIT</code> : <code>username</code> too short/long.</li>
+<li>
+<code>ACCOUNT_USER_INVALID_CHARACTERS</code> : <code>username</code> must be letters and numbers only.</li>
+<li>
+<code>ACCOUNT_DISPLAY_CHAR_LIMIT</code> : <code>displayname</code> too short/long.</li>
+<li>
+<code>ACCOUNT_PASS_CHAR_LIMIT</code> : <code>password</code> too short/long.</li>
+<li>
+<code>ACCOUNT_PASS_MISMATCH</code> : <code>password</code> and <code>confirm_pass</code> do not match.</li>
+<li>
+<code>ACCOUNT_INVALID_EMAIL</code> : <code>email</code> is not a valid email address format.</li>
+<li>
+<code>ACCOUNT_USERNAME_IN_USE</code> : <code>username</code> already in use.</li>
+<li>
+<code>ACCOUNT_DISPLAYNAME_IN_USE</code> : <code>displayname</code> already in use.  TODO: relax this restriction?</li>
+<li>
+<code>ACCOUNT_EMAIL_IN_USE</code> : <code>email</code> already in use.</li>
+<li>
+<code>CAPTCHA_FAIL</code> : captcha did not match.</li>
+<li>
+<code>MAIL_ERROR</code> : Error sending activation email (if enabled).</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_CREATION_COMPLETE</code> : User account successfully created.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>user_load_permissions.php</strong></p>
+
+<ul>
+<li>Load permissions for the currently logged in user.</li>
+<li>Default permission level: <em>logged in users only</em>
+</li>
+<li>Request method: <em>GET</em>
+</li>
+<li>Request parameters: <em>none</em>
+</li>
+<li>Response on failure (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.  Obviously set to 0.</li>
+</ul>
+</li>
+<li>Response on success (JSON):
+
+<ul>
+<li>A JSON object with permission id's (from <code>uc_permissions</code>) as keys, mapping to permission objects for each permission group that the user has access to.  Each permission object contains the following fields:
+
+<ul>
+<li>
+<code>id</code> : the unique id for this permission group.</li>
+<li>
+<code>name</code> : the name of the permission group.</li>
+<li>
+<code>is_default</code> : specify whether the permission group is automatically added when a new account is registered. (<code>"1"</code> or <code>"0"</code>).</li>
+<li>
+<code>can_delete</code> : specify whether the permission group can be deleted via "delete_permission.php". (<code>"1"</code> or <code>"0"</code>).</li>
+<li>
+<code>user_id</code> : the id of the queried user.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>User is not logged in</li>
+<li>Database error</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>user_resend_activation.php</strong></p>
+
+<ul>
+<li>Resend the activation email for a newly registered account.  User must supply the username and email address used to create the account.</li>
+<li>Default permission level: <em>public</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>username</code> : the username for the new user account.</li>
+<li>
+<code>email</code> : the email address for the new user account.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>ACCOUNT_SPECIFY_EMAIL</code> : no email address specified.</li>
+<li>
+<code>ACCOUNT_INVALID_EMAIL</code> : email address is not a valid format, or no account with the specified email address was found.</li>
+<li>
+<code>ACCOUNT_SPECIFY_USERNAME</code> : no username specified.</li>
+<li>
+<code>ACCOUNT_INVALID_USERNAME</code> : no account with the specified username was found.</li>
+<li>
+<code>ACCOUNT_USER_OR_EMAIL_INVALID</code> : username and email address are not linked to the same account.</li>
+<li>
+<code>ACCOUNT_ALREADY_ACTIVE</code> : account has already been activated.</li>
+<li>
+<code>ACCOUNT_LINK_ALREADY_SENT</code> : activation link cannot be resent until the activation threshold expires.</li>
+<li>
+<code>MAIL_TEMPLATE_BUILD_ERROR</code> : could not build the mail template.</li>
+<li>
+<code>MAIL_ERROR</code> : Error sending activation email (if enabled).</li>
+<li>
+<code>SQL_ERROR</code> : Database error</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_NEW_ACTIVATION_SENT</code> : Activation email successfully resent.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>user_reset_password.php</strong></p>
+
+<ul>
+<li>Process various types of password reset requests.</li>
+<li>Default permission level: <em>public</em>
+</li>
+<li>Request method: <em>POST</em> or <em>GET</em>
+</li>
+<li>TODO: separate this into two pages, one that issues password resets and one that processes confirmation/denial.</li>
+</ul>
+</li>
+<li>
+<p><strong>user_update_account_settings.php</strong></p>
+
+<ul>
+<li>Allows a user to update their email and/or password. </li>
+<li>Default permission level: <em>logged in users only</em>
+</li>
+<li>Request method: <em>POST</em>
+</li>
+<li>Request parameters:
+
+<ul>
+<li>
+<code>email</code> : the new email address for the user.  Must be between 1 and 150 characters and a valid email format.</li>
+<li>
+<code>password</code> : the current password for the user.</li>
+<li>
+<code>passwordc</code> : the new password for the user.  Must be between 8 and 50 characters.</li>
+<li>
+<code>passwordcheck</code> : the new password for the user.  Must match the <code>passwordc</code> field.</li>
+<li>
+<code>ajaxMode</code> : specify whether to access in AJAX/JSON mode.  <code>"true"</code> or <code>"false"</code>. </li>
+</ul>
+</li>
+<li>Response (JSON):
+
+<ul>
+<li>
+<code>errors</code> : the number of errors generated by the request.</li>
+<li>
+<code>successes</code> : the number of successes generated by the request.</li>
+</ul>
+</li>
+<li>Possible errors generated (stored in <code>$_SESSION['userAlerts']</code>):
+
+<ul>
+<li>Page access denied</li>
+<li>
+<code>ACCOUNT_SPECIFY_PASSWORD</code> : current password not specified.</li>
+<li>
+<code>ACCOUNT_PASSWORD_INVALID</code> : current password does not match.</li>
+<li>
+<code>ACCOUNT_SPECIFY_EMAIL</code> : no email address specified.</li>
+<li>
+<code>ACCOUNT_INVALID_EMAIL</code> : <code>email</code> is not a valid email address format.</li>
+<li>
+<code>ACCOUNT_EMAIL_IN_USE</code> : <code>email</code> already in use.</li>
+<li>
+<code>ACCOUNT_SPECIFY_NEW_PASSWORD</code> : new password not specified.</li>
+<li>
+<code>ACCOUNT_SPECIFY_CONFIRM_PASSWORD</code> : confirm new password not specified.</li>
+<li>
+<code>ACCOUNT_NEW_PASSWORD_LENGTH</code> : new password must be between 8 and 50 characters.</li>
+<li>
+<code>ACCOUNT_PASS_MISMATCH</code> : <code>passwordc</code> and <code>passwordcheck</code> do not match.</li>
+<li>
+<code>ACCOUNT_PASSWORD_NOTHING_TO_UPDATE</code> : new password is the same as the old password.</li>
+<li>
+<code>NOTHING_TO_UPDATE</code> : No data was specified to update.</li>
+<li>
+<code>NO_DATA</code> : No request data was received by the script.</li>
+</ul>
+</li>
+<li>Possible successes generated (stored in <code>$_SESSION['userAlerts']</code>): 
+
+<ul>
+<li>
+<code>ACCOUNT_EMAIL_UPDATED</code> : User email successfully updated.</li>
+<li>
+<code>ACCOUNT_PASSWORD_UPDATED</code> : User password successfully updated.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><h2>
+<a name="todo-tasks" class="anchor" href="#todo-tasks"><span class="octicon octicon-link"></span></a>TODO Tasks</h2>
+
+<p>These are features to be added in future releases.</p>
+
+<ol>
+<li>Deploy CSRF tokens on all forms and add "bulletproof sessions" as per <a href="http://blog.teamtreehouse.com/how-to-create-bulletproof-sessions">http://blog.teamtreehouse.com/how-to-create-bulletproof-sessions</a>.</li>
+<li>Add <strong>OAuth</strong> support, for users to create accounts and log in via Facebook/Google.</li>
+<li>Associate permission groups with allowed actions, rather than individual pages.  Actions, in turn, are linked to pages (on the backend) and features (on the frontend).  Automatically hide features for which a user does not have permission.</li>
+<li>Convert to standard REST architecture, implementing updates as PUT and deletes as DELETE.  This could mean that different backend pages that act on the same type of object (users, pages, etc) could be combined into a single page that takes different actions depending on the request method.</li>
+<li>Add ability for admins to modify permission group names/settings.</li>
+<li>Filter user list by name, group membership, etc.</li>
+<li>Full directory/subdirectory management tool for pages.</li>
+<li>Add ability for admins to add/remove user account fields, without having to modify code.</li>
+<li>Deploy the <code>jqueryvalidator</code> plugin for client-side validation (as opposed to our own, clunkier validator).</li>
+<li>Admin-side user account creation should bypass activation process.</li>
+<li>Continue improving error-handling and rendering system.</li>
+<li>Finish documenting all functions and pages.</li>
+</ol><p>Possible additional features as suggested on UserCake forums:</p>
+
+<ol>
+<li>"Remember me" feature</li>
+<li>Admin control over session timeout</li>
+<li>Auto-redirect to last visited page on login</li>
+<li>Admin can allow users to log in via email address instead of username</li>
+</ol><h2>
+<a name="creds" class="anchor" href="#creds"><span class="octicon octicon-link"></span></a>Creds</h2>
+
+<p>The back end account management system is derived from <a href="http://usercake.com">UserCake 2.0.2</a>, while the dashboard and admin account features are based on the SB Admin Template by <a href="http://startbootstrap.com">Start Bootstrap</a>. Other key frameworks and plugins used in this system are:</p>
+
+<ul>
+<li> jQuery 1.10.2</li>
+<li> Twitter Bootstrap 3.0</li>
+<li> <a href="http://fontawesome.io">Font Awesome</a>
+</li>
+<li> <a href="http://handlebarsjs.com/">Handlebars templating</a>
+</li>
+<li> <a href="http://tablesorter.com">Tablesorter 2.0</a>
+</li>
+<li> <a href="http://www.datejs.com">DateJS</a>
+</li>
+<li> <a href="http://bootstrap-switch.org">Bootstrap Switch</a> </li>
+</ul><p>All components are copyright of their respective creators.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Userfrosting maintained by <a href="https://github.com/alexweissman">alexweissman</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
