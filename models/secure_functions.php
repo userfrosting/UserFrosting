@@ -273,7 +273,7 @@ function deleteUser($user_id){
           return false;
       }
       
-      $query_perms = "DELETE FROM ".$db_table_prefix."user_permission_matches WHERE user_id = :user_id";
+      $query_perms = "DELETE FROM ".$db_table_prefix."user_group_matches WHERE user_id = :user_id";
             
       $stmt_perms = $db->prepare($query_perms);
       $stmt_perms->execute($sqlVars);

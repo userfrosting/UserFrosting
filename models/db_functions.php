@@ -1165,88 +1165,130 @@ function deleteConfigParameter($name){
 
 //Functions that interact mainly with .pages table
 //------------------------------------------------------------------------------
-
-//Add a page to the DB
-function createPages($pages) {
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."pages (
-		page
-		)
-		VALUES (
-		?
-		)");
-	foreach($pages as $page){
-		$stmt->bind_param("s", $page);
-		$stmt->execute();
-	}
-	$stmt->close();
-}
-
-//Delete a page from the DB
-function deletePages($pages) {
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("DELETE FROM ".$db_table_prefix."pages 
-		WHERE id = ?");
-	$stmt2 = $mysqli->prepare("DELETE FROM ".$db_table_prefix."permission_page_matches 
-		WHERE page_id = ?");
-	foreach($pages as $id){
-		$stmt->bind_param("i", $id);
-		$stmt->execute();
-		$stmt2->bind_param("i", $id);
-		$stmt2->execute();
-	}
-	$stmt->close();
-	$stmt2->close();
+//Check if a page ID exists
+function pageIdExists($page_id) {
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query ="SELECT private
+		FROM ".$db_table_prefix."pages
+		WHERE
+		id = :page_id
+		LIMIT 1";
+    
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':page_id'] = $page_id;
+    
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+        if ($row)
+            return true;
+        else {
+            return false;
+        }
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
 }
 
 //Fetch information on all pages
-function fetchAllPages()
-{
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("SELECT 
-		id,
-		page,
-		private
-		FROM ".$db_table_prefix."pages");
-	$stmt->execute();
-	$stmt->bind_result($id, $page, $private);
-	while ($stmt->fetch()){
-		$row[$page] = array('id' => $id, 'page' => $page, 'private' => $private);
-	}
-	$stmt->close();
-	if (isset($row)){
-		return ($row);
-	}
+function fetchAllPages() {
+    try {
+        global $db_table_prefix;
+        
+        $results = array();
+        
+        $db = pdoConnect();
+        
+        $query = "SELECT 
+            id,
+            page,
+            private
+            FROM ".$db_table_prefix."pages";
+        
+        $stmt = $db->prepare($query);
+
+        if (!$stmt->execute()){
+            // Error
+            return false;
+        }
+        
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $page = $r['page'];
+          $results[$page] = $r;
+        }
+        $stmt = null;
+      
+        return $results;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
 }
 
 //Fetch information for a specific page by id
-function fetchPageDetails($id)
-{
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("SELECT 
-		id,
-		page,
-		private
-		FROM ".$db_table_prefix."pages
-		WHERE
-		id = ?
-		LIMIT 1");
-	$stmt->bind_param("i", $id);
-	$stmt->execute();
-	$stmt->bind_result($id, $page, $private);
-	while ($stmt->fetch()){
-		$row = array('id' => $id, 'page' => $page, 'private' => $private);
-	}
-	$stmt->close();
-	return ($row);
+function fetchPageDetails($page_id) {
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query = "SELECT 
+            id,
+            page,
+            private
+            FROM ".$db_table_prefix."pages
+            WHERE
+            id = :page_id
+            LIMIT 1";
+        
+        $stmt = $db->prepare($query);
+
+        $sqlVars[":page_id"] = $page_id;
+        
+        if (!$stmt->execute($sqlVars)){
+            // Error
+            return false;
+        }
+            
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+        if ($row)
+            return $row;
+        else {
+            addAlert("danger", "The specified page details could not be found.");
+            return false;
+        }    
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
 }
 
 //Fetch information for a specific page by name
 function fetchPageDetailsByName($name){
     try {
         global $db_table_prefix;
-        
-        $results = array();
         
         $db = pdoConnect();
         
@@ -1288,83 +1330,117 @@ function fetchPageDetailsByName($name){
     }
 }
 
-//Check if a page ID exists
-function pageIdExists($id)
-{
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT private
-		FROM ".$db_table_prefix."pages
-		WHERE
-		id = ?
-		LIMIT 1");
-	$stmt->bind_param("i", $id);	
-	$stmt->execute();
-	$stmt->store_result();	
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
-}
 
-//Toggle private/public setting of a page
-function updatePrivate($id, $private)
-{
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("UPDATE ".$db_table_prefix."pages
-		SET 
-		private = ?
-		WHERE
-		id = ?");
-	$stmt->bind_param("ii", $private, $id);
-	$result = $stmt->execute();
-	$stmt->close();	
-	return $result;	
-}
-
-//Functions that interact mainly with .permission_page_matches table
-//------------------------------------------------------------------------------
-
-//Match permission level(s) with page(s)
-function addPage($page, $permission) {
-	global $mysqli,$db_table_prefix; 
-	$i = 0;
-	$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."permission_page_matches (
-		permission_id,
-		page_id
+//Add pages [array] to the DB
+function createPages($pages) {
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $query = "INSERT INTO ".$db_table_prefix."pages (
+		page
 		)
 		VALUES (
-		?,
-		?
-		)");
-	if (is_array($permission)){
-		foreach($permission as $id){
-			$stmt->bind_param("ii", $id, $page);
-			$stmt->execute();
-			$i++;
-		}
-	}
-	elseif (is_array($page)){
-		foreach($page as $id){
-			$stmt->bind_param("ii", $permission, $id);
-			$stmt->execute();
-			$i++;
-		}
-	}
-	else {
-		$stmt->bind_param("ii", $permission, $page);
-		$stmt->execute();
-		$i++;
-	}
-	$stmt->close();
-	return $i;
+		:page
+		)";
+        
+        $stmt = $db->prepare($query);    
+        
+        foreach ($pages as $page){
+            $sqlVars = array(':page' => $page);
+            $stmt->execute($sqlVars);
+        }
+        
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            return false;
+        } 
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }        
 }
+
+//Toggle private/public setting of a page.  1=private, 0=public
+function updatePrivate($page_id, $private) {
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query = "UPDATE ".$db_table_prefix."pages
+		SET 
+		private = :private
+		WHERE
+		id = :page_id";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':private'] = $private;
+        $sqlVars[':page_id'] = $page_id;
+    
+        $stmt->execute();
+            
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            return false;
+        } 
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+//Delete pages [array] from the DB
+function deletePages($pages) {
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $stmt = $db->prepare("DELETE FROM ".$db_table_prefix."pages 
+		WHERE id = :page_id");
+        
+        
+        $stmt2 = $db->prepare("DELETE FROM ".$db_table_prefix."group_page_matches 
+		WHERE page_id = :page_id");
+        
+        foreach($pages as $id){
+            $sqlVars = array(':page_id' => $id);
+            $stmt->execute($sqlVars);
+            $stmt2->execute($sqlVars);
+        }
+        
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            return false;
+        } 
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } 
+}
+
+//Functions that interact mainly with .group_page_matches table
+//------------------------------------------------------------------------------
 
 // Check whether a particular user has access to a particular page
 function userPageMatchExists($user_id, $page_id){
@@ -1410,77 +1486,169 @@ function userPageMatchExists($user_id, $page_id){
 }
 
 //Retrieve list of groups that can access a page
-function fetchPagePermissions($page_id)
-{
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("SELECT
-		id,
-		permission_id
-		FROM ".$db_table_prefix."permission_page_matches
-		WHERE page_id = ?
-		");
-	$stmt->bind_param("i", $page_id);	
-	$stmt->execute();
-	$stmt->bind_result($id, $permission);
-	while ($stmt->fetch()){
-		$row[$permission] = array('id' => $id, 'permission_id' => $permission);
-	}
-	$stmt->close();
-	if (isset($row)){
-		return ($row);
-	}
+function fetchPagePermissions($page_id) {
+   try {
+        global $db_table_prefix;
+        
+        $results = array();
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query = "SELECT
+            id,
+            group_id
+            FROM ".$db_table_prefix."group_page_matches
+            WHERE page_id = :page_id
+            ";
+        $stmt = $db->prepare($query);
+    
+        $sqlVars[':page_id'] = $page_id;
+    
+        if (!$stmt->execute()){
+            // Error
+            return false;
+        }
+        
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $group_id = $r['group_id'];
+          $results[$group_id] = $r;
+        }
+        $stmt = null;
+      
+        return $results;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
 }
 
 //Retrieve list of pages that a group can access
-function fetchPermissionPages($permission_id)
-{
-	global $mysqli,$db_table_prefix; 
-	$stmt = $mysqli->prepare("SELECT
+function fetchPermissionPages($group_id) {
+   try {
+        global $db_table_prefix;
+        
+        $results = array();
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query = "SELECT
 		id,
 		page_id
-		FROM ".$db_table_prefix."permission_page_matches
-		WHERE permission_id = ?
-		");
-	$stmt->bind_param("i", $permission_id);	
-	$stmt->execute();
-	$stmt->bind_result($id, $page);
-	while ($stmt->fetch()){
-		$row[$page] = array('id' => $id, 'permission_id' => $page);
-	}
-	$stmt->close();
-	if (isset($row)){
-		return ($row);
-	}
+		FROM ".$db_table_prefix."group_page_matches
+		WHERE group_id = :group_id
+		";
+        
+        $stmt = $db->prepare($query);
+    
+        $sqlVars[':page_id'] = $page_id;
+    
+        if (!$stmt->execute()){
+            // Error
+            return false;
+        }
+        
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $page_id = $r['page_id'];
+          $results[$page_id] = $r;
+        }
+        $stmt = null;
+      
+        return $results;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
 }
 
-//Unmatched permission and page
-function removePage($page, $permission) {
-	global $mysqli,$db_table_prefix; 
-	$i = 0;
-	$stmt = $mysqli->prepare("DELETE FROM ".$db_table_prefix."permission_page_matches 
-		WHERE page_id = ?
-		AND permission_id =?");
-	if (is_array($page)){
-		foreach($page as $id){
-			$stmt->bind_param("ii", $id, $permission);
-			$stmt->execute();
-			$i++;
-		}
-	}
-	elseif (is_array($permission)){
-		foreach($permission as $id){
-			$stmt->bind_param("ii", $page, $id);
-			$stmt->execute();
-			$i++;
-		}
-	}
-	else {
-		$stmt->bind_param("ii", $page, $permission);
-		$stmt->execute();
-		$i++;
-	}
-	$stmt->close();
-	return $i;
+//Match group with page(s)
+function addPage($page_ids, $group_id) {
+   try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $i = 0;
+        $query = "INSERT INTO ".$db_table_prefix."group_page_matches (
+            group_id,
+            page_id
+            )
+            VALUES (
+            :group_id,
+            :page_id
+            )";
+    
+        $stmt->prepare($query);
+        
+        if (is_array($page_ids)){
+            foreach($page_ids as $id){
+                $sqlVars = array(':group_id' => $group_id, ':page_id' => $id);
+                $stmt->execute($sqlVars);
+                $i++;
+            }
+        } else {
+            $sqlVars = array(':group_id' => $group_id, ':page_id' => $page_ids);
+            $stmt->execute($sqlVars);
+            $i++;
+        }
+        $stmt = null;
+        return $i;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+//Unmatch group from page(s)
+function removePage($page_ids, $group_id) {
+   try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $i = 0;
+        $query = "DELETE FROM ".$db_table_prefix."group_page_matches 
+		WHERE page_id = :page_id
+		AND group_id = :group_id";
+        
+        $stmt->prepare($query);
+        
+        if (is_array($page_ids)){
+            foreach($page_ids as $id){
+                $sqlVars = array(':group_id' => $group_id, ':page_id' => $id);
+                $stmt->execute($sqlVars);
+                $i++;
+            }
+        } else {
+            $sqlVars = array(':group_id' => $group_id, ':page_id' => $page_ids);
+            $stmt->execute($sqlVars);
+            $i++;
+        }
+        $stmt = null;
+        return $i;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
 }
 
 ?>
