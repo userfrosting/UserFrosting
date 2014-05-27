@@ -45,7 +45,7 @@ if (!securePage($_SERVER['PHP_SELF'])){
   exit();
 }
 
-if (!fetchUserAuthById('1')){
+if (!userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
 	header("Location: install/register_root.php");
 	exit();

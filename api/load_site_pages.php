@@ -85,7 +85,7 @@ try {
 	} else {
 	  $allPages[$name]['status'] = 'U';
 	}
-	$pagePermissions = fetchPagePermissions($id);
+	$pagePermissions = fetchPageGroups($id);
 	if ($pagePermissions)
 	  $allPages[$name]['permissions'] = $pagePermissions;
 	else

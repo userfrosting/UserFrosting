@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,40 +29,32 @@ THE SOFTWARE.
 
 */
 
-// Request method: GET
-
-include('models/db-settings.php');
-include('models/config.php');
-
-if ($can_register){
-	echo "
-		  <div class='row'>
-			  <div class='col-md-12'>
-				<a href='register.php' class='btn btn-link' role='button' value='Register'>Not a member yet?  Register here.</a>
-			  </div>
-		  </div>
-		  <div class='row'>
-			  <div class='col-md-12'>
-				<a href='forgot_password.php' class='btn btn-link' role='button' value='Forgot Password'>Forgot your password?</a>
-			  </div>
-		  </div>
-		  <div class='row'>
-			  <div class='col-md-12'>
-				<a href='resend_activation.php' class='btn btn-link' role='button' value='Activate'>Resend activation email</a>
-			  </div>
-		  </div>";
-} else {
-	echo "
-		  <div class='row'>
-			  <div class='col-md-12'>
-				<a href='forgot_password.php' class='btn btn-link' role='button' value='Forgot Password'>Forgot your password?</a>
-			  </div>
-		  </div>
-		  <div class='row'>
-			  <div class='col-md-12'>
-				<a href='resend_activation.php' class='btn btn-link' role='button' value='Activate'>Resend activation email</a>
-			  </div>
-		  </div>";
+// Used to force backend scripts to log errors rather than print them as output
+function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
+	ini_set("log_errors", 1);
+	ini_set("display_errors", 0);
+	
+    error_log("Error ($errno): $errstr in $errfile on line $errline");
+	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
+require_once("../models/db-settings.php");
+require_once("../models/db_functions.php");
+require_once("../models/funcs.php");
+require_once("../models/languages/en.php");
+require_once("../models/class.mail.php");
+require_once("../models/class.user.php");
+require_once("../models/class.newuser.php");
+
+
+defined("MENU_TEMPLATES")
+    or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
+	
+// This is the user id of the master (root) account.
+// The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
+$master_account = 1;
+
+session_start();
+
 ?>
+
