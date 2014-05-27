@@ -1,18 +1,38 @@
 <?php 
 /*
-UserCake Version: 2.0.2
-http://usercake.com
+
+UserFrosting Version: 0.2
+By Alex Weissman
+Copyright (c) 2014
+
+Based on the UserCake user management system, v2.0.2.
+Copyright (c) 2009-2012
+
+UserFrosting, like UserCake, is 100% free and open-source.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the 'Software'), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
 */
-require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/class.newuser.php");
 
-session_start();
+// This is the config file in the install directory.
+require_once('config.php');
 
-if (fetchUserAuthById('1')){
+if (userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
 	header('Location: complete.php');
 	exit();
@@ -22,20 +42,21 @@ $db_issue = false;
 $errors = array();
 $successes = array();
 
-$permissions_sql = "
-CREATE TABLE IF NOT EXISTS `".$db_table_prefix."permissions` (
+$groups_sql = "
+CREATE TABLE IF NOT EXISTS `".$db_table_prefix."groups` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `name` varchar(150) NOT NULL,
 `is_default` tinyint(1) NOT NULL,
 `can_delete` tinyint(1) NOT NULL,
+`home_page_id` int(11) NOT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 ";
 
-$permissions_entry = "
-INSERT INTO `".$db_table_prefix."permissions` (`id`, `name`, `is_default`, `can_delete`) VALUES
-(1, 'User', 1, 0),
-(2, 'Administrator', 0, 0);
+$groups_entry = "
+INSERT INTO `".$db_table_prefix."groups` (`id`, `name`, `is_default`, `can_delete`, `home_page_id`) VALUES
+(1, 'User', 1, 0, 4),
+(2, 'Administrator', 0, 0, 5);
 ";
 
 $users_sql = "
@@ -57,20 +78,21 @@ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ";
 
-$user_permission_matches_sql = "
-CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user_permission_matches` (
+$user_group_matches_sql = "
+CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user_group_matches` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `user_id` int(11) NOT NULL,
-`permission_id` int(11) NOT NULL,
+`group_id` int(11) NOT NULL,
+`is_primary` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies if this is the primary group for the user.',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 ";
 
-// Add admin as a user and administrator
-$user_permission_matches_entry = "
-INSERT INTO `".$db_table_prefix."user_permission_matches` (`id`, `user_id`, `permission_id`) VALUES
-(1, 1, 1),
-(2, 1, 2);
+// Add root acount as a user and administrator
+$user_group_matches_entry = "
+INSERT INTO `".$db_table_prefix."user_group_matches` (`id`, `user_id`, `group_id`, `is_primary`) VALUES
+(1, 1, 1, 0),
+(2, 1, 2, 1);
 ";
 
 $configuration_sql = "
@@ -101,109 +123,76 @@ $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
 `page` varchar(150) NOT NULL,
 `private` tinyint(1) NOT NULL DEFAULT '0',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
 ";
 
 $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`) VALUES
-(1, 'index.php', 0),
-(2, 'register.php', 0),
-(3, 'login.php', 0),
-(4, 'process_login.php', 0),
-(5, 'user_create_user.php', 0),
-(7, 'forgot_password.php', 0),
-(8, 'resend_activation.php', 0),
-(9, 'user_resend_activation.php', 0),
-(10, 'user_reset_password.php', 0),
-(11, 'header-loggedout.php', 0),
-(12, 'jumbotron_links.php', 0),
-(13, 'account.php', 1),
-(14, 'logout.php', 1),
-(15, 'dashboard.php', 1),
-(16, 'user_update_account_settings.php', 1),
-(17, 'load_form_user.php', 1),
-(18, 'user_alerts.php', 1),
-(19, 'header.php', 1),
-(20, 'account_settings.php', 1),
-(21, 'load_current_user.php', 1),
-(23, 'load_permissions.php', 1),
-(24, 'load_site_pages.php', 1),
-(25, 'load_site_settings.php', 1),
-(26, 'dashboard_admin.php', 1),
-(27, 'site_pages.php', 1),
-(28, 'site_settings.php', 1),
-(29, 'update_site_settings.php', 1),
-(30, 'update_user.php', 1),
-(31, 'create_permission.php', 1),
-(32, 'update_permission.php', 1),
-(33, 'create_user.php', 1),
-(34, 'update_page_permission.php', 1),
-(35, 'delete_permission.php', 1),
-(36, 'load_users.php', 1),
-(37, 'admin_activate_user.php', 1),
-(38, 'users.php', 1),
-(39, 'user_details.php', 1),
-(40, 'includes.php', 0),
-(41, 'update_user_enabled.php', 1),
-(42, 'admin_load_permissions.php', 1),
-(43, '404.php', 0),
-(44, 'delete_user_dialog.php', 1),
-(45, 'load_user.php', 1),
-(46, 'delete_user.php', 1);
+(1, 'account/includes.php', 0),
+(2, 'account/header.php', 1),
+(3, 'account/logout.php', 1),
+(4, 'account/dashboard.php', 1),
+(5, 'account/dashboard_admin.php', 1),
+(6, 'account/account_settings.php', 1),
+(7, 'account/site_pages.php', 1),
+(8, 'account/site_settings.php', 1),
+(9, 'account/users.php', 1),
+(10, 'account/user_details.php', 1),
+(11, 'account/load_form_user.php', 1),
+(12, 'account/delete_user_dialog.php', 1);
 ";
 
-$permission_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."permission_page_matches` (
+$group_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."group_page_matches` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
-`permission_id` int(11) NOT NULL,
+`group_id` int(11) NOT NULL,
 `page_id` int(11) NOT NULL,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=76 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
 ";
 
-$permission_page_matches_entry = "INSERT INTO `".$db_table_prefix."permission_page_matches` (`id`, `permission_id`, `page_id`) VALUES
-(1, 1, 13),
-(2, 1, 14),
-(3, 2, 13),
-(4, 2, 17),
-(12, 2, 14),
-(23, 2, 34),
-(24, 2, 29),
-(25, 2, 27),
-(26, 2, 28),
-(27, 2, 25),
-(28, 2, 24),
-(29, 2, 23),
-(30, 2, 35),
-(31, 2, 31),
-(32, 2, 19),
-(33, 1, 19),
-(34, 2, 26),
-(37, 1, 21),
-(38, 2, 21),
-(40, 2, 30),
-(43, 2, 36),
-(45, 2, 38),
-(47, 1, 18),
-(48, 2, 18),
-(57, 2, 45),
-(58, 1, 22),
-(59, 2, 22),
-(60, 2, 42),
-(63, 2, 44),
-(64, 2, 41),
-(65, 2, 46),
-(66, 1, 20),
-(67, 2, 20),
-(68, 1, 16),
-(69, 2, 16),
-(70, 2, 39),
-(71, 1, 15),
-(72, 2, 15),
-(73, 2, 37),
-(74, 2, 32),
-(75, 2, 33);
+$group_page_matches_entry = "INSERT INTO `".$db_table_prefix."group_page_matches` (`id`, `group_id`, `page_id`) VALUES
+(1, 2, 1),
+(2, 2, 2),
+(3, 2, 3),
+(4, 2, 4),
+(5, 2, 5),
+(6, 2, 6),
+(7, 2, 7),
+(8, 2, 8),
+(9, 2, 9),
+(10, 2, 10),
+(11, 2, 11),
+(12, 2, 12),
+(13, 1, 1),
+(14, 1, 2),
+(15, 1, 3),
+(16, 1, 4),
+(17, 1, 6);
 ";
 
-$stmt = $mysqli->prepare($configuration_sql);
+$user_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user_action_permits` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `action` varchar(100) NOT NULL,
+  `permits` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+";
+
+// Sample action permits, should probably change these at some point since root user should automatically have permission for
+// all actions
+$user_action_permits_entry = "INSERT INTO `".$db_table_prefix."user_action_permits` (`id`, `user_id`, `action`, `permits`) VALUES
+(1, 1, 'updateUserEmail', 'isLoggedInUser(user_id)&isActive(user_id)'),
+(2, 1, 'loadUser', 'always()'),
+(3, 1, 'loadUsers', 'always()'),
+(4, 1, 'deleteUser', 'always()'),
+(5, 1, 'activateUser', 'always()'),
+(6, 1, 'loadGroups', 'always()'),
+(7, 1, 'loadUserGroups', 'always()');
+";
+
+$db = pdoConnect();
+
+$stmt = $db->prepare($configuration_sql);
 if($stmt->execute())
 {
     $successes[] = "<p>".$db_table_prefix."configuration table created.....</p>";
@@ -214,7 +203,7 @@ else
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($configuration_entry);
+$stmt = $db->prepare($configuration_entry);
 if($stmt->execute())
 {
     $successes[] = "<p>Inserted basic config settings into ".$db_table_prefix."configuration table.....</p>";
@@ -225,51 +214,51 @@ else
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($permissions_sql);
+$stmt = $db->prepare($groups_sql);
 if($stmt->execute())
 {
-    $successes[] = "<p>".$db_table_prefix."permissions table created.....</p>";
+    $successes[] = "<p>".$db_table_prefix."groups table created.....</p>";
 }
 else
 {
-    $errors[] = "<p>Error constructing ".$db_table_prefix."permissions table.</p>";
+    $errors[] = "<p>Error constructing ".$db_table_prefix."groups table.</p>";
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($permissions_entry);
+$stmt = $db->prepare($groups_entry);
 if($stmt->execute())
 {
-    $successes[] = "<p>Inserted 'User' and 'Admin' groups into ".$db_table_prefix."permissions table.....</p>";
+    $successes[] = "<p>Inserted 'User' and 'Admin' groups into ".$db_table_prefix."groups table.....</p>";
 }
 else
 {
-    $errors[] = "<p>Error inserting permissions.</p>";
+    $errors[] = "<p>Error inserting groups.</p>";
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($user_permission_matches_sql);
+$stmt = $db->prepare($user_group_matches_sql);
 if($stmt->execute())
 {
-    $successes[] = "<p>".$db_table_prefix."user_permission_matches table created.....</p>";
+    $successes[] = "<p>".$db_table_prefix."user_group_matches table created.....</p>";
 }
 else
 {
-    $errors[] = "<p>Error constructing ".$db_table_prefix."user_permission_matches table.</p>";
+    $errors[] = "<p>Error constructing ".$db_table_prefix."user_group_matches table.</p>";
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($user_permission_matches_entry);
+$stmt = $db->prepare($user_group_matches_entry);
 if($stmt->execute())
 {
-    $successes[] = "<p>Added 'Admin' entry for first user in ".$db_table_prefix."user_permission_matches table.....</p>";
+    $successes[] = "<p>Added 'Admin' entry for first user in ".$db_table_prefix."user_group_matches table.....</p>";
 }
 else
 {
-    $errors[] = "<p>Error inserting admin into ".$db_table_prefix."user_permission_matches.</p>";
+    $errors[] = "<p>Error inserting admin into ".$db_table_prefix."user_group_matches.</p>";
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($pages_sql);
+$stmt = $db->prepare($pages_sql);
 if($stmt->execute())
 {
     $successes[] = "<p>".$db_table_prefix."pages table created.....</p>";
@@ -280,7 +269,7 @@ else
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($pages_entry);
+$stmt = $db->prepare($pages_entry);
 if($stmt->execute())
 {
     $successes[] = "<p>Added default pages to ".$db_table_prefix."pages table.....</p>";
@@ -291,29 +280,29 @@ else
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($permission_page_matches_sql);
+$stmt = $db->prepare($group_page_matches_sql);
 if($stmt->execute())
 {
-    $successes[] = "<p>".$db_table_prefix."permission_page_matches table created.....</p>";
+    $successes[] = "<p>".$db_table_prefix."group_page_matches table created.....</p>";
 }
 else
 {
-    $errors[] = "<p>Error constructing ".$db_table_prefix."permission_page_matches table.</p>";
+    $errors[] = "<p>Error constructing ".$db_table_prefix."group_page_matches table.</p>";
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($permission_page_matches_entry);
+$stmt = $db->prepare($group_page_matches_entry);
 if($stmt->execute())
 {
-    $successes[] = "<p>Added default access to ".$db_table_prefix."permission_page_matches table.....</p>";
+    $successes[] = "<p>Added default access to ".$db_table_prefix."group_page_matches table.....</p>";
 }
 else
 {
-    $errors[] = "<p>Error adding default access to ".$db_table_prefix."user_permission_matches.</p>";
+    $errors[] = "<p>Error adding default access to ".$db_table_prefix."user_group_matches.</p>";
     $db_issue = true;
 }
 
-$stmt = $mysqli->prepare($users_sql);
+$stmt = $db->prepare($users_sql);
 if($stmt->execute())
 {
     $successes[] = "<p>".$db_table_prefix."users table created.....</p>";
@@ -321,6 +310,28 @@ if($stmt->execute())
 else
 {
     $errors[] = "<p>Error constructing users table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($user_action_permits_sql);
+if($stmt->execute())
+{
+    $successes[] = "<p>".$db_table_prefix."user_action_permits table created.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error constructing user_action_permits table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($user_action_permits_entry);
+if($stmt->execute())
+{
+    $successes[] = "<p>Added default access to ".$db_table_prefix."user_action_permits table.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error adding default access to ".$db_table_prefix."user_action_permits.</p>";
     $db_issue = true;
 }
 

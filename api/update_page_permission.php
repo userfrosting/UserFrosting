@@ -71,7 +71,7 @@ if ($permissionId == "private"){
 	updatePrivate($pageId, $checked);
 } else {
 	// Get the current page permissions
-	$pagePermissions = fetchPagePermissions($pageId);
+	$pagePermissions = fetchPageGroups($pageId);
 	
 	// Add the page permission if checked=1 and the page doesn't already have that permission
 	if ($checked == "1") {

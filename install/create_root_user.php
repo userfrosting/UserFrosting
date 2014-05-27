@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,16 +29,8 @@ THE SOFTWARE.
 
 */
 
-// Request method: POST
-
-require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/class.newuser.php");
-
-session_start();
+// This is the config file in the install directory.
+require_once('config.php');
 
 if (!($root_account_config_token = fetchConfigParameter('root_account_config_token'))){
 	addAlert("danger", lang("INSTALLER_INCOMPLETE"));
@@ -46,7 +38,7 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
 	exit();
 }
 
-if (fetchUserAuthById('1')){
+if (userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
 	header('Location: index.php');
 	exit();
@@ -64,7 +56,7 @@ if(!empty($_POST))
 	$confirm_pass = trim($_POST["passwordc"]);
 	$token = trim($_POST["token"]);
 	
-	if ($token != $root_account_config_token['value'])
+	if ($token != $root_account_config_token)
 	{
 		$errors[] = lang("CONFIG_TOKEN_MISMATCH");
 	}

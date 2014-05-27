@@ -33,9 +33,10 @@ THE SOFTWARE.
 $db_host = "localhost"; //Host address (most likely localhost)
 $db_name = "userfrosting"; //Name of Database
 $db_user = "userfrosting"; //Name of database user
-$db_pass = "XCUvP2z7peePCnQ2"; //Password for database user
-$db_table_prefix = "uc_";
+$db_pass = ""; //Password for database user
+$db_table_prefix = "uf_";
 
+// All SQL queries use PDO now
 function pdoConnect(){
 	global $db_host, $db_name, $db_user, $db_pass;
 	try {  
@@ -53,15 +54,6 @@ GLOBAL $successes;
 
 $errors = array();
 $successes = array();
-
-/* Create a new mysqli object with database connection parameters */
-$mysqli = new mysqli($db_host, $db_user, $db_pass, $db_name);
-GLOBAL $mysqli;
-
-if(mysqli_connect_errno()) {
-	echo "Connection Failed: " . mysqli_connect_errno();
-	exit();
-}
 
 //Direct to install directory, if it exists
 if(is_dir("install/"))

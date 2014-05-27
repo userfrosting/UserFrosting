@@ -32,16 +32,10 @@ THE SOFTWARE.
 // TODO: Client-side validation and AJAX submission
 
 require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){
-  // Forward to 404 page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  header("Location: 404.php");
-  exit();
-}
 
 setReferralPage($_SERVER['PHP_SELF']);
 
-if (!fetchUserAuthById('1')){
+if (!userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
 	header("Location: install/register_root.php");
 	exit();

@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,21 +29,16 @@ THE SOFTWARE.
 
 */
 
-// TODO: Client-side validation and AJAX submission
-require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/class.newuser.php");
+// This is the config file in the install directory.
+require_once('config.php');
 
-session_start();
+// TODO: Client-side validation and AJAX submission
 
 // To register the root account, two conditions apply:
 // 1. the root config token (root_account_config_token) must exist
 // 2. the uc_users table must not have a user with id=1
 
-if (fetchUserAuthById('1')){
+if (userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
 	header('Location: index.php');
 	exit();

@@ -103,7 +103,12 @@ function userValueExists($column, $data) {
 		$column = :data
 		LIMIT 1";
         
-        $stmt = $db->prepare($query);
+        // This block allows return false if the table doesn't exist
+        try {
+            $stmt = $db->prepare($query);
+        } catch (PDOException $e) {    
+            return false;
+        }
         
         $sqlVars[':data'] = $data;
 
@@ -789,12 +794,14 @@ function addUser($user_name, $display_name, $title, $password, $email, $active, 
             ':activation_token' => $activation_token
         );
     
+        $stmt = $db->prepare($query);
+    
         if (!$stmt->execute($sqlVars)){
             // Error: column does not exist
             return false;
         }
         
-        $inserted_id = $db->lastInsertedId();
+        $inserted_id = $db->lastInsertId();
         
         $stmt = null;
     
@@ -1313,7 +1320,7 @@ function fetchConfigParameter($name){
         $query = "SELECT id, value
 		FROM ".$db_table_prefix."configuration WHERE name = :name";	
         
-        if (!$stmt->prepare($query))
+        if (!$stmt = $db->prepare($query))
             return false;
 
         $sqlVars[":name"] = $name;
@@ -1430,7 +1437,7 @@ function deleteConfigParameter($name){
         $query = "DELETE
 		FROM ".$db_table_prefix."configuration WHERE name = :name";	
 	
-        if (!$stmt->prepare($query))
+        if (!$stmt = $db->prepare($query))
             return false;
 
         $sqlVars[":name"] = $name;
@@ -1779,7 +1786,7 @@ function userPageMatchExists($user_id, $page_id){
 }
 
 //Retrieve list of groups that can access a page
-function fetchPagePermissions($page_id) {
+function fetchPageGroups($page_id) {
    try {
         global $db_table_prefix;
         
@@ -1822,7 +1829,7 @@ function fetchPagePermissions($page_id) {
 }
 
 //Retrieve list of pages that a group can access
-function fetchPermissionPages($group_id) {
+function fetchGroupPages($group_id) {
    try {
         global $db_table_prefix;
         
