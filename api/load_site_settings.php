@@ -29,46 +29,38 @@ THE SOFTWARE.
 
 */
 
-//Database Information
-$db_host = "localhost"; //Host address (most likely localhost)
-$db_name = "userfrosting"; //Name of Database
-$db_user = "userfrosting"; //Name of database user
-$db_pass = "XCUvP2z7peePCnQ2"; //Password for database user
-$db_table_prefix = "uc_";
+require_once("../models/config.php");
 
-function pdoConnect(){
-	global $db_host, $db_name, $db_user, $db_pass;
-	try {  
-	  $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
-	  $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-	  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	  return $db;
-	} catch(PDOException $e) {  
-		return $e->getMessage();  
-	}  
+set_error_handler('logAllErrors');
+
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
 }
+	
+$languages = getLanguageFiles(); //Retrieve list of language files
+$templates = getTemplateFiles(); //Retrieve list of template files
 
-GLOBAL $errors;
-GLOBAL $successes;
-
-$errors = array();
-$successes = array();
-
-/* Create a new mysqli object with database connection parameters */
-$mysqli = new mysqli($db_host, $db_user, $db_pass, $db_name);
-GLOBAL $mysqli;
-
-if(mysqli_connect_errno()) {
-	echo "Connection Failed: " . mysqli_connect_errno();
+//Retrieve settings
+if (!($result = loadConfigParameters())){
+	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }
 
-//Direct to install directory, if it exists
-if(is_dir("install/"))
-{
-	header("Location: install/");
-	die();
+$result['language_options'] = $languages;
+$result['template_options'] = $templates;
 
+
+if (!file_exists($language)) {
+	$language = "models/languages/en.php";
 }
+
+if(!isset($language)) $language = "models/languages/en.php";
+
+restore_error_handler();
+
+echo json_encode($result, JSON_FORCE_OBJECT);
 
 ?>

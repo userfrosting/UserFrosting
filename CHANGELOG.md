@@ -1,8 +1,15 @@
 Change Log
 ==========
 
+Change Log - v0.1.7
+-------------------
+- Page scrolls back to top after AJAX submit.
+- "Website url" is automatically suffixed with "/" if necessary.
+- Fixed bad link to forgot_password.php.
+- Began implementing action authorization scheme.
+
 Change Log - v0.1.6
----------------------
+-------------------
 - Implemented CSRF token checking for creating and updating users
 - Moved much of the nuts and bolts for generating the user-create and user-update forms to the server side, so as to streamline rendering process and require fewer requests by the client (see `load_form_user.php`)
 - Improved responsive layout for rendering nicely on mobile devices

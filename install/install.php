@@ -12,7 +12,7 @@ require_once("../models/class.newuser.php");
 
 session_start();
 
-if (fetchUserDetails(NULL, NULL, '1')){
+if (fetchUserAuthById('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
 	header('Location: complete.php');
 	exit();
@@ -110,7 +110,6 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (3, 'login.php', 0),
 (4, 'process_login.php', 0),
 (5, 'user_create_user.php', 0),
-(6, 'activate_account.php', 0),
 (7, 'forgot_password.php', 0),
 (8, 'resend_activation.php', 0),
 (9, 'user_resend_activation.php', 0),
@@ -126,7 +125,6 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (19, 'header.php', 1),
 (20, 'account_settings.php', 1),
 (21, 'load_current_user.php', 1),
-(22, 'user_load_permissions.php', 1),
 (23, 'load_permissions.php', 1),
 (24, 'load_site_pages.php', 1),
 (25, 'load_site_settings.php', 1),

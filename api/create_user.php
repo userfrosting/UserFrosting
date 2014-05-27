@@ -29,44 +29,39 @@ THE SOFTWARE.
 
 */
 
+
+// Create a user from the admin panel.
 // Request method: POST
 
-require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/class.newuser.php");
+require_once("./models/config.php");
 
-session_start();
+set_error_handler('logAllErrors');
 
-if (!($root_account_config_token = fetchConfigParameter('root_account_config_token'))){
-	addAlert("danger", lang("INSTALLER_INCOMPLETE"));
-	header('Location: index.php');
-	exit();
-}
-
-if (fetchUserAuthById('1')){
-	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
-	header('Location: index.php');
-	exit();
+// Recommended admin-only access
+if (!securePage($_SERVER['PHP_SELF'])){
+  addAlert("danger", "Whoops, looks like you don't have permission to create a user.");
+  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+  } else {
+	header("Location: " . getReferralPage());
+  }
+  exit();
 }
 
 //Forms posted
-if(!empty($_POST))
-{
-	$new_user_id = "";
+if (!empty($_POST)) {
 	$errors = array();
+	$username = trim($_POST["user_name"]);
+	$displayname = trim($_POST["display_name"]);
 	$email = trim($_POST["email"]);
-	$username = trim($_POST["username"]);
-	$displayname = trim($_POST["displayname"]);
+	$title = trim($_POST["user_title"]);
+	$add_permissions = trim($_POST["add_permissions"]);
 	$password = trim($_POST["password"]);
 	$confirm_pass = trim($_POST["passwordc"]);
-	$token = trim($_POST["token"]);
+	$csrf_token = trim($_POST["csrf_token"]);
 	
-	if ($token != $root_account_config_token['value'])
-	{
-		$errors[] = lang("CONFIG_TOKEN_MISMATCH");
+	if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["csrf_token"]))){
+	  $errors[] = lang("ACCESS_DENIED");
 	}
 	if(minMaxRange(1,25,$username))
 	{
@@ -78,9 +73,6 @@ if(!empty($_POST))
 	if(minMaxRange(1,50,$displayname))
 	{
 		$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50));
-	}
-	if(!isValidName($displayname)){
-		$errors[] = lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS");
 	}
 	if(minMaxRange(8,50,$password) && minMaxRange(8,50,$confirm_pass))
 	{
@@ -94,11 +86,14 @@ if(!empty($_POST))
 	{
 		$errors[] = lang("ACCOUNT_INVALID_EMAIL");
 	}
+	
+	$new_user_id = "";
+	
 	//End data validation
 	if(count($errors) == 0)
 	{	
 		//Construct a user object
-		$user = new User($username, $displayname, 'Master Account', $password, $email);
+		$user = new User($username, $displayname, $title, $password, $email);
 		
 		//Checking this flag tells us whether there were any errors such as possible data duplication occured
 		if(!$user->status)
@@ -110,7 +105,6 @@ if(!empty($_POST))
 		else
 		{
 			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
-			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
 			$new_user_id = $user->addUser();
 			if($new_user_id == -1)
 			{
@@ -119,24 +113,29 @@ if(!empty($_POST))
 			}
 		}
 	}
-	
-	// If everything went well, add default groups for the new user
+	// If everything went well, add the specified permissions for the user
 	if(count($errors) == 0) {
-		if (addUserToDefaultGroups($new_user_id)){
-			// Uncomment this if you want self-registered users to know about permission groups
-			//$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
+		// Add initial permissions
+		// Convert string of comma-separated permission_id's into array
+		$add_permissions_arr = explode(',',$add_permissions);
+		$add = array();
+		foreach ($add_permissions_arr as $permission_id){
+				$add[$permission_id] = $permission_id;
+		}
+		if ($addition_count = addUserToGroups($add, $new_user_id)){
+			$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
 		}
 		else {
 			$errors[] = lang("SQL_ERROR");
 		}
-	}
 
-	if(count($errors) == 0) {
-		// On success, create the success message and delete the activation token
-		deleteConfigParameter('root_account_config_token');
-		$successes[] = "You have successfully created the root account.  Please delete this installation folder and log in via login.php.";
+		$successes[] = lang("ACCOUNT_CREATION_COMPLETE", array($username));
 	}	
+} else {
+	$errors[] = lang("NO_DATA");
 }
+
+restore_error_handler();
 
 foreach ($errors as $error){
   addAlert("danger", $error);
@@ -144,20 +143,14 @@ foreach ($errors as $error){
 foreach ($successes as $success){
   addAlert("success", $success);
 }
-
-// Send successfully registered users to the completion page, while errors should return them to the registration page.
+  
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
 	"errors" => count($errors),
 	"successes" => count($successes)));
 } else {
-  if(count($errors) == 0) {
-	header('Location: complete.php');
-	exit();
-  } else {
-	header('Location: register_root.php');
-	exit();	
-  }
+  header('Location: ' . getReferralPage());
+  exit();
 }
 
 ?>

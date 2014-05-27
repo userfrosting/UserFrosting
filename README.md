@@ -1,5 +1,5 @@
 
-UserFrosting 0.1.7
+UserFrosting 0.2.0 (codename butterflyknife) (preview)
 ==================
 
 ### By Alex Weissman
@@ -8,12 +8,17 @@ Copyright (c) 2014
 
 Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
 
-Change Log - v0.1.7
+Change Log - v0.2.0
 -------------------
-- Page scrolls back to top after AJAX submit.
-- "Website url" is automatically suffixed with "/" if necessary.
-- Fixed bad link to forgot_password.php.
-- Began implementing action authorization scheme.
+
+- Converted all DB calls to PDO.
+- Renamed "permissions" to "groups".  Same concept, but using the word "group" suggests that it can be used for more than just access control.
+- Implemented "primary group" membership for users.  A user can belong to multiple groups, but only one of those will be their primary group.
+- Implemented DB-driven home pages for groups.  Upon login, a user will be redirected to the `home_page` for their primary group.
+- Implemented templated menus.  Every group has a corresponding menu template in `models/menu-templates`.  Upon login, the menu for a user's primary group is automatically loaded and rendered.
+- Implemented function-level user authorization.  Whenever a function in `secure_functions` is called, the `user_action_permits` table is checked to see whether or not that user has access to the function (the `action` column), conditional on the boolean functions specified in the `permits` column.
+- Organized pages into three categories: account pages, API pages, and public pages.  Public pages reside in the root directory and can be accessed by anyone.  Account pages are in the `account` directory and are only accessible after logging in.  API pages are in the `api` directory, and consist of all the pages that process or fetch data from the DB and interact with the frontend via AJAX/JSON.  They are accessible by any logged in user, but will only perform a function if the user is authorized.
+
 
 [Older changes](CHANGELOG.md)
 
@@ -688,16 +693,14 @@ These are features to be added in future releases.
 
 1. Deploy CSRF tokens on all forms and add "bulletproof sessions" as per http://blog.teamtreehouse.com/how-to-create-bulletproof-sessions.
 2. Add **OAuth** support, for users to create accounts and log in via Facebook/Google.
-3. Associate permission groups with allowed actions, rather than individual pages.  Actions, in turn, are linked to pages (on the backend) and features (on the frontend).  Automatically hide features for which a user does not have permission.
-4. Convert to standard REST architecture, implementing updates as PUT and deletes as DELETE.  This could mean that different backend pages that act on the same type of object (users, pages, etc) could be combined into a single page that takes different actions depending on the request method.
+3. Deploy the `jqueryvalidator` plugin for client-side validation (as opposed to our own, clunkier validator).
+4. Finish documenting all functions and pages.
 5. Add ability for admins to modify permission group names/settings.
 6. Filter user list by name, group membership, etc.
 7. Full directory/subdirectory management tool for pages.
 8. Add ability for admins to add/remove user account fields, without having to modify code.
-9. Deploy the `jqueryvalidator` plugin for client-side validation (as opposed to our own, clunkier validator).
-10. Admin-side user account creation should bypass activation process.
-11. Continue improving error-handling and rendering system.
-12. Finish documenting all functions and pages.
+9. Admin-side user account creation should bypass activation process.
+10. Continue improving error-handling and rendering system.
 
 Possible additional features as suggested on UserCake forums:
 

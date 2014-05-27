@@ -29,46 +29,53 @@ THE SOFTWARE.
 
 */
 
-//Database Information
-$db_host = "localhost"; //Host address (most likely localhost)
-$db_name = "userfrosting"; //Name of Database
-$db_user = "userfrosting"; //Name of database user
-$db_pass = "XCUvP2z7peePCnQ2"; //Password for database user
-$db_table_prefix = "uc_";
+// UserCake authentication
+include('../models/db-settings.php');
+include('../models/config.php');
 
-function pdoConnect(){
-	global $db_host, $db_name, $db_user, $db_pass;
-	try {  
-	  $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
-	  $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-	  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	  return $db;
-	} catch(PDOException $e) {  
-		return $e->getMessage();  
-	}  
+set_error_handler('logAllErrors');
+
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
 }
 
-GLOBAL $errors;
-GLOBAL $successes;
+// POST Parameters: user_id
+$validator = new Validator();
+$user_id = $validator->requiredPostVar('user_id');
+$enabled = $validator->requiredPostVar('enabled');
 
-$errors = array();
-$successes = array();
+if ($enabled == 'true')
+	$enabled_bit = '1';
+else
+	$enabled_bit = '0';
 
-/* Create a new mysqli object with database connection parameters */
-$mysqli = new mysqli($db_host, $db_user, $db_pass, $db_name);
-GLOBAL $mysqli;
-
-if(mysqli_connect_errno()) {
-	echo "Connection Failed: " . mysqli_connect_errno();
+if (updateUserEnabled($user_id, $enabled_bit)){
+	if ($enabled == 'true')
+		$successes[] = lang("ACCOUNT_ENABLE_SUCCESSFUL");
+	else
+		$successes[] = lang("ACCOUNT_DISABLE_SUCCESSFUL");
+} else {
+	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }
 
-//Direct to install directory, if it exists
-if(is_dir("install/"))
-{
-	header("Location: install/");
-	die();
+restore_error_handler();
 
+foreach ($errors as $error){
+  addAlert("danger", $error);
 }
-
-?>
+foreach ($successes as $success){
+  addAlert("success", $success);
+}
+  
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => count($errors),
+	"successes" => count($successes)));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
+}

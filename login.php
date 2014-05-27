@@ -31,19 +31,14 @@ THE SOFTWARE.
 
 require_once("models/config.php");
 
-if (!securePage($_SERVER['PHP_SELF'])){
-  // Forward to 404 page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  header("Location: 404.php");
-  exit();
-}
+// Public page
 
 setReferralPage($_SERVER['PHP_SELF']);
 
 //Forward the user to their default page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("warning", "You're already logged in!");
-	header("Location: account.php");
+	header("Location: account");
 	exit();
 }
 
@@ -92,7 +87,7 @@ if(isUserLoggedIn()) {
         <h1>Welcome to UserFrosting!</h1>
         <p class="lead">A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</p>
 		<small>Please sign in here:</small>
-		<form class='form-horizontal' role='form' name='login' action='process_login.php' method='post'>
+		<form class='form-horizontal' role='form' name='login' action='api/process_login.php' method='post'>
 		  <div class="row">
 			<div id='display-alerts' class="col-lg-12">
   
@@ -136,7 +131,7 @@ if(isUserLoggedIn()) {
 			  
 		  $("form[name='login']").submit(function(e){
 			var form = $(this);
-			var url = 'process_login.php';
+			var url = 'api/process_login.php';
 			$.ajax({  
 			  type: "POST",  
 			  url: url,  
@@ -150,7 +145,7 @@ if(isUserLoggedIn()) {
 				if (resultJSON['errors'] > 0){
 				  alertWidget('display-alerts');
 				} else {
-				  window.location.replace("account.php");
+				  window.location.replace("account");
 				}
 			  }
 			});

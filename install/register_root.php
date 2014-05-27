@@ -43,7 +43,7 @@ session_start();
 // 1. the root config token (root_account_config_token) must exist
 // 2. the uc_users table must not have a user with id=1
 
-if (fetchUserDetails(NULL, NULL, '1')){
+if (fetchUserAuthById('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
 	header('Location: index.php');
 	exit();
