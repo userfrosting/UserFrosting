@@ -105,7 +105,7 @@ if (!empty($_POST)) {
 		else
 		{
 			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
-			$new_user_id = $user->userCakeAddUser();
+			$new_user_id = $user->addUser();
 			if($new_user_id == -1)
 			{
 				if($user->mail_failure) $errors[] = lang("MAIL_ERROR");

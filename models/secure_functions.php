@@ -17,36 +17,7 @@ function loadUser($user_id){
         return false;
     }
     
-    try {
-      global $db_table_prefix;
-      
-      $results = array();
-      
-      $db = pdoConnect();
-      
-      $sqlVars = array();
-      
-      $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from {$db_table_prefix}users where {$db_table_prefix}users.id = :user_id";
-      
-      $sqlVars[':user_id'] = $user_id;
-      
-      $stmt = $db->prepare($query);
-      $stmt->execute($sqlVars);
-      
-      if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
-          addAlert("danger", "Invalid user id specified");
-          return false;
-      }
-      
-      $stmt = null;
-    
-      return $results;
-      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
-      return false;
-    }
+    return fetchUser($user_id);
 }
 
 // Load data for all users.  TODO: allow filtering by group membership  TODO: also load group membership
@@ -130,7 +101,7 @@ function activateUser($user_id) {
     }
 }
 
-//Change a user's display name
+//Update a user's display name
 function updateUserDisplayName($user_id, $display_name) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -138,35 +109,7 @@ function updateUserDisplayName($user_id, $display_name) {
         return false;
     }
     
-    try {
-        global $db_table_prefix;
-      
-        $db = pdoConnect();
-      
-        $sqlVars = array();
-      
-        $query = "UPDATE ".$db_table_prefix."users
-		SET display_name = :display_name
-		WHERE
-		id = :user_id
-		LIMIT 1";
-        $stmt = $db->prepare($query);
-        $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':display_name'] = $display_name;
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0)
-          return true;
-        else {
-          addAlert("danger", "Invalid user id specified.");
-          return false;
-        }
-    
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
-      return false;
-    }
+    return updateUserField($user_id, 'display_name', $display_name);
 }
 
 //Update a user's email
@@ -177,35 +120,7 @@ function updateUserEmail($user_id, $email) {
         return false;
     }
     
-    try {
-        global $db_table_prefix;
-      
-        $db = pdoConnect();
-      
-        $sqlVars = array();
-      
-        $query = "UPDATE ".$db_table_prefix."users
-		SET 
-		email = :email
-		WHERE
-		id = :user_id";
-        $stmt = $db->prepare($query);
-        $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':email'] = $email;
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0)
-          return true;
-        else {
-          addAlert("danger", "Invalid user id specified.");
-          return false;
-        }
-    
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
-      return false;
-    }
+    return updateUserField($user_id, 'email', $email);
 }
 
 //Update a user's title
@@ -216,30 +131,56 @@ function updateUserTitle($user_id, $title) {
         return false;
     }
     
-    try {
-        global $db_table_prefix;
-      
-        $db = pdoConnect();
-      
-        $sqlVars = array();
-      
-        $query = "UPDATE ".$db_table_prefix."users
-		SET 
-		title = :title
-		WHERE
-		id = :user_id";
-        $stmt = $db->prepare($query);
-        $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':title'] = $title;
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0)
-          return true;
-        else {
-          addAlert("danger", "Invalid user id specified.");
-          return false;
-        }
+    return updateUserField($user_id, 'title', $title);
+}
+
+//Update a user's password (hashed value)
+function updateUserPassword($user_id, $password) {
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
     
+    return updateUserField($user_id, 'password', $password);
+}
+
+// Update a user as enabled ($enabled = 1) or disabled (0)
+function updateUserEnabled($user_id, $enabled){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    
+    // Cannot disable master account
+    if ($user_id == $master_account && $enabled == '0'){
+        addAlert("danger", lang("ACCOUNT_DISABLE_MASTER"));
+        return false;
+    }
+    
+    // Disable the specified user, but leave their information intact in case the account is re-enabled.
+    try {
+
+        $db = pdoConnect();
+        global $db_table_prefix;
+        
+        $sqlVars = array();
+        
+        $query = "UPDATE {$db_table_prefix}users SET enabled = :enabled WHERE id = :user_id LIMIT 1";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':user_id'] = $user_id;
+        $sqlVars[':enabled'] = $enabled;
+	
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            addAlert("danger", "The specified user was not found.");
+            return false;
+        }
+      
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log($e->getMessage());
@@ -255,43 +196,7 @@ function deleteUser($user_id){
         return false;
     }
     
-    try {
-      global $db_table_prefix;
-      
-      $db = pdoConnect();
-      
-      $sqlVars = array();
-      
-      $sqlVars[':user_id'] = $user_id;
-      
-      $query_user = "DELETE FROM ".$db_table_prefix."users WHERE id = :user_id";
-      
-      $stmt_user = $db->prepare($query_user);
-      
-      if (!($stmt_user->execute($sqlVars))){
-          addAlert("danger", "Invalid user id specified");
-          return false;
-      }
-      
-      $query_perms = "DELETE FROM ".$db_table_prefix."user_group_matches WHERE user_id = :user_id";
-            
-      $stmt_perms = $db->prepare($query_perms);
-      $stmt_perms->execute($sqlVars);
-      
-      $stmt_perms = null;
-    
-      if ($stmt_user->rowCount() > 0)
-          return true;
-      else {
-          addAlert("danger", "Invalid user id specified.");
-          return false;
-      }
-      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
-      return false;
-    }
+    return removeUser($user_id);
 }
 
 // Load complete information on all user groups.
@@ -443,5 +348,15 @@ function deleteGroup($group_id) {
     }
 }
 
+// Retrieve an array containing all site configuration parameters
+function loadConfigParameters(){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    return fetchConfigParameters();
+}
 
 ?>

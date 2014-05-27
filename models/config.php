@@ -46,16 +46,16 @@ require_once("db_functions.php");
 $settings = fetchConfigParameters();
 
 //Set Settings
-$emailActivation = $settings['activation']['value'];
-$can_register = $settings['can_register']['value'];
-$websiteName = $settings['website_name']['value'];
-$websiteUrl = $settings['website_url']['value'];
-$emailAddress = $settings['email']['value'];
-$resend_activation_threshold = $settings['resend_activation_threshold']['value'];
+$emailActivation = $settings['activation'];
+$can_register = $settings['can_register'];
+$websiteName = $settings['website_name'];
+$websiteUrl = $settings['website_url'];
+$emailAddress = $settings['email'];
+$resend_activation_threshold = $settings['resend_activation_threshold'];
 $emailDate = date('dmy');
-$language = $settings['language']['value'];
-$template = $settings['template']['value'];
-$new_user_title = $settings['new_user_title']['value'];
+$language = $settings['language'];
+$template = $settings['template'];
+$new_user_title = $settings['new_user_title'];
 
 // Define paths here, relative to the websiteUrl
 defined("SITE_ROOT")
@@ -82,13 +82,13 @@ if(!isset($language)) $language = dirname(__FILE__) . "/languages/en.php";
 
 //Pages to require
 require_once($language);
+require_once("funcs.php");
+require_once("class_validator.php");
+require_once("authorization.php");
+require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");
 require_once("class.newuser.php");
-require_once("funcs.php");
-require_once("authorization.php");
-require_once("secure_functions.php");
-require_once("class_validator.php");
 
 session_start();
 

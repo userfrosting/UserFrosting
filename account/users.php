@@ -90,11 +90,6 @@ setReferralPage($_SERVER['PHP_SELF']);
     
     <script>
         $(document).ready(function() {
-          // Get id of the logged in user to determine how to render this page.
-          var user = loadCurrentUser();
-          var user_id = user['id'];
-          var admin_flag = user['admin'];
-          
           // Load the header
           $('.navbar').load('header.php', function() {
             $('.navitem-users').addClass('active');

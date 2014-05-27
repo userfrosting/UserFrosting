@@ -373,11 +373,7 @@ setReferralPage($_SERVER['PHP_SELF']);
     <script src="../js/morris/morris-0.4.3.js"></script>
     <script src="../js/morris/chart-data-morris.js"></script>
     <script>
-        $(document).ready(function() {
-          // Get id of the logged in user to determine how to render this page.
-          var user = loadCurrentUser();
-          var user_id = user['id'];
-          
+        $(document).ready(function() {          
           // Load the header
           $('.navbar').load('header.php', function() {
             $('.navitem-dashboard-admin').addClass('active');

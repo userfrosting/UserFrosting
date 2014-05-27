@@ -76,9 +76,9 @@ class User
 		}
 	}
 	
-	public function userCakeAddUser()
+	public function addUser()
 	{
-		global $mysqli,$emailActivation,$websiteUrl,$db_table_prefix;
+		global $emailActivation,$websiteUrl;
 		// Default inserted value, in case of errors
 		$inserted_id = -1;
 		//Prevent this function being called if there were construction errors
@@ -137,37 +137,7 @@ class User
 			if(!$this->mail_failure)
 			{
 				//Insert the user into the database providing no errors have been found.
-				$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."users (
-					user_name,
-					display_name,
-					password,
-					email,
-					activation_token,
-					last_activation_request,
-					lost_password_request, 
-					active,
-					title,
-					sign_up_stamp,
-					last_sign_in_stamp
-					)
-					VALUES (
-					?,
-					?,
-					?,
-					?,
-					?,
-					'".time()."',
-					'0',
-					?,
-					?,
-					'".time()."',
-					'0'
-					)");
-				
-				$stmt->bind_param("sssssis", $this->username, $this->displayname, $secure_pass, $this->clean_email, $this->activation_token, $this->user_active, $this->title);
-				$stmt->execute();
-				$inserted_id = $mysqli->insert_id;
-				$stmt->close();
+				$inserted_id = addUser($this->username, $this->displayname, $this->title, $secure_pass, $this->clean_email, $this->user_active, $this->activation_token);
 			}
 		}
 	return $inserted_id;

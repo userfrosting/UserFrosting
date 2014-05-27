@@ -99,9 +99,6 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
     
     <script>
 		$(document).ready(function() {
-			// Get id of the logged in user
-			var user = loadCurrentUser();
-
 			// Load the header
 			$('.navbar').load('header.php', function() {
 			    $('.navitem-users').addClass('active');

@@ -30,52 +30,37 @@ THE SOFTWARE.
 */
 
 // UserCake authentication
-include('models/db-settings.php');
-include('models/config.php');
+include('../models/db-settings.php');
+include('../models/config.php');
+
 set_error_handler('logAllErrors');
 
-if (!securePage($_SERVER['PHP_SELF'])){
-	addAlert("danger", "Whoops, looks like you don't have permission to disable/enable users.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header("Location: " . getReferralPage());
-	}
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
+
+// POST Parameters: user_id
+$validator = new Validator();
+$user_id = $validator->requiredPostVar('user_id');
+$enabled = $validator->requiredPostVar('enabled');
+
+if ($enabled == 'true')
+	$enabled_bit = '1';
+else
+	$enabled_bit = '0';
+
+if (updateUserEnabled($user_id, $enabled_bit)){
+	if ($enabled == 'true')
+		$successes[] = lang("ACCOUNT_ENABLE_SUCCESSFUL");
+	else
+		$successes[] = lang("ACCOUNT_DISABLE_SUCCESSFUL");
+} else {
+	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }
-
-
-$user_id = requiredPostVar('user_id');
-$enabled = requiredPostVar('enabled');
-
-// Disable the specified user, but leave their information intact in case the account is re-enabled.
-$db = pdoConnect();
-global $db_table_prefix;
-
-// Cannot delete master account
-if ($user_id == $master_account){
-	$errors[] = lang("ACCOUNT_DISABLE_MASTER");
-} else {
-	// Set enabled status to '0' or '1'
-	$sqlVars = array();
-	$stmt = $db->prepare("UPDATE {$db_table_prefix}users SET enabled = :enabled WHERE id = :user_id LIMIT 1");
-	$sqlVars[':user_id'] = $user_id;
-	if ($enabled == 'true')
-		$sqlVars[':enabled'] = '1';
-	else
-		$sqlVars[':enabled'] = '0';
-	
-	if (!$stmt->execute($sqlVars)){
-		$errors[] = lang("SQL_ERROR");
-	} else {
-		if ($enabled == 'true')
-			$successes[] = lang("ACCOUNT_ENABLE_SUCCESSFUL");
-		else
-			$successes[] = lang("ACCOUNT_DISABLE_SUCCESSFUL");
-	}
-}
-
-$stmt = null;
 
 restore_error_handler();
 

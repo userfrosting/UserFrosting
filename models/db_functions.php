@@ -182,6 +182,44 @@ function emailUsernameLinked($email,$user_name) {
 
 /*****************  User fetch data functions *******************/
 
+// Fetch non-authorization related data for the specified user.
+function fetchUser($user_id){
+    try {
+      global $db_table_prefix;
+      
+      $results = array();
+      
+      $db = pdoConnect();
+      
+      $sqlVars = array();
+      
+      $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from {$db_table_prefix}users where {$db_table_prefix}users.id = :user_id";
+      
+      $sqlVars[':user_id'] = $user_id;
+      
+      $stmt = $db->prepare($query);
+      $stmt->execute($sqlVars);
+      
+      if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
+          addAlert("danger", "Invalid user id specified");
+          return false;
+      }
+      
+      $stmt = null;
+    
+      return $results;
+      
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+
 // Shortcut functions for fetchUserAuth by different parameters
 function fetchUserAuthById($user_id){
     return fetchUserAuth('id', $user_id);
@@ -249,6 +287,47 @@ function fetchUserAuth($column, $data){
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       error_log($e->getMessage());
+      return false;
+    }
+}
+
+// Get the value of a specified field for a specified user
+function fetchUserField($user_id, $field_name){    
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query = "SELECT 
+            :field_name
+            FROM ".$db_table_prefix."users
+            WHERE
+            id = :user_id
+            LIMIT 1";
+            
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':user_id'] = $user_id;
+        $sqlVars[':field_name'] = $field_name;
+        
+        $stmt->execute($sqlVars);
+          
+        if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
+            // The user does not exist
+            return false;
+        }
+        
+        $stmt = null;
+        return $results[$field_name];
+      
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     }
 }
@@ -651,6 +730,160 @@ function updatePasswordFromToken($password, $current_token) {
     }
 }
 
+/*****************  User create and delete functions *******************/
+
+// Add a user to the database
+function addUser($user_name, $display_name, $title, $password, $email, $active, $activation_token){
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+            
+        $query = "INSERT INTO ".$db_table_prefix."users (
+            user_name,
+            display_name,
+            password,
+            email,
+            activation_token,
+            last_activation_request,
+            lost_password_request, 
+            active,
+            title,
+            sign_up_stamp,
+            last_sign_in_stamp
+            )
+            VALUES (
+            :user_name,
+            :display_name,
+            :password,
+            :email,
+            :activation_token,
+            '".time()."',
+            '0',
+            :active,
+            :title,
+            '".time()."',
+            '0'
+            )";
+    
+        $sqlVars = array(
+            ':user_name' => $user_name,
+            ':display_name' => $display_name,
+            ':title' => $title,
+            ':password' => $password,
+            ':email' => $email,
+            ':active' => $active,
+            ':activation_token' => $activation_token
+        );
+    
+        if (!$stmt->execute($sqlVars)){
+            // Error: column does not exist
+            return false;
+        }
+        
+        $inserted_id = $db->lastInsertedId();
+        
+        $stmt = null;
+    
+        return $inserted_id;
+
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+// Update the last sign in for the specified user
+function updateUserLastSignIn($user_id){
+    updateUserField($user_id, 'last_sign_in_stamp', time());
+}
+
+// Update a field for a user with a given name and value
+function updateUserField($user_id, $field_name, $field_value){
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $query = "UPDATE ".$db_table_prefix."users
+			SET
+			:field_name = :field_value
+			WHERE
+			id = :user_id";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':user_id'] = $user_id;
+        $sqlVars[':field_name'] = $field_name;
+        $sqlVars[':field_value'] = $field_value;
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0)
+          return true;
+        else {
+          addAlert("danger", "Invalid user id specified.");
+          return false;
+        }
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+// Remove a user and associated group membership from DB
+function removeUser($user_id){
+    try {
+      global $db_table_prefix;
+      
+      $db = pdoConnect();
+      
+      $sqlVars = array();
+      
+      $sqlVars[':user_id'] = $user_id;
+      
+      $query_user = "DELETE FROM ".$db_table_prefix."users WHERE id = :user_id";
+      
+      $stmt_user = $db->prepare($query_user);
+      
+      if (!($stmt_user->execute($sqlVars))){
+          addAlert("danger", "Invalid user id specified");
+          return false;
+      }
+      
+      $query_perms = "DELETE FROM ".$db_table_prefix."user_group_matches WHERE user_id = :user_id";
+            
+      $stmt_perms = $db->prepare($query_perms);
+      $stmt_perms->execute($sqlVars);
+      
+      $stmt_perms = null;
+    
+      if ($stmt_user->rowCount() > 0)
+          return true;
+      else {
+          addAlert("danger", "Invalid user id specified.");
+          return false;
+      }
+      
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+
 //Functions that interact mainly with .groups table
 //------------------------------------------------------------------------------
 
@@ -821,6 +1054,53 @@ function fetchGroupDetails($group_id) {
     }        
 }
 
+//Functions that interact mainly with .user_group_matches table
+//------------------------------------------------------------------------------
+
+// Check if the specified user is part of the specified group
+function userInGroup($user_id, $group_id){
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+
+        $query ="SELECT id 
+			FROM ".$db_table_prefix."user_group_matches
+			WHERE user_id = :user_id
+			AND group_id = :group_id
+			LIMIT 1
+			";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':user_id'] = $user_id;
+        $sqlVars[':group_id'] = $group_id;
+
+        if (!$stmt->execute($sqlVars)){
+            // Error
+            return false;
+        }
+        
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row)
+            return true;
+        else
+            return false;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log($e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } 
+
+
+}
+
 // Fetch group information for a specified user
 function fetchUserGroups($user_id) {
     try {
@@ -863,9 +1143,6 @@ function fetchUserGroups($user_id) {
       return false;
     }
 }
-
-//Functions that interact mainly with .user_group_matches table
-//------------------------------------------------------------------------------
 
 // Add a user to the default groups.  TODO: check that user exists and isn't already assigned to group.
 function addUserToDefaultGroups($user_id){
@@ -1070,8 +1347,9 @@ function fetchConfigParameters(){
         }
             
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              $name = $r['name'];
-              $results[$name] = $r;
+            $name = $r['name'];
+            $value = $r['value'];
+            $results[$name] = $value;
         }
         $stmt = null;
           

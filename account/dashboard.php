@@ -144,12 +144,7 @@ setReferralPage($_SERVER['PHP_SELF']);
     </div><!-- /#wrapper -->
 
 	<script>
-        $(document).ready(function() {
-          // Get id of the logged in user to determine how to render this page.
-          var user = loadCurrentUser();
-          var user_id = user['id'];
-          var admin_flag = user['admin'];
-          
+        $(document).ready(function() {       
           alertWidget('display-alerts');
           
           // Load the header

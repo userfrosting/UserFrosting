@@ -38,7 +38,7 @@ include('../models/config.php');
 set_error_handler('logAllErrors');
 
 try {		
-	// Check permissions status
+	// Check that there is a logged-in user
 	$user_id = null;
 	if(isUserLoggedIn()) {
 		$user_id = $loggedInUser->user_id;
@@ -47,38 +47,9 @@ try {
 		echo json_encode(array("errors" => 1, "successes" => 0));
 		exit();
 	}
+	
+	$results = fetchUser($user_id);
 
-	global $db_table_prefix;
-	
-	$results = array();
-	
-	$db = pdoConnect();
-	
-	$sqlVars = array();
-	
-	$query = "select id, user_name, display_name, email, title, sign_up_stamp from {$db_table_prefix}users where id = :user_id";
-	
-	// Required parameters
-	$sqlVars[':user_id'] = $user_id;
-	
-	//echo $query;
-	$stmt = $db->prepare($query);
-	$stmt->execute($sqlVars);
-	
-	$results = $stmt->fetch(PDO::FETCH_ASSOC);
-	
-	$stmt = null;
-	
-	// Also, set account type flag.  This flag should be used for rendering purposes only, never for authentication.
-	// TODO: get rid of this.
-	if ($loggedInUser->checkPermission(array(2))){
-		$results['admin'] = "true";
-	} else {
-		$results['admin'] = "false"; 
-	}
-} catch (PDOException $e) {
-  addAlert("danger", "Oops, looks like our database encountered an error.");
-  error_log($e->getMessage());
 } catch (ErrorException $e) {
   addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
 } catch (RuntimeException $e) {

@@ -29,61 +29,35 @@ THE SOFTWARE.
 
 */
 
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
-try {	
-	// Recommended access restriction: admin only
-	if (!securePage($_SERVER['PHP_SELF'])){
-	  addAlert("danger", "Whoops, looks like you don't have permission to access site settings.");
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
-	}
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
 	
-	$languages = getLanguageFiles(); //Retrieve list of language files
-	$templates = getTemplateFiles(); //Retrieve list of template files
-	
-	//Retrieve settings
-	
-	$result = array();
-	
-	$db = pdoConnect();
-	
-	$sqlVars = array();	
-	
-	$query = "SELECT id, name, value FROM ".$db_table_prefix."configuration";
-	
-	$stmt = $db->prepare($query);
-	$stmt->execute($sqlVars);
-	
-	while ($r = $stmt->fetch(PDO::FETCH_ASSOC)){
-		$name = $r['name'];
-		$value = $r['value'];
-		$result[$name] = $value;
-	}
-	
-	$stmt = null;
-	
-	$result['language_options'] = $languages;
-	$result['template_options'] = $templates;
-	
-	
-	if (!file_exists($language)) {
-		$language = "models/languages/en.php";
-	}
-	
-	if(!isset($language)) $language = "models/languages/en.php";
-	
-} catch (PDOException $e) {
-  addAlert("danger", "Oops, looks like our database encountered an error.");
-  error_log($e->getMessage());
-} catch (ErrorException $e) {
-  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-} catch (RuntimeException $e) {
-  addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-  error_log($e->getMessage());
-} 
+$languages = getLanguageFiles(); //Retrieve list of language files
+$templates = getTemplateFiles(); //Retrieve list of template files
+
+//Retrieve settings
+if (!($result = loadConfigParameters())){
+	echo json_encode(array("errors" => 1, "successes" => 0));
+	exit();
+}
+
+$result['language_options'] = $languages;
+$result['template_options'] = $templates;
+
+
+if (!file_exists($language)) {
+	$language = "models/languages/en.php";
+}
+
+if(!isset($language)) $language = "models/languages/en.php";
 
 restore_error_handler();
 
