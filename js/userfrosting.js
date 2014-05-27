@@ -314,7 +314,7 @@ function loadCurrentUser() {
 	}).responseText;	
 	var resultJSON = processJSONResult(result);
 	
-	if (resultJSON['id']) {
+	if (resultJSON['user_id']) {
 		return resultJSON;
 	} else {
 		addAlert("danger", "We couldn't load your account. We'll try to get this fixed right away!");

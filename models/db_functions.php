@@ -53,14 +53,14 @@ function isUserLoggedIn() {
             }
         } catch (PDOException $e) {
           addAlert("danger", "Oops, looks like our database encountered an error.");
-          error_log($e->getMessage());
+          error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
           return false;
         } catch (ErrorException $e) {
           addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
           return false;
         } catch (RuntimeException $e) {
           addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-          error_log($e->getMessage());
+          error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
           return false;
         }
     }
@@ -120,14 +120,14 @@ function userValueExists($column, $data) {
             return false;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -168,14 +168,14 @@ function emailUsernameLinked($email,$user_name) {
             return false;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -211,7 +211,7 @@ function fetchUser($user_id){
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -279,14 +279,14 @@ function fetchUserAuth($column, $data){
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -300,8 +300,22 @@ function fetchUserField($user_id, $field_name){
         
         $sqlVars = array();
         
+        // First, check that the specified field exists.  Very important as we are using other unsanitized data in the following query.
+        $stmt_field_exists = $db->prepare("SHOW COLUMNS
+            FROM ".$db_table_prefix."users
+            LIKE :field_name");
+        
+        $sqlVars[':field_name'] = $field_name;
+        
+        $stmt_field_exists->execute($sqlVars);
+        
+        if (!($results = $stmt_field_exists->fetch(PDO::FETCH_ASSOC))){
+            // The field does not exist
+            return false;
+        }
+
         $query = "SELECT 
-            :field_name
+            `$field_name`
             FROM ".$db_table_prefix."users
             WHERE
             id = :user_id
@@ -310,7 +324,6 @@ function fetchUserField($user_id, $field_name){
         $stmt = $db->prepare($query);
         
         $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':field_name'] = $field_name;
         
         $stmt->execute($sqlVars);
           
@@ -324,7 +337,7 @@ function fetchUserField($user_id, $field_name){
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -397,7 +410,7 @@ function fetchUserPrimaryGroup($user_id){
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -442,7 +455,7 @@ function fetchUserHomePage($user_id){
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -487,14 +500,14 @@ function setUserActive($token) {
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -534,14 +547,14 @@ function validateActivationToken($token) {
             return false;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }    
 }
@@ -580,14 +593,14 @@ function updateLastActivationRequest($new_activation_token,$user_name,$email) {
         } 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -629,14 +642,14 @@ function validateLostPasswordToken($token) {
             return false;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -673,14 +686,14 @@ function flagLostPasswordRequest($user_name, $value) {
         } 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -718,14 +731,14 @@ function updatePasswordFromToken($password, $current_token) {
         } 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -789,7 +802,7 @@ function addUser($user_name, $display_name, $title, $password, $email, $active, 
 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -809,16 +822,18 @@ function updateUserField($user_id, $field_name, $field_value){
         
         $db = pdoConnect();
         
+        $sqlVars = array();
+
+        // Note that this function uses the field name directly in the query, so do not use unsanitized user input for this function!
         $query = "UPDATE ".$db_table_prefix."users
 			SET
-			:field_name = :field_value
+			$field_name = :field_value
 			WHERE
 			id = :user_id";
         
         $stmt = $db->prepare($query);
         
         $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':field_name'] = $field_name;
         $sqlVars[':field_value'] = $field_value;
         
         $stmt->execute($sqlVars);
@@ -831,7 +846,7 @@ function updateUserField($user_id, $field_name, $field_value){
         }
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -875,7 +890,7 @@ function removeUser($user_id){
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -919,7 +934,7 @@ function groupIdExists($group_id) {
             return false;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -958,7 +973,7 @@ function groupNameExists($name) {
             return false;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1001,7 +1016,7 @@ function fetchAllGroups() {
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1046,7 +1061,7 @@ function fetchGroupDetails($group_id) {
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1091,7 +1106,7 @@ function userInGroup($user_id, $group_id){
             return false;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1119,7 +1134,7 @@ function fetchUserGroups($user_id) {
         
         $stmt = $db->prepare($query);    
 
-        $sqlVars[":user_id"] = $user_id;
+        $sqlVars[':user_id'] = $user_id;
         
         if (!$stmt->execute($sqlVars)){
             // Error
@@ -1136,7 +1151,7 @@ function fetchUserGroups($user_id) {
           
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1184,7 +1199,7 @@ function addUserToDefaultGroups($user_id){
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1227,7 +1242,7 @@ function addUserToGroups($group_ids, $user_id) {
         return $i;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1265,7 +1280,7 @@ function removeUserFromGroups($group_ids, $user) {
         return $i;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1319,7 +1334,7 @@ function fetchConfigParameter($name){
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1357,7 +1372,7 @@ function fetchConfigParameters(){
           
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1395,7 +1410,7 @@ function updateConfig($settings) {
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1433,7 +1448,7 @@ function deleteConfigParameter($name){
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1471,7 +1486,7 @@ function pageIdExists($page_id) {
         }
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1510,7 +1525,7 @@ function fetchAllPages() {
         return $results;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1555,7 +1570,7 @@ function fetchPageDetails($page_id) {
         }    
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1600,7 +1615,7 @@ function fetchPageDetailsByName($name){
         }    
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1637,7 +1652,7 @@ function createPages($pages) {
         } 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1674,7 +1689,7 @@ function updatePrivate($page_id, $private) {
         } 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1709,7 +1724,7 @@ function deletePages($pages) {
         } 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1755,7 +1770,7 @@ function userPageMatchExists($user_id, $page_id){
         }
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1798,7 +1813,7 @@ function fetchPagePermissions($page_id) {
         return $results;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1842,7 +1857,7 @@ function fetchPermissionPages($group_id) {
         return $results;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1884,7 +1899,7 @@ function addPage($page_ids, $group_id) {
         return $i;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -1921,7 +1936,7 @@ function removePage($page_ids, $group_id) {
         return $i;
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
