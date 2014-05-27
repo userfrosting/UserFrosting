@@ -54,7 +54,7 @@ try {
   addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
 } catch (RuntimeException $e) {
   addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-  error_log($e->getMessage());
+  error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
 } 
 
 restore_error_handler();

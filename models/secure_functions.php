@@ -57,7 +57,7 @@ function loadUsers($limit = NULL){
     
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -96,7 +96,7 @@ function activateUser($user_id) {
     
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -183,7 +183,7 @@ function updateUserEnabled($user_id, $enabled){
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -256,7 +256,7 @@ function createGroup($name, $is_default = 0, $can_delete = 1) {
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -294,7 +294,7 @@ function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
     
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
@@ -343,7 +343,7 @@ function deleteGroup($group_id) {
         }      
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log($e->getMessage());
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
 }
