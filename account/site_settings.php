@@ -83,7 +83,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 			<h3 class='panel-title'>Configuration</h3>
 		  </div>
 		  <div class='panel-body'>
-			<form class='form-horizontal' role='form' name='adminConfiguration' action='../api/update_site_settings.php' method='post'>
+			<form class='form-horizontal' role='form' name='adminConfiguration' action='../api/api_site_settings.php' method='post'>
 			<div class="form-group">
 			  <label for="inputWebsiteName" class="col-sm-4 control-label">Site Name</label>
 			  <div class="col-sm-8">
@@ -179,7 +179,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 		  
 		  $("form[name='adminConfiguration']").submit(function(e){
 			var form = $(this);
-			var url = '../api/update_site_settings.php';
+			var url = '../api/api_site_settings.php';
 			$.ajax({  
 			  type: "POST",  
 			  url: url,  
@@ -204,7 +204,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 		  
 		  // Load and initialize fields
 		  $('#regbox input[type="checkbox"]').bootstrapSwitch();
-		  var url = "../api/load_site_settings.php";
+		  var url = "../api/api_site_settings.php";
 		  $.getJSON( url, {})
 		  .fail(function(result) {
 			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
