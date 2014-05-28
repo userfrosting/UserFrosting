@@ -188,6 +188,7 @@ $user_action_permits_entry = "INSERT INTO `".$db_table_prefix."user_action_permi
 (5, 1, 'activateUser', 'always()'),
 (6, 1, 'loadGroups', 'always()'),
 (7, 1, 'loadUserGroups', 'always()');
+(8, 1, 'loadConfigParameters', 'always()');
 ";
 
 $db = pdoConnect();

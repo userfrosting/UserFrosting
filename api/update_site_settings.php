@@ -28,19 +28,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to update the site settings.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
-  }
-  exit();
+if (!isUserLoggedIn()){
+    addAlert("danger", "You must be logged in to access this resource.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
 }
 
 //Forms posted
