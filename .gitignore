@@ -2,3 +2,11 @@
 *.komodoproject
 
 models/db-settings.php
+.idea/.name
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/UserFrosting.iml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+.idea/workspace.xml
