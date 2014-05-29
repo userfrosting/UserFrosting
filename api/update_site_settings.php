@@ -43,9 +43,11 @@ if (!securePage($_SERVER['PHP_SELF'])){
   exit();
 }*/
 $validator = new Validator();
-//$limit = $validator->requiredPostVar('');
 //Forms posted
-$posted = $_POST;
+if (isset($_POST)){
+    $posted = $_POST;
+}
+
 if(!empty($posted))
 {
 	$newSettings = $posted;
