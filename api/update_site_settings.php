@@ -28,11 +28,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
+/*// Recommended admin-only access
 if (!securePage($_SERVER['PHP_SELF'])){
   addAlert("danger", "Whoops, looks like you don't have permission to update the site settings.");
   if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
@@ -41,14 +41,17 @@ if (!securePage($_SERVER['PHP_SELF'])){
 	header("Location: " . getReferralPage());
   }
   exit();
-}
-
+}*/
+$validator = new Validator();
+//$limit = $validator->requiredPostVar('');
 //Forms posted
+$posted = $_POST;
+ChromePhp::log($posted);
 if(!empty($_POST))
 {
 	$newSettings = $_POST;
-	$newWebsiteName = requiredPostVar('website_name');
-	$newWebsiteUrl = requiredPostVar('website_url');
+	$newWebsiteName = $validator->requiredPostVar('website_name');
+	$newWebsiteUrl = $validator->requiredPostVar('website_url');
 	// Append a slash to the end, if not present
 	if (substr($newWebsiteUrl, -1) != "/"){
 	  $newWebsiteUrl = $newWebsiteUrl . "/";
