@@ -32,16 +32,13 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
-/*// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to update the site settings.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
-  }
-  exit();
-}*/
+// User must be logged in
+if (!isUserLoggedIn()){
+    addAlert("danger", "You must be logged in to access this resource.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
+}
+
 $validator = new Validator();
 //Forms posted
 if (isset($_POST)){

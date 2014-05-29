@@ -152,7 +152,7 @@ function updateUserEnabled($user_id, $enabled){
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
         return false;
     }
-    
+    global $master_account;
     // Cannot disable master account
     if ($user_id == $master_account && $enabled == '0'){
         addAlert("danger", lang("ACCOUNT_DISABLE_MASTER"));
@@ -167,13 +167,20 @@ function updateUserEnabled($user_id, $enabled){
         
         $sqlVars = array();
         
-        $query = "UPDATE {$db_table_prefix}users SET enabled = :enabled WHERE id = :user_id LIMIT 1";
-        
+        $query = "UPDATE ".$db_table_prefix."users
+            SET
+            enabled = :enabled
+            WHERE
+            id = :user_id
+            LIMIT 1";
+
         $stmt = $db->prepare($query);
         
         $sqlVars[':user_id'] = $user_id;
         $sqlVars[':enabled'] = $enabled;
-	
+
+        $stmt->execute($sqlVars);
+
         if ($stmt->rowCount() > 0)
             return true;
         else {

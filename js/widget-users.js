@@ -450,13 +450,13 @@ function updateUser(dialog_id, user_id) {
 		remove_permissions: remove_permissions.join(','),
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
 		ajaxMode:	"true"
-	}
+	};
 	
 	var url = APIPATH + "update_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
-	  data: data,		  
+	  data: data
 	}).done(function(result) {
 		processJSONResult(result);
 		window.location.reload();
@@ -488,7 +488,7 @@ function updateUserEnabledStatus(user_id, enabled) {
 		user_id: user_id,
 		enabled: enabled,
 		ajaxMode:	"true"
-	}
+	};
 	
 	url = APIPATH + "update_user_enabled.php";
 	$.ajax({  

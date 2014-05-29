@@ -30,7 +30,7 @@ THE SOFTWARE.
 */
 
 // UserCake authentication
-include('../models/db-settings.php');
+//include('../models/db-settings.php');
 include('../models/config.php');
 
 set_error_handler('logAllErrors');
@@ -70,8 +70,10 @@ foreach ($errors as $error){
 foreach ($successes as $success){
   addAlert("success", $success);
 }
-  
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+
+$ajaxMode = $validator->requiredPostVar('ajaxMode');
+
+if (isset($ajaxMode) and $ajaxMode == "true" ){
   echo json_encode(array(
 	"errors" => count($errors),
 	"successes" => count($successes)));
