@@ -46,10 +46,9 @@ $validator = new Validator();
 //$limit = $validator->requiredPostVar('');
 //Forms posted
 $posted = $_POST;
-ChromePhp::log($posted);
-if(!empty($_POST))
+if(!empty($posted))
 {
-	$newSettings = $_POST;
+	$newSettings = $posted;
 	$newWebsiteName = $validator->requiredPostVar('website_name');
 	$newWebsiteUrl = $validator->requiredPostVar('website_url');
 	// Append a slash to the end, if not present
@@ -58,8 +57,8 @@ if(!empty($_POST))
 	  $newSettings['website_url'] = $newWebsiteUrl;
 	}
 	
-	$newEmail = requiredPostVar('email');
-	$newTitle = requiredPostVar('new_user_title');
+	$newEmail = $validator->requiredPostVar('email');
+	$newTitle = $validator->requiredPostVar('new_user_title');
 	if (isset($newSettings['activation'])){
 		$newActivation = $newSettings['activation'];
 	} else {
@@ -72,8 +71,8 @@ if(!empty($_POST))
 		$newSettings['can_register'] = $newRegistration = "0";
 	}
 	$newResend_activation_threshold = requiredPostVar('resend_activation_threshold');
-	$newLanguage = requiredPostVar('language');
-	$newTemplate = requiredPostVar('template');
+	$newLanguage = $validator->requiredPostVar('language');
+	$newTemplate = $validator->requiredPostVar('template');
 	
 	//Validate new site name
 	if ($newWebsiteName != $websiteName) {
