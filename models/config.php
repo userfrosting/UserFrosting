@@ -90,6 +90,10 @@ require_once("class.mail.php");
 require_once("class.user.php");
 require_once("class.newuser.php");
 
+//ChromePhp debugger for chrome console
+// http://craig.is/writing/chrome-logger
+require_once("chrome.php");
+
 session_start();
 
 //Global User Object Var

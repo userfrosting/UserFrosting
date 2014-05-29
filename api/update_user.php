@@ -28,22 +28,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-require_once("models/config.php");
+require_once("../models/config.php");
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-	addAlert("danger", "Whoops, looks like you don't have permission to update a user.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header("Location: " . getReferralPage());
-	}
-	exit();
+if (!isUserLoggedIn()){
+    addAlert("danger", "You must be logged in to access this resource.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
 }
 
+$validator = new Validator();
+$userid = $validator->requiredPostVar('user_id');
+
 //Check if selected user exists
-if(!isset($_POST['user_id']) or !userIdExists($_POST['user_id'])){
+if(!isset($userid) or !userIdExists($userid)){
 	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
 	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 	  echo json_encode(array("errors" => 1, "successes" => 0));
@@ -54,9 +52,10 @@ if(!isset($_POST['user_id']) or !userIdExists($_POST['user_id'])){
 }
 
 // Required: id
-$id = $_POST['user_id'];
+$id = $userid;
+$csrf = $validator->requiredPostVar('csrf_token');
 
-if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["csrf_token"]))){
+if (!isset($csrf) or !$loggedInUser->csrf_validate(trim($csrf))){
   $errors[] = lang("ACCESS_DENIED");
 } else {
 	
@@ -64,8 +63,8 @@ if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["c
 	$userPermissions = fetchUserGroups($id);
 	
 	//Update display name
-	if ($userdetails['display_name'] != $_POST['display_name']){
-		$displayname = trim($_POST['display_name']);
+	if ($userdetails['display_name'] != $validator->requiredPostVar('display_name')){
+		$displayname = trim($validator->requiredPostVar('display_name'));
 		
 		//Validate display name
 		if(displayNameExists($displayname))
@@ -91,8 +90,8 @@ if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["c
 	}
 	
 	//Update email
-	if ($userdetails['email'] != $_POST['email']){
-		$email = trim($_POST["email"]);
+	if ($userdetails['email'] != $validator->requiredPostVar('email')){
+		$email = trim($validator->requiredPostVar('email'));
 		
 		//Validate email
 		if(!isValidEmail($email))
@@ -114,8 +113,8 @@ if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["c
 	}
 	
 	//Update title
-	if ($userdetails['title'] != $_POST['title']){
-		$title = trim($_POST['title']);
+	if ($userdetails['title'] != $validator->requiredPostVar('title')){
+		$title = trim($validator->requiredPostVar('title'));
 		
 		//Validate title
 		if(minMaxRange(1,50,$title))
@@ -131,11 +130,11 @@ if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["c
 			}
 		}
 	}
-	
+	$rm_perms = $validator->requiredPostVar('remove_permissions');
 	//Remove permission level
-	if(!empty($_POST['remove_permissions'])){
+	if(!empty($rm_perms)){
 		// Convert string of comma-separated permission_id's into array
-		$remove_permissions_arr = explode(',',$_POST['remove_permissions']);
+		$remove_permissions_arr = explode(',',$rm_perms);
 		$remove = array();
 		// Only allow removal if the user already has this permission
 		foreach ($remove_permissions_arr as $permission_id){
@@ -151,11 +150,12 @@ if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["c
 			}
 		}
 	}
-	
+
+    $add_perms = $validator->requiredPostVar('add_permissions');
 	// Add permission levels
-	if(!empty($_POST['add_permissions'])){
+	if(!empty($add_perms)){
 		// Convert string of comma-separated permission_id's into array
-		$add_permissions_arr = explode(',',$_POST['add_permissions']);
+		$add_permissions_arr = explode(',',$add_perms);
 		$add = array();
 		// Only allow adding if the user does NOT already have this permission
 		foreach ($add_permissions_arr as $permission_id){
@@ -181,8 +181,8 @@ foreach ($errors as $error){
 foreach ($successes as $success){
   addAlert("success", $success);
 }
-  
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+$ajaxMode = $validator->requiredPostVar('ajaxMode');
+if (isset($ajaxMode) and $ajaxMode == "true" ){
   echo json_encode(array(
 	"errors" => count($errors),
 	"successes" => count($successes)));
