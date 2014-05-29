@@ -181,13 +181,23 @@ $user_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user
 // Sample action permits, should probably change these at some point since root user should automatically have permission for
 // all actions
 $user_action_permits_entry = "INSERT INTO `".$db_table_prefix."user_action_permits` (`id`, `user_id`, `action`, `permits`) VALUES
-(1, 1, 'updateUserEmail', 'isLoggedInUser(user_id)&isActive(user_id)'),
+(1, 1, 'updateUserEmail', 'always()'),
 (2, 1, 'loadUser', 'always()'),
 (3, 1, 'loadUsers', 'always()'),
 (4, 1, 'deleteUser', 'always()'),
 (5, 1, 'activateUser', 'always()'),
 (6, 1, 'loadGroups', 'always()'),
 (7, 1, 'loadUserGroups', 'always()');
+(8, 1, 'loadConfigParameters', 'always()'),
+(9, 1, 'updateUser', 'always()'),
+(10, 1, 'updateUserDisplayName', 'always()'),
+(11, 1, 'updateUserTitle', 'always()'),
+(12, 1, 'updateUserPassword', 'always()'),
+(13, 1, 'updateUserEnabled', 'always()'),
+(14, 1, 'updateGroup', 'always()'),
+(15, 1, 'createGroup', 'always()'),
+(16, 1, 'deleteGroup', 'always()'),
+(17, 1, 'updateUserEnabled', 'always()');
 ";
 
 $db = pdoConnect();
