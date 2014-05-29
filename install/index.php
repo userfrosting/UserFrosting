@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,15 +29,10 @@ THE SOFTWARE.
 
 */
 
-require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/class.newuser.php");
-session_start();
+// This is the config file in the install directory.
+require_once('config.php');
 
-if (fetchUserDetails(NULL, NULL, '1')){
+if (userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
 	header('Location: complete.php');
 	exit();

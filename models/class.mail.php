@@ -48,12 +48,9 @@ class userCakeMail {
 		$this->contents = file_get_contents($mail_templates_dir.$template);
 		
 		//Check to see we can access the file / it has some contents
-		if(!$this->contents || empty($this->contents))
-		{
+		if(!$this->contents || empty($this->contents)) {
 			return false;
-		}
-		else
-		{
+		} else {
 			//Replace default hooks
 			$this->contents = replaceDefaultHook($this->contents);
 			

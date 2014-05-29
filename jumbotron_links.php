@@ -34,13 +34,6 @@ THE SOFTWARE.
 include('models/db-settings.php');
 include('models/config.php');
 
-if (!securePage($_SERVER['PHP_SELF'])){
-    // Generate AJAX error
-    addAlert("danger", "Whoops, looks like you don't have permission to access this component.");
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
-}
-
 if ($can_register){
 	echo "
 		  <div class='row'>

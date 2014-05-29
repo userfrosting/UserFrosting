@@ -28,6 +28,22 @@ THE SOFTWARE.
 
 */
 
+// Returns the base URL of the website, assuming that this script is in the '/js' subdirectory of the site.
+var APIPATH = (function(scripts) {
+    var scripts = document.getElementsByTagName('script'),
+        script = scripts[scripts.length - 1];
+
+    if (script.getAttribute.length !== undefined) {
+		scriptPath = script.src;
+    }
+
+    scriptPath = script.getAttribute('src', -1);
+	
+	var apiPath = scriptPath.substr(0, scriptPath.lastIndexOf( '/js' )+1 ) + "api/";
+	console.log("api path is: " + apiPath);
+	return apiPath;
+}());
+
 function getTemplateAjax(path) {
 	var source;
 	var template;
@@ -290,7 +306,7 @@ function validateFormFields(dialog_id) {
 }
 
 function loadCurrentUser() {
-	var url = 'load_current_user.php';
+	var url = APIPATH + 'load_current_user.php';
 	var result = $.ajax({  
 	  type: "GET",  
 	  url: url,
@@ -298,17 +314,17 @@ function loadCurrentUser() {
 	}).responseText;	
 	var resultJSON = processJSONResult(result);
 	
-	if (resultJSON['id']) {
+	if (resultJSON['user_id']) {
 		return resultJSON;
 	} else {
 		addAlert("danger", "We couldn't load your account. We'll try to get this fixed right away!");
-		window.location.replace('404.php');
+		window.location.replace('logout.php');
 		return;
 	}
 }
 
 function loadPermissions(div_id) {
-  var url = "load_permissions.php";
+  var url = APIPATH + "load_permissions.php";
   $.getJSON( url, {})
   .done(function( data ) {		  
 	if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
@@ -328,7 +344,7 @@ function loadPermissions(div_id) {
 }
 
 function addNewPermission(permission_name) {
-  var url = 'create_permission.php';
+  var url = APIPATH + 'create_permission.php';
   $.ajax({  
 	type: "POST",  
 	url: url,  
@@ -348,7 +364,7 @@ function addNewPermission(permission_name) {
 }
 
 function deletePermission(id) {
-  var url = 'delete_permission.php';
+  var url = APIPATH + 'delete_permission.php';
   $.ajax({  
 	type: "POST",  
 	url: url,  
@@ -369,7 +385,7 @@ function deletePermission(id) {
 
 // Load permissions for the logged in user
 function userLoadPermissions() {
-	var url = 'user_load_permissions.php';
+	var url = APIPATH + 'load_user_permissions.php';
 	var result = $.ajax({  
 	  type: "GET",  
 	  url: url,
@@ -379,23 +395,8 @@ function userLoadPermissions() {
 	return resultJSON;
 }
 
-// Load permissions for a specified user in admin mode
-function adminLoadPermissions(user_id) {
-	var url = 'admin_load_permissions.php';
-	var result = $.ajax({  
-	  type: "GET",  
-	  url: url,
-	  async: false,
-	  data: {
-		user_id: user_id
-	  }
-	}).responseText;
-	var resultJSON = processJSONResult(result);
-	return resultJSON;
-}
-
 function loadAllPermissions() {
-	var url = 'load_permissions.php';
+	var url = APIPATH + 'load_permissions.php';
 	var result = $.ajax({  
 	  type: "GET",  
 	  url: url,
@@ -407,7 +408,7 @@ function loadAllPermissions() {
 }
 
 function addAlert(type, msg) {
-	var url = 'user_alerts.php';
+	var url = APIPATH + 'user_alerts.php';
 	$.ajax({  
 	  type: "POST",  
 	  url: url,
@@ -425,7 +426,7 @@ function addAlert(type, msg) {
 
 // Load alerts from $_SESSION['userAlerts'] variable into specified element
 function alertWidget(widget_id){
-	var url = 'user_alerts.php';
+	var url = APIPATH + 'user_alerts.php';
 	$.getJSON( url, {})
 	.done(function( data ) {
 		var alertHTML = "";

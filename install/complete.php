@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,8 +29,8 @@ THE SOFTWARE.
 
 */
 
-require_once("../models/db-settings.php");
-session_start();
+// This is the config file in the install directory.
+require_once('config.php');
 
 ?>
 

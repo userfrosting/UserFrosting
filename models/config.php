@@ -39,50 +39,56 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 }
 
 require_once("db-settings.php"); //Require DB connection
+require_once("db_functions.php");
 
-//Retrieve settings
-$stmt = $mysqli->prepare("SELECT id, name, value
-	FROM ".$db_table_prefix."configuration");	
-$stmt->execute();
-$stmt->bind_result($id, $name, $value);
+//Retrieve basic configuration settings
 
-while ($stmt->fetch()){
-	$settings[$name] = array('id' => $id, 'name' => $name, 'value' => $value);
-}
-$stmt->close();
+$settings = fetchConfigParameters();
 
 //Set Settings
-$emailActivation = $settings['activation']['value'];
-$can_register = $settings['can_register']['value'];
-$mail_templates_dir = "models/mail-templates/";
-$websiteName = $settings['website_name']['value'];
-$websiteUrl = $settings['website_url']['value'];
-$emailAddress = $settings['email']['value'];
-$resend_activation_threshold = $settings['resend_activation_threshold']['value'];
+$emailActivation = $settings['activation'];
+$can_register = $settings['can_register'];
+$websiteName = $settings['website_name'];
+$websiteUrl = $settings['website_url'];
+$emailAddress = $settings['email'];
+$resend_activation_threshold = $settings['resend_activation_threshold'];
 $emailDate = date('dmy');
-$language = $settings['language']['value'];
-$template = $settings['template']['value'];
-$new_user_title = $settings['new_user_title']['value'];
+$language = $settings['language'];
+$template = $settings['template'];
+$new_user_title = $settings['new_user_title'];
 
+// Define paths here, relative to the websiteUrl
+defined("SITE_ROOT")
+    or define("SITE_ROOT", basename($websiteUrl));
+
+defined("MENU_TEMPLATES")
+    or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
+	
+$mail_templates_dir = "models/mail-templates/";
+	
 // This is the user id of the master (root) account.
-// The root user cannot be deleted, and automatically has permissions to everything regardless of permission group membership.
+// The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
 $master_account = 1;
 
 $default_hooks = array("#WEBSITENAME#","#WEBSITEURL#","#DATE#");
 $default_replace = array($websiteName,$websiteUrl,$emailDate);
 
+// The dirname(__FILE__) . "/..." construct tells PHP to look for the include file in the same directory as this (the config) file
 if (!file_exists($language)) {
-	$language = "models/languages/en.php";
+	$language = dirname(__FILE__) . "/languages/en.php";
 }
 
-if(!isset($language)) $language = "models/languages/en.php";
+if(!isset($language)) $language = dirname(__FILE__) . "/languages/en.php";
 
 //Pages to require
 require_once($language);
+require_once("funcs.php");
+require_once("class_validator.php");
+require_once("authorization.php");
+require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");
 require_once("class.newuser.php");
-require_once("funcs.php");
 
 session_start();
 
