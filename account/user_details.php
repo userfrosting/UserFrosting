@@ -31,15 +31,21 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
+// Recommended admin-only access
 if (!securePage($_SERVER['PHP_SELF'])){
-  // Forward to index page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  header("Location: index.php");
-  exit();
+    addAlert("danger", "Whoops, looks like you don't have permission to update a user.");
+    if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+        echo json_encode(array("errors" => 1, "successes" => 0));
+    } else {
+        header("Location: " . getReferralPage());
+    }
+    exit();
 }
 
+$validator = new Validator();
+
 // Look up specified user
-$selected_user_id = $_GET['id'];
+$selected_user_id = $validator->requiredGetVar('id');
 
 if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
 	addAlert("danger", "I'm sorry, the user id you specified is invalid!");

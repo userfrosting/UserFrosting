@@ -28,35 +28,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to update the site settings.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
-  }
-  exit();
+// User must be logged in
+if (!isUserLoggedIn()){
+    addAlert("danger", "You must be logged in to access this resource.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
 }
 
+$validator = new Validator();
 //Forms posted
-if(!empty($_POST))
+if (isset($_POST)){
+    $posted = $_POST;
+}
+
+if(!empty($posted))
 {
-	$newSettings = $_POST;
-	$newWebsiteName = requiredPostVar('website_name');
-	$newWebsiteUrl = requiredPostVar('website_url');
+	$newSettings = $posted;
+	$newWebsiteName = $validator->requiredPostVar('website_name');
+	$newWebsiteUrl = $validator->requiredPostVar('website_url');
 	// Append a slash to the end, if not present
 	if (substr($newWebsiteUrl, -1) != "/"){
 	  $newWebsiteUrl = $newWebsiteUrl . "/";
 	  $newSettings['website_url'] = $newWebsiteUrl;
 	}
 	
-	$newEmail = requiredPostVar('email');
-	$newTitle = requiredPostVar('new_user_title');
+	$newEmail = $validator->requiredPostVar('email');
+	$newTitle = $validator->requiredPostVar('new_user_title');
 	if (isset($newSettings['activation'])){
 		$newActivation = $newSettings['activation'];
 	} else {
@@ -69,8 +70,8 @@ if(!empty($_POST))
 		$newSettings['can_register'] = $newRegistration = "0";
 	}
 	$newResend_activation_threshold = requiredPostVar('resend_activation_threshold');
-	$newLanguage = requiredPostVar('language');
-	$newTemplate = requiredPostVar('template');
+	$newLanguage = $validator->requiredPostVar('language');
+	$newTemplate = $validator->requiredPostVar('template');
 	
 	//Validate new site name
 	if ($newWebsiteName != $websiteName) {

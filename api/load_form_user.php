@@ -40,6 +40,8 @@ if (!isUserLoggedIn()){
   exit();
 }
 
+$validator = new Validator();
+
 // TODO: move this to a secured function
 
 // Parameters: box_id, render_mode, [user_id, show_dates, disabled]
@@ -86,12 +88,13 @@ function optionalBooleanGetVar($var_name, $default_value){
     } else
         return $default_value;
 }
-    
+
+$userid = $validator->requiredGetVar('user_id');
 // Create appropriate labels
-if (isset($_GET['user_id']) and is_numeric($_GET['user_id'])){
+if (isset($userid) and is_numeric($userid)){
     $populate_fields = true;
     $button_submit_text = "Update user";
-    $user_id = htmlentities($_GET['user_id']);
+    $user_id = htmlentities($userid);
     $target = "update_user.php";
     $box_title = "Update User";
     $username_disable_str = "disabled";

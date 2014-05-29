@@ -31,10 +31,10 @@ THE SOFTWARE.
 
 // Request method: GET
 
-require_once("models/config.php");
-if (!securePage($_SERVER['PHP_SELF'])){
-    // Generate AJAX error
-    addAlert("danger", "Whoops, looks like you don't have permission to access this component.");
+require_once("../models/config.php");
+// User must be logged in
+if (!isUserLoggedIn()){
+    addAlert("danger", "You must be logged in to access this resource.");
     echo json_encode(array("errors" => 1, "successes" => 0));
     exit();
 }
@@ -57,7 +57,6 @@ if (!securePage($_SERVER['PHP_SELF'])){
         <button type="button" class="btn btn-danger btn-lg btn-block btn-confirm-delete">Yes, delete user</button>
         <button type="button" class="btn btn-default btn-lg btn-block" data-dismiss='modal'>Cancel</button>
       </div>
-    </div>
     </div>
   </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
