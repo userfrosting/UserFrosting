@@ -1,4 +1,33 @@
 <?php
+/*
+
+UserFrosting Version: 0.2.0
+By Alex Weissman
+Copyright (c) 2014
+
+Based on the UserCake user management system, v2.0.2.
+Copyright (c) 2009-2012
+
+UserFrosting, like UserCake, is 100% free and open-source.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the 'Software'), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
 
 require_once("db_functions.php");
 
@@ -218,6 +247,18 @@ function loadGroups(){
     return fetchAllGroups();
 }
 
+// Load information for a specified group.
+function loadGroup($group_id){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    
+    // Calls appropriate function in db_functions
+    return fetchGroupDetails($group_id);
+}
+
 // Load group membership for the specified user.
 function loadUserGroups($user_id){
     // This block automatically checks this action against the permissions database before running.
@@ -230,41 +271,29 @@ function loadUserGroups($user_id){
 }
 
 //Create a new user group.
-function createGroup($name, $is_default = 0, $can_delete = 1) {
+function createGroup($name) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
         return false;
     }
-    
-    try {
 
-        $db = pdoConnect();
-        global $db_table_prefix;
-        
-        $sqlVars = array();
-        
-        $query = "INSERT INTO ".$db_table_prefix."groups (
-		name, is_default, can_delete
-		)
-		VALUES (
-		:name, :is_default, :can_delete
-		)";
-        
-        $stmt = $db->prepare($query);
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0)
+    //Validate request
+    if (groupNameExists($name)){
+        addAlert("danger", lang("PERMISSION_NAME_IN_USE", array($name)));
+        return false;
+    }
+    elseif (minMaxRange(1, 50, $name)){
+        addAlert("danger", lang("PERMISSION_CHAR_LIMIT", array(1, 50)));
+        return false;
+    }
+    else {
+        if (dbCreateGroup($name, 0, 1)) {
+            addAlert("success", lang("PERMISSION_CREATION_SUCCESSFUL", array($name)));
             return true;
-        else {
-            addAlert("danger", "Failed adding new user group.");
+        } else {
             return false;
         }
-      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
     }
 }
 
@@ -275,35 +304,35 @@ function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
         return false;
     }
-    
-    try {
 
-        $db = pdoConnect();
-        
-        global $db_table_prefix;
-
-        $stmt = $db->prepare("UPDATE ".$db_table_prefix."groups
-            SET name = :name, is_default = :is_default, can_delete = :can_delete
-            WHERE
-            id = :group_id
-            LIMIT 1");
-        
-        $sqlVars = array(":group_id" => $group_id, ":name" => $name, "is_default" => $is_default, "can_delete" => $can_delete);
-        
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0)
-          return true;
-        else {
-          addAlert("danger", "Invalid group id specified.");
-          return false;
-        }
-    
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
+    //Check if selected group exists
+    if(!groupIdExists($group_id)){
+        addAlert("danger", "I'm sorry, the group id you specified is invalid!");
+        return false;
     }
+
+    $groupDetails = fetchGroupDetails($group_id); //Fetch information specific to group
+
+	//Update group name, if different from previous and not already taken
+	$name = trim($name);
+    if(strtolower($name) != strtolower($groupDetails['name'])){
+        if (groupNameExists($name)) {
+            addAlert("danger", lang("ACCOUNT_PERMISSIONNAME_IN_USE", array($name)));
+            return false;
+		}
+		elseif (minMaxRange(1, 50, $name)){
+			addAlert("danger", lang("ACCOUNT_PERMISSION_CHAR_LIMIT", array(1, 50)));
+            return false;
+		}
+    }
+    
+    if (dbUpdateGroup($group_id, $name, $is_default, $can_delete)){
+		addAlert("success", lang("PERMISSION_NAME_UPDATE", array($name)));
+        return true;
+    }
+    else {
+        return false;
+    }    
 }
 
 //Delete a user group

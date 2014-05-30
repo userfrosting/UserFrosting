@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,63 +29,40 @@ THE SOFTWARE.
 
 */
 
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to create a permission group.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
-  }
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
   exit();
 }
 
+// TODO: accept home page ids, is_default, and can_delete
+
+$validator = new Validator();
+$group_name = $validator->requiredPostVar('group_name');
+
 //Forms posted
-if(!empty($_POST))
-{
-	//Create new permission level
-	if(!empty($_POST['new_permission'])) {
-		$permission = trim($_POST['new_permission']);
-		
-		//Validate request
-		if (groupNameExists($permission)){
-			$errors[] = lang("PERMISSION_NAME_IN_USE", array($permission));
-		}
-		elseif (minMaxRange(1, 50, $permission)){
-			$errors[] = lang("PERMISSION_CHAR_LIMIT", array(1, 50));	
-		}
-		else{
-			if (createGroup($permission)) {
-			$successes[] = lang("PERMISSION_CREATION_SUCCESSFUL", array($permission));
-		}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	} else {
-		$errors[] = lang("PERMISSION_CHAR_LIMIT", array(1, 50));	
+if($group_name) {
+	if (!createGroup($group_name)){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	  exit();
 	}
 } else {
-	$errors[] = lang("NO_DATA");
+	addAlert("danger", lang("PERMISSION_CHAR_LIMIT", array(1, 50)));
+	echo json_encode(array("errors" => 1, "successes" => 0));
+	exit();
 }
 
 restore_error_handler();
 
-foreach ($errors as $error){
-  addAlert("danger", $error);
-}
-foreach ($successes as $success){
-  addAlert("success", $success);
-}
-  
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => 0,
+	"successes" => 1));
 } else {
   header('Location: ' . getReferralPage());
   exit();
