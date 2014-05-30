@@ -364,13 +364,13 @@ function addNewPermission(group_name) {
 }
 
 function deletePermission(id) {
-  var url = APIPATH + 'delete_permission.php';
+  var url = APIPATH + 'delete_group.php';
   $.ajax({  
 	type: "POST",  
 	url: url,  
 	data: {
-	  permission_id:		id,
-	  ajaxMode:				"true"
+	  group_id:		id,
+	  ajaxMode:		"true"
 	}
   }).done( function(result) {
 	var resultJSON = processJSONResult(result);

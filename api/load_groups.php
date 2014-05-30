@@ -51,6 +51,11 @@ $validator = new Validator();
 $user_id = $validator->optionalGetVar('user_id');
 $group_id = $validator->optionalGetVar('group_id');
 
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
 if ($user_id){
   // Special case to load groups for the logged in user
   if (strtolower($user_id) == "self"){

@@ -49,7 +49,7 @@ function loadUser($user_id){
     return fetchUser($user_id);
 }
 
-// Load data for all users.  TODO: allow filtering by group membership  TODO: also load group membership
+// Load data for all users.  TODO: also load group membership
 function loadUsers($limit = NULL){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -89,6 +89,16 @@ function loadUsers($limit = NULL){
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
+}
+
+function loadUsersInGroup($group_id){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    
+    return fetchGroupUsers($group_id);
 }
 
 //Change a user from inactive to active based on their user id
@@ -404,13 +414,12 @@ function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
     if (dbUpdateGroup($group_id, $name, $is_default, $can_delete)){
 		addAlert("success", lang("PERMISSION_NAME_UPDATE", array($name)));
         return true;
-    }
-    else {
+    } else {
         return false;
     }    
 }
 
-//Delete a user group
+//Delete a user group, and all associations with pages and users
 function deleteGroup($group_id) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -418,45 +427,12 @@ function deleteGroup($group_id) {
         return false;
     }
     
-    try {
-
-        $db = pdoConnect();
-        global $db_table_prefix;
-        
-        $groupDetails = fetchGroupDetails($group_id);
-	
-        if ($groupDetails['can_delete'] == '0'){
-            addAlert("danger", lang("CANNOT_DELETE_PERMISSION_GROUP", array($groupDetails['name'])));
-            return false;
-        }
-	
-        $stmt = $db->prepare("DELETE FROM ".$db_table_prefix."groups 
-            WHERE id = :group_id");
-        
-        $stmt2 = $db->prepare("DELETE FROM ".$db_table_prefix."user_group_matches 
-            WHERE group_id = :group_id");
-        
-        $stmt3 = $db->prepare("DELETE FROM ".$db_table_prefix."group_page_matches 
-            WHERE group_id = :group_id");
-        
-        $sqlVars = array(":group_id" => $group_id);
-        
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0) {
-            // Delete user and page matches for this group.
-            $stmt2->execute($sqlVars);
-            $stmt3->execute($sqlVars);
-            return $groupDetails['name'];
-        } else {
-            addAlert("danger", "The specified group does not exist.");
-            return false;
-        }      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    }
+	if ($name = dbDeleteGroup($group_id)){
+		addAlert("success", lang("PERMISSION_DELETION_SUCCESSFUL_NAME", array($name)));
+        return true;
+    } else {
+		return false;
+	}
 }
 
 // Retrieve an array containing all site configuration parameters
