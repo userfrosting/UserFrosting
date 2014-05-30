@@ -236,43 +236,6 @@ function setReferralPage($page){
 	$_SESSION['referral_page'] = $page;
 }
 
-function requiredPostVar($varname){
-	// Confirm that data has been submitted via POST
-	if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
-		addAlert("danger", "Error: data must be submitted via POST.");
-		echo json_encode(array("errors" => "1", "successes" => "0"));
-		exit();
-	}
-	
-	if (isset($_POST[$varname]))
-		return htmlentities($_POST[$varname]);
-	else {
-		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-			addAlert("danger", "$varname must be specified!");
-			echo json_encode(array("errors" => "1", "successes" => "0"));
-		} else {
-			echo "$varname must be specified!";	
-		}
-		exit();
-	}
-}
-
-function requiredGetVar($varname){
-	// Confirm that data has been submitted via GET
-	if (!($_SERVER['REQUEST_METHOD'] == 'GET')) {
-		addAlert("danger", "Error: data must be submitted via GET.");
-		exit();
-	}
-	
-	if (isset($_GET[$varname]))
-		return htmlentities($_GET[$varname]);
-	else {
-		addAlert("danger", "$varname must be specified!");
-		echo json_encode(array("errors" => "1", "successes" => "0"));
-		exit();
-	}
-}
-
 // Add a session alert to the queue
 function addAlert($type, $message){
     if (!isset($_SESSION["userAlerts"])){
