@@ -68,7 +68,7 @@ function checkActionPermissionSelf($action_function, $function_args){
     
 /** Load action permissions for the logged in user, and check the specified action with the specified arguments. */
 function checkActionPermission($action_function, $args) {
-    global $db_table_prefix, $loggedInUser;
+    global $db_table_prefix, $loggedInUser, $master_account;
     
     // Error if user is not logged in
     if (!isUserLoggedIn()){
@@ -76,6 +76,9 @@ function checkActionPermission($action_function, $args) {
         return false;
     }    
     
+    // Root user automatically has access to everything
+    if ($loggedInUser->user_id == $master_account)
+        return true;
     
     // Error if the specified function does not exist.
     if (!function_exists($action_function)){
@@ -91,37 +94,18 @@ function checkActionPermission($action_function, $args) {
     }
     */
     
-    // Load permission handler mappings for the specified action and logged in user
-    global $db_table_prefix;
-      
-    $action_permits = array();
-      
-    $db = pdoConnect();
-      
-    $sqlVars = array();
-      
-    $query = "select * from {$db_table_prefix}user_action_permits where user_id = :user_id and action = :action";
-      
-    $sqlVars[':user_id'] = $loggedInUser->user_id;
-    $sqlVars[':action'] = $action_function;
+    // Fetch individual level permits
+    $action_permits = fetchUserPermits($loggedInUser->user_id, $action_function);
     
-    $stmt = $db->prepare($query);
-    $stmt->execute($sqlVars);
-    
-    while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $id = $r['id'];
-        $action_permits[$id] = $r;
+    // Fetch permits for each group that the user belongs to
+    $groups = fetchUserGroups($loggedInUser->user_id);
+    foreach ($groups as $group_id => $group){
+        $action_permits = array_merge($action_permits, fetchGroupPermits($group_id, $action_function));
     }
-    $stmt = null;
-    
-    if (count($action_permits) == 0){
-        //echo "Sorry, no permits found for that action.<br>";
-        return false;
-    }
-    
+     
     // For each mapping, run the appropriate handlers
     // If the handlers pass, return true.  Otherwise, move on to the next mapping.
-    foreach ($action_permits as $action_id => $action_permit){
+    foreach ($action_permits as $idx => $action_permit){
         $action = $action_permit['action'];
         //echo "Checking action $action<br>";
         // Get names of action parameters
