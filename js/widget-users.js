@@ -69,9 +69,14 @@ function usersWidget(widget_id, options) {
 	if (options['columns'])
 		columns = options['columns'];		
 
-	console.debug(options);	
+	console.debug(options);
+	
+	// Load the current user's info to get the CSRF token
+	var current_user = loadCurrentUser();
+	csrf_token = current_user['csrf_token'];
+	
 	// Ok, set up the widget with its columns
-	var html =
+	var html = "<input type='hidden' name='csrf_token' value='" + csrf_token + "' />" +
 	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +
     "<div class='panel-body'>";
 	
@@ -149,7 +154,6 @@ function usersWidget(widget_id, options) {
 							"<span class='caret'></span><span class='sr-only'>Toggle Dropdown</span></button>" +
 							"{{{menu}}}</div></td>");
 						var formattedRowData = {};
-						formattedRowData['menu'] 
 						formattedRowData['menu'] = "<ul class='dropdown-menu' role='menu'>";
 						if (record['active'] == 0) {
 							formattedRowData['menu'] += "<li><a href='#' data-id='" + record['user_id'] +
@@ -213,13 +217,13 @@ function usersWidget(widget_id, options) {
 		widget.on('click', '.enableUser', function () {
             var btn = $(this);
             var user_id = btn.data('id');
-			updateUserEnabledStatus(user_id, true);
+			updateUserEnabledStatus(user_id, true, $("input[name='csrf_token']").val());
         });
 		
 		widget.on('click', '.disableUser', function () {
             var btn = $(this);
             var user_id = btn.data('id');
-			updateUserEnabledStatus(user_id, false);
+			updateUserEnabledStatus(user_id, false, $("input[name='csrf_token']").val());
         });		
 
 		widget.on('click', '.activateUser', function () {
@@ -364,11 +368,11 @@ function userDisplay(box_id, user_id) {
 		});
 		
 		$('#' + box_id + ' .btn-enable-user').click(function () {
-			updateUserEnabledStatus(user_id, true);
+			updateUserEnabledStatus(user_id, true, $('#' + box_id + ' input[name="csrf_token"]' ).val());
 		});
 		
 		$('#' + box_id + ' .btn-disable-user').click(function () {
-			updateUserEnabledStatus(user_id, false);
+			updateUserEnabledStatus(user_id, false, $('#' + box_id + ' input[name="csrf_token"]' ).val());
 		});	
 		
 		$('#' + box_id + ' .btn-delete-user').click(function() {
@@ -482,15 +486,16 @@ function activateUser(user_id) {
 }
 
 // Enable/disable the specified user
-function updateUserEnabledStatus(user_id, enabled) {
+function updateUserEnabledStatus(user_id, enabled, csrf_token) {
 	enabled = typeof enabled !== 'undefined' ? enabled : true;
 	var data = {
 		user_id: user_id,
 		enabled: enabled,
+		csrf_token: csrf_token,
 		ajaxMode:	"true"
 	};
 	
-	url = APIPATH + "update_user_enabled.php";
+	url = APIPATH + "update_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  

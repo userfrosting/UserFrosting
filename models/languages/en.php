@@ -95,7 +95,9 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_TITLE_UPDATED"			=> "%m1%'s title changed to %m2%",
 	"ACCOUNT_PERMISSION_ADDED"		=> "Added access to %m1% permission levels",
 	"ACCOUNT_PERMISSION_REMOVED"		=> "Removed access from %m1% permission levels",
-	"ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
+	"ACCOUNT_GROUP_NOT_MEMBER"		=> "User is not a member of group %m1%.",
+	"ACCOUNT_GROUP_ALREADY_MEMBER"		=> "User is already a member of group %m1%.",
+    "ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
 	));
 
 //Configuration

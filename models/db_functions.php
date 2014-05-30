@@ -1290,7 +1290,7 @@ function addUserToDefaultGroups($user_id){
 }
 
 //Match group(s) with user
-function addUserToGroups($group_ids, $user_id) {
+function dbAddUserToGroups($user_id, $group_ids) {
     try {
         global $db_table_prefix;
         
@@ -1335,7 +1335,7 @@ function addUserToGroups($group_ids, $user_id) {
 }
 
 //Unmatch group(s) from a user
-function removeUserFromGroups($group_ids, $user_id) {
+function dbRemoveUserFromGroups($user_id, $group_ids) {
     try {
         global $db_table_prefix;
         

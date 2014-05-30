@@ -138,7 +138,22 @@ function updateUserDisplayName($user_id, $display_name) {
         return false;
     }
     
-    return updateUserField($user_id, 'display_name', $display_name);
+	//Validate display name
+	if(displayNameExists($display_name)) {
+		addAlert("danger", lang("ACCOUNT_DISPLAYNAME_IN_USE",array($display_name)));
+        return false;
+	} elseif(minMaxRange(1,50,$display_name)) {
+		addAlert("danger", lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50)));
+        return false;
+	}
+    
+    if (updateUserField($user_id, 'display_name', $display_name)){
+		addAlert("success", lang("ACCOUNT_DISPLAYNAME_UPDATED", array($display_name)));
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 //Update a user's email
@@ -149,7 +164,21 @@ function updateUserEmail($user_id, $email) {
         return false;
     }
     
-    return updateUserField($user_id, 'email', $email);
+	//Validate email
+	if(!isValidEmail($email)) {
+		addAlert("danger", lang("ACCOUNT_INVALID_EMAIL"));
+        return false;
+	} elseif(emailExists($email)) {
+		addAlert("danger", lang("ACCOUNT_EMAIL_IN_USE",array($email)));
+        return false;
+	}
+    
+    if (updateUserField($user_id, 'email', $email)){
+        addAlert("success", lang("ACCOUNT_EMAIL_UPDATED"));
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //Update a user's title
@@ -159,8 +188,19 @@ function updateUserTitle($user_id, $title) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
         return false;
     }
-    
-    return updateUserField($user_id, 'title', $title);
+
+    //Validate title
+	if(minMaxRange(1,50,$title)) {
+		addAlert("danger", lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50)));
+        return false;
+	}
+
+    if (updateUserField($user_id, 'title', $title)){
+        addAlert("success", lang("ACCOUNT_TITLE_UPDATED", array ($displayname, $title)));
+        return true;
+    } else {
+        return false;    
+    }
 }
 
 //Update a user's password (hashed value)
@@ -188,39 +228,20 @@ function updateUserEnabled($user_id, $enabled){
         return false;
     }
     
+    if ($enabled == 'true')
+		$enabled_bit = '1';
+	else
+		$enabled_bit = '0';
+        
     // Disable the specified user, but leave their information intact in case the account is re-enabled.
-    try {
-
-        $db = pdoConnect();
-        global $db_table_prefix;
-        
-        $sqlVars = array();
-        
-        $query = "UPDATE ".$db_table_prefix."users
-            SET
-            enabled = :enabled
-            WHERE
-            id = :user_id
-            LIMIT 1";
-
-        $stmt = $db->prepare($query);
-        
-        $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':enabled'] = $enabled;
-
-        $stmt->execute($sqlVars);
-
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            addAlert("danger", "The specified user was not found.");
-            return false;
-        }
-      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
+    if (updateUserField($user_id, 'enabled', $enabled_bit)){
+        if ($enabled == 'true')
+            addAlert("success", lang("ACCOUNT_ENABLE_SUCCESSFUL"));
+        else
+            addAlert("success", lang("ACCOUNT_DISABLE_SUCCESSFUL"));
+        return true;
+    } else {
+        return false;    
     }
 }
 
@@ -268,6 +289,60 @@ function loadUserGroups($user_id){
     }
     
     return fetchUserGroups($user_id);
+}
+
+// Remove specified user from group(s)
+function removeUserFromGroups($user_id, $group_ids){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    $userGroups = fetchUserGroups($user_id);
+    
+    $remove = array();
+    
+	// Only try to remove if the user is already part of this group
+	foreach ($group_ids as $group_id){
+		if (isset($userGroups[$group_id])) {
+			$remove[$group_id] = $group_id;
+		}
+	}
+
+    if ($deletion_count = dbRemoveUserFromGroups($user_id, $remove)){
+		if ($deletion_count > 0)
+            addAlert("success", lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count)));
+        return $deletion_count;
+	} else {
+        return false;
+    }
+}
+
+// Add specified user to group(s)
+function addUserToGroups($user_id, $group_ids){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    $userGroups = fetchUserGroups($user_id);
+    
+    $add = array();
+    
+	// Only try to add if the user is not already part of this group
+	foreach ($group_ids as $group_id){
+		if (!isset($userGroups[$group_id])) {
+			$add[$group_id] = $group_id;
+		}
+	}
+
+    if ($addition_count = dbAddUserToGroups($user_id, $add)){
+		if ($addition_count > 0)
+            addAlert("success", lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count)));
+        return $addition_count;
+	} else {
+        return false;
+    }
 }
 
 //Create a new user group.

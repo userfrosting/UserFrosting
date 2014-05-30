@@ -49,7 +49,9 @@ try {
 	}
 	
 	$results = fetchUser($user_id);
-
+	
+	$results['csrf_token'] = $loggedInUser->csrf_token;
+	
 } catch (ErrorException $e) {
   addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
 } catch (RuntimeException $e) {
