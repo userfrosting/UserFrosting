@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -40,8 +40,6 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-$validator = new Validator();
-
 // TODO: move this to a secured function
 
 // Parameters: box_id, render_mode, [user_id, show_dates, disabled]
@@ -52,6 +50,13 @@ $validator = new Validator();
 // show_passwords (optional): if set to true, will show the password creation fields
 // disabled (optional): if set to true, disable all fields
 
+$validator = new Validator();
+
+$box_id = $validator->requiredGetVar('box_id');
+$render_mode = $validator->requiredGetVar('render_mode');
+$show_dates = $validator->optionalBooleanGetVar('show_dates', false);
+$show_passwords = $validator->optionalBooleanGetVar('show_passwords', true);
+
 // Buttons (optional)
 // button_submit: If set to true, display the submission button for this form.
 // button_edit: If set to true, display the edit button for panel mode.
@@ -59,16 +64,12 @@ $validator = new Validator();
 // button_activate: If set to true, display the activate button for inactive users.
 // button_delete: If set to true, display the deletion button for deletable users.
 
-$box_id = requiredGetVar('box_id');
-$render_mode = requiredGetVar('render_mode');
-$show_dates = optionalBooleanGetVar('show_dates', false);
-$show_passwords = optionalBooleanGetVar('show_passwords', true);
-$button_submit = optionalBooleanGetVar('button_submit', true);
-$button_edit = optionalBooleanGetVar('button_edit', false);
-$button_disable = optionalBooleanGetVar('button_disable', false);
-$button_activate = optionalBooleanGetVar('button_activate', false);
-$button_delete = optionalBooleanGetVar('button_delete', false);
-$disabled = optionalBooleanGetVar('disabled', false);
+$button_submit = $validator->optionalBooleanGetVar('button_submit', true);
+$button_edit = $validator->optionalBooleanGetVar('button_edit', false);
+$button_disable = $validator->optionalBooleanGetVar('button_disable', false);
+$button_activate = $validator->optionalBooleanGetVar('button_activate', false);
+$button_delete = $validator->optionalBooleanGetVar('button_delete', false);
+$disabled = $validator->optionalBooleanGetVar('disabled', false);
 
 $disable_str = "";
 if ($disabled) {
@@ -76,22 +77,9 @@ if ($disabled) {
     $username_disable_str = "disabled";
 }
 
-function optionalBooleanGetVar($var_name, $default_value){
-    if (isset($_GET[$var_name])){
-        $bool_val = false;
-        if (strtolower($_GET[$var_name]) == "true")
-            $bool_val = true;
-        if ($bool_val == $default_value)
-            return $default_value;
-        else
-            return !$default_value;
-    } else
-        return $default_value;
-}
-
-$userid = $validator->requiredGetVar('user_id');
+$userid = $validator->optionalNumericGetVar('user_id');
 // Create appropriate labels
-if (isset($userid) and is_numeric($userid)){
+if ($userid){
     $populate_fields = true;
     $button_submit_text = "Update user";
     $user_id = htmlentities($userid);

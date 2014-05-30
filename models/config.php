@@ -39,6 +39,7 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 }
 
 require_once("db-settings.php"); //Require DB connection
+require_once("funcs.php");
 require_once("db_functions.php");
 
 //Retrieve basic configuration settings
@@ -82,7 +83,6 @@ if(!isset($language)) $language = dirname(__FILE__) . "/languages/en.php";
 
 //Pages to require
 require_once($language);
-require_once("funcs.php");
 require_once("class_validator.php");
 require_once("authorization.php");
 require_once("secure_functions.php");
@@ -92,7 +92,7 @@ require_once("class.newuser.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
-require_once("chrome.php");
+//require_once("chrome.php");
 
 session_start();
 

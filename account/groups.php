@@ -111,7 +111,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 		  // Bind permission delete and add buttons
 		  $('.addPermission').on('click', function(){
 			if ($('#permission-groups').has("input").length == 0) {
-			  $("<li class='list-group-item'><div class='row'><div class='col-lg-6'><input autofocus class='form-control' name='new_permission'/></div></div></li>")
+			  $("<li class='list-group-item'><div class='row'><div class='col-lg-6'><input autofocus class='form-control' name='group_name'/></div></div></li>")
 			  .appendTo('#permission-groups');
 			}
 			$('#permission-groups input').focus();

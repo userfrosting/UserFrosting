@@ -1076,6 +1076,81 @@ function fetchGroupDetails($group_id) {
     }        
 }
 
+// Create a new group with the specified name, is_default, and can_delete parameters
+function dbCreateGroup($name, $is_default, $can_delete){
+   try {
+        $db = pdoConnect();
+        global $db_table_prefix;
+        
+        $query = "INSERT INTO ".$db_table_prefix."groups (
+		name, is_default, can_delete
+		)
+		VALUES (
+		:name, :is_default, :can_delete
+		)";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars = array(
+            ':name' => $name,
+            ':is_default' => $is_default,
+            ':can_delete' => $can_delete
+        );
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            addAlert("danger", "Failed adding new user group.");
+            return false;
+        }
+      
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }   
+}
+
+// Update the specified group with a new name, is_default, and can_delete parameters
+function dbUpdateGroup($group_id, $name, $is_default, $can_delete){
+    try {
+
+        $db = pdoConnect();
+        
+        global $db_table_prefix;
+
+        $stmt = $db->prepare("UPDATE ".$db_table_prefix."groups
+            SET name = :name, is_default = :is_default, can_delete = :can_delete
+            WHERE
+            id = :group_id
+            LIMIT 1");
+        
+        $sqlVars = array(":group_id" => $group_id, ":name" => $name, "is_default" => $is_default, "can_delete" => $can_delete);
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0)
+          return true;
+        else {
+          addAlert("danger", "Invalid group id specified.");
+          return false;
+        }
+    
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } 
+}
+
 //Functions that interact mainly with .user_group_matches table
 //------------------------------------------------------------------------------
 
@@ -1232,7 +1307,9 @@ function addUserToGroups($group_ids, $user_id) {
 		:user_id
 		)";
         
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
+        
+        $i = 0;
         
         if (is_array($group_ids)){
             foreach($group_ids as $id){
@@ -1258,7 +1335,7 @@ function addUserToGroups($group_ids, $user_id) {
 }
 
 //Unmatch group(s) from a user
-function removeUserFromGroups($group_ids, $user) {
+function removeUserFromGroups($group_ids, $user_id) {
     try {
         global $db_table_prefix;
         
@@ -1270,7 +1347,9 @@ function removeUserFromGroups($group_ids, $user) {
 		WHERE group_id = :group_id
 		AND user_id = :user_id";
         
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
+        
+        $i = 0;
         
         if (is_array($group_ids)){
             foreach($group_ids as $id){
@@ -1889,7 +1968,7 @@ function addPage($page_ids, $group_id) {
             :page_id
             )";
     
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
         
         if (is_array($page_ids)){
             foreach($page_ids as $id){
@@ -1926,7 +2005,7 @@ function removePage($page_ids, $group_id) {
 		WHERE page_id = :page_id
 		AND group_id = :group_id";
         
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
         
         if (is_array($page_ids)){
             foreach($page_ids as $id){
