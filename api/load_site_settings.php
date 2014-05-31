@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -44,7 +44,7 @@ $languages = getLanguageFiles(); //Retrieve list of language files
 $templates = getTemplateFiles(); //Retrieve list of template files
 
 //Retrieve settings
-if (!($result = loadConfigParameters())){
+if (!($result = loadSiteSettings())){
 	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }

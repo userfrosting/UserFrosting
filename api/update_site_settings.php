@@ -69,7 +69,7 @@ if(!empty($posted))
 	} else {
 		$newSettings['can_register'] = $newRegistration = "0";
 	}
-	$newResend_activation_threshold = requiredPostVar('resend_activation_threshold');
+	$newResend_activation_threshold = $validator->requiredPostVar('resend_activation_threshold');
 	$newLanguage = $validator->requiredPostVar('language');
 	$newTemplate = $validator->requiredPostVar('template');
 	
@@ -184,7 +184,7 @@ if(!empty($posted))
 	
 	//Update configuration table with new settings
 	if (count($errors) == 0) {
-	  if (updateConfig($newSettings)){
+	  if (updateSiteSettings($newSettings)){
 		$successes[] = lang("CONFIG_UPDATE_SUCCESSFUL");
 	  }
 	}

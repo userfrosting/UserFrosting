@@ -576,8 +576,10 @@ function deleteGroup($group_id) {
 	}
 }
 
-// Retrieve an array containing all site configuration parameters
-function loadConfigParameters(){
+/************************* Site configuration functions *************************/
+
+// Retrieve an array containing all site settingss
+function loadSiteSettings(){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
@@ -586,6 +588,19 @@ function loadConfigParameters(){
 
     return fetchConfigParameters();
 }
+
+// Update site settings via an array of key => value
+function updateSiteSettings($settings){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    return updateConfig($settings);    
+}
+
+/************************* Site page functions *************************/
 
 // Load list of all site pages from DB, updating as necessary.  Recommend only allow root access.
 function loadSitePages(){
