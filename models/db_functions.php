@@ -1151,6 +1151,52 @@ function dbUpdateGroup($group_id, $name, $is_default, $can_delete){
     } 
 }
 
+// Delete the group, and all associated pages and users, from the database.
+function dbDeleteGroup($group_id){
+    try {
+
+        $db = pdoConnect();
+        global $db_table_prefix;
+        
+        $groupDetails = fetchGroupDetails($group_id);
+	
+        if ($groupDetails['can_delete'] == '0'){
+            addAlert("danger", lang("CANNOT_DELETE_PERMISSION_GROUP", array($groupDetails['name'])));
+            return false;
+        }
+	
+        $stmt = $db->prepare("DELETE FROM ".$db_table_prefix."groups 
+            WHERE id = :group_id");
+        
+        $stmt2 = $db->prepare("DELETE FROM ".$db_table_prefix."user_group_matches 
+            WHERE group_id = :group_id");
+        
+        $stmt3 = $db->prepare("DELETE FROM ".$db_table_prefix."group_page_matches 
+            WHERE group_id = :group_id");
+        
+        $sqlVars = array(":group_id" => $group_id);
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0) {
+            // Delete user and page matches for this group.
+            $stmt2->execute($sqlVars);
+            $stmt3->execute($sqlVars);
+            return $groupDetails['name'];
+        } else {
+            addAlert("danger", "The specified group does not exist.");
+            return false;
+        }      
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } 
+}
+
 //Functions that interact mainly with .user_group_matches table
 //------------------------------------------------------------------------------
 
@@ -1194,8 +1240,6 @@ function userInGroup($user_id, $group_id){
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } 
-
-
 }
 
 // Fetch group information for a specified user
@@ -1241,6 +1285,49 @@ function fetchUserGroups($user_id) {
     }
 }
 
+// Fetch user information for a specified group
+function fetchGroupUsers($group_id) {
+    try {
+        global $db_table_prefix;
+        
+        $results = array();
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query = "SELECT {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled 
+            FROM ".$db_table_prefix."user_group_matches,".$db_table_prefix."users
+            WHERE group_id = :group_id and ".$db_table_prefix."user_group_matches.user_id = ".$db_table_prefix."users.id
+            ";
+        
+        $stmt = $db->prepare($query);    
+
+        $sqlVars[':group_id'] = $group_id;
+        
+        if (!$stmt->execute($sqlVars)){
+            // Error
+            return false;
+        }
+            
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $id = $r['user_id'];
+              $results[$id] = $r;
+        }
+        $stmt = null;
+          
+        return $results;
+          
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
 // Add a user to the default groups.  TODO: check that user exists and isn't already assigned to group.
 function addUserToDefaultGroups($user_id){
     try {
@@ -1254,7 +1341,7 @@ function addUserToDefaultGroups($user_id){
         
         $stmt = $db->prepare($query);
 
-        if (!$stmt->execute($sqlVars)){
+        if (!$stmt->execute()){
             // Error
             return false;
         }
@@ -1290,7 +1377,7 @@ function addUserToDefaultGroups($user_id){
 }
 
 //Match group(s) with user
-function addUserToGroups($group_ids, $user_id) {
+function dbAddUserToGroups($user_id, $group_ids) {
     try {
         global $db_table_prefix;
         
@@ -1335,7 +1422,7 @@ function addUserToGroups($group_ids, $user_id) {
 }
 
 //Unmatch group(s) from a user
-function removeUserFromGroups($group_ids, $user_id) {
+function dbRemoveUserFromGroups($user_id, $group_ids) {
     try {
         global $db_table_prefix;
         

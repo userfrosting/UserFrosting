@@ -49,6 +49,11 @@ $validator = new Validator();
 $group_id = $validator->requiredPostVar('group_id');
 $name = $validator->requiredPostVar('name');
 
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
 //Forms posted
 if($group_id && $name){
 	if (!updateGroup($group_id, $name)){

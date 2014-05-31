@@ -30,6 +30,7 @@ THE SOFTWARE.
 */
 
 require_once("db_functions.php");
+require_once("class.mail.php");
 
 /******************************************************************************************************************
 
@@ -49,7 +50,7 @@ function loadUser($user_id){
     return fetchUser($user_id);
 }
 
-// Load data for all users.  TODO: allow filtering by group membership  TODO: also load group membership
+// Load data for all users.  TODO: also load group membership
 function loadUsers($limit = NULL){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -89,6 +90,131 @@ function loadUsers($limit = NULL){
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
+}
+
+function loadUsersInGroup($group_id){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    
+    return fetchGroupUsers($group_id);
+}
+
+// Create a user with the specified fields.  Set require_activation to 'true' if you want an activation email to be sent.
+// Set admin to 'true' if you are a logged in user creating on behalf of someone else, 'false' if you are registering from the public.
+function createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin) {
+    // if we're in admin mode, then the user must be logged in and have appropriate permissions
+    if ($admin == "true"){
+        // This block automatically checks this action against the permissions database before running.
+        if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+            addAlert("danger", "Sorry, you do not have permission to access this resource.");
+            return false;
+        }
+    }
+
+    $error_count = 0;
+        
+    // Check values
+    if(minMaxRange(1,25,$user_name))
+	{
+		addAlert("danger", lang("ACCOUNT_USER_CHAR_LIMIT",array(1,25)));
+        $error_count++;
+	}
+	if(!ctype_alnum($user_name)){
+		addAlert("danger", lang("ACCOUNT_USER_INVALID_CHARACTERS"));
+        $error_count++;
+	}
+	if(minMaxRange(1,50,$display_name))
+	{
+		addAlert("danger", lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50)));
+        $error_count++;
+	}
+	if(!isValidName($display_name)){
+		addAlert("danger", lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS"));
+        $error_count++;
+	}
+	if(!isValidEmail($email))
+	{
+		addAlert("danger", lang("ACCOUNT_INVALID_EMAIL"));
+        $error_count++;
+	}
+    if(minMaxRange(1,150,$title)) {
+		addAlert("danger", lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,150)));
+        $error_count++;
+	}
+    if(minMaxRange(8,50,$password) && minMaxRange(8,50,$passwordc))
+	{
+		addAlert("danger", lang("ACCOUNT_PASS_CHAR_LIMIT",array(8,50)));
+        $error_count++;
+	}
+	else if($password != $passwordc)
+	{
+		addAlert("danger", lang("ACCOUNT_PASS_MISMATCH"));
+        $error_count++;
+	}
+	
+	if(usernameExists($user_name)) {
+    	addAlert("danger", lang("ACCOUNT_USERNAME_IN_USE",array($user_name)));
+        $error_count++;
+	}
+	if(displayNameExists($display_name)) {
+		addAlert("danger", lang("ACCOUNT_DISPLAYNAME_IN_USE",array($display_name)));
+        $error_count++;
+	}
+    if(emailExists($email)) {
+        addAlert("danger", lang("ACCOUNT_EMAIL_IN_USE",array($email)));
+        $error_count++;
+    }
+    
+    // Exit on any invalid parameters
+    if($error_count != 0)
+        return false;
+
+    //Construct a secure hash for the plain text password
+    $secure_pass = generateHash($password);
+    
+    //Construct a unique activation token (even if activation is not required)
+    $activation_token = generateActivationToken();
+    $active = 1;
+    
+    //Do we need to require that the user activate their account first?
+    if($require_activation) {
+        global $websiteUrl;
+        
+        //User must activate their account first
+        $active = 0;
+        
+        $mailSender = new userCakeMail();
+        
+        //Build the activation message
+        $activation_message = lang("ACCOUNT_ACTIVATION_MESSAGE",array($websiteUrl, $activation_token));
+        
+        //Define more if you want to build larger structures
+        $hooks = array(
+            "searchStrs" => array("#ACTIVATION-MESSAGE","#ACTIVATION-KEY","#USERNAME#"),
+            "subjectStrs" => array($activation_message,$activation_token,$display_name)
+            );
+        
+        /* Build the template - Optional, you can just use the sendMail function 
+        Instead to pass a message. */
+        // If there is a mail failure, fatal error
+        if(!$mailSender->newTemplateMsg("new-registration.txt",$hooks)) {
+            addAlert("danger", lang("MAIL_ERROR"));
+            return false;
+        } else {
+            //Send the mail. Specify users email here and subject. 
+            //SendMail can have a third paremeter for message if you do not wish to build a template.    
+            if(!$mailSender->sendMail($email, "Please activate your account")) {
+                addAlert("danger", lang("MAIL_ERROR"));
+                return false;
+            }
+        }   
+    }
+
+    // Insert the user into the database and return the new user's id
+    return addUser($user_name, $display_name, $title, $secure_pass, $email, $active, $activation_token);
 }
 
 //Change a user from inactive to active based on their user id
@@ -138,7 +264,22 @@ function updateUserDisplayName($user_id, $display_name) {
         return false;
     }
     
-    return updateUserField($user_id, 'display_name', $display_name);
+	//Validate display name
+	if(displayNameExists($display_name)) {
+		addAlert("danger", lang("ACCOUNT_DISPLAYNAME_IN_USE",array($display_name)));
+        return false;
+	} elseif(minMaxRange(1,50,$display_name)) {
+		addAlert("danger", lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50)));
+        return false;
+	}
+    
+    if (updateUserField($user_id, 'display_name', $display_name)){
+		addAlert("success", lang("ACCOUNT_DISPLAYNAME_UPDATED", array($display_name)));
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 //Update a user's email
@@ -149,7 +290,21 @@ function updateUserEmail($user_id, $email) {
         return false;
     }
     
-    return updateUserField($user_id, 'email', $email);
+	//Validate email
+	if(!isValidEmail($email)) {
+		addAlert("danger", lang("ACCOUNT_INVALID_EMAIL"));
+        return false;
+	} elseif(emailExists($email)) {
+		addAlert("danger", lang("ACCOUNT_EMAIL_IN_USE",array($email)));
+        return false;
+	}
+    
+    if (updateUserField($user_id, 'email', $email)){
+        addAlert("success", lang("ACCOUNT_EMAIL_UPDATED"));
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //Update a user's title
@@ -159,8 +314,19 @@ function updateUserTitle($user_id, $title) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
         return false;
     }
-    
-    return updateUserField($user_id, 'title', $title);
+
+    //Validate title
+	if(minMaxRange(1,150,$title)) {
+		addAlert("danger", lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,150)));
+        return false;
+	}
+
+    if (updateUserField($user_id, 'title', $title)){
+        addAlert("success", lang("ACCOUNT_TITLE_UPDATED", array ($displayname, $title)));
+        return true;
+    } else {
+        return false;    
+    }
 }
 
 //Update a user's password (hashed value)
@@ -188,39 +354,20 @@ function updateUserEnabled($user_id, $enabled){
         return false;
     }
     
+    if ($enabled == 'true')
+		$enabled_bit = '1';
+	else
+		$enabled_bit = '0';
+        
     // Disable the specified user, but leave their information intact in case the account is re-enabled.
-    try {
-
-        $db = pdoConnect();
-        global $db_table_prefix;
-        
-        $sqlVars = array();
-        
-        $query = "UPDATE ".$db_table_prefix."users
-            SET
-            enabled = :enabled
-            WHERE
-            id = :user_id
-            LIMIT 1";
-
-        $stmt = $db->prepare($query);
-        
-        $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':enabled'] = $enabled;
-
-        $stmt->execute($sqlVars);
-
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            addAlert("danger", "The specified user was not found.");
-            return false;
-        }
-      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
+    if (updateUserField($user_id, 'enabled', $enabled_bit)){
+        if ($enabled == 'true')
+            addAlert("success", lang("ACCOUNT_ENABLE_SUCCESSFUL"));
+        else
+            addAlert("success", lang("ACCOUNT_DISABLE_SUCCESSFUL"));
+        return true;
+    } else {
+        return false;    
     }
 }
 
@@ -234,6 +381,8 @@ function deleteUser($user_id){
     
     return removeUser($user_id);
 }
+
+/******************** group functions ******************/
 
 // Load complete information on all user groups.
 function loadGroups(){
@@ -268,6 +417,60 @@ function loadUserGroups($user_id){
     }
     
     return fetchUserGroups($user_id);
+}
+
+// Remove specified user from group(s)
+function removeUserFromGroups($user_id, $group_ids){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    $userGroups = fetchUserGroups($user_id);
+    
+    $remove = array();
+    
+	// Only try to remove if the user is already part of this group
+	foreach ($group_ids as $group_id){
+		if (isset($userGroups[$group_id])) {
+			$remove[$group_id] = $group_id;
+		}
+	}
+
+    if ($deletion_count = dbRemoveUserFromGroups($user_id, $remove)){
+		if ($deletion_count > 0)
+            addAlert("success", lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count)));
+        return $deletion_count;
+	} else {
+        return false;
+    }
+}
+
+// Add specified user to group(s)
+function addUserToGroups($user_id, $group_ids){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    $userGroups = fetchUserGroups($user_id);
+    
+    $add = array();
+    
+	// Only try to add if the user is not already part of this group
+	foreach ($group_ids as $group_id){
+		if (!isset($userGroups[$group_id])) {
+			$add[$group_id] = $group_id;
+		}
+	}
+
+    if ($addition_count = dbAddUserToGroups($user_id, $add)){
+		if ($addition_count > 0)
+            addAlert("success", lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count)));
+        return $addition_count;
+	} else {
+        return false;
+    }
 }
 
 //Create a new user group.
@@ -329,13 +532,12 @@ function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
     if (dbUpdateGroup($group_id, $name, $is_default, $can_delete)){
 		addAlert("success", lang("PERMISSION_NAME_UPDATE", array($name)));
         return true;
-    }
-    else {
+    } else {
         return false;
     }    
 }
 
-//Delete a user group
+//Delete a user group, and all associations with pages and users
 function deleteGroup($group_id) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -343,45 +545,12 @@ function deleteGroup($group_id) {
         return false;
     }
     
-    try {
-
-        $db = pdoConnect();
-        global $db_table_prefix;
-        
-        $groupDetails = fetchGroupDetails($group_id);
-	
-        if ($groupDetails['can_delete'] == '0'){
-            addAlert("danger", lang("CANNOT_DELETE_PERMISSION_GROUP", array($groupDetails['name'])));
-            return false;
-        }
-	
-        $stmt = $db->prepare("DELETE FROM ".$db_table_prefix."groups 
-            WHERE id = :group_id");
-        
-        $stmt2 = $db->prepare("DELETE FROM ".$db_table_prefix."user_group_matches 
-            WHERE group_id = :group_id");
-        
-        $stmt3 = $db->prepare("DELETE FROM ".$db_table_prefix."group_page_matches 
-            WHERE group_id = :group_id");
-        
-        $sqlVars = array(":group_id" => $group_id);
-        
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0) {
-            // Delete user and page matches for this group.
-            $stmt2->execute($sqlVars);
-            $stmt3->execute($sqlVars);
-            return $groupDetails['name'];
-        } else {
-            addAlert("danger", "The specified group does not exist.");
-            return false;
-        }      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    }
+	if ($name = dbDeleteGroup($group_id)){
+		addAlert("success", lang("PERMISSION_DELETION_SUCCESSFUL_NAME", array($name)));
+        return true;
+    } else {
+		return false;
+	}
 }
 
 // Retrieve an array containing all site configuration parameters

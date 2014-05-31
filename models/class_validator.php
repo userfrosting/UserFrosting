@@ -66,6 +66,19 @@ class Validator {
 			return null;
 		}
 	}
+
+	public function requiredNumericPostVar($varname){
+		// Confirm that data has been submitted via POST
+		if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
+			$this->errors[] = "Error: data must be submitted via POST.";
+			return null;
+		}
+		
+		if (isset($_POST[$varname]) && is_numeric($_POST[$varname]))
+			return htmlentities($_POST[$varname]);
+		else
+			return null;
+	}
 	
 	public function optionalGetVar($varname){
 		// Confirm that data has been submitted via GET
@@ -133,6 +146,26 @@ class Validator {
 		if (isset($_GET[$var_name])){
 			$bool_val = false;
 			if (strtolower($_GET[$var_name]) == "true")
+				$bool_val = true;
+			if ($bool_val == $default_value)
+				return $default_value;
+			else
+				return !$default_value;
+		} else
+			return $default_value;
+	}	
+
+	// Optional boolean variable ("true" or "false" as string)
+	function optionalBooleanPostVar($var_name, $default_value = "false"){
+		// Confirm that data has been submitted via POST
+		if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
+			$this->errors[] = "Error: data must be submitted via POST.";
+			return null;
+		}
+		
+		if (isset($_POST[$var_name])){
+			$bool_val = false;
+			if (strtolower($_POST[$var_name]) == "true")
 				$bool_val = true;
 			if ($bool_val == $default_value)
 				return $default_value;

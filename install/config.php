@@ -44,8 +44,7 @@ require_once("../models/funcs.php");
 require_once("../models/languages/en.php");
 require_once("../models/class.mail.php");
 require_once("../models/class.user.php");
-require_once("../models/class.newuser.php");
-
+require_once("../models/class_validator.php");
 
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");

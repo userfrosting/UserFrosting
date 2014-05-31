@@ -29,10 +29,7 @@ THE SOFTWARE.
 
 */
 
-// UserCake authentication
-//include('../models/db-settings.php');
-include('../models/config.php');
-
+require_once("../models/config.php");
 set_error_handler('logAllErrors');
 
 // User must be logged in
@@ -42,21 +39,20 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-// POST Parameters: user_id
 $validator = new Validator();
-$user_id = $validator->requiredPostVar('user_id');
-$enabled = $validator->requiredPostVar('enabled');
+$group_id = $validator->requiredPostVar('group_id');
 
-if ($enabled == 'true')
-	$enabled_bit = '1';
-else
-	$enabled_bit = '0';
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
 
-if (updateUserEnabled($user_id, $enabled_bit)){
-	if ($enabled == 'true')
-		$successes[] = lang("ACCOUNT_ENABLE_SUCCESSFUL");
-	else
-		$successes[] = lang("ACCOUNT_DISABLE_SUCCESSFUL");
+//Forms posted
+if($group_id){
+	if (!deleteGroup($group_id)){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	  exit();
+	}
 } else {
 	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
@@ -64,20 +60,14 @@ if (updateUserEnabled($user_id, $enabled_bit)){
 
 restore_error_handler();
 
-foreach ($errors as $error){
-  addAlert("danger", $error);
-}
-foreach ($successes as $success){
-  addAlert("success", $success);
-}
-
-$ajaxMode = $validator->requiredPostVar('ajaxMode');
-
-if (isset($ajaxMode) and $ajaxMode == "true" ){
+// Allows for functioning in either ajax mode or graceful degradation to PHP/HTML only
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => 0,
+	"successes" => 1));
 } else {
-  header('Location: ' . getReferralPage());
+  header("Location: " . getReferralPage());
   exit();
 }
+
+?>
