@@ -33,19 +33,9 @@ THE SOFTWARE.
 // This is to prevent "orphaned" accounts, who registered while email activation was still required.
 // Request method: POST
 
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
-
-if (!securePage($_SERVER['PHP_SELF'])){
-	addAlert("danger", "Whoops, looks like you don't have permission to resend activation.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header("Location: " . getReferralPage());
-	}
-	exit();
-}
 
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {

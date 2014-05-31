@@ -137,8 +137,8 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (8, 'account/site_settings.php', 1),
 (9, 'account/users.php', 1),
 (10, 'account/user_details.php', 1),
-(11, 'account/load_form_user.php', 1),
-(12, 'account/delete_user_dialog.php', 1);
+(11, 'account/index.php', 0);
+(12, 'account/groups.php', 1);
 ";
 
 $group_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."group_page_matches` (

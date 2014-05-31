@@ -587,4 +587,129 @@ function loadConfigParameters(){
     return fetchConfigParameters();
 }
 
+// Load list of all site pages from DB, updating as necessary.  Recommend only allow root access.
+function loadSitePages(){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    
+    global $page_include_paths;
+    
+    try {
+        // Retrieve files in all included directories
+        $pages = array();
+        foreach ($page_include_paths as $path){
+          $pages = array_merge($pages, getPageFiles($path));
+        }
+        
+        $dbpages = fetchAllPages(); //Retrieve list of pages in pages table
+        $creations = array();
+        $deletions = array();
+        $originals = array();
+        
+        //Check if any pages exist which are not in DB
+        foreach ($pages as $page){
+            if(!isset($dbpages[$page])){
+                $creations[] = $page;	
+            }
+        }
+        
+        //Enter new pages in DB if found
+        if (count($creations) > 0) {
+            createPages($creations)	;
+        }
+        
+        // Find pages in table which no longer exist
+        if (count($dbpages) > 0){
+            //Check if DB contains pages that don't exist
+            foreach ($dbpages as $page){
+                if(!isset($pages[$page['page']])){
+                  $deletions[] = $page['id'];	
+                } else {
+                  $originals[] = $page['id'];
+                }
+            }
+        }
+        
+        $allPages = fetchAllPages();
+        // Merge the newly created pages, plus the pages slated for deletion, load their permissions, and set a flag (C)reated, (U)pdated, (D)eleted
+        foreach ($allPages as $page){
+          $id = $page['id'];
+          $name = $page['page'];
+          if (in_array($name, $creations)){
+            $allPages[$name]['status'] = 'C';
+          } else if (in_array($id, $deletions)){
+            $allPages[$name]['status'] = 'D';
+          } else {
+            $allPages[$name]['status'] = 'U';
+          }
+          $pageGroups = fetchPageGroups($id);
+          if ($pageGroups)
+            $allPages[$name]['permissions'] = $pageGroups;
+          else
+            $allPages[$name]['permissions'] = array();
+        }
+        
+        //Delete pages from DB
+        if (count($deletions) > 0) {
+            deletePages($deletions);
+        }
+    
+        return $allPages;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+    }
+}
+
+// Link/unlink the specified group with the specified page.  Recommend root access only.
+function updatePageGroupLink($page_id, $group_id, $checked){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    //Check if selected page exists
+    if(!pageIdExists($page_id)){
+        addAlert("danger", "I'm sorry, the page id you specified is invalid!");
+        return false;
+    }
+    
+    //TODO: Check if selected group exists
+    
+    $pageDetails = fetchPageDetails($page_id); //Fetch information specific to page
+    
+    // Determine if we're changing the 'private' status, or a specific group
+    if ($group_id == "private"){
+        // Set as private if checked=1, otherwise set as 0
+        updatePrivate($page_id, $checked);
+        return true;
+    } else {
+        // Get the current page groups
+        $pageGroups = fetchPageGroups($page_id);
+        
+        // Add the group if checked=1 and the page doesn't already have that group assigned
+        if ($checked == "1") {
+            if (!isset($pageGroups[$group_id])){
+                addPage($page_id, $group_id);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (isset($pageGroups[$group_id])){
+                removePage($page_id, $group_id);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
+
 ?>
