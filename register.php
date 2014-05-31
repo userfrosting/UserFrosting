@@ -99,7 +99,7 @@ if(isUserLoggedIn()) {
       <div class="jumbotron">
         <h1>Let's get started!</h1>
         <p class="lead">Registration is fast and simple.</p>
-		<form name='newUser' class='form-horizontal' role='form' action='user_create_user.php' method='post'>
+		<form name='newUser' class='form-horizontal' role='form' action='api/create_user.php' method='post'>
 		  <div class="row">
 				<div id='display-alerts' class="col-lg-12">
 		  
@@ -108,13 +108,13 @@ if(isUserLoggedIn()) {
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">User Name</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="User Name" name = 'username' value=''>
+			  <input type="text" class="form-control" placeholder="User Name" name = 'user_name' value=''>
 			</div>
 		  </div>
 		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Display Name</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="Display Name" name='displayname'>
+			  <input type="text" class="form-control" placeholder="Display Name" name='display_name'>
 			</div>
 		  </div>
 		  <div class="form-group">

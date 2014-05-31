@@ -30,6 +30,7 @@ THE SOFTWARE.
 */
 
 require_once("db_functions.php");
+require_once("class.mail.php");
 
 /******************************************************************************************************************
 
@@ -99,6 +100,121 @@ function loadUsersInGroup($group_id){
     }
     
     return fetchGroupUsers($group_id);
+}
+
+// Create a user with the specified fields.  Set require_activation to 'true' if you want an activation email to be sent.
+// Set admin to 'true' if you are a logged in user creating on behalf of someone else, 'false' if you are registering from the public.
+function createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin) {
+    // if we're in admin mode, then the user must be logged in and have appropriate permissions
+    if ($admin == "true"){
+        // This block automatically checks this action against the permissions database before running.
+        if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+            addAlert("danger", "Sorry, you do not have permission to access this resource.");
+            return false;
+        }
+    }
+
+    $error_count = 0;
+        
+    // Check values
+    if(minMaxRange(1,25,$user_name))
+	{
+		addAlert("danger", lang("ACCOUNT_USER_CHAR_LIMIT",array(1,25)));
+        $error_count++;
+	}
+	if(!ctype_alnum($user_name)){
+		addAlert("danger", lang("ACCOUNT_USER_INVALID_CHARACTERS"));
+        $error_count++;
+	}
+	if(minMaxRange(1,50,$display_name))
+	{
+		addAlert("danger", lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50)));
+        $error_count++;
+	}
+	if(!isValidName($display_name)){
+		addAlert("danger", lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS"));
+        $error_count++;
+	}
+	if(!isValidEmail($email))
+	{
+		addAlert("danger", lang("ACCOUNT_INVALID_EMAIL"));
+        $error_count++;
+	}
+    if(minMaxRange(1,150,$title)) {
+		addAlert("danger", lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,150)));
+        $error_count++;
+	}
+    if(minMaxRange(8,50,$password) && minMaxRange(8,50,$passwordc))
+	{
+		addAlert("danger", lang("ACCOUNT_PASS_CHAR_LIMIT",array(8,50)));
+        $error_count++;
+	}
+	else if($password != $passwordc)
+	{
+		addAlert("danger", lang("ACCOUNT_PASS_MISMATCH"));
+        $error_count++;
+	}
+	
+	if(usernameExists($user_name)) {
+    	addAlert("danger", lang("ACCOUNT_USERNAME_IN_USE",array($user_name)));
+        $error_count++;
+	}
+	if(displayNameExists($display_name)) {
+		addAlert("danger", lang("ACCOUNT_DISPLAYNAME_IN_USE",array($display_name)));
+        $error_count++;
+	}
+    if(emailExists($email)) {
+        addAlert("danger", lang("ACCOUNT_EMAIL_IN_USE",array($email)));
+        $error_count++;
+    }
+    
+    // Exit on any invalid parameters
+    if($error_count != 0)
+        return false;
+
+    //Construct a secure hash for the plain text password
+    $secure_pass = generateHash($password);
+    
+    //Construct a unique activation token (even if activation is not required)
+    $activation_token = generateActivationToken();
+    $active = 1;
+    
+    //Do we need to require that the user activate their account first?
+    if($require_activation) {
+        global $websiteUrl;
+        
+        //User must activate their account first
+        $active = 0;
+        
+        $mailSender = new userCakeMail();
+        
+        //Build the activation message
+        $activation_message = lang("ACCOUNT_ACTIVATION_MESSAGE",array($websiteUrl, $activation_token));
+        
+        //Define more if you want to build larger structures
+        $hooks = array(
+            "searchStrs" => array("#ACTIVATION-MESSAGE","#ACTIVATION-KEY","#USERNAME#"),
+            "subjectStrs" => array($activation_message,$activation_token,$display_name)
+            );
+        
+        /* Build the template - Optional, you can just use the sendMail function 
+        Instead to pass a message. */
+        // If there is a mail failure, fatal error
+        if(!$mailSender->newTemplateMsg("new-registration.txt",$hooks)) {
+            addAlert("danger", lang("MAIL_ERROR"));
+            return false;
+        } else {
+            //Send the mail. Specify users email here and subject. 
+            //SendMail can have a third paremeter for message if you do not wish to build a template.    
+            if(!$mailSender->sendMail($email, "Please activate your account")) {
+                addAlert("danger", lang("MAIL_ERROR"));
+                return false;
+            }
+        }   
+    }
+
+    // Insert the user into the database and return the new user's id
+    return addUser($user_name, $display_name, $title, $secure_pass, $email, $active, $activation_token);
 }
 
 //Change a user from inactive to active based on their user id
@@ -200,8 +316,8 @@ function updateUserTitle($user_id, $title) {
     }
 
     //Validate title
-	if(minMaxRange(1,50,$title)) {
-		addAlert("danger", lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50)));
+	if(minMaxRange(1,150,$title)) {
+		addAlert("danger", lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,150)));
         return false;
 	}
 
@@ -265,6 +381,8 @@ function deleteUser($user_id){
     
     return removeUser($user_id);
 }
+
+/******************** group functions ******************/
 
 // Load complete information on all user groups.
 function loadGroups(){

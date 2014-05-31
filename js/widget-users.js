@@ -399,12 +399,14 @@ function createUser(dialog_id) {
 	var data = {
 		user_name: $('#' + dialog_id + ' input[name="user_name"]' ).val(),
 		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
-		user_title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
+		title: $('#' + dialog_id + ' input[name="user_title"]' ).val(),
 		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
-		add_permissions: add_permissions.join(','),
+		add_groups: add_permissions.join(','),
 		password: $('#' + dialog_id + ' input[name="password"]' ).val(),
 		passwordc: $('#' + dialog_id + ' input[name="passwordc"]' ).val(),
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
+		admin: "true",
+		skip_activation: "true",
 		ajaxMode: "true"
 	}
 	

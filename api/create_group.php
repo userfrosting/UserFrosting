@@ -45,6 +45,11 @@ if (!isUserLoggedIn()){
 $validator = new Validator();
 $group_name = $validator->requiredPostVar('group_name');
 
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
 //Forms posted
 if($group_name) {
 	if (!createGroup($group_name)){

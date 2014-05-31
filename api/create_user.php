@@ -30,124 +30,182 @@ THE SOFTWARE.
 */
 
 
-// Create a user from the admin panel.
+// Create a new user.
 // Request method: POST
 
-require_once("./models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to create a user.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
+$validator = new Validator();
+// POST: user_name, display_name, email, title, password, passwordc, [admin, add_groups, skip_activation, csrf_token]
+
+// Check if request is from public or backend
+$admin = $validator->optionalPostVar('admin');
+
+if ($admin == "true"){
+  // Admin mode must be from a logged in user
+  if (!isUserLoggedIn()){
+	  addAlert("danger", "You must be logged in to access this resource.");
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	  exit();
   }
-  exit();
+  
+  $csrf_token = $validator->requiredPostVar('csrf_token');
+  
+  // Validate csrf token
+  if (!$csrf_token or !$loggedInUser->csrf_validate(trim($csrf_token))){
+	  addAlert("danger", lang("ACCESS_DENIED"));
+	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		echo json_encode(array("errors" => 1, "successes" => 0));
+	  } else {
+		header('Location: ../register.php');
+	  }
+	  exit();
+  }
+  
+} else {
+  global $can_register;
+  
+  if (!userIdExists('1')){
+	  addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
+	  header("Location: ../install/register_root.php");
+	  exit();
+  }
+  
+  // If registration is disabled, send them back to the home page with an error message
+  if (!$can_register){
+	  addAlert("danger", lang("ACCOUNT_REGISTRATION_DISABLED"));
+	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		echo json_encode(array("errors" => 1, "successes" => 0));
+	  } else {
+		  header("Location: ../login.php");
+	  }
+	  exit();
+  }
+  
+  //Prevent the user visiting the logged in page if he/she is already logged in
+  if(isUserLoggedIn()) {
+	  addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
+	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		echo json_encode(array("errors" => 1, "successes" => 0));
+	  } else {
+		  header("Location: ../account.php");
+	  }
+	  exit();
+  }
 }
 
-//Forms posted
-if (!empty($_POST)) {
-	$errors = array();
-	$username = trim($_POST["user_name"]);
-	$displayname = trim($_POST["display_name"]);
-	$email = trim($_POST["email"]);
-	$title = trim($_POST["user_title"]);
-	$add_permissions = trim($_POST["add_permissions"]);
-	$password = trim($_POST["password"]);
-	$confirm_pass = trim($_POST["passwordc"]);
-	$csrf_token = trim($_POST["csrf_token"]);
-	
-	if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["csrf_token"]))){
-	  $errors[] = lang("ACCESS_DENIED");
-	}
-	if(minMaxRange(1,25,$username))
-	{
-		$errors[] = lang("ACCOUNT_USER_CHAR_LIMIT",array(1,25));
-	}
-	if(!ctype_alnum($username)){
-		$errors[] = lang("ACCOUNT_USER_INVALID_CHARACTERS");
-	}
-	if(minMaxRange(1,50,$displayname))
-	{
-		$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50));
-	}
-	if(minMaxRange(8,50,$password) && minMaxRange(8,50,$confirm_pass))
-	{
-		$errors[] = lang("ACCOUNT_PASS_CHAR_LIMIT",array(8,50));
-	}
-	else if($password != $confirm_pass)
-	{
-		$errors[] = lang("ACCOUNT_PASS_MISMATCH");
-	}
-	if(!isValidEmail($email))
-	{
-		$errors[] = lang("ACCOUNT_INVALID_EMAIL");
-	}
-	
-	$new_user_id = "";
-	
-	//End data validation
-	if(count($errors) == 0)
-	{	
-		//Construct a user object
-		$user = new User($username, $displayname, $title, $password, $email);
-		
-		//Checking this flag tells us whether there were any errors such as possible data duplication occured
-		if(!$user->status)
-		{
-			if($user->username_taken) $errors[] = lang("ACCOUNT_USERNAME_IN_USE",array($username));
-			if($user->displayname_taken) $errors[] = lang("ACCOUNT_DISPLAYNAME_IN_USE",array($displayname));
-			if($user->email_taken) 	  $errors[] = lang("ACCOUNT_EMAIL_IN_USE",array($email));		
-		}
-		else
-		{
-			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
-			$new_user_id = $user->addUser();
-			if($new_user_id == -1)
-			{
-				if($user->mail_failure) $errors[] = lang("MAIL_ERROR");
-				if($user->sql_failure)  $errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
-	// If everything went well, add the specified permissions for the user
-	if(count($errors) == 0) {
-		// Add initial permissions
-		// Convert string of comma-separated permission_id's into array
-		$add_permissions_arr = explode(',',$add_permissions);
-		$add = array();
-		foreach ($add_permissions_arr as $permission_id){
-				$add[$permission_id] = $permission_id;
-		}
-		if ($addition_count = addUserToGroups($add, $new_user_id)){
-			$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
-		}
-		else {
-			$errors[] = lang("SQL_ERROR");
-		}
-
-		$successes[] = lang("ACCOUNT_CREATION_COMPLETE", array($username));
-	}	
+$user_name = trim($validator->requiredPostVar('user_name'));
+$display_name = trim($validator->requiredPostVar('display_name'));
+$email = trim($validator->requiredPostVar('email'));
+// If we're in admin mode, require title.  Otherwise, use the default title
+if ($admin == "true"){
+  $title = trim($validator->requiredPostVar('title'));
 } else {
-	$errors[] = lang("NO_DATA");
+  $title = $new_user_title;
+}
+// Don't trim passwords
+$password = $validator->requiredPostVar('password');
+$passwordc = $validator->requiredPostVar('passwordc');
+
+// Requires admin mode and appropriate permits
+$add_groups = $validator->optionalPostVar('add_groups');
+$skip_activation = $validator->optionalPostVar('skip_activation');
+
+// Required for non-admin mode
+$captcha = $validator->optionalPostVar('captcha');
+
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
+$error_count = count($validator->errors);
+
+// Check captcha if not in admin mode
+if ($admin != "true"){
+  if (!$captcha || md5($captcha) != $_SESSION['captcha']){
+	  addAlert("danger", lang("CAPTCHA_FAIL"));
+	  $error_count++;
+  }
+}
+
+if ($error_count == 0){
+    global $emailActivation;
+
+	// Use the global email activation setting unless we're told to skip it
+	if ($admin == "true" && $skip_activation == "true")
+	  $require_activation = false;
+	else  
+	  $require_activation = $emailActivation;
+	
+	// Try to create the new user
+	if ($new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin)){
+	  	if ($require_activation)
+		  // Activation required
+		  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE2"));
+		else
+		  // No activation required
+		  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1"));
+	} else {
+		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		  echo json_encode(array("errors" => 1, "successes" => 0));
+		} else {
+		  header('Location: ../register.php');
+		}
+		exit();
+	}
+	
+	// If creation succeeds, try to add groups
+	
+	// If we're in admin mode and add_groups is specified, try to add those groups
+	if ($admin == "true" && $add_groups){
+	  // Convert string of comma-separated group_id's into array
+	  $group_ids_arr = explode(',',$add_groups);
+	  $add = array();
+	  foreach ($group_ids_arr as $group_id){
+		$add[$group_id] = $group_id;
+	  }
+	  if (!$addition_count = addUserToGroups($new_user_id, $add)){
+		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		  echo json_encode(array("errors" => 1, "successes" => 0));
+		} else {
+		  header('Location: ../register.php');
+		}
+		exit();
+	  }	
+	// Otherwise, add default groups for new users
+	} else {
+	  if (addUserToDefaultGroups($new_user_id)){
+		// Uncomment this if you want self-registered users to know about permission groups
+		//$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
+	  } else {
+		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		  echo json_encode(array("errors" => 1, "successes" => 0));
+		} else {
+		  header('Location: ../register.php');
+		}
+		exit();
+	  }
+	}
+	// Account creation was successful!
+	addAlert("success", lang("ACCOUNT_CREATION_COMPLETE", array($user_name)));	
+} else {
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header('Location: ../register.php');
+	}
+	exit();
 }
 
 restore_error_handler();
-
-foreach ($errors as $error){
-  addAlert("danger", $error);
-}
-foreach ($successes as $success){
-  addAlert("success", $success);
-}
   
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => 0,
+	"successes" => 1));
 } else {
   header('Location: ' . getReferralPage());
   exit();

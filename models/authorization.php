@@ -72,7 +72,6 @@ function checkActionPermission($action_function, $args) {
     
     // Error if user is not logged in
     if (!isUserLoggedIn()){
-        //echo "FAILED: action '$action_function' does not exist.<br><br>";
         return false;
     }    
     

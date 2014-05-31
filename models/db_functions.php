@@ -1341,7 +1341,7 @@ function addUserToDefaultGroups($user_id){
         
         $stmt = $db->prepare($query);
 
-        if (!$stmt->execute($sqlVars)){
+        if (!$stmt->execute()){
             // Error
             return false;
         }

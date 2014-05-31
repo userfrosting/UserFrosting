@@ -49,6 +49,11 @@ $rm_groups = $validator->optionalPostVar('remove_permissions');
 $add_groups = $validator->optionalPostVar('add_permissions');
 $enabled = $validator->optionalPostVar('enabled');
 
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
 // Validate csrf token
 if (!$csrf_token or !$loggedInUser->csrf_validate(trim($csrf_token))){
 	addAlert("danger", lang("ACCESS_DENIED"));

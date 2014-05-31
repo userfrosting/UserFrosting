@@ -64,8 +64,9 @@ defined("SITE_ROOT")
 
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
-	
-$mail_templates_dir = "models/mail-templates/";
+
+defined("MAIL_TEMPLATES")
+	or define("MAIL_TEMPLATES", dirname(__FILE__) . "/mail-templates/");
 	
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
@@ -88,7 +89,6 @@ require_once("authorization.php");
 require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");
-require_once("class.newuser.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
