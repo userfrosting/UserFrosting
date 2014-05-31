@@ -73,29 +73,29 @@ setReferralPage($_SERVER['PHP_SELF']);
 		<h1>Account Settings</h1>
 		<div class="row">
 		  <div class="col-lg-6">
-		  <form class="form-horizontal" role="form" name="updateAccount" action="user_update_account_settings.php" method="post">
+		  <form class="form-horizontal" role="form" name="updateAccount" action="update_user.php" method="post">
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Email</label>
 			<div class="col-sm-8">
-			  <input type="email" class="form-control" placeholder="Email" name = 'email' value=''>
+			  <input type="email" class="form-control" placeholder="Email" name='email' value=''>
 			</div>
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Current Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Current Password" name='password'>
+			  <input type="password" class="form-control" placeholder="Current Password" name='passwordcheck'>
 			</div>
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">New Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="New Password" name='passwordc'>
+			  <input type="password" class="form-control" placeholder="New Password" name='password'>
 			</div>
 		  </div>
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Confirm New Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Confirm New Password" name='passwordcheck'>
+			  <input type="password" class="form-control" placeholder="Confirm New Password" name='passwordc'>
 			</div>
 		  </div>
 		  
@@ -104,6 +104,8 @@ setReferralPage($_SERVER['PHP_SELF']);
 			  <button type="submit" class="btn btn-success submit" value='Update'>Update</button>
 			</div>
 		  </div>
+		  <input type="hidden" name="csrf_token" value="<?php echo $loggedInUser->csrf_token; ?>" />
+		  <input type="hidden" name="user_id" value="0" />
 		  </form>
 		  </div>
 		</div>
@@ -128,7 +130,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 
 		  var request;
 		  $("form[name='updateAccount']").submit(function(event){
-			var url = 'user_update_account_settings.php';
+			var url = APIPATH + 'update_user.php';
 			// abort any pending request
 			if (request) {
 				request.abort();

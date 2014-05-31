@@ -330,14 +330,37 @@ function updateUserTitle($user_id, $title) {
 }
 
 //Update a user's password (hashed value)
-function updateUserPassword($user_id, $password) {
+function updateUserPassword($user_id, $password, $passwordc) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
         return false;
     }
     
-    return updateUserField($user_id, 'password', $password);
+    if($password == "") {
+		addAlert("danger", lang("ACCOUNT_SPECIFY_NEW_PASSWORD"));
+        return false;
+    } else if($passwordc == "") {
+		addAlert("danger", lang("ACCOUNT_SPECIFY_CONFIRM_PASSWORD"));
+        return false;
+    }
+    else if(minMaxRange(8,50,$password)) {	
+        addAlert("danger", lang("ACCOUNT_NEW_PASSWORD_LENGTH",array(8,50)));
+        return false;
+    }
+    else if($password != $passwordc) {
+        addAlert("danger", lang("ACCOUNT_PASS_MISMATCH"));
+        return false;
+    }
+	
+    // Hash the user's password and update
+    $secure_pass = generateHash($password);
+	if (updateUserField($user_id, 'password', $secure_pass)){
+        addAlert("success", lang("ACCOUNT_PASSWORD_UPDATED"));
+        return $secure_pass;
+    } else {
+        return false;
+    }
 }
 
 // Update a user as enabled ($enabled = 1) or disabled (0)
