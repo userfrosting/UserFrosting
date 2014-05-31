@@ -58,7 +58,7 @@ foreach ($validator->errors as $error){
 
 if ($user_id){
   // Special case to load groups for the logged in user
-  if (strtolower($user_id) == "self"){
+  if ($user_id == "0"){
     $user_id = $loggedInUser->user_id;
   }
   

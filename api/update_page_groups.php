@@ -39,28 +39,35 @@ if (!isUserLoggedIn()){
   echo json_encode(array("errors" => 1, "successes" => 0));
   exit();
 }
-	
-$languages = getLanguageFiles(); //Retrieve list of language files
-$templates = getTemplateFiles(); //Retrieve list of template files
 
-//Retrieve settings
-if (!($result = loadSiteSettings())){
+// POST: page_id, group_id, checked.  if group_id is set to "private", will change private/public status of page.
+
+$validator = new Validator();
+$page_id = $validator->requiredPostVar('page_id');
+$group_id = $validator->requiredPostVar('group_id');
+$checked = $validator->requiredPostVar('checked');
+
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
+//Forms posted
+if($page_id !== null && $group_id !== null && $checked !== null ){
+  if (!updatePageGroupLink($page_id, $group_id, $checked)){
 	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
+  }
 }
-
-$result['language_options'] = $languages;
-$result['template_options'] = $templates;
-
-
-if (!file_exists($language)) {
-	$language = "models/languages/en.php";
-}
-
-if(!isset($language)) $language = "models/languages/en.php";
 
 restore_error_handler();
 
-echo json_encode($result, JSON_FORCE_OBJECT);
-
+if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+  echo json_encode(array(
+	"errors" => 0,
+	"successes" => 1));
+} else {
+  header('Location: ' . getReferralPage());
+  exit();
+}
 ?>

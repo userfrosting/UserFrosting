@@ -144,15 +144,15 @@ function sitePagesWidget(widget_id, options) {
 			var row = $(this).closest('tr');
 			var btn = $(this);
 			var page_id = btn.data('page-id');
-			var permission_id = btn.data('permission-id');
+			var group_id = btn.data('permission-id');
 			var checked = $(this).prop('checked') ? 1 : 0;
-			var url = APIPATH + "update_page_permission.php";
+			var url = APIPATH + "update_page_groups.php";
 			$.ajax({  
 				type: "POST",  
 				url: url,  
 				data: {
 					page_id: page_id,
-					permission_id: permission_id,
+					group_id: group_id,
 					checked: checked,
 					ajaxMode: "true"
 				},		  

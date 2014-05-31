@@ -390,7 +390,7 @@ function userLoadPermissions() {
 	  type: "GET",  
 	  url: url,
 	  async: false,
-	  data: {user_id: 'self'}
+	  data: {user_id: '0'}
 	}).responseText;
 	var resultJSON = processJSONResult(result);
 	return resultJSON;

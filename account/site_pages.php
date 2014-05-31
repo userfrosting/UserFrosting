@@ -54,9 +54,9 @@ setReferralPage($_SERVER['PHP_SELF']);
 	<?php require_once("includes.php");  ?>
 	 
     <!-- Page Specific Plugins -->
-	<script src="js/jquery.tablesorter.js"></script>
-	<script src="js/tables.js"></script>	
-	<script src="js/widget-pages.js"></script>
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/tables.js"></script>	
+	<script src="../js/widget-pages.js"></script>
   </head>
 
   <body>

@@ -67,6 +67,12 @@ defined("MENU_TEMPLATES")
 
 defined("MAIL_TEMPLATES")
 	or define("MAIL_TEMPLATES", dirname(__FILE__) . "/mail-templates/");
+
+// Include paths for pages to add to site page management
+$page_include_paths = array(
+	"account"
+	// Define more include paths here
+);
 	
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.

@@ -41,7 +41,7 @@ if (!isUserLoggedIn()){
 }
 
 // GET Parameters: [user_id, group_id, limit]
-// If a user_id is specified, attempt to load information for the specified user (self if set to "self").
+// If a user_id is specified, attempt to load information for the specified user (self if set to 0).
 // If a group_id is specified, attempt to load information for all users in the specified group.
 // Otherwise, attempt to load all users.
 $validator = new Validator();
@@ -56,7 +56,7 @@ foreach ($validator->errors as $error){
 
 if ($user_id){
   // Special case to load groups for the logged in user
-  if (strtolower($user_id) == "self"){
+  if ($user_id == "0"){
     $user_id = $loggedInUser->user_id;
   }
   if (!$results = loadUser($user_id)) {

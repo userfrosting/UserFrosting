@@ -50,14 +50,15 @@ function getTemplateFiles()
 	return $languages;
 }
 
-//Retrieve a list of all .php files in root files folder
-function getPageFiles()
+//Retrieve a list of all .php files in a given directory
+function getPageFiles($directory)
 {
-	$directory = "";
-	$pages = glob($directory . "*.php");
+	$pages = glob("../" . $directory . "/*.php");
+	$row = array();
 	//print each file name
 	foreach ($pages as $page){
-		$row[$page] = $page;
+		$page_with_path = $directory . "/" . basename($page);
+		$row[$page_with_path] = $page_with_path;
 	}
 	return $row;
 }

@@ -453,7 +453,7 @@ function fetchUserHomePage($user_id){
             return $row['page'];
         else {
             addAlert("danger", "The user does not appear to have a primary group assigned.");
-            return false;
+            return "404.php";
         }
         
         $stmt = null;
@@ -1649,6 +1649,8 @@ function pageIdExists($page_id) {
         $stmt = $db->prepare($query);
         
         $sqlVars[':page_id'] = $page_id;
+		
+		$stmt->execute($sqlVars);
     
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -1972,7 +1974,7 @@ function fetchPageGroups($page_id) {
     
         $sqlVars[':page_id'] = $page_id;
     
-        if (!$stmt->execute()){
+        if (!$stmt->execute($sqlVars)){
             // Error
             return false;
         }
@@ -2016,7 +2018,7 @@ function fetchGroupPages($group_id) {
     
         $sqlVars[':page_id'] = $page_id;
     
-        if (!$stmt->execute()){
+        if (!$stmt->execute($sqlVars)){
             // Error
             return false;
         }

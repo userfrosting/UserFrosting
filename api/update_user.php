@@ -45,9 +45,15 @@ $user_id = $validator->requiredNumericPostVar('user_id');
 $display_name = trim($validator->optionalPostVar('display_name'));
 $email = trim($validator->optionalPostVar('email'));
 $title = trim($validator->optionalPostVar('title'));
+
 $rm_groups = $validator->optionalPostVar('remove_permissions');
 $add_groups = $validator->optionalPostVar('add_permissions');
 $enabled = $validator->optionalPostVar('enabled');
+
+// For updating passwords.  The user's current password must also be included (passwordcheck) if they are resetting their own password.
+$password = $validator->optionalPostVar('password');
+$passwordc = $validator->optionalPostVar('passwordc');
+$passwordcheck = $validator->optionalPostVar('passwordcheck');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
@@ -59,6 +65,13 @@ if (!$csrf_token or !$loggedInUser->csrf_validate(trim($csrf_token))){
 	addAlert("danger", lang("ACCESS_DENIED"));
     echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
+}
+
+// Special case to update the logged in user (self)
+$self = false;
+if ($user_id == "0"){
+	$self = true;
+	$user_id = $loggedInUser->user_id;
 }
 
 //Check if selected user exists
@@ -112,6 +125,45 @@ if ($enabled !== null){
 	if (!updateUserEnabled($user_id, $enabled)){
 		$error_count++;
 	} else {
+		$success_count++;
+	}
+}
+
+// Update password if specified
+if ($password) {
+	// If updating own password, validate their current password
+	if ($self){
+		//Confirm the hashes match before updating a users password
+		$entered_pass = generateHash($passwordcheck ,$loggedInUser->hash_pw);
+		
+		if ($passwordcheck == ""){
+			addAlert("danger", lang("ACCOUNT_SPECIFY_PASSWORD"));
+			echo json_encode(array("errors" => 1, "successes" => 0));
+			exit();
+		} else if($entered_pass != $loggedInUser->hash_pw) {
+			//No match
+			addAlert("danger", lang("ACCOUNT_PASSWORD_INVALID"));
+			echo json_encode(array("errors" => 1, "successes" => 0));
+			exit();	
+		}	
+	}
+	
+	// Prevent updating if someone attempts to update with the same password
+	$password_hash = generateHash($password, $loggedInUser->hash_pw);
+	
+	if($password_hash == $loggedInUser->hash_pw) {
+		addAlert("danger", lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE"));
+		echo json_encode(array("errors" => 1, "successes" => 0));
+		exit();
+	}
+	
+	if (!$password_hash = updateUserPassword($user_id, $password, $passwordc)){
+		$error_count++;
+	} else {
+		// If we're updating for the currently logged in user, update their hash_pw field
+		if ($self)
+			$loggedInUser->hash_pw = $password_hash;
+	
 		$success_count++;
 	}
 }
