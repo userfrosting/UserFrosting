@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 // Request method: GET
 
-include('../models/db-settings.php');
 include('../models/config.php');
 
 set_error_handler('logAllErrors');
@@ -51,6 +50,7 @@ $validator = new Validator();
 $user_id = $validator->optionalGetVar('user_id');
 $group_id = $validator->optionalGetVar('group_id');
 $all = $validator->optionalGetVar('all');
+$pretty = $validator->optionalGetVar('pretty');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
@@ -86,6 +86,9 @@ if ($user_id){
 
 restore_error_handler();
 
-echo json_encode($results, JSON_HEX_AMP);
-
+if ($pretty){
+  echo prettyPrint(json_encode($results, JSON_PRETTY_PRINT));
+} else {
+  echo json_encode($results);
+}
 ?>

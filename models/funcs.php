@@ -393,4 +393,84 @@ function form_protect($token)
 	{echo '<input type="hidden" name="csrf_token" value="'. $token .'">';}	
 }
 
+// Useful for testing output of API functions
+function prettyPrint( $json )
+{
+    $result = '';
+    $level = 0;
+    $in_quotes = false;
+    $in_escape = false;
+    $ends_line_level = NULL;
+    $json_length = strlen( $json );
+
+    for( $i = 0; $i < $json_length; $i++ ) {
+        $char = $json[$i];
+        $new_line_level = NULL;
+        $post = "";
+        if( $ends_line_level !== NULL ) {
+            $new_line_level = $ends_line_level;
+            $ends_line_level = NULL;
+        }
+        if ( $in_escape ) {
+            $in_escape = false;
+        } else if( $char === '"' ) {
+            $in_quotes = !$in_quotes;
+        } else if( ! $in_quotes ) {
+            switch( $char ) {
+                case '}': case ']':
+                    $level--;
+                    $ends_line_level = NULL;
+                    $new_line_level = $level;
+                    break;
+
+                case '{': case '[':
+                    $level++;
+                case ',':
+                    $ends_line_level = $level;
+                    break;
+
+                case ':':
+                    $post = " ";
+                    break;
+
+                case " ": case "\t": case "\n": case "\r":
+                    $char = "";
+                    $ends_line_level = $new_line_level;
+                    $new_line_level = NULL;
+                    break;
+            }
+        } else if ( $char === '\\' ) {
+            $in_escape = true;
+        }
+        if( $new_line_level !== NULL ) {
+            $result .= "\n".str_repeat( "\t", $new_line_level );
+        }
+        $result .= $char.$post;
+    }
+
+    return $result;
+}
+
+
+// Parse a comment block into a description and array of parameters
+function parseCommentBlock($comment){
+	$lines = explode("\n", $comment);
+	$result = array('description' => "", 'parameters' => array());
+	foreach ($lines as $line){
+		if (!preg_match('/^\s*\/?\*+\/?\s*$/', $line)){
+			// Extract description or parameters
+			if (preg_match('/^\s*\**\s*@param\s+(\w+)\s+\$(\w+)\s+(.*)$/', $line, $matches)){
+				$type = $matches[1];
+				$name = $matches[2];
+				$description = $matches[3];
+				$result['parameters'][$name] = array('type' => $type, 'description' => $description);
+			} else if (preg_match('/^\s*\**\s*(.*)$/', $line, $matches)){
+				$description = $matches[1];
+				$result['description'] .= $description;
+			}
+		}
+	}
+	return $result;
+}
+
 ?>

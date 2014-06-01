@@ -14,9 +14,9 @@ function actionPermitsWidget(widget_id, options) {
         sortRows = [[0,0]];
     }
 
-	var title = "<i class='fa fa-files-o'></i> Access Permits";
+	var title = "<i class='fa fa-key'></i> Access Permits";
 	if (options['title'])
-		title = "<i class='fa fa-files-o'></i> " + options['title'];	
+		title = "<i class='fa fa-key'></i> " + options['title'];	
 
 	var display_errors_id = "";
 	if (options['display_errors_id'])
@@ -42,31 +42,40 @@ function actionPermitsWidget(widget_id, options) {
 		alertWidget('display-alerts');
 		// Don't bother unless there are some records found
 		if (Object.keys(data).length > 0) { 
+			// Get JSON object of all secure functions
+			var secure_functions = loadSecureFunctions();
 			// List each groups's actions and permits
 			jQuery.each(data, function(idx, record) {
-				
-				html += "<div class='h3'>" + record['name'] + "</div>";
+				html += "<h3>Group '" + record['name'] + "' <small>has permission to perform the following actions:</small></h3>";
 				// List actions for this group
 				var action_permits = record['action_permits'];
 				console.log(action_permits);
 				html += "<div class='list-group'>";
-				jQuery.each(action_permits, function(idx_permit, action_permit) {
-					html += "<div class='list-item'>";
-					html += "<div class='h4'>" + action_permit['action'] + "</div>";
-					html += "<div class='h4'><small>Parameters:</small></div>";
+				jQuery.each(action_permits, function(action_idx, action) {
+					html += "<div class='list-group-item'>";
+					var action_name = action['action'];
+					var action_permits = action['permits'];
+					var action_desc = "";
+					var action_params = [];
+					if (secure_functions[action_name]) {
+						action_desc = secure_functions[action_name]['description'];
+						action_params = secure_functions[action_name]['parameters'];
+					}
+					
+					html += "<h4 class='list-group-item-heading'>" + action_name + " <small>" + action_desc + "</small></h4>";
+					html += "<h5>...with parameters:</h5>";
+					html += "<div class='list-group'>";
 					// List parameters for the given action
-					
-					var permits = action_permit['permits'];
-					html += "<div class='h4'><small>Permits:</small></div>";
-					html += "<p>" + permits + "</p></div>";
-					
-					/*
-					jQuery.each(permits, function(permit) {
-						console.log(permit);
-						
-					
+					jQuery.each(action_params, function(name, param) {
+						html += "<div class='list-group-item'><em>" + name + "</em> : " + param['description'] + " (" + param['type'] + ")</div>";
 					});
-					*/
+					html += "</div>";
+					html += "<h5>...if they meet ALL of the following criteria:</h5>";
+					html += "<div class='list-group'>";
+					jQuery.each(action_permits, function(permit_name, permit_params) {
+						html += "<div class='list-group-item'>" + permit_name + "(" + permit_params.join(",") + ")</div>";
+					});
+					html += "</div></div>";
 				});
 				html += "</div>";
 			});

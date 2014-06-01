@@ -29,7 +29,7 @@ class PermissionValidators {
         return true;
     }
     
-    /** Return true if the specified user_id exists and matches the logged in user, false otherwise. */
+    /** Return true if the specified user_id exists and matches the logged in user, false otherwise. Use this function when you want a user to be able to perform an action involving their own account. */
     static function isLoggedInUser($user_id){
         global $loggedInUser;
         if ($loggedInUser->user_id == $user_id)
@@ -38,6 +38,12 @@ class PermissionValidators {
             return false;
     }
 
+    /** Return true if the user is in the specified group */
+    static function isUserInGroup($group_id){
+        global $loggedInUser;
+        return userInGroup($loggedInUser->user_id, $group_id);
+    }
+    
     /** Return true if the specified user_id exists and is an active user, false otherwise. */
     static function isActive($user_id){
         return true;
@@ -143,7 +149,7 @@ function checkActionPermits($permits, $args){
         $permit_name = $permit_param_str[1];
         $mappedArgs = array();
         // Extract and map arguments, if any
-        if ($permit_param_str[2] and $permit_params = split(',', $permit_param_str[2])){
+        if ($permit_param_str[2] and $permit_params = explode(',', $permit_param_str[2])){
             // For each parameter, try to match its value from the arguments, or the logged in user
             foreach ($permit_params as $param){
                 //echo "Mapping permit param: $param<br>";

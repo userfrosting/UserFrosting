@@ -32,6 +32,8 @@ THE SOFTWARE.
 require_once("db_functions.php");
 require_once("class.mail.php");
 
+// phpDoc Blocks as per the phpDocumentor standard: http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.param.pkg.html
+
 /******************************************************************************************************************
 
 Secured functions.  These functions will automatically check the logged in user's permissions against the permit
@@ -39,7 +41,10 @@ database before proceeding.
 
 *******************************************************************************************************************/
 
-// Load data for specified user
+/**
+ * Load data for specified user.
+ * @param int $user_id the id of the user to load.
+ */
 function loadUser($user_id){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -50,7 +55,10 @@ function loadUser($user_id){
     return fetchUser($user_id);
 }
 
-// Load data for all users.  TODO: also load group membership
+/**
+ * Load data for all users.  TODO: also load group membership
+ * @param int $limit (optional) the maximum number of users to return.
+ */
 function loadUsers($limit = NULL){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -92,6 +100,10 @@ function loadUsers($limit = NULL){
     }
 }
 
+/**
+ * Load data for all users in a specified group.
+ * @param int $group_id the id of the group to search for users.
+ */
 function loadUsersInGroup($group_id){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -419,7 +431,10 @@ function loadGroups(){
     return fetchAllGroups();
 }
 
-// Load information for a specified group.
+/**
+ * Load data for a specified group
+ * @param int $group_id the id of the group to load.
+ */
 function loadGroup($group_id){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {

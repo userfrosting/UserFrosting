@@ -2216,8 +2216,25 @@ function fetchAllGroupPermits() {
 				$groups[$group_id]['name'] = $r['name'];
 				$groups[$group_id]['action_permits'] = array();
 			}
-			$permit = array('action' => $r['action'], 'permits' => $r['permits']);
-			$groups[$group_id]['action_permits'][] = $permit;
+			// Parse out permit string into array of permit functions and parameters
+			$permits_arr = explode('&', $r['permits']);
+			$permits_by_arg = array();
+			foreach ($permits_arr as $permit){
+				$permit_with_params = array();
+				preg_match('/(.*?)\((.*?)\)/', $permit, $permit_param_str);
+				$permit_name = $permit_param_str[1];
+				//$permit_with_params['name'] = $permit_name;
+				// Extract and map parameters, if any
+				if ($permit_param_str[2] and $permit_params = explode(',', $permit_param_str[2])){
+					$permit_with_params = array();
+					foreach ($permit_params as $param){
+						$permit_with_params[] = $param;
+					}
+				}				
+				$permits_by_arg[$permit_name] = $permit_with_params;
+			}
+			$action = array('action' => $r['action'], 'permits' => $permits_by_arg);
+			$groups[$group_id]['action_permits'][] = $action;
         }
         $stmt = null;
         
