@@ -44,104 +44,81 @@ if (userIdExists('1')){
 	exit();
 }
 
-//Forms posted
-if(!empty($_POST))
-{
-	$new_user_id = "";
-	$errors = array();
-	$email = trim($_POST["email"]);
-	$username = trim($_POST["username"]);
-	$displayname = trim($_POST["displayname"]);
-	$password = trim($_POST["password"]);
-	$confirm_pass = trim($_POST["passwordc"]);
-	$token = trim($_POST["token"]);
-	
-	if ($token != $root_account_config_token)
-	{
-		$errors[] = lang("CONFIG_TOKEN_MISMATCH");
-	}
-	if(minMaxRange(1,25,$username))
-	{
-		$errors[] = lang("ACCOUNT_USER_CHAR_LIMIT",array(1,25));
-	}
-	if(!ctype_alnum($username)){
-		$errors[] = lang("ACCOUNT_USER_INVALID_CHARACTERS");
-	}
-	if(minMaxRange(1,50,$displayname))
-	{
-		$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50));
-	}
-	if(!isValidName($displayname)){
-		$errors[] = lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS");
-	}
-	if(minMaxRange(8,50,$password) && minMaxRange(8,50,$confirm_pass))
-	{
-		$errors[] = lang("ACCOUNT_PASS_CHAR_LIMIT",array(8,50));
-	}
-	else if($password != $confirm_pass)
-	{
-		$errors[] = lang("ACCOUNT_PASS_MISMATCH");
-	}
-	if(!isValidEmail($email))
-	{
-		$errors[] = lang("ACCOUNT_INVALID_EMAIL");
-	}
-	//End data validation
-	if(count($errors) == 0)
-	{	
-		//Construct a user object
-		$user = new User($username, $displayname, 'Master Account', $password, $email);
-		
-		//Checking this flag tells us whether there were any errors such as possible data duplication occured
-		if(!$user->status)
-		{
-			if($user->username_taken) $errors[] = lang("ACCOUNT_USERNAME_IN_USE",array($username));
-			if($user->displayname_taken) $errors[] = lang("ACCOUNT_DISPLAYNAME_IN_USE",array($displayname));
-			if($user->email_taken) 	  $errors[] = lang("ACCOUNT_EMAIL_IN_USE",array($email));		
-		}
-		else
-		{
-			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
-			//Attempt to add the user to the database, carry out finishing  tasks like emailing the user (if required)
-			$new_user_id = $user->addUser();
-			if($new_user_id == -1)
-			{
-				if($user->mail_failure) $errors[] = lang("MAIL_ERROR");
-				if($user->sql_failure)  $errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
-	
-	// If everything went well, add default groups for the new user
-	if(count($errors) == 0) {
-		if (addUserToDefaultGroups($new_user_id)){
-			// Uncomment this if you want self-registered users to know about permission groups
-			//$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
-		}
-		else {
-			$errors[] = lang("SQL_ERROR");
-		}
-	}
+$validator = new Validator();
+// POST: user_name, display_name, email, password, passwordc, token
+$user_name = trim($validator->requiredPostVar('username'));
+$display_name = trim($validator->requiredPostVar('displayname'));
+$email = trim($validator->requiredPostVar('email'));
+$title = 'Master Account';
+// Don't trim passwords
+$password = $validator->requiredPostVar('password');
+$passwordc = $validator->requiredPostVar('passwordc');
+$token = $validator->requiredPostVar('token');
 
-	if(count($errors) == 0) {
-		// On success, create the success message and delete the activation token
-		deleteConfigParameter('root_account_config_token');
-		$successes[] = "You have successfully created the root account.  Please delete this installation folder and log in via login.php.";
-	}	
-}
-
-foreach ($errors as $error){
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
-foreach ($successes as $success){
-  addAlert("success", $success);
+
+$error_count = count($validator->errors);
+
+// Check token
+if ($token != $root_account_config_token) {
+	addAlert("danger", lang("CONFIG_TOKEN_MISMATCH"));
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header('Location: register_root.php');
+	}
+	exit();
+}
+
+if ($error_count == 0){
+
+	$admin = false;
+	$require_activation = false;
+
+	// Try to create the new user
+	if (!$new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin)) {
+		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		  echo json_encode(array("errors" => 1, "successes" => 0));
+		} else {
+		  header('Location: ../register.php');
+		}
+		exit();
+	}
+	
+	// If creation succeeds, add default groups for new users
+	if (addUserToDefaultGroups($new_user_id)){
+	  // Uncomment this if you want self-registered users to know about permission groups
+	  //$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
+	} else {
+	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		echo json_encode(array("errors" => 1, "successes" => 0));
+	  } else {
+		header('Location: register_root.php');
+	  }
+	  exit();
+	}
+	  
+	// Account creation was successful!
+	// On success, create the success message and delete the activation token
+	deleteConfigParameter('root_account_config_token');
+	addAlert("success", "You have successfully created the root account.  Please delete this installation folder and log in via login.php.");
+} else {
+	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	} else {
+	  header('Location: register_root.php');
+	}
+	exit();
 }
 
 // Send successfully registered users to the completion page, while errors should return them to the registration page.
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => 0,
+	"successes" => 1));
 } else {
   if(count($errors) == 0) {
 	header('Location: complete.php');

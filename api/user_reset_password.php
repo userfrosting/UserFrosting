@@ -31,15 +31,9 @@ THE SOFTWARE.
 
 // Request method: GET or POST
 
-require_once("models/config.php");
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
-
-if (!securePage($_SERVER['PHP_SELF'])){
-	addAlert("danger", "Whoops, looks like you don't have permission to reset your password.");
-	header("Location: " . getReferralPage());
-	exit();
-}
 
 //User has confirmed they want their password changed.  Generate a random password and email it to them.
 if(!empty($_GET["confirm"]))

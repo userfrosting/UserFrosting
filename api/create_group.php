@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,51 +29,47 @@ THE SOFTWARE.
 
 */
 
-require_once("models/config.php");
+require_once("../models/config.php");
+
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to delete a permission group.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
-  }
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
   exit();
 }
 
+// TODO: accept home page ids, is_default, and can_delete
+
+$validator = new Validator();
+$group_name = $validator->requiredPostVar('group_name');
+
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
 //Forms posted
-if(!empty($_POST))
-{
-	//Delete permission levels
-	if(!empty($_POST['permission_id'])){
-		$permission_id = $_POST['permission_id'];
-		if ($name = deleteGroup($permission_id)){
-			$successes[] = lang("PERMISSION_DELETION_SUCCESSFUL_NAME", array($name));
-		}
-	} else {
-		$errors[] = lang("NO_DATA");
+if($group_name) {
+	if (!createGroup($group_name)){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	  exit();
 	}
+} else {
+	addAlert("danger", lang("PERMISSION_CHAR_LIMIT", array(1, 50)));
+	echo json_encode(array("errors" => 1, "successes" => 0));
+	exit();
 }
 
 restore_error_handler();
 
-foreach ($errors as $error){
-  addAlert("danger", $error);
-}
-foreach ($successes as $success){
-  addAlert("success", $success);
-}
-
-// Allows for functioning in either ajax mode or graceful degradation to PHP/HTML only
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => 0,
+	"successes" => 1));
 } else {
-  header("Location: " . getReferralPage());
+  header('Location: ' . getReferralPage());
   exit();
 }
-
 ?>

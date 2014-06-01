@@ -54,9 +54,10 @@ setReferralPage($_SERVER['PHP_SELF']);
 	<?php require_once("includes.php");  ?>
 	 
     <!-- Page Specific Plugins -->
-	<script src="js/jquery.tablesorter.js"></script>
-	<script src="js/tables.js"></script>	
-	<script src="js/widget-pages.js"></script>
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/tables.js"></script>	
+	<script src="../js/widget-pages.js"></script>
+	<script src="../js/widget-permits.js"></script>	
   </head>
 
   <body>
@@ -72,6 +73,11 @@ setReferralPage($_SERVER['PHP_SELF']);
   
 		  </div>
 		</div>
+		<div class="row">
+		  <div id="widget-group-access" class="col-lg-12">
+		  
+		  </div>
+		</div> 
 		<div class="row">
 		  <div id="widget-site-pages" class="col-lg-12">
 		  
@@ -93,6 +99,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 			$('.navitem-site-pages').addClass('active');
           });
 
+		  actionPermitsWidget('widget-group-access', {});
 		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts'});
 		});
 	</script>

@@ -29,65 +29,45 @@ THE SOFTWARE.
 
 */
 
-require_once("models/config.php");
-
+require_once("../models/config.php");
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-  addAlert("danger", "Whoops, looks like you don't have permission to create a permission group.");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: " . getReferralPage());
-  }
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
   exit();
 }
 
+$validator = new Validator();
+$group_id = $validator->requiredPostVar('group_id');
+
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
 //Forms posted
-if(!empty($_POST))
-{
-	//Create new permission level
-	if(!empty($_POST['new_permission'])) {
-		$permission = trim($_POST['new_permission']);
-		
-		//Validate request
-		if (groupNameExists($permission)){
-			$errors[] = lang("PERMISSION_NAME_IN_USE", array($permission));
-		}
-		elseif (minMaxRange(1, 50, $permission)){
-			$errors[] = lang("PERMISSION_CHAR_LIMIT", array(1, 50));	
-		}
-		else{
-			if (createGroup($permission)) {
-			$successes[] = lang("PERMISSION_CREATION_SUCCESSFUL", array($permission));
-		}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	} else {
-		$errors[] = lang("PERMISSION_CHAR_LIMIT", array(1, 50));	
+if($group_id){
+	if (!deleteGroup($group_id)){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	  exit();
 	}
 } else {
-	$errors[] = lang("NO_DATA");
+	echo json_encode(array("errors" => 1, "successes" => 0));
+	exit();
 }
 
 restore_error_handler();
 
-foreach ($errors as $error){
-  addAlert("danger", $error);
-}
-foreach ($successes as $success){
-  addAlert("success", $success);
-}
-  
+// Allows for functioning in either ajax mode or graceful degradation to PHP/HTML only
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => 0,
+	"successes" => 1));
 } else {
-  header('Location: ' . getReferralPage());
+  header("Location: " . getReferralPage());
   exit();
 }
+
 ?>

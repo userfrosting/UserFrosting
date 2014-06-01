@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 // Request method: GET
 
-include('../models/db-settings.php');
 include('../models/config.php');
 
 set_error_handler('logAllErrors');
@@ -43,23 +42,53 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-// GET Parameters: [user_id]
+// GET Parameters: [user_id, group_id]
+// If a user_id is specified, attempt to load action permits explicitly defined for the specified user.
+// If a group_id is specified, attempt to load action permits for the specified group.
+// Otherwise, attempt to load all action permits for either groups or users.
 $validator = new Validator();
 $user_id = $validator->optionalGetVar('user_id');
+$group_id = $validator->optionalGetVar('group_id');
+$all = $validator->optionalGetVar('all');
+$pretty = $validator->optionalGetVar('pretty');
 
-// If no user_id is specified, use the id of the currently logged in user.
-if (!$user_id){
-	$user_id = $loggedInUser->user_id;
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
 }
-	
-// Attempt to load information for the specified user.
-if (!($results = loadUserGroups($user_id))){
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
+
+if ($user_id){
+  // Special case to load groups for the logged in user
+  if ($user_id == "0"){
+    $user_id = $loggedInUser->user_id;
+  }
+  
+  // Attempt to load action permits for the specified user.
+  if (!($results = loadUserActionPermits($user_id))){
+      echo json_encode(array("errors" => 1, "successes" => 0));
+      exit();
+  }
+} else if ($group_id){	
+  // Attempt to load action permits for the specified group.
+  if (!($results = loadGroupActionPermits($group_id))){
+      echo json_encode(array("errors" => 1, "successes" => 0));
+      exit();
+  }
+} else {
+  if ($all == "groups"){
+    // Attempt to load action permits for all groups
+    if (!($results = loadGroupActionPermits("all"))){
+        echo json_encode(array("errors" => 1, "successes" => 0));
+        exit();
+    }
+  }
 }
 
 restore_error_handler();
 
-echo json_encode($results);
-
+if ($pretty){
+  echo prettyPrint(json_encode($results, JSON_PRETTY_PRINT));
+} else {
+  echo json_encode($results);
+}
 ?>

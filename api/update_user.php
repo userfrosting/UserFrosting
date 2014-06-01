@@ -28,22 +28,54 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-require_once("models/config.php");
+require_once("../models/config.php");
 set_error_handler('logAllErrors');
 
-// Recommended admin-only access
-if (!securePage($_SERVER['PHP_SELF'])){
-	addAlert("danger", "Whoops, looks like you don't have permission to update a user.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header("Location: " . getReferralPage());
-	}
+if (!isUserLoggedIn()){
+    addAlert("danger", "You must be logged in to access this resource.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
+}
+
+$validator = new Validator();
+// Required: csrf_token, user_id
+$csrf_token = $validator->requiredPostVar('csrf_token');
+$user_id = $validator->requiredNumericPostVar('user_id');
+
+$display_name = trim($validator->optionalPostVar('display_name'));
+$email = trim($validator->optionalPostVar('email'));
+$title = trim($validator->optionalPostVar('title'));
+
+$rm_groups = $validator->optionalPostVar('remove_permissions');
+$add_groups = $validator->optionalPostVar('add_permissions');
+$enabled = $validator->optionalPostVar('enabled');
+
+// For updating passwords.  The user's current password must also be included (passwordcheck) if they are resetting their own password.
+$password = $validator->optionalPostVar('password');
+$passwordc = $validator->optionalPostVar('passwordc');
+$passwordcheck = $validator->optionalPostVar('passwordcheck');
+
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
+// Validate csrf token
+if (!$csrf_token or !$loggedInUser->csrf_validate(trim($csrf_token))){
+	addAlert("danger", lang("ACCESS_DENIED"));
+    echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }
 
+// Special case to update the logged in user (self)
+$self = false;
+if ($user_id == "0"){
+	$self = true;
+	$user_id = $loggedInUser->user_id;
+}
+
 //Check if selected user exists
-if(!isset($_POST['user_id']) or !userIdExists($_POST['user_id'])){
+if(!$user_id or !userIdExists($user_id)){
 	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
 	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 	  echo json_encode(array("errors" => 1, "successes" => 0));
@@ -52,140 +84,124 @@ if(!isset($_POST['user_id']) or !userIdExists($_POST['user_id'])){
 	}
 	exit();
 }
+	
+$userdetails = fetchUserAuthById($user_id); //Fetch user details
 
-// Required: id
-$id = $_POST['user_id'];
+$error_count = 0;
+$success_count = 0;
 
-if (!isset($_POST["csrf_token"]) or !$loggedInUser->csrf_validate(trim($_POST["csrf_token"]))){
-  $errors[] = lang("ACCESS_DENIED");
+//Update display name if specified and different from current value
+if ($display_name && $userdetails['display_name'] != $display_name){
+	if (!updateUserDisplayName($user_id, $display_name)){
+		$error_count++;
+		$display_name = $userdetails['display_name'];
+	} else {
+		$success_count++;
+	}
 } else {
-	
-	$userdetails = fetchUserAuthById($id); //Fetch user details
-	$userPermissions = fetchUserGroups($id);
-	
-	//Update display name
-	if ($userdetails['display_name'] != $_POST['display_name']){
-		$displayname = trim($_POST['display_name']);
+	$display_name = $userdetails['display_name'];
+}
+
+//Update email if specified and different from current value
+if ($email && $userdetails['email'] != $email){
+	if (!updateUserEmail($user_id, $display_name)){
+		$error_count++;
+	} else {
+		$success_count++;
+	}
+}
+
+//Update title if specified and different from current value
+if ($title && $userdetails['title'] != $title){
+	if (!updateUserTitle($user_id, $title)){
+		$error_count++;
+	} else {
+		$success_count++;
+	}
+}
+
+// Update enabled if specified
+if ($enabled !== null){	
+	if (!updateUserEnabled($user_id, $enabled)){
+		$error_count++;
+	} else {
+		$success_count++;
+	}
+}
+
+// Update password if specified
+if ($password) {
+	// If updating own password, validate their current password
+	if ($self){
+		//Confirm the hashes match before updating a users password
+		$entered_pass = generateHash($passwordcheck ,$loggedInUser->hash_pw);
 		
-		//Validate display name
-		if(displayNameExists($displayname))
-		{
-			$errors[] = lang("ACCOUNT_DISPLAYNAME_IN_USE",array($displayname));
-		}
-		elseif(minMaxRange(1,50,$displayname))
-		{
-			$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateUserDisplayName($id, $displayname)){
-				$successes[] = lang("ACCOUNT_DISPLAYNAME_UPDATED", array($displayname));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-		
-	}
-	else {
-		$displayname = $userdetails['display_name'];
+		if ($passwordcheck == ""){
+			addAlert("danger", lang("ACCOUNT_SPECIFY_PASSWORD"));
+			echo json_encode(array("errors" => 1, "successes" => 0));
+			exit();
+		} else if($entered_pass != $loggedInUser->hash_pw) {
+			//No match
+			addAlert("danger", lang("ACCOUNT_PASSWORD_INVALID"));
+			echo json_encode(array("errors" => 1, "successes" => 0));
+			exit();	
+		}	
 	}
 	
-	//Update email
-	if ($userdetails['email'] != $_POST['email']){
-		$email = trim($_POST["email"]);
-		
-		//Validate email
-		if(!isValidEmail($email))
-		{
-			$errors[] = lang("ACCOUNT_INVALID_EMAIL");
-		}
-		elseif(emailExists($email))
-		{
-			$errors[] = lang("ACCOUNT_EMAIL_IN_USE",array($email));
-		}
-		else {
-			if (updateUserEmail($id, $email)){
-				$successes[] = lang("ACCOUNT_EMAIL_UPDATED");
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
+	// Prevent updating if someone attempts to update with the same password
+	$password_hash = generateHash($password, $loggedInUser->hash_pw);
+	
+	if($password_hash == $loggedInUser->hash_pw) {
+		addAlert("danger", lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE"));
+		echo json_encode(array("errors" => 1, "successes" => 0));
+		exit();
 	}
 	
-	//Update title
-	if ($userdetails['title'] != $_POST['title']){
-		$title = trim($_POST['title']);
-		
-		//Validate title
-		if(minMaxRange(1,50,$title))
-		{
-			$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-		}
-		else {
-			if (updateUserTitle($id, $title)){
-				$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($displayname, $title));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-	}
+	if (!$password_hash = updateUserPassword($user_id, $password, $passwordc)){
+		$error_count++;
+	} else {
+		// If we're updating for the currently logged in user, update their hash_pw field
+		if ($self)
+			$loggedInUser->hash_pw = $password_hash;
 	
-	//Remove permission level
-	if(!empty($_POST['remove_permissions'])){
-		// Convert string of comma-separated permission_id's into array
-		$remove_permissions_arr = explode(',',$_POST['remove_permissions']);
-		$remove = array();
-		// Only allow removal if the user already has this permission
-		foreach ($remove_permissions_arr as $permission_id){
-			if (isset($userPermissions[$permission_id]))
-				$remove[$permission_id] = $permission_id;
-		}
-		if (count($remove) > 0) {
-			if ($deletion_count = removeUserFromGroups($remove, $id)){
-				$successes[] = lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
+		$success_count++;
 	}
+}
+
+//Remove groups
+if(!empty($rm_groups)){
+	// Convert string of comma-separated group_id's into array
+	$group_ids_arr = explode(',',$rm_groups);
+
+	$removed = removeUserFromGroups($user_id, $group_ids_arr);
+	if ($removed === false){
+		$error_count++;
+	} else {
+		$success_count += $removed;
+	}
+}
+
+
+// Add groups
+if(!empty($add_groups)){
+	// Convert string of comma-separated group_id's into array
+	$group_ids_arr = explode(',',$add_groups);
 	
-	// Add permission levels
-	if(!empty($_POST['add_permissions'])){
-		// Convert string of comma-separated permission_id's into array
-		$add_permissions_arr = explode(',',$_POST['add_permissions']);
-		$add = array();
-		// Only allow adding if the user does NOT already have this permission
-		foreach ($add_permissions_arr as $permission_id){
-			if (!isset($userPermissions[$permission_id]))
-				$add[$permission_id] = $permission_id;
-		}
-		if (count($add) > 0) {
-			if ($addition_count = addUserToGroups($add, $id)){
-				$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
+	$added = addUserToGroups($user_id, $group_ids_arr);
+	if ($added === false){
+		$error_count++;
+	} else {
+		$success_count += $added;
 	}
 }
 
 restore_error_handler();
 
-foreach ($errors as $error){
-  addAlert("danger", $error);
-}
-foreach ($successes as $success){
-  addAlert("success", $success);
-}
-  
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+$ajaxMode = $validator->optionalBooleanPostVar('ajaxMode', 'true');
+if ($ajaxMode == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => $error_count,
+	"successes" => $success_count));
 } else {
   header('Location: ' . getReferralPage());
   exit();

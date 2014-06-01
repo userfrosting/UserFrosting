@@ -39,6 +39,7 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 }
 
 require_once("db-settings.php"); //Require DB connection
+require_once("funcs.php");
 require_once("db_functions.php");
 
 //Retrieve basic configuration settings
@@ -63,8 +64,15 @@ defined("SITE_ROOT")
 
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
-	
-$mail_templates_dir = "models/mail-templates/";
+
+defined("MAIL_TEMPLATES")
+	or define("MAIL_TEMPLATES", dirname(__FILE__) . "/mail-templates/");
+
+// Include paths for pages to add to site page management
+$page_include_paths = array(
+	"account"
+	// Define more include paths here
+);
 	
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
@@ -82,13 +90,15 @@ if(!isset($language)) $language = dirname(__FILE__) . "/languages/en.php";
 
 //Pages to require
 require_once($language);
-require_once("funcs.php");
 require_once("class_validator.php");
 require_once("authorization.php");
 require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");
-require_once("class.newuser.php");
+
+//ChromePhp debugger for chrome console
+// http://craig.is/writing/chrome-logger
+//require_once("chrome.php");
 
 session_start();
 

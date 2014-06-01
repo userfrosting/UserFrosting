@@ -1,4 +1,4 @@
-<?
+<?php
 
 /******************************************************************************************************************
 
@@ -453,7 +453,7 @@ function fetchUserHomePage($user_id){
             return $row['page'];
         else {
             addAlert("danger", "The user does not appear to have a primary group assigned.");
-            return false;
+            return "404.php";
         }
         
         $stmt = null;
@@ -1076,6 +1076,127 @@ function fetchGroupDetails($group_id) {
     }        
 }
 
+// Create a new group with the specified name, is_default, and can_delete parameters
+function dbCreateGroup($name, $is_default, $can_delete){
+   try {
+        $db = pdoConnect();
+        global $db_table_prefix;
+        
+        $query = "INSERT INTO ".$db_table_prefix."groups (
+		name, is_default, can_delete
+		)
+		VALUES (
+		:name, :is_default, :can_delete
+		)";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars = array(
+            ':name' => $name,
+            ':is_default' => $is_default,
+            ':can_delete' => $can_delete
+        );
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            addAlert("danger", "Failed adding new user group.");
+            return false;
+        }
+      
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }   
+}
+
+// Update the specified group with a new name, is_default, and can_delete parameters
+function dbUpdateGroup($group_id, $name, $is_default, $can_delete){
+    try {
+
+        $db = pdoConnect();
+        
+        global $db_table_prefix;
+
+        $stmt = $db->prepare("UPDATE ".$db_table_prefix."groups
+            SET name = :name, is_default = :is_default, can_delete = :can_delete
+            WHERE
+            id = :group_id
+            LIMIT 1");
+        
+        $sqlVars = array(":group_id" => $group_id, ":name" => $name, "is_default" => $is_default, "can_delete" => $can_delete);
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0)
+          return true;
+        else {
+          addAlert("danger", "Invalid group id specified.");
+          return false;
+        }
+    
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } 
+}
+
+// Delete the group, and all associated pages and users, from the database.
+function dbDeleteGroup($group_id){
+    try {
+
+        $db = pdoConnect();
+        global $db_table_prefix;
+        
+        $groupDetails = fetchGroupDetails($group_id);
+	
+        if ($groupDetails['can_delete'] == '0'){
+            addAlert("danger", lang("CANNOT_DELETE_PERMISSION_GROUP", array($groupDetails['name'])));
+            return false;
+        }
+	
+        $stmt = $db->prepare("DELETE FROM ".$db_table_prefix."groups 
+            WHERE id = :group_id");
+        
+        $stmt2 = $db->prepare("DELETE FROM ".$db_table_prefix."user_group_matches 
+            WHERE group_id = :group_id");
+        
+        $stmt3 = $db->prepare("DELETE FROM ".$db_table_prefix."group_page_matches 
+            WHERE group_id = :group_id");
+        
+        $sqlVars = array(":group_id" => $group_id);
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0) {
+            // Delete user and page matches for this group.
+            $stmt2->execute($sqlVars);
+            $stmt3->execute($sqlVars);
+            return $groupDetails['name'];
+        } else {
+            addAlert("danger", "The specified group does not exist.");
+            return false;
+        }      
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } 
+}
+
 //Functions that interact mainly with .user_group_matches table
 //------------------------------------------------------------------------------
 
@@ -1119,8 +1240,6 @@ function userInGroup($user_id, $group_id){
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     } 
-
-
 }
 
 // Fetch group information for a specified user
@@ -1166,6 +1285,49 @@ function fetchUserGroups($user_id) {
     }
 }
 
+// Fetch user information for a specified group
+function fetchGroupUsers($group_id) {
+    try {
+        global $db_table_prefix;
+        
+        $results = array();
+        
+        $db = pdoConnect();
+        
+        $sqlVars = array();
+        
+        $query = "SELECT {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled 
+            FROM ".$db_table_prefix."user_group_matches,".$db_table_prefix."users
+            WHERE group_id = :group_id and ".$db_table_prefix."user_group_matches.user_id = ".$db_table_prefix."users.id
+            ";
+        
+        $stmt = $db->prepare($query);    
+
+        $sqlVars[':group_id'] = $group_id;
+        
+        if (!$stmt->execute($sqlVars)){
+            // Error
+            return false;
+        }
+            
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $id = $r['user_id'];
+              $results[$id] = $r;
+        }
+        $stmt = null;
+          
+        return $results;
+          
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
 // Add a user to the default groups.  TODO: check that user exists and isn't already assigned to group.
 function addUserToDefaultGroups($user_id){
     try {
@@ -1179,7 +1341,7 @@ function addUserToDefaultGroups($user_id){
         
         $stmt = $db->prepare($query);
 
-        if (!$stmt->execute($sqlVars)){
+        if (!$stmt->execute()){
             // Error
             return false;
         }
@@ -1215,7 +1377,7 @@ function addUserToDefaultGroups($user_id){
 }
 
 //Match group(s) with user
-function addUserToGroups($group_ids, $user_id) {
+function dbAddUserToGroups($user_id, $group_ids) {
     try {
         global $db_table_prefix;
         
@@ -1232,7 +1394,9 @@ function addUserToGroups($group_ids, $user_id) {
 		:user_id
 		)";
         
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
+        
+        $i = 0;
         
         if (is_array($group_ids)){
             foreach($group_ids as $id){
@@ -1258,7 +1422,7 @@ function addUserToGroups($group_ids, $user_id) {
 }
 
 //Unmatch group(s) from a user
-function removeUserFromGroups($group_ids, $user) {
+function dbRemoveUserFromGroups($user_id, $group_ids) {
     try {
         global $db_table_prefix;
         
@@ -1270,7 +1434,9 @@ function removeUserFromGroups($group_ids, $user) {
 		WHERE group_id = :group_id
 		AND user_id = :user_id";
         
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
+        
+        $i = 0;
         
         if (is_array($group_ids)){
             foreach($group_ids as $id){
@@ -1483,6 +1649,8 @@ function pageIdExists($page_id) {
         $stmt = $db->prepare($query);
         
         $sqlVars[':page_id'] = $page_id;
+		
+		$stmt->execute($sqlVars);
     
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -1806,7 +1974,7 @@ function fetchPageGroups($page_id) {
     
         $sqlVars[':page_id'] = $page_id;
     
-        if (!$stmt->execute()){
+        if (!$stmt->execute($sqlVars)){
             // Error
             return false;
         }
@@ -1850,7 +2018,7 @@ function fetchGroupPages($group_id) {
     
         $sqlVars[':page_id'] = $page_id;
     
-        if (!$stmt->execute()){
+        if (!$stmt->execute($sqlVars)){
             // Error
             return false;
         }
@@ -1889,7 +2057,7 @@ function addPage($page_ids, $group_id) {
             :page_id
             )";
     
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
         
         if (is_array($page_ids)){
             foreach($page_ids as $id){
@@ -1926,7 +2094,7 @@ function removePage($page_ids, $group_id) {
 		WHERE page_id = :page_id
 		AND group_id = :group_id";
         
-        $stmt->prepare($query);
+        $stmt = $db->prepare($query);
         
         if (is_array($page_ids)){
             foreach($page_ids as $id){
@@ -1941,6 +2109,137 @@ function removePage($page_ids, $group_id) {
         }
         $stmt = null;
         return $i;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+// Load permission validator mappings for the specified action and user
+function fetchUserPermits($user_id, $action_function) {
+    try {
+        global $db_table_prefix;
+          
+        $action_permits = array();
+          
+        $db = pdoConnect();
+          
+        $sqlVars = array();
+          
+        $query = "select * from {$db_table_prefix}user_action_permits where user_id = :user_id and action = :action";
+          
+        $sqlVars[':user_id'] = $user_id;
+        $sqlVars[':action'] = $action_function;
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+        
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $action_permits[] = $r;
+        }
+        $stmt = null;
+
+        return $action_permits;
+
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+// Load permission validator mappings for the specified group and optionally, for a specified action
+function fetchGroupPermits($group_id, $action_function = null) {
+    try {
+        global $db_table_prefix;
+          
+        $action_permits = array();
+          
+        $db = pdoConnect();
+          
+        $sqlVars = array();
+          
+        $query = "select * from {$db_table_prefix}group_action_permits where group_id = :group_id";
+		
+		if ($action_function){
+			$query .= " and action = :action";
+            $sqlVars[':action'] = $action_function;
+		}
+        $sqlVars[':group_id'] = $group_id;
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+        
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $action_permits[] = $r;
+        }
+        $stmt = null;
+        
+        return $action_permits;
+
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+// Load permission validator mappings for the all groups
+function fetchAllGroupPermits() {
+    try {
+        global $db_table_prefix;
+          
+        $groups = array();
+          
+        $db = pdoConnect();
+          
+        $query = "SELECT {$db_table_prefix}group_action_permits.*, name FROM  {$db_table_prefix}groups, {$db_table_prefix}group_action_permits
+			WHERE {$db_table_prefix}groups.id = {$db_table_prefix}group_action_permits.group_id ORDER BY group_id, action";
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $group_id = $r['group_id'];
+			if (!isset($groups[$group_id])){
+				$groups[$group_id] = array();
+				$groups[$group_id]['name'] = $r['name'];
+				$groups[$group_id]['action_permits'] = array();
+			}
+			// Parse out permit string into array of permit functions and parameters
+			$permits_arr = explode('&', $r['permits']);
+			$permits_by_arg = array();
+			foreach ($permits_arr as $permit){
+				$permit_with_params = array();
+				preg_match('/(.*?)\((.*?)\)/', $permit, $permit_param_str);
+				$permit_name = $permit_param_str[1];
+				//$permit_with_params['name'] = $permit_name;
+				// Extract and map parameters, if any
+				if ($permit_param_str[2] and $permit_params = explode(',', $permit_param_str[2])){
+					$permit_with_params = array();
+					foreach ($permit_params as $param){
+						$permit_with_params[] = $param;
+					}
+				}				
+				$permits_by_arg[$permit_name] = $permit_with_params;
+			}
+			$action = array('action' => $r['action'], 'permits' => $permits_by_arg);
+			$groups[$group_id]['action_permits'][] = $action;
+        }
+        $stmt = null;
+        
+        return $groups;
+
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());

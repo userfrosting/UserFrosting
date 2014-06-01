@@ -2,7 +2,7 @@
 	columns
 */
 
-// Load a list of all tutors.  Available to admin only.
+// Load a list of all pages as a table, rows correspond to pages and columns to groups.
 function sitePagesWidget(widget_id, options) {
 	var widget = $('#' + widget_id);
 	var sort = "asc";
@@ -62,7 +62,7 @@ function sitePagesWidget(widget_id, options) {
 			jQuery.each(permissions, function(perm_id, perm) {
 				html += "<th>" + perm['name'] + "</th>";
 			});
-			html += "</tr></thead><tbody></tbody></table>";
+			html += "</tr></thead><tbody></tbody></table></div></div></div>";
 		} else {
 			console.log("No pages found.");
 			html += "<div class='alert alert-info'>No pages found.</div>";
@@ -144,15 +144,15 @@ function sitePagesWidget(widget_id, options) {
 			var row = $(this).closest('tr');
 			var btn = $(this);
 			var page_id = btn.data('page-id');
-			var permission_id = btn.data('permission-id');
+			var group_id = btn.data('permission-id');
 			var checked = $(this).prop('checked') ? 1 : 0;
-			var url = APIPATH + "update_page_permission.php";
+			var url = APIPATH + "update_page_groups.php";
 			$.ajax({  
 				type: "POST",  
 				url: url,  
 				data: {
 					page_id: page_id,
-					permission_id: permission_id,
+					group_id: group_id,
 					checked: checked,
 					ajaxMode: "true"
 				},		  

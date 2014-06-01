@@ -45,6 +45,11 @@ if (!isUserLoggedIn()){
 $validator = new Validator();
 $user_id = $validator->requiredPostVar('user_id');
 
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
 // Cannot delete master account
 if ($user_id == $master_account){
 	addAlert("danger", lang("ACCOUNT_DELETE_MASTER"));

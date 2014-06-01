@@ -324,7 +324,7 @@ function loadCurrentUser() {
 }
 
 function loadPermissions(div_id) {
-  var url = APIPATH + "load_permissions.php";
+  var url = APIPATH + "load_groups.php";
   $.getJSON( url, {})
   .done(function( data ) {		  
 	if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
@@ -343,13 +343,13 @@ function loadPermissions(div_id) {
   });
 }
 
-function addNewPermission(permission_name) {
-  var url = APIPATH + 'create_permission.php';
+function addNewPermission(group_name) {
+  var url = APIPATH + 'create_group.php';
   $.ajax({  
 	type: "POST",  
 	url: url,  
 	data: {
-	  new_permission:		permission_name,
+	  group_name:		group_name,
 	  ajaxMode:				"true"
 	}		  
   }).done( function(result) {
@@ -364,13 +364,13 @@ function addNewPermission(permission_name) {
 }
 
 function deletePermission(id) {
-  var url = APIPATH + 'delete_permission.php';
+  var url = APIPATH + 'delete_group.php';
   $.ajax({  
 	type: "POST",  
 	url: url,  
 	data: {
-	  permission_id:		id,
-	  ajaxMode:				"true"
+	  group_id:		id,
+	  ajaxMode:		"true"
 	}
   }).done( function(result) {
 	var resultJSON = processJSONResult(result);
@@ -385,18 +385,31 @@ function deletePermission(id) {
 
 // Load permissions for the logged in user
 function userLoadPermissions() {
-	var url = APIPATH + 'load_user_permissions.php';
+	var url = APIPATH + 'load_groups.php';
 	var result = $.ajax({  
 	  type: "GET",  
 	  url: url,
-	  async: false
+	  async: false,
+	  data: {user_id: '0'}
 	}).responseText;
 	var resultJSON = processJSONResult(result);
 	return resultJSON;
 }
 
 function loadAllPermissions() {
-	var url = APIPATH + 'load_permissions.php';
+	var url = APIPATH + 'load_groups.php';
+	var result = $.ajax({  
+	  type: "GET",  
+	  url: url,
+	  async: false,
+	  data: {}
+	}).responseText;
+	var resultJSON = processJSONResult(result);
+	return resultJSON;
+}
+
+function loadSecureFunctions() {
+	var url = APIPATH + 'load_secure_functions.php';
 	var result = $.ajax({  
 	  type: "GET",  
 	  url: url,

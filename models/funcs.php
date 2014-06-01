@@ -35,7 +35,7 @@ THE SOFTWARE.
 //Retrieve a list of all .php files in models/languages
 function getLanguageFiles()
 {
-	$directory = "models/languages/";
+	$directory = "../models/languages/";
 	$languages = glob($directory . "*.php");
 	//print each file name
 	return $languages;
@@ -44,20 +44,21 @@ function getLanguageFiles()
 //Retrieve a list of all .css files in models/site-templates 
 function getTemplateFiles()
 {
-	$directory = "models/site-templates/";
+	$directory = "../models/site-templates/";
 	$languages = glob($directory . "*.css");
 	//print each file name
 	return $languages;
 }
 
-//Retrieve a list of all .php files in root files folder
-function getPageFiles()
+//Retrieve a list of all .php files in a given directory
+function getPageFiles($directory)
 {
-	$directory = "";
-	$pages = glob($directory . "*.php");
+	$pages = glob("../" . $directory . "/*.php");
+	$row = array();
 	//print each file name
 	foreach ($pages as $page){
-		$row[$page] = $page;
+		$page_with_path = $directory . "/" . basename($page);
+		$row[$page_with_path] = $page_with_path;
 	}
 	return $row;
 }
@@ -236,43 +237,6 @@ function setReferralPage($page){
 	$_SESSION['referral_page'] = $page;
 }
 
-function requiredPostVar($varname){
-	// Confirm that data has been submitted via POST
-	if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
-		addAlert("danger", "Error: data must be submitted via POST.");
-		echo json_encode(array("errors" => "1", "successes" => "0"));
-		exit();
-	}
-	
-	if (isset($_POST[$varname]))
-		return htmlentities($_POST[$varname]);
-	else {
-		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-			addAlert("danger", "$varname must be specified!");
-			echo json_encode(array("errors" => "1", "successes" => "0"));
-		} else {
-			echo "$varname must be specified!";	
-		}
-		exit();
-	}
-}
-
-function requiredGetVar($varname){
-	// Confirm that data has been submitted via GET
-	if (!($_SERVER['REQUEST_METHOD'] == 'GET')) {
-		addAlert("danger", "Error: data must be submitted via GET.");
-		exit();
-	}
-	
-	if (isset($_GET[$varname]))
-		return htmlentities($_GET[$varname]);
-	else {
-		addAlert("danger", "$varname must be specified!");
-		echo json_encode(array("errors" => "1", "successes" => "0"));
-		exit();
-	}
-}
-
 // Add a session alert to the queue
 function addAlert($type, $message){
     if (!isset($_SESSION["userAlerts"])){
@@ -427,6 +391,86 @@ function form_protect($token)
 {
 	if(isUserLoggedIn())
 	{echo '<input type="hidden" name="csrf_token" value="'. $token .'">';}	
+}
+
+// Useful for testing output of API functions
+function prettyPrint( $json )
+{
+    $result = '';
+    $level = 0;
+    $in_quotes = false;
+    $in_escape = false;
+    $ends_line_level = NULL;
+    $json_length = strlen( $json );
+
+    for( $i = 0; $i < $json_length; $i++ ) {
+        $char = $json[$i];
+        $new_line_level = NULL;
+        $post = "";
+        if( $ends_line_level !== NULL ) {
+            $new_line_level = $ends_line_level;
+            $ends_line_level = NULL;
+        }
+        if ( $in_escape ) {
+            $in_escape = false;
+        } else if( $char === '"' ) {
+            $in_quotes = !$in_quotes;
+        } else if( ! $in_quotes ) {
+            switch( $char ) {
+                case '}': case ']':
+                    $level--;
+                    $ends_line_level = NULL;
+                    $new_line_level = $level;
+                    break;
+
+                case '{': case '[':
+                    $level++;
+                case ',':
+                    $ends_line_level = $level;
+                    break;
+
+                case ':':
+                    $post = " ";
+                    break;
+
+                case " ": case "\t": case "\n": case "\r":
+                    $char = "";
+                    $ends_line_level = $new_line_level;
+                    $new_line_level = NULL;
+                    break;
+            }
+        } else if ( $char === '\\' ) {
+            $in_escape = true;
+        }
+        if( $new_line_level !== NULL ) {
+            $result .= "\n".str_repeat( "\t", $new_line_level );
+        }
+        $result .= $char.$post;
+    }
+
+    return $result;
+}
+
+
+// Parse a comment block into a description and array of parameters
+function parseCommentBlock($comment){
+	$lines = explode("\n", $comment);
+	$result = array('description' => "", 'parameters' => array());
+	foreach ($lines as $line){
+		if (!preg_match('/^\s*\/?\*+\/?\s*$/', $line)){
+			// Extract description or parameters
+			if (preg_match('/^\s*\**\s*@param\s+(\w+)\s+\$(\w+)\s+(.*)$/', $line, $matches)){
+				$type = $matches[1];
+				$name = $matches[2];
+				$description = $matches[3];
+				$result['parameters'][$name] = array('type' => $type, 'description' => $description);
+			} else if (preg_match('/^\s*\**\s*(.*)$/', $line, $matches)){
+				$description = $matches[1];
+				$result['description'] .= $description;
+			}
+		}
+	}
+	return $result;
 }
 
 ?>

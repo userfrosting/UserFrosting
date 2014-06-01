@@ -1,7 +1,7 @@
 <?php 
 /*
 
-UserFrosting Version: 0.2
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -137,8 +137,8 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (8, 'account/site_settings.php', 1),
 (9, 'account/users.php', 1),
 (10, 'account/user_details.php', 1),
-(11, 'account/load_form_user.php', 1),
-(12, 'account/delete_user_dialog.php', 1);
+(11, 'account/index.php', 0),
+(12, 'account/groups.php', 1)
 ";
 
 $group_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."group_page_matches` (
@@ -169,25 +169,46 @@ $group_page_matches_entry = "INSERT INTO `".$db_table_prefix."group_page_matches
 (17, 1, 6);
 ";
 
+// Group-level permits
+$group_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."group_action_permits` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `action` varchar(100) NOT NULL,
+  `permits` varchar(400) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+";
+
+$group_action_permits_entry = "INSERT INTO `".$db_table_prefix."group_action_permits` (`id`, `group_id`, `action`, `permits`) VALUES
+(1, 1, 'updateUserEmail', 'isLoggedInUser(user_id)'),
+(2, 1, 'updateUserPassword', 'isLoggedInUser(user_id)'),
+(3, 1, 'loadUser', 'isLoggedInUser(user_id)'),
+(4, 1, 'loadUserGroups', 'isLoggedInUser(user_id)'),
+(5, 2, 'updateUserEmail', 'always()'),
+(6, 2, 'updateUserPassword', 'always()'),
+(7, 2, 'updateUser', 'always()'),
+(8, 2, 'updateUserDisplayName', 'always()'),
+(9, 2, 'updateUserTitle', 'always()'),
+(10, 2, 'updateUserEnabled', 'always()'),
+(11, 2, 'loadUser', 'always()'),
+(12, 2, 'loadUserGroups', 'always()'),
+(13, 2, 'loadUsers', 'always()'),
+(14, 2, 'deleteUser', 'always()'),
+(15, 2, 'activateUser', 'always()'),
+(16, 2, 'loadGroups', 'always()'),
+(17, 2, 'updateGroup', 'always()'),
+(18, 2, 'createGroup', 'always()'),
+(19, 2, 'deleteGroup', 'always()')
+";
+
+// User-level permits
 $user_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user_action_permits` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `action` varchar(100) NOT NULL,
-  `permits` varchar(200) NOT NULL,
+  `permits` varchar(400) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
-";
-
-// Sample action permits, should probably change these at some point since root user should automatically have permission for
-// all actions
-$user_action_permits_entry = "INSERT INTO `".$db_table_prefix."user_action_permits` (`id`, `user_id`, `action`, `permits`) VALUES
-(1, 1, 'updateUserEmail', 'isLoggedInUser(user_id)&isActive(user_id)'),
-(2, 1, 'loadUser', 'always()'),
-(3, 1, 'loadUsers', 'always()'),
-(4, 1, 'deleteUser', 'always()'),
-(5, 1, 'activateUser', 'always()'),
-(6, 1, 'loadGroups', 'always()'),
-(7, 1, 'loadUserGroups', 'always()');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ";
 
 $db = pdoConnect();
@@ -313,6 +334,28 @@ else
     $db_issue = true;
 }
 
+$stmt = $db->prepare($group_action_permits_sql);
+if($stmt->execute())
+{
+    $successes[] = "<p>".$db_table_prefix."group_action_permits table created.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error constructing group_action_permits table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($group_action_permits_entry);
+if($stmt->execute())
+{
+    $successes[] = "<p>Added default access to ".$db_table_prefix."group_action_permits table.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error adding default access to ".$db_table_prefix."group_action_permits.</p>";
+    $db_issue = true;
+}
+
 $stmt = $db->prepare($user_action_permits_sql);
 if($stmt->execute())
 {
@@ -321,17 +364,6 @@ if($stmt->execute())
 else
 {
     $errors[] = "<p>Error constructing user_action_permits table.</p>";
-    $db_issue = true;
-}
-
-$stmt = $db->prepare($user_action_permits_entry);
-if($stmt->execute())
-{
-    $successes[] = "<p>Added default access to ".$db_table_prefix."user_action_permits table.....</p>";
-}
-else
-{
-    $errors[] = "<p>Error adding default access to ".$db_table_prefix."user_action_permits.</p>";
     $db_issue = true;
 }
 

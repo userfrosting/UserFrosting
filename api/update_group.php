@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -29,9 +29,10 @@ THE SOFTWARE.
 
 */
 
-// UserCake authentication
-include('../models/db-settings.php');
-include('../models/config.php');
+// Update a permission group
+// Request method: POST
+
+require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
@@ -42,40 +43,60 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-// POST Parameters: user_id
+// TODO: accept home page ids, is_default, and can_delete
+
 $validator = new Validator();
-$user_id = $validator->requiredPostVar('user_id');
-$enabled = $validator->requiredPostVar('enabled');
+$group_id = $validator->requiredPostVar('group_id');
+$name = $validator->requiredPostVar('name');
 
-if ($enabled == 'true')
-	$enabled_bit = '1';
-else
-	$enabled_bit = '0';
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
 
-if (updateUserEnabled($user_id, $enabled_bit)){
-	if ($enabled == 'true')
-		$successes[] = lang("ACCOUNT_ENABLE_SUCCESSFUL");
-	else
-		$successes[] = lang("ACCOUNT_DISABLE_SUCCESSFUL");
+//Forms posted
+if($group_id && $name){
+	if (!updateGroup($group_id, $name)){
+	  echo json_encode(array("errors" => 1, "successes" => 0));
+	  exit();
+	}
 } else {
 	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }
+	/*
+	//Remove access for users
+	if(!empty($_POST['removePermission'])){
+		$remove = $_POST['removePermission'];
+		if ($deletion_count = removeUsersFromGroup($permissionId, $remove)) {
+			$successes[] = lang("PERMISSION_REMOVE_USERS", array($deletion_count));
+		}
+		else {
+			$errors[] = lang("SQL_ERROR");
+		}
+	}
+	
+	//Add access for users
+	if(!empty($_POST['addPermission'])){
+		$add = $_POST['addPermission'];
+		if ($addition_count = addUsersToGroup($permissionId, $add)) {
+			$successes[] = lang("PERMISSION_ADD_USERS", array($addition_count));
+		}
+		else {
+			$errors[] = lang("SQL_ERROR");
+		}
+	}
+*/
 
 restore_error_handler();
 
-foreach ($errors as $error){
-  addAlert("danger", $error);
-}
-foreach ($successes as $success){
-  addAlert("success", $success);
-}
-  
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+	"errors" => 0,
+	"successes" => 1));
 } else {
   header('Location: ' . getReferralPage());
   exit();
 }
+
+?>
