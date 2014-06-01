@@ -2,7 +2,7 @@
 	columns
 */
 
-// Load a list of all tutors.  Available to admin only.
+// Load a list of all pages as a table, rows correspond to pages and columns to groups.
 function sitePagesWidget(widget_id, options) {
 	var widget = $('#' + widget_id);
 	var sort = "asc";
@@ -62,7 +62,7 @@ function sitePagesWidget(widget_id, options) {
 			jQuery.each(permissions, function(perm_id, perm) {
 				html += "<th>" + perm['name'] + "</th>";
 			});
-			html += "</tr></thead><tbody></tbody></table>";
+			html += "</tr></thead><tbody></tbody></table></div></div></div>";
 		} else {
 			console.log("No pages found.");
 			html += "<div class='alert alert-info'>No pages found.</div>";

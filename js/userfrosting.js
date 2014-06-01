@@ -408,6 +408,18 @@ function loadAllPermissions() {
 	return resultJSON;
 }
 
+function loadSecureFunctions() {
+	var url = APIPATH + 'load_secure_functions.php';
+	var result = $.ajax({  
+	  type: "GET",  
+	  url: url,
+	  async: false,
+	  data: {}
+	}).responseText;
+	var resultJSON = processJSONResult(result);
+	return resultJSON;
+}
+
 function addAlert(type, msg) {
 	var url = APIPATH + 'user_alerts.php';
 	$.ajax({  

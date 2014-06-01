@@ -52,14 +52,22 @@ $functionsWithParams = array();
 foreach ($functionArray as $function) {
     // Map the function argument names to their values.  We end up with a dictionary of argument_name => argument_value
     $method = new ReflectionFunction($function);
-    $methodObj = array("name" => $function, "parameters" => array());
+    $commentBlock = parseCommentBlock($method->getDocComment());
+    if (!$description = $commentBlock['description'])
+        $description = "No description available.";
+    if (!$parameters = $commentBlock['parameters'])
+        $parameters = array();       
+    $methodObj = array("description" => $description, "parameters" => array());
     foreach ($method->getParameters() as $param){
-        $methodObj['parameters'][] = $param->name;
+        if (isset($parameters[$param->name]))
+            $methodObj['parameters'][$param->name] = $parameters[$param->name];
+        else
+            $methodObj['parameters'][$param->name] = array("type" => "unknown", "description" => "unknown");
     }
-    $functionsWithParams[] = $methodObj;
-    echo json_encode($methodObj);
+    $functionsWithParams[$function] = $methodObj;
+
 }
 
-return $functionsWithParams;
+echo json_encode($functionsWithParams);
 
 ?>
