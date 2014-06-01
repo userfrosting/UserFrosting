@@ -137,8 +137,8 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (8, 'account/site_settings.php', 1),
 (9, 'account/users.php', 1),
 (10, 'account/user_details.php', 1),
-(11, 'account/index.php', 0);
-(12, 'account/groups.php', 1);
+(11, 'account/index.php', 0),
+(12, 'account/groups.php', 1)
 ";
 
 $group_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."group_page_matches` (
@@ -183,7 +183,7 @@ $group_action_permits_entry = "INSERT INTO `".$db_table_prefix."group_action_per
 (1, 1, 'updateUserEmail', 'isLoggedInUser(user_id)'),
 (2, 1, 'updateUserPassword', 'isLoggedInUser(user_id)'),
 (3, 1, 'loadUser', 'isLoggedInUser(user_id)'),
-(4, 1, 'loadUserGroups', 'isLoggedInUser(user_id)');
+(4, 1, 'loadUserGroups', 'isLoggedInUser(user_id)'),
 (5, 2, 'updateUserEmail', 'always()'),
 (6, 2, 'updateUserPassword', 'always()'),
 (7, 2, 'updateUser', 'always()'),
@@ -191,14 +191,14 @@ $group_action_permits_entry = "INSERT INTO `".$db_table_prefix."group_action_per
 (9, 2, 'updateUserTitle', 'always()'),
 (10, 2, 'updateUserEnabled', 'always()'),
 (11, 2, 'loadUser', 'always()'),
-(12, 2, 'loadUserGroups', 'always()');
+(12, 2, 'loadUserGroups', 'always()'),
 (13, 2, 'loadUsers', 'always()'),
 (14, 2, 'deleteUser', 'always()'),
 (15, 2, 'activateUser', 'always()'),
 (16, 2, 'loadGroups', 'always()'),
 (17, 2, 'updateGroup', 'always()'),
 (18, 2, 'createGroup', 'always()'),
-(19, 2, 'deleteGroup', 'always()');
+(19, 2, 'deleteGroup', 'always()')
 ";
 
 // User-level permits

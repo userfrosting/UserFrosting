@@ -46,8 +46,8 @@ if (userIdExists('1')){
 
 $validator = new Validator();
 // POST: user_name, display_name, email, password, passwordc, token
-$user_name = trim($validator->requiredPostVar('user_name'));
-$display_name = trim($validator->requiredPostVar('display_name'));
+$user_name = trim($validator->requiredPostVar('username'));
+$display_name = trim($validator->requiredPostVar('displayname'));
 $email = trim($validator->requiredPostVar('email'));
 $title = 'Master Account';
 // Don't trim passwords
