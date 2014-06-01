@@ -431,6 +431,22 @@ function loadGroup($group_id){
     return fetchGroupDetails($group_id);
 }
 
+// Load action permits for a specified group.
+function loadGroupActionPermits($group_id) {
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    
+    // Calls appropriate function in db_functions
+    if ($group_id == "all"){
+        return fetchAllGroupPermits();
+    } else {
+        return fetchGroupPermits($group_id);
+    }
+}
+
 // Load group membership for the specified user.
 function loadUserGroups($user_id){
     // This block automatically checks this action against the permissions database before running.
