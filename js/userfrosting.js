@@ -28,8 +28,11 @@ THE SOFTWARE.
 
 */
 
+var APIPATH = getSitePath() + "api/";
+var FORMSPATH = getSitePath() + "forms/";
+
 // Returns the base URL of the website, assuming that this script is in the '/js' subdirectory of the site.
-var APIPATH = (function(scripts) {
+function getSitePath() {
     var scripts = document.getElementsByTagName('script'),
         script = scripts[scripts.length - 1];
 
@@ -39,10 +42,10 @@ var APIPATH = (function(scripts) {
 
     scriptPath = script.getAttribute('src', -1);
 	
-	var apiPath = scriptPath.substr(0, scriptPath.lastIndexOf( '/js' )+1 ) + "api/";
-	console.log("api path is: " + apiPath);
-	return apiPath;
-}());
+	var basePath = scriptPath.substr(0, scriptPath.lastIndexOf( '/js' )+1 );
+	console.log("base site path is: " + basePath);
+	return basePath;
+}
 
 function getTemplateAjax(path) {
 	var source;

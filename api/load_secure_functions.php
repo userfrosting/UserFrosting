@@ -31,43 +31,17 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
-# The Regular Expression for Function Declarations
-$functionFinder = '/function[\s\n]+(\S+)[\s\n]*\(/';
-# Init an Array to hold the Function Names
-$functionArray = array();
-# Load the Content of the PHP File
-$fileContents = file_get_contents( '../models/secure_functions.php' );
+set_error_handler('logAllErrors');
 
-# Apply the Regular Expression to the PHP File Contents
-preg_match_all( $functionFinder , $fileContents , $functionArray );
-
-# If we have a Result, Tidy It Up
-if( count( $functionArray )>1 ){
-  # Grab Element 1, as it has the Matches
-  $functionArray = $functionArray[1];
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
 }
 
-// Next, get parameter list for each function
-$functionsWithParams = array();
-foreach ($functionArray as $function) {
-    // Map the function argument names to their values.  We end up with a dictionary of argument_name => argument_value
-    $method = new ReflectionFunction($function);
-    $commentBlock = parseCommentBlock($method->getDocComment());
-    if (!$description = $commentBlock['description'])
-        $description = "No description available.";
-    if (!$parameters = $commentBlock['parameters'])
-        $parameters = array();       
-    $methodObj = array("description" => $description, "parameters" => array());
-    foreach ($method->getParameters() as $param){
-        if (isset($parameters[$param->name]))
-            $methodObj['parameters'][$param->name] = $parameters[$param->name];
-        else
-            $methodObj['parameters'][$param->name] = array("type" => "unknown", "description" => "unknown");
-    }
-    $functionsWithParams[$function] = $methodObj;
+$results = loadSecureFunctions();
 
-}
-
-echo json_encode($functionsWithParams);
+echo json_encode($results);
 
 ?>

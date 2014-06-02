@@ -247,7 +247,7 @@ function deleteUserDialog(dialog_id, user_id, name){
 	var parentDiv = "<div id='" + dialog_id + "' class='modal fade'></div>";
 	$( "body" ).append( parentDiv );
 	
-	$('#' + dialog_id).load(APIPATH + 'delete_user_dialog.php', function () {
+	$('#' + dialog_id).load(FORMSPATH + 'form_dialog_delete_user.php', function () {
 		// Set the student_id
 		$('#' + dialog_id + ' input[name="user_id"]').val(user_id);
 		// Set the student_name
@@ -282,7 +282,7 @@ function userForm(box_id, user_id) {
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: APIPATH + "load_form_user.php",  
+	  url: FORMSPATH + "form_user.php",  
 	  data: data,
 	  dataType: 'json',
 	  cache: false
@@ -327,7 +327,7 @@ function userDisplay(box_id, user_id) {
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: APIPATH + "load_form_user.php",  
+	  url: FORMSPATH + "form_user.php",  
 	  data: {
 		box_id: box_id,
 		render_mode: 'panel',

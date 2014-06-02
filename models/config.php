@@ -70,7 +70,8 @@ defined("MAIL_TEMPLATES")
 
 // Include paths for pages to add to site page management
 $page_include_paths = array(
-	"account"
+	"account",
+	"forms"
 	// Define more include paths here
 );
 	
