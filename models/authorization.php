@@ -18,18 +18,19 @@ function createSession($student_id, $user_id){
 /** Contains methods for validating user permissions.  Used in conjunction with action functions and checkActionPermission. */
 class PermissionValidators {
 
-    /** Unconditionally grant permission - use carefully! */
+    /**
+    * Unconditionally grant permission - use carefully!
+    */
     static function always(){
         return true;
     
     }
-    
-    /** Return true if the specified user_id is assigned to the specified student_id, false otherwise. */
-    static function hasStudent($user_id, $student_id){
-        return true;
-    }
-    
-    /** Return true if the specified user_id exists and matches the logged in user, false otherwise. Use this function when you want a user to be able to perform an action involving their own account. */
+       
+    /**
+     * Return true if the specified user_id exists and matches the logged in user, false otherwise.
+     * Use this function when you want a user to be able to perform an action involving their own account.
+     * @param int $user_id the user_id to compare to the currently logged in user's user_id.
+     */
     static function isLoggedInUser($user_id){
         global $loggedInUser;
         if ($loggedInUser->user_id == $user_id)
@@ -38,17 +39,32 @@ class PermissionValidators {
             return false;
     }
 
-    /** Return true if the user is in the specified group */
+    /**
+     * Return true if the currently logged in user is a member of the specified group_id.
+     * @param int $group_id the group_id to compare to the currently logged in user's group membership.
+     */
     static function isUserInGroup($group_id){
         global $loggedInUser;
         return userInGroup($loggedInUser->user_id, $group_id);
     }
     
-    /** Return true if the specified user_id exists and is an active user, false otherwise. */
+    /**
+     * Return true if the specified user_id exists and is an active user, false otherwise.
+     * @param int $user_id the user_id to compare to the currently logged in user's user_id.     
+     */
     static function isActive($user_id){
         return true;
     }    
-        
+ 
+
+    /**
+     * Return true if the specified user_id is assigned to the specified student_id, false otherwise (for bloomingtontutors.com).
+     * @param int $user_id the user_id to check.
+     * @param int $student_id the student_id to check.     
+     */
+    static function hasStudent($user_id, $student_id){
+        return true;
+    }        
 }
 
 /** Called from within an action function, checks permissions for that action with the specified arguments */
