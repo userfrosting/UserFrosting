@@ -334,7 +334,9 @@ function updateUserTitle($user_id, $title) {
 	}
 
     if (updateUserField($user_id, 'title', $title)){
-        addAlert("success", lang("ACCOUNT_TITLE_UPDATED", array ($displayname, $title)));
+    	$details = fetchUserAuthById($user_id);
+        $display_name = $details['display_name'];
+        addAlert("success", lang("ACCOUNT_TITLE_UPDATED", array ($display_name, $title)));
         return true;
     } else {
         return false;    
