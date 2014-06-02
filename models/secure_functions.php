@@ -44,6 +44,7 @@ database before proceeding.
 /**
  * Load data for specified user.
  * @param int $user_id the id of the user to load.
+ * @return array $results fetch non-authorization related data for the specified user
  */
 function loadUser($user_id){
     // This block automatically checks this action against the permissions database before running.
@@ -56,8 +57,10 @@ function loadUser($user_id){
 }
 
 /**
- * Load data for all users.  TODO: also load group membership
+ * Load data for all users.
+ * @todo also load group membership
  * @param int $limit (optional) the maximum number of users to return.
+ * @return object $results fetch non-authorization related data for the all users
  */
 function loadUsers($limit = NULL){
     // This block automatically checks this action against the permissions database before running.
@@ -103,6 +106,7 @@ function loadUsers($limit = NULL){
 /**
  * Load data for all users in a specified group.
  * @param int $group_id the id of the group to search for users.
+ * @return array $results returns all users of a group
  */
 function loadUsersInGroup($group_id){
     // This block automatically checks this action against the permissions database before running.
@@ -114,8 +118,18 @@ function loadUsersInGroup($group_id){
     return fetchGroupUsers($group_id);
 }
 
-// Create a user with the specified fields.  Set require_activation to 'true' if you want an activation email to be sent.
-// Set admin to 'true' if you are a logged in user creating on behalf of someone else, 'false' if you are registering from the public.
+/**
+ * Create a user with the specified fields.
+ * @param string $user_name the validated $_POST['user_name'] variable
+ * @param string $display_name the validated $_POST['display_name'] variable
+ * @param string $email the validated $_POST['email'] variable
+ * @param string $title the validated $_POST['title'] variable
+ * @param string $password the validated $_POST['password'] variable
+ * @param string $passwordc the validated $_POST['passwordc'] variable
+ * @param boolean $require_activation value of global $emailActivation when $admin is false
+ * @param boolean $admin True if admin is creating user, False if not admin creating user.
+ * @return int $inserted_id
+ */
 function createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin) {
     // if we're in admin mode, then the user must be logged in and have appropriate permissions
     if ($admin == "true"){
@@ -229,7 +243,11 @@ function createUser($user_name, $display_name, $email, $title, $password, $passw
     return addUser($user_name, $display_name, $title, $secure_pass, $email, $active, $activation_token);
 }
 
-//Change a user from inactive to active based on their user id
+/**
+ * Activate user based on $user_id.
+ * @param int $user_id the id of the user to activate.
+ * @return boolean
+ */
 function activateUser($user_id) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -268,7 +286,12 @@ function activateUser($user_id) {
     }
 }
 
-//Update a user's display name
+/**
+ * Update user's display_name based on $user_id and new $display_name.
+ * @param int $user_id the id of the user to update.
+ * @param string $display_name the validated $_POST['display_name']
+ * @return boolean true on success false on failure
+ */
 function updateUserDisplayName($user_id, $display_name) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -294,7 +317,12 @@ function updateUserDisplayName($user_id, $display_name) {
     }
 }
 
-//Update a user's email
+/**
+ * Update user's email address based on $user_id and new $email.
+ * @param int $user_id the id of the user to update.
+ * @param string $email the validated $_POST['email']
+ * @return boolean true on success false on failure
+ */
 function updateUserEmail($user_id, $email) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -319,7 +347,12 @@ function updateUserEmail($user_id, $email) {
     }
 }
 
-//Update a user's title
+/**
+ * Update user's title based on $user_id and new $title.
+ * @param int $user_id the id of the user to update.
+ * @param string $title the validated $_POST['title']
+ * @return boolean true on success false on failure
+ */
 function updateUserTitle($user_id, $title) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -343,7 +376,13 @@ function updateUserTitle($user_id, $title) {
     }
 }
 
-//Update a user's password (hashed value)
+/**
+ * Update user's password(hashed value) based on $user_id and new $password & $passwordc.
+ * @param int $user_id the id of the user to update.
+ * @param string $password the new password
+ * @param string $passwordc the new password confirmation
+ * @return boolean true on success false on failure
+ */
 function updateUserPassword($user_id, $password, $passwordc) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -377,7 +416,12 @@ function updateUserPassword($user_id, $password, $passwordc) {
     }
 }
 
-// Update a user as enabled ($enabled = 1) or disabled (0)
+/**
+ * Update user's enabled status based on $user_id.
+ * @param int $user_id the id of the user to enable or disable.
+ * @param boolean $enabled true for enable, false for disable
+ * @return boolean true on success false on failure
+ */
 function updateUserEnabled($user_id, $enabled){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -408,7 +452,11 @@ function updateUserEnabled($user_id, $enabled){
     }
 }
 
-// Delete a specified user and all of their permission settings.  Returns true on success, false on failure.
+/**
+ * Delete user and associated permissions based on $user_id.
+ * @param int $user_id the id of the user to delete.
+ * @return boolean true on success false on failure
+ */
 function deleteUser($user_id){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -421,7 +469,10 @@ function deleteUser($user_id){
 
 /******************** group functions ******************/
 
-// Load complete information on all user groups.
+/**
+ * Loads all group information.
+ * @return array $results contains group information id, name, is_default, can_delete
+ */
 function loadGroups(){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -436,6 +487,7 @@ function loadGroups(){
 /**
  * Load data for a specified group
  * @param int $group_id the id of the group to load.
+ * @return array $results contains group information based on $group_id
  */
 function loadGroup($group_id){
     // This block automatically checks this action against the permissions database before running.
@@ -448,7 +500,12 @@ function loadGroup($group_id){
     return fetchGroupDetails($group_id);
 }
 
-// Load action permits for a specified group.
+/**
+ * Load data for a specified group's permitted actions or all permits available to groups
+ * @param int $group_id the id of the group to load, Could also use (string)all to load all groups instead of one group.
+ * @return array $action_permits contains group information based on $group_id
+ * @return array $results contains all permits available
+ */
 function loadGroupActionPermits($group_id) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -464,7 +521,11 @@ function loadGroupActionPermits($group_id) {
     }
 }
 
-// Load group membership for the specified user.
+/**
+ * Load groups for a specified user
+ * @param int $user_id the id of the user to load groups for.
+ * @return array $results contains all groups the selected user belongs to
+ */
 function loadUserGroups($user_id){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -475,7 +536,12 @@ function loadUserGroups($user_id){
     return fetchUserGroups($user_id);
 }
 
-// Remove specified user from group(s)
+/**
+ * Remove user from specified group(s)
+ * @param int $user_id the id of the user to load.
+ * @param array $group_ids the group(s) to remove the user from
+ * @return int $i the count of groups removed from the user or false if failed
+ */
 function removeUserFromGroups($user_id, $group_ids){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -502,7 +568,12 @@ function removeUserFromGroups($user_id, $group_ids){
     }
 }
 
-// Add specified user to group(s)
+/**
+ * Add user to specified group(s)
+ * @param int $user_id the id of the user to load.
+ * @param array $group_ids the group(s) to add the user to
+ * @return int $i the count of groups added to the user or false if failed
+ */
 function addUserToGroups($user_id, $group_ids){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -529,7 +600,11 @@ function addUserToGroups($user_id, $group_ids){
     }
 }
 
-//Create a new user group.
+/**
+ * Creates new group based on name
+ * @param string $name the string name of the group to add.
+ * @return boolean true for success, false if failed
+ */
 function createGroup($name) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -556,7 +631,14 @@ function createGroup($name) {
     }
 }
 
-//Change a group's details
+/**
+ * Update group based on new details
+ * @param int $group_id the id of the group to edit.
+ * @param string $name the new name of the group
+ * @param bool|int $is_default if the group is default group or not
+ * @param bool|int $can_delete if the group can be deleted or not
+ * @return boolean true for success, false if failed
+ */
 function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -593,7 +675,11 @@ function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
     }    
 }
 
-//Delete a user group, and all associations with pages and users
+/**
+ * Deletes group based on $group_id
+ * @param int $group_id the id of the group to delete.
+ * @return boolean true for success, false if failed
+ */
 function deleteGroup($group_id) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -611,7 +697,10 @@ function deleteGroup($group_id) {
 
 /************************* Site configuration functions *************************/
 
-// Retrieve an array containing all site settingss
+/**
+ * Retrieve all site settings in a array
+ * @return array $results contains all site settings
+ */
 function loadSiteSettings(){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -622,7 +711,11 @@ function loadSiteSettings(){
     return fetchConfigParameters();
 }
 
-// Update site settings via an array of key => value
+/**
+ * Update site settings
+ * @param array $settings the array of key => value to update.
+ * @return boolean true for success, false if failed
+ */
 function updateSiteSettings($settings){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -636,6 +729,10 @@ function updateSiteSettings($settings){
 /************************* Site page functions *************************/
 
 // Load list of all site pages from DB, updating as necessary.  Recommend only allow root access.
+/**
+ * Loads all site pages, adds new pages found, deletes pages not found
+ * @return array $allPages containing all pages and associated permissions for those pages
+ */
 function loadSitePages(){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
@@ -714,7 +811,13 @@ function loadSitePages(){
     }
 }
 
-// Link/unlink the specified group with the specified page.  Recommend root access only.
+/**
+ * Link/unlink the specified group with the specified page.  Recommend root access only.
+ * @param int $page_id the id of the page
+ * @param int $group_id the id of the group
+ * @param boolean $checked 1 if private page 0 if public
+ * @return boolean true for success, false if failed
+ */
 function updatePageGroupLink($page_id, $group_id, $checked){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
