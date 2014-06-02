@@ -145,6 +145,11 @@ $response .= "
     <input class='form-control typeahead input-lg' type='text' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' $action_name_disable_str />";
 $response .= "
 </div>
+<h5>Permits:</h5>
+<div class='form-group'>
+    <input class='form-control typeahead input-lg' type='text' data-selected_id='' placeholder='Search by name or description' name='permit_name' autocomplete='off'/>";
+$response .= "
+</div>
 ";
 
 // Buttons

@@ -169,10 +169,32 @@ function actionPermitForm(box_id, group_id, user_id) {
                 suggestions.push(suggest);
 			});
         
-			actionDropdown($('#' + box_id).find("input[name='action_name']"), suggestions, "", false);
+			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
+			typeaheadDropdown($('#' + box_id).find("input[name='action_name']"), suggestions, render_template, {'disabled': false});
 		});
 		
+		// Load permit options
+		var url = APIPATH + "load_permission_validators.php";
+		$.getJSON( url, { })
+		.done(function( data ) {
+			var suggestions = [];
+            jQuery.each(data, function(name, item) {
+				suggest = {
+					value: name,
+					tokens: [name].concat(item['description'].split(" ")),
+					name: name,
+                    description: item['description'],
+                    parameters: item['parameters']
+                };
+                
+                suggestions.push(suggest);
+			});
+        
+			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
+			typeaheadDropdown($('#' + box_id).find("input[name='permit_name']"), suggestions, render_template, {'disabled': false});
+		});
 		
+				
 		// Link submission buttons
 		$('#' + box_id + ' form').submit(function(e){ 
 			var errorMessages = validateFormFields(box_id);
@@ -192,73 +214,4 @@ function actionPermitForm(box_id, group_id, user_id) {
 	});
 }
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
-// Create an old-fashion html style select dropdown with typeahead capability
-function actionDropdown(typeahead_id, suggestions, default_id, disabled) {
-	default_id = typeof default_id !== 'undefined' ? default_id : "";
-	disabled = typeof disabled !== 'undefined' ? disabled : false;
-	
-	var source = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
-	var template = Handlebars.compile(source);
-	// Enable item
-	//jQuery.fn._typeahead.noConflict();
-	// Test array: var colors = ["red", "blue", "green", "yellow", "brown", "black"];    
-	$(typeahead_id).typeahead({
-		//name: classLabel,     // Update 2/19/2014: remove name to keep typeahead from caching data
-		minLength: 0,
-		limit: 100,
-        highlight: true,
-		local: suggestions,
-		template: template,
-		engine: Handlebars
-	}).on('typeahead:closed', function (object, datum) {
-		// Check to make sure that the inputted value is in the list of values.  If so, set the hidden -id field to the corresponding id
-		var found = false;
-		jQuery.each(suggestions, function(idx, item) {
-			// Match the item name against the suggestions list
-			if (item['name'].toLowerCase() == $(typeahead_id).val().toLowerCase())
-				found = item;
-		});
-		if (found ) {
-			// Set the selected hidden id and trigger the "change" event
-			var selected_id = found['id'];
-			$(typeahead_id).data("selected_id", selected_id);
-            $(typeahead_id).trigger('change');
-		} else {
-			$(typeahead_id).typeahead('setQuery', "");
-		}
-
-	});
-
-	// Set default value if specified
-	if (default_id) {
-		// Look for name
-		var found = false;
-		jQuery.each(suggestions, function(idx, item) {
-			// Match the item name against the suggestions list
-			if (item['id'] == default_id)
-				found = item;
-		});
-		if (found ) {
-			// Set the selected hidden id and trigger the "change" event
-			var selected_id = found['id'];
-			$(typeahead_id).typeahead('setQuery', found['name']);
-			$(typeahead_id).data("selected_id", selected_id);
-            $(typeahead_id).trigger('change');
-		} else {
-			$(typeahead_id).typeahead('setQuery', "");
-		}
-	}
-	// Disable if specified
-	if (disabled) {
-		$(typeahead_id).typeahead('destroy');
-		$(typeahead_id).prop('disabled', true);
-	}
-}
 
