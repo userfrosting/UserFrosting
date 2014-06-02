@@ -420,6 +420,18 @@ function loadSecureFunctions() {
 	return resultJSON;
 }
 
+function loadPermissionValidators() {
+	var url = APIPATH + 'load_permission_validators.php';
+	var result = $.ajax({  
+	  type: "GET",  
+	  url: url,
+	  async: false,
+	  data: {}
+	}).responseText;
+	var resultJSON = processJSONResult(result);
+	return resultJSON;
+}
+
 function addAlert(type, msg) {
 	var url = APIPATH + 'user_alerts.php';
 	$.ajax({  

@@ -44,9 +44,11 @@ function actionPermitsWidget(widget_id, options) {
 		if (Object.keys(data).length > 0) { 
 			// Get JSON object of all secure functions
 			var secure_functions = loadSecureFunctions();
+			var permission_validators = loadPermissionValidators();
 			// List each groups's actions and permits
 			jQuery.each(data, function(idx, record) {
 				html += "<h3>Group '" + record['name'] + "' <small>has permission to perform the following actions:</small></h3>";
+				html += "<div class='btn-group'><button class='btn btn-primary'><i class='fa fa-plus-square'></i> Add action for group '" + record['name'] + "'</button></div><br><br>";
 				// List actions for this group
 				var action_permits = record['action_permits'];
 				console.log(action_permits);
@@ -62,18 +64,28 @@ function actionPermitsWidget(widget_id, options) {
 						action_params = secure_functions[action_name]['parameters'];
 					}
 					
-					html += "<h4 class='list-group-item-heading'>" + action_name + " <small>" + action_desc + "</small></h4>";
-					html += "<h5>...with parameters:</h5>";
+					html += "<h4 class='list-group-item-heading'>" + action_name + " <small>" + action_desc + "</small>";
+					html += "<div class='pull-right'><button class='btn btn-primary'><i class='fa fa-edit'></i> Edit</button> ";
+					html += "<button class='btn btn-danger'><i class='fa fa-trash-o'></i> Delete</button></div></h4>";
+					html += "<h4><small>...with parameters:</small></h4>";
 					html += "<div class='list-group'>";
 					// List parameters for the given action
 					jQuery.each(action_params, function(name, param) {
 						html += "<div class='list-group-item'><em>" + name + "</em> : " + param['description'] + " (" + param['type'] + ")</div>";
 					});
 					html += "</div>";
-					html += "<h5>...if they meet ALL of the following criteria:</h5>";
+					html += "<h4><small>...if they meet ALL of the following criteria:</small></h4>";
 					html += "<div class='list-group'>";
 					jQuery.each(action_permits, function(permit_name, permit_params) {
-						html += "<div class='list-group-item'>" + permit_name + "(" + permit_params.join(",") + ")</div>";
+						permit_params_styled = [];
+						jQuery.each(permit_params, function(index, param) {
+							permit_params_styled.push("<em>" + param + "</em>");
+						});
+						html += "<div class='list-group-item'>" + permit_name + "(" + permit_params_styled.join(",") + ")";
+						if (permission_validators[permit_name]){
+							html += "<div class='h5'><small>" + permission_validators[permit_name]['description'] + "</small></div>";
+						}
+						html += "</div>";
 					});
 					html += "</div></div>";
 				});
