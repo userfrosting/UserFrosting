@@ -160,6 +160,7 @@ function actionPermitForm(box_id, group_id, user_id) {
             jQuery.each(data, function(name, item) {
 				suggest = {
 					value: name,
+					id: name,
 					tokens: [name].concat(item['description'].split(" ")),
 					name: name,
                     description: item['description'],
@@ -171,8 +172,20 @@ function actionPermitForm(box_id, group_id, user_id) {
         
 			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
 			typeaheadDropdown($('#' + box_id).find("input[name='action_name']"), suggestions, render_template, {'disabled': false});
+			
+			$('#' + box_id).find("input[name='action_name']").change(function(){
+				var id = $('#' + box_id).find("input[name='action_name']").data('selected_id');
+				var action = findById(suggestions, id);
+				var params = action['parameters'];
+				var html = "";
+				jQuery.each(params, function(name, param) {
+					html += "<div class='list-group-item'><em>" + name + "</em> : " + param['description'] + "</div>";
+				});
+				$('.action-parameters').html(html);
+			});
+			
 		});
-		
+				
 		// Load permit options
 		var url = APIPATH + "load_permission_validators.php";
 		$.getJSON( url, { })
@@ -181,6 +194,7 @@ function actionPermitForm(box_id, group_id, user_id) {
             jQuery.each(data, function(name, item) {
 				suggest = {
 					value: name,
+					id: name,
 					tokens: [name].concat(item['description'].split(" ")),
 					name: name,
                     description: item['description'],
@@ -214,4 +228,12 @@ function actionPermitForm(box_id, group_id, user_id) {
 	});
 }
 
-
+function findById(arr, id){
+	var result = null;
+	jQuery.each(arr, function (a,b){
+		if (b['id'] == id){
+			result = b;
+		}
+	});
+	return result;
+};
