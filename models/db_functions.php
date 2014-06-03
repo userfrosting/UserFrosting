@@ -1855,7 +1855,7 @@ function updatePrivate($page_id, $private) {
         $sqlVars[':private'] = $private;
         $sqlVars[':page_id'] = $page_id;
     
-        $stmt->execute();
+        $stmt->execute($sqlVars);
             
         if ($stmt->rowCount() > 0)
             return true;
@@ -2155,6 +2155,43 @@ function fetchUserPermits($user_id, $action_function) {
     }
 }
 
+// Load permission validator mappings for the specified action-permit mapping by id (from the `group_action_permits` table)
+function fetchGroupActionPermits($action_id) {
+    try {
+        global $db_table_prefix;
+          
+        $action_permits = array();
+          
+        $db = pdoConnect();
+          
+        $sqlVars = array();
+          
+        $query = "select * from {$db_table_prefix}group_action_permits where id = :action_id";
+		
+        $sqlVars[':action_id'] = $action_id;
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+        
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+        if ($row)
+            return $row;
+        else {
+            addAlert("danger", "The specified action id does not exist.");
+            return false;
+        }
+
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
 // Load permission validator mappings for the specified group and optionally, for a specified action
 function fetchGroupPermits($group_id, $action_function = null) {
     try {
@@ -2211,9 +2248,11 @@ function fetchAllGroupPermits() {
         
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $group_id = $r['group_id'];
+            $action_permit_id = $r['id'];
 			if (!isset($groups[$group_id])){
 				$groups[$group_id] = array();
-				$groups[$group_id]['name'] = $r['name'];
+				$groups[$group_id]['group_id'] = $group_id;
+                $groups[$group_id]['name'] = $r['name'];
 				$groups[$group_id]['action_permits'] = array();
 			}
 			// Parse out permit string into array of permit functions and parameters
@@ -2233,10 +2272,26 @@ function fetchAllGroupPermits() {
 				}				
 				$permits_by_arg[$permit_name] = $permit_with_params;
 			}
-			$action = array('action' => $r['action'], 'permits' => $permits_by_arg);
-			$groups[$group_id]['action_permits'][] = $action;
+
+			$actions = array('action_id' => $action_permit_id, 'action' => $r['action'], 'permits' => $permits_by_arg);
+			$groups[$group_id]['action_permits'][$action_permit_id] = $actions;
         }
+        
+        // Convert groups to numerically indexed array
+        $groups = array_values($groups);    
         $stmt = null;
+        
+        foreach ($groups as $group_id => $group){
+            $action_names = array();
+            foreach ($group['action_permits'] as $action_id => $action) {
+                $action_names[]  = $action['action'];
+            }
+            //echo var_dump($action_names);
+            //echo var_dump($group['action_permits']);
+            array_multisort($action_names, SORT_ASC, $group['action_permits']);
+            // Convert action_permits to numerically indexed array
+            $groups[$group_id]['action_permits'] = array_values($groups[$group_id]['action_permits']);
+        }
         
         return $groups;
 

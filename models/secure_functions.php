@@ -863,4 +863,56 @@ function updatePageGroupLink($page_id, $group_id, $checked){
     }
 }
 
+/***************************** Secure function authorization functions - recommend allow root user access only! *****************************/
+
+// This function allows you to view action permissions for groups.  
+function loadSecureFunctions(){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }    
+
+    # The Regular Expression for Function Declarations
+    $functionFinder = '/function[\s\n]+(\S+)[\s\n]*\(/';
+    # Init an Array to hold the Function Names
+    $functionArray = array();
+    # Load the Content of the PHP File
+    $fileContents = file_get_contents( '../models/secure_functions.php' );
+    
+    # Apply the Regular Expression to the PHP File Contents
+    preg_match_all( $functionFinder , $fileContents , $functionArray );
+    
+    # If we have a Result, Tidy It Up
+    if( count( $functionArray )>1 ){
+      # Grab Element 1, as it has the Matches
+      $functionArray = $functionArray[1];
+    }
+    
+    // Next, get parameter list for each function
+    $functionsWithParams = array();
+    foreach ($functionArray as $function) {
+        // Map the function argument names to their values.  We end up with a dictionary of argument_name => argument_value
+        $method = new ReflectionFunction($function);
+        $commentBlock = parseCommentBlock($method->getDocComment());
+        if (!$description = $commentBlock['description'])
+            $description = "No description available.";
+        if (!$parameters = $commentBlock['parameters'])
+            $parameters = array();       
+        $methodObj = array("description" => $description, "parameters" => array());
+        foreach ($method->getParameters() as $param){
+            if (isset($parameters[$param->name]))
+                $methodObj['parameters'][$param->name] = $parameters[$param->name];
+            else
+                $methodObj['parameters'][$param->name] = array("type" => "unknown", "description" => "unknown");
+        }
+        $functionsWithParams[$function] = $methodObj;
+    
+    }
+    
+    ksort($functionsWithParams);
+    
+    return $functionsWithParams;
+}
+
 ?>

@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -32,12 +32,15 @@ THE SOFTWARE.
 // Request method: GET
 
 require_once("../models/config.php");
-// User must be logged in
-if (!isUserLoggedIn()){
-    addAlert("danger", "You must be logged in to access this resource.");
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
+
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to index page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: index.php");
+  exit();
 }
+
+setReferralPage($_SERVER['PHP_SELF']);
 
 ?>
 

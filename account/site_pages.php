@@ -52,10 +52,14 @@ setReferralPage($_SERVER['PHP_SELF']);
     <title>UserFrosting Admin - Site Pages</title>
 
 	<?php require_once("includes.php");  ?>
-	 
+
+	<link rel="stylesheet" href="../css/typeahead.css"></link>
+		 
     <!-- Page Specific Plugins -->
 	<script src="../js/jquery.tablesorter.js"></script>
 	<script src="../js/tables.js"></script>	
+	<script src="../js/typeahead.js"></script>
+	<script src="../js/handlebars-v1.2.0.js"></script>
 	<script src="../js/widget-pages.js"></script>
 	<script src="../js/widget-permits.js"></script>	
   </head>

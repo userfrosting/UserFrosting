@@ -33,14 +33,14 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
-// User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
+if (!securePage($_SERVER['PHP_SELF'])){
+  // Forward to index page
+  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+  header("Location: index.php");
   exit();
 }
 
-// TODO: move this to a secured function
+setReferralPage($_SERVER['PHP_SELF']);
 
 // Parameters: box_id, render_mode, [user_id, show_dates, disabled]
 // box_id: the desired name of the div that will contain the form.
