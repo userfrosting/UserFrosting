@@ -41,7 +41,13 @@ if(isUserLoggedIn()) {
 	header("Location: account");
 	exit();
 }
+global $email_login;
 
+if ($email_login == 1) {
+    $user_email_placeholder = 'Username or Email';
+}else{
+    $user_email_placeholder = 'Username';
+}
 ?>
 
 <!DOCTYPE html>
@@ -95,7 +101,7 @@ if(isUserLoggedIn()) {
 		  </div>
 		  <div class="form-group">
 			<div class="col-md-offset-3 col-md-6">
-			  <input type="text" class="form-control" id="inputUserName" placeholder="Username" name = 'username' value=''>
+			  <input type="text" class="form-control" id="inputUserName" placeholder="<?php echo $user_email_placeholder; ?>" name = 'username' value=''>
 			</div>
 		  </div>
 		  <div class="form-group">

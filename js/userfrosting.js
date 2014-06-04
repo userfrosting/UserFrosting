@@ -28,8 +28,11 @@ THE SOFTWARE.
 
 */
 
+var APIPATH = getSitePath() + "api/";
+var FORMSPATH = getSitePath() + "forms/";
+
 // Returns the base URL of the website, assuming that this script is in the '/js' subdirectory of the site.
-var APIPATH = (function(scripts) {
+function getSitePath() {
     var scripts = document.getElementsByTagName('script'),
         script = scripts[scripts.length - 1];
 
@@ -39,10 +42,10 @@ var APIPATH = (function(scripts) {
 
     scriptPath = script.getAttribute('src', -1);
 	
-	var apiPath = scriptPath.substr(0, scriptPath.lastIndexOf( '/js' )+1 ) + "api/";
-	console.log("api path is: " + apiPath);
-	return apiPath;
-}());
+	var basePath = scriptPath.substr(0, scriptPath.lastIndexOf( '/js' )+1 );
+	console.log("base site path is: " + basePath);
+	return basePath;
+}
 
 function getTemplateAjax(path) {
 	var source;
@@ -128,48 +131,55 @@ function toTitleCase(str) {
 	}
 }
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 // Create an old-fashion html style select dropdown with typeahead capability
-function presetDropdown(dialog_id, classLabel, suggestions, default_id, disabled) {
-	default_id = typeof default_id !== 'undefined' ? default_id : "";
-	disabled = typeof disabled !== 'undefined' ? disabled : false;
-	
-	var source = "<p>{{name}}</p>";
-	var template = Handlebars.compile(source);
+function typeaheadDropdown(typeahead_element, suggestions, suggestion_render_template, options) {
+	var default_id = "";
+	var disabled = false;
+	if (options['default_id'])
+		default_id = options['default_id'];
+	if (options['disabled'])
+		disabled = options['disabled'];
+
+	var template = Handlebars.compile(suggestion_render_template);
 	// Enable item
 	//jQuery.fn._typeahead.noConflict();
-	// Test array: var colors = ["red", "blue", "green", "yellow", "brown", "black"];     
-	$('#' + dialog_id + ' .' + classLabel).typeahead({
+	// Test array: var colors = ["red", "blue", "green", "yellow", "brown", "black"];    
+	$(typeahead_element).typeahead({
 		//name: classLabel,     // Update 2/19/2014: remove name to keep typeahead from caching data
 		minLength: 0,
 		limit: 100,
+        highlight: true,
 		local: suggestions,
 		template: template,
 		engine: Handlebars
 	}).on('typeahead:closed', function (object, datum) {
-		console.log("Typeahead updated.");
 		// Check to make sure that the inputted value is in the list of values.  If so, set the hidden -id field to the corresponding id
 		var found = false;
 		jQuery.each(suggestions, function(idx, item) {
 			// Match the item name against the suggestions list
-			console.log("Checking item " + item['name']);
-			if (item['name'].toLowerCase() == $('#' + dialog_id + ' .' + classLabel).val().toLowerCase())
+			if (item['name'].toLowerCase() == $(typeahead_element).val().toLowerCase())
 				found = item;
 		});
 		if (found ) {
 			// Set the selected hidden id and trigger the "change" event
 			var selected_id = found['id'];
-			console.log("FIRING TRIGGER: " + selected_id);
-			$('#' + dialog_id + ' .' + classLabel + '-id' ).val(selected_id).trigger('change');
-
+			$(typeahead_element).data("selected_id", selected_id);
+            $(typeahead_element).trigger('change');
 		} else {
-			$('#' + dialog_id + ' .' + classLabel).typeahead('setQuery', "");
-			console.log("Item not found in list.");
+			$(typeahead_element).typeahead('setQuery', "");
 		}
 
 	});
+
 	// Set default value if specified
 	if (default_id) {
-		console.log("Default value is " + default_id);
 		// Look for name
 		var found = false;
 		jQuery.each(suggestions, function(idx, item) {
@@ -180,19 +190,17 @@ function presetDropdown(dialog_id, classLabel, suggestions, default_id, disabled
 		if (found ) {
 			// Set the selected hidden id and trigger the "change" event
 			var selected_id = found['id'];
-			$('#' + dialog_id + ' .' + classLabel).typeahead('setQuery', found['name']);
-			console.log("FIRING TRIGGER: " + selected_id);
-			$('#' + dialog_id + ' .' + classLabel + '-id' ).val(selected_id).trigger('change');
+			$(typeahead_element).typeahead('setQuery', found['name']);
+			$(typeahead_element).data("selected_id", selected_id);
+            $(typeahead_element).trigger('change');
 		} else {
-			$('#' + dialog_id + ' .' + classLabel).typeahead('setQuery', "");
-			console.log("Item not found in list.");
+			$(typeahead_element).typeahead('setQuery', "");
 		}
 	}
 	// Disable if specified
 	if (disabled) {
-		console.log("Disabling typeahead.");
-		$('#' + dialog_id + ' .' + classLabel).typeahead('destroy');
-		$('#' + dialog_id + ' .' + classLabel).prop('disabled', true);
+		$(typeahead_element).typeahead('destroy');
+		$(typeahead_element).prop('disabled', true);
 	}
 }
 
