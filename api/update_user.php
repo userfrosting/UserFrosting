@@ -93,6 +93,7 @@ $success_count = 0;
 //Update display name if specified and different from current value
 if ($display_name && $userdetails['display_name'] != $display_name){
 	if (!updateUserDisplayName($user_id, $display_name)){
+		addAlert("danger", "Failed updating user display name.");
 		$error_count++;
 		$display_name = $userdetails['display_name'];
 	} else {

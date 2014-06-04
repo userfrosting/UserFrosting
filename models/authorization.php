@@ -43,11 +43,21 @@ class PermissionValidators {
      * Return true if the currently logged in user is a member of the specified group_id.
      * @param int $group_id the group_id to compare to the currently logged in user's group membership.
      */
-    static function isUserInGroup($group_id){
+    static function isLoggedInUserInGroup($group_id){
         global $loggedInUser;
         return userInGroup($loggedInUser->user_id, $group_id);
     }
-    
+
+    /**
+     * Return true if the specified user's primary group matches the group specified by group_id.
+     * @param int $user_id the user_id to check.
+     * @param int $group_id the group_id to compare to the specified user's primary group.
+     */
+    static function isUserPrimaryGroup($user_id, $group_id){
+        $primary_group = fetchUserPrimaryGroup($user_id);
+        return ($primary_group['id'] == $group_id);
+    }    
+            
     /**
      * Return true if the specified user_id exists and is an active user, false otherwise.
      * @param int $user_id the user_id to compare to the currently logged in user's user_id.     
@@ -139,8 +149,9 @@ function checkActionPermission($action_function, $args) {
         // Process permits for this mapping
         $permits_str = $action_permit['permits'];
         $permits = explode('&', $permits_str);
+        //echo "Checking $action_function on arguments " . print_r($args, true) . "<br><br>";
         if (checkActionPermits($permits, $args)) {
-            //echo "Successfully validated $action_function on arguments " . print_r($args, true) . "<br><br>";
+            
             return true;
         }
     }
@@ -168,11 +179,18 @@ function checkActionPermits($permits, $args){
         if ($permit_param_str[2] and $permit_params = explode(',', $permit_param_str[2])){
             // For each parameter, try to match its value from the arguments, or the logged in user
             foreach ($permit_params as $param){
-                //echo "Mapping permit param: $param<br>";
+                // Trim
+                $param = trim($param);
+                // Map action parameters
                 if (isset($args[$param])){
                     $mappedArgs[] = $args[$param];
+                // Map logged in user id
                 } else if ($param == 'logged_in_user_id') {
                     $mappedArgs[] = $loggedInUser->user_id;
+                // Map literal (constant) parameters.  Must be surrounded by single quotes
+                } else if (preg_match('/^\'(.*)\'$/', $param, $val)){
+                    //echo "Found literal parameter $param";
+                    $mappedArgs[] = $val[1];
                 } else {
                     //echo "Error: Required parameter $param not specified.<br>";
                     return false;   // Unspecified parameter name

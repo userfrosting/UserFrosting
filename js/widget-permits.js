@@ -170,9 +170,10 @@ function actionPermitForm(box_id, group_id, user_id) {
                 suggestions.push(suggest);
 			});
         
+			// Build the typeahead for selecting an action
 			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
 			typeaheadDropdown($('#' + box_id).find("input[name='action_name']"), suggestions, render_template, {'disabled': false});
-			
+			// Update parameter list whenever an action is selected
 			$('#' + box_id).find("input[name='action_name']").change(function(){
 				var id = $('#' + box_id).find("input[name='action_name']").data('selected_id');
 				var action = findById(suggestions, id);

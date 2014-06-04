@@ -464,6 +464,8 @@ function parseCommentBlock($comment){
 				$name = $matches[2];
 				$description = $matches[3];
 				$result['parameters'][$name] = array('type' => $type, 'description' => $description);
+			} else if (preg_match('/^\s*\**\s*@(.*)$/', $line, $matches)){
+				// Skip other types of special entities
 			} else if (preg_match('/^\s*\**\s*(.*)$/', $line, $matches)){
 				$description = $matches[1];
 				$result['description'] .= $description;
