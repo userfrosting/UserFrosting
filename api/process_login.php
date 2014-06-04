@@ -47,28 +47,30 @@ if(isUserLoggedIn()) {
   }
 	exit();
 }
+$validate = new Validator();
 
+$postedUsername = $validate->requiredPostVar('username');
 //Forms posted
 if(!empty($_POST))
 {
     global $email_login;
 
-    $isEmail = count(explode('@', $_POST['username']));
+    $isEmail = count(explode('@', $postedUsername));
 
     if ($isEmail == 2 && $email_login == 1) {
         $email = 1;
-        $email_address = sanitize(trim($_POST['username']));
+        $email_address = sanitize(trim($postedUsername));
     } elseif ($isEmail == 1 && $email_login == 1){
         $email = 0;
-        $username = sanitize(trim($_POST['username']));
+        $username = sanitize(trim($postedUsername));
     }else {// ($email_login == 0){
         $email = 0;
-        $username = sanitize(trim($_POST['username']));
+        $username = sanitize(trim($postedUsername));
     }
 
 	$errors = array();
 	//$username = sanitize(trim($_POST["username"]));
-	$password = trim($_POST["password"]);
+	$password = trim($validate->requiredPostVar('password'));
 	
 	//Perform some validation
 	//Feel free to edit / change as required
