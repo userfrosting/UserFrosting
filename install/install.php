@@ -115,7 +115,8 @@ INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
 (7, 'template', 'models/site-templates/default.css'),
 (8, 'can_register', '1'),
 (9, 'new_user_title', 'New Member'),
-(10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "');
+(10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "'),
+(11, 'email_login', '0');
 ";
 
 $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (

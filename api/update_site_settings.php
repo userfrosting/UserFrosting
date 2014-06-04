@@ -69,6 +69,11 @@ if(!empty($posted))
 	} else {
 		$newSettings['can_register'] = $newRegistration = "0";
 	}
+    if (isset($newSettings['email_login'])){
+        $emailLogin = $newSettings['email_login'];
+    } else {
+        $newSettings['email_login'] = $emailLogin = "0";
+    }
 	$newResend_activation_threshold = $validator->requiredPostVar('resend_activation_threshold');
 	$newLanguage = $validator->requiredPostVar('language');
 	$newTemplate = $validator->requiredPostVar('template');
@@ -131,6 +136,17 @@ if(!empty($posted))
 			$can_register = $newRegistration;
 		}
 	}
+
+    //Validate email login enable/disable selection
+    if ($emailLogin != $email_login) {
+        if($emailLogin != "0" AND $emailLogin != "1")
+        {
+            $errors[] = lang("CONFIG_REGISTRATION_TRUE_FALSE");
+        }
+        else if (count($errors) == 0) {
+            $email_login = $emailLogin;
+        }
+    }
 
 	//Validate email activation selection
 	if ($newActivation != $emailActivation) {

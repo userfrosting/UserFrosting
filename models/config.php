@@ -57,6 +57,7 @@ $emailDate = date('dmy');
 $language = $settings['language'];
 $template = $settings['template'];
 $new_user_title = $settings['new_user_title'];
+$email_login = $settings['email_login'];
 
 // Define paths here, relative to the websiteUrl
 defined("SITE_ROOT")
