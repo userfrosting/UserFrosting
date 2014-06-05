@@ -176,39 +176,29 @@ function actionPermitForm(box_id, group_id, user_id) {
 			// Update parameter list whenever an action is selected
 			$('#' + box_id).find("input[name='action_name']").change(function(){
 				var id = $('#' + box_id).find("input[name='action_name']").data('selected_id');
+				//console.log("selected " + id);
+				//console.log(suggestions);
 				var action = findById(suggestions, id);
 				var params = action['parameters'];
 				var html = "";
+				/*
 				jQuery.each(params, function(name, param) {
 					html += "<div class='list-group-item'><em>" + name + "</em> : " + param['description'] + "</div>";
 				});
 				$('.action-parameters').html(html);
+				*/
+				// Also update permit options
+				var select_permit = $('#' + box_id).find("select[name='permit']");
+				select_permit.html("");
+				var presetPermits = buildPresetGroupPermitOptions(getKeys(params));
+				console.log(presetPermits);
+				jQuery.each(presetPermits, function(idx, option) {
+					$("<option></option>").val(option['value']).html(option['name']).
+					prop('selected', false).appendTo(select_permit);
+				});
 			});
 			
 		});
-				
-		// Load permit options
-		var url = APIPATH + "load_permission_validators.php";
-		$.getJSON( url, { })
-		.done(function( data ) {
-			var suggestions = [];
-            jQuery.each(data, function(name, item) {
-				suggest = {
-					value: name,
-					id: name,
-					tokens: [name].concat(item['description'].split(" ")),
-					name: name,
-                    description: item['description'],
-                    parameters: item['parameters']
-                };
-                
-                suggestions.push(suggest);
-			});
-        
-			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
-			typeaheadDropdown($('#' + box_id).find("input[name='permit_name']"), suggestions, render_template, {'disabled': false});
-		});
-		
 				
 		// Link submission buttons
 		$('#' + box_id + ' form').submit(function(e){ 
@@ -238,3 +228,32 @@ function findById(arr, id){
 	});
 	return result;
 };
+
+function getKeys(obj) {
+	var keys = [];
+	$.each( obj, function( key, value ) {
+		keys.push(key);
+	});
+	return keys;
+}
+
+// Create a list of the most common options for group-level permits, based on the fields passed in from an action.
+// Add additional options here as you think necessary.
+function buildPresetGroupPermitOptions(fields) {
+	console.log(fields);
+	var permits = [];
+	// Only add these permit options for actions that involve a user_id
+	if (jQuery.inArray('user_id', fields) > -1) {
+		// Create permit option for 'self'
+		permits.push({name: "themselves only.", value:"isLoggedInUser(user_id)"});
+		// Create permits to perform actions on users in primary groups
+		var groups = loadAllGroups();
+		jQuery.each(groups, function(group_id, group){
+			permits.push({name: "users whose primary group is '" + group['name'] + "'.", value:"isUserPrimaryGroup(user_id,'" + group['id'] + "')"});	
+		});
+		permits.push({name: "any user.", value:"always()"});
+	}
+
+	return permits;
+}
+

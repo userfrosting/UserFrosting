@@ -139,18 +139,15 @@ $response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
 $response .= "
 <div class='dialog-alert'>
 </div>
-<h4>Add action for group '$group_name':</h4>
-<h5>Action:</h5>
+<h4>Users in group '$group_name' can perform the action </h4>
 <div class='form-group'>
     <input class='form-control typeahead input-lg' type='text' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' $action_name_disable_str />";
 $response .= "
 </div>
-<h5>Parameters:</h5>
-<div class='list-group action-parameters'>
-</div>
-<h5>Permits:</h5>
+<h4>for</h4>
 <div class='form-group'>
-    <input class='form-control typeahead input-lg' type='text' data-selected_id='' placeholder='Search by name or description' name='permit_name' autocomplete='off'/>";
+    <select class='form-control' name='permit'>
+    </select>";
 $response .= "
 </div>
 ";

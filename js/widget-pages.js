@@ -57,8 +57,8 @@ function sitePagesWidget(widget_id, options) {
 			jQuery.each(columns, function(name, header) {
 				html += "<th>" + header + " <i class='fa fa-sort'></th>";
 			});
-			// Load list of permissions
-			permissions = loadAllPermissions();
+			// Load list of groups
+			permissions = loadAllGroups();
 			jQuery.each(permissions, function(perm_id, perm) {
 				html += "<th>" + perm['name'] + "</th>";
 			});
