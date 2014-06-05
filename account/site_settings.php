@@ -109,6 +109,13 @@ setReferralPage($_SERVER['PHP_SELF']);
 				<br><small>Specify whether users can create new accounts by themselves.</small>
 			  </div>
 			</div>
+            <div class="form-group">
+              <label for="emailLogin" class="col-sm-4 control-label">Email Login</label>
+                <div class="col-sm-8">
+                  <input type="checkbox" id ="emailLogin" name='email_login' value='0'/>
+                    <br><small>Specify whether users can login via email address or username instead of just username.</small>
+                </div>
+            </div>
 			<div class="form-group">
 			  <label for="newUserTitle" class="col-sm-4 control-label">Default New User Title</label>
 			  <div class="col-sm-8">
@@ -177,6 +184,7 @@ setReferralPage($_SERVER['PHP_SELF']);
 				resend_activation_threshold:	form.find('input[name="resend_activation_threshold"]').val(),
 				new_user_title:					form.find('input[name="new_user_title"]').val(),
 				can_register: 					form.find('input[name="can_register"]:checked').val(),
+                email_login: 					form.find('input[name="email_login"]:checked').val(),
 				activation: 					form.find('input[name="activation"]:checked').val(),
 				language:						form.find('select[name="language"] option:selected').val(),
 				template:						form.find('select[name="template"] option:selected').val(),
@@ -211,6 +219,11 @@ setReferralPage($_SERVER['PHP_SELF']);
 			  } else {
 				$('#regbox input[name="can_register"]').bootstrapSwitch('setState', false);
 			  }
+              if (data['email_login'] == "1")  {
+                  $('#regbox input[name="email_login"]').bootstrapSwitch('setState', true);
+              } else {
+                  $('#regbox input[name="email_login"]').bootstrapSwitch('setState', false);
+              }
 			  if (data['activation'] == "1")  {
 				$('#regbox input[name="activation"]').bootstrapSwitch('setState', true);
 			  } else {

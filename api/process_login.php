@@ -47,35 +47,68 @@ if(isUserLoggedIn()) {
   }
 	exit();
 }
+$validate = new Validator();
 
+$postedUsername = $validate->requiredPostVar('username');
 //Forms posted
 if(!empty($_POST))
 {
+    global $email_login;
+
+    $isEmail = count(explode('@', $postedUsername));
+
+    if ($isEmail == 2 && $email_login == 1) {
+        $email = 1;
+        $email_address = sanitize(trim($postedUsername));
+    } elseif ($isEmail == 1 && $email_login == 1){
+        $email = 0;
+        $username = sanitize(trim($postedUsername));
+    }else {// ($email_login == 0){
+        $email = 0;
+        $username = sanitize(trim($postedUsername));
+    }
+
 	$errors = array();
-	$username = sanitize(trim($_POST["username"]));
-	$password = trim($_POST["password"]);
+	//$username = sanitize(trim($_POST["username"]));
+	$password = trim($validate->requiredPostVar('password'));
 	
 	//Perform some validation
 	//Feel free to edit / change as required
-	if($username == "")
-	{
-		$errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
-	}
+    if ($email == 1){
+        if($email_address == "")
+        {
+            $errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
+        }
+    } else {
+        if($username == "")
+        {
+            $errors[] = lang("ACCOUNT_SPECIFY_USERNAME");
+        }
+    }
 	if($password == "")
 	{
 		$errors[] = lang("ACCOUNT_SPECIFY_PASSWORD");
 	}
-
 	if(count($errors) == 0)
 	{
 		//A security note here, never tell the user which credential was incorrect
-		if(!usernameExists($username))
+        if($email == 1){
+            $existsVar = !emailExists($email_address);
+        }else{
+            $existsVar = !usernameExists($username);
+        }
+
+        if($existsVar)
 		{
-			$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
+		  	$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
 		}
-		else
+        else
 		{
-			$userdetails = fetchUserAuthByUserName($username);
+            if ($email == 1){
+                $userdetails = fetchUserAuthByEmail($email_address);
+            } elseif ($email == 0) {
+                $userdetails = fetchUserAuthByUserName($username);
+            }
 			//See if the user's account is activated
 			if($userdetails["active"]==0)
 			{
@@ -84,8 +117,7 @@ if(!empty($_POST))
 			// See if user's account is enabled
 			else if ($userdetails["enabled"]==0){
 				$errors[] = lang("ACCOUNT_DISABLED");
-			} else
-			{
+			} else {
 				//Hash the password and use the salt from the database to compare the password.
 				
 				// If the password in the db is 65 characters long, match against the md5-hashed password.

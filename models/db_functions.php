@@ -238,6 +238,10 @@ function fetchUserAuthByUserName($user_name){
     return fetchUserAuth('user_name', $user_name);
 }
 
+function fetchUserAuthByEmail($email){
+    return fetchUserAuth('email', $email);
+}
+
 // Similar to loadUser, except additionally loads authentication data including password hash and activation request data
 function fetchUserAuth($column, $data){    
     try {
