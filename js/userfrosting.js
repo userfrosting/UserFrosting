@@ -169,6 +169,7 @@ function typeaheadDropdown(typeahead_element, suggestions, suggestion_render_tem
 		});
 		if (found ) {
 			// Set the selected hidden id and trigger the "change" event
+			//console.log("Selected " + found['id']);
 			var selected_id = found['id'];
 			$(typeahead_element).data("selected_id", selected_id);
             $(typeahead_element).trigger('change');
@@ -404,7 +405,7 @@ function userLoadPermissions() {
 	return resultJSON;
 }
 
-function loadAllPermissions() {
+function loadAllGroups() {
 	var url = APIPATH + 'load_groups.php';
 	var result = $.ajax({  
 	  type: "GET",  

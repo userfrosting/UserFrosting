@@ -33,7 +33,6 @@ require_once("../models/config.php");
 
 // Recommended admin-only access
 if (!securePage($_SERVER['PHP_SELF'])){
-    addAlert("danger", "Whoops, looks like you don't have permission to update a user.");
     if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
         echo json_encode(array("errors" => 1, "successes" => 0));
     } else {
