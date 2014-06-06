@@ -31,32 +31,20 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
-// Load all permission validator functions
-$permitReflector = new ReflectionClass('PermissionValidators');
-$methods = $permitReflector->getMethods();
+set_error_handler('logAllErrors');
 
-// Next, get parameter list for each function
-$functionsWithParams = array();
-
-foreach ($methods as $method) {
-    $function_name = $method->getName();
-    // Map the function argument names to their values.  We end up with a dictionary of argument_name => argument_value
-    $commentBlock = parseCommentBlock($method->getDocComment());
-    if (!$description = $commentBlock['description'])
-        $description = "No description available.";
-    if (!$parameters = $commentBlock['parameters'])
-        $parameters = array();       
-    $methodObj = array("description" => $description, "parameters" => array());
-    foreach ($method->getParameters() as $param){
-        if (isset($parameters[$param->name]))
-            $methodObj['parameters'][$param->name] = $parameters[$param->name];
-        else
-            $methodObj['parameters'][$param->name] = array("type" => "unknown", "description" => "unknown");
-    }
-    $functionsWithParams[$function_name] = $methodObj;
-
+// User must be logged in
+if (!isUserLoggedIn()){
+  addAlert("danger", "You must be logged in to access this resource.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
 }
 
-echo json_encode($functionsWithParams);
+if (!$results = loadPermissionValidators()){
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
+}
+
+echo json_encode($results);
 
 ?>

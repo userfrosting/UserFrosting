@@ -632,6 +632,52 @@ function createGroup($name) {
 }
 
 /**
+ * Creates new action permit mapping for a group
+ * @param string $group_id the id of the group for which to create a new permit.
+ * @param string $action_name the name of the action function. 
+ * @param string $permit the permit expression, a sequence of permission validator function calls joined by '&'.
+ * @return boolean true for success, false if failed
+ */
+function createGroupActionPermit($group_id, $action_name, $permit){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    //Check if selected group exists
+    if(!groupIdExists($group_id)){
+        addAlert("danger", "I'm sorry, the group id you specified is invalid!");
+        return false;
+    }    
+
+    //Check that secure function name exists
+    $secure_funcs = fetchSecureFunctions();
+    if (!isset($secure_funcs[$action_name])){
+        addAlert("danger", "I'm sorry, the specified action does not exist.");
+        return false;        
+    }
+
+    // Check that permission validators exist
+    $permit_funcs = fetchPermissionValidators();
+    $permit_arr = parsePermitString($permit);
+    foreach ($permit_arr as $p){
+        $name = $p['name'];
+        if (!isset($permit_funcs[$name])){
+            addAlert("danger", "I'm sorry, the permission validator $name does not exist.");
+            return false;              
+        }
+    }
+    
+    // Attempt to create in DB
+    if (!dbCreateGroupActionPermit($group_id, $action_name, $permit)){
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
  * Update group based on new details
  * @param int $group_id the id of the group to edit.
  * @param string $name the new name of the group
@@ -873,46 +919,18 @@ function loadSecureFunctions(){
         return false;
     }
 
-    # The Regular Expression for Function Declarations
-    $functionFinder = '/function[\s\n]+(\S+)[\s\n]*\(/';
-    # Init an Array to hold the Function Names
-    $functionArray = array();
-    # Load the Content of the PHP File
-    $fileContents = file_get_contents( '../models/secure_functions.php' );
+    return fetchSecureFunctions();
+}
 
-    # Apply the Regular Expression to the PHP File Contents
-    preg_match_all( $functionFinder , $fileContents , $functionArray );
-
-    # If we have a Result, Tidy It Up
-    if( count( $functionArray )>1 ){
-        # Grab Element 1, as it has the Matches
-        $functionArray = $functionArray[1];
+// This function allows you to view a list of permission validator functions.
+function loadPermissionValidators(){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
     }
 
-    // Next, get parameter list for each function
-    $functionsWithParams = array();
-    foreach ($functionArray as $function) {
-        // Map the function argument names to their values.  We end up with a dictionary of argument_name => argument_value
-        $method = new ReflectionFunction($function);
-        $commentBlock = parseCommentBlock($method->getDocComment());
-        if (!$description = $commentBlock['description'])
-            $description = "No description available.";
-        if (!$parameters = $commentBlock['parameters'])
-            $parameters = array();
-        $methodObj = array("description" => $description, "parameters" => array());
-        foreach ($method->getParameters() as $param){
-            if (isset($parameters[$param->name]))
-                $methodObj['parameters'][$param->name] = $parameters[$param->name];
-            else
-                $methodObj['parameters'][$param->name] = array("type" => "unknown", "description" => "unknown");
-        }
-        $functionsWithParams[$function] = $methodObj;
-
-    }
-
-    ksort($functionsWithParams);
-
-    return $functionsWithParams;
+    return fetchPermissionValidators();
 }
 
 ?>

@@ -49,8 +49,7 @@ function actionPermitsWidget(widget_id, options) {
 			jQuery.each(data, function(idx, record) {
 				// List actions for this group
 				var action_permits = record['action_permits'];
-				var group_id = record['group_id'];
-				console.log(action_permits);			
+				var group_id = record['group_id'];		
 				html += "<h3>Group '" + record['name'] + "' <small>has permission to perform the following actions:</small></h3>";
 				html += "<div class='btn-group'><button class='btn btn-primary createAction' data-toggle='modal' data-target='#action-create-dialog' data-id='" + group_id + "'>";
 				html += "<i class='fa fa-plus-square'></i> Add action for group '" + record['name'] + "'</button></div><br><br>";
@@ -112,9 +111,10 @@ function actionPermitsWidget(widget_id, options) {
 }
 
 /* Display a modal form for updating/creating an action-permission set for a user or group */
-function actionPermitForm(box_id, group_id, user_id) {	
+function actionPermitForm(box_id, group_id, user_id, action_id) {	
 	user_id = typeof user_id !== 'undefined' ? user_id : "";
 	group_id = typeof group_id !== 'undefined' ? group_id : "";
+	action_id = typeof action_id !== 'undefined' ? action_id : "";
 	
 	// Delete any existing instance of the form with the same name
 	if($('#' + box_id).length ) {
@@ -125,9 +125,12 @@ function actionPermitForm(box_id, group_id, user_id) {
 		box_id: box_id,
 		render_mode: 'modal'
 	};
+
+	if (action_id != "") {
+		data['action_id'] = action_id;
+	}
 	
 	if (user_id != "") {
-		console.log("Update mode");
 		data['user_id'] = user_id;
 	}
 	
@@ -170,14 +173,12 @@ function actionPermitForm(box_id, group_id, user_id) {
                 suggestions.push(suggest);
 			});
         
-			// Build the typeahead for selecting an action
-			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
-			typeaheadDropdown($('#' + box_id).find("input[name='action_name']"), suggestions, render_template, {'disabled': false});
 			// Update parameter list whenever an action is selected
-			$('#' + box_id).find("input[name='action_name']").change(function(){
-				var id = $('#' + box_id).find("input[name='action_name']").data('selected_id');
-				//console.log("selected " + id);
-				//console.log(suggestions);
+			$("#" + box_id + " .typeahead-action-name").change(function(){
+				var id = $(this).data('selected_id');
+				// Seems that change() is sometimes triggered without an id specified...this prevents phantom triggering
+				if (!id)
+					return;
 				var action = findById(suggestions, id);
 				var params = action['parameters'];
 				var html = "";
@@ -191,13 +192,15 @@ function actionPermitForm(box_id, group_id, user_id) {
 				var select_permit = $('#' + box_id).find("select[name='permit']");
 				select_permit.html("");
 				var presetPermits = buildPresetGroupPermitOptions(getKeys(params));
-				console.log(presetPermits);
 				jQuery.each(presetPermits, function(idx, option) {
 					$("<option></option>").val(option['value']).html(option['name']).
 					prop('selected', false).appendTo(select_permit);
 				});
 			});
 			
+			// Build the typeahead for selecting an action
+			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
+			typeaheadDropdown($("#" + box_id + " .typeahead-action-name"), suggestions, render_template, {'disabled': false});			
 		});
 				
 		// Link submission buttons
@@ -209,10 +212,14 @@ function actionPermitForm(box_id, group_id, user_id) {
 					$('#' + box_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
 				});	
 			} else {
-				if (user_id != "")
-					updateUser(box_id, user_id);
+				console.log("No errors found, submitting form.");
+				if (action_id != ""){
+				
+				}
 				else
-					createUser(box_id);
+					if (group_id != "") {
+						createGroupActionPermit(box_id, group_id);
+					}	
 			}
 			e.preventDefault();
 		});    	
@@ -220,13 +227,13 @@ function actionPermitForm(box_id, group_id, user_id) {
 }
 
 function findById(arr, id){
-	var result = null;
+	var item = null;
 	jQuery.each(arr, function (a,b){
 		if (b['id'] == id){
-			result = b;
+			item = b;
 		}
 	});
-	return result;
+	return item;
 };
 
 function getKeys(obj) {
@@ -240,7 +247,6 @@ function getKeys(obj) {
 // Create a list of the most common options for group-level permits, based on the fields passed in from an action.
 // Add additional options here as you think necessary.
 function buildPresetGroupPermitOptions(fields) {
-	console.log(fields);
 	var permits = [];
 	// Only add these permit options for actions that involve a user_id
 	if (jQuery.inArray('user_id', fields) > -1) {
@@ -257,3 +263,23 @@ function buildPresetGroupPermitOptions(fields) {
 	return permits;
 }
 
+function createGroupActionPermit(box_id, group_id) {
+	var data = {
+		group_id: group_id,
+		action_name: $('#' + box_id + ' input[name="action_name"]' ).val(),
+		permit: $('#' + box_id + ' select[name="permit"] option:selected' ).val(),
+		csrf_token: $('#' + box_id + ' input[name="csrf_token"]' ).val(),
+		ajaxMode: "true"
+	}
+	
+	var url = APIPATH + "create_action_permit.php";
+	$.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: data
+	}).done(function(result) {
+		processJSONResult(result);
+		window.location.reload();
+	});
+	return;
+}

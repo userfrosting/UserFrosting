@@ -75,14 +75,13 @@ if ($disabled) {
 if ($action_permit_id){
     $populate_fields = true;
     $button_submit_text = "Update action";
-    $user_id = htmlentities($userid);
-    $target = "update_action_permit.php";
+    $target = "../api/update_action_permit.php";
     $box_title = "Update Action";
     $action_name_disable_str = "disabled";
 } else {
     $populate_fields = false;
     $button_submit_text = "Create action";
-    $target = "create_action_permit.php";
+    $target = "../api/create_action_permit.php";
     $box_title = "New Action";
     $action_name_disable_str = "";
 }
@@ -91,7 +90,7 @@ $action_name = "";
 
 // If we're in update mode, load action data
 if ($populate_fields){
-    $action_permit = fetchGroupActionPermits($action_id);
+    $action_permit = fetchGroupActionPermits($action_permit_id);
     $action_name = $action_permit['action'];
     $group_id = $action_permit['group_id'];
     
@@ -138,10 +137,17 @@ $response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
 
 $response .= "
 <div class='dialog-alert'>
-</div>
-<h4>Users in group '$group_name' can perform the action </h4>
-<div class='form-group'>
-    <input class='form-control typeahead input-lg' type='text' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' $action_name_disable_str />";
+</div>";
+if ($group_id){
+  $response .= "<h4>Users in group '$group_name' can perform the action </h4>
+    <input type='hidden' name='group_id' value='$group_id'/>";
+} else if ($user_id){
+  $response .= "<h4>User '$user_name' can perform the action </h4>
+    <input type='hidden' name='user_id' value='$user_id'/>";
+}
+
+$response .= "<div class='form-group'>
+    <input class='form-control input-lg typeahead typeahead-action-name' type='text' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' $action_name_disable_str />";
 $response .= "
 </div>
 <h4>for</h4>

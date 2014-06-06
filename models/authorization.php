@@ -162,6 +162,30 @@ function checkActionPermission($action_function, $args) {
     
 }
 
+// Parse a permit string into an array of permit function names and associated parameters
+function parsePermitString($permit_str){
+    $permits = explode('&', $permit_str);
+    $permit_arr = array();
+    foreach ($permits as $permit){
+        $permit_obj = array();
+        // Extract permit parameters
+        $permit_param_str = array();
+        //echo $permit;
+        preg_match('/(.*?)\((.*?)\)/', $permit, $permit_param_str);
+        if ($permit_param_str[1]){
+            $permit_obj['name'] = $permit_param_str[1];
+            // Add parameters
+            if ($permit_param_str[2] && $permit_params = explode(',', $permit_param_str[2])){
+                $permit_obj['parameters'] = $permit_params;
+            } else {
+                $permit_obj['parameters'] = array();
+            }
+            $permit_arr[] = $permit_obj;
+        }  
+    }
+    return $permit_arr;
+}
+
 // Validate current user against an array of permits with the specified parameters.  Return true if ALL permits succeed.
 function checkActionPermits($permits, $args){
     global $loggedInUser;
@@ -254,6 +278,78 @@ function securePage($uri){
 			return false;	
 		}
 	}
+}
+
+function fetchSecureFunctions(){
+    # The Regular Expression for Function Declarations
+    $functionFinder = '/function[\s\n]+(\S+)[\s\n]*\(/';
+    # Init an Array to hold the Function Names
+    $functionArray = array();
+    # Load the Content of the PHP File
+    $fileContents = file_get_contents( FILE_SECURE_FUNCTIONS );
+
+    # Apply the Regular Expression to the PHP File Contents
+    preg_match_all( $functionFinder , $fileContents , $functionArray );
+
+    # If we have a Result, Tidy It Up
+    if( count( $functionArray )>1 ){
+        # Grab Element 1, as it has the Matches
+        $functionArray = $functionArray[1];
+    }
+
+    // Next, get parameter list for each function
+    $functionsWithParams = array();
+    foreach ($functionArray as $function) {
+        // Map the function argument names to their values.  We end up with a dictionary of argument_name => argument_value
+        $method = new ReflectionFunction($function);
+        $commentBlock = parseCommentBlock($method->getDocComment());
+        if (!$description = $commentBlock['description'])
+            $description = "No description available.";
+        if (!$parameters = $commentBlock['parameters'])
+            $parameters = array();
+        $methodObj = array("description" => $description, "parameters" => array());
+        foreach ($method->getParameters() as $param){
+            if (isset($parameters[$param->name]))
+                $methodObj['parameters'][$param->name] = $parameters[$param->name];
+            else
+                $methodObj['parameters'][$param->name] = array("type" => "unknown", "description" => "unknown");
+        }
+        $functionsWithParams[$function] = $methodObj;
+
+    }
+
+    ksort($functionsWithParams);
+
+    return $functionsWithParams;
+}
+
+function fetchPermissionValidators(){
+    // Load all permission validator functions
+    $permitReflector = new ReflectionClass('PermissionValidators');
+    $methods = $permitReflector->getMethods();
+    
+    // Next, get parameter list for each function
+    $functionsWithParams = array();
+    
+    foreach ($methods as $method) {
+        $function_name = $method->getName();
+        // Map the function argument names to their values.  We end up with a dictionary of argument_name => argument_value
+        $commentBlock = parseCommentBlock($method->getDocComment());
+        if (!$description = $commentBlock['description'])
+            $description = "No description available.";
+        if (!$parameters = $commentBlock['parameters'])
+            $parameters = array();       
+        $methodObj = array("description" => $description, "parameters" => array());
+        foreach ($method->getParameters() as $param){
+            if (isset($parameters[$param->name]))
+                $methodObj['parameters'][$param->name] = $parameters[$param->name];
+            else
+                $methodObj['parameters'][$param->name] = array("type" => "unknown", "description" => "unknown");
+        }
+        $functionsWithParams[$function_name] = $methodObj;
+    
+    }
+    return $functionsWithParams;
 }
 
 ?>

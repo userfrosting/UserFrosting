@@ -18,4 +18,6 @@ if (checkActionPermission('updateUserDisplayName', array("user_id" => 24))){
     echo "yessss";
 }
 
+echo var_dump(parsePermitString("isLoggedInUser(user_id,'3')&always()"));
+
 ?>
