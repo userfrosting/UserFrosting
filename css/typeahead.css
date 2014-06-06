@@ -1,10 +1,23 @@
 .twitter-typeahead {
   width: 100%;
+  text-align: left;
+  font-size: 18px;
 }
 
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {
   margin-bottom: 0;
+}
+
+.twitter-typeahead .tt-hint {
+    display: block;
+    width: inherit;
+    height: 100%;
+    padding: 8px 16px;
+    color: #999;
+    line-height: 1.428571429;
+    border: 1px solid transparent;
+    border-radius:4px;
 }
 
 .tt-dropdown-menu {
@@ -55,15 +68,6 @@
   margin: 0;
 }
 
-.twitter-typeahead .tt-hint {
-    display: block;
-    height: 34px;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.428571429;
-    border: 1px solid transparent;
-    border-radius:4px;
-}
 .twitter-typeahead .hint-small {
     height: 30px;
     padding: 5px 10px;
@@ -71,6 +75,7 @@
     border-radius: 3px;
     line-height: 1.5;
 }
+
 .twitter-typeahead .hint-large {
     height: 45px;
     padding: 10px 16px;

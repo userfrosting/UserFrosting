@@ -238,35 +238,37 @@ if ($show_passwords){
     </div>";
 }
 
-$response .= "    
-    <div class='col-sm-6'>
-        <h5>Permission Groups</h5>
-        <ul class='list-group permission-summary-rows'>";
+// Attempt to load all user groups
+$groups = loadGroups();
 
-
-// Load all user groups
-$permissions = loadGroups();
-
-foreach ($permissions as $id => $permission){
-    $permission_name = $permission['name'];
-    $is_default = $permission['is_default'];
-    $response .= "
-    <li class='list-group-item'>
-        $permission_name
-        <span class='pull-right'>
-        <input name='select_permissions' type='checkbox' class='form-control' data-id='$id' $disable_str";
-    if ((!$populate_fields and $is_default == 1) or ($populate_fields and isset($user_permissions[$id]))){
-        $response .= " checked";
-    }
-    $response .= "/>
-        </span>
-    </li>";  
+if ($groups){
+  $response .= "    
+      <div class='col-sm-6'>
+          <h5>Groups</h5>
+          <ul class='list-group permission-summary-rows'>";
+  
+  foreach ($groups as $id => $group){
+      $group_name = $group['name'];
+      $is_default = $group['is_default'];
+      $response .= "
+      <li class='list-group-item'>
+          $group_name
+          <span class='pull-right'>
+          <input name='select_permissions' type='checkbox' class='form-control' data-id='$id' $disable_str";
+      if ((!$populate_fields and $is_default == 1) or ($populate_fields and isset($user_permissions[$id]))){
+          $response .= " checked";
+      }
+      $response .= "/>
+          </span>
+      </li>";  
+  }
+        
+  $response .= "
+          </ul>
+      </div>";
 }
-      
-$response .= "
-        </ul>
-    </div>
-</div>";
+
+$response .= "</div>";
 
 // Buttons
 $response .= "
