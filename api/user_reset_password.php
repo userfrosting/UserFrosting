@@ -34,11 +34,108 @@ THE SOFTWARE.
 require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
+$validate = new Validator();
+$confirm = $validate->optionalPostVar('token');
+// TODO: setup deny variable in form to cancel out password reset request
+//$deny = $validate->optionalGetVar('deny');
 
-//User has confirmed they want their password changed.  Generate a random password and email it to them.
-if(!empty($_GET["confirm"]))
+// User has a token and want to reset there password
+if(!empty($confirm)) {
+    // Add alerts for any failed input validation
+    foreach ($validate->errors as $error){
+        addAlert("danger", $error);
+    }
+
+    // Grab up the token and remove any whitespace
+    $token = $validate->requiredPostVar('token');
+
+    // Validate the token to make sure its valid
+    if($token == "" || !validateLostPasswordToken($token))
+    {
+        $errors[] = lang("FORGOTPASS_INVALID_TOKEN");
+    }
+
+    // Set up variables for new password
+    $username = $validate->requiredPostVar('username');
+    $password = $validate->requiredPostVar('password');
+    $passwordc = $validate->requiredPostVar('passwordc');
+
+    //Fetch user details
+    $userdetails = fetchUserAuth('user_name', $username);
+
+    // Check if the password request is set or not
+    if($userdetails["lost_password_request"] == 0)
+    {
+        // TODO: if the user already has sent a password request
+
+    }else{
+
+        //check the time stamp of the last request
+        $request_time = $userdetails["lost_password_timestamp"];
+
+        // Get the timeout value from the configuration table
+        global $token_timeout;
+        $current_token_life = time()-$request_time;
+
+        // Check the token time to see if the token is still valid based on the timeout value
+        if($current_token_life >= $token_timeout){
+            // If not valid make the user restart the password request
+            $errors[] = 'Token past expiration time';
+            //reset the lost_password_request
+            header('Location: ../forgot_password.php');
+            exit();
+        }
+
+        //time is good, token is good process the password reset request
+        // Prevent updating if someone attempts to update with the same password
+	    // TODO: check the password rather then generating a new hash
+        $password_hash = generateHash($password);
+
+        // Check if the password being changed is the same as the current password or not
+	    if($password_hash == $userdetails["password"]) {
+            $errors[] = lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE");
+            exit();
+        }
+
+        // Check if the password is empty or not
+        if($password == "") {
+            $errors = lang("ACCOUNT_SPECIFY_NEW_PASSWORD");
+        // Check if the confirm password is empty or not
+        } else if($passwordc == "") {
+            $errors = lang("ACCOUNT_SPECIFY_CONFIRM_PASSWORD");
+        }
+        // Validate length of the password to be changed
+        else if(minMaxRange(8,50,$password)) {
+            $errors = lang("ACCOUNT_NEW_PASSWORD_LENGTH",array(8,50));
+        }
+        // Check if the Password and PasswordC match or not
+        else if($password != $passwordc) {
+            $errors[] = lang("ACCOUNT_PASS_MISMATCH");
+        }
+
+        // Hash the user's password and update
+        $secure_pass = generateHash($password);
+
+        // Nab up the user_id from the users information to update the password
+        $user_id = $userdetails["id"];
+
+        if(count($errors) == 0){
+            // Update password based on the user's id and the new password
+            if (updateUserField($user_id, 'password', $secure_pass)){
+                // Password was updated
+                $successes[] = lang("ACCOUNT_PASSWORD_UPDATED");
+            } else {
+                // Error happened couldn't update password
+                $errors[] = "Couldn't update password";
+            }
+        }
+    }
+}
+
+$sconfirm = '';
+if(!empty($sconfirm))
 {
-	$token = trim($_GET["confirm"]);
+	$token = trim($confirm);
 	
 	if($token == "" || !validateLostPasswordToken($token))
 	{
@@ -89,9 +186,9 @@ if(!empty($_GET["confirm"]))
 }
 
 //User has denied this request
-if(!empty($_GET["deny"]))
+if(!empty($deny))
 {
-	$token = trim($_GET["deny"]);
+	$token = trim($deny);
 	
 	if($token == "" || !validateLostPasswordToken($token))
 	{
@@ -113,7 +210,8 @@ if(!empty($_GET["deny"]))
 }
 
 //Forms posted
-if(!empty($_POST))
+$initial = $validate->optionalPostVar('initial');
+if(!empty($initial))
 {
 	$email = $_POST["email"];
 	$username = sanitize($_POST["username"]);
@@ -152,7 +250,7 @@ if(!empty($_POST))
 		{
 			//Check if the user has any outstanding lost password requests
 			$userdetails = fetchUserAuthByUserName($username);
-			if($userdetails["lost_password_request"] == 1)
+            if($userdetails["lost_password_request"] == 1)
 			{
 				$errors[] = lang("FORGOTPASS_REQUEST_EXISTS");
 			}
@@ -164,8 +262,8 @@ if(!empty($_POST))
 				//We use the activation token again for the url key it gets regenerated everytime it's used.
 				
 				$mail = new userCakeMail();
-				$confirm_url = lang("CONFIRM")."\n".$websiteUrl."user_reset_password.php?confirm=".$userdetails["activation_token"];
-				$deny_url = lang("DENY")."\n".$websiteUrl."user_reset_password.php?deny=".$userdetails["activation_token"];
+				$confirm_url = lang("CONFIRM")."\n".$websiteUrl."api/user_reset_password.php?confirm=".$userdetails["activation_token"];
+				$deny_url = lang("DENY")."\n".$websiteUrl."api/user_reset_password.php?deny=".$userdetails["activation_token"];
 				
 				//Setup our custom hooks
 				$hooks = array(
@@ -217,10 +315,10 @@ if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 } else {
   // Send successes to the login page, while errors should return them to the forgot_password page.
   if(count($errors) == 0) {
-	header('Location: login.php');
+	header('Location: ../login.php');
 	exit();
   } else {
-	header('Location: forgot_password.php');
+	header('Location: ../forgot_password.php');
 	exit();	
   }
 }

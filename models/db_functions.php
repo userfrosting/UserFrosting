@@ -262,6 +262,7 @@ function fetchUserAuth($column, $data){
             activation_token,
             last_activation_request,
             lost_password_request,
+            lost_password_timestamp,
             active,
             title,
             sign_up_stamp,
