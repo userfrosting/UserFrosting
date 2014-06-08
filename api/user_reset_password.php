@@ -36,15 +36,16 @@ require_once("../models/config.php");
 set_error_handler('logAllErrors');
 $validate = new Validator();
 $confirm = $validate->optionalPostVar('token');
-// TODO: setup deny variable in form to cancel out password reset request
+
 //$deny = $validate->optionalGetVar('deny');
 
 // User has a token and want to reset there password
+// Fix code to set lost_password_request to 0 when new pass is set
 if(!empty($confirm)) {
     // Add alerts for any failed input validation
-    foreach ($validate->errors as $error){
+    /*foreach ($validate->errors as $error){
         addAlert("danger", $error);
-    }
+    }*/
 
     // Grab up the token and remove any whitespace
     $token = $validate->requiredPostVar('token');
@@ -53,24 +54,17 @@ if(!empty($confirm)) {
     if($token == "" || !validateLostPasswordToken($token))
     {
         $errors[] = lang("FORGOTPASS_INVALID_TOKEN");
-    }
+    } else {
 
-    // Set up variables for new password
-    $username = $validate->requiredPostVar('username');
-    $password = $validate->requiredPostVar('password');
-    $passwordc = $validate->requiredPostVar('passwordc');
+        // Set up variables for new password
+        $username = $validate->requiredPostVar('username');
+        $password = $validate->requiredPostVar('password');
+        $passwordc = $validate->requiredPostVar('passwordc');
 
-    //Fetch user details
-    $userdetails = fetchUserAuth('user_name', $username);
+        //Fetch user details
+        $userdetails = fetchUserAuth('user_name', $username);
 
-    // Check if the password request is set or not
-    if($userdetails["lost_password_request"] == 0)
-    {
-        // TODO: if the user already has sent a password request
-
-    }else{
-
-        //check the time stamp of the last request
+        // Get the time stamp of the last request
         $request_time = $userdetails["lost_password_timestamp"];
 
         // Get the timeout value from the configuration table
@@ -81,16 +75,19 @@ if(!empty($confirm)) {
         if($current_token_life >= $token_timeout){
             // If not valid make the user restart the password request
             $errors[] = 'Token past expiration time';
-            //reset the lost_password_request
-            header('Location: ../forgot_password.php');
-            exit();
+
+            // Reset the password flag
+            if(!flagLostPasswordRequest($userdetails["user_name"],0))
+            {
+                $errors[] = lang("SQL_ERROR");
+            }
         }
 
         //time is good, token is good process the password reset request
         // Prevent updating if someone attempts to update with the same password
 	    // TODO: check the password rather then generating a new hash
         $password_hash = generateHash($password);
-
+        //ChromePhp::log($password_hash);
         // Check if the password being changed is the same as the current password or not
 	    if($password_hash == $userdetails["password"]) {
             $errors[] = lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE");
@@ -124,6 +121,16 @@ if(!empty($confirm)) {
             if (updateUserField($user_id, 'password', $secure_pass)){
                 // Password was updated
                 $successes[] = lang("ACCOUNT_PASSWORD_UPDATED");
+
+                // Reset the password flag
+                if(!flagLostPasswordRequest($userdetails["user_name"],0))
+                {
+                    $errors[] = lang("SQL_ERROR");
+                }
+                else {
+
+                    $successes[] = lang("FORGOTPASS_REQUEST_SUCCESS");
+                }
             } else {
                 // Error happened couldn't update password
                 $errors[] = "Couldn't update password";
@@ -131,7 +138,8 @@ if(!empty($confirm)) {
         }
     }
 }
-
+/*
+// Code below should be deprecated now by the above code
 $sconfirm = '';
 if(!empty($sconfirm))
 {
@@ -184,7 +192,9 @@ if(!empty($sconfirm))
 		}
 	}
 }
-
+*/
+// Fix code below so it works use $validate class on variables
+// Code below should work on this page without any input and redirect the user back to login.php
 //User has denied this request
 if(!empty($deny))
 {
@@ -209,12 +219,14 @@ if(!empty($deny))
 	}
 }
 
+// Fix errors in code below so that it will work correctly now
+// Regenerate the token we send to the user everytime this is called
 //Forms posted
 $initial = $validate->optionalPostVar('initial');
 if(!empty($initial))
 {
-	$email = $_POST["email"];
-	$username = sanitize($_POST["username"]);
+	$email = $validate->requiredPostVar('email');
+	$username = $validate->requiredPostVar('username');
 	
 	//Perform some validation
 	//Feel free to edit / change as required
@@ -262,7 +274,7 @@ if(!empty($initial))
 				//We use the activation token again for the url key it gets regenerated everytime it's used.
 				
 				$mail = new userCakeMail();
-				$confirm_url = lang("CONFIRM")."\n".$websiteUrl."api/user_reset_password.php?confirm=".$userdetails["activation_token"];
+				$confirm_url = lang("CONFIRM")."\n".$websiteUrl."forgot_password.php?confirm=".$userdetails["activation_token"];
 				$deny_url = lang("DENY")."\n".$websiteUrl."api/user_reset_password.php?deny=".$userdetails["activation_token"];
 				
 				//Setup our custom hooks

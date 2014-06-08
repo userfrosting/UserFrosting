@@ -86,7 +86,20 @@ global $token_timeout;
       </div>
       <div class="jumbotron">
         <h1>Reset Password</h1>
-        <p class="lead">Please enter your username and the email address you used to sign up.  A link with instructions to reset your password will be emailed to you.</p>
+        <?php
+        if(!$token){
+        echo'
+          <p class="lead">
+            Please enter your username and the email address you used to sign up.
+            A link with instructions to reset your password will be emailed to you.
+        </p>';
+        }else{
+            echo'
+          <p class="lead">
+            Please enter your username and your new password to reset your password.
+        </p>';
+        }?>
+
           <form class='form-horizontal' role='form' name='reset_password' action='api/user_reset_password.php' method='post'>
               <div class="row">
                   <div id='display-alerts' class="col-lg-12">
@@ -155,7 +168,7 @@ global $token_timeout;
                     var formdata = {
                         username:	form.find('input[name="username"]').val(),
                         email:		form.find('input[name="email"]').val(),
-                        initial:    "true",
+                        initial:    "1",
                         ajaxMode:	"true"
                     }
                 }
