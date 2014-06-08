@@ -39,10 +39,7 @@ $confirmAjax = 0;
 
 if(!empty($token)){$confirmAjax = 1;}else{$confirmAjax = 0;}
 
-//ChromePhp::log($token);
-//ChromePhp::log($confirmAjax);
 global $token_timeout;
-//ChromePhp::log($token_timeout);
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +93,7 @@ global $token_timeout;
         }else{
             echo'
           <p class="lead">
-            Please enter your username and your new password to reset your password.
+            Please enter your username and your new password to continue.
         </p>';
         }?>
 
@@ -132,7 +129,7 @@ global $token_timeout;
               </div>
               <div class="form-group">
                   <div class="col-md-offset-3 col-md-6">
-                      <input type="text" class="form-control" placeholder="Token" name = \'token\' value=\''.$token.'\'>
+                      <input type="hidden" class="form-control" placeholder="Token" name = \'token\' value=\''.$token.'\'>
                   </div>
               </div>';
               } ?>

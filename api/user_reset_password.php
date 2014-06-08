@@ -34,18 +34,18 @@ THE SOFTWARE.
 require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
+
 $validate = new Validator();
 $confirm = $validate->optionalPostVar('token');
-
-//$deny = $validate->optionalGetVar('deny');
+$initial = $validate->optionalPostVar('initial');
 
 // User has a token and want to reset there password
 // Fix code to set lost_password_request to 0 when new pass is set
 if(!empty($confirm)) {
     // Add alerts for any failed input validation
-    /*foreach ($validate->errors as $error){
+    foreach ($validate->errors as $error){
         addAlert("danger", $error);
-    }*/
+    }
 
     // Grab up the token and remove any whitespace
     $token = $validate->requiredPostVar('token');
@@ -87,7 +87,6 @@ if(!empty($confirm)) {
         // Prevent updating if someone attempts to update with the same password
 	    // TODO: check the password rather then generating a new hash
         $password_hash = generateHash($password);
-        //ChromePhp::log($password_hash);
         // Check if the password being changed is the same as the current password or not
 	    if($password_hash == $userdetails["password"]) {
             $errors[] = lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE");
@@ -127,10 +126,6 @@ if(!empty($confirm)) {
                 {
                     $errors[] = lang("SQL_ERROR");
                 }
-                else {
-
-                    $successes[] = lang("FORGOTPASS_REQUEST_SUCCESS");
-                }
             } else {
                 // Error happened couldn't update password
                 $errors[] = "Couldn't update password";
@@ -138,91 +133,9 @@ if(!empty($confirm)) {
         }
     }
 }
-/*
-// Code below should be deprecated now by the above code
-$sconfirm = '';
-if(!empty($sconfirm))
-{
-	$token = trim($confirm);
-	
-	if($token == "" || !validateLostPasswordToken($token))
-	{
-		$errors[] = lang("FORGOTPASS_INVALID_TOKEN");
-	}
-	else
-	{
-		$rand_pass = getUniqueCode(15); //Get unique code
-		$secure_pass = generateHash($rand_pass); //Generate random hash
-		$userdetails = fetchUserAuthByActivationToken($token); //Fetchs user details
-		$mail = new userCakeMail();		
-		
-		//Setup our custom hooks
-		$hooks = array(
-			"searchStrs" => array("#GENERATED-PASS#","#USERNAME#"),
-			"subjectStrs" => array($rand_pass,$userdetails["display_name"])
-			);
-		
-		if(!$mail->newTemplateMsg("your-lost-password.txt",$hooks))
-		{
-			$errors[] = lang("MAIL_TEMPLATE_BUILD_ERROR");
-		}
-		else
-		{	
-			if(!$mail->sendMail($userdetails["email"],"Your new password"))
-			{
-				$errors[] = lang("MAIL_ERROR");
-			}
-			else
-			{
-				if(!updatePasswordFromToken($secure_pass,$token))
-				{
-					$errors[] = lang("SQL_ERROR");
-				}
-				else
-				{	
-					if(!flagLostPasswordRequest($userdetails["user_name"],0))
-					{
-						$errors[] = lang("SQL_ERROR");
-					}
-					else {
-						$successes[]  = lang("FORGOTPASS_NEW_PASS_EMAIL");
-					}
-				}
-			}
-		}
-	}
-}
-*/
-// Fix code below so it works use $validate class on variables
-// Code below should work on this page without any input and redirect the user back to login.php
-//User has denied this request
-if(!empty($deny))
-{
-	$token = trim($deny);
-	
-	if($token == "" || !validateLostPasswordToken($token))
-	{
-		$errors[] = lang("FORGOTPASS_INVALID_TOKEN");
-	}
-	else
-	{
-		
-		$userdetails = fetchUserAuthByActivationToken($token);
-		
-		if(!flagLostPasswordRequest($userdetails["user_name"],0))
-		{
-			$errors[] = lang("SQL_ERROR");
-		}
-		else {
-			$successes[] = lang("FORGOTPASS_REQUEST_CANNED");
-		}
-	}
-}
 
-// Fix errors in code below so that it will work correctly now
 // Regenerate the token we send to the user everytime this is called
-//Forms posted
-$initial = $validate->optionalPostVar('initial');
+// Forms posted
 if(!empty($initial))
 {
 	$email = $validate->requiredPostVar('email');
@@ -309,6 +222,32 @@ if(!empty($initial))
 			}
 		}
 	}
+}
+
+$deny = $validate->optionalGetVar('deny');
+// Code below should work on this page without any input and redirect the user back to login.php
+// User has denied this request
+if(!empty($deny))
+{
+    $token = trim($deny);
+
+    if($token == "" || !validateLostPasswordToken($token))
+    {
+        $errors[] = lang("FORGOTPASS_INVALID_TOKEN");
+    }
+    else
+    {
+
+        $userdetails = fetchUserAuthByActivationToken($token);
+
+        if(!flagLostPasswordRequest($userdetails["user_name"],0))
+        {
+            $errors[] = lang("SQL_ERROR");
+        }
+        else {
+            $successes[] = lang("FORGOTPASS_REQUEST_CANNED");
+        }
+    }
 }
 
 restore_error_handler();

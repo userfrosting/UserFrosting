@@ -617,7 +617,8 @@ function updateLastActivationRequest($new_activation_token,$user_name,$email) {
 
 /*****************  User lost password functions *******************/
 
-//Check if lost password token exists in DB, that user account is active and that there is an outstanding lost password request.
+//Check if lost password token exists in DB, that user account is active and
+//that there is an outstanding lost password request.
 function validateLostPasswordToken($token) {
     try {
         global $db_table_prefix;
