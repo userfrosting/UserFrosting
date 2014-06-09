@@ -74,7 +74,7 @@ if(!empty($confirm)) {
         // Check the token time to see if the token is still valid based on the timeout value
         if($current_token_life >= $token_timeout){
             // If not valid make the user restart the password request
-            $errors[] = 'Token past expiration time';
+            $errors[] = lang("FORGOTPASS_OLD_TOKEN");
 
             // Reset the password flag
             if(!flagLostPasswordRequest($userdetails["user_name"],0))
@@ -128,7 +128,7 @@ if(!empty($confirm)) {
                 }
             } else {
                 // Error happened couldn't update password
-                $errors[] = "Couldn't update password";
+                $errors[] = lang("FORGOTPASS_COULD_NOT_UPDATE");
             }
         }
     }
