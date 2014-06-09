@@ -84,11 +84,8 @@ if(!empty($confirm)) {
         }
 
         //time is good, token is good process the password reset request
-        // Prevent updating if someone attempts to update with the same password
-	    // TODO: check the password rather then generating a new hash
-        $password_hash = generateHash($password);
         // Check if the password being changed is the same as the current password or not
-	    if($password_hash == $userdetails["password"]) {
+	    if(!generateHash($password, $userdetails["password"])) {
             $errors[] = lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE");
             exit();
         }
