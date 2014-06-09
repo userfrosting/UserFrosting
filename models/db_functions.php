@@ -262,6 +262,7 @@ function fetchUserAuth($column, $data){
             activation_token,
             last_activation_request,
             lost_password_request,
+            lost_password_timestamp,
             active,
             title,
             sign_up_stamp,
@@ -616,7 +617,8 @@ function updateLastActivationRequest($new_activation_token,$user_name,$email) {
 
 /*****************  User lost password functions *******************/
 
-//Check if lost password token exists in DB, that user account is active and that there is an outstanding lost password request.
+//Check if lost password token exists in DB, that user account is active and
+//that there is an outstanding lost password request.
 function validateLostPasswordToken($token) {
     try {
         global $db_table_prefix;
@@ -768,7 +770,8 @@ function addUser($user_name, $display_name, $title, $password, $email, $active, 
             email,
             activation_token,
             last_activation_request,
-            lost_password_request, 
+            lost_password_request,
+            lost_password_timestamp,
             active,
             title,
             sign_up_stamp,
@@ -782,6 +785,7 @@ function addUser($user_name, $display_name, $title, $password, $email, $active, 
             :activation_token,
             '".time()."',
             '0',
+            '".time()."',
             :active,
             :title,
             '".time()."',

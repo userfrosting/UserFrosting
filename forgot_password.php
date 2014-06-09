@@ -33,6 +33,13 @@ require_once("models/config.php");
 
 setReferralPage($_SERVER['PHP_SELF']);
 
+$validate = new Validator();
+$token = $validate->optionalGetVar('confirm');
+$confirmAjax = 0;
+
+if(!empty($token)){$confirmAjax = 1;}else{$confirmAjax = 0;}
+
+global $token_timeout;
 ?>
 
 <!DOCTYPE html>
@@ -76,64 +83,114 @@ setReferralPage($_SERVER['PHP_SELF']);
       </div>
       <div class="jumbotron">
         <h1>Reset Password</h1>
-        <p class="lead">Please enter your username and the email address you used to sign up.  A link with instructions to reset your password will be emailed to you.</p> 
-		<form class='form-horizontal' role='form' name='reset_password' action='user_reset_password.php' method='post'>
-		  <div class="row">
-			<div id='display-alerts' class="col-lg-12">
-  
-			</div>
-		  </div>
-		  <div class="form-group">
-			<div class="col-md-offset-3 col-md-6">
-			  <input type="text" class="form-control" placeholder="Username" name = 'username' value=''>
-			</div>
-		  </div>
-		  <div class="form-group">
-			<div class="col-md-offset-3 col-md-6">
-			  <input type="email" class="form-control" placeholder="Email" name='email'>
-			</div>
-		  </div>
-		  <div class="form-group">
-			<div class="col-md-12">
-			  <button type="submit" class="btn btn-success submit" value='Reset'>Reset Password</button>
-			</div>
-		  </div>
-		</form>
-      </div>	
+        <?php
+        if(!$token){
+        echo'
+          <p class="lead">
+            Please enter your username and the email address you used to sign up.
+            A link with instructions to reset your password will be emailed to you.
+        </p>';
+        }else{
+            echo'
+          <p class="lead">
+            Please enter your username and your new password to continue.
+        </p>';
+        }?>
+
+          <form class='form-horizontal' role='form' name='reset_password' action='api/user_reset_password.php' method='post'>
+              <div class="row">
+                  <div id='display-alerts' class="col-lg-12">
+
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="col-md-offset-3 col-md-6">
+                      <input type="text" class="form-control" placeholder="Username" name = 'username' value=''>
+                  </div>
+              </div>
+              <?php
+              if(!$token){
+
+              echo '<div class="form-group">
+                  <div class="col-md-offset-3 col-md-6">
+                      <input type="email" class="form-control" placeholder="Email" name=\'email\' value=\'\'>
+                  </div>
+              </div>';
+              }else{
+              echo '<div class="form-group">
+                  <div class="col-md-offset-3 col-md-6">
+                      <input type="password" class="form-control" placeholder="New Password" name = \'password\' value=\'\'>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="col-md-offset-3 col-md-6">
+                      <input type="password" class="form-control" placeholder="Password Confirm" name = \'passwordc\' value=\'\'>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="col-md-offset-3 col-md-6">
+                      <input type="hidden" class="form-control" placeholder="Token" name = \'token\' value=\''.$token.'\'>
+                  </div>
+              </div>';
+              } ?>
+
+              <div class="form-group">
+                  <div class="col-md-12">
+                      <button type="submit" class="btn btn-success submit" value='Reset'>Reset Password</button>
+                  </div>
+              </div>
+          </form>
+      </div>
       <div class="footer">
         <p>&copy; Your Website, 2014</p>
       </div>
 
     </div> <!-- /container -->
+    <script>
+        $(document).ready(function() {
+            // Load the header
+            $(".navbar").load("header-loggedout.php", function() {
+                $(".navbar .navitem-login").addClass('active');
+            });
 
-	<script>
-        $(document).ready(function() {          
-			// Load the header
-			$(".navbar").load("header-loggedout.php", function() {
-				$(".navbar .navitem-login").addClass('active');
-			});
-		  	
-			alertWidget('display-alerts');
-			  
-			$("form[name='reset_password']").submit(function(e){
-				var form = $(this);
-				var url = 'user_reset_password.php';
-				$.ajax({  
-				  type: "POST",  
-				  url: url,  
-				  data: {
-					username:	form.find('input[name="username"]').val(),
-					email:		form.find('input[name="email"]').val(),
-					ajaxMode:	"true"
-				  }
-				}).done(function(result) {
-				  resultJSON = processJSONResult(result);
-				  alertWidget('display-alerts');
-				});
-				// Prevent form from submitting twice
-				e.preventDefault();	
-			});  
-		});
-	</script>
+            alertWidget('display-alerts');
+
+            $("form[name='reset_password']").submit(function(e){
+                var form = $(this);
+                var url = 'api/user_reset_password.php';
+                var confirm = <?php echo $confirmAjax; ?>;
+
+                if(confirm==0)
+                {
+                    var formdata = {
+                        username:	form.find('input[name="username"]').val(),
+                        email:		form.find('input[name="email"]').val(),
+                        initial:    "1",
+                        ajaxMode:	"true"
+                    }
+                }
+                else
+                {
+                    var formdata = {
+                        username:	form.find('input[name="username"]').val(),
+                        password:	form.find('input[name="password"]').val(),
+                        passwordc:  form.find('input[name="passwordc"]').val(),
+                        token:      form.find('input[name="token"]').val(),
+                        ajaxMode:	"true"
+                    }
+                }
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formdata
+                }).done(function(result) {
+                    resultJSON = processJSONResult(result);
+                    alertWidget('display-alerts');
+                });
+                // Prevent form from submitting twice
+                e.preventDefault();
+            });
+        });
+    </script>
   </body>
 </html>

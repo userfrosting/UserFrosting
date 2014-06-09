@@ -58,6 +58,7 @@ $language = $settings['language'];
 $template = $settings['template'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
+$token_timeout = $settings['token_timeout'];
 
 // Define paths here, relative to the websiteUrl
 defined("SITE_ROOT")
@@ -103,8 +104,7 @@ require_once("class.user.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
-//require_once("chrome.php");
-
+// require_once("chrome.php");
 session_start();
 
 //Global User Object Var
