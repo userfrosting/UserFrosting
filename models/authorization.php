@@ -240,16 +240,14 @@ function checkActionPermits($permits, $args){
 }
 
 //Check if a user has access to an account page
-function securePage($uri){	
-	// Separate file path from base website path (case-insensitive)
-	$page = str_replace(strtolower("/" . SITE_ROOT . "/"), "", strtolower($uri));
-	
-	// $tokens = explode('/', $uri);
-	// $page = $tokens[sizeof($tokens)-1];
-	
+function securePage($file){		
+    
     global $loggedInUser,$master_account;
     
-    $pageDetails = fetchPageDetailsByName($page);
+	// Separate file path from base website path (case-insensitive)
+	$localPath = strtolower(getRelativeDocumentPath($file));
+    
+    $pageDetails = fetchPageDetailsByName($localPath);
     
 	//If page does not exist in DB or page is not permitted for any groups, disallow access		//Modified by Alex 9/18/2013 to NOT allow access by default
 	if (empty($pageDetails)){

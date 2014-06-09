@@ -207,7 +207,6 @@ function createUser($user_name, $display_name, $email, $title, $password, $passw
 
     //Do we need to require that the user activate their account first?
     if($require_activation) {
-        global $websiteUrl;
 
         //User must activate their account first
         $active = 0;
@@ -215,7 +214,7 @@ function createUser($user_name, $display_name, $email, $title, $password, $passw
         $mailSender = new userCakeMail();
 
         //Build the activation message
-        $activation_message = lang("ACCOUNT_ACTIVATION_MESSAGE",array($websiteUrl, $activation_token));
+        $activation_message = lang("ACCOUNT_ACTIVATION_MESSAGE",array(SITE_ROOT . "api/", $activation_token));
 
         //Define more if you want to build larger structures
         $hooks = array(

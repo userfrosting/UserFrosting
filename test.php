@@ -18,6 +18,19 @@ if (checkActionPermission('updateUserDisplayName', array("user_id" => 24))){
     echo "yessss";
 }
 
-echo var_dump(parsePermitString("isLoggedInUser(user_id,'3')&always()"));
+echo var_dump(parsePermitString("isLoggedInUser(user_id,'3')&always()")).PHP_EOL;
 
+define("PHP_BR", "<br>");
+
+echo SITE_ROOT.PHP_BR;
+echo $websiteUrl.PHP_BR;
+echo LOCAL_ROOT.PHP_BR;
+echo __FILE__.PHP_BR;
+echo dirname(__FILE__).PHP_BR;
+echo $_SERVER['SERVER_NAME'].PHP_BR;
+echo $_SERVER['HTTP_HOST'].PHP_BR;
+echo $_SERVER['PHP_SELF'].PHP_BR;
+echo $_SERVER['DOCUMENT_ROOT'].PHP_BR;
+echo getRelativeDocumentPath(__FILE__).PHP_BR;
+echo getAbsoluteDocumentPath(__FILE__).PHP_BR;
 ?>

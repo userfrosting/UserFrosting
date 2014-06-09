@@ -59,10 +59,21 @@ $template = $settings['template'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 
-// Define paths here, relative to the websiteUrl
-defined("SITE_ROOT")
-    or define("SITE_ROOT", basename($websiteUrl));
+// Determine if this is SSL or unsecured connection
+$url_prefix = "http://";
+// Determine if connection is http or https
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+    // SSL connection
+	$url_prefix = "https://";
+}
 
+// Define paths here
+defined("SITE_ROOT")
+    or define("SITE_ROOT", $url_prefix . "localhost/userfrosting/");
+
+defined("LOCAL_ROOT")
+	or define ("LOCAL_ROOT", realpath(dirname(__FILE__)."/.."));
+	
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
 
@@ -84,7 +95,7 @@ $page_include_paths = array(
 $master_account = 1;
 
 $default_hooks = array("#WEBSITENAME#","#WEBSITEURL#","#DATE#");
-$default_replace = array($websiteName,$websiteUrl,$emailDate);
+$default_replace = array($websiteName,SITE_ROOT,$emailDate);
 
 // The dirname(__FILE__) . "/..." construct tells PHP to look for the include file in the same directory as this (the config) file
 if (!file_exists($language)) {
@@ -92,6 +103,22 @@ if (!file_exists($language)) {
 }
 
 if(!isset($language)) $language = dirname(__FILE__) . "/languages/en.php";
+
+function getAbsoluteDocumentPath($localPath){
+	return SITE_ROOT . getRelativeDocumentPath($localPath);
+}
+
+// Return the document path of a file, relative to the root directory of the site.  Takes the absolute local path of the file (such as defined by __FILE__)
+function getRelativeDocumentPath($localPath){
+	$localPathLower = strtolower($localPath);
+	$localRootLower = strtolower(LOCAL_ROOT) . "/";
+	$pos = strpos($localPathLower, $localRootLower);
+	if ($pos !== false) {
+		return substr_replace($localPathLower,"",$pos,strlen($localRootLower));
+	} else {
+		return $localRootLower;
+	}
+}
 
 //Pages to require
 require_once($language);
