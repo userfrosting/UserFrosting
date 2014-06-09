@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 require_once("models/config.php");
 
-setReferralPage($_SERVER['PHP_SELF']);
+setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {

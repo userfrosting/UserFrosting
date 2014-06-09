@@ -140,7 +140,7 @@ function getParameterByName(name) {
 
 // Create an old-fashion html style select dropdown with typeahead capability
 function typeaheadDropdown(typeahead_element, suggestions, suggestion_render_template, options) {
-	var default_id = "";
+	var default_id = false;
 	var disabled = false;
 	if (options['default_id'])
 		default_id = options['default_id'];
@@ -169,10 +169,8 @@ function typeaheadDropdown(typeahead_element, suggestions, suggestion_render_tem
 		});
 		if (found ) {
 			// Set the selected hidden id and trigger the "change" event
-			//console.log("Selected " + found['id']);
 			var selected_id = found['id'];
-			$(typeahead_element).data("selected_id", selected_id);
-            $(typeahead_element).trigger('change');
+			$(typeahead_element).data("selected_id", selected_id).trigger('change');
 		} else {
 			$(typeahead_element).typeahead('setQuery', "");
 		}
@@ -192,8 +190,7 @@ function typeaheadDropdown(typeahead_element, suggestions, suggestion_render_tem
 			// Set the selected hidden id and trigger the "change" event
 			var selected_id = found['id'];
 			$(typeahead_element).typeahead('setQuery', found['name']);
-			$(typeahead_element).data("selected_id", selected_id);
-            $(typeahead_element).trigger('change');
+			$(typeahead_element).data("selected_id", selected_id).trigger('change');
 		} else {
 			$(typeahead_element).typeahead('setQuery', "");
 		}

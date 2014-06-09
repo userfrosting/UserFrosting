@@ -31,14 +31,14 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
-if (!securePage($_SERVER['PHP_SELF'])){
+if (!securePage(__FILE__)){
   // Forward to index page
   addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
   header("Location: 404.php");
   exit();
 }
 
-setReferralPage($_SERVER['PHP_SELF']);
+setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 //Log the user out
 if(isUserLoggedIn())
@@ -46,30 +46,9 @@ if(isUserLoggedIn())
 	$loggedInUser->userLogOut();
 }
 
-$url_prefix = "http://";
-// Determine if connection is http or https
-if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
-    // SSL connection
-	$url_prefix = "https://";
-}
-
-if(!empty($websiteUrl)) 
-{
-	$add_http = "";
-	
-	if(strpos($websiteUrl,$url_prefix) === false)
-	{
-		$add_http = $url_prefix;
-	}
-	
-	header("Location: ".$add_http.$websiteUrl);
-	die();
-}
-else
-{
-	header("Location: ".$url_prefix.$_SERVER['HTTP_HOST']);
-	die();
-}	
+// Forward to index root page
+header("Location: " . SITE_ROOT);
+die();
 
 ?>
 

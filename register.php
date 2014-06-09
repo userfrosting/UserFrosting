@@ -33,7 +33,7 @@ THE SOFTWARE.
 
 require_once("models/config.php");
 
-setReferralPage($_SERVER['PHP_SELF']);
+setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 if (!userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));

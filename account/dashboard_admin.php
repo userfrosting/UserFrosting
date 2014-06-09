@@ -33,14 +33,14 @@ THE SOFTWARE.
 require_once("../models/config.php");
 
 
-if (!securePage($_SERVER['PHP_SELF'])){
+if (!securePage(__FILE__)){
   // TODO: account section has its own 404 page
   header("Location: index.php");
   exit();
 }
 
 
-setReferralPage($_SERVER['PHP_SELF']);
+setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 // Admin page
 

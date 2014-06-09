@@ -33,7 +33,7 @@ require_once("models/config.php");
 
 // Public page
 
-setReferralPage($_SERVER['PHP_SELF']);
+setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 //Forward the user to their default page if he/she is already logged in
 if(isUserLoggedIn()) {

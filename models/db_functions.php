@@ -2313,4 +2313,49 @@ function fetchAllGroupPermits() {
     }
 }
 
+function dbCreateGroupActionPermit($group_id, $action, $permits) {
+   try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $i = 0;
+        $query = "INSERT INTO ".$db_table_prefix."group_action_permits (
+            group_id,
+            action,
+            permits
+            )
+            VALUES (
+            :group_id,
+            :action,
+            :permits
+            )";
+    
+        $stmt = $db->prepare($query);
+        
+        $sqlVars = array(
+            ':group_id' => $group_id,
+            ':action' => $action,
+            ':permits' => $permits
+        );
+        
+        $stmt->execute($sqlVars);
+
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            return false;
+        }
+        
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+
 ?>

@@ -103,6 +103,8 @@ setReferralPage($_SERVER['PHP_SELF']);
 			$('.navitem-site-pages').addClass('active');
           });
 
+		  alertWidget('display-alerts');
+		  
 		  actionPermitsWidget('widget-group-access', {});
 		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts'});
 		});
