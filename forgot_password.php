@@ -31,7 +31,7 @@ THE SOFTWARE.
 
 require_once("models/config.php");
 
-setReferralPage($_SERVER['PHP_SELF']);
+setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 $validate = new Validator();
 $token = $validate->optionalGetVar('confirm');
