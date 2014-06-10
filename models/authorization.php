@@ -245,9 +245,9 @@ function securePage($file){
     global $loggedInUser,$master_account;
     
 	// Separate file path from base website path (case-insensitive)
-	$localPath = strtolower(getRelativeDocumentPath($file));
+	$relativeURL = strtolower(getRelativeDocumentPath($file));
     
-    $pageDetails = fetchPageDetailsByName($localPath);
+    $pageDetails = fetchPageDetailsByName($relativeURL);
     
 	//If page does not exist in DB or page is not permitted for any groups, disallow access		//Modified by Alex 9/18/2013 to NOT allow access by default
 	if (empty($pageDetails)){

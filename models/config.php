@@ -110,13 +110,24 @@ function getAbsoluteDocumentPath($localPath){
 
 // Return the document path of a file, relative to the root directory of the site.  Takes the absolute local path of the file (such as defined by __FILE__)
 function getRelativeDocumentPath($localPath){
+	// Replace backslashes in local path (if we're in a windows environment)
+	$localPath = str_replace('\\', '/', $localPath);
+	
+	// Get lowercase version of path
 	$localPathLower = strtolower($localPath);
-	$localRootLower = strtolower(LOCAL_ROOT) . "/";
+
+	// Replace backslashes in local root (if we're in a windows environment)
+	$localRoot = str_replace('\\', '/', LOCAL_ROOT);	
+	
+	// Get lowercase version of path
+	$localRootLower = strtolower($localRoot) . "/";
+	
+	// Remove local root but preserve case
 	$pos = strpos($localPathLower, $localRootLower);
 	if ($pos !== false) {
-		return substr_replace($localPathLower,"",$pos,strlen($localRootLower));
+		return substr_replace($localPath,"",$pos,strlen($localRootLower));
 	} else {
-		return $localRootLower;
+		return $localRoot;
 	}
 }
 

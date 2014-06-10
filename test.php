@@ -2,35 +2,54 @@
 
 require_once("models/config.php");
 
-// Just some tests, for now
-
-/*
-if (PermissionValidators::isUserPrimaryGroup(24,'3')){
-    echo "user 24 has primary group 3";
-} else {
-    echo "no";
-}
-*/
-checkActionPermission('updateUserEmail', array("user_id" => 1));
-checkActionPermission('updateUserEmail', array("blah" => 1));
-
-if (checkActionPermission('updateUserDisplayName', array("user_id" => 24))){
-    echo "yessss";
-}
-
-echo var_dump(parsePermitString("isLoggedInUser(user_id,'3')&always()")).PHP_EOL;
-
 define("PHP_BR", "<br>");
 
-echo SITE_ROOT.PHP_BR;
-echo $websiteUrl.PHP_BR;
-echo LOCAL_ROOT.PHP_BR;
-echo __FILE__.PHP_BR;
-echo dirname(__FILE__).PHP_BR;
-echo $_SERVER['SERVER_NAME'].PHP_BR;
-echo $_SERVER['HTTP_HOST'].PHP_BR;
-echo $_SERVER['PHP_SELF'].PHP_BR;
-echo $_SERVER['DOCUMENT_ROOT'].PHP_BR;
-echo getRelativeDocumentPath(__FILE__).PHP_BR;
-echo getAbsoluteDocumentPath(__FILE__).PHP_BR;
+echo PHP_BR.PHP_BR.PHP_BR;
+echo 'Site root: '.SITE_ROOT.PHP_BR;
+echo '$websiteUrl: '.$websiteUrl.PHP_BR;
+echo 'Local root: '.LOCAL_ROOT.PHP_BR;
+echo 'file path: '.__FILE__.PHP_BR;
+echo 'file pate with dirname: '.dirname(__FILE__).PHP_BR;
+echo '$_SERVER servername: '.$_SERVER['SERVER_NAME'].PHP_BR;
+echo '$_SERVER http host: '.$_SERVER['HTTP_HOST'].PHP_BR;
+echo '$_SERVER php self: '.$_SERVER['PHP_SELF'].PHP_BR;
+echo '$_SERVER document root: '.$_SERVER['DOCUMENT_ROOT'].PHP_BR;
+echo 'get rel doc path: '.getRelativeDocumentPath(__FILE__).PHP_BR;
+echo 'get abs doc path: '.getAbsoluteDocumentPath(__FILE__).PHP_BR;
+
+echo PHP_BR.PHP_BR;
+
+echo '$_SERVER[PHP_SELF]: ' . $_SERVER['PHP_SELF'] . '<br />';
+echo 'Dirname($_SERVER[PHP_SELF]: ' . dirname($_SERVER['PHP_SELF']) . '<br>';
+
+echo PHP_BR.PHP_BR;
+
+$parentparentdir=basename(dirname(__FILE__));
+echo $parentparentdir; //will output 'content'
+
+echo PHP_BR.PHP_BR;
+
+/**
+ * @def (string) DS - Directory separator.
+ */
+define("DS","/",true);
+
+/**
+ * @def (resource) BASE_PATH - get a base path.
+ */
+define('BASE_PATH',basename(dirname(__FILE__)).DS,true);
+
+echo BASE_PATH;
+
+echo PHP_BR.PHP_BR;
+
+// Is the user using HTTPS?
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+
+// Complete the URL
+$url .= $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
+
+// echo the URL
+echo $url;
+
 ?>
