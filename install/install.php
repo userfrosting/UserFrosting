@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `".$db_table_prefix."users` (
 `activation_token` varchar(225) NOT NULL,
 `last_activation_request` int(11) NOT NULL,
 `lost_password_request` tinyint(1) NOT NULL,
+`lost_password_timestamp` int(11) NULL,
 `active` tinyint(1) NOT NULL,
 `title` varchar(150) NOT NULL,
 `sign_up_stamp` int(11) NOT NULL,
@@ -116,7 +117,8 @@ INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
 (8, 'can_register', '1'),
 (9, 'new_user_title', 'New Member'),
 (10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "'),
-(11, 'email_login', '0');
+(11, 'email_login', '0'),
+(12, 'token_timeout', '10800');
 ";
 
 $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
