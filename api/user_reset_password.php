@@ -108,7 +108,7 @@ if(!empty($confirm)) {
         $secure_pass = generateHash($password);
         // Nab up the user_id from the users information to update the password
         $user_id = $userdetails["id"];
-        
+
         if(count($errors) == 0){
             // Update password based on the user's id and the new password
             if (updateUserField($user_id, 'password', $secure_pass)){
