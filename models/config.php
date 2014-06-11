@@ -58,6 +58,7 @@ $language = $settings['language'];
 $template = $settings['template'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
+$token_timeout = $settings['token_timeout'];
 
 // Determine if this is SSL or unsecured connection
 $url_prefix = "http://";

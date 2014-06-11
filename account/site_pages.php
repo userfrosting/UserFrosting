@@ -98,11 +98,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 	</div>
 	</div>
 	<script>
-        $(document).ready(function() {
-          // Get id of the logged in user to determine how to render this page.
-          var user = loadCurrentUser();
-          var user_id = user['user_id'];
-          
+        $(document).ready(function() {          
           // Load the header
           $('.navbar').load('header.php', function() {
 			$('.navitem-site-pages').addClass('active');
