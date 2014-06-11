@@ -40,10 +40,12 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-// TODO: accept home page id, is_default, and can_delete
+// Delete an action-permit mapping, specified by action_id
+// POST: action_id, type = (user, group)
 
 $validator = new Validator();
-$group_name = $validator->requiredPostVar('group_name');
+$action_id = $validator->requiredPostVar('action_id');
+$type = $validator->requiredPostVar('type');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
@@ -51,13 +53,23 @@ foreach ($validator->errors as $error){
 }
 
 //Forms posted
-if($group_name) {
-	if (!createGroup($group_name)){
+if($action_id && $type) {
+	if ($type == "user"){
+	  if (!deleteUserActionPermit($action_id)){
+		echo json_encode(array("errors" => 1, "successes" => 0));
+		exit();
+	  } 
+	} else if ($type == "group"){
+	  if (!deleteGroupActionPermit($action_id)){
+		echo json_encode(array("errors" => 1, "successes" => 0));
+		exit();
+	  } 
+	} else {
+	  addAlert("danger", "Invalid action type (user, group) specified.");
 	  echo json_encode(array("errors" => 1, "successes" => 0));
 	  exit();
 	}
 } else {
-	addAlert("danger", lang("PERMISSION_CHAR_LIMIT", array(1, 50)));
 	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }

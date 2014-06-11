@@ -89,7 +89,7 @@ if ($error_count == 0){
 	}
 	
 	// If creation succeeds, add default groups for new users
-	if (addUserToDefaultGroups($new_user_id)){
+	if (dbAddUserToDefaultGroups($new_user_id)){
 	  // Uncomment this if you want self-registered users to know about permission groups
 	  //$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
 	} else {

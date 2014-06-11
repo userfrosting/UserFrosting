@@ -198,7 +198,7 @@ function fetchUser($user_id){
       
       $sqlVars = array();
       
-      $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from {$db_table_prefix}users where {$db_table_prefix}users.id = :user_id";
+      $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled, primary_group_id from {$db_table_prefix}users where {$db_table_prefix}users.id = :user_id";
       
       $sqlVars[':user_id'] = $user_id;
       
@@ -393,9 +393,8 @@ function fetchUserPrimaryGroup($user_id){
         $sqlVars = array();
         
         $query = "SELECT ".$db_table_prefix."groups.id as id, name 
-            FROM ".$db_table_prefix."user_group_matches,".$db_table_prefix."groups
-            WHERE user_id = :user_id and ".$db_table_prefix."user_group_matches.group_id = ".$db_table_prefix."groups.id and
-            ".$db_table_prefix."user_group_matches.is_primary = 1 LIMIT 1";
+            FROM ".$db_table_prefix."users,".$db_table_prefix."groups
+            WHERE ".$db_table_prefix."users.id = :user_id and ".$db_table_prefix."users.primary_group_id = ".$db_table_prefix."groups.id LIMIT 1";
         
         $stmt = $db->prepare($query);  
 
@@ -411,7 +410,7 @@ function fetchUserPrimaryGroup($user_id){
         if ($row)
             return $row;
         else {
-            addAlert("danger", "The user does not appear to have a primary group assigned.");
+            addAlert("danger", "The user either does not exist, or does not have a primary group assigned.");
             return false;
         }
         
@@ -438,9 +437,9 @@ function fetchUserHomePage($user_id){
         $sqlVars = array();
         
         $query = "SELECT page 
-            FROM ".$db_table_prefix."user_group_matches,".$db_table_prefix."groups,".$db_table_prefix."pages 
-            WHERE user_id = :user_id and ".$db_table_prefix."user_group_matches.group_id = ".$db_table_prefix."groups.id
-             and ".$db_table_prefix."user_group_matches.is_primary = '1' and ".$db_table_prefix."pages.id = ".$db_table_prefix."groups.home_page_id LIMIT 1";
+            FROM ".$db_table_prefix."users,".$db_table_prefix."groups,".$db_table_prefix."pages 
+            WHERE ".$db_table_prefix."users.id = :user_id and ".$db_table_prefix."users.primary_group_id = ".$db_table_prefix."groups.id and ".
+            $db_table_prefix."groups.home_page_id = ".$db_table_prefix."pages.id LIMIT 1";
         
         $stmt = $db->prepare($query);  
 
@@ -865,7 +864,7 @@ function updateUserField($user_id, $field_name, $field_value){
     }
 }
 
-// Remove a user and associated group membership from DB
+// Remove a user and associated group membership and action permissions from DB
 function removeUser($user_id){
     try {
       global $db_table_prefix;
@@ -885,7 +884,14 @@ function removeUser($user_id){
           return false;
       }
       
-      $query_perms = "DELETE FROM ".$db_table_prefix."user_group_matches WHERE user_id = :user_id";
+      $query_groups = "DELETE FROM ".$db_table_prefix."user_group_matches WHERE user_id = :user_id";
+      
+      $stmt_groups = $db->prepare($query_groups);
+      $stmt_groups->execute($sqlVars);
+      
+      $stmt_groups = null;      
+      
+      $query_perms = "DELETE FROM ".$db_table_prefix."user_action_permits WHERE user_id = :user_id";
             
       $stmt_perms = $db->prepare($query_perms);
       $stmt_perms->execute($sqlVars);
@@ -1007,7 +1013,8 @@ function fetchAllGroups() {
             id,
             name,
             is_default,
-            can_delete
+            can_delete,
+            home_page_id 
             FROM ".$db_table_prefix."groups"; 
         
         $stmt = $db->prepare($query);
@@ -1048,7 +1055,8 @@ function fetchGroupDetails($group_id) {
             id,
             name,
             is_default,
-            can_delete 
+            can_delete,
+            home_page_id 
             FROM ".$db_table_prefix."groups
             WHERE
             id = :group_id
@@ -1080,17 +1088,59 @@ function fetchGroupDetails($group_id) {
     }        
 }
 
-// Create a new group with the specified name, is_default, and can_delete parameters
-function dbCreateGroup($name, $is_default, $can_delete){
+// Get details for the default primary group
+function fetchDefaultPrimaryGroup(){
+    try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+
+        $query = "SELECT 
+            id,
+            name,
+            is_default,
+            can_delete,
+            home_page_id 
+            FROM ".$db_table_prefix."groups
+            WHERE
+            is_default = '2' 
+            LIMIT 1";
+	
+        $stmt = $db->prepare($query);
+        
+        if (!$stmt->execute()){
+            // Error
+            return false;
+        }
+        
+        if (!($results = $stmt->fetch(PDO::FETCH_ASSOC)))
+            return false;
+            
+        $stmt = null;
+      
+        return $results;
+        
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }  
+}
+
+// Create a new group with the specified name, is_default, can_delete, and home_page_id parameters
+function dbCreateGroup($name, $is_default, $can_delete, $home_page_id){
    try {
         $db = pdoConnect();
         global $db_table_prefix;
         
         $query = "INSERT INTO ".$db_table_prefix."groups (
-		name, is_default, can_delete
+		name, is_default, can_delete, home_page_id
 		)
 		VALUES (
-		:name, :is_default, :can_delete
+		:name, :is_default, :can_delete, :home_page_id
 		)";
         
         $stmt = $db->prepare($query);
@@ -1098,7 +1148,8 @@ function dbCreateGroup($name, $is_default, $can_delete){
         $sqlVars = array(
             ':name' => $name,
             ':is_default' => $is_default,
-            ':can_delete' => $can_delete
+            ':can_delete' => $can_delete,
+            ':home_page_id' => $home_page_id
         );
         
         $stmt->execute($sqlVars);
@@ -1120,8 +1171,8 @@ function dbCreateGroup($name, $is_default, $can_delete){
     }   
 }
 
-// Update the specified group with a new name, is_default, and can_delete parameters
-function dbUpdateGroup($group_id, $name, $is_default, $can_delete){
+// Update the specified group with a new name, is_default, can_delete, and home_page_id parameters
+function dbUpdateGroup($group_id, $name, $is_default, $can_delete, $home_page_id){
     try {
 
         $db = pdoConnect();
@@ -1129,12 +1180,12 @@ function dbUpdateGroup($group_id, $name, $is_default, $can_delete){
         global $db_table_prefix;
 
         $stmt = $db->prepare("UPDATE ".$db_table_prefix."groups
-            SET name = :name, is_default = :is_default, can_delete = :can_delete
+            SET name = :name, is_default = :is_default, can_delete = :can_delete, home_page_id = :home_page_id 
             WHERE
             id = :group_id
             LIMIT 1");
         
-        $sqlVars = array(":group_id" => $group_id, ":name" => $name, "is_default" => $is_default, "can_delete" => $can_delete);
+        $sqlVars = array(":group_id" => $group_id, ":name" => $name, ":is_default" => $is_default, ":can_delete" => $can_delete, ":home_page_id" => $home_page_id);
         
         $stmt->execute($sqlVars);
         
@@ -1155,7 +1206,7 @@ function dbUpdateGroup($group_id, $name, $is_default, $can_delete){
     } 
 }
 
-// Delete the group, and all associated pages and users, from the database.
+// Delete the group, and all associations with pages, users, and action permits, from the database.
 function dbDeleteGroup($group_id){
     try {
 
@@ -1177,7 +1228,10 @@ function dbDeleteGroup($group_id){
         
         $stmt3 = $db->prepare("DELETE FROM ".$db_table_prefix."group_page_matches 
             WHERE group_id = :group_id");
-        
+
+        $stmt4 = $db->prepare("DELETE FROM ".$db_table_prefix."group_action_permits 
+            WHERE group_id = :group_id");        
+                
         $sqlVars = array(":group_id" => $group_id);
         
         $stmt->execute($sqlVars);
@@ -1186,6 +1240,7 @@ function dbDeleteGroup($group_id){
             // Delete user and page matches for this group.
             $stmt2->execute($sqlVars);
             $stmt3->execute($sqlVars);
+            $stmt4->execute($sqlVars);
             return $groupDetails['name'];
         } else {
             addAlert("danger", "The specified group does not exist.");
@@ -1300,7 +1355,8 @@ function fetchGroupUsers($group_id) {
         
         $sqlVars = array();
         
-        $query = "SELECT {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled 
+        $query = "SELECT {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp,
+            last_sign_in_stamp, active, enabled, primary_group_id  
             FROM ".$db_table_prefix."user_group_matches,".$db_table_prefix."users
             WHERE group_id = :group_id and ".$db_table_prefix."user_group_matches.user_id = ".$db_table_prefix."users.id
             ";
@@ -1332,16 +1388,16 @@ function fetchGroupUsers($group_id) {
     }
 }
 
-// Add a user to the default groups.  TODO: check that user exists and isn't already assigned to group.
-function addUserToDefaultGroups($user_id){
+// Add a user to the default groups and set their primary group if possible.  TODO: check that user exists and isn't already assigned to group.
+function dbAddUserToDefaultGroups($user_id){
     try {
         global $db_table_prefix;
         
         $db = pdoConnect();
 
         $query = "SELECT 
-            id 
-            FROM ".$db_table_prefix."groups where is_default='1'"; 
+            id, is_default 
+            FROM ".$db_table_prefix."groups where is_default >= '1'"; 
         
         $stmt = $db->prepare($query);
 
@@ -1362,13 +1418,26 @@ function addUserToDefaultGroups($user_id){
         
         $stmt_user = $db->prepare($query_user);
         
+        $primary_group_id = null;
         // Insert match for each default group
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $group_id = $r['id'];
+            if ($r['is_default'] == '2')
+                $primary_group_id = $group_id;
             $sqlVars = array(':group_id' => $group_id, ':user_id' => $user_id);
             $stmt_user->execute($sqlVars);   
         }
+        
+        // Set primary group for user
+        if ($primary_group_id){
+            if (!updateUserField($user_id, 'primary_group_id', $primary_group_id)){
+                return false;
+            }
+        }
+        
         $stmt = null;
+      
+        return true;
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
@@ -2353,5 +2422,87 @@ function dbCreateGroupActionPermit($group_id, $action, $permits) {
     }
 }
 
+function dbCreateUserActionPermit($user_id, $action, $permits) {
+   try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $i = 0;
+        $query = "INSERT INTO ".$db_table_prefix."user_action_permits (
+            user_id,
+            action,
+            permits
+            )
+            VALUES (
+            :user_id,
+            :action,
+            :permits
+            )";
+    
+        $stmt = $db->prepare($query);
+        
+        $sqlVars = array(
+            ':user_id' => $user_id,
+            ':action' => $action,
+            ':permits' => $permits
+        );
+        
+        $stmt->execute($sqlVars);
+
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            return false;
+        }
+        
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+function dbDeleteActionPermit($action_id, $type){
+   try {
+        global $db_table_prefix;
+        
+        $db = pdoConnect();
+        
+        $table = "";
+        if ($type == "user"){
+            $table = "user_action_permits";
+        } else if ($type == "group"){
+            $table = "group_action_permits";
+        } else {
+            return false;
+        }
+        
+        $query = "DELETE FROM ".$db_table_prefix.$table.
+		" WHERE id = :action_id";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars = array(':action_id' => $action_id);
+        $stmt->execute($sqlVars);
+
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            return false;
+        }
+        
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
 
 ?>

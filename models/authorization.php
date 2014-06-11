@@ -57,7 +57,25 @@ class PermissionValidators {
         $primary_group = fetchUserPrimaryGroup($user_id);
         return ($primary_group['id'] == $group_id);
     }    
-            
+
+    /**
+     * Return true if the specified group_ids are the same.
+     * @param int $group_id the group_id to check.
+     * @param int $group_id_2 the group_id to compare.
+     */
+    static function isSameGroup($group_id, $group_id_2){
+        return ($group_id == $group_id_2);
+    }      
+
+    /**
+     * Return true if the specified group_id is a default group.
+     * @param int $group_id the group_id to check.
+     */
+    static function isDefaultGroup($group_id){
+        $group = fetchGroupDetails($group_id);
+        return ($group['is_default'] >= '1');
+    }         
+     
     /**
      * Return true if the specified user_id exists and is an active user, false otherwise.
      * @param int $user_id the user_id to compare to the currently logged in user's user_id.     

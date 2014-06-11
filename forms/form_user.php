@@ -40,8 +40,6 @@ if (!securePage(__FILE__)){
   exit();
 }
 
-setReferralPage(getAbsoluteDocumentPath(__FILE__));
-
 // Parameters: box_id, render_mode, [user_id, show_dates, disabled]
 // box_id: the desired name of the div that will contain the form.
 // render_mode: modal or panel
@@ -110,6 +108,7 @@ if ($populate_fields){
     $user_title = $user['title'];
     $user_active = $user['active'];
     $user_enabled = $user['enabled'];
+    $primary_group_id = $user['primary_group_id'];
     
     if ($user['last_sign_in_stamp'] == '0'){
         $last_sign_in_date = "Brand new!";
@@ -250,16 +249,28 @@ if ($groups){
   foreach ($groups as $id => $group){
       $group_name = $group['name'];
       $is_default = $group['is_default'];
+      $disable_primary_toggle = $disable_str;
       $response .= "
       <li class='list-group-item'>
           $group_name
           <span class='pull-right'>
           <input name='select_permissions' type='checkbox' class='form-control' data-id='$id' $disable_str";
-      if ((!$populate_fields and $is_default == 1) or ($populate_fields and isset($user_permissions[$id]))){
+      if ((!$populate_fields and $is_default >= 1) || ($populate_fields && isset($user_permissions[$id]))){
           $response .= " checked";
+      } else {
+        $disable_primary_toggle = "disabled";
       }
-      $response .= "/>
-          </span>
+      $response .= "/>";
+      if ((!$populate_fields and $is_default == 2) || ($populate_fields && ($id == $primary_group_id))){
+        $primary_group_class = "btn-toggle-primary-group btn-toggle-primary-group-on";
+      } else {
+        $primary_group_class = "btn-toggle-primary-group";
+      }
+      
+      $response .= "  <button type='button' class='btn btn-xs $primary_group_class $disable_primary_toggle' data-id='$id' title='Set as primary group'><i class='fa fa-home'></i></button>";
+      
+      
+      $response .= "</span>
       </li>";  
   }
         

@@ -55,7 +55,7 @@ PRIMARY KEY (`id`)
 
 $groups_entry = "
 INSERT INTO `".$db_table_prefix."groups` (`id`, `name`, `is_default`, `can_delete`, `home_page_id`) VALUES
-(1, 'User', 1, 0, 4),
+(1, 'User', 2, 0, 4),
 (2, 'Administrator', 0, 0, 5);
 ";
 
@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `".$db_table_prefix."users` (
 `sign_up_stamp` int(11) NOT NULL,
 `last_sign_in_stamp` int(11) NOT NULL,
 `enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Specifies if the account is enabled.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.',
+`primary_group_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Specifies the primary group for the user.',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ";
@@ -83,16 +84,15 @@ CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user_group_matches` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `user_id` int(11) NOT NULL,
 `group_id` int(11) NOT NULL,
-`is_primary` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies if this is the primary group for the user.',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 ";
 
 // Add root acount as a user and administrator
 $user_group_matches_entry = "
-INSERT INTO `".$db_table_prefix."user_group_matches` (`id`, `user_id`, `group_id`, `is_primary`) VALUES
-(1, 1, 1, 0),
-(2, 1, 2, 1);
+INSERT INTO `".$db_table_prefix."user_group_matches` (`id`, `user_id`, `group_id`) VALUES
+(1, 1, 1),
+(2, 1, 2);
 ";
 
 $configuration_sql = "

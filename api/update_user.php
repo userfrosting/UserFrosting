@@ -49,6 +49,7 @@ $title = trim($validator->optionalPostVar('title'));
 $rm_groups = $validator->optionalPostVar('remove_permissions');
 $add_groups = $validator->optionalPostVar('add_permissions');
 $enabled = $validator->optionalPostVar('enabled');
+$primary_group_id = $validator->optionalPostVar('primary_group_id');
 
 // For updating passwords.  The user's current password must also be included (passwordcheck) if they are resetting their own password.
 $password = $validator->optionalPostVar('password');
@@ -174,11 +175,12 @@ if(!empty($rm_groups)){
 	// Convert string of comma-separated group_id's into array
 	$group_ids_arr = explode(',',$rm_groups);
 
-	$removed = removeUserFromGroups($user_id, $group_ids_arr);
-	if ($removed === false){
-		$error_count++;
-	} else {
-		$success_count += $removed;
+	foreach ($group_ids_arr as $group_id){
+		if (removeUserFromGroup($user_id, $group_id)){
+			$success_count++;
+		} else {
+			$error_count++;
+		}
 	}
 }
 
@@ -188,11 +190,21 @@ if(!empty($add_groups)){
 	// Convert string of comma-separated group_id's into array
 	$group_ids_arr = explode(',',$add_groups);
 	
-	$added = addUserToGroups($user_id, $group_ids_arr);
-	if ($added === false){
-		$error_count++;
+	foreach ($group_ids_arr as $group_id){
+		if (addUserToGroup($user_id, $group_id)){
+			$success_count++;
+		} else {
+			$error_count++;
+		}
+	}
+}
+
+// Set primary group
+if(!empty($primary_group_id)){
+	if (updateUserPrimaryGroup($user_id, $primary_group_id)){
+		$success_count++;
 	} else {
-		$success_count += $added;
+		$error_count++;
 	}
 }
 

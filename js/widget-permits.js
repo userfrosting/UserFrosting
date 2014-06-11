@@ -54,7 +54,7 @@ function actionPermitsWidget(widget_id, options) {
 				html += "<div class='btn-group'><button class='btn btn-primary createAction' data-toggle='modal' data-target='#action-create-dialog' data-id='" + group_id + "'>";
 				html += "<i class='fa fa-plus-square'></i> Add action for group '" + record['name'] + "'</button></div><br><br>";
 				html += "<div class='list-group'>";
-				// Iterate actions for this group
+				// Iterate over actions for this group
 				jQuery.each(action_permits, function(idx_action, action) {
 					html += "<div class='list-group-item'>";
 					var action_id = action['action_id'];
@@ -69,7 +69,7 @@ function actionPermitsWidget(widget_id, options) {
 					
 					html += "<h4 class='list-group-item-heading'>" + action_name + " <small>" + action_desc + "</small>";
 					html += "<div class='pull-right'><button class='btn btn-primary' data-id='" + action_id + "'><i class='fa fa-edit'></i> Edit</button> ";
-					html += "<button class='btn btn-danger'><i class='fa fa-trash-o'></i> Delete</button></div></h4>";
+					html += "<button class='btn btn-danger deleteAction' data-id='" + action_id + "' data-type='group'><i class='fa fa-trash-o'></i> Delete</button></div></h4>";
 					html += "<h4><small>...with parameters:</small></h4>";
 					html += "<div class='list-group'>";
 					// List parameters for the given action
@@ -105,7 +105,13 @@ function actionPermitsWidget(widget_id, options) {
             var group_id = btn.data('id');
 			actionPermitForm('action-create-dialog', group_id, null);
         });
-		
+
+		widget.on('click', '.deleteAction', function () {
+            var btn = $(this);
+            var action_id = btn.data('id');
+			var type = btn.data('type');
+			deleteActionPermit(action_id, type);
+        });				
 		return false;
 	});
 }
@@ -248,8 +254,18 @@ function getKeys(obj) {
 // Add additional options here as you think necessary.
 function buildPresetGroupPermitOptions(fields) {
 	var permits = [];
+	// Add these permit options for actions that involve both a user_id and a group_id
+	if (jQuery.inArray('user_id', fields) > -1 && jQuery.inArray('group_id', fields) > -1) {
+		// Create permit options for default groups (any user)
+		permits.push({name: "any user and default groups.", value:"isDefaultGroup(group_id)"});				
+		// Create permit options for each group (any user)
+		var groups = loadAllGroups();
+		jQuery.each(groups, function(group_id, group){
+			permits.push({name: "any user and group '" + group['name'] + "'.", value:"isSameGroup(group_id,'" + group['id'] + "')"});		
+		});	
+		permits.push({name: "any user with any group.", value:"always()"});
 	// Only add these permit options for actions that involve a user_id
-	if (jQuery.inArray('user_id', fields) > -1) {
+	} else if (jQuery.inArray('user_id', fields) > -1) {
 		// Create permit option for 'self'
 		permits.push({name: "themselves only.", value:"isLoggedInUser(user_id)"});
 		// Create permits to perform actions on users in primary groups
@@ -258,6 +274,19 @@ function buildPresetGroupPermitOptions(fields) {
 			permits.push({name: "users whose primary group is '" + group['name'] + "'.", value:"isUserPrimaryGroup(user_id,'" + group['id'] + "')"});	
 		});
 		permits.push({name: "any user.", value:"always()"});
+	// Add these options for actions that involve a group_id
+	} else if (jQuery.inArray('group_id', fields) > -1) {
+		var groups = loadAllGroups();
+		// Create permit option for the user's primary group only
+		
+		// Create permit options for each group
+		jQuery.each(groups, function(group_id, group){
+			permits.push({name: "group '" + group['name'] + "'.", value:"isSameGroup(group_id,'" + group['id'] + "')"});		
+		});
+		permits.push({name: "any group.", value:"always()"});
+	// Default options
+	} else {
+		permits.push({name: "always.", value:"always()"});
 	}
 
 	return permits;
@@ -273,6 +302,25 @@ function createGroupActionPermit(box_id, group_id) {
 	}
 	
 	var url = APIPATH + "create_action_permit.php";
+	$.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: data
+	}).done(function(result) {
+		processJSONResult(result);
+		window.location.reload();
+	});
+	return;
+}
+
+function deleteActionPermit(action_id, type) {
+	var data = {
+		action_id: action_id,
+		type: type,
+		ajaxMode: "true"
+	}
+	
+	var url = APIPATH + "delete_action_permit.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  

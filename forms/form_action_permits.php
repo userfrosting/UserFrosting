@@ -40,8 +40,6 @@ if (!securePage(__FILE__)){
   exit();
 }
 
-setReferralPage(getAbsoluteDocumentPath(__FILE__));
-
 // Parameters: box_id, render_mode, [action_permit_id]
 // box_id: the desired id of the div that will contain the form.
 // render_mode: modal or panel

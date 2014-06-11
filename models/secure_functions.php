@@ -78,7 +78,7 @@ function loadUsers($limit = NULL){
 
         $sqlVars = array();
 
-        $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled from {$db_table_prefix}users";
+        $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled, primary_group_id from {$db_table_prefix}users";
 
         $stmt = $db->prepare($query);
         $stmt->execute($sqlVars);
@@ -452,6 +452,36 @@ function updateUserEnabled($user_id, $enabled){
 }
 
 /**
+ * Set user's primary group (by group_id)
+ * @param int $user_id the id of the user to update.
+ * @param int $group_id the id of the group to set as the primary group.
+ * @return boolean true on success false on failure
+ */
+function updateUserPrimaryGroup($user_id, $group_id) {
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+    
+    // Check that the group exists, and that the user is a member of it
+    if (!groupIdExists($group_id)){
+        addAlert("danger", "I'm sorry, the group id you specified is invalid!");
+        return false;    
+    } else if (!userInGroup($user_id, $group_id)){
+        addAlert("danger", "I'm sorry, the specified user is not a member of the specified group.");
+        return false;     
+    } else {
+        if (updateUserField($user_id, 'primary_group_id', $group_id)){
+            addAlert("success", "Primary group for user updated.");
+            return true;
+        } else {
+            return false;
+        }        
+    }
+}
+
+/**
  * Delete user and associated permissions based on $user_id.
  * @param int $user_id the id of the user to delete.
  * @return boolean true on success false on failure
@@ -536,12 +566,12 @@ function loadUserGroups($user_id){
 }
 
 /**
- * Remove user from specified group(s)
+ * Remove user from specified group
  * @param int $user_id the id of the user to load.
- * @param array $group_ids the group(s) to remove the user from
- * @return int $i the count of groups removed from the user or false if failed
+ * @param int $group_id the group to remove the user from
+ * @return boolean true for success, false if failed
  */
-function removeUserFromGroups($user_id, $group_ids){
+function removeUserFromGroup($user_id, $group_id){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
@@ -549,31 +579,25 @@ function removeUserFromGroups($user_id, $group_ids){
     }
     $userGroups = fetchUserGroups($user_id);
 
-    $remove = array();
-
     // Only try to remove if the user is already part of this group
-    foreach ($group_ids as $group_id){
-        if (isset($userGroups[$group_id])) {
-            $remove[$group_id] = $group_id;
+    if (isset($userGroups[$group_id])) {
+        if ($deletion_count = dbRemoveUserFromGroups($user_id, $group_id)){
+            if ($deletion_count > 0)
+                addAlert("success", lang("ACCOUNT_GROUP_REMOVED", array ($userGroups[$group_id]['name'])));
+            return true;
+        } else {
+            return false;
         }
-    }
-
-    if ($deletion_count = dbRemoveUserFromGroups($user_id, $remove)){
-        if ($deletion_count > 0)
-            addAlert("success", lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count)));
-        return $deletion_count;
-    } else {
-        return false;
     }
 }
 
 /**
- * Add user to specified group(s)
+ * Add user to specified group
  * @param int $user_id the id of the user to load.
- * @param array $group_ids the group(s) to add the user to
- * @return int $i the count of groups added to the user or false if failed
+ * @param int $group_id the group to add the user to
+ * @return boolean true for success, false if failed
  */
-function addUserToGroups($user_id, $group_ids){
+function addUserToGroup($user_id, $group_id){
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
@@ -584,18 +608,16 @@ function addUserToGroups($user_id, $group_ids){
     $add = array();
 
     // Only try to add if the user is not already part of this group
-    foreach ($group_ids as $group_id){
-        if (!isset($userGroups[$group_id])) {
-            $add[$group_id] = $group_id;
+    if (!isset($userGroups[$group_id])) {
+        if ($count = dbAddUserToGroups($user_id, $group_id)){
+            if ($count > 0){
+                $group = fetchGroupDetails($group_id);
+                addAlert("success", lang("ACCOUNT_GROUP_ADDED", array($group['name'])));
+            }
+            return true;
+        } else {
+            return false;
         }
-    }
-
-    if ($addition_count = dbAddUserToGroups($user_id, $add)){
-        if ($addition_count > 0)
-            addAlert("success", lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count)));
-        return $addition_count;
-    } else {
-        return false;
     }
 }
 
@@ -738,6 +760,27 @@ function deleteGroup($group_id) {
     } else {
         return false;
     }
+}
+
+/**
+ * Delete action permit mapping for a group.
+ * @param int $action_id the id of the action mapping to delete.
+ * @return boolean true for success, false if failed
+ */
+function deleteGroupActionPermit($action_id) {
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    if ($name = dbDeleteActionPermit($action_id, "group")){
+        addAlert("success", "Successfully deleted the specified action-permit mapping for the group.");
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 /************************* Site configuration functions *************************/

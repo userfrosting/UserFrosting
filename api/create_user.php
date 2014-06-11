@@ -112,6 +112,7 @@ $passwordc = $validator->requiredPostVar('passwordc');
 // Requires admin mode and appropriate permits
 $add_groups = $validator->optionalPostVar('add_groups');
 $skip_activation = $validator->optionalPostVar('skip_activation');
+$primary_group_id = $validator->optionalPostVar('primary_group_id');
 
 // Required for non-admin mode
 $captcha = $validator->optionalPostVar('captcha');
@@ -163,21 +164,23 @@ if ($error_count == 0){
 	if ($admin == "true" && $add_groups){
 	  // Convert string of comma-separated group_id's into array
 	  $group_ids_arr = explode(',',$add_groups);
-	  $add = array();
+	  $addition_count = 0;
 	  foreach ($group_ids_arr as $group_id){
-		$add[$group_id] = $group_id;
+		$addition_count += addUserToGroup($new_user_id, $group_id);
 	  }
-	  if (!$addition_count = addUserToGroups($new_user_id, $add)){
-		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-		  echo json_encode(array("errors" => 1, "successes" => 0));
-		} else {
-		  header('Location: ../register.php');
-		}
-		exit();
-	  }	
-	// Otherwise, add default groups for new users
+	  
+	  // Set primary group
+	  if(!empty($primary_group_id)){
+		  if (updateUserPrimaryGroup($new_user_id, $primary_group_id)){
+			  addAlert("success", "Successfully set user primary group.");
+		  } else {
+			  $error_count++;
+		  }
+	  }
+	  
+	// Otherwise, add default groups and set primary group for new users
 	} else {
-	  if (addUserToDefaultGroups($new_user_id)){
+	  if (dbAddUserToDefaultGroups($new_user_id)){
 		// Uncomment this if you want self-registered users to know about permission groups
 		//$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
 	  } else {

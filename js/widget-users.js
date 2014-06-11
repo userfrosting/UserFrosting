@@ -302,7 +302,30 @@ function userForm(box_id, user_id) {
 		switches.data('off-label', '<i class="fa fa-times"></i>');
 		switches.bootstrapSwitch();
 		switches.bootstrapSwitch('setSizeClass', 'switch-mini' );
-	
+		
+		// Initialize primary group buttons
+		$('#' + box_id + ' .btn-toggle-primary-group').click(function() {
+			$('#' + box_id + ' .btn-toggle-primary-group-on').removeClass('btn-toggle-primary-group-on');
+			$(this).addClass('btn-toggle-primary-group-on');
+		});
+		
+		// Enable/disable primary group buttons when switch is toggled
+		switches.on('switch-change', function(event, data){
+			var el = data.el;
+			var id = el.data('id');
+			// Get corresponding primary button
+			var primary_button = $('#' + box_id + ' button.btn-toggle-primary-group[data-id="' + id + '"]');
+			// If switch is turned on, enable the corresponding button, otherwise turn off and disable it
+			if (data.value) {
+				console.log("enabling");
+				primary_button.removeClass('disabled');
+			} else {
+				console.log("disabling");
+				primary_button.removeClass('btn-toggle-primary-group-on');
+				primary_button.addClass('disabled');
+			}	
+		});
+		
 		// Link submission buttons
 		$('#' + box_id + ' form').submit(function(e){ 
 			var errorMessages = validateFormFields(box_id);
@@ -351,7 +374,7 @@ function userDisplay(box_id, user_id) {
 	.done(function(result) {
 		$('#' + box_id).html(result['data']);
 
-		// Initialize bootstrap switches
+		// Initialize bootstrap switches for user groups
 		var switches = $('#' + box_id + ' input[name="select_permissions"]');
 		switches.data('on-label', '<i class="fa fa-check"></i>');
 		switches.data('off-label', '<i class="fa fa-times"></i>');
@@ -396,6 +419,9 @@ function createUser(dialog_id) {
 	});
 	console.log("Adding permissions: " + add_permissions.join(','));
 
+	// Set primary group
+	var primary_group_id = $('#' + dialog_id + ' button.btn-toggle-primary-group-on').data('id');
+	
 	var data = {
 		user_name: $('#' + dialog_id + ' input[name="user_name"]' ).val(),
 		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
@@ -405,6 +431,7 @@ function createUser(dialog_id) {
 		password: $('#' + dialog_id + ' input[name="password"]' ).val(),
 		passwordc: $('#' + dialog_id + ' input[name="passwordc"]' ).val(),
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
+		primary_group_id: primary_group_id,
 		admin: "true",
 		skip_activation: "true",
 		ajaxMode: "true"
@@ -447,6 +474,9 @@ function updateUser(dialog_id, user_id) {
 	console.log("Adding permissions: " + add_permissions.join(','));
 	console.log("Removing permissions: " + remove_permissions.join(','));
 	
+	// Set primary group
+	var primary_group_id = $('#' + dialog_id + ' button.btn-toggle-primary-group-on').data('id');
+	
 	var data = {
 		user_id: user_id,
 		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
@@ -454,6 +484,7 @@ function updateUser(dialog_id, user_id) {
 		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
 		add_permissions: add_permissions.join(','),
 		remove_permissions: remove_permissions.join(','),
+		primary_group_id: primary_group_id,
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
 		ajaxMode:	"true"
 	};

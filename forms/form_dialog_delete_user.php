@@ -40,8 +40,6 @@ if (!securePage(__FILE__)){
   exit();
 }
 
-setReferralPage(getAbsoluteDocumentPath(__FILE__));
-
 ?>
 
 <div class='modal-dialog modal-sm'>

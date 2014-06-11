@@ -167,3 +167,27 @@ table.tablesorter thead tr th:hover {
   }
 
 }
+
+/* Special buttons */
+.btn-toggle-primary-group {
+  color: #000000;
+  background-color: #ffffff;
+  border-color: #cccccc;
+  border-width: 2px;
+}
+
+.btn-toggle-primary-group-on {
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #357ebd;
+  border-width: 2px;
+}
+
+.btn-toggle-primary-group:hover,
+.btn-toggle-primary-group:focus,
+.btn-toggle-primary-group:active {
+  color: #ffffff;
+  background-color: #3276b1;
+  border-color: #357ebd;
+  border-width: 2px;
+}

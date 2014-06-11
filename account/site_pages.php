@@ -78,6 +78,11 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		  </div>
 		</div>
 		<div class="row">
+		  <div id='display-alerts-instant' class="col-lg-12">
+  
+		  </div>
+		</div>
+		<div class="row">
 		  <div id="widget-group-access" class="col-lg-12">
 		  
 		  </div>
@@ -106,7 +111,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		  alertWidget('display-alerts');
 		  
 		  actionPermitsWidget('widget-group-access', {});
-		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts'});
+		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts-instant'});
 		});
 	</script>
   </body>
