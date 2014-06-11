@@ -75,7 +75,18 @@ if(!empty($posted))
         $newSettings['email_login'] = $emailLogin = "0";
     }
 	$newResend_activation_threshold = $validator->requiredPostVar('resend_activation_threshold');
-	$newLanguage = $validator->requiredPostVar('language');
+
+    //grab the new value and multiply by 60 to get minutes and again by 60 to get the hours
+    //value returned is hours in seconds
+    //$newTokenTimeout = $validator->requiredPostVar('token_timeout') * 60 * 60;
+    $newSettings['token_timeout'] = $newSettings['token_timeout'] *60 *60;
+    if (isset($newSettings['token_timeout'])){
+        $newTokenTimeout = $newSettings['token_timeout'];
+    } else {
+        $newSettings['token_timeout'] = $newTokenTimeout = "10800";
+    }
+
+    $newLanguage = $validator->requiredPostVar('language');
 	$newTemplate = $validator->requiredPostVar('template');
 	
 	//Validate new site name
@@ -169,8 +180,19 @@ if(!empty($posted))
 			$resend_activation_threshold = $newResend_activation_threshold;
 		}
 	}
-	
-	//Validate new language selection
+
+    //Validate token time
+    if ($newTokenTimeout != $token_timeout) {
+        if($newTokenTimeout >= 0)
+        {
+            $errors[] = 'error on timeout token';
+        }
+        else if (count($errors) == 0) {
+            $token_timeout = $newTokenTimeout;
+        }
+    }
+
+    //Validate new language selection
 	if ($newLanguage != $language) {
 		if(minMaxRange(1,150,$newLanguage))
 		{

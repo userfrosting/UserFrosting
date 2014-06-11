@@ -121,6 +121,8 @@ $lang = array_merge($lang,array(
 //Forgot Password
 $lang = array_merge($lang,array(
 	"FORGOTPASS_INVALID_TOKEN"		=> "Your activation token is not valid",
+    "FORGOTPASS_OLD_TOKEN"          => "Token past expiration time",
+    "FORGOTPASS_COULD_NOT_UPDATE"   => "Couldn't update password",
 	"FORGOTPASS_NEW_PASS_EMAIL"		=> "We have emailed you a new password",
 	"FORGOTPASS_REQUEST_CANNED"		=> "Lost password request cancelled",
 	"FORGOTPASS_REQUEST_EXISTS"		=> "There is already a outstanding lost password request on this account",
