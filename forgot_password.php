@@ -157,7 +157,7 @@ global $token_timeout;
 
         $("form[name='reset_password']").submit(function(e){
             var form = $(this);
-            var url = 'api/user_reset_password.php';
+            var url = APIPATH + 'user_reset_password.php';
             var confirm = <?php echo $confirmAjax; ?>;
 
             if(confirm==0)

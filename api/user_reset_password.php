@@ -265,10 +265,10 @@ if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 } else {
     // Send successes to the login page, while errors should return them to the forgot_password page.
     if(count($errors) == 0) {
-        header('Location: ../../login.php');
+        header('Location: ' . SITE_ROOT . 'login.php');
         exit();
     } else {
-        header('Location: ../../forgot_password.php');
+        header('Location: ' . SITE_ROOT . 'forgot_password.php');
         exit();
     }
 }
