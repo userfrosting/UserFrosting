@@ -36,7 +36,7 @@ require_once("../models/config.php");
 if (!securePage(__FILE__)){
   // Forward to index page
   addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  header("Location: index.php");
+  echo json_encode(array("errors" => 1, "successes" => 0));
   exit();
 }
 

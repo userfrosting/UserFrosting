@@ -242,17 +242,39 @@ function usersWidget(widget_id, options) {
 	});
 }
 
-function deleteUserDialog(dialog_id, user_id, name){
-	// First, create the dialog div
-	var parentDiv = "<div id='" + dialog_id + "' class='modal fade'></div>";
-	$( "body" ).append( parentDiv );
+function deleteUserDialog(box_id, user_id, name){
 	
-	$('#' + dialog_id).load(FORMSPATH + 'form_dialog_delete_user.php', function () {
-		// Set the student_id
-		$('#' + dialog_id + ' input[name="user_id"]').val(user_id);
-		// Set the student_name
-		$('#' + dialog_id + ' .user_name').html(name);
-		$('#' + dialog_id + ' .btn-group-action .btn-confirm-delete').click(function(){
+	var data = {
+		box_id: box_id,
+		title: "Delete User",
+		message: "Are you sure you want to delete the user " + name + "?",
+		confirm: "Yes, delete user"
+	}
+	
+	// Generate the form
+	$.ajax({  
+	  type: "GET",  
+	  url: FORMSPATH + "form_confirm_delete.php",  
+	  data: data,
+	  dataType: 'json',
+	  cache: false
+	})
+	.fail(function(result) {
+		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+		alertWidget('display-alerts');
+	})
+	.done(function(result) {
+		if (result['errors']) {
+			console.log("error");
+			alertWidget('display-alerts');
+			return;
+		}
+		
+		// Append the form as a modal dialog to the body
+		$( "body" ).append(result['data']);
+		$('#' + box_id).modal('show');
+		
+		$('#' + box_id + ' .btn-group-action .btn-confirm-delete').click(function(){
 			deleteUser(user_id);
 		});	
 	});
