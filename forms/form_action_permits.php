@@ -43,26 +43,30 @@ if (!securePage(__FILE__)){
 // Parameters: box_id, render_mode, [action_permit_id]
 // box_id: the desired id of the div that will contain the form.
 // render_mode: modal or panel
+// group_id or user_id: one must be specified depending on whether this is for a user or a group.
 // action_id (optional): if specified, will load the relevant data for the action/permit mapping into the form.  Form will then be in "update" mode.
-// group_id (optional): if specified, will let you create a new action/permit mapping for the specified group.
-// user_id (optional): if specified, will let you create a new action/permit mapping for the specified user.
 // disabled (optional): if set to true, disable all fields
 
 $validator = new Validator();
 
 $box_id = $validator->requiredGetVar('box_id');
 $render_mode = $validator->requiredGetVar('render_mode');
-$action_id = $validator->optionalNumericGetVar('action_id');
 $group_id = $validator->optionalNumericGetVar('group_id');
 $user_id = $validator->optionalNumericGetVar('user_id');
+$action_id = $validator->optionalNumericGetVar('action_id');
+$disabled = $validator->optionalBooleanGetVar('disabled', false);
+
+if (!($user_id xor $group_id)){
+  addAlert("danger", "Exactly one of {user_id, group_id} must be specified.");
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();  
+}
 
 // Buttons (optional)
 // button_submit: If set to true, display the submission button for this form.
 // button_edit: If set to true, display the edit button for panel mode.
-
 $button_submit = $validator->optionalBooleanGetVar('button_submit', true);
 $button_edit = $validator->optionalBooleanGetVar('button_edit', false);
-$disabled = $validator->optionalBooleanGetVar('disabled', false);
 
 $disable_str = "";
 if ($disabled) {
@@ -70,8 +74,7 @@ if ($disabled) {
     $action_name_disable_str = "disabled";
 }
 
-
-// Create appropriate labels
+// Create appropriate labels depending on if we're in update or create mode
 if ($action_id){
     $populate_fields = true;
     $button_submit_text = "Update action";
@@ -90,19 +93,27 @@ $action_name = "";
 
 // If we're in update mode, load action data
 if ($populate_fields){
-    $action_permit = fetchGroupActionPermits($action_id);
-    $action_name = $action_permit['action'];
-    $group_id = $action_permit['group_id'];
+    if ($group_id) {
+      $action_permit = fetchActionPermit($action_id, "group");
+    } else {
+      $action_permit = fetchActionPermit($action_id, "user");
+    }
     
-    //$permission_validators = loadUserGroups($user_id);
+    $action_name = $action_permit['action'];
+
     if ($render_mode == "panel"){
         $box_title = $action_name; 
     }   
 }
 
-// Otherwise just load group data
-$group = fetchGroupDetails($group_id);
-$group_name = $group['name'];
+// Otherwise just load user/group data
+if ($group_id){
+  $group = fetchGroupDetails($group_id);
+  $group_name = $group['name'];
+} else {
+  $user = fetchUser($user_id);
+  $user_name = $user['user_name'];
+}
 
 $response = "";
 

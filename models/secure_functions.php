@@ -530,10 +530,9 @@ function loadGroup($group_id){
 }
 
 /**
- * Load data for a specified group's permitted actions or all permits available to groups
- * @param int $group_id the id of the group to load, Could also use (string)all to load all groups instead of one group.
- * @return array $action_permits contains group information based on $group_id
- * @return array $results contains all permits available
+ * Load data for a specified group's permitted actions or an array of permitted actions for every group
+ * @param int $group_id the id of the group to load, Could also use (string)all to load permits for all groups instead of one group.
+ * @return array either a single group's permitted actions, or an array of groups
  */
 function loadGroupActionPermits($group_id) {
     // This block automatically checks this action against the permissions database before running.
@@ -544,9 +543,30 @@ function loadGroupActionPermits($group_id) {
 
     // Calls appropriate function in db_functions
     if ($group_id == "all"){
-        return fetchAllGroupPermits();
+        return fetchAllPermits("group");
     } else {
         return fetchGroupPermits($group_id);
+    }
+}
+
+
+/**
+ * Load data for a specified user's permitted actions or an array of permitted actions for every user
+ * @param int $user_id the id of the user to load, Could also use (string)all to load permits for all users instead of one user.
+ * @return array either a single user's permitted actions, or an array of users
+ */
+function loadUserActionPermits($user_id) {
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    // Calls appropriate function in db_functions
+    if ($user_id == "all"){
+        return fetchAllPermits("user");
+    } else {
+        return fetchUserPermits($user_id);
     }
 }
 

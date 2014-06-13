@@ -75,12 +75,22 @@ if ($user_id){
       exit();
   }
 } else {
-  if ($all == "groups"){
+  if ($all == "users"){
+    // Attempt to load action permits for all users
+    if (!($results = loadUserActionPermits("all"))){
+        echo json_encode(array("errors" => 1, "successes" => 0));
+        exit();
+    }
+  } else if ($all == "groups"){
     // Attempt to load action permits for all groups
     if (!($results = loadGroupActionPermits("all"))){
         echo json_encode(array("errors" => 1, "successes" => 0));
         exit();
     }
+  } else {
+    addAlert("danger", "user_id, group_id, or all must be specified.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();    
   }
 }
 

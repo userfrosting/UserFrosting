@@ -2195,54 +2195,25 @@ function removePage($page_ids, $group_id) {
     }
 }
 
-// Load permission validator mappings for the specified action and user
-function fetchUserPermits($user_id, $action_function) {
+// Load permission validator mappings for the specified action-permit mapping by id (for either a group or a user)
+function fetchActionPermit($action_id, $type) {
     try {
         global $db_table_prefix;
-          
-        $action_permits = array();
           
         $db = pdoConnect();
           
         $sqlVars = array();
+         
+        $table = "";
+        if ($type == "user"){
+            $table = "user_action_permits";
+        } else if ($type == "group"){
+            $table = "group_action_permits";
+        } else {
+            return false;
+        } 
           
-        $query = "select * from {$db_table_prefix}user_action_permits where user_id = :user_id and action = :action";
-          
-        $sqlVars[':user_id'] = $user_id;
-        $sqlVars[':action'] = $action_function;
-        
-        $stmt = $db->prepare($query);
-        $stmt->execute($sqlVars);
-        
-        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $action_permits[] = $r;
-        }
-        $stmt = null;
-
-        return $action_permits;
-
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    } catch (ErrorException $e) {
-      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      return false;
-    }
-}
-
-// Load permission validator mappings for the specified action-permit mapping by id (from the `group_action_permits` table)
-function fetchGroupActionPermits($action_id) {
-    try {
-        global $db_table_prefix;
-          
-        $action_permits = array();
-          
-        $db = pdoConnect();
-          
-        $sqlVars = array();
-          
-        $query = "select * from {$db_table_prefix}group_action_permits where id = :action_id";
+        $query = "select * from {$db_table_prefix}{$table} where id = :action_id";
 		
         $sqlVars[':action_id'] = $action_id;
         
@@ -2268,7 +2239,46 @@ function fetchGroupActionPermits($action_id) {
     }
 }
 
-// Load permission validator mappings for the specified group and optionally, for a specified action
+// Load permission validator mappings for a specified user and optionally, for a specified action
+function fetchUserPermits($user_id, $action_function = null) {
+    try {
+        global $db_table_prefix;
+          
+        $action_permits = array();
+          
+        $db = pdoConnect();
+          
+        $sqlVars = array();
+          
+        $query = "select * from {$db_table_prefix}user_action_permits where user_id = :user_id";
+
+        if ($action_function){
+			$query .= " and action = :action";
+            $sqlVars[':action'] = $action_function;
+		}
+        $sqlVars[':user_id'] = $user_id;
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+        
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $action_permits[] = $r;
+        }
+        $stmt = null;
+
+        return $action_permits;
+
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
+// Load permission validator mappings for a specified group and optionally, for a specified action
 function fetchGroupPermits($group_id, $action_function = null) {
     try {
         global $db_table_prefix;
@@ -2307,29 +2317,45 @@ function fetchGroupPermits($group_id, $action_function = null) {
     }
 }
 
-// Load permission validator mappings for the all groups
-function fetchAllGroupPermits() {
+// Load action-permit mappings for all groups or users
+function fetchAllPermits($type) {
     try {
         global $db_table_prefix;
           
-        $groups = array();
+        $result = array();
           
         $db = pdoConnect();
-          
-        $query = "SELECT {$db_table_prefix}group_action_permits.*, name FROM  {$db_table_prefix}groups, {$db_table_prefix}group_action_permits
+
+        if ($type == "user"){
+            $query = "SELECT {$db_table_prefix}user_action_permits.*, user_name FROM  {$db_table_prefix}users, {$db_table_prefix}user_action_permits
+			WHERE {$db_table_prefix}users.id = {$db_table_prefix}user_action_permits.user_id ORDER BY user_id, action";
+        } else if ($type == "group"){
+            $query = "SELECT {$db_table_prefix}group_action_permits.*, name FROM  {$db_table_prefix}groups, {$db_table_prefix}group_action_permits
 			WHERE {$db_table_prefix}groups.id = {$db_table_prefix}group_action_permits.group_id ORDER BY group_id, action";
+        } else {
+            return false;
+        }  
         
         $stmt = $db->prepare($query);
         $stmt->execute();
         
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $group_id = $r['group_id'];
+            if ($type == "user"){
+                $id = $r['user_id'];
+            } else {
+                $id = $r['group_id'];
+            }
             $action_permit_id = $r['id'];
-			if (!isset($groups[$group_id])){
-				$groups[$group_id] = array();
-				$groups[$group_id]['group_id'] = $group_id;
-                $groups[$group_id]['name'] = $r['name'];
-				$groups[$group_id]['action_permits'] = array();
+			if (!isset($result[$id])){
+				$result[$id] = array();
+                if ($type == "user"){
+                    $result[$id]['user_id'] = $id;
+                    $result[$id]['user_name'] = $r['user_name'];
+                } else {
+                    $result[$id]['group_id'] = $id;
+                    $result[$id]['name'] = $r['name'];
+                }
+				$result[$id]['action_permits'] = array();
 			}
 			// Parse out permit string into array of permit functions and parameters
 			$permits_arr = explode('&', $r['permits']);
@@ -2350,26 +2376,26 @@ function fetchAllGroupPermits() {
 			}
 
 			$actions = array('action_id' => $action_permit_id, 'action' => $r['action'], 'permits' => $permits_by_arg);
-			$groups[$group_id]['action_permits'][$action_permit_id] = $actions;
+			$result[$id]['action_permits'][$action_permit_id] = $actions;
         }
         
-        // Convert groups to numerically indexed array
-        $groups = array_values($groups);    
+        // Convert users/groups to numerically indexed array
+        $result = array_values($result);    
         $stmt = null;
         
-        foreach ($groups as $group_id => $group){
+        foreach ($result as $id => $owner){
             $action_names = array();
-            foreach ($group['action_permits'] as $action_id => $action) {
+            foreach ($owner['action_permits'] as $action_id => $action) {
                 $action_names[]  = $action['action'];
             }
             //echo var_dump($action_names);
             //echo var_dump($group['action_permits']);
-            array_multisort($action_names, SORT_ASC, $group['action_permits']);
+            array_multisort($action_names, SORT_ASC, $owner['action_permits']);
             // Convert action_permits to numerically indexed array
-            $groups[$group_id]['action_permits'] = array_values($groups[$group_id]['action_permits']);
+            $result[$id]['action_permits'] = array_values($result[$id]['action_permits']);
         }
         
-        return $groups;
+        return $result;
 
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
