@@ -2381,20 +2381,77 @@ function fetchAllGroupPermits() {
     }
 }
 
-function dbCreateGroupActionPermit($group_id, $action, $permits) {
+function actionPermitExists($action_id, $type){
+    try {
+    
+        global $db_table_prefix;
+        $db = pdoConnect();
+
+        $table = "";
+        if ($type == "user"){
+            $table = "user_action_permits";
+        } else if ($type == "group"){
+            $table = "group_action_permits";
+        } else {
+            return false;
+        }
+
+        $query = "SELECT id
+		FROM ".$db_table_prefix.$table.
+        " WHERE
+		id = :action_id
+		LIMIT 1";
+        
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':action_id'] = $action_id;
+
+        if (!$stmt->execute($sqlVars)){
+            // Error
+            return false;
+        }
+        
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row)
+            return true;
+        else
+            return false;
+    } catch (PDOException $e) {
+      addAlert("danger", "Oops, looks like our database encountered an error.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } 
+}
+
+
+function dbCreateActionPermit($owner_id, $action, $permits, $type) {
    try {
         global $db_table_prefix;
         
         $db = pdoConnect();
         
-        $i = 0;
-        $query = "INSERT INTO ".$db_table_prefix."group_action_permits (
-            group_id,
+        $table = "";
+        if ($type == "user"){
+            $table = "user_action_permits";
+            $owner_col = "user_id";
+        } else if ($type == "group"){
+            $table = "group_action_permits";
+            $owner_col = "group_id";
+        } else {
+            return false;
+        }
+        
+        $query = "INSERT INTO ".$db_table_prefix.$table.
+            "($owner_col,
             action,
             permits
             )
             VALUES (
-            :group_id,
+            :id,
             :action,
             :permits
             )";
@@ -2402,7 +2459,7 @@ function dbCreateGroupActionPermit($group_id, $action, $permits) {
         $stmt = $db->prepare($query);
         
         $sqlVars = array(
-            ':group_id' => $group_id,
+            ':id' => $owner_id,
             ':action' => $action,
             ':permits' => $permits
         );
@@ -2425,40 +2482,39 @@ function dbCreateGroupActionPermit($group_id, $action, $permits) {
     }
 }
 
-function dbCreateUserActionPermit($user_id, $action, $permits) {
-   try {
-        global $db_table_prefix;
-        
-        $db = pdoConnect();
-        
-        $i = 0;
-        $query = "INSERT INTO ".$db_table_prefix."user_action_permits (
-            user_id,
-            action,
-            permits
-            )
-            VALUES (
-            :user_id,
-            :action,
-            :permits
-            )";
+// Update the specified action permit mapping with specified permit string
+function dbUpdateActionPermit($action_id, $permits, $type){
+    try {
     
-        $stmt = $db->prepare($query);
-        
-        $sqlVars = array(
-            ':user_id' => $user_id,
-            ':action' => $action,
-            ':permits' => $permits
-        );
-        
-        $stmt->execute($sqlVars);
+        global $db_table_prefix;
+        $db = pdoConnect();
 
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
+        $table = "";
+        if ($type == "user"){
+            $table = "user_action_permits";
+        } else if ($type == "group"){
+            $table = "group_action_permits";
+        } else {
             return false;
         }
         
+        $stmt = $db->prepare("UPDATE ".$db_table_prefix.$table.
+            "SET permits = :permits
+            WHERE
+            id = :action_id
+            LIMIT 1");
+        
+        $sqlVars = array(":action_id" => $action_id, ":permits" => $permits);
+        
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount() > 0)
+          return true;
+        else {
+          addAlert("danger", "Invalid action_id specified.");
+          return false;
+        }
+    
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
@@ -2466,7 +2522,7 @@ function dbCreateUserActionPermit($user_id, $action, $permits) {
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
-    }
+    } 
 }
 
 function dbDeleteActionPermit($action_id, $type){
@@ -2506,6 +2562,19 @@ function dbDeleteActionPermit($action_id, $type){
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     }
+}
+
+function isValidPermitString($permit){
+    $permit_funcs = fetchPermissionValidators();
+    $permit_arr = parsePermitString($permit);
+    foreach ($permit_arr as $p){
+        $name = $p['name'];
+        if (!isset($permit_funcs[$name])){
+            addAlert("danger", "I'm sorry, the permission validator $name does not exist.");
+            return false;              
+        }
+    }
+    return true;
 }
 
 ?>

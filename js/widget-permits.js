@@ -69,7 +69,8 @@ function actionPermitsWidget(widget_id, options) {
 					
 					html += "<h4 class='list-group-item-heading'>" + action_name + " <small>" + action_desc + "</small>";
 					html += "<div class='pull-right'><button class='btn btn-primary' data-id='" + action_id + "'><i class='fa fa-edit'></i> Edit</button> ";
-					html += "<button class='btn btn-danger deleteAction' data-id='" + action_id + "' data-type='group'><i class='fa fa-trash-o'></i> Delete</button></div></h4>";
+					html += "<button class='btn btn-danger deleteAction' data-id='" + action_id + "' data-type='group' data-action-name='" + action_name +
+					"' data-owner-name='" + record['name'] + "'><i class='fa fa-trash-o'></i> Delete</button></div></h4>";
 					html += "<h4><small>...with parameters:</small></h4>";
 					html += "<div class='list-group'>";
 					// List parameters for the given action
@@ -110,7 +111,9 @@ function actionPermitsWidget(widget_id, options) {
             var btn = $(this);
             var action_id = btn.data('id');
 			var type = btn.data('type');
-			deleteActionPermit(action_id, type);
+			var owner_name = btn.data('owner-name');
+			var action_name = btn.data('action-name');
+			deleteActionPermitDialog('dialog-delete-action', owner_name, action_name, action_id, type);
         });				
 		return false;
 	});
@@ -311,6 +314,48 @@ function createGroupActionPermit(box_id, group_id) {
 		window.location.reload();
 	});
 	return;
+}
+
+function deleteActionPermitDialog(box_id, name, action, action_id, type){
+	// Delete any existing instance of the form with the same name
+	if($('#' + box_id).length ) {
+		$('#' + box_id).remove();
+	}
+	
+	var data = {
+		box_id: box_id,
+		title: "Delete Action Permission",
+		message: "Are you sure you want to remove permission for '" + name + "' to perform action '" + action + "'?",
+		confirm: "Yes, delete permission"
+	}
+	
+	// Generate the form
+	$.ajax({  
+	  type: "GET",  
+	  url: FORMSPATH + "form_confirm_delete.php",  
+	  data: data,
+	  dataType: 'json',
+	  cache: false
+	})
+	.fail(function(result) {
+		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+		alertWidget('display-alerts');
+	})
+	.done(function(result) {
+		if (result['errors']) {
+			console.log("error");
+			alertWidget('display-alerts');
+			return;
+		}
+		
+		// Append the form as a modal dialog to the body
+		$( "body" ).append(result['data']);
+		$('#' + box_id).modal('show');
+		
+		$('#' + box_id + ' .btn-group-action .btn-confirm-delete').click(function(){
+			deleteActionPermit(action_id, type);
+		});	
+	});
 }
 
 function deleteActionPermit(action_id, type) {

@@ -243,6 +243,10 @@ function usersWidget(widget_id, options) {
 }
 
 function deleteUserDialog(box_id, user_id, name){
+	// Delete any existing instance of the form with the same name
+	if($('#' + box_id).length ) {
+		$('#' + box_id).remove();
+	}
 	
 	var data = {
 		box_id: box_id,

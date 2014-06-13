@@ -43,16 +43,18 @@ if (!securePage(__FILE__)){
 // Parameters: box_id, render_mode, [action_permit_id]
 // box_id: the desired id of the div that will contain the form.
 // render_mode: modal or panel
-// action_permit_id (optional): if specified, will load the relevant data for the action/permit mapping into the form.  Form will then be in "update" mode.
+// action_id (optional): if specified, will load the relevant data for the action/permit mapping into the form.  Form will then be in "update" mode.
 // group_id (optional): if specified, will let you create a new action/permit mapping for the specified group.
+// user_id (optional): if specified, will let you create a new action/permit mapping for the specified user.
 // disabled (optional): if set to true, disable all fields
 
 $validator = new Validator();
 
 $box_id = $validator->requiredGetVar('box_id');
 $render_mode = $validator->requiredGetVar('render_mode');
-$action_permit_id = $validator->optionalNumericGetVar('action_permit_id');
+$action_id = $validator->optionalNumericGetVar('action_id');
 $group_id = $validator->optionalNumericGetVar('group_id');
+$user_id = $validator->optionalNumericGetVar('user_id');
 
 // Buttons (optional)
 // button_submit: If set to true, display the submission button for this form.
@@ -70,7 +72,7 @@ if ($disabled) {
 
 
 // Create appropriate labels
-if ($action_permit_id){
+if ($action_id){
     $populate_fields = true;
     $button_submit_text = "Update action";
     $target = "../api/update_action_permit.php";
@@ -88,7 +90,7 @@ $action_name = "";
 
 // If we're in update mode, load action data
 if ($populate_fields){
-    $action_permit = fetchGroupActionPermits($action_permit_id);
+    $action_permit = fetchGroupActionPermits($action_id);
     $action_name = $action_permit['action'];
     $group_id = $action_permit['group_id'];
     

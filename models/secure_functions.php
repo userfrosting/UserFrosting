@@ -680,18 +680,50 @@ function createGroupActionPermit($group_id, $action_name, $permit){
     }
 
     // Check that permission validators exist
-    $permit_funcs = fetchPermissionValidators();
-    $permit_arr = parsePermitString($permit);
-    foreach ($permit_arr as $p){
-        $name = $p['name'];
-        if (!isset($permit_funcs[$name])){
-            addAlert("danger", "I'm sorry, the permission validator $name does not exist.");
-            return false;              
-        }
-    }
+    if (!isValidPermitString($permit))
+        return false;
     
     // Attempt to create in DB
-    if (!dbCreateGroupActionPermit($group_id, $action_name, $permit)){
+    if (!dbCreateActionPermit($group_id, $action_name, $permit, 'group')){
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * Creates new action permit mapping for a user
+ * @param string $user_id the id of the user for which to create a new permit.
+ * @param string $action_name the name of the action function. 
+ * @param string $permit the permit expression, a sequence of permission validator function calls joined by '&'.
+ * @return boolean true for success, false if failed
+ */
+function createUserActionPermit($user_id, $action_name, $permit){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    //Check if selected user exists
+    if(!userIdExists($user_id)){
+        addAlert("danger", "I'm sorry, the user_id you specified is invalid!");
+        return false;
+    }    
+
+    //Check that secure function name exists
+    $secure_funcs = fetchSecureFunctions();
+    if (!isset($secure_funcs[$action_name])){
+        addAlert("danger", "I'm sorry, the specified action does not exist.");
+        return false;        
+    }
+
+    // Check that permission validators exist
+    if (!isValidPermitString($permit))
+        return false;
+    
+    // Attempt to create in DB
+    if (!dbCreateActionPermit($user_id, $action_name, $permit, 'user')){
         return false;
     } else {
         return true;
@@ -743,6 +775,70 @@ function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
 }
 
 /**
+ * Update action permit mapping for a group
+ * @param string $action_id the id of the group action mapping for which to update a permit.
+ * @param string $group_id the id of the group for this permit.  Not necessary to perform update, just included for controlling access based on group_id.
+ * @param string $permit the permit expression, a sequence of permission validator function calls joined by '&'.
+ * @return boolean true for success, false if failed
+ */
+function updateGroupActionPermit($action_id, $group_id, $permit){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    //Check if selected action exists
+    if(!actionPermitExists($action_id, 'group')){
+        addAlert("danger", "I'm sorry, the action_id you specified is invalid!");
+        return false;
+    } 
+
+    // Check that permission validators exist
+    if (!isValidPermitString($permit))
+        return false;
+    
+    // Attempt to create in DB
+    if (!dbUpdateActionPermit($action_id, $permit, 'group')){
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
+ * Update action permit mapping for a user
+ * @param string $action_id the id of the user action mapping for which to update a permit.
+ * @param string $user_id the id of the user for this permit.  Not necessary to perform update, just included for controlling access based on user_id.
+ * @param string $permit the permit expression, a sequence of permission validator function calls joined by '&'.
+ * @return boolean true for success, false if failed
+ */
+function updateUserActionPermit($action_id, $user_id, $permit){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    //Check if selected action exists
+    if(!actionPermitExists($action_id, 'user')){
+        addAlert("danger", "I'm sorry, the action_id you specified is invalid!");
+        return false;
+    } 
+
+    // Check that permission validators exist
+    if (!isValidPermitString($permit))
+        return false;
+    
+    // Attempt to create in DB
+    if (!dbUpdateActionPermit($action_id, $permit, 'user')){
+        return false;
+    } else {
+        return true;
+    }
+}
+
+/**
  * Deletes group based on $group_id
  * @param int $group_id the id of the group to delete.
  * @return boolean true for success, false if failed
@@ -780,7 +876,26 @@ function deleteGroupActionPermit($action_id) {
     } else {
         return false;
     }
+}
 
+/**
+ * Delete action permit mapping for a user.
+ * @param int $action_id the id of the user action mapping to delete.
+ * @return boolean true for success, false if failed
+ */
+function deleteUserActionPermit($action_id) {
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    if ($name = dbDeleteActionPermit($action_id, "user")){
+        addAlert("success", "Successfully deleted the specified action-permit mapping for the user.");
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /************************* Site configuration functions *************************/
