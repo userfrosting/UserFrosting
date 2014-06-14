@@ -4,6 +4,7 @@
 
 // Load a list of all pages as a table, rows correspond to pages and columns to groups.
 function actionPermitsWidget(widget_id, options) {
+	// Initialize parameters
 	var widget = $('#' + widget_id);
 	var sort = "asc";
 	var sortRows = "";
@@ -14,22 +15,26 @@ function actionPermitsWidget(widget_id, options) {
         sortRows = [[0,0]];
     }
 
+	var type = "group";
+	if (options['type'])
+		type = options['type'];
+	
 	var title = "<i class='fa fa-key'></i> Access Permits";
 	if (options['title'])
-		title = "<i class='fa fa-key'></i> " + options['title'];	
-
-	var display_errors_id = "";
-	if (options['display_errors_id'])
-		display_errors_id = options['display_errors_id'];		
+		title = "<i class='fa fa-key'></i> " + options['title'];		
 	
-	//console.log(display_errors_id);
 	// Ok, set up the widget
 	var html =
 	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +
     "<div class='panel-body'>";
 	
 	// Load the data and generate the rows.
-	var url = APIPATH + 'load_action_permits.php?group_id=all';
+	var url = "";
+	if (type == "group")
+		url = APIPATH + 'load_action_permits.php?group_id=all';
+	else
+		url = APIPATH + 'load_action_permits.php?user_id=all';
+		
 	$.getJSON( url, {
 	})
 	.fail(function(result) {
@@ -39,7 +44,7 @@ function actionPermitsWidget(widget_id, options) {
 	.done(function( result ) {
 		var data = processJSONResult(result);
 		console.log(data);
-		alertWidget('display-alerts');
+		//alertWidget('display-alerts');
 		// Don't bother unless there are some records found
 		if (Object.keys(data).length > 0) { 
 			// Get JSON object of all secure functions
@@ -49,10 +54,18 @@ function actionPermitsWidget(widget_id, options) {
 			jQuery.each(data, function(idx, record) {
 				// List actions for this group
 				var action_permits = record['action_permits'];
-				var group_id = record['group_id'];		
-				html += "<h3>Group '" + record['name'] + "' <small>has permission to perform the following actions:</small></h3>";
-				html += "<div class='btn-group'><button class='btn btn-primary createAction' data-toggle='modal' data-target='#action-create-dialog' data-id='" + group_id + "'>";
-				html += "<i class='fa fa-plus-square'></i> Add action for group '" + record['name'] + "'</button></div><br><br>";
+				var owner_id = "";
+				var owner_name = "";
+				if (type == "group"){
+					owner_id = record['group_id'];
+					owner_name = record['name'];
+				} else {
+					owner_id = record['user_id'];
+					owner_name = record['user_name'];
+				}
+				html += "<h3>" + ((type == "group")?"Group '":"User '") + owner_name + "' <small>has permission to perform the following actions:</small></h3>";
+				html += "<div class='btn-group'><button class='btn btn-primary createAction' data-toggle='modal' data-target='#action-create-dialog' data-owner-id='" + owner_id + "'>";
+				html += "<i class='fa fa-plus-square'></i> Add action for " + ((type == "group")?"group '":"user '") + owner_name + "'</button></div><br><br>";
 				html += "<div class='list-group'>";
 				// Iterate over actions for this group
 				jQuery.each(action_permits, function(idx_action, action) {
@@ -68,9 +81,10 @@ function actionPermitsWidget(widget_id, options) {
 					}
 					
 					html += "<h4 class='list-group-item-heading'>" + action_name + " <small>" + action_desc + "</small>";
-					html += "<div class='pull-right'><button class='btn btn-primary' data-id='" + action_id + "'><i class='fa fa-edit'></i> Edit</button> ";
-					html += "<button class='btn btn-danger deleteAction' data-id='" + action_id + "' data-type='group' data-action-name='" + action_name +
-					"' data-owner-name='" + record['name'] + "'><i class='fa fa-trash-o'></i> Delete</button></div></h4>";
+					html += "<div class='pull-right'><button class='btn btn-primary updateAction' data-id='" + action_id + "' data-owner-id='" + owner_id +
+					"'><i class='fa fa-edit'></i> Edit</button>  ";
+					html += "<button class='btn btn-danger deleteAction' data-id='" + action_id + "' data-type='" + type + "' data-action-name='" + action_name +
+					"' data-owner-name='" + owner_name + "'><i class='fa fa-trash-o'></i> Delete</button></div></h4>";
 					html += "<h4><small>...with parameters:</small></h4>";
 					html += "<div class='list-group'>";
 					// List parameters for the given action
@@ -103,10 +117,26 @@ function actionPermitsWidget(widget_id, options) {
 		// Link buttons to actions
 		widget.on('click', '.createAction', function () {
             var btn = $(this);
-            var group_id = btn.data('id');
-			actionPermitForm('action-create-dialog', group_id, null);
+            var owner_id = btn.data('owner-id');
+			if (type == "group") {
+				actionPermitForm('action-create-dialog', { group_id: owner_id });
+			} else {
+				actionPermitForm('action-create-dialog', { user_id: owner_id });
+			}
+			
         });
 
+		widget.on('click', '.updateAction', function () {
+            var btn = $(this);
+			var owner_id = btn.data('owner-id');
+            var action_id = btn.data('id');
+			if (type == "group") {
+				actionPermitForm('action-create-dialog', { action_id: action_id, group_id: owner_id });
+			} else {
+				actionPermitForm('action-create-dialog', { action_id: action_id, user_id: owner_id });
+			}
+        });		
+		
 		widget.on('click', '.deleteAction', function () {
             var btn = $(this);
             var action_id = btn.data('id');
@@ -120,10 +150,18 @@ function actionPermitsWidget(widget_id, options) {
 }
 
 /* Display a modal form for updating/creating an action-permission set for a user or group */
-function actionPermitForm(box_id, group_id, user_id, action_id) {	
-	user_id = typeof user_id !== 'undefined' ? user_id : "";
-	group_id = typeof group_id !== 'undefined' ? group_id : "";
-	action_id = typeof action_id !== 'undefined' ? action_id : "";
+function actionPermitForm(box_id, options) {	
+	var user_id = "";
+	if (options['user_id'])
+		user_id = options['user_id'];
+	
+	var group_id = "";
+	if (options['group_id'])
+		group_id = options['group_id'];
+	
+	var action_id = "";	
+	if (options['action_id'])
+		action_id = options['action_id'];
 	
 	// Delete any existing instance of the form with the same name
 	if($('#' + box_id).length ) {
@@ -181,35 +219,37 @@ function actionPermitForm(box_id, group_id, user_id, action_id) {
                 
                 suggestions.push(suggest);
 			});
-        
-			// Update parameter list whenever an action is selected
-			$("#" + box_id + " .typeahead-action-name").change(function(){
-				var id = $(this).data('selected_id');
-				// Seems that change() is sometimes triggered without an id specified...this prevents phantom triggering
-				if (!id)
-					return;
-				var action = findById(suggestions, id);
-				var params = action['parameters'];
-				var html = "";
-				/*
-				jQuery.each(params, function(name, param) {
-					html += "<div class='list-group-item'><em>" + name + "</em> : " + param['description'] + "</div>";
-				});
-				$('.action-parameters').html(html);
-				*/
-				// Also update permit options
-				var select_permit = $('#' + box_id).find("select[name='permit']");
-				select_permit.html("");
-				var presetPermits = buildPresetGroupPermitOptions(getKeys(params));
-				jQuery.each(presetPermits, function(idx, option) {
-					$("<option></option>").val(option['value']).html(option['name']).
-					prop('selected', false).appendTo(select_permit);
-				});
-			});
 			
-			// Build the typeahead for selecting an action
-			var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
-			typeaheadDropdown($("#" + box_id + " .typeahead-action-name"), suggestions, render_template, {'disabled': false});			
+			// Build the typeahead for selecting an action if we're in create mode, otherwise don't bother
+			if (!action_id) {		
+				// Update parameter list whenever an action is selected
+				$("#" + box_id + " .typeahead-action-name").change(function(){
+					var id = $(this).data('selected_id');
+					// Seems that change() is sometimes triggered without an id specified...this prevents phantom triggering
+					if (!id)
+						return;
+					var action = findById(suggestions, id);
+					var params = action['parameters'];
+					var html = "";
+					/*
+					jQuery.each(params, function(name, param) {
+						html += "<div class='list-group-item'><em>" + name + "</em> : " + param['description'] + "</div>";
+					});
+					$('.action-parameters').html(html);
+					*/
+					// Also update permit options
+					var select_permit = $('#' + box_id).find("select[name='permit']");
+					select_permit.html("");
+					var presetPermits = loadPresetPermitOptions(getKeys(params));
+					jQuery.each(presetPermits, function(idx, option) {
+						$("<option></option>").val(option['value']).html(option['name']).
+						prop('selected', false).appendTo(select_permit);
+					});
+				});
+
+				var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
+				typeaheadDropdown($("#" + box_id + " .typeahead-action-name"), suggestions, render_template, {'disabled': false});
+			}
 		});
 				
 		// Link submission buttons
@@ -223,7 +263,8 @@ function actionPermitForm(box_id, group_id, user_id, action_id) {
 			} else {
 				console.log("No errors found, submitting form.");
 				if (action_id != ""){
-				
+					console.log(action_id, " ", group_id);
+					updateGroupActionPermit(box_id, action_id, group_id);
 				}
 				else
 					if (group_id != "") {
@@ -255,44 +296,16 @@ function getKeys(obj) {
 
 // Create a list of the most common options for group-level permits, based on the fields passed in from an action.
 // Add additional options here as you think necessary.
-function buildPresetGroupPermitOptions(fields) {
-	var permits = [];
-	// Add these permit options for actions that involve both a user_id and a group_id
-	if (jQuery.inArray('user_id', fields) > -1 && jQuery.inArray('group_id', fields) > -1) {
-		// Create permit options for default groups (any user)
-		permits.push({name: "any user and default groups.", value:"isDefaultGroup(group_id)"});				
-		// Create permit options for each group (any user)
-		var groups = loadAllGroups();
-		jQuery.each(groups, function(group_id, group){
-			permits.push({name: "any user and group '" + group['name'] + "'.", value:"isSameGroup(group_id,'" + group['id'] + "')"});		
-		});	
-		permits.push({name: "any user with any group.", value:"always()"});
-	// Only add these permit options for actions that involve a user_id
-	} else if (jQuery.inArray('user_id', fields) > -1) {
-		// Create permit option for 'self'
-		permits.push({name: "themselves only.", value:"isLoggedInUser(user_id)"});
-		// Create permits to perform actions on users in primary groups
-		var groups = loadAllGroups();
-		jQuery.each(groups, function(group_id, group){
-			permits.push({name: "users whose primary group is '" + group['name'] + "'.", value:"isUserPrimaryGroup(user_id,'" + group['id'] + "')"});	
-		});
-		permits.push({name: "any user.", value:"always()"});
-	// Add these options for actions that involve a group_id
-	} else if (jQuery.inArray('group_id', fields) > -1) {
-		var groups = loadAllGroups();
-		// Create permit option for the user's primary group only
-		
-		// Create permit options for each group
-		jQuery.each(groups, function(group_id, group){
-			permits.push({name: "group '" + group['name'] + "'.", value:"isSameGroup(group_id,'" + group['id'] + "')"});		
-		});
-		permits.push({name: "any group.", value:"always()"});
-	// Default options
-	} else {
-		permits.push({name: "always.", value:"always()"});
-	}
-
-	return permits;
+function loadPresetPermitOptions(fields) {
+	var url = APIPATH + 'load_preset_permits.php';
+	var result = $.ajax({  
+	  type: "GET",  
+	  url: url,
+	  async: false,
+	  data: {fields: fields}
+	}).responseText;
+	var resultJSON = processJSONResult(result);
+	return resultJSON;
 }
 
 function createGroupActionPermit(box_id, group_id) {
@@ -305,6 +318,27 @@ function createGroupActionPermit(box_id, group_id) {
 	}
 	
 	var url = APIPATH + "create_action_permit.php";
+	$.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: data
+	}).done(function(result) {
+		processJSONResult(result);
+		window.location.reload();
+	});
+	return;
+}
+
+function updateGroupActionPermit(box_id, action_id, group_id) {
+	var data = {
+		action_id: action_id,
+		group_id: group_id,
+		permit: $('#' + box_id + ' select[name="permit"] option:selected' ).val(),
+		csrf_token: $('#' + box_id + ' input[name="csrf_token"]' ).val(),
+		ajaxMode: "true"
+	}
+	
+	var url = APIPATH + "update_action_permit.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  

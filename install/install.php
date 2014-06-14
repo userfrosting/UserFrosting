@@ -136,7 +136,7 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (4, 'account/dashboard.php', 1),
 (5, 'account/dashboard_admin.php', 1),
 (6, 'account/account_settings.php', 1),
-(7, 'account/site_pages.php', 1),
+(7, 'account/site_authorization.php', 1),
 (8, 'account/site_settings.php', 1),
 (9, 'account/users.php', 1),
 (10, 'account/user_details.php', 1),

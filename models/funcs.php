@@ -213,10 +213,10 @@ function replaceDefaultHook($str)
 	return (str_replace($default_hooks,$default_replace,$str));
 }
 
-//Completely sanitizes text
-function sanitize($str)
+// Convert text that might be in a different case or with trailing/leading whitespace to a standard form
+function str_normalize($str)
 {
-	return strtolower(strip_tags(trim(($str))));
+	return strtolower(trim($str));
 }
 
 // Get the last referral page.

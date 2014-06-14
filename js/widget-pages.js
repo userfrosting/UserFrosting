@@ -44,11 +44,11 @@ function sitePagesWidget(widget_id, options) {
 	})
 	.fail(function(result) {
 		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-		alertWidget('display-alerts');
+		//alertWidget('display-alerts');
 	})
 	.done(function( result ) {
 		var data = processJSONResult(result);	
-		alertWidget('display-alerts');
+		//alertWidget('display-alerts');
 		var permissions = {};
 		// Don't bother unless there are some records found
 		if (Object.keys(data).length > 0) { 

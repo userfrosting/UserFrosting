@@ -43,7 +43,7 @@ $csrf_token = $validator->requiredPostVar('csrf_token');
 $user_id = $validator->requiredNumericPostVar('user_id');
 
 $display_name = trim($validator->optionalPostVar('display_name'));
-$email = trim($validator->optionalPostVar('email'));
+$email = str_normalize($validator->optionalPostVar('email'));
 $title = trim($validator->optionalPostVar('title'));
 
 $rm_groups = $validator->optionalPostVar('remove_permissions');

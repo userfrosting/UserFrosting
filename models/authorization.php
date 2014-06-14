@@ -368,4 +368,47 @@ function fetchPermissionValidators(){
     return $functionsWithParams;
 }
 
+// Build a list of preset options for permit validators, based on the specified fields
+function fetchPresetPermitOptions($fields){
+    $permits = array();
+	// Add these permit options for actions that involve both a user_id and a group_id
+	if (in_array('user_id', $fields) && in_array('group_id', $fields)) {
+		// Create permit options for default groups (any user)
+		$permits[] = array("name" => "any user and default groups.", "value" => "isDefaultGroup(group_id)");				
+		// Create permit options for each group (any user)
+		$groups = fetchAllGroups();
+		foreach($groups as $group_id => $group){
+			$permits[] = array("name" => "any user and group '{$group['name']}'.", "value" => "isSameGroup(group_id,'{$group['id']}')");		
+		}	
+		$permits[] = array("name" => "any user with any group.", "value" => "always()");
+	// Only add these permit options for actions that involve a user_id
+	} else if (in_array('user_id', $fields)) {
+		// Create permit option for 'self'
+		$permits[] = array("name" => "themselves only.", "value" => "isLoggedInUser(user_id)");
+		// Create permits to perform actions on users in primary groups
+		$groups = fetchAllGroups();
+		foreach($groups as $group_id => $group){
+			$permits[] = array("name" => "users whose primary group is '{$group['name']}'.", "value" => "isUserPrimaryGroup(user_id,'{$group['id']}')");	
+		}
+		$permits[] = array("name" => "any user.", "value" => "always()");
+	// Add these options for actions that involve a group_id
+	} else if (in_array('group_id', $fields)) {
+		$groups = fetchAllGroups();
+		// TODO: create permit option for the user's primary group only?
+		
+		// Create permit options for each group
+		foreach($groups as $group_id => $group){
+			$permits[] = array("name" => "group '{$group['name']}'.", "value" => "isSameGroup(group_id,'{$group['id']}')");		
+		}
+		$permits[] = array("name" => "any group.", "value" => "always()");
+	// Default options
+	} else {
+		$permits[] = array("name" => "always.", "value" => "always()");
+	}
+
+	return $permits;
+
+
+}
+
 ?>

@@ -94,12 +94,15 @@ $action_name = "";
 // If we're in update mode, load action data
 if ($populate_fields){
     if ($group_id) {
-      $action_permit = fetchActionPermit($action_id, "group");
+      if (!$action_permit = fetchActionPermit($action_id, "group"))
+        addAlert("danger", "The specified action id does not exist.");
     } else {
-      $action_permit = fetchActionPermit($action_id, "user");
+      if (!$action_permit = fetchActionPermit($action_id, "user"))
+        addAlert("danger", "The specified action id does not exist.");
     }
     
     $action_name = $action_permit['action'];
+    $action_permits = $action_permit['permits'];
 
     if ($render_mode == "panel"){
         $box_title = $action_name; 
@@ -158,14 +161,34 @@ if ($group_id){
 }
 
 $response .= "<div class='form-group'>
-    <input class='form-control input-lg typeahead typeahead-action-name' type='text' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' $action_name_disable_str />";
+    <input class='form-control input-lg typeahead typeahead-action-name' type='text' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' value='$action_name' $action_name_disable_str />";
 $response .= "
 </div>
 <h4>for</h4>
 <div class='form-group'>
-    <select class='form-control' name='permit'>
-    </select>";
-$response .= "
+    <select class='form-control' name='permit'>";
+// If we're in update mode, load the preset options and highlight the selected one (if available)
+if ($populate_fields){
+  $secure_functions = fetchSecureFunctions();
+  $fields = array_keys($secure_functions[$action_name]['parameters']);
+  $presets = fetchPresetPermitOptions($fields);
+  $option_found = false;
+  foreach ($presets as $preset){
+    $name = $preset['name'];
+    $value = $preset['value'];
+    if ($value == $action_permits){
+      $option_found = true;
+      $response .= "<option value=\"$value\" selected>$name</option>";
+    } else {
+      $response .= "<option value=\"$value\">$name</option>";
+    }
+  }
+  if (!$option_found){
+    $response .= "<option value='$action_permits'>Custom permit string: $action_permits</option>";
+  }
+}  
+
+$response .= "</select>
 </div>
 ";
 

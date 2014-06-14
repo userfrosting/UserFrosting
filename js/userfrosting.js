@@ -307,7 +307,7 @@ function validateFormFields(dialog_id) {
 			closestGroup.addClass('has-success');
 		}		
 	});
-	console.log(errorMessages);
+	//console.log(errorMessages);
 	return errorMessages;
 }
 

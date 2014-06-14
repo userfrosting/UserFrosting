@@ -106,7 +106,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 		  alertWidget('display-alerts');
 		  
-		  actionPermitsWidget('widget-group-access', {});
+		  actionPermitsWidget('widget-group-access', {type: 'group'});
 		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts-instant'});
 		});
 	</script>

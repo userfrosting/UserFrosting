@@ -37,6 +37,8 @@ class Validator {
 		$this->errors = array();
 	}
 	
+	// TODO: also use strip_tags()?
+	
 	public function requiredGetVar($varname){
 		// Confirm that data has been submitted via GET
 		if (!($_SERVER['REQUEST_METHOD'] == 'GET')) {
@@ -47,6 +49,24 @@ class Validator {
 		if (isset($_GET[$varname]))
 			return htmlentities($_GET[$varname]);
 		else {
+			$this->errors[] = "Parameter $varname must be specified!";
+			return null;
+		}
+	}
+
+	public function requiredGetArray($varname){
+		// Confirm that data has been submitted via GET
+		if (!($_SERVER['REQUEST_METHOD'] == 'GET')) {
+			$this->errors[] = "Error: data must be submitted via GET.";
+			return null;
+		}
+		if (isset($_GET[$varname])) {
+			$arr = array();
+			foreach ($_GET[$varname] as $val){
+				$arr[] = htmlentities($val);
+			}
+			return $arr;
+		} else {
 			$this->errors[] = "Parameter $varname must be specified!";
 			return null;
 		}
@@ -67,6 +87,24 @@ class Validator {
 		}
 	}
 
+	public function requiredPostArray($varname){
+		// Confirm that data has been submitted via POST
+		if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
+			$this->errors[] = "Error: data must be submitted via POST.";
+			return null;
+		}
+		if (isset($_POST[$varname])) {
+			$arr = array();
+			foreach ($_POST[$varname] as $val){
+				$arr[] = htmlentities($val);
+			}
+			return $arr;
+		} else {
+			$this->errors[] = "Parameter $varname must be specified!";
+			return null;
+		}
+	}
+	
 	public function requiredNumericPostVar($varname){
 		// Confirm that data has been submitted via POST
 		if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {

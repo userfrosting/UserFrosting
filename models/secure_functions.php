@@ -809,7 +809,8 @@ function updateGroupActionPermit($action_id, $group_id, $permit){
     }
 
     //Check if selected action exists
-    if(!actionPermitExists($action_id, 'group')){
+    $action_permit = fetchActionPermit($action_id, 'group');
+    if(!$action_permit){
         addAlert("danger", "I'm sorry, the action_id you specified is invalid!");
         return false;
     } 
@@ -822,6 +823,7 @@ function updateGroupActionPermit($action_id, $group_id, $permit){
     if (!dbUpdateActionPermit($action_id, $permit, 'group')){
         return false;
     } else {
+        addAlert("success", "Successfully updated permit for action {$action_permit['action']}");
         return true;
     }
 }
@@ -840,8 +842,13 @@ function updateUserActionPermit($action_id, $user_id, $permit){
         return false;
     }
 
+    // TODO: Check that user exists
+    
+    
+    
     //Check if selected action exists
-    if(!actionPermitExists($action_id, 'user')){
+    $action_permit = fetchActionPermit($action_id, 'user');
+    if(!$action_permit){
         addAlert("danger", "I'm sorry, the action_id you specified is invalid!");
         return false;
     } 
@@ -854,6 +861,7 @@ function updateUserActionPermit($action_id, $user_id, $permit){
     if (!dbUpdateActionPermit($action_id, $permit, 'user')){
         return false;
     } else {
+        addAlert("success", "Successfully updated permit for action {$action_permit['action']}");
         return true;
     }
 }
@@ -1108,6 +1116,17 @@ function loadPermissionValidators(){
     }
 
     return fetchPermissionValidators();
+}
+
+// Returns a list of commonly used preset permit options
+function loadPresetPermitOptions($fields){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    return fetchPresetPermitOptions($fields);
 }
 
 ?>

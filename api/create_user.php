@@ -96,9 +96,9 @@ if ($admin == "true"){
   }
 }
 
-$user_name = trim($validator->requiredPostVar('user_name'));
+$user_name = str_normalize($validator->requiredPostVar('user_name'));
 $display_name = trim($validator->requiredPostVar('display_name'));
-$email = trim($validator->requiredPostVar('email'));
+$email = str_normalize($validator->requiredPostVar('email'));
 // If we're in admin mode, require title.  Otherwise, use the default title
 if ($admin == "true"){
   $title = trim($validator->requiredPostVar('title'));

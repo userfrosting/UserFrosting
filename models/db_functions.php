@@ -2225,7 +2225,6 @@ function fetchActionPermit($action_id, $type) {
         if ($row)
             return $row;
         else {
-            addAlert("danger", "The specified action id does not exist.");
             return false;
         }
 
@@ -2525,8 +2524,8 @@ function dbUpdateActionPermit($action_id, $permits, $type){
         }
         
         $stmt = $db->prepare("UPDATE ".$db_table_prefix.$table.
-            "SET permits = :permits
-            WHERE
+            " SET permits = :permits
+            WHERE 
             id = :action_id
             LIMIT 1");
         
