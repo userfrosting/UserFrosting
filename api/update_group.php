@@ -43,27 +43,45 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-// TODO: accept home page ids, is_default, and can_delete
+// Update a group, specified by id, with the given group name, is_default setting, and home page id.
+// POST: group_id, [group_name, is_default, home_page_id]
 
 $validator = new Validator();
 $group_id = $validator->requiredPostVar('group_id');
-$name = $validator->requiredPostVar('name');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
 
-//Forms posted
-if($group_id && $name){
-	if (!updateGroup($group_id, $name)){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
-	}
-} else {
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+if(!$group_id){
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();  
 }
+
+// Fetch data for this group
+$group = fetchGroupDetails($group_id);
+
+$group_name = $validator->optionalPostVar('group_name');
+if (!$group_name){
+  $group_name = $group['name'];
+}
+
+$is_default = $validator->optionalPostVar('is_default');
+if ($is_default === null){
+  $is_default = $group['is_default'];
+}
+
+$home_page_id = $validator->optionalPostVar('home_page_id');
+if (!$home_page_id){
+  $home_page_id = $group['home_page_id'];
+}
+
+if (!updateGroup($group_id, $group_name, $is_default, $home_page_id)){
+  echo json_encode(array("errors" => 1, "successes" => 0));
+  exit();
+}
+
 	/*
 	//Remove access for users
 	if(!empty($_POST['removePermission'])){

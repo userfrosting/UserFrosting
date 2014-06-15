@@ -2,7 +2,7 @@
 
 */
 
-// Load a list of all pages as a table, rows correspond to pages and columns to groups.
+// Load and display all action-permits for users or groups
 function actionPermitsWidget(widget_id, options) {
 	// Initialize parameters
 	var widget = $('#' + widget_id);
@@ -238,7 +238,7 @@ function actionPermitForm(box_id, options) {
 					// Seems that change() is sometimes triggered without an id specified...this prevents phantom triggering
 					if (!id)
 						return;
-					var action = findById(suggestions, id);
+					var action = findObjectByField(suggestions, id);
 					var params = action['parameters'];
 					var html = "";
 					/*
@@ -290,24 +290,6 @@ function actionPermitForm(box_id, options) {
 			e.preventDefault();
 		});    	
 	});
-}
-
-function findById(arr, id){
-	var item = null;
-	jQuery.each(arr, function (a,b){
-		if (b['id'] == id){
-			item = b;
-		}
-	});
-	return item;
-};
-
-function getKeys(obj) {
-	var keys = [];
-	$.each( obj, function( key, value ) {
-		keys.push(key);
-	});
-	return keys;
 }
 
 // Create a list of the most common options for group-level permits, based on the fields passed in from an action.

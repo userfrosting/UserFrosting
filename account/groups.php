@@ -56,9 +56,8 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 	<link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
 
 	<script src="../js/bootstrap-switch.min.js"></script>
-	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/tables.js"></script>
-
+	<script src="../js/widget-groups.js"></script>
+	
   </head>
 
   <body>
@@ -77,53 +76,25 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
         </div>
 		<h1>Group Settings</h1>
 		<div class='row'>
-		<div class='col-lg-6'>
-		<div class='panel panel-primary'>
-		  <div class='panel-heading'>
-		  <h3 class='panel-title'>Permission Groups</h3>
+		  <div class='col-lg-6'>
+			<div id='widget-groups'>
+			</div>
 		  </div>
-		  <div class='panel-body'>
-			<ul id='permission-groups' class="list-group">
-			</ul>
-		  <button type='button' class='btn btn-primary addPermission'><i class='fa fa-plus-square'></i>  Add Permission Group</button>
-		  </div>
-		  </div>
+		  <div id='info' class='col-lg-6'>
+            <p>{information for groups here}</p>
+          </div>
 		</div>
-            <div id='info' class='col-lg-6'>
-                <p>{information for groups here}</p>
-            </div>
-		</div>
-		</div>
-        </div>
+      </div>
+	</div>
 	<script>
         $(document).ready(function() {
-          // Get id of the logged in user to determine how to render this page.
-          var user = loadCurrentUser();
-          var user_id = user['user_id'];
-
           // Load the header
           $('.navbar').load('header.php', function() {
 			$('.navitem-groups').addClass('active');
           });
-		  // Load permissions
-		  loadPermissions('permission-groups');
 		  
-		  // Bind permission delete and add buttons
-		  $('.addPermission').on('click', function(){
-			if ($('#permission-groups').has("input").length == 0) {
-			  $("<li class='list-group-item'><div class='row'><div class='col-lg-6'><input autofocus class='form-control' name='group_name'/></div></div></li>")
-			  .appendTo('#permission-groups');
-			}
-			$('#permission-groups input').focus();
-			
-			// Bind entering a value
-			$('#permission-groups input').blur(function(){
-			  // Submit to processing form
-			  addNewPermission($('#permission-groups input').val());
-			});
-		  });
-		  
-		  //alertWidget('display-alerts');
+		  alertWidget('display-alerts');
+		  groupsWidget('widget-groups', {});
 		  
 		});
 	</script>

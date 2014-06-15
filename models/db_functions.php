@@ -1171,7 +1171,7 @@ function fetchDefaultPrimaryGroup(){
     }  
 }
 
-// Create a new group with the specified name, is_default, can_delete, and home_page_id parameters
+// Create a new group with the specified name, is_default, and home_page_id parameters
 function dbCreateGroup($name, $is_default, $can_delete, $home_page_id){
    try {
         $db = pdoConnect();
@@ -1212,24 +1212,33 @@ function dbCreateGroup($name, $is_default, $can_delete, $home_page_id){
     }   
 }
 
-// Update the specified group with a new name, is_default, can_delete, and home_page_id parameters
-function dbUpdateGroup($group_id, $name, $is_default, $can_delete, $home_page_id){
+// Update the specified group with a new name, is_default, and home_page_id parameters
+function dbUpdateGroup($group_id, $name, $is_default, $home_page_id){
     try {
 
         $db = pdoConnect();
         
         global $db_table_prefix;
 
-        $stmt = $db->prepare("UPDATE ".$db_table_prefix."groups
-            SET name = :name, is_default = :is_default, can_delete = :can_delete, home_page_id = :home_page_id 
+        // If this group is being set as the primary default group, then the current primary default group must be reset
+        if ($is_default == '2'){
+			$stmt_reset = $db->prepare("UPDATE ".$db_table_prefix."groups
+            SET is_default = '1' 
+            WHERE
+            is_default = '2'");
+			$stmt_reset->execute();
+		}
+		
+		$stmt = $db->prepare("UPDATE ".$db_table_prefix."groups
+            SET name = :name, is_default = :is_default, home_page_id = :home_page_id 
             WHERE
             id = :group_id
             LIMIT 1");
         
-        $sqlVars = array(":group_id" => $group_id, ":name" => $name, ":is_default" => $is_default, ":can_delete" => $can_delete, ":home_page_id" => $home_page_id);
+        $sqlVars = array(":group_id" => $group_id, ":name" => $name, ":is_default" => $is_default, ":home_page_id" => $home_page_id);
         
         $stmt->execute($sqlVars);
-        
+        		
         if ($stmt->rowCount() > 0)
           return true;
         else {

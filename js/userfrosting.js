@@ -131,11 +131,32 @@ function toTitleCase(str) {
 	}
 }
 
+// Get the value of a URI parameter from the current page by name.
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+// Find an object in an array of objects that has the corresponding field value
+function findObjectByField(arr, field_value, field_name){
+	field_name = typeof field_name !== 'undefined' ? field_name : "id";
+	var item = null;
+	jQuery.each(arr, function (a,b){
+		if (b[field_name] == field_value){
+			item = b;
+		}
+	});
+	return item;
+};
+
+function getKeys(obj) {
+	var keys = [];
+	$.each( obj, function( key, value ) {
+		keys.push(key);
+	});
+	return keys;
 }
 
 // Create an old-fashion html style select dropdown with typeahead capability
@@ -327,66 +348,6 @@ function loadCurrentUser() {
 		window.location.replace('logout.php');
 		return;
 	}
-}
-
-function loadPermissions(div_id) {
-  var url = APIPATH + "load_groups.php";
-  $.getJSON( url, {})
-  .done(function( data ) {		  
-	if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
-	  jQuery.each(data, function(idx, record) {
-		$('#' + div_id).append("<li class='list-group-item'>" + record['name'] + 
-		"<button class='btn btn-sm btn-danger deletePermission pull-right' data-id='" + record['id'] + "'>Delete</button></li>");
-	  });
-	  
-	  // Bind delete buttons
-	  $('.deletePermission').on('click', function(){
-		var btn = $(this);
-		var id = btn.data('id');
-		deletePermission(id);
-	  });
-	}
-  });
-}
-
-function addNewPermission(group_name) {
-  var url = APIPATH + 'create_group.php';
-  $.ajax({  
-	type: "POST",  
-	url: url,  
-	data: {
-	  group_name:		group_name,
-	  ajaxMode:				"true"
-	}		  
-  }).done( function(result) {
-	var resultJSON = processJSONResult(result);
-	alertWidget('display-alerts');
-	if (resultJSON['errors'] == 0) {
-		// If no errors, reload the newly added permission as a new element in the list
-		$('#permission-groups').html("");
-		loadPermissions('permission-groups');
-	}
-  });
-}
-
-function deletePermission(id) {
-  var url = APIPATH + 'delete_group.php';
-  $.ajax({  
-	type: "POST",  
-	url: url,  
-	data: {
-	  group_id:		id,
-	  ajaxMode:		"true"
-	}
-  }).done( function(result) {
-	var resultJSON = processJSONResult(result);
-	alertWidget('display-alerts');
-	if (resultJSON['errors'] == 0) { 
-		// If no errors, reload the permissions list
-		$('#permission-groups').html("");
-		loadPermissions('permission-groups');
-	}
-  });		  
 }
 
 // Load permissions for the logged in user

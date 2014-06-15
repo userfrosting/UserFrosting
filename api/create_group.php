@@ -40,10 +40,11 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-// TODO: accept home page id, is_default, and can_delete
-
+// Create a new group with the specified name and home page id
+// POST: group_name, home_page_id
 $validator = new Validator();
 $group_name = $validator->requiredPostVar('group_name');
+$home_page_id = $validator->requiredPostVar('home_page_id');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
@@ -52,7 +53,7 @@ foreach ($validator->errors as $error){
 
 //Forms posted
 if($group_name) {
-	if (!createGroup($group_name)){
+	if (!createGroup($group_name, $home_page_id)){
 	  echo json_encode(array("errors" => 1, "successes" => 0));
 	  exit();
 	}

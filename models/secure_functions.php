@@ -613,9 +613,10 @@ function addUserToGroup($user_id, $group_id){
 /**
  * Creates new group based on name
  * @param string $name the string name of the group to add.
+ * @param int $home_page_id the id of the home page for members of this group who have this as a primary group.
  * @return boolean true for success, false if failed
  */
-function createGroup($name) {
+function createGroup($name, $home_page_id) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
@@ -632,7 +633,8 @@ function createGroup($name) {
         return false;
     }
     else {
-        if (dbCreateGroup($name, 0, 1)) {
+        // Set group as NOT default on creation, and CAN be deleted
+        if (dbCreateGroup($name, 0, 1, $home_page_id)) {
             addAlert("success", lang("PERMISSION_CREATION_SUCCESSFUL", array($name)));
             return true;
         } else {
@@ -725,11 +727,11 @@ function createUserActionPermit($user_id, $action_name, $permit){
  * Update group based on new details
  * @param int $group_id the id of the group to edit.
  * @param string $name the new name of the group
- * @param bool|int $is_default if the group is default group or not
- * @param bool|int $can_delete if the group can be deleted or not
+ * @param int $is_default 0 if the group is not a default group for new users, 1 if it is, 2 if it is also the primary default group for new users
+ * @param int $home_page_id the id of the home page for users who have this group as their primary group
  * @return boolean true for success, false if failed
  */
-function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
+function updateGroup($group_id, $name, $is_default, $home_page_id) {
     // This block automatically checks this action against the permissions database before running.
     if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
         addAlert("danger", "Sorry, you do not have permission to access this resource.");
@@ -755,10 +757,10 @@ function updateGroup($group_id, $name, $is_default = 0, $can_delete = 1) {
             addAlert("danger", lang("ACCOUNT_PERMISSION_CHAR_LIMIT", array(1, 50)));
             return false;
         }
-    }
-
-    if (dbUpdateGroup($group_id, $name, $is_default, $can_delete)){
-        addAlert("success", lang("PERMISSION_NAME_UPDATE", array($name)));
+    }  
+    
+    if (dbUpdateGroup($group_id, $name, $is_default, $home_page_id)){
+        addAlert("success", lang("GROUP_UPDATE", array($name)));
         return true;
     } else {
         return false;
