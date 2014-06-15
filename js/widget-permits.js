@@ -17,16 +17,10 @@ function actionPermitsWidget(widget_id, options) {
 
 	var type = "group";
 	if (options['type'])
-		type = options['type'];
-	
-	var title = "<i class='fa fa-key'></i> Access Permits";
-	if (options['title'])
-		title = "<i class='fa fa-key'></i> " + options['title'];		
+		type = options['type'];	
 	
 	// Ok, set up the widget
-	var html =
-	"<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>" +
-    "<div class='panel-body'>";
+
 	
 	// Load the data and generate the rows.
 	var url = "";
@@ -44,6 +38,14 @@ function actionPermitsWidget(widget_id, options) {
 	.done(function( result ) {
 		var data = processJSONResult(result);
 		console.log(data);
+		var panel_group_id = "";
+		if (type == "group"){
+			panel_group_id = "group-permits";
+		} else {
+			panel_group_id = "user-permits";
+		}
+		
+		var html ="<div class='panel-group' id='" + panel_group_id + "'>";
 		//alertWidget('display-alerts');
 		// Don't bother unless there are some records found
 		if (Object.keys(data).length > 0) { 
@@ -56,13 +58,21 @@ function actionPermitsWidget(widget_id, options) {
 				var action_permits = record['action_permits'];
 				var owner_id = "";
 				var owner_name = "";
+				var panel_id = "";
 				if (type == "group"){
 					owner_id = record['group_id'];
 					owner_name = record['name'];
+					panel_id = "group-" + owner_id;
 				} else {
 					owner_id = record['user_id'];
 					owner_name = record['user_name'];
+					panel_id = "user-" + owner_id;
 				}
+				
+				var title = "<a data-toggle='collapse' data-parent='#" + panel_group_id + "' href='#" + panel_id + "'><i class='fa fa-caret-down'></i> " +
+				((type == "group")?"Group '":"User '") + owner_name + "'</a>";	
+				html += "<div class='panel panel-primary'><div class='panel-heading'><h3 class='panel-title'>" + title + "</h3></div>";
+				html += "<div id='" + panel_id + "' class='panel-collapse collapse'><div class='panel-body'>";
 				html += "<h3>" + ((type == "group")?"Group '":"User '") + owner_name + "' <small>has permission to perform the following actions:</small></h3>";
 				html += "<div class='btn-group'><button class='btn btn-primary createAction' data-toggle='modal' data-target='#action-create-dialog' data-owner-id='" + owner_id + "'>";
 				html += "<i class='fa fa-plus-square'></i> Add action for " + ((type == "group")?"group '":"user '") + owner_name + "'</button></div><br><br>";
@@ -107,10 +117,10 @@ function actionPermitsWidget(widget_id, options) {
 					});
 					html += "</div></div>";
 				});
-				html += "</div>";
+				html += "</div></div></div></div>";
 			});
 		}
-		html += "</div></div>";
+		html += "</div>";
 		
 		$('#' + widget_id).html(html);
 		
@@ -264,12 +274,18 @@ function actionPermitForm(box_id, options) {
 				console.log("No errors found, submitting form.");
 				if (action_id != ""){
 					console.log(action_id, " ", group_id);
-					updateGroupActionPermit(box_id, action_id, group_id);
-				}
-				else
 					if (group_id != "") {
-						createGroupActionPermit(box_id, group_id);
-					}	
+						updateActionPermit(box_id, action_id, {group_id: group_id});
+					} else {
+						updateActionPermit(box_id, action_id, {user_id: user_id});
+					}
+				} else {
+					if (group_id != "") {
+						createActionPermit(box_id, {group_id: group_id});
+					} else {
+						createActionPermit(box_id, {user_id: user_id});
+					}
+				}
 			}
 			e.preventDefault();
 		});    	
@@ -308,15 +324,20 @@ function loadPresetPermitOptions(fields) {
 	return resultJSON;
 }
 
-function createGroupActionPermit(box_id, group_id) {
+function createActionPermit(box_id, options) {
 	var data = {
-		group_id: group_id,
 		action_name: $('#' + box_id + ' input[name="action_name"]' ).val(),
 		permit: $('#' + box_id + ' select[name="permit"] option:selected' ).val(),
 		csrf_token: $('#' + box_id + ' input[name="csrf_token"]' ).val(),
 		ajaxMode: "true"
 	}
 	
+	if (options['group_id']) {
+		data['group_id'] = options['group_id'];
+	} else {
+		data['user_id'] = options['user_id'];
+	}
+
 	var url = APIPATH + "create_action_permit.php";
 	$.ajax({  
 	  type: "POST",  
@@ -329,13 +350,18 @@ function createGroupActionPermit(box_id, group_id) {
 	return;
 }
 
-function updateGroupActionPermit(box_id, action_id, group_id) {
+function updateActionPermit(box_id, action_id, options) {
 	var data = {
 		action_id: action_id,
-		group_id: group_id,
 		permit: $('#' + box_id + ' select[name="permit"] option:selected' ).val(),
 		csrf_token: $('#' + box_id + ' input[name="csrf_token"]' ).val(),
 		ajaxMode: "true"
+	}
+	
+	if (options['group_id']) {
+		data['group_id'] = options['group_id'];
+	} else {
+		data['user_id'] = options['user_id'];
 	}
 	
 	var url = APIPATH + "update_action_permit.php";

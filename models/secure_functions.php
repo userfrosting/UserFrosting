@@ -69,38 +69,7 @@ function loadUsers($limit = NULL){
         return false;
     }
 
-    try {
-        global $db_table_prefix;
-
-        $results = array();
-
-        $db = pdoConnect();
-
-        $sqlVars = array();
-
-        $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled, primary_group_id from {$db_table_prefix}users";
-
-        $stmt = $db->prepare($query);
-        $stmt->execute($sqlVars);
-
-        if (!$limit){
-            $limit = 9999999;
-        }
-        $i = 0;
-        while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
-            $id = $r['user_id'];
-            $results[$id] = $r;
-            $i++;
-        }
-
-        $stmt = null;
-        return $results;
-
-    } catch (PDOException $e) {
-        addAlert("danger", "Oops, looks like our database encountered an error.");
-        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-        return false;
-    }
+    return fetchAllUsers($limit);
 }
 
 /**
@@ -707,6 +676,7 @@ function createGroupActionPermit($group_id, $action_name, $permit){
     if (!dbCreateActionPermit($group_id, $action_name, $permit, 'group')){
         return false;
     } else {
+        addAlert("success", "Successfully created group-level permit for action $action_name");
         return true;
     }
 }
@@ -746,6 +716,7 @@ function createUserActionPermit($user_id, $action_name, $permit){
     if (!dbCreateActionPermit($user_id, $action_name, $permit, 'user')){
         return false;
     } else {
+        addAlert("success", "Successfully created user-level permit for action $action_name");
         return true;
     }
 }

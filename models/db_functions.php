@@ -187,6 +187,44 @@ function emailUsernameLinked($email,$user_name) {
 
 /*****************  User fetch data functions *******************/
 
+function fetchAllUsers($limit = null){
+    try {
+        global $db_table_prefix;
+
+        $results = array();
+
+        $db = pdoConnect();
+
+        $sqlVars = array();
+
+        $query = "select {$db_table_prefix}users.id as user_id, user_name, display_name, email, title, sign_up_stamp, last_sign_in_stamp, active, enabled, primary_group_id from {$db_table_prefix}users";
+
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+
+        if (!$limit){
+            $limit = 9999999;
+        }
+        $i = 0;
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
+            $id = $r['user_id'];
+            $results[$id] = $r;
+            $i++;
+        }
+
+        $stmt = null;
+        return $results;
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    }
+}
+
 // Fetch non-authorization related data for the specified user.
 function fetchUser($user_id){
     try {
@@ -2322,7 +2360,27 @@ function fetchAllPermits($type) {
         global $db_table_prefix;
           
         $result = array();
-          
+        
+		// Build array of groups/users indexed by id
+		if ($type == "user"){
+			$users = fetchAllUsers();
+			foreach($users as $user){
+				$id = $user['user_id'];
+				$result[$id] = array();
+				$result[$id]['user_id'] = $id;
+                $result[$id]['user_name'] = $user['user_name'];
+				$result[$id]['action_permits'] = array();
+			}
+		} else {
+			$groups = fetchAllGroups();
+			foreach($groups as $group){
+				$id = $group['id'];
+			    $result[$id]['group_id'] = $id;
+                $result[$id]['name'] = $group['name'];
+				$result[$id]['action_permits'] = array();
+			}
+		}
+		
         $db = pdoConnect();
 
         if ($type == "user"){
@@ -2345,17 +2403,6 @@ function fetchAllPermits($type) {
                 $id = $r['group_id'];
             }
             $action_permit_id = $r['id'];
-			if (!isset($result[$id])){
-				$result[$id] = array();
-                if ($type == "user"){
-                    $result[$id]['user_id'] = $id;
-                    $result[$id]['user_name'] = $r['user_name'];
-                } else {
-                    $result[$id]['group_id'] = $id;
-                    $result[$id]['name'] = $r['name'];
-                }
-				$result[$id]['action_permits'] = array();
-			}
 			// Parse out permit string into array of permit functions and parameters
 			$permits_arr = explode('&', $r['permits']);
 			$permits_by_arg = array();

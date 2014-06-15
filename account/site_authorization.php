@@ -83,13 +83,27 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		  </div>
 		</div>
 		<div class="row">
-		  <div id="widget-group-access" class="col-lg-12">
-		  
+		  <div class="col-lg-12">
+			<h2>Group-level action authorization</h2>
+			<div class='alert alert-info'>This feature allows you to specify group-level permissions for specific types of actions (e.g. create users, delete users, create groups, etc).  You can also specify certain contexts for these permissions through the use of permits.  For example, you could specify a permit that only allows deleting users in certain groups.</div>
+			<div id="widget-group-access">
+			</div>
 		  </div>
 		</div> 
 		<div class="row">
-		  <div id="widget-site-pages" class="col-lg-12">
-		  
+		  <div class="col-lg-12">
+			<h2>User-level action authorization</h2>
+			<div class='alert alert-info'>This feature allows you to specify user-level permissions for specific types of actions.  User-level permissions are applied in parallel with group permissions, i.e. a user will be granted access if they have been given permission at the user level, OR if they belong to a group that has been granted permission.</div>
+			<div id="widget-user-access">
+			</div>
+		  </div>
+		</div>
+		<div class="row">
+		  <div class="col-lg-12">
+			<h2>Page-level authorization</h2>
+			<div id="widget-site-pages">
+			
+			</div>
 		  </div>
 		</div>  
 	  </div>
@@ -107,6 +121,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		  alertWidget('display-alerts');
 		  
 		  actionPermitsWidget('widget-group-access', {type: 'group'});
+		  actionPermitsWidget('widget-user-access', {type: 'user'});
 		  sitePagesWidget('widget-site-pages', { display_errors_id: 'display-alerts-instant'});
 		});
 	</script>
