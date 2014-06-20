@@ -284,7 +284,7 @@ function addAlert($type, $message){
     $_SESSION["userAlerts"][] = $alert;
 }
 
-//Check if a given value exists in the DB for a specified tablee
+//Check if a given value exists in the DB for a specified table
 function propExists($tblName, $colName, $val)
 {
     global $mysqli,$db_table_prefix;
