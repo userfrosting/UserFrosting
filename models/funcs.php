@@ -284,6 +284,43 @@ function addAlert($type, $message){
     $_SESSION["userAlerts"][] = $alert;
 }
 
+//Check if a given value exists in the DB for a specified tablee
+function propExists($tblName, $colName, $val)
+{
+    global $mysqli,$db_table_prefix;
+    
+    // bind_param accepts only double, integer, or string types.
+    // Check here to ensure that: A) all params have been passed and B) the value is one of these three types
+    if((!$tblName || !$colName || !$val) || (!in_array(gettype($val), array("double", "integer", "string"))))
+    {
+        return false;
+    }
+    else
+    {
+        $paramType = "";
+        
+        switch(gettype($val))
+        {
+            case "double": $paramType = "d"; break;
+            case "integer": $paramType = "i"; break;
+            case "string": $paramType = "s"; break;
+        }
+        
+        $stmt = $mysqli->prepare("SELECT active
+                FROM ".$db_table_prefix.$tblName."
+                WHERE
+                ".$colName." = ?
+                LIMIT 1");
+        $stmt->bind_param($paramType, $val);
+        $stmt->execute();
+        $stmt->store_result();
+        $num_returns = $stmt->num_rows;
+        $stmt->close();
+        
+        return ($num_returns > 0) ? true : false;
+    }
+}
+
 //Functions that interact mainly with .users table
 //------------------------------------------------------------------------------
 
@@ -310,51 +347,13 @@ function deleteUsers($users) {
 //Check if a display name exists in the DB
 function displayNameExists($displayname)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		display_name = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $displayname);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+	return propExists('users', 'display_name', $displayname);
 }
 
 //Check if an email exists in the DB
 function emailExists($email)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		email = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $email);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+	return propExists('users', 'email', $email);
 }
 
 //Check if a user name and email belong to the same user
@@ -625,51 +624,13 @@ function updateTitle($id, $title)
 //Check if a user ID exists in the DB
 function userIdExists($id)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		id = ?
-		LIMIT 1");
-	$stmt->bind_param("i", $id);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+	return propExists('users', 'id', $id);
 }
 
 //Checks if a username exists in the DB
 function usernameExists($username)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		user_name = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $username);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+	return propExists('users', 'user_name', $username);
 }
 
 //Check if activation token exists in DB
@@ -803,51 +764,13 @@ function fetchPermissionDetails($id)
 //Check if a permission level ID exists in the DB
 function permissionIdExists($id)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT id
-		FROM ".$db_table_prefix."permissions
-		WHERE
-		id = ?
-		LIMIT 1");
-	$stmt->bind_param("i", $id);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+	return propExists('permissions', 'id', $id);
 }
 
 //Check if a permission level name exists in the DB
 function permissionNameExists($permission)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT id
-		FROM ".$db_table_prefix."permissions
-		WHERE
-		name = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $permission);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+	return propExists('permissions', 'name', $permission);
 }
 
 //Change a permission level's details
@@ -1127,26 +1050,7 @@ function fetchPageDetails($id)
 //Check if a page ID exists
 function pageIdExists($id)
 {
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT private
-		FROM ".$db_table_prefix."pages
-		WHERE
-		id = ?
-		LIMIT 1");
-	$stmt->bind_param("i", $id);	
-	$stmt->execute();
-	$stmt->store_result();	
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
-	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
+	return propExists('pages', 'id', $id);
 }
 
 //Toggle private/public setting of a page
