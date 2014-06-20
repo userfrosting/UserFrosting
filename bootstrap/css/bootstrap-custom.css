@@ -1,0 +1,364 @@
+/* header box for front page */
+.header-box{
+	position:relative;
+	padding:200px 15px 100px 15px;
+	margin-bottom: 50px;
+	min-height: 700px;
+	background-color:#336699;
+	/*background-image:-webkit-linear-gradient(top,#563d7c 0,#6f5499 100%);
+	background-image:linear-gradient(to bottom,#563d7c 0,#6f5499 100%);*/
+	/*background-image:linear-gradient(to bottom,#000000 0,#373737 100%);*/
+	background-image:linear-gradient(to bottom,#003366 0,#336699 100%);
+	background-repeat:repeat-x;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#003366', endColorstr='#336699', GradientType=0)
+}
+
+.header-box-short{
+	position:relative;
+	padding:100px 15px 15px 15px;
+	margin-bottom: 50px;
+	background-color:#336699;
+	/*background-image:-webkit-linear-gradient(top,#563d7c 0,#6f5499 100%);
+	background-image:linear-gradient(to bottom,#563d7c 0,#6f5499 100%);*/
+	/*background-image:linear-gradient(to bottom,#000000 0,#373737 100%);*/
+	background-image:linear-gradient(to bottom,#003366 0,#336699 100%);
+	background-repeat:repeat-x;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#003366', endColorstr='#336699', GradientType=0)
+}
+
+.container-full {
+	color:#f3f3f3;
+	text-align:center;
+	text-shadow:0 1px 0 rgba(0,0,0,.1);
+}
+
+.container-text {
+	color:#f3f3f3;
+	text-align:left;
+	text-shadow:0 1px 0 rgba(0,0,0,.1);
+}
+
+.header-box-wizard {
+	position:relative;
+	padding:100px 15px;
+	margin-bottom: 50px;
+	min-height: 860px;
+	background-color:#336699;
+	/*background-image:-webkit-linear-gradient(top,#563d7c 0,#6f5499 100%);
+	background-image:linear-gradient(to bottom,#563d7c 0,#6f5499 100%);*/
+	/*background-image:linear-gradient(to bottom,#000000 0,#373737 100%);*/
+	background-image:linear-gradient(to bottom,#003366 0,#336699 100%);
+	background-repeat:repeat-x;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#003366', endColorstr='#336699', GradientType=0)
+}
+
+.header-box-wizard .step-header {
+	color:#f3f3f3;
+	text-align:center;
+	text-shadow:0 1px 0 rgba(0,0,0,.1);
+}
+
+.header-box-wizard .step-text {
+	color:#f3f3f3;
+	text-align:left;
+	text-shadow:0 1px 0 rgba(0,0,0,.1);
+}
+
+.header-box-wizard label {
+	color:#f3f3f3;
+	/*padding: 5px 2px 0px 0px;*/
+	text-shadow:0 1px 0 rgba(0,0,0,.1);
+}
+
+.header-inner{
+	width: 1170px;
+	
+}
+
+.nopadding {
+   padding: 5px !important;
+   margin: 0 !important;
+}
+
+.pushdown {
+	margin-top: 20px;
+}
+
+.link, .link:visited, .link:active {
+	color: #fff;
+}
+
+.link:hover {
+	color: #bfbfbf;
+}
+
+.panel-inverse {
+  border-color: #000000;
+}
+.panel-inverse > .panel-heading {
+  color: #e6e6e6;
+  background-color: #1b1b1b;
+  border-color: #000000;
+}
+.panel-inverse > .panel-heading + .panel-collapse .panel-body {
+  border-top-color: #000000;
+}
+.panel-inverse > .panel-footer + .panel-collapse .panel-body {
+  border-bottom-color: #000000;
+}
+
+.panel-marketing {
+	font-size: 12px;
+}
+
+
+.panel-marketing .panel-title {
+	text-align: center;
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.panel-marketing .panel-subtitle {
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.panel-marketing .panel-sessions{
+	/*background-color: #FFF;	#404040;*/
+	color: #e6e6e6;
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px 2px;
+}
+
+.panel-marketing .panel-price{
+	color: #e6e6e6;
+	text-align: center;
+	font-size: 24px;
+	font-weight: normal;
+	padding: 2px 2px;
+}
+
+.panel-marketing .list-group-item {
+	border: none;
+}
+
+.help-block {
+	padding: 0px 0px 0px 5px;
+	color: #b94a48;
+	background-color: #f2dede;
+	border-color: #ebccd1;
+	border: 1px solid transparent;
+	border-radius: 4px;
+
+}
+
+.styled-select {
+   border: none;
+}
+
+/* Customize container */
+@media (min-width: 900px) {
+  .container-narrow {
+    max-width: 850px;
+  }
+  
+  .panel-marketing .panel-body{
+	height: 155px;
+	padding: 0px;
+  }
+  
+  .list-group-narrow {
+	max-width: 400px;
+  }
+  
+}
+
+@media only screen and (max-width: 1000px) {
+	.navbar-brand {
+		display: none;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+    h1 {
+		font-size: 20px;
+	}
+
+    h1 small {
+		font-size: 20px;
+	}
+	
+	.navbar-wrapper.h4 {
+		margin-top: 0px;
+	}
+	
+	.logo-image {
+		width: 100px;
+		height: 100px;
+	}
+	
+	.header-box{
+		min-height: 600px;
+		padding:100px 15px;
+	}
+
+	.header-box-wizard{
+		min-height: 480px;
+		padding:100px 15px;
+	}	
+		
+	body{
+		font-size: 14px;
+	}
+}
+
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  padding-bottom: 40px;
+  color: #5a5a5a;
+}
+
+.header-image {
+	padding-top: 2px;
+	height: 49px;
+	float: left;
+	margin-right: 15px;
+}
+
+.navbar-brand{
+	font-size: 24px;
+	font-family: "Verdana", Geneva, sans-serif;
+}
+
+.logo {
+	height: 200px;
+}
+
+.vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.logo-text {
+	font-size: 100px;
+	line-height: 105px;
+	padding-left: 10px;
+}
+
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Pad the edges of the mobile views a bit */
+.marketing {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+  /* Remove the edge padding needed for mobile */
+  .marketing {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* Navbar positioning foo */
+  .navbar-wrapper {
+    margin-top: 20px;
+  }
+  .navbar-wrapper .container {
+    padding-right: 15px;
+    padding-left:  15px;
+  }
+  .navbar-wrapper .navbar {
+    padding-right: 0;
+    padding-left:  0;
+  }
+
+  /* The navbar becomes detached from the top, so we round the corners */
+  .navbar-wrapper .navbar {
+    border-radius: 4px;
+  }
+
+  /* Bump up size of carousel content */
+  .carousel-caption p {
+    margin-bottom: 20px;
+    font-size: 21px;
+    line-height: 1.4;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 992px) {
+  .featurette-heading {
+    margin-top: 10px;
+  }
+}
