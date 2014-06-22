@@ -3,6 +3,8 @@ layout: default
 title: "UserFrosting: About"
 ---   
 
+#About
+
 Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
 
 ## Why UserFrosting?

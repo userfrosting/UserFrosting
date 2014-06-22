@@ -2,10 +2,34 @@
 layout: default
 title: "UserFrosting: Components"
 --- 
-
 # Components
 
-## Users
+<div class="header-menu">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="#users">Users</a></li>
+          <li><a href="#groups">Groups</a></li>
+          <li><a href="#pages">Account Pages</a></li>
+          <li><a href="#actions">Secure Actions</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+</div>
+
+## <a name="users"></a><i class='fa fa-user'></i> Users
 
 UserFrosting is all about, well, **users**.  Specifically, it's for situations when you want users of your site to have an account on your site and be able to log in with a username (or email address) and password.  This is known as **authentication**.  You may also want your users to be able to manage their account information (such as changing their email address, password, or other information), or register a new account for themselves when they visit your site.  You may also want to control what individual users will see when they log into your site, and what types of things they can or cannot do when logged in.  This last concept is often referred to as **authorization**.
 
@@ -15,7 +39,7 @@ Administrators can also **edit** user details, temporarily **disable** user acco
 
 There is one special account, called the **root account**.  The root account is the first account created during the installation process (see "Installation").  It is defined as the account with `user_id` of `1`, although this can be changed in `models/config.php`.  The root account cannot be deleted, and is automatically granted permission for every action and page (see "Authorization").
 
-## Groups
+## <a name="groups"></a><i class='fa fa-users'></i> Groups
 
 **Groups** are used to control authorization for multiple users at once, as well as customize the appearance and layout of the pages that each user sees.  Each user can belong to one or more groups, but only one group will be considered the user's **primary group**.  The primary group is used to determine which page the user will land on when they log in, as well as the formatting for their side menu bar.  Primary group assignment can also be used as a criteria for authorization: for example, you may authorize a group of site moderators to disable user accounts, but only for users whose primary group is "User".  For more details, see the "Authorization" section.
 
@@ -23,7 +47,7 @@ Groups can be managed from the "Groups" page under "Site Settings".  Here, one m
 
 Groups can be authorized to perform certain actions or access certain pages.  Users automatically gain all the permissions associated with all groups to which they belong.  UserFrosting uses a default-deny authorization scheme, which means that users can only be denied access to an action or page by being omitted from groups that have that access.  For more information, see the "Authorization" section.
 
-## Account Pages
+## <a name="pages"></a><i class='fa fa-files-o'></i> Account Pages
 
 **Account pages** make up the navigable content of your site.  Each page is implemented as a `.php` file, and can contain PHP, HTML, and Javascript.  We recommend that you separate your visible content (HTML) from the PHP as much as possible as a best practice.  This can be done by using Javascript/AJAX to mediate interaction between your account pages and a set of backend **api pages**.  For more information on this, see the section "Separation of frontend and backend".
 
@@ -51,7 +75,7 @@ $('.navbar').load('header.php', function() {
 
 These are located in the `account` subdirectory.  You can manually add additional subdirectories in `models/config.php` by adding the path to the `$page_include_paths` array.
 
-## Secure Actions
+## <a name="actions"></a><i class='fa fa-lock'></i> Secure Actions
 
 Like UserCake, the first version of UserFrosting was only able to control access at the page level.  Each group either had or didn't have access to a particular page.  When I started implementing the tutor management system for [my company](http://bloomingtontutors.com), I quickly realized that I needed to be able to allow different users access to different resources on the same page.  Furthermore, I realized that I needed a user's authorization to depend on certain contexts.  For example, I wanted to allow tutors to edit a student's details, but only if they had been assigned to that student.  Of course, this could be implemented with something like:
 
