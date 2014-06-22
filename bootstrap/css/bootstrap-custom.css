@@ -16,6 +16,18 @@ body {
 padding: 10px 0px 0px 0px;
 }
 
+.img-right {
+  float: right !important;
+  margin-left: 25px;
+  margin-bottom: 25px;
+}
+
+.img-left {
+  float: left !important;
+  margin-right: 25px;
+  margin-bottom: 25px;
+}
+
 .navbar .navbar-nav > .dropdown-primary {
   
 }

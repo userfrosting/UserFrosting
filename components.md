@@ -31,15 +31,23 @@ title: "UserFrosting: Components"
 
 ## <a name="users"></a><i class='fa fa-user'></i> Users
 
-UserFrosting is all about, well, **users**.  Specifically, it's for situations when you want users of your site to have an account on your site and be able to log in with a username (or email address) and password.  This is known as **authentication**.  You may also want your users to be able to manage their account information (such as changing their email address, password, or other information), or register a new account for themselves when they visit your site.  You may also want to control what individual users will see when they log into your site, and what types of things they can or cannot do when logged in.  This last concept is often referred to as **authorization**.
+<img class="img-right" src="images/components-user.png">
 
-User accounts can be created in two ways: by another user who is authorized to create user accounts (such as site administrators), or directly through self-registration from the "registration" page.  This second method can be enabled or disabled by administrators through the "site settings" page.  Self-registered users can also be required to activate their account through an email link.  If this feature is enabled (through the "email activation" button in site settings), newly registered users will be emailed a link containing a unique **activation token**.  The user must then click this link before they will be able to log in.  Accounts can also be manually activated by administrators.  For more details on account registration and activation, see the "Account Registration" page.
+UserFrosting is all about, well, **users**.  Specifically, it's for situations when you want users of your site to have an account on your site and be able to log in with a username (or email address) and password.  This is known as **authentication**.
+
+You may also want your users to be able to manage their account information (such as changing their email address, password, or other information), or register a new account for themselves when they visit your site.  You may also want to control what individual users will see when they log into your site, and what types of things they can or cannot do when logged in.  This last concept is often referred to as **authorization**.
+
+User accounts can be created in two ways: by another user who is authorized to create user accounts (such as site administrators), or directly through self-registration from the "registration" page.  This second method can be enabled or disabled by administrators through the "site settings" page.  Self-registered users can also be required to activate their account through an email link.  If this feature is enabled (through the "email activation" button in site settings), newly registered users will be emailed a link containing a unique **activation token**.  The user must then click this link before they will be able to log in.
+
+Accounts can also be manually activated by administrators.  For more details on account registration and activation, see the "Account Registration" page.
 
 Administrators can also **edit** user details, temporarily **disable** user accounts from the "users" page, or **delete** a user account entirely.  For more information, see the "User Management" section.
 
 There is one special account, called the **root account**.  The root account is the first account created during the installation process (see "Installation").  It is defined as the account with `user_id` of `1`, although this can be changed in `models/config.php`.  The root account cannot be deleted, and is automatically granted permission for every action and page (see "Authorization").
 
 ## <a name="groups"></a><i class='fa fa-users'></i> Groups
+
+<img class="img-left" src="images/components-groups.png">
 
 **Groups** are used to control authorization for multiple users at once, as well as customize the appearance and layout of the pages that each user sees.  Each user can belong to one or more groups, but only one group will be considered the user's **primary group**.  The primary group is used to determine which page the user will land on when they log in, as well as the formatting for their side menu bar.  Primary group assignment can also be used as a criteria for authorization: for example, you may authorize a group of site moderators to disable user accounts, but only for users whose primary group is "User".  For more details, see the "Authorization" section.
 
