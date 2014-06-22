@@ -1,5 +1,5 @@
 name: UserFrosting
 markdown: redcarpet
-pygments: true
+highlighter: pygments
 baseurl: /userfrosting/
 title: UserFrosting
