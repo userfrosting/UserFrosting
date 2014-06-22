@@ -1,0 +1,80 @@
+<div class="header-box">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="#welcome">Welcome</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#requirements">Requirements and Technologies</a></li>
+          <li><a href="#installation">Installation</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+  <div class='alert alert-warning'>Please note that many of the features described here are for the 'butterflyknife' development branch of UserFrosting.  This branch will soon be merged to the master branch.</div>      
+  <div class='text-center'>
+    <h1 id="welcome">Welcome to UserFrosting!<br>
+    <small>A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</small></h1>
+    <p><img src='images/userfrosting.png'></p>
+  </div>
+  <p class='lead'>
+  Chances are you've come here because you have a great idea for a user-oriented website, and you need a way to manage user accounts for your service/forum/orbital laser cannon without reinventing the wheel.  <strong>UserFrosting delivers.</strong>
+  </p>
+  <p>
+  You may have even started to code and write content for your project.  But whether it's a private forum for your WoW guild, an employee management system for your small business, or the next big social network, we're guessing that you probably want to get started on implementing your awesome new idea as quickly as possible.  You most certainly <strong>do not</strong> want to spend your time writing code to manage user authentication and authorization.
+  </p>
+  <p>
+There are, of course, frameworks that can do user management, but you don't want to spend your valuable time learning the ins and outs of a particular framework, only to discover that it's not really what you need.  You might also have some existing code and content that you don't want to have to rewrite to fit the framework's way of doing things.  UserFrosting is meant for developers who want to take advantage of a pre-designed user management system, but write their own code in native PHP.
+  </p>
+  <p>
+Whatever the case may be, you probably want something that is ready to go straight out of the box, without forcing you to start from `Hello World`.  UserFrosting delivers this and more.  With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less - all you need is a web server running PHP 5.3 or greater, and a SQL database.
+  </p>
+</div>
+
+<h2 id="features">Features</h2>
+<div class='row'>
+  <div class='col-md-6'>
+    <h3><i class='fa fa-user'></i> User Accounts</h3>
+    <p class='lead'>Let users register an account with your site.  We've provided everything you need for users to register, log in, manage their account, recover lost passwords, and more.</p>
+  </div>
+  <div class='col-md-6'>
+    <h3><i class='fa fa-users'></i> Groups</h3>
+    <p class='lead'>Create user groups, configure fine-grained user and group authorization rules, and set landing pages for when users log in.</p>
+  </div>
+</div>
+<div class='row'>
+  <div class='col-md-6'>
+    <img class="img-responsive" src='images/demo-register.png'>
+  </div>
+  <div class='col-md-6'>      
+    <img class="img-responsive" src='images/demo-groups.png'>
+  </div>
+</div>
+<h3><i class='fa fa-wrench'></i> Admin Management Tools</h3>
+<p class='lead'>Manage users and groups on your website with an intuitive administrative interface.  Manually create user accounts.</p>
+<img  class="img-responsive" src='images/demo-users.png'>      
+  
+<h2 id="requirements">Requirements and Technologies</h2>
+<p class="lead">UserFrosting uses pure PHP (>=5.3) for server-side code, and MySQL (server version 4.1.3 or newer) for the database.  Your PHP installation must have PDO database connections enabled.</p>
+<p>The frontend uses the following technologies (included in the project):</p>
+<ul class="list-unstyled">
+  <li>jQuery v1.10.2</li>
+  <li>Bootstrap v3.1.1</li>
+  <li> <a href="http://fontawesome.io">Font Awesome</a></li>
+  <li> <a href="http://handlebarsjs.com/">Handlebars templating</a></li>
+  <li> <a href="http://tablesorter.com">Tablesorter 2.0</a></li>
+  <li> <a href="http://www.datejs.com">DateJS</a> </li>
+  <li> <a href="http://bootstrap-switch.org">Bootstrap Switch</a> </li>
+</ul>
+<h2 id="installation">Installation</h2>
+<p class="lead">UserFrosting comes with an automated installer that will set up your database and configuration files and create the root account.  All you need to do is place the files in your home directory, go to <code>http://yoursite/install</code>, follow the steps and UserFrosting will do the rest.  When you're done, simply delete the <code>install</code> directory.</p>
