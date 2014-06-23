@@ -25,3 +25,11 @@ When a caterpillar undergoes metamorphosis, it liquifies all of its internal org
 ## Why not use Node/Drupal/Django/RoR/(insert favorite framework here)?
 
 I chose PHP because PHP is what I know from my prior experience as a web developer. Additionally, PHP remains extremely popular and well-supported.  I chose not to use a framework because I wanted something that I could understand easily and develop rapidly from an existing PHP codebase.
+
+##Design Principles
+
+* Works out of the box
+* Intuitive, modern interface
+* Mobile ready
+* Flexible
+* Extendable
