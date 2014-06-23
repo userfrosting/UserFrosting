@@ -11,6 +11,13 @@ Welcome to UserFrosting, a secure, modern user management system for web service
 
 This project grew out of a need for a simple user management system for my tutoring business, [Bloomington Tutors](http://bloomingtontutors.com).  I wanted something that I could develop rapidly and easily customize for the needs of my business.  Since my [prior web development experience](http://alexanderweissman.com/completed-projects/) was in pure PHP, I decided to go with the PHP-based UserCake system.  Over time I modified and expanded the codebase, turning it into the UserFrosting project. 
 
+## What makes UserFrosting special?
+
+* No need to learn a special framework!  The backend of UserFrosting is based on native PHP5, allowing for rapid development and deployment.
+* Clean separation of backend and frontend code.  Easily interact with the backend via AJAX calls.
+* Automated installation tool for initializing the database.
+* Frontend built with jQuery and Twitter Bootstrap.  Javascript components for typical database CRUD operations provided with this distribution!
+
 ## Why is the new version called "butterflyknife"?
 
 When a caterpillar undergoes metamorphosis, it liquifies all of its internal organs inside its cocoon, rearranging the bits and pieces to build a butterfly.  This is essentially what we have done with the codebase from the the previous version, which was essentially organized the same way as UserCake.  Butterflyknife more cleanly separates code from content, and explicitly distinguishes backend (`api`) pages from the frontend (`account`) pages.  The "knife" part captures the precision control that the new authorization system offers.  Put "butterfly" and "knife" together, and you get the name of a well-known tool which is known for its rapid deployability and elegant design.
