@@ -21,7 +21,7 @@ These are pages which accept a POST or GET request, perform some action, and the
     <div id="activate_account" class="panel-collapse collapse in">
       <div class="panel-body">
         <p class="lead">
-        Activates a newly registered user account, using the activation token that was emailed to the user upon account registration or user's <code>user_id</code> (`id` column in <code>users</code>).
+        Activates a newly registered user account, using the activation token that was emailed to the user upon account registration or user's <code>user_id</code> (<code>id</code> column in <code>users</code>).
         </p>
         <p><strong>Login required: </strong>no</p>
         <p><strong>GET request</strong></p>
@@ -131,13 +131,81 @@ These are pages which accept a POST or GET request, perform some action, and the
         </table>    
         <p><strong>Possible alerts generated</strong></p>
         <ul class="list-group">
-            <li class="list-group-item"><code>PERMISSION_NAME_IN_USE</code> : Group name already in use.
-            <li class="list-group-item"><code>PERMISSION_CHAR_LIMIT</code> : Group name too short/long.
-            <li class="list-group-item"><code>PERMISSION_CREATION_SUCCESSFUL</code> : Group successfully created.
+            <li class="list-group-item"><code>PERMISSION_NAME_IN_USE</code> : Group name already in use.</li>
+            <li class="list-group-item"><code>PERMISSION_CHAR_LIMIT</code> : Group name too short/long.</li>
+            <li class="list-group-item"><code>PERMISSION_CREATION_SUCCESSFUL</code> : Group successfully created.</li>
             <li class="list-group-item"><code>SQL_ERROR</code> : Database error.</li>
             <li class="list-group-item">Authorization failed</li>
         </ul>
       </div>
     </div>
   </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#api_pages" href="#create_user">
+          create_user.php
+        </a>
+      </h4>
+    </div>
+    <div id="create_user" class="panel-collapse collapse">
+      <div class="panel-body">
+        <p class="lead">
+        Create a new <a href="components.html#users">user</a>.
+        </p>
+        <p><strong>Login required: </strong>sometimes</p>
+        <p>This page can be accessed in admin or registration mode.  If accessed in admin mode, authorization for the <code>createUser</code> secure function will be required, and the session <a href="security.html#csrf">CSRF token</a> must be supplied.  Otherwise, a new user account can be self-registered if registration is enabled in the <strong>site settings</strong>.  In registration mode, all default groups will be added for the new user.  Will fail if the root account has not yet been created.</p>
+        <p><strong>POST request</strong></p>
+        <table class="table table-bordered">
+        <thead><td>Variable name</td><td>Description</td></thead>
+        <tbody>
+        <tr><td><code>user_name</code></td><td>The username of the new user.  Must be between 1 and 25 characters long, letters and numbers only (no whitespace)</td></tr>
+        <tr><td><code>display_name</code></td><td>The display name of the new user.  Could be used, for example, to store a user's real name.  Must be between 1 and 50 characters long.</td></tr>
+        <tr><td><code>email</code></td><td>The user's email address.  Required for sending activation and password recovery emails.  Must be between 1 and 150 characters and a valid email format.</td></tr>
+        <tr><td><code>[title]</code></td><td>The new user's title.  Can only be specified in admin mode.  In registration mode, the default title for new users (in <strong>site settings</strong>) will be used for the user's title.  Must be between 1 and 150 characters long.</td></tr>
+        <tr><td><code>password</code></td><td>The password for the new user.  Must be between 8 and 50 characters.</td></tr>
+        <tr><td><code>passwordc</code></td><td>The password for the new user.  Must match the `password` field.</td></tr>
+        <tr><td><code>[add_groups]</code></td><td>A comma-separated string of <code>group_id</code>'s to be associated with the new user.  Will only be accepted in admin mode.</td></tr>
+        <tr><td><code>[csrf_token]</code></td><td>The csrf token for the user's session.  In admin mode, must be set or the request will automatically fail.</td></tr>
+        <tr><td><code>[skip_activation]</code></td><td>If set to <b>true</b>, will skip the activation step for the new user account.  Will only be recognized in admin mode.</td></tr>
+        <tr><td><code>[primary_group_id]</code></td><td>The <code>group_id</code> of the primary group for the new user.  Will only be recognized in admin mode.</td></tr>
+        
+        <tr><td><code>[captcha]</code></td><td>The captcha code displayed on the registration form.  In registration mode, must be specified and correctly match the registration captcha or else the request will automatically fail.</td></tr>
+        <tr><td><code>ajaxMode</code></td><td>Set to <strong>true</strong> if the request is via ajax, <strong>false</strong> otherwise.</td></tr>
+        </tbody>
+        </table>
+        <p><strong>POST response</strong></p>
+        <table class="table table-bordered">
+        <thead><td>Variable name</td><td>Description</td></thead>
+        <tbody>
+        <tr><td><code>errors[]</code></td><td>the number of errors generated by the request.</td></tr>
+        <tr><td><code>successes[]</code></td><td>the number of successes generated by the request.</td></tr>
+        </tbody>
+        </table>    
+        <p><strong>Possible alerts generated</strong></p>
+        <ul class="list-group">
+            <li class="list-group-item"><code>ACCOUNT_USER_CHAR_LIMIT</code> : Username too short/long.</li>
+            <li class="list-group-item"><code>ACCOUNT_USER_INVALID_CHARACTERS</code> : Username must be letters and numbers only.</li>
+            <li class="list-group-item"><code>ACCOUNT_USERNAME_IN_USE</code> : Username already in use.</li>
+            <li class="list-group-item"><code>ACCOUNT_DISPLAY_CHAR_LIMIT</code> : Display name too short/long.</li>
+            <li class="list-group-item"><code>ACCOUNT_DISPLAYNAME_IN_USE</code> : Display name already in use.  TODO: relax this restriction?</li>
+            <li class="list-group-item"><code>ACCOUNT_PASS_CHAR_LIMIT</code> : Password too short/long.</li>            
+            <li class="list-group-item"><code>ACCOUNT_PASS_MISMATCH</code> : <code>password</code> and <code>passwordc</code> do not match.</li>
+            <li class="list-group-item"><code>ACCOUNT_INVALID_EMAIL</code> : Email is not a valid email address format.</li>
+            <li class="list-group-item"><code>ACCOUNT_EMAIL_IN_USE</code> : Email address already in use.</li>
+            <li class="list-group-item"><code>MAIL_ERROR</code> : Error sending activation email (if in registration mode).</li>
+            <li class="list-group-item"><code>CAPTCHA_FAIL</code> : Captcha did not match. (if in registration mode).</li>
+            <li class="list-group-item"><code>ACCOUNT_CREATION_COMPLETE</code> : Successfully completed user account setup.</li>   
+            <li class="list-group-item"><code>ACCOUNT_REGISTRATION_COMPLETE_TYPE1</code> : Successfully created user account (no activation required).</li>
+            <li class="list-group-item"><code>ACCOUNT_REGISTRATION_COMPLETE_TYPE2</code> : Successfully created user account (activation required).</li>               
+            <li class="list-group-item"><code>ACCOUNT_PERMISSION_ADDED</code> : Successfully added user to groups (if in admin mode).</li>
+            <li class="list-group-item"><code>NO_DATA</code> : No request data was received by the script.</li>
+            <li class="list-group-item"><code>SQL_ERROR</code> : Database error.</li>
+            <li class="list-group-item">Authorization failed</li>
+        </ul>
+      </div>
+    </div>
+  </div>  
+
+      
 </div>
