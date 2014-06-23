@@ -1,12 +1,12 @@
 ---
 layout: default
-title: "UserFrosting: Backend API"
+title: "UserFrosting: Backend AJAX API"
 ---
   <div class='alert alert-warning'>This page is still under construction.</div>  
-<h1>Backend API</h1>
+<h1>Backend AJAX API</h1>
 
 <p class="lead">
-These are pages which accept a POST or GET request, perform some action, and then return a response in the form of a JSON object.  All backend api pages are stored in the <code>api</code> directory.  Success, error, and warning messages are sent to the <a href="features.html#errors">alert stream</a>, and can be accessed via <code>api/user_alerts.php</code>.
+These are pages which accept a POST or GET request (usually via AJAX), perform some action, and then return a response in the form of a JSON object.  All backend api pages are stored in the <code>api</code> directory.  Success, error, and warning messages are sent to the <a href="features.html#errors">alert stream</a>, and can be accessed via <code>api/user_alerts.php</code>.
 </p>
 
 <div class="panel-group" id="api_pages">
@@ -424,5 +424,50 @@ These are pages which accept a POST or GET request, perform some action, and the
       </div>
     </div>
   </div>    
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#api_pages" href="#load_current_user">
+          load_current_user.php
+        </a>
+      </h4>
+    </div>
+    <div id="load_current_user" class="panel-collapse collapse">
+      <div class="panel-body">
+        <p class="lead">
+        Load the currently logged-in user's information.
+        </p>
+        <p><strong>Login required: </strong>yes</p>
+        <p><strong>AJAX only: </strong>yes</p>
+        <p><strong>GET request</strong></p>
+        <div class="well"><i>No parameters</i></div>
+        <p><strong>GET response</strong></p>
+        <p>A JSON object containing the following fields for the user's account:</p>
+        <table class="table table-bordered">
+        <thead><td>Variable name</td><td>Description</td></thead>
+        <tbody>        
+        <tr><td><code>user_id</code></td><td>The id of the currently logged in user.</td></tr>
+        <tr><td><code>user_name</code></td><td>The username of the currently logged in user.</td></tr>
+        <tr><td><code>display_name</code></td><td>The display name of the currently logged in user.</td></tr>
+        <tr><td><code>title</code></td><td>The title of the currently logged in user.</td></tr>
+        <tr><td><code>email</code></td><td>The email address of the currently logged in user.</td></tr>
+        <tr><td><code>sign_up_stamp</code></td><td>The UNIX timestamp (seconds since Jan 1, 1970) of the time when the currently logged in user's account was created.</td></tr>
+        <tr><td><code>last_sign_in_stamp</code></td><td>The UNIX timestamp (seconds since Jan 1, 1970) of the time when the currently logged in user's last logged in.</td></tr>
+        <tr><td><code>active</code></td><td><b>1</b> if the user's account is active, <b>0</b> otherwise.</td></tr>
+        <tr><td><code>enabled</code></td><td><b>1</b> if the user's account is enabled, <b>0</b> otherwise.</td></tr>
+        <tr><td><code>primary_group_id</code></td><td>The <code>group_id</code> of the user's primary group.</td></tr>
+        <tr><td><code>csrf_token</code></td><td>The currently logged in user's <a href="security.html#csrf">CSRF token</a>.</td></tr>
+        </tbody>
+        </table>
+        <p><strong>Possible alerts generated</strong></p>
+        <ul class="list-group">
+            <li class="list-group-item"><code>SQL_ERROR</code> : Database error.</li>
+            <li class="list-group-item">User is not logged in.</li>
+        </ul>
+      </div>
+    </div>
+  </div>    
+  
 </div>
 
