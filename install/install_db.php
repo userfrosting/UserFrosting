@@ -42,21 +42,21 @@ $site_email = $validator->requiredPostVar('site_email');
 $user_title = $validator->requiredPostVar('user_title');
 
 // Check and see if email login should be enabled or disabled by default
-if($validator->requiredPostVar('select_email') == 'on' ){
+if($validator->optionalPostVar('select_email') == 'on' ){
     $selected_email = 1;
 }else{
     $selected_email = 0;
 }
 
 // Check and see if general registration should be enabled or disabled by default
-if($validator->requiredPostVar('can_register') == 'on' ){
+if($validator->optionalPostVar('can_register') == 'on' ){
     $selected_register = 1;
 }else{
     $selected_register = 0;
 }
 
 // Check and see if email activation should be enabled or disabled by default
-if($validator->requiredPostVar('email_activation') == 'on' ){
+if($validator->optionalPostVar('email_activation') == 'on' ){
     $selected_activation = 1;
 }else{
     $selected_activation = 0;

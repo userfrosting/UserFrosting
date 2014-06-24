@@ -125,7 +125,7 @@ if (!$db = pdoConnect()){
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Enable Email Login</label>
                     <div class="col-sm-8">
-                        <input type="checkbox" name="select_email" checked />
+                        <input type="checkbox" name="select_email" />
                     </div>
                 </div>
             </div>
