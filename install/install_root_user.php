@@ -30,19 +30,26 @@ THE SOFTWARE.
 */
 
 // This is the config file in the install directory.
-require_once('config.php');
+require_once("config.php");
+require_once("../models/db-settings.php");
+require_once("../models/db_functions.php");
+require_once("../models/funcs.php");
+require_once("../models/languages/en.php");
+require_once("../models/class.mail.php");
+require_once("../models/class.user.php");
+require_once("../models/secure_functions.php");
 
 if (!($root_account_config_token = fetchConfigParameter('root_account_config_token'))){
-	addAlert("danger", lang("INSTALLER_INCOMPLETE"));
+    addAlert("danger", lang("INSTALLER_INCOMPLETE"));
 	header('Location: index.php');
 	exit();
 }
 
-if (userIdExists('1')){
-	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
-	header('Location: index.php');
-	exit();
-}
+//if (userIdExists('1')){
+//	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
+//	header('Location: index.php');
+//	exit();
+//}
 
 $validator = new Validator();
 // POST: user_name, display_name, email, password, passwordc, token
@@ -74,22 +81,20 @@ if ($token != $root_account_config_token) {
 }
 
 if ($error_count == 0){
-
 	$admin = false;
 	$require_activation = false;
 
 	// Try to create the new user
 	if (!$new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin)) {
-		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+        if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 		  echo json_encode(array("errors" => 1, "successes" => 0));
 		} else {
 		  header('Location: ../register.php');
 		}
 		exit();
 	}
-	
 	// If creation succeeds, add default groups for new users
-	if (dbAddUserToDefaultGroups($new_user_id)){
+	/*if (dbAddUserToDefaultGroups($new_user_id)){
 	  // Uncomment this if you want self-registered users to know about permission groups
 	  //$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
 	} else {
@@ -99,12 +104,14 @@ if ($error_count == 0){
 		header('Location: register_root.php');
 	  }
 	  exit();
-	}
-	  
+	}*/
+    updateUserField('1', 'primary_group_id', '2');
+
 	// Account creation was successful!
 	// On success, create the success message and delete the activation token
 	deleteConfigParameter('root_account_config_token');
 	addAlert("success", "You have successfully created the root account.  Please delete this installation folder and log in via login.php.");
+    addAlert("success", "<a href='../login.php'>Click Here</a> to login");
 } else {
 	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 	  echo json_encode(array("errors" => 1, "successes" => 0));

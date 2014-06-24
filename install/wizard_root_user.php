@@ -31,6 +31,13 @@ THE SOFTWARE.
 
 // This is the config file in the install directory.
 require_once('config.php');
+require_once('../models/db-settings.php');
+require_once("../models/db_functions.php");
+require_once("../models/funcs.php");
+require_once("../models/languages/en.php");
+require_once("../models/class.mail.php");
+require_once("../models/class.user.php");
+require_once("../models/secure_functions.php");
 
 // TODO: Client-side validation and AJAX submission
 
@@ -38,11 +45,11 @@ require_once('config.php');
 // 1. the root config token (root_account_config_token) must exist
 // 2. the uc_users table must not have a user with id=1
 
-if (userIdExists('1')){
-	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
-	header('Location: index.php');
-	exit();
-}
+//if (userIdExists('1')){
+//	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
+//	header('Location: index.php');
+//	exit();
+//}
 
 if (!($root_account_config_token = fetchConfigParameter('root_account_config_token'))){
 	addAlert("danger", lang("INSTALLER_INCOMPLETE"));
@@ -60,7 +67,7 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="css/favicon.ico">
+    <link rel="shortcut icon" href="../css/favicon.ico">
 
     <title>UserFrosting - Register Master Account</title>
 
@@ -78,7 +85,6 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
     <script src="../js/jquery-1.10.2.min.js"></script>
 	<script src="../js/bootstrap.js"></script>
 	<script src="../js/userfrosting.js"></script>
-
   </head>
 
   <body>
@@ -92,7 +98,7 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
         <h1>Master Account Setup</h1>
         <p class="lead">Please set up the master (root) account for UserFrosting.</p>
 		<small>The configuration token can be found in the 'uc_configuration' table of your database, as the value for 'root_account_config_token'.</small>
-		<form name='newUser' class='form-horizontal' role='form' action='create_root_user.php' method='post'>
+		<form name='newUser' class='form-horizontal' role='form' action='install_root_user.php' method='post'>
 		  <div class="row">
 				<div id='display-alerts' class="col-lg-12">
 		  
@@ -131,7 +137,7 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
 		  <div class="form-group">
 			<label class="col-sm-4 control-label">Configuration Token</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" name='token'>
+			  <input type="text" class="form-control" placeholder="Configuration Token" name='token'>
 			</div>
 		  </div>
 		  <br>
@@ -143,35 +149,32 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
 		</form>
 	  </div>	
       <div class="footer">
-        <p>&copy; Your Website, 2014</p>
+        <p>&copy; UserFrosting Installer, 2014</p>
       </div>
 
     </div> <!-- /container -->
-
   </body>
+  <script>
+      $(document).ready(function() {
+          var widget_id = 'display-alerts';
+          var url = 'install_alerts.php';
+          $.getJSON( url, {})
+              .done(function( data ) {
+                  var alertHTML = "";
+                  jQuery.each(data, function(alert_idx, alert_message) {
+                      if (alert_message['type'] == "success"){
+                          alertHTML += "<div class='alert alert-success'>" + alert_message['message'] + "</div>";
+                      } else if (alert_message['type'] == "warning"){
+                          alertHTML += "<div class='alert alert-warning'>" + alert_message['message'] + "</div>";
+                      } else 	if (alert_message['type'] == "info"){
+                          alertHTML += "<div class='alert alert-info'>" + alert_message['message'] + "</div>";
+                      } else if (alert_message['type'] == "danger"){
+                          alertHTML += "<div class='alert alert-danger'>" + alert_message['message'] + "</div>";
+                      }
+                  });
+                  $('#' + widget_id).html(alertHTML);
+                  return false;
+              });
+      });
+  </script>
 </html>
-
-	<script>
-        $(document).ready(function() {
-		  var widget_id = 'display-alerts';
-		  var url = 'install_alerts.php';
-		  $.getJSON( url, {})
-		  .done(function( data ) {	
-			  var alertHTML = "";
-			  jQuery.each(data, function(alert_idx, alert_message) {
-				  if (alert_message['type'] == "success"){
-					  alertHTML += "<div class='alert alert-success'>" + alert_message['message'] + "</div>";
-				  } else if (alert_message['type'] == "warning"){
-					  alertHTML += "<div class='alert alert-warning'>" + alert_message['message'] + "</div>";
-				  } else 	if (alert_message['type'] == "info"){
-					  alertHTML += "<div class='alert alert-info'>" + alert_message['message'] + "</div>";
-				  } else if (alert_message['type'] == "danger"){
-					  alertHTML += "<div class='alert alert-danger'>" + alert_message['message'] + "</div>";
-				  }
-			  });	
-			  $('#' + widget_id).html(alertHTML);
-			  return false;
-		  });
-		});
-	</script>
-

@@ -29,9 +29,7 @@ THE SOFTWARE.
 
 */
 
-// This is the config file in the install directory.
 require_once('config.php');
-
 ?>
 
 <!DOCTYPE html>
@@ -80,7 +78,7 @@ require_once('config.php');
 		</div>
 	  </div>	
       <div class="footer">
-        <p>&copy; Your Website, 2014</p>
+        <p>&copy; UserFrosting Installer, 2014</p>
       </div>
 
     </div> <!-- /container -->

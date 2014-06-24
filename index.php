@@ -95,7 +95,7 @@ if(isUserLoggedIn()) {
         </div>
       </div>	
       <div class="footer">
-        <p>&copy; Your Website, 2014</p>
+        <p>&copy; <a href='http://www.userfrosting.com'>UserFrosting</a>, 2014</p>
       </div>
 
     </div> <!-- /container -->

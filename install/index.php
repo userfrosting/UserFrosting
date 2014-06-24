@@ -1,45 +1,3 @@
-<?php
-/*
-
-UserFrosting Version: 0.2
-By Alex Weissman
-Copyright (c) 2014
-
-Based on the UserCake user management system, v2.0.2.
-Copyright (c) 2009-2012
-
-UserFrosting, like UserCake, is 100% free and open-source.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
-
-// This is the config file in the install directory.
-require_once('config.php');
-
-if (userIdExists('1')){
-	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
-	header('Location: complete.php');
-	exit();
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -78,28 +36,14 @@ if (userIdExists('1')){
       <div class="jumbotron">
         <h1>Welcome to UserFrosting!</h1>
         <p class="lead">A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</p>
-	  
-		<div class="row">
-			<div id='display-alerts' class="col-lg-12">
-
-			</div>
-		</div>
-	      </div>	
-		<div class="row">
-			<div class="col-sm-12">
-			<h2>To install, follow these instructions:</h2>
-			<ul class="list-group">
-				<li class="list-group-item">1. Create a database on your server / web hosting package. UserFrosting supports MySQLi and requires MySQL server version 4.1.3 or newer, as well as PHP 5.4 or later with PDO database connections enabled.</li>
-				<li class="list-group-item">2. Open up models/db-settings.php and fill out the connection details for your database.</li>
-				<li class="list-group-item">3. Click <a href="install.php">here</a> to run the UserFrosting installer.  UserFrosting will attempt to build the database for you, and generate a registration code to create the master (root) account.</li>
-				<li class="list-group-item">4. After the installer successfully completes, delete the install folder.</li>
-			</ul>
-			</div>
-        </div>	
+		<div class='alert alert-warning'>Before you begin, please create a new MySQL database.  Then, open the file <code>models/db-settings.php</code> and enter your database connection details (host, database name, username, password).  When this is complete, click the button below.</div>
+		<div id='display-alerts'>
+		</div>        
+		<a class="btn btn-primary" href='wizard_site_config.php'>Start Installation</a>
+	  </div>
       <div class="footer">
-        <p>&copy; Your Website, 2014</p>
+        <p>&copy; UserFrosting Installer, 2014</p>
       </div>
-
     </div> <!-- /container -->
 
 	<script>

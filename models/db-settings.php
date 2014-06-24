@@ -45,7 +45,7 @@ function pdoConnect(){
 	  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	  return $db;
 	} catch(PDOException $e) {  
-		return $e->getMessage();  
+		return null;  
 	}  
 }
 

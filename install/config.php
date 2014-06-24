@@ -38,23 +38,27 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
-require_once("../models/db-settings.php");
-require_once("../models/db_functions.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
 require_once("../models/class_validator.php");
-require_once("../models/secure_functions.php");
 
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
-	
+
+//Get url for install path
+$hostname = $_SERVER['HTTP_HOST'];
+$app_path = $_SERVER['PHP_SELF'];
+
+//Get the path to the app the main directory
+$exploded = explode('/', $app_path);
+
+//check if its in the root directory or a sub directory
+if($exploded >=1){$ePath = $exploded['1'] .'/';}else{$ePath = NULL;}
+
+//Holds the install path for inserting into the database
+$url = $hostname .'/'. $ePath;
+
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
 $master_account = 1;
+$db_table_prefix = 'uf_';
 
 session_start();
-
-?>
-

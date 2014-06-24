@@ -31,11 +31,46 @@ THE SOFTWARE.
 
 // This is the config file in the install directory.
 require_once('config.php');
+require_once("../models/db-settings.php");
+require_once("../models/funcs.php");
 
-if (userIdExists('1')){
-	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
-	header('Location: complete.php');
-	exit();
+// Process POSTed site settings
+$validator = new Validator();
+$site_url_root = $validator->requiredPostVar('site_url');
+$site_name = $validator->requiredPostVar('site_name');
+$site_email = $validator->requiredPostVar('site_email');
+$user_title = $validator->requiredPostVar('user_title');
+
+// Check and see if email login should be enabled or disabled by default
+if($validator->requiredPostVar('select_email') == 'on' ){
+    $selected_email = 1;
+}else{
+    $selected_email = 0;
+}
+
+// Check and see if general registration should be enabled or disabled by default
+if($validator->requiredPostVar('can_register') == 'on' ){
+    $selected_register = 1;
+}else{
+    $selected_register = 0;
+}
+
+// Check and see if email activation should be enabled or disabled by default
+if($validator->requiredPostVar('email_activation') == 'on' ){
+    $selected_activation = 1;
+}else{
+    $selected_activation = 0;
+}
+
+// If any errors or missing values, send us back
+// Add alerts for any failed input validation
+foreach ($validator->errors as $error){
+  addAlert("danger", $error);
+}
+
+if (count($validator->errors) > 0){
+    header("Location: wizard_site_config.php");
+    exit();
 }
 
 $db_issue = false;
@@ -89,7 +124,7 @@ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 ";
 
-// Add root acount as a user and administrator
+// Add root account as a user and administrator
 $user_group_matches_entry = "
 INSERT INTO `".$db_table_prefix."user_group_matches` (`id`, `user_id`, `group_id`) VALUES
 (1, 1, 1),
@@ -107,17 +142,17 @@ PRIMARY KEY (`id`)
 
 $configuration_entry = "
 INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
-(1, 'website_name', 'UserFrosting'),
-(2, 'website_url', 'localhost/'),
-(3, 'email', 'noreply@myfrosting.com'),
-(4, 'activation', '0'),
+(1, 'website_name', '".$site_name."'),
+(2, 'website_url', '".$site_url_root."'),
+(3, 'email', '".$site_email."'),
+(4, 'activation', ".$selected_activation."),
 (5, 'resend_activation_threshold', '0'),
 (6, 'language', 'models/languages/en.php'),
 (7, 'template', 'models/site-templates/default.css'),
-(8, 'can_register', '1'),
-(9, 'new_user_title', 'New Member'),
+(8, 'can_register', ".$selected_register."),
+(9, 'new_user_title', '".$user_title."'),
 (10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "'),
-(11, 'email_login', '0'),
+(11, 'email_login', '".$selected_email."'),
 (12, 'token_timeout', '10800');
 ";
 
@@ -126,7 +161,7 @@ $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
 `page` varchar(150) NOT NULL,
 `private` tinyint(1) NOT NULL DEFAULT '0',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 ";
 
 $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`) VALUES
@@ -141,7 +176,11 @@ $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`
 (9, 'account/users.php', 1),
 (10, 'account/user_details.php', 1),
 (11, 'account/index.php', 0),
-(12, 'account/groups.php', 1)
+(12, 'account/groups.php', 1),
+(13, 'forms/form_user.php', 1),
+(14, 'forms/form_group.php', 1),
+(15, 'forms/form_confirm_delete.php', 1),
+(16, 'forms/form_action_permits.php', 1);
 ";
 
 $group_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."group_page_matches` (
@@ -149,7 +188,7 @@ $group_page_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."group
 `group_id` int(11) NOT NULL,
 `page_id` int(11) NOT NULL,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24;
 ";
 
 $group_page_matches_entry = "INSERT INTO `".$db_table_prefix."group_page_matches` (`id`, `group_id`, `page_id`) VALUES
@@ -165,11 +204,17 @@ $group_page_matches_entry = "INSERT INTO `".$db_table_prefix."group_page_matches
 (10, 2, 10),
 (11, 2, 11),
 (12, 2, 12),
-(13, 1, 1),
-(14, 1, 2),
-(15, 1, 3),
-(16, 1, 4),
-(17, 1, 6);
+(13, 2, 13),
+(14, 2, 14),
+(15, 2, 15),
+(16, 2, 16),
+(17, 1, 1),
+(18, 1, 2),
+(19, 1, 3),
+(20, 1, 4),
+(21, 1, 6),
+(22, 1, 13),
+(23, 1, 15);
 ";
 
 // Group-level permits
@@ -179,7 +224,7 @@ $group_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."gro
   `action` varchar(100) NOT NULL,
   `permits` varchar(400) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 ";
 
 $group_action_permits_entry = "INSERT INTO `".$db_table_prefix."group_action_permits` (`id`, `group_id`, `action`, `permits`) VALUES
@@ -198,10 +243,7 @@ $group_action_permits_entry = "INSERT INTO `".$db_table_prefix."group_action_per
 (13, 2, 'loadUsers', 'always()'),
 (14, 2, 'deleteUser', 'always()'),
 (15, 2, 'activateUser', 'always()'),
-(16, 2, 'loadGroups', 'always()'),
-(17, 2, 'updateGroup', 'always()'),
-(18, 2, 'createGroup', 'always()'),
-(19, 2, 'deleteGroup', 'always()')
+(16, 2, 'loadGroups', 'always()');
 ";
 
 // User-level permits
@@ -214,7 +256,12 @@ $user_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ";
 
-$db = pdoConnect();
+// Try to connect to the database.  If failed, return to wizard_site_config.php
+if (!$db = pdoConnect()){
+    addAlert("error", "Could not connect to database.  Please check your database credentials in `models/db-settings.php`.");
+    header("Location: wizard_site_config.php");
+    exit();
+}
 
 $stmt = $db->prepare($configuration_sql);
 if($stmt->execute())
@@ -381,16 +428,11 @@ else
 $result['errors'] = $errors;
 $result['successes'] = $successes;
 foreach ($errors as $error){
-  addAlert("danger", $error);
+    addAlert("danger", $error);
 }
 foreach ($successes as $success){
-  addAlert("success", $success);
+    addAlert("success", $success);
 }
 
-if (count($errors) == 0)
-    header('Location: register_root.php');
-else
-    header('Location: index.php');
-exit();	
-
-?>
+echo json_encode(array("errors" => count($errors), "successes" => count($successes)));
+  
