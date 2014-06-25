@@ -75,9 +75,12 @@ if (count($validator->errors) > 0){
 
 // Check that database exists, we can connect to it, and that none of the tables already exist.
 
-// Try to connect to the database.  If failed, return to wizard_site_config.php
-if (!$db = pdoConnect()){
-    addAlert("error", "Could not connect to database.  Please check your database credentials in `models/db-settings.php`.");
+// Try to connect to the database.  If failed, return error code
+try{
+    $db = pdoConnect();
+} catch (PDOException $e) {
+    addAlert("danger", "Could not connect to database.  Please check your database credentials in `models/db-settings.php`.");
+    error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
     echo json_encode(array("errors" => 1, "successes" => 0));
     exit();
 }

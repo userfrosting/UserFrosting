@@ -4,8 +4,11 @@ require_once("../models/db-settings.php");
 require_once("../models/funcs.php");
 
 // Try to connect to the database.  If failed, return to index.php
-if (!$db = pdoConnect()){
+try{
+    $db = pdoConnect();
+} catch (PDOException $e) {
     addAlert("danger", "Could not connect to database.  Please check your database credentials in `models/db-settings.php`.");
+    error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
     header("Location: ./");
     exit();
 }

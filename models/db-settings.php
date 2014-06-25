@@ -38,15 +38,12 @@ $db_table_prefix = "uf_";
 
 // All SQL queries use PDO now
 function pdoConnect(){
+	// Let this function throw a PDO exception if it cannot connect
 	global $db_host, $db_name, $db_user, $db_pass;
-	try {  
-	  $db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
-	  $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-	  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	  return $db;
-	} catch(PDOException $e) {  
-		return null;  
-	}  
+	$db = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
+	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	return $db;
 }
 
 GLOBAL $errors;
