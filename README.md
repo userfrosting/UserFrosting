@@ -87,6 +87,8 @@ Change Log - v0.2.0 (butterflyknife)
 - Implemented templated menus.  Every group has a corresponding menu template in `models/menu-templates`.  Upon login, the menu for a user's primary group is automatically loaded and rendered.
 - Implemented function-level user authorization.  Whenever a function in `secure_functions` is called, the `user_action_permits` table is checked to see whether or not that user has access to the function (the `action` column), conditional on the boolean functions specified in the `permits` column.
 - Organized pages into four categories: account pages, API pages, form pages, and public pages.  Public pages reside in the root directory and can be accessed by anyone.  Account pages are in the `account` directory and are only accessible after logging in.  API pages are in the `api` directory, and consist of all the pages that process or fetch data from the DB and interact with the frontend via AJAX/JSON.  They are accessible by any logged in user, but will only perform a function if the user is authorized.  Form pages are in the `forms` directory, and consist of pages that generate forms (for creating/updating users, groups, etc.)  
+- Converted registration page to AJAX.
+- Improved installer with site configuration.
 
 [Older changes](CHANGELOG.md)   
 
@@ -107,3 +109,9 @@ The back end account management system is derived from [UserCake 2.0.2](http://u
 *  [Bootstrap Switch](http://bootstrap-switch.org) 
 
 All components are copyright of their respective creators.
+
+Upcoming Features
+-----------------
+
+Please see the [wiki](https://github.com/alexweissman/UserFrosting/wiki/Upcoming-features) for a list of potential upcoming features.  If you would like to see a new feature implemented (or you would like to implement it!) please [open an issue](https://github.com/alexweissman/UserFrosting/issues?direction=desc&sort=updated&state=open).
+
