@@ -97,7 +97,7 @@ function valueExists($table, $column, $value) {
         
         $sqlVars = array();
         
-        $query = "SELECT active
+        $query = "SELECT id
     FROM ".$db_table_prefix.$table."
     WHERE
     $column = :data
