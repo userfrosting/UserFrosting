@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <title>UserFrosting: Security Features</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+    <link rel="canonical" href="//security.html">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="//css/main.css">
+    
+   <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-custom.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link rel="canonical" href="http://www.userfrosting.com">
+
+    <title>UserFrosting: A secure, modern user management system based on UserCake, jQuery, and Bootstrap</title>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-37689257-2', 'www.userfrosting.com');
+        ga('send', 'pageview');
+      
+    </script>
+</head>
+
+
+    <body>
+
+    <header role="banner" class="navbar navbar-default navbar-fixed-top top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" data-toggle="collapse" data-target="#collapse" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">UserFrosting</a>
+    </div>
+    <nav id="collapse" role="navigation" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown dropdown-primary">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class='fa fa-download'></i> Get UserFrosting <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="https://github.com/alexweissman/UserFrosting/"><i class='fa fa-github'></i> View on Github</a></li>
+            <li class="divider"></li>              
+            <li><a href="https://github.com/alexweissman/UserFrosting/zipball/master"><i class='fa fa-file-archive-o'></i> Download as a .zip file</a></li>
+            <li><a href="https://github.com/alexweissman/UserFrosting/tarball/master"><i class='fa fa-file-archive-o'></i> Download as a tar.gz file</a></li>
+          </ul>
+        </li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="examples.html">Examples</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Features <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="about.html">About</a></li>
+            <li><a href="components.html">Components</a></li>
+            <li><a href="features.html">Main Features</a></li>
+            <li><a href="security.html">Security Features</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation <b class="caret"></b></a>
+          <ul class="dropdown-menu">        
+            <li><a href="backend-api.html">Backend AJAX API</a></li>
+            <li><a href="forms-api.html">Forms API</a></li>
+          </ul>
+        </li>
+        <li><a href="contributors.html">Contributors</a></li>
+        </ul>
+      <ul class="nav navbar-nav navbar-right">  
+        <li style="padding-top: 10px;"><iframe src="http://ghbtns.com/github-btn.html?user=alexweissman&repo=userfrosting&type=watch&count=true&size=large" frameborder="0" scrolling="0" width="144" height="30"></iframe></li>
+      </ul>
+      
+    </nav>
+  </div>
+</header> 
+
+
+    <div class="container">
+      <h1 id="toc_0">Security Features</h1>
+
+<div class="header-menu">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="#ssl">SSL/HTTPS</a></li>
+          <li><a href="#passwords">Password Hashing</a></li>
+          <li><a href="#csrf">CSRF Attacks</a></li>
+          <li><a href="#xss">XSS Attacks</a></li>
+          <li><a href="#sql-inject">SQL Injection</a></li>          
+          </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+</div>
+
+<p>UserFrosting is designed to address the most common security issues with websites that handle sensitive user data:</p>
+
+<h2 id="toc_1"><a name="ssl"></a><i class='fa fa-lock'></i> SSL/HTTPS compatibility</h2>
+
+<p>Unsecured (&quot;ssl&quot;) websites exchange data between the user and the server in plain text.  If the connection between the user and server is not secure, this data can be intercepted, and possibly even altered and/or rerouted.  And, even if the sensitive data itself is encrypted, the user&#39;s session on the website can be stolen and impersonated unless ALL communication between the user and server is handled over SSL (&quot;https&quot; websites).  If you walk into any coffee shop with an unsecured wireless network, and launch a simple program such as <a href="http://codebutler.com/firesheep/">Firesheep</a>, you will see how huge of a problem this is, and why <a href="http://www.wired.com/2014/04/https/">Google and other companies are pushing for <em>everyone</em> to use SSL</a>.</p>
+
+<p>This is also why there are strict standards about websites that handle sensitive user data such as credit card numbers!  We strongly encourage anyone planning to deploy a website that handles user passwords and sessions (such as ones based on UserFrosting) to purchase an SSL certificate and deploy it on their web server.  <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/794/67/how-to-activate-ssl-certificate">Namecheap</a> offers basic, inexpensive certs for $9/year (you do not need to have Namecheap hosting or domain registration to use their certificates on your site).  If your web hosting happens to use cPanel, this is easy to <a href="http://docs.cpanel.net/twiki/bin/view/AllDocumentation/WHMDocs/InstallCert">set up yourself</a> without needing to contact your hosting provider.  Please note that SSL on shared hosting accounts may create false security warnings for end-users with <a href="https://en.wikipedia.org/wiki/Server_Name_Indication#No_support">older browsers</a>.</p>
+
+<p>For <strong>local testing purposes only</strong> you may create a self-signed certificate.  For instructions on how to do this for XAMPP/Apache in OSX, see <a href="http://shahpunyerblog.blogspot.com/2007/10/create-self-signed-ssl-certificate-in.html">this blog post</a>.</p>
+
+<h2 id="toc_2"><a name="passwords"></a><i class='fa fa-key'></i> Strong password hashing</h2>
+
+<p>UserFrosting uses the <code>password_hash</code> and <code>password_verify</code> functions to hash and validate passwords (new in PHP v5.5.0).  <code>password_hash</code> uses the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a 22-character salt to user passwords, protecting against dictionary attacks.</p>
+
+<p>UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with MD5.  User accounts that have been hashed with MD5 will automatically be updated to the new encryption standard when the user successfully logs in.</p>
+
+<h2 id="toc_3"><a name="csrf"></a><i class='fa fa-bomb'></i> Protection against cross-site request forgery (CSRF)</h2>
+
+<p>CSRF is an attack that relies on a user unwittingly submitting malicious data from another source while logged in to their account.  The malicious data can be embedded in an image, link, or other javascript content, on another website or in an email.  Because the user has a valid session with a website, the external content is accepted and processed.  Thus, attackers can easily change passwords or delete a user&#39;s account with this attack.</p>
+
+<p>To guard against this, UserFrosting provides the <code>csrf_token</code> function (courtesy of @r3wt).  By generating a new, random CSRF token for users when they log in, inserting it into legitimate forms as a hidden field, and then having the backend form processing links check for this token before taking any action, CSRF attacks can be thwarted.</p>
+
+<h2 id="toc_4"><a name="xss"></a><i class='fa fa-bomb'></i> Protection against cross-site scripting (XSS)</h2>
+
+<p>XSS is another variety of attack that tricks a user, but instead of tricking the user into submitting malicious data (CSRF), it tricks the user into running malicious scripts.  This vulnerability usually appears when you allow arbitrary content (including javascript and HTML tags) to be processed and then regurgitated back to other users.  Thus, an attacker on a forum could create a new &quot;post&quot; that contains javascript commands.  When anyone else on the site goes to view that post, the javascript commands are executed.  Those commands could easily be instructions to transmit the user&#39;s session data to a remote server, where attackers can use it to impersonate the user.</p>
+
+<p>UserFrosting guards against this by sanitizing user input before storing or otherwise acting upon it.  Please let us know if you find a place where input is not properly sanitized.</p>
+
+<h2 id="toc_5"><a name="sql-inject"></a><i class='fa fa-bomb'></i> Protection against SQL injection</h2>
+
+<p>Whereas XSS tricks the <em>user</em> into executing malicious code, SQL injection tricks the <em>server</em> into executing malicious code; in this case, SQL statements.  Thus, sites vulnerable to SQL injection can end up executing code that, for example, deletes a table or database.</p>
+
+<p>UserFrosting protects against this by using parameterized queries, which do not allow user-supplied data to be executed as code.  However there are always exceptions, and we would be glad to have some contributors test and/or help patch any possible remaining SQL injection vulnerabilities.</p>
+
+                <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; Created by <a href="https://github.com/alexweissman" target="_blank">Alexander Weissman</a> Licensed under the
+        <a href="http://opensource.org/licenses/MIT" target="_blank">MIT License</a></p>
+      </footer>
+      
+    </div>
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="jquery/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>
