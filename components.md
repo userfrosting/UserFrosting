@@ -41,23 +41,23 @@ User accounts can be created in two ways: by another user who is authorized to c
 
 Accounts can also be manually activated by administrators.  For more details on account registration and activation, see the "Account Registration" page.
 
-Administrators can also **edit** user details, temporarily **disable** user accounts from the "users" page, or **delete** a user account entirely.  For more information, see the "User Management" section.
+Administrators can also **edit** user details, temporarily **disable** user accounts from the "users" page, or **delete** a user account entirely.  For more information, see the <a href="features.html#user-management">User Management</a> section.
 
-There is one special account, called the **root account**.  The root account is the first account created during the installation process (see "Installation").  It is defined as the account with `user_id` of `1`, although this can be changed in `models/config.php`.  The root account cannot be deleted, and is automatically granted permission for every action and page (see "Authorization").
+There is one special account, called the **root account**.  The root account is the first account created during the installation process (see "Installation").  It is defined as the account with `user_id` of `1`, although this can be changed in `models/config.php`.  The root account cannot be deleted, and is automatically granted permission for every action and page (see <a href="features.html#authorization">Authorization</a>).
 
 ## <a name="groups"></a><i class='fa fa-users'></i> Groups
 
 <img class="img-left" src="images/components-groups.png">
 
-**Groups** are used to control authorization for multiple users at once, as well as customize the appearance and layout of the pages that each user sees.  Each user can belong to one or more groups, but only one group will be considered the user's **primary group**.  The primary group is used to determine which page the user will land on when they log in, as well as the formatting for their side menu bar.  Primary group assignment can also be used as a criteria for authorization: for example, you may authorize a group of site moderators to disable user accounts, but only for users whose primary group is "User".  For more details, see the "Authorization" section.
+**Groups** are used to control authorization for multiple users at once, as well as customize the appearance and layout of the pages that each user sees.  Each user can belong to one or more groups, but only one group will be considered the user's **primary group**.  The primary group is used to determine which page the user will land on when they log in, as well as the formatting for their side menu bar.  Primary group assignment can also be used as a criteria for authorization: for example, you may authorize a group of site moderators to disable user accounts, but only for users whose primary group is "User".  For more details, see the <a href="features.html#authorization">Authorization</a> section.
 
 Groups can be managed from the "Groups" page under "Site Settings".  Here, one may edit group names, and set the landing page for primary members of that group.  Additionally, groups can be set as **default groups**.  Self-registered users are automatically added to the default groups when they create their account.  One default group can also be set as the **default primary group**.  Self-registered users will have their primary group set to this default group.
 
-Groups can be authorized to perform certain actions or access certain pages.  Users automatically gain all the permissions associated with all groups to which they belong.  UserFrosting uses a default-deny authorization scheme, which means that users can only be denied access to an action or page by being omitted from groups that have that access.  For more information, see the "Authorization" section.
+Groups can be authorized to perform certain actions or access certain pages.  Users automatically gain all the permissions associated with all groups to which they belong.  UserFrosting uses a default-deny authorization scheme, which means that users can only be denied access to an action or page by being omitted from groups that have that access.  For more information, see the <a href="components.html#authorization">Authorization</a> section.
 
 ## <a name="pages"></a><i class='fa fa-files-o'></i> Account Pages
 
-**Account pages** make up the navigable content of your site.  Each page is implemented as a `.php` file, and can contain PHP, HTML, and Javascript.  We recommend that you separate your visible content (HTML) from the PHP as much as possible as a best practice.  This can be done by using Javascript/AJAX to mediate interaction between your account pages and a set of backend **api pages**.  For more information on this, see the section "Separation of frontend and backend".
+**Account pages** make up the navigable content of your site.  Each page is implemented as a `.php` file, and can contain PHP, HTML, and Javascript.  We recommend that you separate your visible content (HTML) from the PHP as much as possible as a best practice.  This can be done by using Javascript/AJAX to mediate interaction between your account pages and a set of backend **api pages**.  For more information on this, see the section <a href="features.html#api">Backend API</a>.
 
 The default installation comes with the following pages:
 
@@ -76,7 +76,7 @@ $('.navbar').load('header.php', function() {
 * `includes.php`: Not a navigable page.  Loads core jQuery, bootstrap, and UserFrosting javascript modules.  Also, applies appropriate CSS styles for users.
 * `index.php`: The first page that users are sent to upon login.  Automatically redirects users to their home page.
 * `logout.php`: Logs the current user out.  We may move this to the `api` directory soon.
-* `site_authorization.php`: The page where administrators can manage user, group, and page authorization.  See "Authorization" for more information.
+* `site_authorization.php`: The page where administrators can manage user, group, and page authorization.  See <a href="features.html#authorization">Authorization</a> for more information.
 * `site_settings.php`: The page where administrators can change settings for the site, including site name, enable or disable account registration, email login, and more.
 * `user_details.php`: The page where administrators can view and edit details for a user, including group membership.  Takes the GET parameter `id`, where `id` is the id of the user to be displayed. 
 * `users.php`: The page where administrators can view a list of all users, edit their account information, activate, disable, and delete accounts.
@@ -97,4 +97,4 @@ But I didn't want to hard code these rules throughout my site, and then have to 
 
 Enter the concept of **secure actions**.  Secure actions are functions that perform some atomic operation, such as modifying a user, assigning a user to a group, or viewing a list of users.  They are special because, when they are called, they first check to see if the user who called them is authorized to perform that action with the specified parameters.  This is achieved through PHP's reflective programming API, which allows a running to script to "know thyself."  A secure action calls the `checkActionPermissionSelf` function, which looks up the name of the function in the database to see if the current user (or their groups) is authorized to call it.  If so, the parameters supplied to the function are checked against one or more **permits**.  Permits are functions that check if supplied parameters meet certain criteria, and then return a true/false value.  For example, the permit `isLoggedInUser(user_id)` checks to see whether the supplied `user_id` matches the `user_id` of the currently logged in user.  If (and only if) the user passes all of the required permits for that action, then the secure function proceeds to execute.
 
-For more information, see the "Authorization" section.
+For more information, see the <a href="features.html#authorization">Authorization</a> section.

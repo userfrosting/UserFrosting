@@ -129,7 +129,7 @@
 
 <h2 id="toc_2"><a name="validation"></a><i class='fa fa-check'></i> Input Validation</h2>
 
-<p>For security and user experience, data submitted by the user must be validated.  For example, we might require that passwords be a certain minimum length, or that email addresses contain the <code>@</code> symbol.  Data is validated in two places: on the frontend, so that users can find out why their input is invalid without waiting for a page to reload, and on the backend, so that malicious users cannot bypass the frontend validation to submit potentially <strong>destructive data</strong> (for more information on destructive data, see the &quot;Security&quot; section).</p>
+<p>For security and user experience, data submitted by the user must be validated.  For example, we might require that passwords be a certain minimum length, or that email addresses contain the <code>@</code> symbol.  Data is validated in two places: on the frontend, so that users can find out why their input is invalid without waiting for a page to reload, and on the backend, so that malicious users cannot bypass the frontend validation to submit potentially <strong>destructive data</strong> (for more information on destructive data, see the <a href="security.html">Security</a> section).</p>
 
 <p>On the frontend, validation is done via the <code>validateFormFields</code> function, located in <code>js/userfrosting.js</code>.  When this function is called on a form, it checks all submitted values against their validation rules.  These rules are specified by the <code>data-validate</code> attribute for the given field.  For example,</p>
 <div class="highlight"><pre><code class="text language-text" data-lang="text">&lt;input type=&#39;text&#39; class=&#39;form-control&#39; name=&#39;user_title&#39; autocomplete=&#39;off&#39; data-validate=&#39;{\&quot;minLength\&quot;: 1, \&quot;maxLength\&quot;: 100, \&quot;label\&quot;: \&quot;Title\&quot; }/&gt;
@@ -151,7 +151,7 @@
 
 <h2 id="toc_4"><a name="authentication"></a><i class='fa fa-key'></i> Authentication</h2>
 
-<p>Users of your site <strong>authenticate</strong> (&quot;log in&quot;) with a unique username and a password.  Passwords are hashed via the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm before being stored in the database.  Since hashing is a one-way function, this provides an essential security feature in the event that your database is compromised.  If an attacker managed to gain access to your database, they&#39;ll have a much harder time recovering your users&#39; passwords from the hashes.  UserFrosting also appends a 22-character pseudo-random salt to user passwords, which makes it harder for attackers to reverse engineer passwords based on known hashes.  For more information, see the &quot;Security&quot; section.</p>
+<p><a href="components.html#users">Users</a> of your site <strong>authenticate</strong> (&quot;log in&quot;) with a unique username and a password.  Passwords are hashed via the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm before being stored in the database.  Since hashing is a one-way function, this provides an essential security feature in the event that your database is compromised.  If an attacker managed to gain access to your database, they&#39;ll have a much harder time recovering your users&#39; passwords from the hashes.  UserFrosting also appends a 22-character pseudo-random salt to user passwords, which makes it harder for attackers to reverse engineer passwords based on known hashes.  For more information, see the &quot;Security&quot; section.</p>
 
 <p>UserFrosting can also be configured to allow logging in with the user&#39;s email address instead of their username.  This makes it a little easier for your users, since they don&#39;t have to remember an additional piece of information.  However email addresses are by definition public pieces of information, making them slightly less secure than a username, which could be kept secret.  This is a tradeoff you must consider based on the purpose and target audience of your site.</p>
 
@@ -159,7 +159,8 @@
 
 <h2 id="toc_5"><a name="authorization"></a><i class='fa fa-ticket'></i> Authorization</h2>
 
-<p>Once logged in, different users can be given permission to access different resources (such as pages) and perform different actions.  For example, you might want to allow a customer the ability to change their avatar image or password, but not their current balance.  Or, you might want to allow one user to send a message to another user, but only if they belong to the same group.  This is known as authorization.</p>
+<img class="img-right" src="images/demo-action-auth.png">
+<p>Once logged in, different users can be given permission to access different resources (such as pages) and perform different actions.  For example, you might want to allow a customer the ability to change their avatar image or password, but not their current balance.  Or, you might want to allow one user to send a message to another user, but only if they belong to the same <a href="components.html#groups">group</a>.  This is known as authorization.</p>
 
 <p>The most common way that authorization is implemented is through an ACL (**access control list**).  In this scheme, every object (files, database entries, etc) in your system is stored along with a list of users and the actions they may perform on that object.  For example, an ACL entry might say that user Alice has permission to read and update other users&#39; information.  If you wanted to limit Alice&#39;s access only to certain profiles, you&#39;d need a separate entry in the ACL for each user she can access (&quot;Alice can read and update Bob&#39;s profile information&quot;, &quot;Alice can read and update Carlos&#39; profile information&quot;, etc).  </p>
 
@@ -244,7 +245,11 @@
 
 <h2 id="toc_6"><a name="user-management"></a><i class='fa fa-users'></i> User Management</h2>
 
-<div class="alert alert-info">Coming soon!</div>
+<p>UserFrosting provides a robust, intuitive interface for administrators to manage user accounts.  From the "users" page, admins can create new user accounts, edit existing user account information, activate, disable, and delete accounts.  Users can also be assigned/removed from different groups, and the user primary group can be set.</p>
+<p>Upcoming features include pagination of the user list, and searching for users by name or other criteria.</p>
+<img src="images/demo-user-management.png">
+
+
 
 <h2 id="toc_7"><a name="templating"></a><i class='fa fa-puzzle-piece'></i> Templating</h2>
 

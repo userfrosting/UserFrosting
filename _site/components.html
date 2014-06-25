@@ -126,23 +126,23 @@
 
 <p>Accounts can also be manually activated by administrators.  For more details on account registration and activation, see the &quot;Account Registration&quot; page.</p>
 
-<p>Administrators can also <strong>edit</strong> user details, temporarily <strong>disable</strong> user accounts from the &quot;users&quot; page, or <strong>delete</strong> a user account entirely.  For more information, see the &quot;User Management&quot; section.</p>
+<p>Administrators can also <strong>edit</strong> user details, temporarily <strong>disable</strong> user accounts from the &quot;users&quot; page, or <strong>delete</strong> a user account entirely.  For more information, see the <a href="features.html#user-management">User Management</a> section.</p>
 
-<p>There is one special account, called the <strong>root account</strong>.  The root account is the first account created during the installation process (see &quot;Installation&quot;).  It is defined as the account with <code>user_id</code> of <code>1</code>, although this can be changed in <code>models/config.php</code>.  The root account cannot be deleted, and is automatically granted permission for every action and page (see &quot;Authorization&quot;).</p>
+<p>There is one special account, called the <strong>root account</strong>.  The root account is the first account created during the installation process (see &quot;Installation&quot;).  It is defined as the account with <code>user_id</code> of <code>1</code>, although this can be changed in <code>models/config.php</code>.  The root account cannot be deleted, and is automatically granted permission for every action and page (see <a href="features.html#authorization">Authorization</a>).</p>
 
 <h2 id="toc_2"><a name="groups"></a><i class='fa fa-users'></i> Groups</h2>
 
 <p><img class="img-left" src="images/components-groups.png"></p>
 
-<p><strong>Groups</strong> are used to control authorization for multiple users at once, as well as customize the appearance and layout of the pages that each user sees.  Each user can belong to one or more groups, but only one group will be considered the user&#39;s <strong>primary group</strong>.  The primary group is used to determine which page the user will land on when they log in, as well as the formatting for their side menu bar.  Primary group assignment can also be used as a criteria for authorization: for example, you may authorize a group of site moderators to disable user accounts, but only for users whose primary group is &quot;User&quot;.  For more details, see the &quot;Authorization&quot; section.</p>
+<p><strong>Groups</strong> are used to control authorization for multiple users at once, as well as customize the appearance and layout of the pages that each user sees.  Each user can belong to one or more groups, but only one group will be considered the user&#39;s <strong>primary group</strong>.  The primary group is used to determine which page the user will land on when they log in, as well as the formatting for their side menu bar.  Primary group assignment can also be used as a criteria for authorization: for example, you may authorize a group of site moderators to disable user accounts, but only for users whose primary group is &quot;User&quot;.  For more details, see the <a href="features.html#authorization">Authorization</a> section.</p>
 
 <p>Groups can be managed from the &quot;Groups&quot; page under &quot;Site Settings&quot;.  Here, one may edit group names, and set the landing page for primary members of that group.  Additionally, groups can be set as <strong>default groups</strong>.  Self-registered users are automatically added to the default groups when they create their account.  One default group can also be set as the <strong>default primary group</strong>.  Self-registered users will have their primary group set to this default group.</p>
 
-<p>Groups can be authorized to perform certain actions or access certain pages.  Users automatically gain all the permissions associated with all groups to which they belong.  UserFrosting uses a default-deny authorization scheme, which means that users can only be denied access to an action or page by being omitted from groups that have that access.  For more information, see the &quot;Authorization&quot; section.</p>
+<p>Groups can be authorized to perform certain actions or access certain pages.  Users automatically gain all the permissions associated with all groups to which they belong.  UserFrosting uses a default-deny authorization scheme, which means that users can only be denied access to an action or page by being omitted from groups that have that access.  For more information, see the <a href="components.html#authorization">Authorization</a> section.</p>
 
 <h2 id="toc_3"><a name="pages"></a><i class='fa fa-files-o'></i> Account Pages</h2>
 
-<p><strong>Account pages</strong> make up the navigable content of your site.  Each page is implemented as a <code>.php</code> file, and can contain PHP, HTML, and Javascript.  We recommend that you separate your visible content (HTML) from the PHP as much as possible as a best practice.  This can be done by using Javascript/AJAX to mediate interaction between your account pages and a set of backend <strong>api pages</strong>.  For more information on this, see the section &quot;Separation of frontend and backend&quot;.</p>
+<p><strong>Account pages</strong> make up the navigable content of your site.  Each page is implemented as a <code>.php</code> file, and can contain PHP, HTML, and Javascript.  We recommend that you separate your visible content (HTML) from the PHP as much as possible as a best practice.  This can be done by using Javascript/AJAX to mediate interaction between your account pages and a set of backend <strong>api pages</strong>.  For more information on this, see the section <a href="features.html#api">Backend API</a>.</p>
 
 <p>The default installation comes with the following pages:</p>
 
@@ -161,7 +161,7 @@
 <li><code>includes.php</code>: Not a navigable page.  Loads core jQuery, bootstrap, and UserFrosting javascript modules.  Also, applies appropriate CSS styles for users.</li>
 <li><code>index.php</code>: The first page that users are sent to upon login.  Automatically redirects users to their home page.</li>
 <li><code>logout.php</code>: Logs the current user out.  We may move this to the <code>api</code> directory soon.</li>
-<li><code>site_authorization.php</code>: The page where administrators can manage user, group, and page authorization.  See &quot;Authorization&quot; for more information.</li>
+<li><code>site_authorization.php</code>: The page where administrators can manage user, group, and page authorization.  See <a href="features.html#authorization">Authorization</a> for more information.</li>
 <li><code>site_settings.php</code>: The page where administrators can change settings for the site, including site name, enable or disable account registration, email login, and more.</li>
 <li><code>user_details.php</code>: The page where administrators can view and edit details for a user, including group membership.  Takes the GET parameter <code>id</code>, where <code>id</code> is the id of the user to be displayed. </li>
 <li><code>users.php</code>: The page where administrators can view a list of all users, edit their account information, activate, disable, and delete accounts.</li>
@@ -180,7 +180,7 @@
 
 <p>Enter the concept of <strong>secure actions</strong>.  Secure actions are functions that perform some atomic operation, such as modifying a user, assigning a user to a group, or viewing a list of users.  They are special because, when they are called, they first check to see if the user who called them is authorized to perform that action with the specified parameters.  This is achieved through PHP&#39;s reflective programming API, which allows a running to script to &quot;know thyself.&quot;  A secure action calls the <code>checkActionPermissionSelf</code> function, which looks up the name of the function in the database to see if the current user (or their groups) is authorized to call it.  If so, the parameters supplied to the function are checked against one or more <strong>permits</strong>.  Permits are functions that check if supplied parameters meet certain criteria, and then return a true/false value.  For example, the permit <code>isLoggedInUser(user_id)</code> checks to see whether the supplied <code>user_id</code> matches the <code>user_id</code> of the currently logged in user.  If (and only if) the user passes all of the required permits for that action, then the secure function proceeds to execute.</p>
 
-<p>For more information, see the &quot;Authorization&quot; section.</p>
+<p>For more information, see the <a href="features.html#authorization">Authorization</a> section.</p>
 
                 <!-- FOOTER -->
       <footer>
