@@ -148,7 +148,7 @@ if ($email_login == 1) {
 			  },		  
 			  success: function(result) {
 				var resultJSON = processJSONResult(result);
-				if (resultJSON['errors'] > 0){
+				if (resultJSON['errors'] && resultJSON['errors'] > 0){
 				  alertWidget('display-alerts');
 				} else {
 				  window.location.replace("account");

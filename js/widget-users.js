@@ -69,7 +69,7 @@ function usersWidget(widget_id, options) {
 	if (options['columns'])
 		columns = options['columns'];		
 
-	console.debug(options);
+	//console.debug(options);
 	
 	// Load the current user's info to get the CSRF token
 	var current_user = loadCurrentUser();
@@ -443,7 +443,7 @@ function createUser(dialog_id) {
 			add_permissions.push(permission_id);
 		}
 	});
-	console.log("Adding permissions: " + add_permissions.join(','));
+	//console.log("Adding user to groups: " + add_permissions.join(','));
 
 	// Set primary group
 	var primary_group_id = $('#' + dialog_id + ' button.btn-toggle-primary-group-on').data('id');
@@ -461,7 +461,7 @@ function createUser(dialog_id) {
 		admin: "true",
 		skip_activation: "true",
 		ajaxMode: "true"
-	}
+	};
 	
 	var url = APIPATH + "create_user.php";
 	$.ajax({  

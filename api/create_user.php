@@ -142,12 +142,7 @@ if ($error_count == 0){
 	
 	// Try to create the new user
 	if ($new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin)){
-	  	if ($require_activation)
-		  // Activation required
-		  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE2"));
-		else
-		  // No activation required
-		  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1"));
+
 	} else {
 		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 		  echo json_encode(array("errors" => 1, "successes" => 0));
@@ -171,17 +166,23 @@ if ($error_count == 0){
 	  // Set primary group
 	  if(!empty($primary_group_id)){
 		  if (updateUserPrimaryGroup($new_user_id, $primary_group_id)){
-			  addAlert("success", "Successfully set user primary group.");
+		  	  // Account creation was successful!
+			  addAlert("success", lang("ACCOUNT_CREATION_COMPLETE", array($user_name)));
+			  addAlert("success", lang("ACCOUNT_GROUP_ADDED", array($addition_count)));
+			  addAlert("success", lang("ACCOUNT_PRIMARY_GROUP_SET"));
 		  } else {
 			  $error_count++;
 		  }
-	  }
-	  
+	  }	  
 	// Otherwise, add default groups and set primary group for new users
 	} else {
 	  if (dbAddUserToDefaultGroups($new_user_id)){
-		// Uncomment this if you want self-registered users to know about permission groups
-		//$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
+	  	if ($require_activation)
+		  // Activation required
+		  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE2"));
+		else
+		  // No activation required
+		  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1"));
 	  } else {
 		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 		  echo json_encode(array("errors" => 1, "successes" => 0));
@@ -191,8 +192,6 @@ if ($error_count == 0){
 		exit();
 	  }
 	}
-	// Account creation was successful!
-	addAlert("success", lang("ACCOUNT_CREATION_COMPLETE", array($user_name)));	
 } else {
 	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
 	  echo json_encode(array("errors" => 1, "successes" => 0));

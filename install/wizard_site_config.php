@@ -213,7 +213,7 @@ try{
                   }		  
                 }).done(function(result) {
                   var resultJSON = processJSONResult(result);
-                  if (resultJSON['errors']) {
+                  if (resultJSON['errors'] && resultJSON['errors'] > 0){
                         console.log("error");
                         alertWidget('display-alerts');
                         return;

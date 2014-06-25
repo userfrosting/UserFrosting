@@ -98,6 +98,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_GROUP_NOT_MEMBER"		=> "User is not a member of group %m1%.",
 	"ACCOUNT_GROUP_ALREADY_MEMBER"		=> "User is already a member of group %m1%.",
     "ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
+    "ACCOUNT_PRIMARY_GROUP_SET" => "Successfully set user primary group.",
 	));
 
 //Configuration

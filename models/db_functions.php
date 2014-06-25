@@ -875,6 +875,12 @@ function updateUserField($user_id, $field_name, $field_value){
         
         $sqlVars = array();
 
+		// Check that the user exists
+		if (!userIdExists($user_id)){
+          addAlert("danger", "Invalid user id specified.");
+          return false;		
+		}
+		
         // Note that this function uses the field name directly in the query, so do not use unsanitized user input for this function!
         $query = "UPDATE ".$db_table_prefix."users
 			SET
@@ -887,14 +893,12 @@ function updateUserField($user_id, $field_name, $field_value){
         $sqlVars[':user_id'] = $user_id;
         $sqlVars[':field_value'] = $field_value;
         
-        $stmt->execute($sqlVars);
-        
-        if ($stmt->rowCount() > 0)
-          return true;
-        else {
-          addAlert("danger", "Invalid user id specified.");
-          return false;
-        }
+        if ($stmt->execute($sqlVars)){
+			return true;
+		} else {
+			return false;
+		}
+		
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
@@ -1447,7 +1451,7 @@ function dbAddUserToDefaultGroups($user_id){
 
         $query = "SELECT 
             id, is_default 
-            FROM ".$db_table_prefix."groups where is_default >= '1'"; 
+            FROM ".$db_table_prefix."groups where is_default >= 1"; 
         
         $stmt = $db->prepare($query);
 
@@ -1483,7 +1487,10 @@ function dbAddUserToDefaultGroups($user_id){
             if (!updateUserField($user_id, 'primary_group_id', $primary_group_id)){
                 return false;
             }
-        }
+        } else {
+		    addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+			return false;
+		}
         
         $stmt = null;
       
