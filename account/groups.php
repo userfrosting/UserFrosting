@@ -74,14 +74,13 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
           </div>
         </div>
-		<h1>Group Settings</h1>
 		<div class='row'>
 		  <div class='col-lg-6'>
 			<div id='widget-groups'>
 			</div>
 		  </div>
 		  <div id='info' class='col-lg-6'>
-            <p>{information for groups here}</p>
+            
           </div>
 		</div>
       </div>
