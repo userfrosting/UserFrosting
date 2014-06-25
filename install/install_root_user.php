@@ -53,14 +53,14 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
 
 $validator = new Validator();
 // POST: user_name, display_name, email, password, passwordc, token
-$user_name = trim($validator->requiredPostVar('username'));
-$display_name = trim($validator->requiredPostVar('displayname'));
+$user_name = trim($validator->requiredPostVar('user_name'));
+$display_name = trim($validator->requiredPostVar('display_name'));
 $email = trim($validator->requiredPostVar('email'));
 $title = 'Master Account';
 // Don't trim passwords
 $password = $validator->requiredPostVar('password');
 $passwordc = $validator->requiredPostVar('passwordc');
-$token = $validator->requiredPostVar('token');
+$token = $validator->requiredPostVar('csrf_token');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
@@ -72,11 +72,7 @@ $error_count = count($validator->errors);
 // Check token
 if ($token != $root_account_config_token) {
 	addAlert("danger", lang("CONFIG_TOKEN_MISMATCH"));
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header('Location: register_root.php');
-	}
+	echo json_encode(array("errors" => 1, "successes" => 0));
 	exit();
 }
 
@@ -86,11 +82,7 @@ if ($error_count == 0){
 
 	// Try to create the new user
 	if (!$new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin)) {
-        if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-		  echo json_encode(array("errors" => 1, "successes" => 0));
-		} else {
-		  header('Location: ../register.php');
-		}
+		echo json_encode(array("errors" => 1, "successes" => 0));
 		exit();
 	}
 	// If creation succeeds, add default groups for new users
@@ -105,6 +97,7 @@ if ($error_count == 0){
 	  }
 	  exit();
 	}*/
+	// Set the primary group as the "Admin" group
     updateUserField('1', 'primary_group_id', '2');
 
 	// Account creation was successful!
@@ -113,27 +106,14 @@ if ($error_count == 0){
 	addAlert("success", "You have successfully created the root account.  Please delete this installation folder and log in via login.php.");
     addAlert("success", "<a href='../login.php'>Click Here</a> to login");
 } else {
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header('Location: register_root.php');
-	}
+	echo json_encode(array("errors" => $error_count, "successes" => 0));
 	exit();
 }
 
 // Send successfully registered users to the completion page, while errors should return them to the registration page.
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
+echo json_encode(array(
 	"errors" => 0,
 	"successes" => 1));
-} else {
-  if(count($errors) == 0) {
-	header('Location: complete.php');
-	exit();
-  } else {
-	header('Location: register_root.php');
-	exit();	
-  }
-}
+exit();
 
 ?>

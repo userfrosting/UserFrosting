@@ -96,48 +96,66 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
       </div>
       <div class="jumbotron">
         <h1>Master Account Setup</h1>
-        <p class="lead">Please set up the master (root) account for UserFrosting.</p>
-		<small>The configuration token can be found in the 'uc_configuration' table of your database, as the value for 'root_account_config_token'.</small>
-		<form name='newUser' class='form-horizontal' role='form' action='install_root_user.php' method='post'>
+        <p class="lead">Please set up the master (root) account for UserFrosting.<br>
+		<small>The configuration token can be found in the <code>uc_configuration</code> table of your database, as the value for <code>root_account_config_token</code>.</small></p>
+		<form name='newUser' id='newUser' class='form-horizontal' role='form' action='install_root_user.php' method='post'>
 		  <div class="row">
 				<div id='display-alerts' class="col-lg-12">
 		  
 				</div>
 		  </div>		
-		  <div class="form-group">
-			<label class="col-sm-4 control-label">User Name</label>
+		  <div class="row form-group">
+			<label class="col-sm-4 control-label">Username</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="User Name" name = 'username' value=''>
+			    <div class="input-group">
+                    <span class='input-group-addon'><i class='fa fa-edit'></i></span>
+					<input type="text" class="form-control" placeholder="Username" name = 'user_name' value='' data-validate='{"minLength": 1, "maxLength": 25, "label": "Username" }'>
+				</div>
 			</div>
 		  </div>
 		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Display Name</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="Display Name" name='displayname'>
+				<div class="input-group">
+					<span class='input-group-addon'><i class='fa fa-edit'></i></span>
+					<input type="text" class="form-control" placeholder="Display Name" name='display_name' data-validate='{"minLength": 1, "maxLength": 50, "label": "Display Name" }'>
+				</div>
 			</div>
 		  </div>
-		  <div class="form-group">
+		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Email</label>
 			<div class="col-sm-8">
-			  <input type="email" class="form-control" placeholder="Email" name='email'>
+				<div class="input-group">
+					<span class='input-group-addon'><i class='fa fa-envelope'></i></span>
+					<input type="email" class="form-control" placeholder="Email" name='email' data-validate='{"email": true, "minLength": 1, "maxLength": 150, "label": "Email" }'>
+				</div>
 			</div>
 		  </div>		  
-		  <div class="form-group">
+		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Password" name='password'>
+				<div class="input-group">
+					<span class='input-group-addon'><i class='fa fa-lock'></i></span>
+					<input type="password" class="form-control" placeholder="Password" name='password' data-validate='{"minLength": 8, "maxLength": 50, "passwordMatch": "passwordc", "label": "Password" }'>
+				</div>
 			</div>
 		  </div>
-		  <div class="form-group">
+		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Confirm Password</label>
 			<div class="col-sm-8">
-			  <input type="password" class="form-control" placeholder="Confirm Password" name='passwordc'>
+			  	<div class="input-group">
+					<span class='input-group-addon'><i class='fa fa-lock'></i></span>
+					<input type="password" class="form-control" placeholder="Confirm Password" name='passwordc' data-validate='{"minLength": 8, "maxLength": 50, "label": "Confirm Password" }'>
+				</div>
 			</div>
 		  </div>
-		  <div class="form-group">
+		  <div class="row form-group">
 			<label class="col-sm-4 control-label">Configuration Token</label>
 			<div class="col-sm-8">
-			  <input type="text" class="form-control" placeholder="Configuration Token" name='token'>
+			  	<div class="input-group">
+					<span class='input-group-addon'><i class='fa fa-lock'></i></span>
+					<input type="text" class="form-control" placeholder="Configuration Token" name='csrf_token' data-validate='{"minLength": 1, "maxLength": 100, "label": "Configuration Token" }'>
+				</div>
 			</div>
 		  </div>
 		  <br>
@@ -149,32 +167,70 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
 		</form>
 	  </div>	
       <div class="footer">
-        <p>&copy; UserFrosting Installer, 2014</p>
+        <p>&copy; <a href="http://www.userfrosting.com">UserFrosting</a> Installer, 2014</p>
       </div>
 
     </div> <!-- /container -->
   </body>
   <script>
-      $(document).ready(function() {
-          var widget_id = 'display-alerts';
-          var url = 'install_alerts.php';
-          $.getJSON( url, {})
-              .done(function( data ) {
-                  var alertHTML = "";
-                  jQuery.each(data, function(alert_idx, alert_message) {
-                      if (alert_message['type'] == "success"){
-                          alertHTML += "<div class='alert alert-success'>" + alert_message['message'] + "</div>";
-                      } else if (alert_message['type'] == "warning"){
-                          alertHTML += "<div class='alert alert-warning'>" + alert_message['message'] + "</div>";
-                      } else 	if (alert_message['type'] == "info"){
-                          alertHTML += "<div class='alert alert-info'>" + alert_message['message'] + "</div>";
-                      } else if (alert_message['type'] == "danger"){
-                          alertHTML += "<div class='alert alert-danger'>" + alert_message['message'] + "</div>";
-                      }
-                  });
-                  $('#' + widget_id).html(alertHTML);
-                  return false;
-              });
+	$(document).ready(function() {
+		var widget_id = 'display-alerts';
+		var url = 'install_alerts.php';
+		$.getJSON( url, {})
+		.done(function( data ) {
+			var alertHTML = "";
+			jQuery.each(data, function(alert_idx, alert_message) {
+				if (alert_message['type'] == "success"){
+					alertHTML += "<div class='alert alert-success'>" + alert_message['message'] + "</div>";
+				} else if (alert_message['type'] == "warning"){
+					alertHTML += "<div class='alert alert-warning'>" + alert_message['message'] + "</div>";
+				} else 	if (alert_message['type'] == "info"){
+					alertHTML += "<div class='alert alert-info'>" + alert_message['message'] + "</div>";
+				} else if (alert_message['type'] == "danger"){
+					alertHTML += "<div class='alert alert-danger'>" + alert_message['message'] + "</div>";
+				}
+			});
+			$('#' + widget_id).html(alertHTML);
+			return false;
+		});
+		
+		// Process submission
+        $("form[name='newUser']").submit(function(e){
+			e.preventDefault();
+            var form = $(this);
+            var errorMessages = validateFormFields('newUser');
+			if (errorMessages.length > 0) {
+				$('#display-alerts').html("");
+				$.each(errorMessages, function (idx, msg) {
+					$('#display-alerts').append("<div class='alert alert-danger'>" + msg + "</div>");
+				});	
+			} else {
+                var url = 'install_root_user.php';
+                $.ajax({  
+                  type: "POST",  
+                  url: url,  
+                  data: {
+					user_name: 		form.find('input[name="user_name"]' ).val(),
+					display_name: 	form.find('input[name="display_name"]' ).val(),
+					email: 			form.find('input[name="email"]' ).val(),
+					password: 		form.find('input[name="password"]' ).val(),
+					passwordc: 		form.find('input[name="passwordc"]' ).val(),
+					csrf_token: 	form.find('input[name="csrf_token"]' ).val(),
+                    ajaxMode:		"true"
+                  }		  
+                }).done(function(result) {
+                  var resultJSON = processJSONResult(result);
+                  if (resultJSON['errors']) {
+                        console.log("error");
+                        alertWidget('display-alerts');
+                        return;
+                  } else {
+                    window.location.replace('complete.php');
+                  }
+                });   
+            }
+		});
+		
       });
   </script>
 </html>

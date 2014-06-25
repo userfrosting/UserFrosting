@@ -69,7 +69,59 @@ foreach ($validator->errors as $error){
 }
 
 if (count($validator->errors) > 0){
-    header("Location: wizard_site_config.php");
+    echo json_encode(array("errors" => count($validator->errors), "successes" => 0));
+    exit();
+}
+
+// Check that database exists, we can connect to it, and that none of the tables already exist.
+
+// Try to connect to the database.  If failed, return to wizard_site_config.php
+if (!$db = pdoConnect()){
+    addAlert("error", "Could not connect to database.  Please check your database credentials in `models/db-settings.php`.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
+}
+
+global $db_name;
+
+$tables = array(
+    $db_table_prefix."groups",
+    $db_table_prefix."users",
+    $db_table_prefix."pages",
+    $db_table_prefix."user_group_matches",
+    $db_table_prefix."group_page_matches",
+    $db_table_prefix."user_action_permits",
+    $db_table_prefix."group_action_permits",
+    $db_table_prefix."configuration"
+);
+
+$table_exists_sql = "
+SELECT *
+FROM information_schema.tables
+WHERE table_schema = '$db_name' 
+    AND table_name = :table
+LIMIT 1;";
+
+$stmt = $db->prepare($table_exists_sql);
+
+$tables_found = 0;
+foreach ($tables as $table){
+    try {
+        $stmt->execute(array(":table" => $table));
+        if ($r = $stmt->fetch(PDO::FETCH_ASSOC)){
+            addAlert("danger", "The database '$db_name' already contains the table '$table'.  Please delete or rename it, then try again.");
+            $tables_found++;       
+        }
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        echo json_encode(array("errors" => 1, "successes" => 0));
+        exit();
+    }
+}
+
+if ($tables_found > 0){
+    echo json_encode(array("errors" => $tables_found, "successes" => 0));
     exit();
 }
 
@@ -255,13 +307,6 @@ $user_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ";
-
-// Try to connect to the database.  If failed, return to wizard_site_config.php
-if (!$db = pdoConnect()){
-    addAlert("error", "Could not connect to database.  Please check your database credentials in `models/db-settings.php`.");
-    header("Location: wizard_site_config.php");
-    exit();
-}
 
 $stmt = $db->prepare($configuration_sql);
 if($stmt->execute())

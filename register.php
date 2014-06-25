@@ -37,7 +37,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 if (!userIdExists('1')){
 	addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
-	header("Location: install/register_root.php");
+	header("Location: install/wizard_root_user.php");
 	exit();
 }
 

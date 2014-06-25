@@ -77,36 +77,44 @@ if (!$db = pdoConnect()){
             <div id='newInstall' class="panel-body">
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Site Root URL <br /> <small>(Ensure this is correct <br />with a single trailing /)</small></label>
-                    <div class="col-sm-8 input-group">
-                        <span class='input-group-addon'>http(s)://</span>
-                        <input type="text" class="form-control" name='site_url' value='<?php global $url; echo $url; ?>' data-validate='{"minLength": 1, "maxLength": 150, "label": "Site Root URL"}'>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <span class='input-group-addon'>http(s)://</span>
+                            <input type="text" class="form-control" name='site_url' value='<?php global $url; echo $url; ?>' data-validate='{"minLength": 1, "maxLength": 150, "label": "Site Root URL"}'>
+                        </div>
+                        <small>This is the root URL for UserFrosting.  We attempted to detect it automatically; please check to make sure that it is correct.  All other pages are located relative to this URL.</small>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Website Name</label>
-                    <div class="col-sm-8 input-group">
-                        <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-                        <input type="text" class="form-control" name='site_name' value='UserFrosting' data-validate='{"minLength": 1, "maxLength": 150, "label": "Website Name"}'>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
+                            <input type="text" class="form-control" name='site_name' value='UserFrosting' data-validate='{"minLength": 1, "maxLength": 150, "label": "Website Name"}'>         
+                        </div>
+                        <small>This is the name of the website, which will be shown in the upper left of the menu bar.</small>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Default New User Title</label>
-                    <div class='col-sm-8'>
-                    <div class='input-group'>
-                        <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-                        <input type="text" class="form-control" name='user_title' value='New Member' data-validate='{"minLength": 1, "maxLength": 150, "label": "Default New User Title"}'>
-                    </div>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
+                            <input type="text" class="form-control" name='user_title' value='New Member' data-validate='{"minLength": 1, "maxLength": 150, "label": "Default New User Title"}'>
+                        </div>
+                        <small>This is the default title given to newly registered users.</small>
                     </div>
                 </div>
                 <div class="form-group">
                 
                     <label class="col-sm-4 control-label">Site Email Address</label>
                     <div class="col-sm-8">
-                        <div class='input-group'>
-                        <span class='input-group-addon'><i class='fa fa-envelope'></i></span>
-                        <input type="text" class="form-control" name='site_email' placeholder='admin email address' value="" data-validate='{"minLength": 1, "maxLength": 150, "email": true, "label": "Site Email Address"}'>
+                        <div class="input-group">
+                            <span class='input-group-addon'><i class='fa fa-envelope'></i></span>
+                            <input type="text" class="form-control" name='site_email' placeholder='admin email address' value="" data-validate='{"minLength": 1, "maxLength": 150, "email": true, "label": "Site Email Address"}'>
                         </div>
+                        <small>This is the 'from' address that users will see when they get site emails, such as activation or lost password emails.</small>
                     </div>
                 </div>
                 
@@ -114,18 +122,21 @@ if (!$db = pdoConnect()){
                     <label class="col-sm-4 control-label">Enable User Registration</label>
                     <div class="col-sm-8">
                         <input type="checkbox" name="can_register" checked />
+                        <br><small>Specify whether users can create new accounts by themselves.  Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.</small>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Require Email Activation</label>
                     <div class="col-sm-8">
                         <input type="checkbox" name="email_activation" checked />
+                        <br><small>Specify whether email activation is required for newly registered accounts.</small>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label">Enable Email Login</label>
                     <div class="col-sm-8">
                         <input type="checkbox" name="select_email" />
+                        <br><small>Specify whether users can login via email address or username instead of just username.</small>
                     </div>
                 </div>
             </div>
@@ -142,7 +153,7 @@ if (!$db = pdoConnect()){
 
 
     <div class="footer">
-        <p>&copy; UserFrosting Installer, 2014</p>
+        <p>&copy; <a href="http://www.userfrosting.com">UserFrosting</a> Installer, 2014</p>
     </div>
 
 </div> <!-- /container -->

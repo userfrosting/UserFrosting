@@ -69,7 +69,6 @@ if ($admin == "true"){
   
   if (!userIdExists('1')){
 	  addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
-	  header("Location: ../install/register_root.php");
 	  exit();
   }
   
