@@ -1,14 +1,12 @@
 
-# UserFrosting 0.2.0
-## (butterflyknife)
+# UserFrosting 0.2.0 (butterflyknife)
 ## http://www.userfrosting.com
 
 ### By Alex Weissman
 
 Copyright (c) 2014
 
-Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
-
+Welcome to UserFrosting, a secure, modern user management system for web services and applications.  UserFrosting is based on the popular UserCake system, written in PHP.  UserFrosting improves on this system by adding fine-grained authorization rules and a sleek, intuitive frontend interface based on HTML5 and Twitter Bootstrap.  We've also separated the backend PHP machinery that interacts with the database from the frontend code base.  The frontend and backend talk to each other via AJAX and JSON.
         
 Screenshots
 -----------------
@@ -42,7 +40,7 @@ I chose PHP because PHP is what I know from my prior experience as a web develop
 Developer Features
 ------------------
 - No need to learn a special framework!  The backend of UserFrosting is based on native PHP5, allowing for rapid development and deployment.
-- Clean separation of backend and frontend code.  Easily interact with the backend via AJAX calls.
+- Clean separation of backend and frontend code.  Easily interact with the backend via [AJAX calls](http://www.userfrosting.com/backend-api.html).
 - Automated installation tool for initializing the database.
 - Frontend built with jQuery and Twitter Bootstrap.  Javascript components for typical database CRUD operations provided with this distribution!
 
@@ -50,13 +48,13 @@ User Features
 -------------
 UserFrosting offers all of the features of UserCake, plus several new ones:
 
-- Fine-grained, rule-based authorization for different users and groups.  Use our preloaded rules, or write your own and assign them to users and groups with our easy-to-use interface.
+- Fine-grained, [rule-based authorization](http://www.userfrosting.com/features.html#authorization) for different users and groups.  Use our preloaded rules, or write your own and assign them to users and groups with our easy-to-use interface.
 - Account creation/deletion from the admin interface
 - Admin can disable/enable individual accounts
 - Admin can disable/enable new account registration
 - Admin can enable/disable logging in with email address
 - Dropdown menus for easier account modifications
-- Client-side data validation
+- Client-side [data validation](http://www.userfrosting.com/features.html#validation)
 - Primary group for each user.  Primary group can be used to determine authorization, site rendering, custom menus, etc.
 - Default groups for new accounts
 - Table view for easily editing page authorization.
@@ -66,11 +64,11 @@ Security Features
 -----------------
 UserFrosting is designed to address the most common security issues with websites that handle sensitive user data:
 
-#### SSL/HTTPS compatibility
-#### Strong password hashing
-#### Protection against cross-site request forgery (CSRF)
-#### Protection against cross-site scripting (XSS)
-#### Protection against SQL injection
+- SSL/HTTPS compatibility
+- Strong password hashing
+- Protection against cross-site request forgery (CSRF)
+- Protection against cross-site scripting (XSS)
+- Protection against SQL injection
 
 See the [security](http://www.userfrosting.com/security.html) section of our website for more details.
 
@@ -79,7 +77,7 @@ Installation
 
 UserFrosting comes with an easy-to-use installer.  Simply download the code to a directory on your server, and navigate to the <code>/install</code> subdirectory.  UserFrosting will guide you through setting up the database, configuring settings, and creating the master account.
 
-Change Log - v0.2.0
+Change Log - v0.2.0 (butterflyknife)
 -------------------
 
 - Converted all DB calls to PDO.
