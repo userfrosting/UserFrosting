@@ -70,7 +70,7 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
 
 // Define paths here
 defined("SITE_ROOT")
-    or define("SITE_ROOT", $url_prefix . "localhost/userfrosting/");
+    or define("SITE_ROOT", $url_prefix.$websiteUrl);
 
 defined("LOCAL_ROOT")
 	or define ("LOCAL_ROOT", realpath(dirname(__FILE__)."/.."));
