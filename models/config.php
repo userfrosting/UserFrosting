@@ -142,7 +142,10 @@ require_once("class.user.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
-//require_once("chrome.php");
+require_once("chrome.php");
+
+// Temp value for pm system while in dev
+$pmsystem_enabled = 1;
 
 session_start();
 
@@ -152,5 +155,3 @@ if(isset($_SESSION["userCakeUser"]) && is_object($_SESSION["userCakeUser"]))
 {
 	$loggedInUser = $_SESSION["userCakeUser"];
 }
-
-?>
