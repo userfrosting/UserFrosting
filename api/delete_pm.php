@@ -45,7 +45,7 @@ if (!isUserLoggedIn()){
 $validator = new Validator();
 $msg_id = $validator->requiredPostVar('msg_id');
 $user_id = $loggedInUser->user_id;
-$table = $validator->requiredPostVar('table'); // Field not table xD
+$field = $validator->requiredPostVar('table'); // Field not table xD
 $uid = $validator->requiredPostVar('action'); //receiver_id or sender_id depending on inbox or outbox
 
 
@@ -55,12 +55,11 @@ foreach ($validator->errors as $error){
 }
 
 // Delete the pm from the user's view but not from the database entirely. This is not a true delete
-if (removePM($msg_id, $user_id, $table, $uid)) {
-	addAlert("success", lang("PM_RECEIVER_DELETION_SUCCESSFUL", array('1')));
-}
-else {
-//	echo json_encode(array("errors" => 1, "successes" => 0));
-//	exit();
+if (!removePM($msg_id, $user_id, $field, $uid)) {
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
+}else{
+    addAlert("success", lang("PM_RECEIVER_DELETION_SUCCESSFUL", array('1')));
 }
 
 
@@ -69,9 +68,9 @@ restore_error_handler();
 // Allows for functioning in either ajax mode or graceful degradation to PHP/HTML only  
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array("errors" => 0, "successes" => 1));
-  header('Location: '. getReferralPage());
+  header('Location: '.SITE_ROOT.'account/pm.php');
   exit();
 } else {
-  header('Location: '. getReferralPage());
+  header('Location: '.SITE_ROOT.'account/pm.php');
   exit();
 }

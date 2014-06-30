@@ -84,7 +84,9 @@ function pmsWidget(widget_id, options) {
 	// Load the data and generate the rows.
 	var url = APIPATH + "load_private_messages.php";
 	$.getJSON( url, {
-		limit: limit
+		limit: limit,
+        send_rec_id: "receiver_id",
+        deleted: "receiver_deleted"
 	})
 	.done(function( data ) {
 		// Don't bother unless there are some records found
@@ -241,6 +243,7 @@ function messageDisplay(box_id, msg_id) {
         dataType: 'json',
         cache: false
     })
+
     .fail(function(result) {
         addAlert("danger", "Oops, looks like this message dose not exist or had been deleted.  If you're an admin, please check the PHP error logs.");
         alertWidget('display-alerts');
@@ -320,8 +323,8 @@ function deleteMsg(msg_id) {
             ajaxMode:	"true"
         }
     }).done(function(result) {
-        processJSONResult(result);
-        window.location.reload();
+        //processJSONResult(result);
+        window.location.assign('pm.php');
     });
 }
 
