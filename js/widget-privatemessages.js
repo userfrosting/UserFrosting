@@ -51,7 +51,9 @@ function pmsWidget(widget_id, options) {
 		title = "<i class='fa fa-envelope'></i> " + options['title'];
 
     var title_page = "Inbox";
-		
+    if (options['title_page'])
+        title_page = options['title_page'];
+
 	var limit = 10;
 	if (options['limit'])
 		limit = options['limit'];	
@@ -69,7 +71,16 @@ function pmsWidget(widget_id, options) {
 	};
 
 	if (options['columns'])
-		columns = options['columns'];		
+		columns = options['columns'];
+
+
+    var action_id = "receiver_id";
+    if (options['action_id'])
+        action_id = options['action_id'];
+
+    var action_deleted = "receiver_deleted";
+    if (options['action_deleted'])
+        action_deleted = options['action_deleted'];
 
 	console.debug(options);
 	
@@ -85,12 +96,15 @@ function pmsWidget(widget_id, options) {
 	var url = APIPATH + "load_private_messages.php";
 	$.getJSON( url, {
 		limit: limit,
-        send_rec_id: "receiver_id",
-        deleted: "receiver_deleted"
+        send_rec_id: action_id,
+        deleted: action_deleted
 	})
 	.done(function( data ) {
 		// Don't bother unless there are some records found
-		if (Object.keys(data).length > 0) { 
+            html+= "<div class='row'><div class='col-md-4'>" +
+                "<p><i class='fa fa-envelope'></i> <a href='pm.php'>Inbox</a> ~ <i class='fa fa-envelope-o'></i> <a href='pm.php?action=outbox'>outbox</a></p>" +
+                "</div></div>";
+		if (Object.keys(data).length > 0) {
 			html+= "<div class='table-responsive'><table class='table table-bordered table-hover table-striped tablesorter'>" + 
 			"<thead><tr>";
 			jQuery.each(columns, function(name, header) {
@@ -191,14 +205,14 @@ function pmsWidget(widget_id, options) {
 
 		// Link the "Create User" buttons
 		widget.on('click', '.createMessage', function () {
-			userForm('user-create-dialog');
+			msgForm('msg-create-dialog');
         });
 		
 		// Link the dropdown buttons from table of users
 		widget.on('click', '.deleteMessage', function () {
             var btn = $(this);
             var msg_id = btn.data('id');
-			deleteMsgDialog('delete-msg-dialog', msg_id);
+			deleteMsgDialog('delete-msg-dialog', msg_id, action_id, action_deleted);
         });  		
 		return false;
 	});
@@ -265,9 +279,71 @@ function messageDisplay(box_id, msg_id) {
     });
 }
 
+function msgForm(box_id, msg_id) {
+    msg_id = typeof msg_id !== 'undefined' ? msg_id : "";
+
+    // Delete any existing instance of the form with the same name
+    if($('#' + box_id).length ) {
+        $('#' + box_id).remove();
+    }
+
+    var data = {
+        box_id: box_id,
+        render_mode: 'modal',
+        button_send: true
+    };
+
+    if (msg_id != "") {
+        console.log("Reply");
+        data['msg_id'] = msg_id;
+    }
+
+    if(msg_id = "undefined") {
+        console.log("New Message");
+        //data['msg_id'] = 0;
+    }
+
+    // Generate the form
+    $.ajax({
+        type: "GET",
+        url: FORMSPATH + "form_message.php",
+        data: data,
+        dataType: 'json',
+        cache: false
+    })
+        .fail(function(result) {
+            addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+            alertWidget('display-alerts');
+        })
+        .done(function(result) {
+            // Append the form as a modal dialog to the body
+            $( "body" ).append(result['data']);
+            $('#' + box_id).modal('show');
+
+            // Link submission buttons
+            $('#' + box_id + ' form').submit(function(e){
+                var errorMessages = validateFormFields(box_id);
+                if (errorMessages.length > 0) {
+                    $('#' + box_id + ' .dialog-alert').html("");
+                    $.each(errorMessages, function (idx, msg) {
+                        $('#' + box_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
+                    });
+                } else {
+                    if (msg_id != "")
+                        replyMsgDialog(box_id, msg_id);
+                    else
+                        createMsg(box_id);
+                }
+                e.preventDefault();
+            });
+        });
+}
+
+function createMsg(box_id, msg_id) {console.log(msg_id);}
+
 function replyMsgDialog(box_id, msg_id) {console.log(msg_id);}
 
-function deleteMsgDialog(box_id, msg_id){
+function deleteMsgDialog(box_id, msg_id, action_id, action_deleted){
     // Delete any existing instance of the form with the same name
     if($('#' + box_id).length ) {
         $('#' + box_id).remove();
@@ -306,20 +382,20 @@ function deleteMsgDialog(box_id, msg_id){
         $('#' + box_id + ' .btn-group-action .btn-confirm-delete').click(function(){
             //console.log('deleting message' + msg_id);
             // Dont accually delete the message just set the flag for receiver deleted as true
-            deleteMsg(msg_id);
+            deleteMsg(msg_id, action_id, action_deleted);
         });
     });
 }
 
-function deleteMsg(msg_id) {
+function deleteMsg(msg_id, action_id, action_deleted) {
     var url = APIPATH + "delete_pm.php";
     $.ajax({
         type: "POST",
         url: url,
         data: {
             msg_id: msg_id,
-            table: "receiver_deleted",
-            action: "receiver_id",
+            table: action_deleted,//"receiver_deleted",
+            action: action_id, //"receiver_id",
             ajaxMode:	"true"
         }
     }).done(function(result) {
