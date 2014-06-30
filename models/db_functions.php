@@ -519,7 +519,7 @@ function fetchUserHomePage($user_id){
  * @param int $limit (optional) the maximum number of users to return.
  * @return object $results fetch non-authorization related data for the all users
  */
-function loadPMS($limit = NULL, $user_id){
+function loadPMS($limit = NULL, $user_id, $send_rec_id, $deleted){
 
     try {
         global $db_table_prefix;
@@ -535,7 +535,7 @@ function loadPMS($limit = NULL, $user_id){
         time_sent, time_read, receiver_read, sender_deleted,
         receiver_deleted, isreply
         from {$db_table_prefix}plugin_pm
-        WHERE receiver_id = :user_id AND receiver_deleted != '1'";
+        WHERE $send_rec_id = :user_id AND $deleted != '1'";
 
         $stmt = $db->prepare($query);
         $sqlVars[':user_id'] = $user_id;
@@ -589,7 +589,14 @@ function loadPMById($msg_id, $user_id, $action){
         //$stmt->execute($sqlVars);
 
         if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
-            addAlert("danger", "Invalid msg id specified");
+            addAlert("danger", "Invalid Message id specified");
+            return false;
+        }
+
+        ChromePhp::log($results);
+
+        if($results['receiver_deleted'] != '0'){
+            addAlert("danger", "Message Deleted");
             return false;
         }
 
@@ -604,7 +611,7 @@ function loadPMById($msg_id, $user_id, $action){
     }
 }
 
-function removePM($msg_id, $user_id, $table, $action){
+function removePM($msg_id, $user_id, $field, $action){
     try {
         global $db_table_prefix;
 
@@ -615,7 +622,7 @@ function removePM($msg_id, $user_id, $table, $action){
         $sqlVars = array();
 
         $query = "UPDATE ".$db_table_prefix."plugin_pm
-            SET $table = '1'
+            SET $field = '1'
             WHERE
             id = :msg_id AND $action = :user_id";
 

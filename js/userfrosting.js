@@ -149,7 +149,7 @@ function findObjectByField(arr, field_value, field_name){
 		}
 	});
 	return item;
-};
+}
 
 function getKeys(obj) {
 	var keys = [];
@@ -452,7 +452,7 @@ function processJSONResult(result) {
 		} catch (err) {
 			console.log("Backend error: " + result);
 			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-			return {"errors": 1, "successes": 0};
+            return {"errors": 1, "successes": 0};
 		}	
 	}
 }
