@@ -65,9 +65,15 @@ $button_reply = $validator->optionalBooleanGetVar('button_reply', false);
 $button_delete = $validator->optionalBooleanGetVar('button_delete', false);
 
 $msg_id = $validator->optionalNumericGetVar('id');
-$msg = loadPMById($msg_id, $loggedInUser->user_id, 'receiver_id');
+
+if($msg_id){
+    $msg = loadPMById($msg_id, $loggedInUser->user_id, 'receiver_id');
+}else{
+    $msg = ['message' => '', 'title' => '', 'sender_id' => $loggedInUser->user_id];
+}
+ChromePhp::log($msg);
 // Create appropriate labels
-if ($msg){
+if ($msg_id){
     $populate_fields = true;
     $msg_id = htmlentities($msg_id);
     $button_submit_text = 'Reply';
@@ -128,8 +134,20 @@ $sender_id = $loggedInUser->user_id;
 $response .= "<input type='hidden' name='sender_id' value='$sender_id'/>";
 
 
-
-$response .= "
+if ($render_mode == "modal"){
+    $response .= "
+<div class='dialog-alert'>
+</div>
+<div class='row'>
+    <div class='col-sm-12'>
+        <div class='input-group'>
+            <span class='input-group-addon'>Title</span>
+            <input type='text' class='form-control' name='title' autocomplete='off' value='$title'>
+        </div>
+    </div>
+</div>";
+} else if ($render_mode == "panel"){
+    $response .= "
 <div class='dialog-alert'>
 </div>
 <div class='row'>
@@ -140,6 +158,10 @@ $response .= "
         </div>
     </div>
 </div>";
+} else {
+    echo "Invalid render mode.";
+    exit();
+}
 
 // Try to make this into a search box for the true username then convert it into the user_id
 /*
@@ -176,7 +198,7 @@ if(!$populate_fields){
     $response .= "
 <br />
 <div class='row'>
-    <div class='col-sm-6'>
+    <div class='col-sm-12'>
         <div class='input-group'>
             <span class='input-group-addon'>Send To:</span>
             <input type='text' class='form-control' name='receiver_name' autocomplete='off' value='$receiver_name'>
@@ -186,6 +208,18 @@ if(!$populate_fields){
 ";
 }
 
+if ($render_mode == "modal"){
+    $response .= "
+<br />
+<div class='row'>
+    <div class='col-sm-12'>
+        <div class='input-group'>
+            <span class='input-group-addon'>Message</span>
+            <textarea class='form-control' name='message' rows='10' cols='60'>$message</textarea>
+        </div>
+    </div>
+</div>";
+} else if ($render_mode == "panel"){
     $response .="
 <br />
 <div class='row'>
@@ -196,6 +230,10 @@ if(!$populate_fields){
         </div>
     </div>
 </div>";
+} else {
+    echo "Invalid render mode.";
+    exit();
+}
 
 // Buttons
 $response .= "<br><div class='row'>";

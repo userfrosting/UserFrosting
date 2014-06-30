@@ -104,6 +104,12 @@ $msg_id = $validate->optionalGetVar('id');
         }else if(action == 'reply'){
             // action = reply - this may not need to be shown
             //console.log('reply' + ' id=' + msg_id);
+        }else if(action == 'outbox'){
+            pmsWidget('widget-privatemessages',{
+                title_page: 'Outbox',
+                action_id: 'sender_id',
+                action_deleted: 'sender_deleted'
+            });
         }else{
             // Action is unset show the list of messages eg. inbox
             pmsWidget('widget-privatemessages',{});
