@@ -67,7 +67,7 @@ $button_delete = $validator->optionalBooleanGetVar('button_delete', false);
 $msg_id = $validator->optionalNumericGetVar('id');
 
 if($msg_id){
-    $msg = loadPMById($msg_id, $loggedInUser->user_id, 'receiver_id');
+    $msg = loadPMById($msg_id, $loggedInUser->user_id); //, 'receiver_id');
 }else{
     $msg = ['message' => '', 'title' => '', 'sender_id' => $loggedInUser->user_id];
 }

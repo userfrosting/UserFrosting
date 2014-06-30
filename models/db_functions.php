@@ -561,7 +561,7 @@ function loadPMS($limit = NULL, $user_id, $send_rec_id, $deleted){
     }
 }
 
-function loadPMById($msg_id, $user_id, $action){
+function loadPMById($msg_id, $user_id){
 
     try {
         global $db_table_prefix;
@@ -577,7 +577,7 @@ function loadPMById($msg_id, $user_id, $action){
         time_sent, time_read, receiver_read, sender_deleted,
         receiver_deleted, isreply
         from {$db_table_prefix}plugin_pm
-        WHERE id = :msg_id AND $action = :user_id";
+        WHERE id = :msg_id AND receiver_id OR sender_id = :user_id";
 
         $stmt = $db->prepare($query);
         $sqlVars[':msg_id'] = $msg_id;
@@ -601,10 +601,57 @@ function loadPMById($msg_id, $user_id, $action){
 
         $stmt = null;
 
+        checkPMReadFlag($msg_id);
+
         return $results;
 
     } catch (PDOException $e) {
         addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    }
+}
+
+function checkPMReadFlag($msg_id){
+    try {
+        global $db_table_prefix;
+
+        $results = array();
+
+        $db = pdoConnect();
+
+        $sqlVars = array();
+
+        $query = "UPDATE ".$db_table_prefix."plugin_pm
+            SET receiver_read = '1'
+            WHERE
+            id = :msg_id";
+
+        $stmt = $db->prepare($query);
+
+        $sqlVars[':msg_id'] = $msg_id;
+
+        if (!$stmt->execute($sqlVars)){
+            // Error: column does not exist
+            return false;
+        }
+
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            //addAlert("danger", "alread set as read.");
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+        addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+        return false;
+    } catch (RuntimeException $e) {
+        addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
         error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
         return false;
     }
