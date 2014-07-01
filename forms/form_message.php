@@ -67,11 +67,11 @@ $button_delete = $validator->optionalBooleanGetVar('button_delete', false);
 $msg_id = $validator->optionalNumericGetVar('id');
 
 if($msg_id){
-    $msg = loadPMById($msg_id, $loggedInUser->user_id); //, 'receiver_id');
+    $msg = loadPMById($msg_id, $loggedInUser->user_id);
 }else{
     $msg = ['message' => '', 'title' => '', 'sender_id' => $loggedInUser->user_id];
 }
-ChromePhp::log($msg);
+//ChromePhp::log($msg);
 // Create appropriate labels
 if ($msg_id){
     $populate_fields = true;
@@ -91,7 +91,6 @@ $message = "";
 
 // If we're showing the message then load it based on the message_id
 if ($populate_fields){
-    //$msg = loadPMById($msg_id, $loggedInUser->user_id, 'receiver_id');
     $message = $msg['message'];
     $title = $msg['title'];
     $sender_info = loadUser($msg['sender_id']);
@@ -275,7 +274,8 @@ if ($button_delete){
 
 // Create the cancel button for modal mode
 if ($render_mode == 'modal'){
-    $response .= "<div class='col-xs-4 col-sm-3 pull-right'><div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
+    $response .= "<div class='col-xs-4 col-sm-3 pull-right'>
+    <div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
 }
 $response .= "</div>";
 

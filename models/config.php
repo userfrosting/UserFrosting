@@ -92,7 +92,8 @@ $files_secure_functions = array(
 // Include paths for pages to add to site page management
 $page_include_paths = array(
 	"account",
-	"forms"
+	"forms",
+    "privatemessages"
 	// Define more include paths here
 );
 

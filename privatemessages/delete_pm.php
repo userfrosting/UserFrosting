@@ -41,13 +41,21 @@ if (!isUserLoggedIn()){
   exit();
 }
 
-// POST Parameters: user_id
 $validator = new Validator();
 $msg_id = $validator->requiredPostVar('msg_id');
 $user_id = $loggedInUser->user_id;
-$field = $validator->requiredPostVar('table'); // Field not table xD
-$uid = $validator->requiredPostVar('action'); //receiver_id or sender_id depending on inbox or outbox
 
+$field = $validator->optionalPostVar('table'); // Field not table xD
+$uid = $validator->optionalPostVar('action'); //receiver_id or sender_id depending on inbox or outbox
+
+//$field = $validator->optionalGetVar('a_id'); // Field not table xD
+//$uid = $validator->optionalGetVar('a_d'); //receiver_id or sender_id depending on inbox or outbox
+
+
+//$page = $validator->optionalGetVar('action'); //inbox or outbox
+//if(isset($page) && !isset($field)){$field = 'sender_deleted';}
+//if(isset($page) && !isset($uid)){$uid = 'sender_id';}
+ChromePhp::log($field, $uid);
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
@@ -62,15 +70,14 @@ if (!removePM($msg_id, $user_id, $field, $uid)) {
     addAlert("success", lang("PM_RECEIVER_DELETION_SUCCESSFUL", array('1')));
 }
 
-
 restore_error_handler();
 
 // Allows for functioning in either ajax mode or graceful degradation to PHP/HTML only  
 if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
   echo json_encode(array("errors" => 0, "successes" => 1));
-  header('Location: '.SITE_ROOT.'account/pm.php');
+  header('Location: ' . getReferralPage());
   exit();
 } else {
-  header('Location: '.SITE_ROOT.'account/pm.php');
+  header('Location: ' . getReferralPage());
   exit();
 }
