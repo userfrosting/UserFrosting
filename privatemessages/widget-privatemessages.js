@@ -56,7 +56,7 @@ function pmsWidget(widget_id, options) {
     "<div class='panel-body'>";
 	
 	// Load the data and generate the rows.
-	var url = PMPATH + "load_private_messages.php";
+	var url = "load_private_messages.php";
 	$.getJSON( url, {
 		limit: limit,
         send_rec_id: action_id,
@@ -209,7 +209,7 @@ function messageDisplay(box_id, msg_id, action_id, action_deleted) {
     // Generate the form
     $.ajax({
         type: "GET",
-        url: FORMSPATH + "form_message.php",
+        url: "form_message.php",
         data: {
             box_id: box_id,
             render_mode: 'panel',
@@ -270,7 +270,7 @@ function msgForm(box_id, msg_id) {
     // Generate the form
     $.ajax({
         type: "GET",
-        url: FORMSPATH + "form_message.php",
+        url: "form_message.php",
         data: data,
         dataType: 'json',
         cache: false
@@ -352,7 +352,7 @@ function deleteMsgDialog(box_id, msg_id, action_id, action_deleted){
 }
 
 function deleteMsg(msg_id, action_id, action_deleted) {
-    var url = PMPATH + "delete_pm.php";
+    var url = "delete_pm.php";
     $.ajax({
         type: "POST",
         url: url,
