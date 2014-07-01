@@ -1,40 +1,3 @@
-/*
-
-UserFrosting Version: 0.1
-By Alex Weissman
-Copyright (c) 2014
-
-Based on the UserCake user management system, v2.0.2.
-Copyright (c) 2009-2012
-
-UserFrosting, like UserCake, is 100% free and open-source.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
-
-/* Widget for displaying users.  Options include:
-sort (asc,desc)
-title
-limit
-columns
-*/
-
 // Load a list of all users.  Available to admin only.
 function pmsWidget(widget_id, options) {
 	var widget = $('#' + widget_id);
@@ -93,7 +56,7 @@ function pmsWidget(widget_id, options) {
     "<div class='panel-body'>";
 	
 	// Load the data and generate the rows.
-	var url = APIPATH + "load_private_messages.php";
+	var url = PMPATH + "load_private_messages.php";
 	$.getJSON( url, {
 		limit: limit,
         send_rec_id: action_id,
@@ -136,7 +99,7 @@ function pmsWidget(widget_id, options) {
 						formattedRowData['message_id'] = record['message_id'];
 						formattedRowData['title'] = record['title'];
 						var template = Handlebars.compile("<td data-text='{{title}}'><div class='h4'>" +
-						"<a href='pm.php?action=read&amp;id={{message_id}}'>{{title}}</a></div>" +
+						"<a href='pm.php?action=read&amp;id={{message_id}}&amp;a_id="+action_id +"&amp;a_d="+action_deleted+"'>{{title}}</a></div>" +
 						"</td>");
 						row += template(formattedRowData);
 					}
@@ -242,7 +205,7 @@ function loadUserNameById(sender_id) {
 }
 
 // Display user info in a panel
-function messageDisplay(box_id, msg_id) {
+function messageDisplay(box_id, msg_id, action_id, action_deleted) {
     // Generate the form
     $.ajax({
         type: "GET",
@@ -263,6 +226,8 @@ function messageDisplay(box_id, msg_id) {
         alertWidget('display-alerts');
     })
     .done(function(result) {
+        console.log(action_id);
+        console.log(action_deleted);
         $('#' + box_id).html(result['data']);
 
         $('#' + box_id + ' .btn-reply-msg').click(function() {
@@ -272,8 +237,8 @@ function messageDisplay(box_id, msg_id) {
         });
 
         $('#' + box_id + ' .btn-delete-msg').click(function() {
-            var user_name = $('#' + box_id + ' .btn-delete-msg').data('msg_id');
-            deleteMsgDialog('delete-msg-dialog', msg_id);
+            var msg_id = $('#' + box_id + ' .btn-delete-msg').data('msg_id');
+            deleteMsgDialog('delete-msg-dialog', msg_id, action_id, action_deleted);
             $('#delete-msg-dialog').modal('show');
         });
     });
@@ -300,7 +265,6 @@ function msgForm(box_id, msg_id) {
 
     if(msg_id = "undefined") {
         console.log("New Message");
-        //data['msg_id'] = 0;
     }
 
     // Generate the form
@@ -332,16 +296,16 @@ function msgForm(box_id, msg_id) {
                     if (msg_id != "")
                         replyMsgDialog(box_id, msg_id);
                     else
-                        createMsg(box_id);
+                        replyMsgDialog(box_id, msg_id);
                 }
                 e.preventDefault();
             });
         });
 }
 
-function createMsg(box_id, msg_id) {console.log(msg_id);}
+function createMsg(box_id, msg_id) {console.log("new message");}
 
-function replyMsgDialog(box_id, msg_id) {console.log(msg_id);}
+function replyMsgDialog(box_id, msg_id) {console.log(box_id, msg_id);}
 
 function deleteMsgDialog(box_id, msg_id, action_id, action_deleted){
     // Delete any existing instance of the form with the same name
@@ -388,7 +352,7 @@ function deleteMsgDialog(box_id, msg_id, action_id, action_deleted){
 }
 
 function deleteMsg(msg_id, action_id, action_deleted) {
-    var url = APIPATH + "delete_pm.php";
+    var url = PMPATH + "delete_pm.php";
     $.ajax({
         type: "POST",
         url: url,
@@ -405,6 +369,7 @@ function deleteMsg(msg_id, action_id, action_deleted) {
 }
 
 /* Display a modal form for updating/creating an action-permission set for a user or group */
+
 function actionPermitForm(box_id, options) {
     var user_id = "";
     if (options['user_id'])

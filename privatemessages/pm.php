@@ -33,6 +33,9 @@ $validate = new Validator();
 $action_var = $validate->optionalGetVar('action');
 $msg_id = $validate->optionalGetVar('id');
 
+$table_name = $validate->optionalGetVar('a_id'); // Field not table xD
+$table_delete = $validate->optionalGetVar('a_d'); //receiver_id or sender_id depending on inbox or outbox
+
 //ChromePhp::log($action_var);
 //ChromePhp::log($msg_id)
 ?>
@@ -47,7 +50,7 @@ $msg_id = $validate->optionalGetVar('id');
 
     <title>UserFrosting Admin - Private Messages</title>
 
-    <?php require_once("includes.php");  ?>
+    <?php require_once("../account/includes.php");  ?>
 
     <!-- Page Specific Plugins -->
     <link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
@@ -87,7 +90,7 @@ $msg_id = $validate->optionalGetVar('id');
 <script>
     $(document).ready(function() {
         // Load the header
-        $('.navbar').load('header.php', function() {
+        $('.navbar').load('../account/header.php', function() {
             $('.navitem-pms').addClass('active');
         });
 
@@ -96,11 +99,13 @@ $msg_id = $validate->optionalGetVar('id');
         var action = '<?php echo $action_var; ?>';
         var msg_id = '<?php echo $msg_id; ?>';
 
+        var a_id = '<?php echo $table_name; ?>';
+        var a_d = '<?php echo $table_delete; ?>';
 
         if(action == "read"){
             // Action = read we show the message to the user
-            //console.log('read' + ' id=' + msg_id);
-            messageDisplay('widget-privatemessages', msg_id);
+            //console.log('read' + ' id=' + msg_id + ' a_id=' + a_id + ' a_d=' + a_d);
+            messageDisplay('widget-privatemessages', msg_id, a_id, a_d);
         }else if(action == 'reply'){
             // action = reply - this may not need to be shown
             //console.log('reply' + ' id=' + msg_id);
@@ -112,7 +117,11 @@ $msg_id = $validate->optionalGetVar('id');
             });
         }else{
             // Action is unset show the list of messages eg. inbox
-            pmsWidget('widget-privatemessages',{});
+            pmsWidget('widget-privatemessages',{
+                title_page: 'Inbox',
+                action_id: 'receiver_id',
+                action_deleted: 'receiver_deleted'
+            });
         }
     });
 </script>

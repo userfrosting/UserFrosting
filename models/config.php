@@ -87,7 +87,8 @@ defined("FILE_SECURE_FUNCTIONS")
 // Include paths for pages to add to site page management
 $page_include_paths = array(
 	"account",
-	"forms"
+	"forms",
+    "privatemessages"
 	// Define more include paths here
 );
 	
