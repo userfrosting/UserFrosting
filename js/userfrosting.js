@@ -30,7 +30,6 @@ THE SOFTWARE.
 
 var APIPATH = getSitePath() + "api/";
 var FORMSPATH = getSitePath() + "forms/";
-var PMPATH = getSitePath() + "privatemessages/";
 
 // Returns the base URL of the website, assuming that this script is in the '/js' subdirectory of the site.
 function getSitePath() {

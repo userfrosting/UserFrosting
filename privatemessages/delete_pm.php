@@ -45,17 +45,8 @@ $validator = new Validator();
 $msg_id = $validator->requiredPostVar('msg_id');
 $user_id = $loggedInUser->user_id;
 
-$field = $validator->optionalPostVar('table'); // Field not table xD
+$field = $validator->optionalPostVar('table'); // receiver_deleted or sender_deleted depending on inbox or outbox
 $uid = $validator->optionalPostVar('action'); //receiver_id or sender_id depending on inbox or outbox
-
-//$field = $validator->optionalGetVar('a_id'); // Field not table xD
-//$uid = $validator->optionalGetVar('a_d'); //receiver_id or sender_id depending on inbox or outbox
-
-
-//$page = $validator->optionalGetVar('action'); //inbox or outbox
-//if(isset($page) && !isset($field)){$field = 'sender_deleted';}
-//if(isset($page) && !isset($uid)){$uid = 'sender_id';}
-ChromePhp::log($field, $uid);
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){

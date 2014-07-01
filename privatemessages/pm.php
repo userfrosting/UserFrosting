@@ -23,21 +23,21 @@ if (!securePage(__FILE__)){
 if ($pmsystem_enabled != 1){
     // Forward to index page
     addAlert("danger", "Whoops, looks like the private message system is not enabled");
-    header("Location: index.php");
+    header("Location: ".SITE_ROOT."account/index.php");
     exit();
 }
 
 setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 $validate = new Validator();
+
+// This is used to get the right page view
 $action_var = $validate->optionalGetVar('action');
 $msg_id = $validate->optionalGetVar('id');
 
+// This is for use when deleting messages
 $table_name = $validate->optionalGetVar('a_id'); // Field not table xD
 $table_delete = $validate->optionalGetVar('a_d'); //receiver_id or sender_id depending on inbox or outbox
-
-//ChromePhp::log($action_var);
-//ChromePhp::log($msg_id)
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +60,7 @@ $table_delete = $validate->optionalGetVar('a_d'); //receiver_id or sender_id dep
     <script src="../js/bootstrap-switch.min.js"></script>
     <script src="../js/jquery.tablesorter.js"></script>
     <script src="../js/tables.js"></script>
-    <script src="../js/widget-privatemessages.js"></script>
+    <script src="widget-privatemessages.js"></script>
 </head>
 
 <body>
@@ -103,12 +103,13 @@ $table_delete = $validate->optionalGetVar('a_d'); //receiver_id or sender_id dep
         var a_d = '<?php echo $table_delete; ?>';
 
         if(action == "read"){
-            // Action = read we show the message to the user
+            // Action = read we show the message to the user and pass which tables we need
             //console.log('read' + ' id=' + msg_id + ' a_id=' + a_id + ' a_d=' + a_d);
             messageDisplay('widget-privatemessages', msg_id, a_id, a_d);
         }else if(action == 'reply'){
             // action = reply - this may not need to be shown
             //console.log('reply' + ' id=' + msg_id);
+
         }else if(action == 'outbox'){
             pmsWidget('widget-privatemessages',{
                 title_page: 'Outbox',
