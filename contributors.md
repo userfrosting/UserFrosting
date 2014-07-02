@@ -16,6 +16,6 @@ title: "UserFrosting: Contributors"
 
 <p class="lead">When he's not staring at a screen, Alex enjoys jogging, gardening, and cooking and baking.</p>
 
-## Bryon Shepard (https://github.com/lilfade)
+## Bryson Shepard (https://github.com/lilfade)
 
-<p class="lead">For Bryon, programming in PHP has been largely a self-learned hobby.  Bryon is an avid gamer and currently lives in Nebraska.</p>
+<p class="lead">Bryson has coded a significant portion of the installer for UserFrosting, and has heavily contributed to testing and debugging.  Bryson is currently working on a private message (PM) plugin for UserFrosting.  For Bryson, programming in PHP has been largely a self-learned hobby.  Bryson is an avid gamer and currently lives in Nebraska.</p>
