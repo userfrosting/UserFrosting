@@ -12,6 +12,7 @@
  */
 
 require_once("../models/config.php");
+require_once("pm_functions.php");
 
 if (!securePage(__FILE__)){
     // Forward to index page
