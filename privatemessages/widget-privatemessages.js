@@ -213,7 +213,7 @@ function messageDisplay(box_id, msg_id, action_id, action_deleted) {
         data: {
             box_id: box_id,
             render_mode: 'panel',
-            id: msg_id,
+            msg_id: msg_id,
             button_reply: true,
             button_delete: true
         },
@@ -226,13 +226,11 @@ function messageDisplay(box_id, msg_id, action_id, action_deleted) {
         alertWidget('display-alerts');
     })
     .done(function(result) {
-        console.log(action_id);
-        console.log(action_deleted);
         $('#' + box_id).html(result['data']);
 
         $('#' + box_id + ' .btn-reply-msg').click(function() {
             var msg_id = $('#' + box_id + ' .btn-reply-msg').data('msg_id');
-            replyMsgDialog('reply-msg-dialog', msg_id);
+            msgForm('reply-msg-dialog', msg_id);
             $('#reply-msg-dialog').modal('show');
         });
 
@@ -263,10 +261,6 @@ function msgForm(box_id, msg_id) {
         data['msg_id'] = msg_id;
     }
 
-    if(msg_id = "undefined") {
-        console.log("New Message");
-    }
-
     // Generate the form
     $.ajax({
         type: "GET",
@@ -283,7 +277,7 @@ function msgForm(box_id, msg_id) {
             // Append the form as a modal dialog to the body
             $( "body" ).append(result['data']);
             $('#' + box_id).modal('show');
-
+            //console.log(msg_id);
             // Link submission buttons
             $('#' + box_id + ' form').submit(function(e){
                 var errorMessages = validateFormFields(box_id);
@@ -293,19 +287,78 @@ function msgForm(box_id, msg_id) {
                         $('#' + box_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
                     });
                 } else {
+
                     if (msg_id != "")
                         replyMsgDialog(box_id, msg_id);
                     else
-                        replyMsgDialog(box_id, msg_id);
+                        createMsg(box_id);
                 }
                 e.preventDefault();
             });
         });
 }
 
-function createMsg(box_id, msg_id) {console.log("new message");}
+//not working currently
+function createMsg(dialog_id) {
+    console.log("create");
+    var data = {
+        msg_id: "",
+        sender_id: $('#' + dialog_id + ' input[name="sender_id"]' ).val(),
+        title: $('#' + dialog_id + ' input[name="title"]' ).val(),
+        receiver_name: $('#' + dialog_id + ' input[name="receiver_name"]' ).val(),
+        message: $('#' + dialog_id + ' textarea[name="message"]' ).val(),
+        csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
+        ajaxMode: "true"
+    };
 
-function replyMsgDialog(box_id, msg_id) {console.log(box_id, msg_id);}
+    var url = "create_pm.php";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: data
+    }).done(function(result) {
+        processJSONResult(result);
+        window.location.reload();
+    });
+    return;
+//    console.log("create" + msg_id);
+}
+
+//not working currently
+function replyMsgDialog(dialog_id, msg_id) {
+    console.log("update" + msg_id);
+    console.log(dialog_id, msg_id);
+
+    var errorMessages = validateFormFields(dialog_id);
+    if (errorMessages.length > 0) {
+        $('#' + dialog_id + ' .dialog-alert').html("");
+        $.each(errorMessages, function (idx, msg) {
+            $('#' + dialog_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
+        });
+        return false;
+    }
+
+    var data = {
+        msg_id: msg_id,
+        sender_id: $('#' + dialog_id + ' input[name="sender_id"]' ).val(),
+        title: $('#' + dialog_id + ' input[name="title"]' ).val(),
+        receiver_name: $('#' + dialog_id + ' input[name="receiver_name"]' ).val(),
+        message: $('#' + dialog_id + ' textarea[name="message"]' ).val(),
+        csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
+        ajaxMode:	"true"
+    };
+
+    var url = "reply_pm.php";
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: data
+    }).done(function(result) {
+        processJSONResult(result);
+        window.location.reload();
+    });
+    return;
+}
 
 function deleteMsgDialog(box_id, msg_id, action_id, action_deleted){
     // Delete any existing instance of the form with the same name

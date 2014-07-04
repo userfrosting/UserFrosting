@@ -28,10 +28,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-
+/*
+ *
+ *
+ *
+ * needs a complete re-write to take into effect the msg being new or a reply
+ *
+ *
+ *
+ *
+ *
+ */
 // Request method: GET
 
 require_once("../models/config.php");
+require_once("pm_functions.php");
 
 if (!securePage(__FILE__)){
   // Forward to index page
@@ -64,25 +75,29 @@ $button_send = $validator->optionalBooleanGetVar('button_send', false);
 $button_reply = $validator->optionalBooleanGetVar('button_reply', false);
 $button_delete = $validator->optionalBooleanGetVar('button_delete', false);
 
-$msg_id = $validator->optionalNumericGetVar('id');
+$msg_id = $validator->optionalGetVar('msg_id');
 
 if($msg_id){
     $msg = loadPMById($msg_id, $loggedInUser->user_id);
+    if(isset($msg)) { $replys = loadPMReplys($msg_id); }
+    ChromePhp::log($msg);
+    ChromePhp::log($replys);
 }else{
     $msg = ['message' => '', 'title' => '', 'sender_id' => $loggedInUser->user_id];
 }
-//ChromePhp::log($msg);
+ChromePhp::log($msg_id);
+//on new message this should be null on reply the msg_id should = msg_id but everything is going to null instead
 // Create appropriate labels
 if ($msg_id){
     $populate_fields = true;
     $msg_id = htmlentities($msg_id);
     $button_submit_text = 'Reply';
     $target = "reply_pm.php";
-    $box_title = "Read Message";
+    $box_title = "Reply Message";
 } else {
     $populate_fields = false;
     $button_submit_text = "Send";
-    $target = "create_message.php";
+    $target = "create_pm.php";
     $box_title = "New Message";
 }
 $receiver_name = '1';
@@ -109,7 +124,7 @@ if ($render_mode == "modal"){
                     <h4 class='modal-title'>$box_title</h4>
                 </div>
                 <div class='modal-body'>
-                    <form method='post' action='$target'>";        
+                    <form method='post' action='".$target."'>";
 } else if ($render_mode == "panel"){
     $response .=
     "<div class='panel panel-primary'>
@@ -118,7 +133,7 @@ if ($render_mode == "modal"){
             <div class='clearfix'></div>
             </div>
             <div class='panel-body'>
-                <form method='post' action='$target'>";
+                <form method='post' action='".$target."'>";
 } else {
     echo "Invalid render mode.";
     exit();
@@ -234,6 +249,11 @@ if ($render_mode == "modal"){
     exit();
 }
 
+// Replys
+//if($replys){
+//    $response .="<br><div class='row'></div>";
+//}
+
 // Buttons
 $response .= "<br><div class='row'>";
 
@@ -242,7 +262,7 @@ if ($button_send){
     $response .= "
     <div class='col-xs-8'>
     <div class='vert-pad'>
-    <button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success'>
+    <button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success' data-msg_id='".$msg_id."'>
     $button_submit_text</button>
     </div>
     </div>";
@@ -253,7 +273,7 @@ if ($button_reply){
     $response .= "
     <div class='col-xs-6 col-sm-3'>
     <div class='vert-pad'>
-    <button class='btn btn-block btn-primary btn-reply-msg' data-toggle='modal' data-msg_id='$msg_id'>
+    <button class='btn btn-block btn-primary btn-reply-msg' data-toggle='modal' data-msg_id='".$msg_id."'>
     <i class='fa fa-envelope-o'></i> Reply
     </button>
     </div>
@@ -284,6 +304,8 @@ if ($render_mode == "modal")
     $response .= "</form></div></div></div></div>";
 else
     $response .= "</form></div></div>";
+
+//ChromePhp::log($response);
 
 echo json_encode(array("data" => $response), JSON_FORCE_OBJECT);
 ?>

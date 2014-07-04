@@ -1,6 +1,7 @@
 <?php
 
 include('../models/config.php');
+require_once("pm_functions.php");
 
 set_error_handler('logAllErrors');
 
