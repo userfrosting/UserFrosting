@@ -23,7 +23,7 @@ function loadPMS($limit = NULL, $user_id, $send_rec_id, $deleted){
         time_sent, time_read, receiver_read, sender_deleted,
         receiver_deleted, isreply
         from {$db_table_prefix}plugin_pm
-        WHERE $send_rec_id = :user_id AND $deleted != '1'";
+        WHERE $send_rec_id = :user_id AND $deleted != '1' AND isreply != '1'";
 
         $stmt = $db->prepare($query);
         $sqlVars[':user_id'] = $user_id;
@@ -66,11 +66,11 @@ function loadPMById($msg_id, $user_id){
         time_sent, time_read, receiver_read, sender_deleted,
         receiver_deleted, isreply
         from {$db_table_prefix}plugin_pm
-        WHERE id = :msg_id AND receiver_id OR sender_id = :user_id";
+        WHERE id = :msg_id"; // AND receiver_id OR sender_id = :user_id";
 
         $stmt = $db->prepare($query);
         $sqlVars[':msg_id'] = $msg_id;
-        $sqlVars[':user_id'] = $user_id;
+//        $sqlVars[':user_id'] = $user_id;
         $stmt->execute($sqlVars);
 
         //$stmt = $db->prepare($query);
@@ -127,31 +127,14 @@ function loadPMReplys($msg_id){
         $stmt->execute($sqlVars);
         $limit = '99999';
 
-        //if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
-        //    addAlert("danger", "Invalid Message id specified");
-        //    return false;
-        //}
-
         $i = 0;
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            //echo '<pre>';
-            //print_r($r);
-            //echo '</pre>';
-            //if($r['receiver_deleted'] || $r['sender_deleted'] != '1'){
-                $id = $r['message_id'];
-                $results[$id] = $r;
-                $i++;
-            //}
+            $id = $i;//$r['message_id'];
+            $results[$id] = $r;
+            $i++;
         }
 
-        //if($results['receiver_deleted'] != '0'){
-            //addAlert("danger", "Message Deleted");
-        //    return false;
-        //}
-
         $stmt = null;
-
-        //checkPMReadFlag($msg_id);
 
         return $results;
 
