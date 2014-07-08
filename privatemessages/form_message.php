@@ -80,12 +80,10 @@ $msg_id = $validator->optionalGetVar('msg_id');
 if($msg_id){
     $msg = loadPMById($msg_id, $loggedInUser->user_id);
     if(isset($msg)) { $replys = loadPMReplys($msg_id); }
-    ChromePhp::log($msg);
-    ChromePhp::log($replys);
 }else{
     $msg = ['message' => '', 'title' => '', 'sender_id' => $loggedInUser->user_id];
 }
-ChromePhp::log($msg_id);
+//ChromePhp::log($msg_id);
 //on new message this should be null on reply the msg_id should = msg_id but everything is going to null instead
 // Create appropriate labels
 if ($msg_id){
@@ -229,7 +227,7 @@ if ($render_mode == "modal"){
     <div class='col-sm-12'>
         <div class='input-group'>
             <span class='input-group-addon'>Message</span>
-            <textarea class='form-control' name='message' rows='10' cols='60'>$message</textarea>
+            <textarea class='form-control' name='message' rows='10' cols='60'></textarea>
         </div>
     </div>
 </div>";
@@ -248,11 +246,6 @@ if ($render_mode == "modal"){
     echo "Invalid render mode.";
     exit();
 }
-
-// Replys
-//if($replys){
-//    $response .="<br><div class='row'></div>";
-//}
 
 // Buttons
 $response .= "<br><div class='row'>";
@@ -273,7 +266,7 @@ if ($button_reply){
     $response .= "
     <div class='col-xs-6 col-sm-3'>
     <div class='vert-pad'>
-    <button class='btn btn-block btn-primary btn-reply-msg' data-toggle='modal' data-msg_id='".$msg_id."'>
+    <button class='btn btn-block btn-primary btn-reply-msg' data-toggle='modal' data-msg_id='".$msg_id." data-receiver_id='".$receiver_name."'>
     <i class='fa fa-envelope-o'></i> Reply
     </button>
     </div>
@@ -305,6 +298,39 @@ if ($render_mode == "modal")
 else
     $response .= "</form></div></div>";
 
+// Replys
+if($replys){
+    if ($render_mode == 'panel'){
+    $response .="
+ <div class='panel panel-primary'>
+        <div class='panel-heading'>
+            <h2 class='panel-title pull-left'>
+            <a data-toggle='collapse' data-parent='#replys_group' href='#replys'><i class='fa fa-caret-down'></i> Replys</a>
+            </h2>
+            <div class='clearfix'></div>
+        </div>
+        <div id='replys' class='panel-collapse collapse' style='height&#58; 0px&#58;9'>
+        <div class='panel-body'>";
+
+    foreach($replys as $reply_msg){
+        $response .= "<div class='row'>
+    <div class='col-sm-6'>
+        <div class='input-group'>
+            <span class='input-group-addon'>RE: ".$msg['title']."</span>
+            <input type='text' class='form-control' name='title' autocomplete='off' value='".$reply_msg['title']."'>
+        </div>
+        <br />
+        <div class='input-group'>
+            <span class='input-group-addon'>Reply</span>
+            <textarea rows='10' cols='65'>".$reply_msg['message']."</textarea>
+        </div>
+        <hr />
+        </div></div>";
+    }
+
+    $response .="</div></div></div></div>";
+}
+}
 //ChromePhp::log($response);
 
 echo json_encode(array("data" => $response), JSON_FORCE_OBJECT);

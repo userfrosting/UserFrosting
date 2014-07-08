@@ -421,8 +421,9 @@ function deleteMsg(msg_id, action_id, action_deleted) {
     });
 }
 
-/* Display a modal form for updating/creating an action-permission set for a user or group */
+// Function that are not needed her just for reference
 
+/* Display a modal form for updating/creating an action-permission set for a user or group */
 function actionPermitForm(box_id, options) {
     var user_id = "";
     if (options['user_id'])
@@ -553,4 +554,18 @@ function actionPermitForm(box_id, options) {
                 e.preventDefault();
             });
         });
+}
+
+// Create a list of the most common options for group-level permits, based on the fields passed in from an action.
+// Add additional options here as you think necessary.
+function loadPresetPermitOptions(fields) {
+    var url = APIPATH + 'load_preset_permits.php';
+    var result = $.ajax({
+        type: "GET",
+        url: url,
+        async: false,
+        data: {fields: fields}
+    }).responseText;
+    var resultJSON = processJSONResult(result);
+    return resultJSON;
 }
