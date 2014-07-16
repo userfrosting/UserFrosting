@@ -104,13 +104,17 @@ if(!empty($confirm)) {
         }
 
         // Hash the user's password and update
-        $secure_pass = passwordHashUF($password);
+        $password_hash = passwordHashUF($password);
+		if ($password_hash === null){
+			$errors[] = lang("PASSWORD_HASH_FAILED");
+		}		
+		
         // Nab up the user_id from the users information to update the password
         $user_id = $userdetails["id"];
 
         if(count($errors) == 0){
             // Update password based on the user's id and the new password
-            if (updateUserField($user_id, 'password', $secure_pass)){
+            if (updateUserField($user_id, 'password', $password_hash)){
                 // Password was updated
                 $successes[] = lang("ACCOUNT_PASSWORD_UPDATED");
 

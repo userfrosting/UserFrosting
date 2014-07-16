@@ -122,9 +122,7 @@ if(!empty($_POST))
 				{
 					//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
 					$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
-				}
-				else
-				{
+				} else {
 					//Passwords match! we're good to go'
 					
 					//Construct a new logged in user object
@@ -144,10 +142,14 @@ if(!empty($_POST))
 					// Update password if we had encountered an outdated hash
 					if (getPasswordHashTypeUF($userdetails["password"]) != "modern"){
 					    // Hash the user's password and update
-						$secure_pass = passwordHashUF($password);
-						$loggedInUser->hash_pw = $secure_pass;
-						updateUserField($loggedInUser->user_id, 'password', $secure_pass);
-						error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
+						$password_hash = passwordHashUF($password);
+						if ($password_hash === null){
+							error_log("Notice: outdated password hash could not be updated because new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?");
+						} else {
+							$loggedInUser->hash_pw = $password_hash;
+							updateUserField($loggedInUser->user_id, 'password', $password_hash);
+							error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
+						}
 					}
 					
 					// Create the user's CSRF token
