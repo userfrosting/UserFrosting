@@ -19,9 +19,10 @@ title: "UserFrosting: A secure, modern user management system based on UserCake,
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
           <li><a href="#welcome">Welcome</a></li>
+          <li><a href="#requirements">Requirements</a></li>
           <li><a href="#features">Features</a></li>
-          <li><a href="#requirements">Requirements and Technologies</a></li>
           <li><a href="#installation">Installation</a></li>
+          <li><a href="#technologies">Technologies</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -44,7 +45,13 @@ There are, of course, frameworks that can do user management, but you don't want
 Whatever the case may be, you probably want something that is ready to go straight out of the box, without forcing you to start from `Hello World`.  UserFrosting delivers this and more.  With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less - all you need is a web server running PHP 5.3 or greater, and a SQL database.
   </p>
 </div>
-
+<h2 id="requirements">Requirements</h2>
+  <p class="lead">UserFrosting is designed to have as few dependencies as possible.  All you need to run UserFrosting is a web server of your choice, along with the following components:</p>
+  <ul>
+    <li>PHP version 5.3.7 or higher.  This is because of a security flaw in password-related algorithms in older versions of PHP.</li>
+    <li>MySQL server version 4.1.3, with PDO database connections enabled.</li>
+  </ul>
+</h2>
 <h2 id="features">Features</h2>
 <div class='row'>
   <div class='col-md-6'>
@@ -67,11 +74,13 @@ Whatever the case may be, you probably want something that is ready to go straig
 <h3><i class='fa fa-wrench'></i> Admin Management Tools</h3>
 <p class='lead'>Manage users and groups on your website with an intuitive administrative interface.  Manually create user accounts.</p>
 <img  class="img-responsive" src='images/demo-users.png'>      
-  
-<h2 id="requirements">Requirements and Technologies</h2>
-<p class="lead">UserFrosting uses pure PHP (>=5.3) for server-side code, and MySQL (server version 4.1.3 or newer) for the database.  Your PHP installation must have PDO database connections enabled.</p>
-<p>The frontend uses the following technologies (included in the project):</p>
-<ul class="list-unstyled">
+
+<h2 id="installation">Installation</h2>
+<p class="lead">UserFrosting comes with an automated installer that will set up your database and configuration files and create the root account.  All you need to do is place the files in your home directory, go to <code>http://yoursite/install</code>, follow the steps and UserFrosting will do the rest.  When you're done, simply delete the <code>install</code> directory.</p>
+
+<h2 id="technologies">Technologies</h2>
+<p class="lead">The frontend uses the following technologies (included in the project):</p>
+<ul>
   <li>jQuery v1.10.2</li>
   <li>Bootstrap v3.1.1</li>
   <li> <a href="http://fontawesome.io">Font Awesome</a></li>
@@ -81,5 +90,3 @@ Whatever the case may be, you probably want something that is ready to go straig
   <li> <a href="http://www.datejs.com">DateJS</a> </li>
   <li> <a href="http://bootstrap-switch.org">Bootstrap Switch</a> </li>
 </ul>
-<h2 id="installation">Installation</h2>
-<p class="lead">UserFrosting comes with an automated installer that will set up your database and configuration files and create the root account.  All you need to do is place the files in your home directory, go to <code>http://yoursite/install</code>, follow the steps and UserFrosting will do the rest.  When you're done, simply delete the <code>install</code> directory.</p>

@@ -126,9 +126,11 @@
 
 <h2 id="toc_2"><a name="passwords"></a><i class='fa fa-key'></i> Strong password hashing</h2>
 
-<p>UserFrosting uses the <code>password_hash</code> and <code>password_verify</code> functions to hash and validate passwords (new in PHP v5.5.0).  <code>password_hash</code> uses the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a 22-character salt to user passwords, protecting against dictionary attacks.</p>
+<p>UserFrosting uses the <code>password_hash</code> and <code>password_verify</code> functions to hash and validate passwords (new in PHP v5.5.0).  <code>password_hash</code> uses the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a salt to user passwords, protecting against dictionary attacks.</p>
 
-<p>UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with MD5.  User accounts that have been hashed with MD5 will automatically be updated to the new encryption standard when the user successfully logs in.</p>
+<p>For versions of PHP between 5.3.7 and 5.5.0, UserFrosting uses the <a href="https://github.com/ircmaxell/password_compat">password compatibility pack</a>.  UserFrosting is <strong>not compatible with versions of PHP prior to 5.3.7.</strong>  This is because <a href="http://php.net/security/crypt_blowfish.php">versions of PHP prior to 5.3.7 have a security flaw in their implementation of Blowfish</a>.  </p>
+
+<p>UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with SHA1.  User accounts that have been hashed with SHA1 will automatically be updated to the new encryption standard when the user successfully logs in.</p>
 
 <h2 id="toc_3"><a name="csrf"></a><i class='fa fa-bomb'></i> Protection against cross-site request forgery (CSRF)</h2>
 

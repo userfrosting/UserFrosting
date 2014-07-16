@@ -41,9 +41,11 @@ This is also why there are strict standards about websites that handle sensitive
 For __local testing purposes only__ you may create a self-signed certificate.  For instructions on how to do this for XAMPP/Apache in OSX, see [this blog post](http://shahpunyerblog.blogspot.com/2007/10/create-self-signed-ssl-certificate-in.html).
 
 ## <a name="passwords"></a><i class='fa fa-key'></i> Strong password hashing
-UserFrosting uses the `password_hash` and `password_verify` functions to hash and validate passwords (new in PHP v5.5.0).  `password_hash` uses the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a 22-character salt to user passwords, protecting against dictionary attacks.
+UserFrosting uses the `password_hash` and `password_verify` functions to hash and validate passwords (new in PHP v5.5.0).  `password_hash` uses the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a salt to user passwords, protecting against dictionary attacks.
 
-UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with MD5.  User accounts that have been hashed with MD5 will automatically be updated to the new encryption standard when the user successfully logs in.
+For versions of PHP between 5.3.7 and 5.5.0, UserFrosting uses the [password compatibility pack](https://github.com/ircmaxell/password_compat).  UserFrosting is __not compatible with versions of PHP prior to 5.3.7.__  This is because [versions of PHP prior to 5.3.7 have a security flaw in their implementation of Blowfish](http://php.net/security/crypt_blowfish.php).  
+
+UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with SHA1.  User accounts that have been hashed with SHA1 will automatically be updated to the new encryption standard when the user successfully logs in.
 
 ## <a name="csrf"></a><i class='fa fa-bomb'></i> Protection against cross-site request forgery (CSRF)
 CSRF is an attack that relies on a user unwittingly submitting malicious data from another source while logged in to their account.  The malicious data can be embedded in an image, link, or other javascript content, on another website or in an email.  Because the user has a valid session with a website, the external content is accepted and processed.  Thus, attackers can easily change passwords or delete a user's account with this attack.
