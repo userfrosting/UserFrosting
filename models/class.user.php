@@ -45,19 +45,6 @@ class loggedInUser {
 		return fetchUserField($this->user_id, 'sign_up_stamp');
 	}
 	
-	//Update this user's password (plaintext parameter)
-	public function updatePassword($pass) {
-		$secure_pass = generateHash($pass);
-		$this->hash_pw = $secure_pass;
-		return updateUserPassword($this->user_id, $secure_pass);
-	}
-	
-	//Update this user's email
-	public function updateEmail($email) {
-		$this->email = $email;
-		return updateUserEmail($this->user_id, $email);	
-	}
-	
 	//csrf tokens
 	public function csrf_token($regen = false)
     {

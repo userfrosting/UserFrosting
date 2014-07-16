@@ -168,7 +168,7 @@ function createUser($user_name, $display_name, $email, $title, $password, $passw
         return false;
 
     //Construct a secure hash for the plain text password
-    $secure_pass = generateHash($password);
+    $secure_pass = passwordHashUF($password);
 
     //Construct a unique activation token (even if activation is not required)
     $activation_token = generateActivationToken();
@@ -375,7 +375,7 @@ function updateUserPassword($user_id, $password, $passwordc) {
     }
 
     // Hash the user's password and update
-    $secure_pass = generateHash($password);
+    $secure_pass = passwordHashUF($password);
     if (updateUserField($user_id, 'password', $secure_pass)){
         addAlert("success", lang("ACCOUNT_PASSWORD_UPDATED"));
         return $secure_pass;

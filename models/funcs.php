@@ -92,63 +92,46 @@ function generateActivationToken($gen = null)
 	return $gen;
 }
 
-//secure password hashing.
-function generateHash($plainText, $encdata = false){
-
-	/*used for standard implementation of bcrypt*/
-	$options = array("cost" => 12 );
-		
-	/*used for manual implementation of bcrypt*/
-	$cost = '12'; 
-
-	if(function_exists('password_hash') && function_exists('password_verify')) {
-		if ($encdata) { 
-			if (password_verify($plainText, $encdata)) { 
-			  return true; 
-			} else { 
-			  return false; 
-			} 
-		} else {	 
-			return password_hash($plainText, PASSWORD_BCRYPT, $options);
-		} 
-	}else{
-		//if encrypted data is passed, check it against input
-		if ($encdata) { 
-			if (substr($encdata, 0, 60) == crypt($plainText, "$2y$".$cost."$".substr($encdata, 60))) { 
-			  return true; 
-			} else { 
-			  return false; 
-			} 
-		} else {	 
-			//make a salt and hash it with input, and add salt to end 
-			$salt = ""; 
-			for ($i = 0; $i < 22; $i++) { 
-			$salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 63), 1); 
-			} 
-			//return 82 char string (60 char hash & 22 char salt) 
-			return crypt($plainText, "$2y$".$cost."$".$salt).$salt; 
-		} 
+// Master function for validating passwords.  Ensures backwards compatibility with sha1 (usercake) and the old homegrown implementation of crypt
+function passwordVerifyUF($password, $hash){
+	if (getPasswordHashTypeUF($hash) == "sha1"){
+		$salt = substr($hash, 0, 25);		// Extract the salt from the hash
+		$hash_input = $salt . sha1($salt . $password);
+		if ($hash_input == $hash){
+			return true;
+		} else {
+			return false;
+		}
+	}	
+	// Homegrown implementation (assuming that current install has been using a cost parameter of 12)
+	else if (getPasswordHashTypeUF($hash) == "homegrown"){
+		/*used for manual implementation of bcrypt*/
+		$cost = '12'; 
+		if (substr($hash, 0, 60) == crypt($password, "$2y$".$cost."$".substr($hash, 60))){
+			return true;
+		} else {
+			return false;
+		}
+	// Modern implementation
+	} else {
+		return password_verify($password, $hash);
 	}
-	
 }
 
-// Deprecated, but provided for compatibility with older databases
-// Hashes passwords based on the md5 algorithm.  Please note that md5 is considered a "broken" encryption scheme.
-// Accounts with md5 passwords should be immediately upgraded as per password_hash when your users log in!
-function generateHashMD5($plainText, $salt = null) {
-	if ($salt === null)
-	{
-		$salt = substr(md5(uniqid(rand(), true)), 0, 25);
-	}
+// Hash a new password.  Uses the modern implementation.
+function passwordHashUF($password){
+	return password_hash($password, PASSWORD_BCRYPT);
+}
+
+function getPasswordHashTypeUF($hash){
+	// If the password in the db is 65 characters long, we have an sha1-hashed password.
+	if (strlen($hash) == 65)
+		return "sha1";
+	else if (substr($hash, 0, 7) == "$2y$12$")
+		return "homegrown";
 	else
-	{
-		$salt = substr($salt, 0, 25);
-	}
-	
-	// Returns a 65-character hexadecimal string
-	return $salt . sha1($salt . $plainText);
+		return "modern";
 }
-
 
 //Checks if an email is valid
 function isValidEmail($email)

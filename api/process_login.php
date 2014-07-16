@@ -117,17 +117,8 @@ if(!empty($_POST))
 			else if ($userdetails["enabled"]==0){
 				$errors[] = lang("ACCOUNT_DISABLED");
 			} else {
-				//Hash the password and use the salt from the database to compare the password.
-				
-				// If the password in the db is 65 characters long, match against the md5-hashed password.
-				// Otherwise, match against the bcrypt-hashed password.
-				if (strlen($userdetails["password"]) == 65){
-				  $entered_pass = generateHashMD5($password,$userdetails["password"]);
-				} else {
-				  $entered_pass = generateHash($password,$userdetails["password"]);
-				}
-				
-				if($entered_pass != $userdetails["password"])
+				// Validate the password
+				if(!passwordVerifyUF($password, $userdetails["password"]))
 				{
 					//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
 					$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
@@ -150,9 +141,13 @@ if(!empty($_POST))
 					//Update last sign in
 					$loggedInUser->updateLastSignIn();
 					
-					// Update password if we had encountered an md5-encoded password at login
-					if (strlen($userdetails["password"]) == 65){
-					  $loggedInUser->updatePassword($password);
+					// Update password if we had encountered an outdated hash
+					if (getPasswordHashTypeUF($userdetails["password"]) != "modern"){
+					    // Hash the user's password and update
+						$secure_pass = passwordHashUF($password);
+						$loggedInUser->hash_pw = $secure_pass;
+						updateUserField($loggedInUser->user_id, 'password', $secure_pass);
+						error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
 					}
 					
 					// Create the user's CSRF token

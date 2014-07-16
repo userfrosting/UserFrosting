@@ -40,6 +40,7 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 
 require_once("db-settings.php"); //Require DB connection
 require_once("funcs.php");
+require_once("password.php");
 require_once("db_functions.php");
 
 //Retrieve basic configuration settings
