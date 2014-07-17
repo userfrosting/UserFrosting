@@ -50,8 +50,4 @@ if ($loggedInUser->user_id == $master_account){
 	$hooks['#HEADERMESSAGE#'] = "<span class='navbar-center navbar-brand'>YOU ARE CURRENTLY LOGGED IN AS ROOT USER</span>";
 }
 
-echo fetchUserMenu($loggedInUser->user_id, $hooks);
-
-?>
-
-
+echo fetchUserMenu($loggedInUser->user_id, $hooks)['value'];
