@@ -1,7 +1,18 @@
 <?php
-
-include('../models/config.php');
-require_once("pm_functions.php");
+/**
+ * Load PM API page for the private message system
+ *
+ * Tested with PHP version 5
+ *
+ * @author     Bryson Shepard <lilfade@fadedgaming.co>
+ * @author     Project Manager: Alex Weissman
+ * @copyright  2014 UserFrosting
+ * @version    0.1
+ * @link       http://www.userfrosting.com/
+ * @link       http://www.github.com/lilfade/UF-PMSystem/
+ */
+include('../../models/config.php');
+require_once("../models/pm_functions.php");
 
 set_error_handler('logAllErrors');
 

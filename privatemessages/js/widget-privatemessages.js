@@ -1,4 +1,17 @@
-// Load a list of all users.  Available to admin only.
+/**
+ * JS for the private message system
+ *
+ * Tested with PHP version 5
+ *
+ * @author     Bryson Shepard <lilfade@fadedgaming.co>
+ * @author     Project Manager: Alex Weissman
+ * @copyright  2014 UserFrosting
+ * @version    0.1
+ * @link       http://www.userfrosting.com/
+ * @link       http://www.github.com/lilfade/UF-PMSystem/
+ */
+
+// Load a list of all pms.
 function pmsWidget(widget_id, options) {
 	var widget = $('#' + widget_id);
 	var sort = "asc";
@@ -17,7 +30,7 @@ function pmsWidget(widget_id, options) {
     if (options['title_page'])
         title_page = options['title_page'];
 
-	var limit = 10;
+	var limit = 100;
 	if (options['limit'])
 		limit = options['limit'];	
 
@@ -56,7 +69,7 @@ function pmsWidget(widget_id, options) {
     "<div class='panel-body'>";
 	
 	// Load the data and generate the rows.
-	var url = "load_private_messages.php";
+	var url = "api/load_private_messages.php";
 	$.getJSON( url, {
 		limit: limit,
         send_rec_id: action_id,
@@ -64,10 +77,19 @@ function pmsWidget(widget_id, options) {
 	})
 	.done(function( data ) {
 		// Don't bother unless there are some records found
-            html+= "<div class='row'><div class='col-md-4'>" +
-                "<p><i class='fa fa-envelope'></i> <a href='pm.php'>Inbox</a> ~ <i class='fa fa-envelope-o'></i> <a href='pm.php?action=outbox'>outbox</a></p>" +
-                "</div></div>";
-		if (Object.keys(data).length > 0) {
+            html+= "<div class='row'><div class='col-md-6'>" +
+                "<p><i class='fa fa-envelope'></i> <a href='pm.php'>Inbox</a> ~ <i class='fa fa-envelope-o'></i> <a href='pm.php?action=outbox'>outbox</a>" +
+                "</div>";
+
+            if (show_new_msg_button == 'true') {
+                html += "<div class='col-md-6'>" +
+                    "<button type='button' class='btn btn-success pull-right createMessage' data-toggle='modal' data-target='#message-create-dialog'>" +
+                    "<i class='fa fa-plus-square'></i>  Compose New Message</button></div></div></p>";
+            } else {
+                html += "</div></p>";
+            }
+
+        if (Object.keys(data).length > 0) {
 			html+= "<div class='table-responsive'><table class='table table-bordered table-hover table-striped tablesorter'>" + 
 			"<thead><tr>";
 			jQuery.each(columns, function(name, header) {
@@ -78,16 +100,8 @@ function pmsWidget(widget_id, options) {
 			console.log("No messages found.");
 			html += "<div class='alert alert-info'>No messages found.</div>";
 		}
-		
-		if (show_new_msg_button == 'true') {
-			html += "<div class='row'><div class='col-md-6'>" +
-            "<button type='button' class='btn btn-success createMessage' data-toggle='modal' data-target='#message-create-dialog'>" +
-			"<i class='fa fa-plus-square'></i>  Compose New Message</button></div><div class='col-md-6 text-right'>" +
-			"</div></div></div></div>";
-		} else {
-			html += "<div class='row'><div class='col-md-12 text-right'>" +
-			"</div></div></div></div>";		
-		}
+
+        html += "</div></div></div>";
 
 		$('#' + widget_id).html(html);
 		if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
@@ -112,9 +126,9 @@ function pmsWidget(widget_id, options) {
 					if (name == 'msg_sender') {
                         var formattedRowData = {};
                         formattedRowData['sender_id'] = record['sender_id'];
+
                         //Load user_name from sender_id
-                        //var
-                        formattedRowData['sender_name'] = loadUserNameById(record['sender_id']);//sender_id, user_name);
+                        formattedRowData['sender_name'] = loadUserNameById(record['sender_id']);
 
                         var template = Handlebars.compile("<td data-text='{{sender_id}}'><div class='h4'>" +
                             "<a href='user_details.php?id={{sender_id}}'>{{sender_name}}</a></div>" +
@@ -136,6 +150,8 @@ function pmsWidget(widget_id, options) {
 							formattedRowData['btn-class'] = 'btn-danger';
 							formattedRowData['msg-status'] = 'Already Read';
 						}
+                        formattedRowData['menu'] += "<li><a href='#' data-target='#read-msg-dialog' data-toggle='modal' data-id='" + record['message_id'] +
+                            "' data-name='" + record['title'] + "' class='markMessageRead'> Mark message read</a></li>";
 						formattedRowData['menu'] += "<li><a href='#' data-target='#delete-msg-dialog' data-toggle='modal' data-id='" + record['message_id'] +
 							"' data-name='" + record['title'] + "' class='deleteMessage'><i class='fa fa-trash-o'></i> Delete message</a></li>";
 						formattedRowData['menu'] += "</ul>";
@@ -159,19 +175,17 @@ function pmsWidget(widget_id, options) {
 			});
 		}
 
-        // Link the dropdown buttons from table of users
-        widget.on('click', '.editUserDetails', function () {
+        // Link the dropdown buttons from table of messages
+        widget.on('click', '.markMessageRead', function () {
             var btn = $(this);
-            var user_id = btn.data('id');
-            userForm('user-update-dialog', user_id);
+            var msg_id = btn.data('id');
+            userForm('read-message-dialog', msg_id);
         });
 
-		// Link the "Create User" buttons
 		widget.on('click', '.createMessage', function () {
 			msgForm('msg-create-dialog');
         });
-		
-		// Link the dropdown buttons from table of users
+
 		widget.on('click', '.deleteMessage', function () {
             var btn = $(this);
             var msg_id = btn.data('id');
@@ -186,7 +200,6 @@ function loadUserNameById(sender_id) {
     var data = {
         user_id: sender_id
     };
-    //console.log(sender_id);
     var url = APIPATH + 'load_users.php';
     var result = $.ajax({
         type: "GET",
@@ -204,12 +217,12 @@ function loadUserNameById(sender_id) {
     }
 }
 
-// Display user info in a panel
+// Display pm in a panel
 function messageDisplay(box_id, msg_id, action_id, action_deleted) {
     // Generate the form
     $.ajax({
         type: "GET",
-        url: "form_message.php",
+        url: "forms/form_message.php",
         data: {
             box_id: box_id,
             render_mode: 'panel',
@@ -264,7 +277,7 @@ function msgForm(box_id, msg_id) {
     // Generate the form
     $.ajax({
         type: "GET",
-        url: "form_message.php",
+        url: "forms/form_message.php",
         data: data,
         dataType: 'json',
         cache: false
@@ -277,7 +290,36 @@ function msgForm(box_id, msg_id) {
             // Append the form as a modal dialog to the body
             $( "body" ).append(result['data']);
             $('#' + box_id).modal('show');
-            //console.log(msg_id);
+
+            // Load action options
+            var url = APIPATH + "load_users.php";
+            $.getJSON( url, { })
+                .done(function( data ) {
+                    var suggestions = [];
+                    jQuery.each(data, function(idx, item) {
+                        suggest = {
+                            value: item['display_name'],
+                            name: item['display_name'],
+                            user_id: item['user_id']
+                        };
+
+                        suggestions.push(suggest);
+                    });
+
+                    // Build the typeahead for selecting a username
+                        $("#" + box_id + " .typeahead-username").change(function(){
+                            var id = $(this).data('selected_id');
+
+                            // Seems that change() is sometimes triggered without an id specified...this prevents phantom triggering
+                            if (!id)
+                                return;
+                        });
+
+                        var render_template = "<div class='h4'>{{name}}</div>";
+                        typeaheadDropdown($("#" + box_id + " .typeahead-username"), suggestions, render_template, {'disabled': false});
+
+                });
+
             // Link submission buttons
             $('#' + box_id + ' form').submit(function(e){
                 var errorMessages = validateFormFields(box_id);
@@ -298,20 +340,26 @@ function msgForm(box_id, msg_id) {
         });
 }
 
-//not working currently
 function createMsg(dialog_id) {
-    console.log("create");
+    var errorMessages = validateFormFields(dialog_id);
+    if (errorMessages.length > 0) {
+        $('#' + dialog_id + ' .dialog-alert').html("");
+        $.each(errorMessages, function (idx, msg) {
+            $('#' + dialog_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
+        });
+        return false;
+    }
+
     var data = {
-        msg_id: "",
         sender_id: $('#' + dialog_id + ' input[name="sender_id"]' ).val(),
         title: $('#' + dialog_id + ' input[name="title"]' ).val(),
         receiver_name: $('#' + dialog_id + ' input[name="receiver_name"]' ).val(),
         message: $('#' + dialog_id + ' textarea[name="message"]' ).val(),
         csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
-        ajaxMode: "true"
+        ajaxMode:	"true"
     };
 
-    var url = "create_pm.php";
+    var url = "api/send_pm.php";
     $.ajax({
         type: "POST",
         url: url,
@@ -321,13 +369,9 @@ function createMsg(dialog_id) {
         window.location.reload();
     });
     return;
-//    console.log("create" + msg_id);
 }
 
-//not working currently
 function replyMsgDialog(dialog_id, msg_id) {
-    console.log("update" + msg_id);
-    console.log(dialog_id, msg_id);
 
     var errorMessages = validateFormFields(dialog_id);
     if (errorMessages.length > 0) {
@@ -348,7 +392,7 @@ function replyMsgDialog(dialog_id, msg_id) {
         ajaxMode:	"true"
     };
 
-    var url = "reply_pm.php";
+    var url = "api/send_pm.php";
     $.ajax({
         type: "POST",
         url: url,
@@ -397,7 +441,6 @@ function deleteMsgDialog(box_id, msg_id, action_id, action_deleted){
         $('#' + box_id).modal('show');
 
         $('#' + box_id + ' .btn-group-action .btn-confirm-delete').click(function(){
-            //console.log('deleting message' + msg_id);
             // Dont accually delete the message just set the flag for receiver deleted as true
             deleteMsg(msg_id, action_id, action_deleted);
         });
@@ -405,167 +448,18 @@ function deleteMsgDialog(box_id, msg_id, action_id, action_deleted){
 }
 
 function deleteMsg(msg_id, action_id, action_deleted) {
-    var url = "delete_pm.php";
+    var url = "api/delete_pm.php";
     $.ajax({
         type: "POST",
         url: url,
         data: {
             msg_id: msg_id,
-            table: action_deleted,//"receiver_deleted",
-            action: action_id, //"receiver_id",
+            table: action_deleted,
+            action: action_id,
             ajaxMode:	"true"
         }
     }).done(function(result) {
         //processJSONResult(result);
         window.location.assign('pm.php');
     });
-}
-
-// Function that are not needed her just for reference
-
-/* Display a modal form for updating/creating an action-permission set for a user or group */
-function actionPermitForm(box_id, options) {
-    var user_id = "";
-    if (options['user_id'])
-        user_id = options['user_id'];
-
-    var group_id = "";
-    if (options['group_id'])
-        group_id = options['group_id'];
-
-    var action_id = "";
-    if (options['action_id'])
-        action_id = options['action_id'];
-
-    // Delete any existing instance of the form with the same name
-    if($('#' + box_id).length ) {
-        $('#' + box_id).remove();
-    }
-
-    var data = {
-        box_id: box_id,
-        render_mode: 'modal'
-    };
-
-    if (action_id != "") {
-        data['action_id'] = action_id;
-    }
-
-    if (user_id != "") {
-        data['user_id'] = user_id;
-    }
-
-    if (group_id != "") {
-        data['group_id'] = group_id;
-    }
-
-    // Generate the form
-    $.ajax({
-        type: "GET",
-        url: FORMSPATH + "form_action_permits.php",
-        data: data,
-        dataType: 'json',
-        cache: false
-    })
-        .fail(function(result) {
-            addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-            alertWidget('display-alerts');
-        })
-        .done(function(result) {
-            // Append the form as a modal dialog to the body
-            $( "body" ).append(result['data']);
-            $('#' + box_id).modal('show');
-
-            // Load action options
-            var url = APIPATH + "load_secure_functions.php";
-            $.getJSON( url, { })
-                .done(function( data ) {
-                    var suggestions = [];
-                    jQuery.each(data, function(name, item) {
-                        suggest = {
-                            value: name,
-                            id: name,
-                            tokens: [name].concat(item['description'].split(" ")),
-                            name: name,
-                            description: item['description'],
-                            parameters: item['parameters']
-                        };
-
-                        suggestions.push(suggest);
-                    });
-
-                    // Build the typeahead for selecting an action if we're in create mode, otherwise don't bother
-                    if (!action_id) {
-                        // Update parameter list whenever an action is selected
-                        $("#" + box_id + " .typeahead-action-name").change(function(){
-                            var id = $(this).data('selected_id');
-                            // Seems that change() is sometimes triggered without an id specified...this prevents phantom triggering
-                            if (!id)
-                                return;
-                            var action = findObjectByField(suggestions, id);
-                            var params = action['parameters'];
-                            var html = "";
-                            /*
-                             jQuery.each(params, function(name, param) {
-                             html += "<div class='list-group-item'><em>" + name + "</em> : " + param['description'] + "</div>";
-                             });
-                             $('.action-parameters').html(html);
-                             */
-                            // Also update permit options
-                            var select_permit = $('#' + box_id).find("select[name='permit']");
-                            select_permit.html("");
-                            var presetPermits = loadPresetPermitOptions(getKeys(params));
-                            jQuery.each(presetPermits, function(idx, option) {
-                                $("<option></option>").val(option['value']).html(option['name']).
-                                    prop('selected', false).appendTo(select_permit);
-                            });
-                        });
-
-                        var render_template = "<div class='h4'>{{name}}</div><div class='h4'><small>{{description}}</small></div>";
-                        typeaheadDropdown($("#" + box_id + " .typeahead-action-name"), suggestions, render_template, {'disabled': false});
-                    }
-                });
-
-            // Link submission buttons
-            $('#' + box_id + ' form').submit(function(e){
-                var errorMessages = validateFormFields(box_id);
-                if (errorMessages.length > 0) {
-                    $('#' + box_id + ' .dialog-alert').html("");
-                    $.each(errorMessages, function (idx, msg) {
-                        $('#' + box_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
-                    });
-                } else {
-                    console.log("No errors found, submitting form.");
-                    if (action_id != ""){
-                        console.log(action_id, " ", group_id);
-                        if (group_id != "") {
-                            updateActionPermit(box_id, action_id, {group_id: group_id});
-                        } else {
-                            updateActionPermit(box_id, action_id, {user_id: user_id});
-                        }
-                    } else {
-                        if (group_id != "") {
-                            createActionPermit(box_id, {group_id: group_id});
-                        } else {
-                            createActionPermit(box_id, {user_id: user_id});
-                        }
-                    }
-                }
-                e.preventDefault();
-            });
-        });
-}
-
-// Create a list of the most common options for group-level permits, based on the fields passed in from an action.
-// Add additional options here as you think necessary.
-function loadPresetPermitOptions(fields) {
-    var url = APIPATH + 'load_preset_permits.php';
-    var result = $.ajax({
-        type: "GET",
-        url: url,
-        async: false,
-        data: {fields: fields}
-    }).responseText;
-    var resultJSON = processJSONResult(result);
-    return resultJSON;
 }

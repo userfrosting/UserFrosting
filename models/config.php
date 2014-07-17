@@ -88,7 +88,9 @@ defined("FILE_SECURE_FUNCTIONS")
 $page_include_paths = array(
 	"account",
 	"forms",
-    "privatemessages"
+    "privatemessages",
+    "privatemessages/forms",
+    //"privatemessages/api"
 	// Define more include paths here
 );
 	
