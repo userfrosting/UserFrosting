@@ -1,12 +1,17 @@
 <?php
-/*****************  Private message functions *******************/
-
 /**
- * Load data for all users.
- * @todo also load group membership
- * @param int $limit (optional) the maximum number of users to return.
- * @return object $results fetch non-authorization related data for the all users
+ * Functions for the private message system
+ *
+ * Tested with PHP version 5
+ *
+ * @author     Bryson Shepard <lilfade@fadedgaming.co>
+ * @author     Project Manager: Alex Weissman
+ * @copyright  2014 UserFrosting
+ * @version    0.1
+ * @link       http://www.userfrosting.com/
+ * @link       http://www.github.com/lilfade/UF-PMSystem/
  */
+
 function loadPMS($limit = NULL, $user_id, $send_rec_id, $deleted){
 
     try {
@@ -21,12 +26,14 @@ function loadPMS($limit = NULL, $user_id, $send_rec_id, $deleted){
         $query = "select {$db_table_prefix}plugin_pm.id as
         message_id, sender_id, receiver_id, title, message,
         time_sent, time_read, receiver_read, sender_deleted,
-        receiver_deleted, isreply
+        receiver_deleted, parent_id
         from {$db_table_prefix}plugin_pm
-        WHERE $send_rec_id = :user_id AND $deleted != '1' AND isreply != '1'";
+        WHERE $send_rec_id = :user_id AND $deleted != '1' AND parent_id IS NULL ";
 
         $stmt = $db->prepare($query);
+
         $sqlVars[':user_id'] = $user_id;
+
         $stmt->execute($sqlVars);
 
         if (!$limit){
@@ -64,26 +71,20 @@ function loadPMById($msg_id, $user_id){
         $query = "select {$db_table_prefix}plugin_pm.id as
         message_id, sender_id, receiver_id, title, message,
         time_sent, time_read, receiver_read, sender_deleted,
-        receiver_deleted, isreply
+        receiver_deleted
         from {$db_table_prefix}plugin_pm
-        WHERE id = :msg_id"; // AND receiver_id OR sender_id = :user_id";
+        WHERE id = :msg_id";
 
         $stmt = $db->prepare($query);
+
         $sqlVars[':msg_id'] = $msg_id;
-//        $sqlVars[':user_id'] = $user_id;
+
         $stmt->execute($sqlVars);
-
-        //$stmt = $db->prepare($query);
-        //$stmt->execute($sqlVars);
-
-        //ChromePhp::log("Data: ".$sqlVars[':msg_id']);
 
         if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
             addAlert("danger", "Invalid Message id specified");
             return false;
         }
-
-        //ChromePhp::log($results);
 
         if($results['receiver_deleted'] != '0'){
             addAlert("danger", "Message Deleted");
@@ -117,19 +118,20 @@ function loadPMReplys($msg_id){
         $query = "select {$db_table_prefix}plugin_pm.id as
         message_id, sender_id, receiver_id, title, message,
         time_sent, time_read, receiver_read, sender_deleted,
-        receiver_deleted, isreply, parent_id
+        receiver_deleted, parent_id
         from {$db_table_prefix}plugin_pm
-        WHERE isreply = '1' AND parent_id = :msg_id";
+        WHERE parent_id = :msg_id";
 
         $stmt = $db->prepare($query);
+
         $sqlVars[':msg_id'] = $msg_id;
-        //$sqlVars[':user_id'] = $user_id;
+
         $stmt->execute($sqlVars);
         $limit = '99999';
 
         $i = 0;
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $id = $i;//$r['message_id'];
+            $id = $i;
             $results[$id] = $r;
             $i++;
         }
@@ -139,7 +141,7 @@ function loadPMReplys($msg_id){
         return $results;
 
     } catch (PDOException $e) {
-        //addAlert("danger", "Oops, looks like our database encountered an error.");
+        addAlert("danger", "Oops, looks like our database encountered an error.");
         error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
         return false;
     }
@@ -172,7 +174,6 @@ function checkPMReadFlag($msg_id){
         if ($stmt->rowCount() > 0)
             return true;
         else {
-            //addAlert("danger", "alread set as read.");
             return false;
         }
 
@@ -236,7 +237,7 @@ function removePM($msg_id, $user_id, $field, $action){
     }
 }
 
-function fetchUserIdByUsername($user_name){
+function fetchUserIdByDisplayname($user_name){
     try {
         global $db_table_prefix;
 
@@ -246,7 +247,7 @@ function fetchUserIdByUsername($user_name){
 
         $sqlVars = array();
 
-        $query = "select id, user_name, display_name from {$db_table_prefix}users where user_name = :user_name";
+        $query = "select id, display_name from {$db_table_prefix}users where display_name = :user_name";
 
         $sqlVars[':user_name'] = $user_name;
 
@@ -272,31 +273,30 @@ function fetchUserIdByUsername($user_name){
     }
 }
 
-function createMessage($user_id, $receiver_id, $title, $message, $isreply=NULL, $parent_id=NULL){
+function createMessage($user_id, $receiver_id, $title, $message, $parent_id=NULL){
     try {
         global $db_table_prefix;
 
         $db = pdoConnect();
 
         $query = "INSERT INTO ".$db_table_prefix."plugin_pm (
-            sender_id, receiver_id, title, message, time_sent, time_read,
-            receiver_read, sender_deleted, receiver_deleted, isreply, parent_id
-            )
-            VALUES (
-            :user_id, :receiver_id, :title, :message,
-            '".time()."', '0', '0',
-            '0', '0', :isreply, :parent_id
-            )";
+          sender_id, receiver_id, title, message, time_sent,  parent_id
+        )
+        VALUES (
+          :user_id, :receiver_id, :title, :message,
+          '".time()."', :parent_id
+        )";
 
         $sqlVars = array(
             ':user_id' => $user_id,
             ':receiver_id' => $receiver_id,
             ':title' => $title,
             ':message' => $message,
-            ':isreply' => $isreply,
             ':parent_id' => $parent_id
         );
+
         $stmt = $db->prepare($query);
+
         if (!$stmt->execute($sqlVars)){
             // Error: column does not exist
             return false;

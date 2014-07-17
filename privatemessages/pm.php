@@ -9,10 +9,11 @@
  * @copyright  2014 UserFrosting
  * @version    0.1
  * @link       http://www.userfrosting.com/
+ * @link       http://www.github.com/lilfade/UF-PMSystem/
  */
 
 require_once("../models/config.php");
-require_once("pm_functions.php");
+require_once("models/pm_functions.php");
 
 if (!securePage(__FILE__)){
     // Forward to index page
@@ -59,9 +60,10 @@ $table_delete = $validate->optionalGetVar('a_d'); //receiver_id or sender_id dep
     <script src="../js/date.min.js"></script>
     <script src="../js/handlebars-v1.2.0.js"></script>
     <script src="../js/bootstrap-switch.min.js"></script>
+    <script src="../js/typeahead.js"></script>
     <script src="../js/jquery.tablesorter.js"></script>
     <script src="../js/tables.js"></script>
-    <script src="widget-privatemessages.js"></script>
+    <script src="js/widget-privatemessages.js"></script>
 </head>
 
 <body>
