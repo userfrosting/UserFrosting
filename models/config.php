@@ -48,14 +48,15 @@ require_once("db_functions.php");
 $settings = fetchConfigParameters();
 
 //Set Settings
-$emailDate = date('dmy');
 $emailActivation = $settings['activation'];
 $can_register = $settings['can_register'];
 $websiteName = $settings['website_name'];
 $websiteUrl = $settings['website_url'];
 $emailAddress = $settings['email'];
 $resend_activation_threshold = $settings['resend_activation_threshold'];
+$emailDate = date('dmy');
 $language = $settings['language'];
+$template = $settings['template'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
@@ -72,9 +73,6 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
 defined("SITE_ROOT")
     or define("SITE_ROOT", $url_prefix.$websiteUrl);
 
-defined("ACCOUNT_ROOT")
-    or define("ACCOUNT_ROOT", SITE_ROOT . "account/");
-		
 defined("LOCAL_ROOT")
 	or define ("LOCAL_ROOT", realpath(dirname(__FILE__)."/.."));
 	
@@ -84,10 +82,8 @@ defined("MENU_TEMPLATES")
 defined("MAIL_TEMPLATES")
 	or define("MAIL_TEMPLATES", dirname(__FILE__) . "/mail-templates/");
 
-// Include paths for files containing secure functions
-$files_secure_functions = array(
-	dirname(__FILE__) . "/secure_functions.php"
-);
+defined("FILE_SECURE_FUNCTIONS")
+	or define("FILE_SECURE_FUNCTIONS", dirname(__FILE__) . "/secure_functions.php");	
 
 // Include paths for pages to add to site page management
 $page_include_paths = array(
@@ -98,15 +94,7 @@ $page_include_paths = array(
     //"privatemessages/api"
 	// Define more include paths here
 );
-
-// Other constants
-defined("ACCOUNT_HEAD_FILE")
-	or define("ACCOUNT_HEAD_FILE", "head-account.html");	
-
-// Set to true if you want authorization failures to be logged to the PHP error log.
-defined("LOG_AUTH_FAILURES")
-	or define("LOG_AUTH_FAILURES", false);
-
+	
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
 $master_account = 1;
@@ -152,7 +140,6 @@ function getRelativeDocumentPath($localPath){
 require_once($language);
 require_once("class_validator.php");
 require_once("authorization.php");
-require_once("error_functions.php");
 require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");

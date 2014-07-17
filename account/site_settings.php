@@ -112,7 +112,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
             <div class="form-group">
               <label for="emailLogin" class="col-sm-4 control-label">Email Login</label>
                 <div class="col-sm-8">
-                  <input type="checkbox" id ="emailLogin" name='email_login' value='0'/>
+                  <input type="checkbox" id ="checkEmailLogin" name='email_login' value='1'/>
                     <br><small>Specify whether users can login via email address or username instead of just username.</small>
                 </div>
             </div>
@@ -157,8 +157,17 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		</div>
 		</div>
 		
-		<div class='col-lg-6'>
-		<p>{Information for settings here}</p>
+		<div id='plugins' class='col-lg-6'>
+            <div class='panel panel-primary'>
+                <div class='panel-heading'>
+                    <h3 class='panel-title'>Plugin Configurations</h3>
+                </div>
+                <div class='panel-body'>
+                    <form class='form-horizontal' role='form' name='adminConfiguration' action='../api/update_site_settings.php' method='post'>
+                        <p>Dynamically listed here</p>
+                    </form>
+                </div>
+            </div>
 	  </div>
 	<script>
         $(document).ready(function() {
@@ -243,7 +252,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 			  }
 			}
 		  });
-		  //alertWidget('display-alerts');
+		  alertWidget('display-alerts');
 		  
 		});
 	</script>
