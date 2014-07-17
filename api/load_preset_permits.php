@@ -41,10 +41,10 @@ if (!isUserLoggedIn()){
 }
 
 // Load a list of preset permit options
-// POST: fields
+// POST: [fields]
 
 $validator = new Validator();
-$fields = $validator->requiredGetArray('fields');
+$fields = $validator->optionalGetArray('fields');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){

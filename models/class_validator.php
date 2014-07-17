@@ -172,6 +172,23 @@ class Validator {
 			return array();
 		}
 	}		
+
+	public function optionalGetArray($varname){
+		// Confirm that data has been submitted via GET
+		if (!($_SERVER['REQUEST_METHOD'] == 'GET')) {
+			$this->errors[] = "Error: data must be submitted via GET.";
+			return null;
+		}
+		if (isset($_GET[$varname])) {
+			$arr = array();
+			foreach ($_GET[$varname] as $val){
+				$arr[] = htmlentities($val);
+			}
+			return $arr;
+		} else {
+			return array();
+		}
+	}
 	
 	// Optional boolean variable ("true" or "false" as string)
 	function optionalBooleanGetVar($var_name, $default_value = "false"){

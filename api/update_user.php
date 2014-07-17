@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -28,6 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
+
 require_once("../models/config.php");
 set_error_handler('logAllErrors');
 
@@ -135,14 +136,12 @@ if ($enabled !== null){
 if ($password) {
 	// If updating own password, validate their current password
 	if ($self){
-		//Confirm the hashes match before updating a users password
-		$entered_pass = generateHash($passwordcheck ,$loggedInUser->hash_pw);
-		
+		//Confirm the hashes match before updating a users password		
 		if ($passwordcheck == ""){
 			addAlert("danger", lang("ACCOUNT_SPECIFY_PASSWORD"));
 			echo json_encode(array("errors" => 1, "successes" => 0));
 			exit();
-		} else if($entered_pass != $loggedInUser->hash_pw) {
+		} else if (!passwordVerifyUF($passwordcheck, $loggedInUser->hash_pw)) {
 			//No match
 			addAlert("danger", lang("ACCOUNT_PASSWORD_INVALID"));
 			echo json_encode(array("errors" => 1, "successes" => 0));
@@ -150,10 +149,8 @@ if ($password) {
 		}	
 	}
 	
-	// Prevent updating if someone attempts to update with the same password
-	$password_hash = generateHash($password, $loggedInUser->hash_pw);
-	
-	if($password_hash == $loggedInUser->hash_pw) {
+	// Prevent updating if someone attempts to update with the same password	
+	if(passwordVerifyUF($password, $loggedInUser->hash_pw)) {
 		addAlert("danger", lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE"));
 		echo json_encode(array("errors" => 1, "successes" => 0));
 		exit();

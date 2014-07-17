@@ -68,26 +68,26 @@ function isUserLoggedIn() {
 
 //Check if a user ID exists in the DB
 function userIdExists($id) {
-    return userValueExists('id', $id);
+    return valueExists('users', 'id', $id);
 }
 
 //Checks if a username exists in the DB.  
 function usernameExists($user_name) {
-    return userValueExists('user_name', $user_name);
+    return valueExists('users', 'user_name', $user_name);
 }
 
 //Check if a display name exists in the DB.
 function displayNameExists($display_name) {
-    return userValueExists('display_name', $display_name);
+    return valueExists('users', 'display_name', $display_name);
 }
 
 //Check if an email exists in the DB
 function emailExists($email) {
-    return userValueExists('email', $email);
+    return valueExists('users', 'email', $email);
 }
 
-// Determine if a user with the specified value for a specified column exists.  Returns true if the username exists, false if not or on error.
-function userValueExists($column, $data) {
+// Determine if a specified value for a specified column exists in the specified table.  Returns true if it exists, false if not or an error.
+function valueExists($table, $column, $value) {
     try {
         global $db_table_prefix;
         
@@ -97,11 +97,11 @@ function userValueExists($column, $data) {
         
         $sqlVars = array();
         
-        $query = "SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		$column = :data
-		LIMIT 1";
+        $query = "SELECT id
+    FROM ".$db_table_prefix.$table."
+    WHERE
+    $column = :data
+    LIMIT 1";
         
         // This block allows return false if the table doesn't exist
         try {
@@ -110,7 +110,7 @@ function userValueExists($column, $data) {
             return false;
         }
         
-        $sqlVars[':data'] = $data;
+        $sqlVars[':data'] = $value;
 
         if (!$stmt->execute($sqlVars)){
             // Error: column does not exist
@@ -135,6 +135,7 @@ function userValueExists($column, $data) {
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
       return false;
     }
+
 }
 
 //Check if a user name and email belong to the same user
@@ -966,81 +967,12 @@ function removeUser($user_id){
 
 //Check if a group exists in the DB
 function groupIdExists($group_id) {
-    try {
-        global $db_table_prefix;
-        
-        $db = pdoConnect();
-        
-        $sqlVars = array();
-
-        $query = "SELECT id
-		FROM ".$db_table_prefix."groups
-		WHERE
-		id = :group_id
-		LIMIT 1";
-        
-        $stmt = $db->prepare($query);
-        
-        $sqlVars[':group_id'] = $group_id;
-
-        if (!$stmt->execute($sqlVars)){
-            // Error
-            return false;
-        }
-        
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($row)
-            return true;
-        else
-            return false;
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    } catch (ErrorException $e) {
-      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      return false;
-    }
+    return valueExists('groups', 'id', $group_id);
 }
 
 //Check if a group name exists in the DB
 function groupNameExists($name) {
-    try {
-        global $db_table_prefix;
-        
-        $db = pdoConnect();
-        
-        $sqlVars = array();
-
-        $query = "SELECT id
-		FROM ".$db_table_prefix."groups
-		WHERE
-		name = :name
-		LIMIT 1";
-        $stmt = $db->prepare($query);
-        
-        $sqlVars[':name'] = $name;
-
-        if (!$stmt->execute($sqlVars)){
-            // Error
-            return false;
-        }
-        
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($row)
-            return true;
-        else
-            return false;
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    } catch (ErrorException $e) {
-      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      return false;
-    }
+    return valueExists('groups', 'name', $name);
 }
 
 //Retrieve information for all user groups
@@ -1763,40 +1695,7 @@ function deleteConfigParameter($name){
 //------------------------------------------------------------------------------
 //Check if a page ID exists
 function pageIdExists($page_id) {
-    try {
-        global $db_table_prefix;
-        
-        $db = pdoConnect();
-        
-        $sqlVars = array();
-        
-        $query ="SELECT private
-		FROM ".$db_table_prefix."pages
-		WHERE
-		id = :page_id
-		LIMIT 1";
-    
-        $stmt = $db->prepare($query);
-        
-        $sqlVars[':page_id'] = $page_id;
-		
-		$stmt->execute($sqlVars);
-    
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-        if ($row)
-            return true;
-        else {
-            return false;
-        }
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    } catch (ErrorException $e) {
-      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-      return false;
-    }
+    return valueExists('pages', 'id', $page_id);
 }
 
 //Fetch information on all pages

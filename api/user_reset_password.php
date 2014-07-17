@@ -83,8 +83,7 @@ if(!empty($confirm)) {
 
         //time is good, token is good process the password reset request
         // Check if the password being changed is the same as the current password or not
-        if(generateHash($password, $userdetails["password"])) {
-
+        if(passwordVerifyUF($password, $userdetails["password"])) {
             $errors[] = lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE");
         }
 
@@ -105,13 +104,17 @@ if(!empty($confirm)) {
         }
 
         // Hash the user's password and update
-        $secure_pass = generateHash($password);
+        $password_hash = passwordHashUF($password);
+		if ($password_hash === null){
+			$errors[] = lang("PASSWORD_HASH_FAILED");
+		}		
+		
         // Nab up the user_id from the users information to update the password
         $user_id = $userdetails["id"];
 
         if(count($errors) == 0){
             // Update password based on the user's id and the new password
-            if (updateUserField($user_id, 'password', $secure_pass)){
+            if (updateUserField($user_id, 'password', $password_hash)){
                 // Password was updated
                 $successes[] = lang("ACCOUNT_PASSWORD_UPDATED");
 
