@@ -140,6 +140,7 @@ $lang = array_merge($lang,array(
 
 //Miscellaneous
 $lang = array_merge($lang,array(
+    "PASSWORD_HASH_FAILED"  => "Password hashing failed.  Please contact a site administrator.",
 	"NO_DATA"				=> "No data/bad data sent",
     "CAPTCHA_FAIL"				=> "Failed security question",
 	"CONFIRM"				=> "Confirm",
@@ -169,4 +170,9 @@ $lang = array_merge($lang,array(
 	"PERMISSION_ADD_USERS"			=> "Successfully added %m1% user(s)",
 	"CANNOT_DELETE_PERMISSION_GROUP" => "You cannot delete the group '%m1%'",
 	));
+
+//Private Messages
+$lang = array_merge($lang,array(
+    "PM_RECEIVER_DELETION_SUCCESSFUL"   => "Message Deleted",
+));
 ?>

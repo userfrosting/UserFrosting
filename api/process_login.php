@@ -117,23 +117,12 @@ if(!empty($_POST))
 			else if ($userdetails["enabled"]==0){
 				$errors[] = lang("ACCOUNT_DISABLED");
 			} else {
-				//Hash the password and use the salt from the database to compare the password.
-				
-				// If the password in the db is 65 characters long, match against the md5-hashed password.
-				// Otherwise, match against the bcrypt-hashed password.
-				if (strlen($userdetails["password"]) == 65){
-				  $entered_pass = generateHashMD5($password,$userdetails["password"]);
-				} else {
-				  $entered_pass = generateHash($password,$userdetails["password"]);
-				}
-				
-				if($entered_pass != $userdetails["password"])
+				// Validate the password
+				if(!passwordVerifyUF($password, $userdetails["password"]))
 				{
 					//Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
 					$errors[] = lang("ACCOUNT_USER_OR_PASS_INVALID");
-				}
-				else
-				{
+				} else {
 					//Passwords match! we're good to go'
 					
 					//Construct a new logged in user object
@@ -150,9 +139,17 @@ if(!empty($_POST))
 					//Update last sign in
 					$loggedInUser->updateLastSignIn();
 					
-					// Update password if we had encountered an md5-encoded password at login
-					if (strlen($userdetails["password"]) == 65){
-					  $loggedInUser->updatePassword($password);
+					// Update password if we had encountered an outdated hash
+					if (getPasswordHashTypeUF($userdetails["password"]) != "modern"){
+					    // Hash the user's password and update
+						$password_hash = passwordHashUF($password);
+						if ($password_hash === null){
+							error_log("Notice: outdated password hash could not be updated because new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?");
+						} else {
+							$loggedInUser->hash_pw = $password_hash;
+							updateUserField($loggedInUser->user_id, 'password', $password_hash);
+							error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
+						}
 					}
 					
 					// Create the user's CSRF token

@@ -40,6 +40,7 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 
 require_once("db-settings.php"); //Require DB connection
 require_once("funcs.php");
+require_once("password.php");
 require_once("db_functions.php");
 
 //Retrieve basic configuration settings
@@ -87,7 +88,10 @@ defined("FILE_SECURE_FUNCTIONS")
 // Include paths for pages to add to site page management
 $page_include_paths = array(
 	"account",
-	"forms"
+	"forms",
+    "privatemessages",
+    "privatemessages/forms",
+    //"privatemessages/api"
 	// Define more include paths here
 );
 	
@@ -142,7 +146,10 @@ require_once("class.user.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
-//require_once("chrome.php");
+require_once("chrome.php");
+
+// Temp value for pm system while in dev
+$pmsystem_enabled = 1;
 
 session_start();
 
@@ -152,5 +159,3 @@ if(isset($_SESSION["userCakeUser"]) && is_object($_SESSION["userCakeUser"]))
 {
 	$loggedInUser = $_SESSION["userCakeUser"];
 }
-
-?>

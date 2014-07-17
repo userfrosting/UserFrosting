@@ -3,6 +3,21 @@ require_once('config.php');
 require_once("../models/db-settings.php");
 require_once("../models/funcs.php");
 
+// Check system requirements
+// PHP_VERSION_ID is available as of PHP 5.2.7, if our version is lower than that, then emulate it
+if (!defined('PHP_VERSION_ID')) {
+    $version = explode('.', PHP_VERSION);
+    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+}
+
+if (PHP_VERSION_ID < 50307){
+    addAlert("danger", "I'm sorry, due to a security flaw in older versions of PHP, UserFrosting requires PHP 5.3.7 or later.  For more information, please see <a href='http://www.userfrosting.com/security.html'>http://www.userfrosting.com/security.html</a>.");
+    header("Location: ./");
+    exit();
+} else if (PHP_VERSION_ID >= 50307 && PHP_VERSION_ID < 50500){
+    addAlert("warning", "You currently have version " . PHP_VERSION . " of PHP installed.  We recommend version 5.5 or later.  UserFrosting can still be installed, but we highly recommend you upgrade soon.");    
+}
+
 // Try to connect to the database.  If failed, return to index.php
 try{
     $db = pdoConnect();
@@ -54,25 +69,22 @@ try{
         </ul>
         <h3 class="text-muted">UserFrosting</h3>
     </div>
-    <div class="alert alert-success">
-    Great news, we're able to connect to your database!  Let's set up the rest of the site.
-    </div>
-    <div class="alert alert-info">
-        <h1 class="panel-title">Installation consists of three easy steps:</h1>
-        <ol>
-            <li>Enter some basic configuration information for your site.  You can change this at any time after installation from the "site settings" page.</li>
-            <li>Create the root user account.  A configuration token will be placed in your database, which you will be asked to verify.</li>
-            <li>Delete the <code>install</code> folder.  You will be able to login to your new site by navigating to the root directory.</li>
-        </ol>
-    </div><!-- Info popup -->
-
     <!-- Start Form Input -->
     <form name='newInstall' class='form-horizontal' role='form' action='install_db.php' method='post'>
-        <div class="row">
-            <div id='display-alerts' class="col-lg-12">
+        <div id='display-alerts'>
 
-            </div>
         </div>
+        <div class="alert alert-success">
+        Great news, we're able to connect to your database!  Let's set up the rest of the site.
+        </div>
+        <div class="alert alert-info">
+            <div class="h4">Installation consists of three easy steps:</div>
+            <ol>
+                <li>Enter some basic configuration information for your site.  You can change this at any time after installation from the "site settings" page.</li>
+                <li>Create the root user account.  A configuration token will be placed in your database, which you will be asked to verify.</li>
+                <li>Delete the <code>install</code> folder.  You will be able to login to your new site by navigating to the root directory.</li>
+            </ol>
+        </div><!-- Info popup -->            
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h1 class="panel-title">Site Settings</h1>

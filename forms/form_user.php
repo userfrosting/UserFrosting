@@ -40,6 +40,8 @@ if (!securePage(__FILE__)){
   exit();
 }
 
+// TODO: allow setting default groups
+
 // Parameters: box_id, render_mode, [user_id, show_dates, disabled]
 // box_id: the desired name of the div that will contain the form.
 // render_mode: modal or panel

@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.1
+UserFrosting Version: 0.2.0
 By Alex Weissman
 Copyright (c) 2014
 
@@ -31,7 +31,6 @@ THE SOFTWARE.
 
 // Request method: GET
 
-include('../models/db-settings.php');
 include('../models/config.php');
 
 // User must be logged in

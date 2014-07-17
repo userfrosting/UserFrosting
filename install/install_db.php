@@ -311,6 +311,24 @@ $user_action_permits_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."user
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ";
 
+$pm_sql = "
+CREATE TABLE IF NOT EXISTS `".$db_table_prefix."plugin_pm` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`sender_id` int(11) NOT NULL,
+`receiver_id` int(11) NOT NULL,
+`title` varchar(255) NOT NULL,
+`message` text NOT NULL,
+`time_sent` int(11) NOT NULL,
+`time_read` int(11) NOT NULL,
+`receiver_read` tinyint(1) NOT NULL,
+`sender_deleted` tinyint(1) NULL,
+`receiver_deleted` tinyint(1) NOT NULL,
+`isreply` tinyint(1) NULL COMMENT 'If this is a reply or not',
+`parent_id` int(11) NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+";
+
 $stmt = $db->prepare($configuration_sql);
 if($stmt->execute())
 {
@@ -462,6 +480,17 @@ if($stmt->execute())
 else
 {
     $errors[] = "<p>Error constructing user_action_permits table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($pm_sql);
+if($stmt->execute())
+{
+    $successes[] = "<p>".$db_table_prefix."plugin_pm table created.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error constructing plugin_pm table.</p>";
     $db_issue = true;
 }
 
