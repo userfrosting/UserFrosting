@@ -440,14 +440,10 @@ function fetchUserMenu($user_id, $hooks){
         $find = array_keys($hooks);
         $replace = array_values($hooks);
 
-        ChromePhp::log($results);
-
         //Replace hooks
         $contents = str_replace($find, $replace, $results);
 
         return $contents;
-
-        //return $results[$field_name];
 
     } catch (PDOException $e) {
         addAlert("danger", "Oops, looks like our database encountered an error.");
@@ -457,29 +453,6 @@ function fetchUserMenu($user_id, $hooks){
         addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
         return false;
     }
-
-    /*
-    // Recode below to pull from the database so we can make required changes on the fly for plugins
-    $path = MENU_TEMPLATES . "menu-" . $group_id . ".html";
-    
-	$contents = file_get_contents($path);
-
-    ChromePhp::log($group_id);
-
-    //Check to see we can access the file / it has some contents
-    if(!$contents || empty($contents)) {
-          addAlert("danger", "The menu for this group could not be found.");
-          return null;
-    } else { 
-        $find = array_keys($hooks);
-        $replace = array_values($hooks);
-        
-        //Replace hooks
-        $contents = str_replace($find, $replace, $contents);
-        
-        return $contents;
-    }
-    */
 }
 
 // Fetch the primary group for the specified user
@@ -1676,6 +1649,44 @@ function fetchConfigParameters(){
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
+    }
+}
+
+// Retrieve an array containing all site configuration parameters
+function fetchConfigParametersPlugins(){
+    try {
+        global $db_table_prefix;
+
+        $results = array();
+
+        $db = pdoConnect();
+
+        $query = "SELECT id, name, value
+        FROM ".$db_table_prefix."plugin_configuration";
+
+        $stmt = $db->prepare($query);
+
+        if (!$stmt->execute()){
+            // Error
+            return false;
+        }
+
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $name = $r['name'];
+            $value = $r['value'];
+            $results[$name] = $value;
+        }
+        $stmt = null;
+
+        return $results;
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+        addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+        return false;
     }
 }
 

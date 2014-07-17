@@ -39,7 +39,7 @@ if (!isUserLoggedIn()){
   echo json_encode(array("errors" => 1, "successes" => 0));
   exit();
 }
-	
+
 $languages = getLanguageFiles(); //Retrieve list of language files
 
 //Retrieve settings
