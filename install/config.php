@@ -39,6 +39,7 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 }
 
 require_once("../models/class_validator.php");
+require_once("../models/password.php");
 
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");

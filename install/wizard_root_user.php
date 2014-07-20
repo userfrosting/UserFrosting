@@ -39,8 +39,6 @@ require_once("../models/class.mail.php");
 require_once("../models/class.user.php");
 require_once("../models/secure_functions.php");
 
-// TODO: Client-side validation and AJAX submission
-
 // To register the root account, two conditions apply:
 // 1. the root config token (root_account_config_token) must exist
 // 2. the uc_users table must not have a user with id=1
