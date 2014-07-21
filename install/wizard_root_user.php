@@ -29,15 +29,8 @@ THE SOFTWARE.
 
 */
 
-// This is the config file in the install directory.
-require_once('config.php');
-require_once('../models/db-settings.php');
-require_once("../models/db_functions.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/secure_functions.php");
+// This is the installer config file in the install directory.
+require_once("config.php");
 
 // To register the root account, two conditions apply:
 // 1. the root config token (root_account_config_token) must exist

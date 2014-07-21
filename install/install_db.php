@@ -30,9 +30,7 @@ THE SOFTWARE.
 */
 
 // This is the config file in the install directory.
-require_once('config.php');
-require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
+require_once("config.php");
 
 // Process POSTed site settings
 $validator = new Validator();
