@@ -112,7 +112,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
             <div class="form-group">
               <label for="emailLogin" class="col-sm-4 control-label">Email Login</label>
                 <div class="col-sm-8">
-                  <input type="checkbox" id ="emailLogin" name='email_login' value='0'/>
+                  <input type="checkbox" id ="checkEmailLogin" name='email_login' value='1'/>
                     <br><small>Specify whether users can login via email address or username instead of just username.</small>
                 </div>
             </div>
@@ -163,9 +163,9 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		</div>
 		</div>
 		
-		<div class='col-lg-6'>
-		<p>{Information for settings here}</p>
-	  </div>
+		<div id='plugins' class='col-lg-6'>
+
+	    </div>
 	<script>
         $(document).ready(function() {
           // Get id of the logged in user to determine how to render this page.
@@ -176,7 +176,10 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
           $('.navbar').load('header.php', function() {
 			$('.navitem-site-settings').addClass('active');
           });
-		  
+
+          /*
+           * start site settings form submit
+           */
 		  $("form[name='adminConfiguration']").submit(function(e){
 			var form = $(this);
 			var url = '../api/update_site_settings.php';
@@ -203,9 +206,14 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 			});
 			return false;
 		  });
-		  
-		  // Load and initialize fields
-		  $('#regbox input[type="checkbox"]').bootstrapSwitch();
+          /*
+           * end site settings form submit
+           */
+
+		  /*
+           * start site settings config load
+           */
+          $('#regbox input[type="checkbox"]').bootstrapSwitch();
 		  var url = "../api/load_site_settings.php";
 		  $.getJSON( url, {})
 		  .fail(function(result) {
@@ -261,7 +269,83 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 			  
 			}
 		  });
-		  //alertWidget('display-alerts');
+          /*
+          * end site settings config load
+          */
+
+          /*
+           * Load plugin config settings
+           */
+
+          var url = "../api/load_plugin_settings.php";
+          $.getJSON( url, {})
+          .fail(function(data) {
+              addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+              alertWidget('display-alerts');
+          })
+          .done(function( data ) {
+              if (Object.keys(data).length > 0) {
+                  console.log(data);
+
+                  var html = "<div class='panel panel-primary'>" +
+                  "<div class='panel-heading'>" +
+                      "<h3 class='panel-title'>Plugin Configurations</h3>" +
+                  "</div>" +
+                  "<div class='panel-body'>" +
+                      "<form class='form-horizontal' role='form' name='adminConfiguration' action='../api/update_plugin_settings.php' method='post'>";
+
+
+                  if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
+                      jQuery.each(data, function(name, setting) {
+
+                          function isNumber(n) {
+                              return !isNaN(parseFloat(n)) && isFinite(n);
+                          }
+
+                          if (isNumber(setting)) {
+                              // Assume this should be a bootstrap switch
+
+                              html += "<div class='form-group'><label for='"+name+"' class='col-sm-4 control-label'>"+name+"</label>" +
+                              "<div class='col-sm-8'>";
+                                  var settingInt = parseInt(setting);
+
+                                  if(settingInt > 0 ){
+                                     html += "<input type='checkbox' id ='"+name+"' name='"+name+"' value='"+setting+"' checked />"
+                                  }else{
+                                     html += "<input type='checkbox' id ='"+name+"' name='"+name+"' value='"+setting+"' />"
+                                  }
+                                  html += "<br><small>setting['description']</small>" +
+                              "</div>" +
+                              "</div>";
+                              console.log("binary value " + name + " ~ " + setting);
+                          }else{
+                              // Assume this should be a text box
+                          html += "<div class='form-group'><label for='"+name+"' class='col-sm-4 control-label'>"+name+"</label>" +
+                              "<div class='col-sm-8'>" +
+                                  "<input type='text' id='"+name+"' class='form-control' name='"+name+"' value='"+setting+"'/>" +
+                                  "</div>" +
+                              "</div>";
+                              console.log("non binary value " + name + " ~ " + setting);
+                          }
+                      })
+                  }
+                  html += "</form>" +
+                  "</div>" +
+                  "</div>";
+
+                  $('#plugins').html(html);
+                  $('#plugins input[type="checkbox"]').bootstrapSwitch();
+              } else {
+
+                 console.log("No settings found.");
+
+                  html += "<div class='alert alert-info'>No plugins found.</div>";
+
+              }
+          });
+
+
+		  alertWidget('display-alerts');
 		  
 		});
 	</script>

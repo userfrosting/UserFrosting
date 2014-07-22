@@ -394,32 +394,64 @@ function fetchUserField($user_id, $field_name){
     }
 }
 
-// Fetch the appropriate menu for a user based on their primary group.  TODO: make this cacheable so it doesn't have to be processed each time a page is loaded.
+// Fetch the appropriate menu for a user based on their primary group.
+// TODO: make this cacheable so it doesn't have to be processed each time a page is loaded.
 // Hooks is an array of hook names mapped to their values
 function fetchUserMenu($user_id, $hooks){
-    // Get the user's primary group
-    if (!($primary_group = fetchUserPrimaryGroup($user_id))){
-        return null;
-    }
-    
-    $group_id = $primary_group['id'];
-    
-    $path = MENU_TEMPLATES . "menu-" . $group_id . ".html";
-    
-	$contents = file_get_contents($path);
-    
-    //Check to see we can access the file / it has some contents
-    if(!$contents || empty($contents)) {
-          addAlert("danger", "The menu for this group could not be found.");
-          return null;
-    } else { 
+
+    try {
+        global $db_table_prefix;
+
+        $db = pdoConnect();
+
+        // Get the user's primary group
+        if (!($primary_group = fetchUserPrimaryGroup($user_id))){
+            return null;
+        }
+
+        // $group_id = the id of the template we want to grab
+        $group_id = $primary_group['id'];
+
+        //we'll call it menu-$group_id to keep it simple
+        $menu_id = 'menu-'.$group_id;
+
+        $sqlVars = array();
+
+        $query = "SELECT
+            value
+            FROM ".$db_table_prefix."templates
+            WHERE
+            name = :name
+            LIMIT 1";
+
+        $stmt = $db->prepare($query);
+
+        $sqlVars[':name'] = $menu_id;
+
+        $stmt->execute($sqlVars);
+
+        if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
+            // The user does not exist
+            return false;
+        }
+
+        $stmt = null;
+
         $find = array_keys($hooks);
         $replace = array_values($hooks);
-        
+
         //Replace hooks
-        $contents = str_replace($find, $replace, $contents);
-        
+        $contents = str_replace($find, $replace, $results);
+
         return $contents;
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+        addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+        return false;
     }
 }
 
@@ -1612,6 +1644,44 @@ function fetchConfigParameters(){
     } catch (ErrorException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
+    }
+}
+
+// Retrieve an array containing all site configuration parameters
+function fetchConfigParametersPlugins(){
+    try {
+        global $db_table_prefix;
+
+        $results = array();
+
+        $db = pdoConnect();
+
+        $query = "SELECT id, name, value
+        FROM ".$db_table_prefix."plugin_configuration";
+
+        $stmt = $db->prepare($query);
+
+        if (!$stmt->execute()){
+            // Error
+            return false;
+        }
+
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $name = $r['name'];
+            $value = $r['value'];
+            $results[$name] = $value;
+        }
+        $stmt = null;
+
+        return $results;
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+        addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+        return false;
     }
 }
 

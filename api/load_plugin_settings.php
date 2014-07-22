@@ -29,25 +29,23 @@ THE SOFTWARE.
 
 */
 
-// Request method: GET
+require_once("../models/config.php");
 
-include('../models/config.php');
+set_error_handler('logAllErrors');
 
 // User must be logged in
 if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access the account page.");
-  header("Location: ../login.php");
-  exit();
+    addAlert("danger", "You must be logged in to access this resource.");
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
 }
 
-$hooks = array(
-		  "#USERNAME#" => $loggedInUser->username,
-		  "#WEBSITENAME#" => $websiteName
-		  );
-
-// Special case for root account
-if ($loggedInUser->user_id == $master_account){
-	$hooks['#HEADERMESSAGE#'] = "<span class='navbar-center navbar-brand'>YOU ARE CURRENTLY LOGGED IN AS ROOT USER</span>";
+//Retrieve settings
+if (!($result = fetchConfigParametersPlugins())){
+    echo json_encode(array("errors" => 1, "successes" => 0));
+    exit();
 }
 
-echo fetchUserMenu($loggedInUser->user_id, $hooks)['value'];
+restore_error_handler();
+
+echo json_encode($result, JSON_FORCE_OBJECT);

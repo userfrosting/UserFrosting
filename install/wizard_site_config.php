@@ -1,9 +1,10 @@
 <?php
-require_once('config.php');
-require_once("../models/db-settings.php");
-require_once("../models/funcs.php");
+// This is the installer config file in the install directory.
+require_once("config.php");
 
 // Check system requirements
+// 1. Check PHP version
+
 // PHP_VERSION_ID is available as of PHP 5.2.7, if our version is lower than that, then emulate it
 if (!defined('PHP_VERSION_ID')) {
     $version = explode('.', PHP_VERSION);
@@ -18,7 +19,14 @@ if (PHP_VERSION_ID < 50307){
     addAlert("warning", "You currently have version " . PHP_VERSION . " of PHP installed.  We recommend version 5.5 or later.  UserFrosting can still be installed, but we highly recommend you upgrade soon.");    
 }
 
-// Try to connect to the database.  If failed, return to index.php
+// 2. Check that PDO is installed and enabled
+if (!class_exists('PDO')){
+    addAlert("danger", "I'm sorry, you must have PDO installed and enabled in order for UserFrosting to access the database.  If you don't know what PDO is, please see <a href='http://php.net/manual/en/book.pdo.php'>http://php.net/manual/en/book.pdo.php</a>.  You must also have MySQL version 4.1 or higher installed, since UserFrosting relies on native prepared statements.");
+    header("Location: ./");
+    exit();    
+}
+
+// 3. Try to connect to the database.  If failed, return to index.php
 try{
     $db = pdoConnect();
 } catch (PDOException $e) {

@@ -31,13 +31,6 @@ THE SOFTWARE.
 
 // This is the config file in the install directory.
 require_once("config.php");
-require_once("../models/db-settings.php");
-require_once("../models/db_functions.php");
-require_once("../models/funcs.php");
-require_once("../models/languages/en.php");
-require_once("../models/class.mail.php");
-require_once("../models/class.user.php");
-require_once("../models/secure_functions.php");
 
 if (!($root_account_config_token = fetchConfigParameter('root_account_config_token'))){
     addAlert("danger", lang("INSTALLER_INCOMPLETE"));

@@ -38,25 +38,32 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
+require_once("../models/db-settings.php");
 require_once("../models/class_validator.php");
+require_once("../models/password.php");
+require_once("../models/db_functions.php");
+require_once("../models/funcs.php");
+require_once("../models/languages/en.php");
+require_once("../models/class.mail.php");
+require_once("../models/class.user.php");
+require_once("../models/secure_functions.php");
 
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
 
-//Get url for install path
+// Construct default site path for inserting into the database
 $hostname = $_SERVER['HTTP_HOST'];
 $app_path = $_SERVER['PHP_SELF'];
 
-//Get the path to the app the main directory
-$exploded = explode('/', $app_path);
+// Get the parent directory of this (the install) directory
+$app_dir_raw = dirname(dirname($app_path));
 
-//check if its in the root directory or a sub directory
-if($exploded >=1){$ePath = $exploded['1'] .'/';}else{$ePath = NULL;}
+// Replace backslashes in local root (if we're in a windows environment)
+$app_dir = str_replace('\\', '/', $app_dir_raw);	
 
-//Holds the install path for inserting into the database
-$url = $hostname .'/'. $ePath;
+$url = $hostname . $app_dir . '/';
 
-// This is the user id of the master (root) account.
+// $master_account: this is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
 $master_account = 1;
 $db_table_prefix = 'uf_';
