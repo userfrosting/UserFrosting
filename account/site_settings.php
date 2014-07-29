@@ -279,39 +279,44 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
                   if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
                       jQuery.each(data, function(name, setting) {
-
+                          console.log(data);
                           function isNumber(n) {
                               return !isNaN(parseFloat(n)) && isFinite(n);
                           }
 
-                          if (isNumber(setting)) {
+                          if (setting['binary'] >= 1) {
                               // Assume this should be a bootstrap switch
 
-                              html += "<div class='form-group'><label for='"+name+"' class='col-sm-4 control-label'>"+name+"</label>" +
+                              html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
                               "<div class='col-sm-8'>";
-                                  var settingInt = parseInt(setting);
+                                  //var settingInt = parseInt(setting);
 
-                                  if(settingInt > 0 ){
-                                     html += "<input type='checkbox' id ='"+name+"' name='"+name+"' value='"+setting+"' checked />"
+                                  if(setting['value'] > 0 ){
+                                     html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' checked />"
                                   }else{
-                                     html += "<input type='checkbox' id ='"+name+"' name='"+name+"' value='"+setting+"' />"
+                                     html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' />"
                                   }
-                                  html += "<br><small>setting['description']</small>" +
+                                  html += "<br><small>" +setting['variable'] +"</small>" +
                               "</div>" +
                               "</div>";
-                              console.log("binary value " + name + " ~ " + setting);
+                              console.log("binary value " + setting['name'] + " ~ " + setting['value']);
                           }else{
                               // Assume this should be a text box
-                          html += "<div class='form-group'><label for='"+name+"' class='col-sm-4 control-label'>"+name+"</label>" +
+                          html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
                               "<div class='col-sm-8'>" +
-                                  "<input type='text' id='"+name+"' class='form-control' name='"+name+"' value='"+setting+"'/>" +
+                                  "<input type='text' id='"+setting['name']+"' class='form-control' name='"+setting['name']+"' value='"+setting['value']+"'/>" +
                                   "</div>" +
                               "</div>";
-                              console.log("non binary value " + name + " ~ " + setting);
+                              console.log("non binary value " + setting['name'] + " ~ " + setting['value']);
                           }
                       })
                   }
-                  html += "</form>" +
+                  html += "<div class='form-group'>" +
+                  "<div class='col-sm-offset-4 col-sm-8'>" +
+                  "<button type='submit' class='btn btn-success submit' value='Update'>Update</button>" +
+                  "</div>" +
+                  "</div>" +
+                  "</form>" +
                   "</div>" +
                   "</div>";
 

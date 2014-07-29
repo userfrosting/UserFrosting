@@ -42,8 +42,8 @@ if (!isUserLoggedIn()){
 
 //Retrieve settings
 if (!($result = fetchConfigParametersPlugins())){
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
+    //echo json_encode(array("errors" => 1, "successes" => 0));
+    //exit();
 }
 
 restore_error_handler();
