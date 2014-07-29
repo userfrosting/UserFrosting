@@ -201,7 +201,6 @@ INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
 (4, 'activation', ".$selected_activation."),
 (5, 'resend_activation_threshold', '0'),
 (6, 'language', 'models/languages/en.php'),
-(7, 'template', 'models/site-templates/default.css'),
 (8, 'can_register', ".$selected_register."),
 (9, 'new_user_title', '".$user_title."'),
 (10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "'),

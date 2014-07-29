@@ -41,15 +41,6 @@ function getLanguageFiles()
 	return $languages;
 }
 
-//Retrieve a list of all .css files in models/site-templates 
-function getTemplateFiles()
-{
-	$directory = "../models/site-templates/";
-	$languages = glob($directory . "*.css");
-	//print each file name
-	return $languages;
-}
-
 //Retrieve a list of all .php files in a given directory
 function getPageFiles($directory)
 {
