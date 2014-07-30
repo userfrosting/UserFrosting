@@ -138,19 +138,13 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
             <div class="form-group">
                 <label for="inputTimeoutToken" class="col-sm-4 control-label">Password Reset Token Timeout value (in hours Max: 27 Hours)</label>
                 <div class="col-sm-8">
-                    <input type='text' id="inputTimeoutToken" class="form-control" name='password_token_timeout'/>
+                    <input type='text' id="inputTimeoutToken" class="form-control" name='token_timeout'/>
                 </div>
             </div>
 			<div class="form-group">
 			  <label for="selectLanguage" class="col-sm-4 control-label">Site Language</label>
 			  <div class="col-sm-8">
 				<select id="selectLanguage" name='language'></select>
-			  </div>
-			</div>
-			<div class="form-group">
-			  <label for="selectTemplate" class="col-sm-4 control-label">Site Template</label>
-			  <div class="col-sm-8">
-				<select id="selectTemplate" name='template'></select>
 			  </div>
 			</div>
 			<div class="form-group">
@@ -195,9 +189,8 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 				can_register: 					form.find('input[name="can_register"]:checked').val(),
                 email_login: 					form.find('input[name="email_login"]:checked').val(),
 				activation: 					form.find('input[name="activation"]:checked').val(),
-                token_timeout:                  form.find('input[name="password_token_timeout"]').val(),
+                token_timeout:                  form.find('input[name="token_timeout"]').val(),
 				language:						form.find('select[name="language"] option:selected').val(),
-				template:						form.find('select[name="template"] option:selected').val(),
 				ajaxMode:						"true"
 			  }		  
 			}).done(function(result) {
@@ -244,7 +237,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 			  } else {
 				$('#regbox input[name="activation"]').bootstrapSwitch('setState', false);
 			  }
-                $('#regbox input[name="password_token_timeout"]').val(data['token_timeout']/60/60);
+                $('#regbox input[name="token_timeout"]').val(data['token_timeout']/60/60);
 			  // Load the language and template options
 			  var language_options = data['language_options'];
 			  if (Object.keys(language_options).length > 0) { // Don't bother unless there are some options found
@@ -256,17 +249,6 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 				  }
 				});
 			  }
-			  var template_options = data['template_options'];
-			  if (Object.keys(template_options).length > 0) { // Don't bother unless there are some options found
-				jQuery.each(template_options, function(idx, record) {
-				  if (record == data['template']) {
-					$('<option></option>').val(record).html(record).prop('selected', true).appendTo('#regbox select[name="template"]');
-				  } else {
-					$('<option></option>').val(record).html(record).prop('selected', false).appendTo('#regbox select[name="template"]');
-				  }
-				});
-			  }			  
-			  
 			}
 		  });
           /*

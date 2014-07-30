@@ -1717,11 +1717,7 @@ function updateConfig($settings) {
             $stmt->execute($sqlVars);
         }
         
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            return false;
-        } 
+        return true;
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");

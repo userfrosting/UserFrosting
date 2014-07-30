@@ -2,3 +2,5 @@
 *.komodoproject
 
 models/db-settings.php
+
+models/.DS_Store
