@@ -1656,8 +1656,7 @@ function fetchConfigParametersPlugins(){
 
         $db = pdoConnect();
 
-        $query = "SELECT id, name, value
-        FROM ".$db_table_prefix."plugin_configuration";
+        $query = "SELECT id, name, value, `binary`, `variable` FROM ".$db_table_prefix."plugin_configuration";
 
         $stmt = $db->prepare($query);
 
@@ -1667,11 +1666,22 @@ function fetchConfigParametersPlugins(){
         }
 
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $id = $r['id'];
+            $results[$id] = $r;
+        }
+
+        /*while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            //$id = $r['id'];
             $name = $r['name'];
             $value = $r['value'];
+            //$binary = $r['binary'];
+            //$variable = $r['variable'];
+
             $results[$name] = $value;
-        }
+        }*/
         $stmt = null;
+
+        ChromePhp::log($results);
 
         return $results;
 
@@ -1707,11 +1717,7 @@ function updateConfig($settings) {
             $stmt->execute($sqlVars);
         }
         
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            return false;
-        } 
+        return true;
         
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");

@@ -63,9 +63,4 @@ $app_dir = str_replace('\\', '/', $app_dir_raw);
 
 $url = $hostname . $app_dir . '/';
 
-// $master_account: this is the user id of the master (root) account.
-// The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
-$master_account = 1;
-$db_table_prefix = 'uf_';
-
 session_start();

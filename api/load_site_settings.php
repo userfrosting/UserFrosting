@@ -41,7 +41,6 @@ if (!isUserLoggedIn()){
 }
 
 $languages = getLanguageFiles(); //Retrieve list of language files
-$templates = getTemplateFiles(); //Retrieve list of template files
 
 //Retrieve settings
 if (!($result = loadSiteSettings())){
@@ -50,8 +49,6 @@ if (!($result = loadSiteSettings())){
 }
 
 $result['language_options'] = $languages;
-$result['template_options'] = $templates;
-
 
 if (!file_exists($language)) {
 	$language = "models/languages/en.php";
