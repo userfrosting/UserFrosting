@@ -107,7 +107,7 @@ if ($display_name && $userdetails['display_name'] != $display_name){
 
 //Update email if specified and different from current value
 if ($email && $userdetails['email'] != $email){
-	if (!updateUserEmail($user_id, $display_name)){
+	if (!updateUserEmail($user_id, $email)){
 		$error_count++;
 	} else {
 		$success_count++;

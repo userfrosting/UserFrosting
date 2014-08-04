@@ -408,7 +408,7 @@ function updateUserEnabled($user_id, $enabled){
     }
     global $master_account;
     // Cannot disable master account
-    if ($user_id == $master_account && $enabled == '0'){
+    if ($user_id == $master_account && $enabled == 'false'){
         addAlert("danger", lang("ACCOUNT_DISABLE_MASTER"));
         return false;
     }
