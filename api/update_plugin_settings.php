@@ -17,9 +17,12 @@ if (isset($_POST)){
     $posted = $_POST;
 }
 
+ChromePhp::log($validator->requiredPostVar('formdata'));
+
+
 if(!empty($posted))
 {
-	$newSettings = $posted;
+	/*$newSettings = $posted;
 	$newWebsiteName = $validator->requiredPostVar('website_name');
 	$newWebsiteUrl = $validator->requiredPostVar('website_url');
 	// Append a slash to the end, if not present
@@ -198,6 +201,7 @@ if(!empty($posted))
 		$successes[] = lang("CONFIG_UPDATE_SUCCESSFUL");
 	  }
 	}
+*/
 } else {
 	$errors[] = lang("NO_DATA");
 }

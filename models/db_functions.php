@@ -1686,7 +1686,7 @@ function fetchConfigParametersPlugins(){
         }*/
         $stmt = null;
 
-        ChromePhp::log($results);
+        //ChromePhp::log($results);
 
         return $results;
 

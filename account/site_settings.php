@@ -267,22 +267,24 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
           })
           .done(function( data ) {
               if (Object.keys(data).length > 0) {
-                  console.log(data);
+                  //console.log(data);
 
                   var html = "<div class='panel panel-primary'>" +
                   "<div class='panel-heading'>" +
                       "<h3 class='panel-title'>Plugin Configurations</h3>" +
                   "</div>" +
                   "<div class='panel-body'>" +
-                      "<form class='form-horizontal' role='form' name='adminConfiguration' action='../api/update_plugin_settings.php' method='post'>";
+                      "<form class='form-horizontal' role='form' name='pluginConfiguration' id='pluginConfiguration' action='../api/update_plugin_settings.php' method='post'>";
 
 
                   if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
                       jQuery.each(data, function(name, setting) {
-                          console.log(data);
-                          function isNumber(n) {
-                              return !isNaN(parseFloat(n)) && isFinite(n);
-                          }
+                          //console.log(data);
+
+                          //function to see if its a number or not, unused now
+                          //function isNumber(n) {
+                          //    return !isNaN(parseFloat(n)) && isFinite(n);
+                          //}
 
                           if (setting['binary'] >= 1) {
                               // Assume this should be a bootstrap switch
@@ -299,7 +301,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
                                   html += "<br><small>" +setting['variable'] +"</small>" +
                               "</div>" +
                               "</div>";
-                              console.log("binary value " + setting['name'] + " ~ " + setting['value']);
+                              //console.log("binary value " + setting['name'] + " ~ " + setting['value']);
                           }else{
                               // Assume this should be a text box
                           html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
@@ -307,7 +309,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
                                   "<input type='text' id='"+setting['name']+"' class='form-control' name='"+setting['name']+"' value='"+setting['value']+"'/>" +
                                   "</div>" +
                               "</div>";
-                              console.log("non binary value " + setting['name'] + " ~ " + setting['value']);
+                              //console.log("non binary value " + setting['name'] + " ~ " + setting['value']);
                           }
                       })
                   }
@@ -331,6 +333,31 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
               }
           });
 
+          /*
+           * start plugin settings form submit
+           */
+
+            $("form[name='pluginConfiguration']").submit(function(e){
+                var form = $(this);
+                var url = '../api/update_plugin_settings.php';
+                var serdata = $("form[name='pluginConfiguration']").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        formdata: serdata,
+                        ajaxMode: "true"
+                    }
+                }).done(function(result) {
+                    var resultJSON = processJSONResult(result);
+                    alertWidget('display-alerts');
+                });
+                return false;
+          });
+
+          /*
+           * end plugin settings form submit
+           */
 
 		  alertWidget('display-alerts');
 		  
