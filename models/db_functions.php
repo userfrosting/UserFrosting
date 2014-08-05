@@ -1184,6 +1184,12 @@ function dbCreateGroup($name, $is_default, $can_delete, $home_page_id){
 function dbUpdateGroup($group_id, $name, $is_default, $home_page_id){
     try {
 
+		// Make sure group exists
+		if (!groupIdExists($group_id)){
+			addAlert("danger", lang("GROUP_INVALID_ID"));
+			return false;
+		}
+
         $db = pdoConnect();
         
         global $db_table_prefix;
@@ -1205,14 +1211,11 @@ function dbUpdateGroup($group_id, $name, $is_default, $home_page_id){
         
         $sqlVars = array(":group_id" => $group_id, ":name" => $name, ":is_default" => $is_default, ":home_page_id" => $home_page_id);
         
-        $stmt->execute($sqlVars);
-        		
-        if ($stmt->rowCount() > 0)
-          return true;
-        else {
-          addAlert("danger", "Invalid group id specified.");
-          return false;
-        }
+        if ($stmt->execute($sqlVars)){
+			return true;
+		} else {
+			return false;
+		}
     
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
@@ -1943,7 +1946,13 @@ function createPages($pages) {
 //Toggle private/public setting of a page.  1=private, 0=public
 function updatePrivate($page_id, $private) {
     try {
-        global $db_table_prefix;
+        // Make sure the specified page exists
+		if (!pageIdExists($page_id)){
+			addAlert("danger", lang("PAGE_INVALID_ID"));
+			return false;
+		}
+		
+		global $db_table_prefix;
         
         $db = pdoConnect();
         
@@ -1959,14 +1968,13 @@ function updatePrivate($page_id, $private) {
         
         $sqlVars[':private'] = $private;
         $sqlVars[':page_id'] = $page_id;
-    
-        $stmt->execute($sqlVars);
             
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            return false;
-        } 
+        if ($stmt->execute($sqlVars)){
+			return true;
+		} else {
+			return false;
+		}
+		
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());

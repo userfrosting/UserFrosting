@@ -150,7 +150,8 @@ $lang = array_merge($lang,array(
 	"NOTHING_TO_UPDATE"			=> "Nothing to update",
 	"SQL_ERROR"				=> "Fatal SQL error",
 	"FEATURE_DISABLED"			=> "This feature is currently disabled",
-	"PAGE_PRIVATE_TOGGLED"			=> "This page is now %m1%",
+	"PAGE_INVALID_ID"              => "The requested page id does not exist",
+    "PAGE_PRIVATE_TOGGLED"			=> "This page is now %m1%",
 	"PAGE_ACCESS_REMOVED"			=> "Page access removed for %m1% permission level(s)",
 	"PAGE_ACCESS_ADDED"			=> "Page access added for %m1% permission level(s)",
     "ACCESS_DENIED" => "Hmm, looks like you don't have permission to do that.",
@@ -158,6 +159,7 @@ $lang = array_merge($lang,array(
 
 //Permissions
 $lang = array_merge($lang,array(
+    "GROUP_INVALID_ID"              => "The requested group id does not exist",
 	"PERMISSION_CHAR_LIMIT"			=> "Permission names must be between %m1% and %m2% characters in length",
 	"PERMISSION_NAME_IN_USE"		=> "Permission name %m1% is already in use",
 	"PERMISSION_DELETION_SUCCESSFUL_NAME"		=> "Successfully deleted permission '%m1%'",
