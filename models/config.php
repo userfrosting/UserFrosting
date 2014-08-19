@@ -48,15 +48,14 @@ require_once("db_functions.php");
 $settings = fetchConfigParameters();
 
 //Set Settings
+$emailDate = date('dmy');
 $emailActivation = $settings['activation'];
 $can_register = $settings['can_register'];
 $websiteName = $settings['website_name'];
 $websiteUrl = $settings['website_url'];
 $emailAddress = $settings['email'];
 $resend_activation_threshold = $settings['resend_activation_threshold'];
-$emailDate = date('dmy');
 $language = $settings['language'];
-$template = $settings['template'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
@@ -149,7 +148,7 @@ require_once("class.user.php");
 require_once("chrome.php");
 
 // Temp value for pm system while in dev
-$pmsystem_enabled = 1;
+$pmsystem_enabled = 1;//$settings['plugin_pmsystem'];;
 
 session_start();
 
