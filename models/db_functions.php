@@ -1732,6 +1732,75 @@ function updateConfig($settings) {
     }         
 }
 
+//Check data type of config value
+function checkBinaryConfig($name){
+    try{
+        global $db_table_prefix;
+
+        $results = array();
+
+        $db = pdoConnect();
+
+        $query = "SELECT `binary` FROM ".$db_table_prefix."plugin_configuration WHERE name = :name AND `binary` = 1";
+
+        $stmt = $db->prepare($query);
+
+        $sqlVars = array(':name' => $name);
+        //$stmt->execute($sqlVars);
+
+        if (!$stmt->execute($sqlVars)){
+            // Error
+            return false;
+        }
+
+        if ($stmt->rowCount() > 0)
+            return true;
+        else {
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+        addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+        return false;
+    }
+}
+
+//Update plugin config table with new values
+function updatePluginConfig($name, $value) {
+    try {
+        global $db_table_prefix;
+
+        $results = array();
+
+        $db = pdoConnect();
+
+        $query = "UPDATE ".$db_table_prefix."plugin_configuration
+            SET
+            value = :value
+            WHERE
+            name = :name";
+
+        $stmt = $db->prepare($query);
+
+        $sqlVars = array(':name' => $name, ':value' => $value);
+        $stmt->execute($sqlVars);
+
+        return true;
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+        addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+        return false;
+    }
+}
+
 // Delete a specified configuration parameter (by name)
 function deleteConfigParameter($name){
     try {

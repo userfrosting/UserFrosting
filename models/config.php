@@ -148,7 +148,7 @@ require_once("class.user.php");
 require_once("chrome.php");
 
 // Temp value for pm system while in dev
-$pmsystem_enabled = 1;//$settings['plugin_pmsystem'];;
+$pmsystem_enabled = 0;//$settings['plugin_pmsystem'];;
 
 session_start();
 
