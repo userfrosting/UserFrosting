@@ -156,10 +156,52 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		  </div>
 		</div>
 		</div>
-		
-		<div id='plugins' class='col-lg-6'>
+
+		<div id='plugins' name='plugins' class='col-lg-6'>
 
 	    </div>
+        <script>
+            function updateCheckbox(cb){
+                var name = cb.name;
+                var value = cb.value;
+                var url = '../api/update_plugin_settings.php';
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        name: name,
+                        value: value,
+                        ajaxMode: "true"
+                    }
+
+                }).done(function(result) {
+                    var resultJSON = processJSONResult(result);
+                    alertWidget('display-alerts');
+                });
+                //console.log(cb);
+            }
+            function updateTextbox(tb){
+                var name = tb.name;
+                var value = tb.value;
+                var url = '../api/update_plugin_settings.php';
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        name: name,
+                        value: value,
+                        ajaxMode: "true"
+                    }
+
+                }).done(function(result) {
+                    var resultJSON = processJSONResult(result);
+                    alertWidget('display-alerts');
+                });
+                //console.log(value);
+            }
+        </script>
 	<script>
         $(document).ready(function() {
           // Get id of the logged in user to determine how to render this page.
@@ -215,6 +257,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		  })
 		  .done(function( result ) {
 			var data = processJSONResult(result);
+
 			alertWidget('display-alerts');
 			if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
 			  $('#regbox input[name="website_name"]').val(data['website_name']);
@@ -258,7 +301,80 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
           /*
            * Load plugin config settings
            */
+            var url = "../api/load_plugin_settings.php";
+            $.getJSON( url, {})
+                .fail(function(data) {
+                    addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+                    alertWidget('display-alerts');
+                })
+                .done(function( data ) {
+                    if (Object.keys(data).length > 0) {
+                        //console.log(data);
 
+                        var html = "<div class='panel panel-primary'>" +
+                            "<div class='panel-heading'>" +
+                            "<h3 class='panel-title'>Plugin Configurations</h3>" +
+                            "</div>" +
+                            "<div class='panel-body'>" +
+                            "<form class='form-horizontal' role='form' name='pluginConfiguration' id='pluginConfiguration' action='../api/update_plugin_settings.php' method='post'>";
+
+
+                        if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
+                            jQuery.each(data, function(name, setting) {
+                                //console.log(data);
+
+                                //function to see if its a number or not, unused now
+                                //function isNumber(n) {
+                                //    return !isNaN(parseFloat(n)) && isFinite(n);
+                                //}
+
+                                if (setting['binary'] >= 1) {
+                                    // Assume this should be a bootstrap switch
+
+                                    html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
+                                        "<div class='col-sm-8'>";
+                                    //var settingInt = parseInt(setting);
+
+                                    if(setting['value'] > 0 ){
+                                        html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateCheckbox(this)' checked />"
+                                    }else{
+                                        html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateCheckbox(this)' />"
+                                    }
+                                    html += "<br><small>" +setting['variable'] +"</small>" +
+                                        "</div>" +
+                                        "</div>";
+                                    //console.log("binary value " + setting['name'] + " ~ " + setting['value']);
+                                }else{
+                                    // Assume this should be a text box
+                                    html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
+                                        "<div class='col-sm-8'>" +
+                                        "<input type='text' id='"+setting['name']+"' class='form-control' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateTextbox(this)'/>" +
+                                        "</div>" +
+                                        "</div>";
+                                    //console.log("non binary value " + setting['name'] + " ~ " + setting['value']);
+                                }
+                            })
+                        }
+                        html += "<div class='form-group'>" +
+                            "<div class='col-sm-offset-4 col-sm-8'>" +
+                            "<button type='submit' class='btn btn-success submit' value='Update'>Update</button>" +
+                            "</div>" +
+                            "</div>" +
+                            "</form>" +
+                            "</div>" +
+                            "</div>";
+
+                        $('#plugins').html(html);
+                        $('#plugins input[type="checkbox"]').bootstrapSwitch();
+                    } else {
+
+                        console.log("No settings found.");
+
+                        html += "<div class='alert alert-info'>No plugins found.</div>";
+
+                    }
+                });
+          /*
           var url = "../api/load_plugin_settings.php";
           $.getJSON( url, {})
           .fail(function(data) {
@@ -266,71 +382,42 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
               alertWidget('display-alerts');
           })
           .done(function( data ) {
-              if (Object.keys(data).length > 0) {
-                  console.log(data);
-
-                  var html = "<div class='panel panel-primary'>" +
-                  "<div class='panel-heading'>" +
-                      "<h3 class='panel-title'>Plugin Configurations</h3>" +
-                  "</div>" +
-                  "<div class='panel-body'>" +
-                      "<form class='form-horizontal' role='form' name='adminConfiguration' action='../api/update_plugin_settings.php' method='post'>";
-
-
-                  if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
-                      jQuery.each(data, function(name, setting) {
-                          console.log(data);
-                          function isNumber(n) {
-                              return !isNaN(parseFloat(n)) && isFinite(n);
-                          }
-
-                          if (setting['binary'] >= 1) {
-                              // Assume this should be a bootstrap switch
-
-                              html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
-                              "<div class='col-sm-8'>";
-                                  //var settingInt = parseInt(setting);
-
-                                  if(setting['value'] > 0 ){
-                                     html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' checked />"
-                                  }else{
-                                     html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' />"
-                                  }
-                                  html += "<br><small>" +setting['variable'] +"</small>" +
-                              "</div>" +
-                              "</div>";
-                              console.log("binary value " + setting['name'] + " ~ " + setting['value']);
-                          }else{
-                              // Assume this should be a text box
-                          html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
-                              "<div class='col-sm-8'>" +
-                                  "<input type='text' id='"+setting['name']+"' class='form-control' name='"+setting['name']+"' value='"+setting['value']+"'/>" +
-                                  "</div>" +
-                              "</div>";
-                              console.log("non binary value " + setting['name'] + " ~ " + setting['value']);
-                          }
-                      })
-                  }
-                  html += "<div class='form-group'>" +
-                  "<div class='col-sm-offset-4 col-sm-8'>" +
-                  "<button type='submit' class='btn btn-success submit' value='Update'>Update</button>" +
-                  "</div>" +
-                  "</div>" +
-                  "</form>" +
-                  "</div>" +
-                  "</div>";
-
-                  $('#plugins').html(html);
-                  $('#plugins input[type="checkbox"]').bootstrapSwitch();
-              } else {
-
-                 console.log("No settings found.");
-
-                  html += "<div class='alert alert-info'>No plugins found.</div>";
-
-              }
+              $('#plugins').html(data);
+              $('#plugins input[type="checkbox"]').bootstrapSwitch().val();
           });
+          */
 
+          /*
+           * start plugin settings form submit
+           */
+
+            /*$("form[name='pluginConfiguration']").submit(function(e){
+                var form = $(this);
+                var url = 'api/update_plugin_settings.php';
+                var serdata = $('#plugin').serialize();
+                console.log(serdata);
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {
+                        formdata: serdata,
+                        ajaxMode: "true"
+                    }
+
+                }).done(function(result) {
+                    var resultJSON = processJSONResult(result);
+                    alertWidget('display-alerts');
+                });
+                return false;
+            });*/
+
+            $("form").change(function() {
+                console.log('something changed')
+            });
+
+          /*
+           * end plugin settings form submit
+           */
 
 		  alertWidget('display-alerts');
 		  
