@@ -47,6 +47,19 @@ require_once("db_functions.php");
 
 $settings = fetchConfigParameters();
 
+//Grab plugin settings, used in plugin like so:
+//$pvalue = $plugin_settings['variable_name']['config_value'];
+/*
+ $pvalue = $plugin_settings['$pmsystem']['value'];
+ if ($pvalue != 1){
+    // Forward to index page
+    addAlert("danger", "Whoops, looks like the private message system is not enabled");
+    header("Location: ".SITE_ROOT."account/index.php");
+    exit();
+ }
+ */
+$plugin_settings = fetchConfigParametersPlugins();
+
 //Set Settings
 $emailDate = date('dmy');
 $emailActivation = $settings['activation'];
@@ -59,6 +72,7 @@ $language = $settings['language'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
+
 
 // Determine if this is SSL or unsecured connection
 $url_prefix = "http://";
@@ -146,9 +160,6 @@ require_once("class.user.php");
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
 require_once("chrome.php");
-
-// Temp value for pm system while in dev
-$pmsystem_enabled = 0;//$settings['plugin_pmsystem'];;
 
 session_start();
 
