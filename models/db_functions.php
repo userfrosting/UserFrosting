@@ -1650,7 +1650,7 @@ function fetchConfigParameters(){
     }
 }
 
-// Retrieve an array containing all site configuration parameters
+// Retrieve an array containing all site configuration parameters for plugins
 function fetchConfigParametersPlugins(){
     try {
         global $db_table_prefix;
