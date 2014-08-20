@@ -32,397 +32,342 @@ THE SOFTWARE.
 require_once("../models/config.php");
 
 if (!securePage(__FILE__)){
-  // Forward to index page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  header("Location: index.php");
-  exit();
+    // Forward to index page
+    addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
+    header("Location: index.php");
+    exit();
 }
 
 setReferralPage(getAbsoluteDocumentPath(__FILE__));
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
     <title>UserFrosting Admin - Settings</title>
-		
-	<?php require_once("includes.php");  ?>
-	
-	<!-- Page Specific Plugins -->
-	<link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
 
-	<script src="../js/bootstrap-switch.min.js"></script>
-	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/tables.js"></script>
+    <?php require_once("includes.php");  ?>
 
-  </head>
+    <!-- Page Specific Plugins -->
+    <link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
 
-  <body>
+    <script src="../js/bootstrap-switch.min.js"></script>
+    <script src="../js/jquery.tablesorter.js"></script>
+    <script src="../js/tables.js"></script>
 
-    <div id="wrapper">
+</head>
 
-      <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      </nav>
+<body>
 
-      <div id="page-wrapper">
-	  	<div class="row">
-          <div id='display-alerts' class="col-lg-12">
+<div id="wrapper">
 
-          </div>
+<!-- Sidebar -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+</nav>
+
+<div id="page-wrapper">
+<div class="row">
+    <div id='display-alerts' class="col-lg-12">
+
+    </div>
+</div>
+<h1>Site Settings</h1>
+<div class='row'>
+<div id='regbox' class='col-lg-6'>
+    <div class='panel panel-primary'>
+        <div class='panel-heading'>
+            <h3 class='panel-title'>Configuration</h3>
         </div>
-		<h1>Site Settings</h1>
-		<div class='row'>
-		<div id='regbox' class='col-lg-6'>
-		<div class='panel panel-primary'>
-		  <div class='panel-heading'>
-			<h3 class='panel-title'>Configuration</h3>
-		  </div>
-		  <div class='panel-body'>
-			<form class='form-horizontal' role='form' name='adminConfiguration' action='../api/update_site_settings.php' method='post'>
-			<div class="form-group">
-			  <label for="inputWebsiteName" class="col-sm-4 control-label">Site Name</label>
-			  <div class="col-sm-8">
-				<input type='text' id="inputWebsiteName" class="form-control" name='website_name'/>
-			  </div>
-			</div>
-			<div class="form-group">
-			  <label for="inputWebsiteURL" class="col-sm-4 control-label">Admin Root URL</label>
-			  <div class="col-sm-8">
-				<input type='text' id="inputWebsiteURL" class="form-control" name='website_url'/>
-			  </div>
-			</div>
-			<div class="form-group">
-			  <label for="inputEmail" class="col-sm-4 control-label">Account Management Email</label>
-			  <div class="col-sm-8">
-				<input type='text' id="inputEmail" class="form-control" name='email'/>
-			  </div>
-			</div>
-			<div class="form-group">
-			  <label for="userRegistration" class="col-sm-4 control-label">User Registration</label>
-			  <div class="col-sm-8">
-				<input type="checkbox" id ="userRegistration" name='can_register' value='1'/>
-				<br><small>Specify whether users can create new accounts by themselves.</small>
-			  </div>
-			</div>
-            <div class="form-group">
-              <label for="emailLogin" class="col-sm-4 control-label">Email Login</label>
-                <div class="col-sm-8">
-                  <input type="checkbox" id ="checkEmailLogin" name='email_login' value='1'/>
-                    <br><small>Specify whether users can login via email address or username instead of just username.</small>
+        <div class='panel-body'>
+            <form class='form-horizontal' role='form' name='adminConfiguration' action='../api/update_site_settings.php' method='post'>
+                <div class="form-group">
+                    <label for="inputWebsiteName" class="col-sm-4 control-label">Site Name</label>
+                    <div class="col-sm-8">
+                        <input type='text' id="inputWebsiteName" class="form-control" name='website_name'/>
+                    </div>
                 </div>
-            </div>
-			<div class="form-group">
-			  <label for="newUserTitle" class="col-sm-4 control-label">Default New User Title</label>
-			  <div class="col-sm-8">
-				<input type='text' id="newUserTitle" class="form-control" name='new_user_title'/>
-			  </div>
-			</div>
-			<div class="form-group">
-			  <label for="checkEmailActivation" class="col-sm-4 control-label">Email Activation</label>
-			  <div class="col-sm-8">
-				<input type="checkbox" id ="checkEmailActivation" name='activation' value='1'/>
-				<br><small>Specify whether email activation is required for newly registered accounts.</small>
-			  </div>
-			</div>
-			<div class="form-group">
-			  <label for="inputThreshold" class="col-sm-4 control-label">Account Activation Threshold</label>
-			  <div class="col-sm-8">
-				<input type='text' id="inputThreshold" class="form-control" name='resend_activation_threshold'/>
-			  </div>
-			</div>
-            <div class="form-group">
-                <label for="inputTimeoutToken" class="col-sm-4 control-label">Password Reset Token Timeout value (in hours Max: 27 Hours)</label>
-                <div class="col-sm-8">
-                    <input type='text' id="inputTimeoutToken" class="form-control" name='token_timeout'/>
+                <div class="form-group">
+                    <label for="inputWebsiteURL" class="col-sm-4 control-label">Admin Root URL</label>
+                    <div class="col-sm-8">
+                        <input type='text' id="inputWebsiteURL" class="form-control" name='website_url'/>
+                    </div>
                 </div>
-            </div>
-			<div class="form-group">
-			  <label for="selectLanguage" class="col-sm-4 control-label">Site Language</label>
-			  <div class="col-sm-8">
-				<select id="selectLanguage" name='language'></select>
-			  </div>
-			</div>
-			<div class="form-group">
-			  <div class="col-sm-offset-4 col-sm-8">
-				<button type="submit" class="btn btn-success submit" value='Update'>Update</button>
-			  </div>
-			</div>
-			</form>
-		  </div>
-		</div>
-		</div>
+                <div class="form-group">
+                    <label for="inputEmail" class="col-sm-4 control-label">Account Management Email</label>
+                    <div class="col-sm-8">
+                        <input type='text' id="inputEmail" class="form-control" name='email'/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="userRegistration" class="col-sm-4 control-label">User Registration</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id ="userRegistration" name='can_register' value='1'/>
+                        <br><small>Specify whether users can create new accounts by themselves.</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="emailLogin" class="col-sm-4 control-label">Email Login</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id ="checkEmailLogin" name='email_login' value='1'/>
+                        <br><small>Specify whether users can login via email address or username instead of just username.</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newUserTitle" class="col-sm-4 control-label">Default New User Title</label>
+                    <div class="col-sm-8">
+                        <input type='text' id="newUserTitle" class="form-control" name='new_user_title'/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="checkEmailActivation" class="col-sm-4 control-label">Email Activation</label>
+                    <div class="col-sm-8">
+                        <input type="checkbox" id ="checkEmailActivation" name='activation' value='1'/>
+                        <br><small>Specify whether email activation is required for newly registered accounts.</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputThreshold" class="col-sm-4 control-label">Account Activation Threshold</label>
+                    <div class="col-sm-8">
+                        <input type='text' id="inputThreshold" class="form-control" name='resend_activation_threshold'/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputTimeoutToken" class="col-sm-4 control-label">Password Reset Token Timeout value (in hours Max: 27 Hours)</label>
+                    <div class="col-sm-8">
+                        <input type='text' id="inputTimeoutToken" class="form-control" name='token_timeout'/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="selectLanguage" class="col-sm-4 control-label">Site Language</label>
+                    <div class="col-sm-8">
+                        <select id="selectLanguage" name='language'></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <button type="submit" class="btn btn-success submit" value='Update'>Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-		<div id='plugins' name='plugins' class='col-lg-6'>
+<div id='plugins' name='plugins' class='col-lg-6'>
 
-	    </div>
-        <script>
-            function updateCheckbox(cb){
-                var name = cb.name;
-                var value = cb.value;
-                var url = '../api/update_plugin_settings.php';
+</div>
+<script>
+    function updateCheckbox(cb){
+        var name = cb.name;
+        var value = cb.value;
+        var url = '../api/update_plugin_settings.php';
 
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {
-                        name: name,
-                        value: value,
-                        ajaxMode: "true"
-                    }
-
-                }).done(function(result) {
-                    var resultJSON = processJSONResult(result);
-                    alertWidget('display-alerts');
-                });
-                //console.log(cb);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                name: name,
+                value: value,
+                ajaxMode: "true"
             }
-            function updateTextbox(tb){
-                var name = tb.name;
-                var value = tb.value;
-                var url = '../api/update_plugin_settings.php';
+        }).done(function(result) {
+            var resultJSON = processJSONResult(result);
+            alertWidget('display-alerts');
+        });
+    }
+    function updateTextbox(tb){
+        var name = tb.name;
+        var value = tb.value;
+        var url = '../api/update_plugin_settings.php';
 
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {
-                        name: name,
-                        value: value,
-                        ajaxMode: "true"
-                    }
-
-                }).done(function(result) {
-                    var resultJSON = processJSONResult(result);
-                    alertWidget('display-alerts');
-                });
-                //console.log(value);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {
+                name: name,
+                value: value,
+                ajaxMode: "true"
             }
-        </script>
-	<script>
-        $(document).ready(function() {
-          // Get id of the logged in user to determine how to render this page.
-          var user = loadCurrentUser();
-          var user_id = user['user_id'];
+        }).done(function(result) {
+            var resultJSON = processJSONResult(result);
+            alertWidget('display-alerts');
+        });
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        // Get id of the logged in user to determine how to render this page.
+        var user = loadCurrentUser();
+        var user_id = user['user_id'];
 
-          // Load the header
-          $('.navbar').load('header.php', function() {
-			$('.navitem-site-settings').addClass('active');
-          });
+        // Load the header
+        $('.navbar').load('header.php', function() {
+            $('.navitem-site-settings').addClass('active');
+        });
 
-          /*
-           * start site settings form submit
-           */
-		  $("form[name='adminConfiguration']").submit(function(e){
-			var form = $(this);
-			var url = '../api/update_site_settings.php';
-			$.ajax({  
-			  type: "POST",  
-			  url: url,  
-			  data: {
-				website_name:					form.find('input[name="website_name"]').val(),
-				website_url:					form.find('input[name="website_url"]').val(),
-				email:							form.find('input[name="email"]').val(),
-				resend_activation_threshold:	form.find('input[name="resend_activation_threshold"]').val(),
-				new_user_title:					form.find('input[name="new_user_title"]').val(),
-				can_register: 					form.find('input[name="can_register"]:checked').val(),
-                email_login: 					form.find('input[name="email_login"]:checked').val(),
-				activation: 					form.find('input[name="activation"]:checked').val(),
-                token_timeout:                  form.find('input[name="token_timeout"]').val(),
-				language:						form.find('select[name="language"] option:selected').val(),
-				ajaxMode:						"true"
-			  }		  
-			}).done(function(result) {
-			  var resultJSON = processJSONResult(result);
-			  alertWidget('display-alerts');
-			});
-			return false;
-		  });
-          /*
-           * end site settings form submit
-           */
+        /*
+         * start site settings form submit
+         */
+        $("form[name='adminConfiguration']").submit(function(e){
+            var form = $(this);
+            var url = '../api/update_site_settings.php';
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    website_name:					form.find('input[name="website_name"]').val(),
+                    website_url:					form.find('input[name="website_url"]').val(),
+                    email:							form.find('input[name="email"]').val(),
+                    resend_activation_threshold:	form.find('input[name="resend_activation_threshold"]').val(),
+                    new_user_title:					form.find('input[name="new_user_title"]').val(),
+                    can_register: 					form.find('input[name="can_register"]:checked').val(),
+                    email_login: 					form.find('input[name="email_login"]:checked').val(),
+                    activation: 					form.find('input[name="activation"]:checked').val(),
+                    token_timeout:                  form.find('input[name="token_timeout"]').val(),
+                    language:						form.find('select[name="language"] option:selected').val(),
+                    ajaxMode:						"true"
+                }
+            }).done(function(result) {
+                var resultJSON = processJSONResult(result);
+                alertWidget('display-alerts');
+            });
+            return false;
+        });
+        /*
+         * end site settings form submit
+         */
 
-		  /*
-           * start site settings config load
-           */
-          $('#regbox input[type="checkbox"]').bootstrapSwitch();
-		  var url = "../api/load_site_settings.php";
-		  $.getJSON( url, {})
-		  .fail(function(result) {
-			addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-			alertWidget('display-alerts');
-		  })
-		  .done(function( result ) {
-			var data = processJSONResult(result);
+        /*
+         * start site settings config load
+         */
+        $('#regbox input[type="checkbox"]').bootstrapSwitch();
+        var url = "../api/load_site_settings.php";
+        $.getJSON( url, {})
+            .fail(function(result) {
+                addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+                alertWidget('display-alerts');
+            })
+            .done(function( result ) {
+                var data = processJSONResult(result);
 
-			alertWidget('display-alerts');
-			if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
-			  $('#regbox input[name="website_name"]').val(data['website_name']);
-			  $('#regbox input[name="website_url"]').val(data['website_url']);
-			  $('#regbox input[name="email"]').val(data['email']);
-			  $('#regbox input[name="new_user_title"]').val(data['new_user_title']);
-			  $('#regbox input[name="resend_activation_threshold"]').val(data['resend_activation_threshold']);
-			  if (data['can_register'] == "1")  {
-				$('#regbox input[name="can_register"]').bootstrapSwitch('setState', true);
-			  } else {
-				$('#regbox input[name="can_register"]').bootstrapSwitch('setState', false);
-			  }
-              if (data['email_login'] == "1")  {
-                  $('#regbox input[name="email_login"]').bootstrapSwitch('setState', true);
-              } else {
-                  $('#regbox input[name="email_login"]').bootstrapSwitch('setState', false);
-              }
-			  if (data['activation'] == "1")  {
-				$('#regbox input[name="activation"]').bootstrapSwitch('setState', true);
-			  } else {
-				$('#regbox input[name="activation"]').bootstrapSwitch('setState', false);
-			  }
-                $('#regbox input[name="token_timeout"]').val(data['token_timeout']/60/60);
-			  // Load the language and template options
-			  var language_options = data['language_options'];
-			  if (Object.keys(language_options).length > 0) { // Don't bother unless there are some options found
-				jQuery.each(language_options, function(idx, record) {
-				  if (record == data['language']) {
-					$('<option></option>').val(record).html(record).prop('selected', true).appendTo('#regbox select[name="language"]');
-				  } else {
-					$('<option></option>').val(record).html(record).prop('selected', false).appendTo('#regbox select[name="language"]');
-				  }
-				});
-			  }
-			}
-		  });
-          /*
-          * end site settings config load
-          */
-
-          /*
-           * Load plugin config settings
-           */
-            var url = "../api/load_plugin_settings.php";
-            $.getJSON( url, {})
-                .fail(function(data) {
-                    addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-                    alertWidget('display-alerts');
-                })
-                .done(function( data ) {
-                    if (Object.keys(data).length > 0) {
-                        //console.log(data);
-
-                        var html = "<div class='panel panel-primary'>" +
-                            "<div class='panel-heading'>" +
-                            "<h3 class='panel-title'>Plugin Configurations</h3>" +
-                            "</div>" +
-                            "<div class='panel-body'>" +
-                            "<form class='form-horizontal' role='form' name='pluginConfiguration' id='pluginConfiguration' action='../api/update_plugin_settings.php' method='post'>";
-
-
-                        if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
-                            jQuery.each(data, function(name, setting) {
-                                //console.log(data);
-
-                                //function to see if its a number or not, unused now
-                                //function isNumber(n) {
-                                //    return !isNaN(parseFloat(n)) && isFinite(n);
-                                //}
-
-                                if (setting['binary'] >= 1) {
-                                    // Assume this should be a bootstrap switch
-
-                                    html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
-                                        "<div class='col-sm-8'>";
-                                    //var settingInt = parseInt(setting);
-
-                                    if(setting['value'] > 0 ){
-                                        html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateCheckbox(this)' checked />"
-                                    }else{
-                                        html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateCheckbox(this)' />"
-                                    }
-                                    html += "<br><small>" +setting['variable'] +"</small>" +
-                                        "</div>" +
-                                        "</div>";
-                                    //console.log("binary value " + setting['name'] + " ~ " + setting['value']);
-                                }else{
-                                    // Assume this should be a text box
-                                    html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
-                                        "<div class='col-sm-8'>" +
-                                        "<input type='text' id='"+setting['name']+"' class='form-control' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateTextbox(this)'/>" +
-                                        "</div>" +
-                                        "</div>";
-                                    //console.log("non binary value " + setting['name'] + " ~ " + setting['value']);
-                                }
-                            })
-                        }
-                        html += "<div class='form-group'>" +
-                            "<div class='col-sm-offset-4 col-sm-8'>" +
-                            "<button type='submit' class='btn btn-success submit' value='Update'>Update</button>" +
-                            "</div>" +
-                            "</div>" +
-                            "</form>" +
-                            "</div>" +
-                            "</div>";
-
-                        $('#plugins').html(html);
-                        $('#plugins input[type="checkbox"]').bootstrapSwitch();
+                alertWidget('display-alerts');
+                if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
+                    $('#regbox input[name="website_name"]').val(data['website_name']);
+                    $('#regbox input[name="website_url"]').val(data['website_url']);
+                    $('#regbox input[name="email"]').val(data['email']);
+                    $('#regbox input[name="new_user_title"]').val(data['new_user_title']);
+                    $('#regbox input[name="resend_activation_threshold"]').val(data['resend_activation_threshold']);
+                    if (data['can_register'] == "1")  {
+                        $('#regbox input[name="can_register"]').bootstrapSwitch('setState', true);
                     } else {
-
-                        console.log("No settings found.");
-
-                        html += "<div class='alert alert-info'>No plugins found.</div>";
-
+                        $('#regbox input[name="can_register"]').bootstrapSwitch('setState', false);
                     }
-                });
-          /*
-          var url = "../api/load_plugin_settings.php";
-          $.getJSON( url, {})
-          .fail(function(data) {
-              addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-              alertWidget('display-alerts');
-          })
-          .done(function( data ) {
-              $('#plugins').html(data);
-              $('#plugins input[type="checkbox"]').bootstrapSwitch().val();
-          });
-          */
-
-          /*
-           * start plugin settings form submit
-           */
-
-            /*$("form[name='pluginConfiguration']").submit(function(e){
-                var form = $(this);
-                var url = 'api/update_plugin_settings.php';
-                var serdata = $('#plugin').serialize();
-                console.log(serdata);
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {
-                        formdata: serdata,
-                        ajaxMode: "true"
+                    if (data['email_login'] == "1")  {
+                        $('#regbox input[name="email_login"]').bootstrapSwitch('setState', true);
+                    } else {
+                        $('#regbox input[name="email_login"]').bootstrapSwitch('setState', false);
                     }
+                    if (data['activation'] == "1")  {
+                        $('#regbox input[name="activation"]').bootstrapSwitch('setState', true);
+                    } else {
+                        $('#regbox input[name="activation"]').bootstrapSwitch('setState', false);
+                    }
+                    $('#regbox input[name="token_timeout"]').val(data['token_timeout']/60/60);
+                    // Load the language and template options
+                    var language_options = data['language_options'];
+                    if (Object.keys(language_options).length > 0) { // Don't bother unless there are some options found
+                        jQuery.each(language_options, function(idx, record) {
+                            if (record == data['language']) {
+                                $('<option></option>').val(record).html(record).prop('selected', true).appendTo('#regbox select[name="language"]');
+                            } else {
+                                $('<option></option>').val(record).html(record).prop('selected', false).appendTo('#regbox select[name="language"]');
+                            }
+                        });
+                    }
+                }
+            });
+        /*
+         * end site settings config load
+         */
 
-                }).done(function(result) {
-                    var resultJSON = processJSONResult(result);
-                    alertWidget('display-alerts');
-                });
-                return false;
-            });*/
+        /*
+         * Load plugin config settings
+         */
+        var url = "../api/load_plugin_settings.php";
+        $.getJSON( url, {})
+            .fail(function(data) {
+                addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+                alertWidget('display-alerts');
+            })
+            .done(function( data ) {
+                if (Object.keys(data).length > 0) {
 
-            $("form").change(function() {
-                console.log('something changed')
+                    var html = "<div class='panel panel-primary'>" +
+                        "<div class='panel-heading'>" +
+                        "<h3 class='panel-title'>Plugin Configurations</h3>" +
+                        "</div>" +
+                        "<div class='panel-body'>" +
+                        "<form class='form-horizontal' role='form' name='pluginConfiguration' id='pluginConfiguration' action='../api/update_plugin_settings.php' method='post'>";
+
+
+                    if (Object.keys(data).length > 0) { // Don't bother unless there are some records found
+                        jQuery.each(data, function(name, setting) {
+
+                            if (setting['binary'] >= 1) {
+                                // Assume this should be a bootstrap switch
+                                html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
+                                    "<div class='col-sm-8'>";
+                                if(setting['value'] > 0 ){
+                                    html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateCheckbox(this)' checked />"
+                                }else{
+                                    html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateCheckbox(this)' />"
+                                }
+                                html += "<br><small>" +setting['variable'] +"</small>" +
+                                    "</div>" +
+                                    "</div>";
+                            }else{
+                                // Assume this should be a text box
+                                html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
+                                    "<div class='col-sm-8'>" +
+                                    "<input type='text' id='"+setting['name']+"' class='form-control' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateTextbox(this)'/>" +
+                                    "</div>" +
+                                    "</div>";
+                            }
+                        })
+                    }
+                    html += "<div class='form-group'>" +
+                        "<div class='col-sm-offset-4 col-sm-8'>" +
+                        "<small>Values automatically updated in database.</small>" +
+                        "</div>" +
+                        "</div>" +
+                        "</form>" +
+                        "</div>" +
+                        "</div>";
+
+                    $('#plugins').html(html);
+                    /*$('#plugins input[type="checkbox"]').bootstrapSwitch();*/
+                } else {
+                    console.log("No settings found.");
+                    html += "<div class='alert alert-info'>No plugins found.</div>";
+                }
             });
 
-          /*
-           * end plugin settings form submit
-           */
+        /*$("form").change(function() {
+         console.log('something changed')
+         });*/
 
-		  alertWidget('display-alerts');
-		  
-		});
-	</script>
-  </body>
+        /*
+         * end plugin settings form submit
+         */
+
+        alertWidget('display-alerts');
+
+    });
+</script>
+</body>
 </html>
 

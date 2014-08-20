@@ -22,17 +22,25 @@ if (isset($_POST)){
 }
 
 if(!empty($newSettings)) {
-    ChromePhp::log($newSettings);
+    //ChromePhp::log($newSettings);
 
     //validate new settings to make sure its all on the up and up
 
     // Check to see if this should be a binary or string value, update accordingly
     if ($results = checkBinaryConfig($name)){
         // Assume binary data type, hack to simply change to new value rather then using value
-        if ($results == 1){
-            ChromePhp::log($results);
+        if ($results[1] == 1){
+            if (updatePluginConfig($name, 0)){
+                $successes[] = lang("CONFIG_UPDATE_SUCCESSFUL");
+            }
+            ChromePhp::log($name);
+        }elseif ($results[1] == 0){
+            if (updatePluginConfig($name, 1)){
+                $successes[] = lang("CONFIG_UPDATE_SUCCESSFUL");
+            }
+            ChromePhp::log($name);
         }else{
-            ChromePhp::log('0');
+            $errors[] = lang("NO_DATA");
         }
     }else{
         // Assume non binary data type
