@@ -1743,7 +1743,7 @@ function checkBinaryConfig($name){
 
         $db = pdoConnect();
 
-        $query = "SELECT `binary` FROM ".$db_table_prefix."plugin_configuration WHERE name = :name AND `binary` = 1";
+        $query = "SELECT `binary`, `value` FROM ".$db_table_prefix."plugin_configuration WHERE name = :name AND `binary` = 1";
 
         $stmt = $db->prepare($query);
 
@@ -1755,11 +1755,20 @@ function checkBinaryConfig($name){
             return false;
         }
 
-        if ($stmt->rowCount() > 0)
+        /*if ($stmt->rowCount() > 0)
             return true;
         else {
             return false;
+        }*/
+
+        while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $binary = $r['binary'];
+            $value = $r['value'];
+            $results[$binary] = $value;
         }
+        $stmt = null;
+        //ChromePhp::log($results);
+        return $results;
 
     } catch (PDOException $e) {
         addAlert("danger", "Oops, looks like our database encountered an error.");
