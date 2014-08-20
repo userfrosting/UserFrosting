@@ -326,7 +326,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
                                 }else{
                                     html += "<input type='checkbox' id ='"+setting['name']+"' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateCheckbox(this)' />"
                                 }
-                                html += "<br><small>" +setting['variable'] +"</small>" +
+                                html += "<br><small><em>Variable: " +setting['variable'] +"</em></small>" +
                                     "</div>" +
                                     "</div>";
                             }else{
@@ -334,6 +334,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
                                 html += "<div class='form-group'><label for='"+setting['name']+"' class='col-sm-4 control-label'>"+setting['name']+"</label>" +
                                     "<div class='col-sm-8'>" +
                                     "<input type='text' id='"+setting['name']+"' class='form-control' name='"+setting['name']+"' value='"+setting['value']+"' onchange='updateTextbox(this)'/>" +
+                                    "<br><small><em>Variable: " +setting['variable'] +"</em></small>" +
                                     "</div>" +
                                     "</div>";
                             }
@@ -341,7 +342,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
                     }
                     html += "<div class='form-group'>" +
                         "<div class='col-sm-offset-4 col-sm-8'>" +
-                        "<small>Values automatically updated in database.</small>" +
+                        "<small><strong>Values automatically updated in database.</strong></small>" +
                         "</div>" +
                         "</div>" +
                         "</form>" +
