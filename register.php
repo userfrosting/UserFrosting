@@ -48,8 +48,7 @@ if (!$can_register){
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	header("Location: account.php");
-	exit();
+	apiReturnError(false, SITE_ROOT);
 }
 
 ?>

@@ -31,11 +31,13 @@ THE SOFTWARE.
 
 
 // Create a new user.
-// Request method: POST
 
 require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
+
+// Request method: POST
+$ajax = checkRequestMode("post");
 
 $validator = new Validator();
 // POST: user_name, display_name, email, title, password, passwordc, [admin, add_groups, skip_activation, csrf_token]
@@ -47,8 +49,7 @@ if ($admin == "true"){
   // Admin mode must be from a logged in user
   if (!isUserLoggedIn()){
 	  addAlert("danger", "You must be logged in to access this resource.");
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
+	  apiReturnError($ajax, ACCOUNT_ROOT);
   }
   
   $csrf_token = $validator->requiredPostVar('csrf_token');
@@ -56,12 +57,7 @@ if ($admin == "true"){
   // Validate csrf token
   if (!$csrf_token or !$loggedInUser->csrf_validate(trim($csrf_token))){
 	  addAlert("danger", lang("ACCESS_DENIED"));
-	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-		echo json_encode(array("errors" => 1, "successes" => 0));
-	  } else {
-		header('Location: ../register.php');
-	  }
-	  exit();
+	  apiReturnError($ajax, ACCOUNT_ROOT);
   }
   
 } else {
@@ -69,29 +65,19 @@ if ($admin == "true"){
   
   if (!userIdExists('1')){
 	  addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
-	  exit();
+	  apiReturnError($ajax, SITE_ROOT);
   }
   
   // If registration is disabled, send them back to the home page with an error message
   if (!$can_register){
 	  addAlert("danger", lang("ACCOUNT_REGISTRATION_DISABLED"));
-	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-		echo json_encode(array("errors" => 1, "successes" => 0));
-	  } else {
-		  header("Location: ../login.php");
-	  }
-	  exit();
+	  apiReturnError($ajax, SITE_ROOT);
   }
   
   //Prevent the user visiting the logged in page if he/she is already logged in
   if(isUserLoggedIn()) {
 	  addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-		echo json_encode(array("errors" => 1, "successes" => 0));
-	  } else {
-		  header("Location: ../account.php");
-	  }
-	  exit();
+	  apiReturnError($ajax, ACCOUNT_ROOT);
   }
 }
 
@@ -144,12 +130,7 @@ if ($error_count == 0){
 	if ($new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc, $require_activation, $admin)){
 
 	} else {
-		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-		  echo json_encode(array("errors" => 1, "successes" => 0));
-		} else {
-		  header('Location: ../register.php');
-		}
-		exit();
+		apiReturnError($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
 	}
 	
 	// If creation succeeds, try to add groups
@@ -184,21 +165,11 @@ if ($error_count == 0){
 		  // No activation required
 		  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1"));
 	  } else {
-		if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-		  echo json_encode(array("errors" => 1, "successes" => 0));
-		} else {
-		  header('Location: ../register.php');
-		}
-		exit();
+		apiReturnError($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
 	  }
 	}
 } else {
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header('Location: ../register.php');
-	}
-	exit();
+	apiReturnError($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
 }
 
 restore_error_handler();

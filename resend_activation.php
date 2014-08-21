@@ -35,9 +35,8 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
-	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	header("Location: account.php");
-	exit();
+	addAlert("danger", "I'm sorry, you cannot request an activation email while logged in.  Please log out first.");
+	apiReturnError(false, SITE_ROOT);
 }
 
 ?>

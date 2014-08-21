@@ -328,7 +328,6 @@ function securePage($file){
 		if (userPageMatchExists($loggedInUser->user_id, $pageDetails['id'])){ 
 			return true;
 		} else {
-			//header("Location: account.php");
 			return false;	
 		}
 	}

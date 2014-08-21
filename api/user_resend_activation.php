@@ -40,12 +40,7 @@ set_error_handler('logAllErrors');
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-        header("Location: account.php");
-    }
-    exit();
+	apiReturnError($ajax, ACCOUNT_ROOT);
 }
 
 //Forms posted
