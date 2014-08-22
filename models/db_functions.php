@@ -617,7 +617,8 @@ function updateLastActivationRequest($new_activation_token,$user_name,$email) {
         $sqlVars = array();
         $query = "UPDATE ".$db_table_prefix."users
             SET activation_token = :token,
-            last_activation_request = :time
+            last_activation_request = :time,
+            lost_password_timestamp = :time_password
             WHERE email = :email
             AND
             user_name = :user_name";
@@ -626,6 +627,7 @@ function updateLastActivationRequest($new_activation_token,$user_name,$email) {
         
         $sqlVars['token'] = $new_activation_token;
         $sqlVars['time'] = time();
+        $sqlVars['time_password'] = time();
         $sqlVars['email'] = $email;
         $sqlVars['user_name'] = $user_name;
         
