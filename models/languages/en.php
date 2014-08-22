@@ -126,7 +126,7 @@ $lang = array_merge($lang,array(
     "FORGOTPASS_COULD_NOT_UPDATE"   => "Couldn't update password",
 	"FORGOTPASS_NEW_PASS_EMAIL"		=> "We have emailed you a new password",
 	"FORGOTPASS_REQUEST_CANNED"		=> "Lost password request cancelled",
-	"FORGOTPASS_REQUEST_EXISTS"		=> "There is already a outstanding lost password request on this account",
+	"FORGOTPASS_REQUEST_EXISTS"		=> "There is already an outstanding lost password request on this account",
 	"FORGOTPASS_REQUEST_SUCCESS"		=> "We have emailed you instructions on how to regain access to your account",
 	));
 
