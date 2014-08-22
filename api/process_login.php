@@ -29,24 +29,21 @@ THE SOFTWARE.
 
 */
 
-// Request method: POST
-
 require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
 // Publically accessible API
 
+// Request method: POST
+$ajax = checkRequestMode("post");
+
 //Forward the user to their default page if he/she is already logged in
 if(isUserLoggedIn()) {
 	addAlert("warning", "You're already logged in!");
-  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-  } else {
-	header("Location: account.php");
-  }
-	exit();
+	apiReturnError($ajax, ACCOUNT_ROOT);
 }
+
 $validate = new Validator();
 
 $postedUsername = str_normalize($validate->requiredPostVar('username'));

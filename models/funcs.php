@@ -199,9 +199,9 @@ function getReferralPage(){
 		return $_SESSION['referral_page'];
 	} else {
 		if(isUserLoggedIn()) {
-			return 'account.php';
+			return ACCOUNT_ROOT;
 		} else {
-			return 'login.php';
+			return SITE_ROOT;
 		}
 	}
 }
@@ -210,18 +210,6 @@ function getReferralPage(){
 function setReferralPage($page){
 	$_SESSION['referral_page'] = $page;
 }
-
-// Add a session alert to the queue
-function addAlert($type, $message){
-    if (!isset($_SESSION["userAlerts"])){
-		$_SESSION["userAlerts"] = array();
-	}
-	$alert = array();
-    $alert['type'] = $type;
-    $alert['message'] = $message;
-    $_SESSION["userAlerts"][] = $alert;
-}
-
 
 /**
 * Converts phone numbers to the formatting standard
@@ -424,7 +412,6 @@ function prettyPrint( $json )
 
     return $result;
 }
-
 
 // Parse a comment block into a description and array of parameters
 function parseCommentBlock($comment){

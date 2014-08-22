@@ -86,6 +86,9 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
 defined("SITE_ROOT")
     or define("SITE_ROOT", $url_prefix.$websiteUrl);
 
+defined("ACCOUNT_ROOT")
+    or define("ACCOUNT_ROOT", SITE_ROOT . "account/");
+		
 defined("LOCAL_ROOT")
 	or define ("LOCAL_ROOT", realpath(dirname(__FILE__)."/.."));
 	
@@ -153,6 +156,7 @@ function getRelativeDocumentPath($localPath){
 require_once($language);
 require_once("class_validator.php");
 require_once("authorization.php");
+require_once("error_functions.php");
 require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");
