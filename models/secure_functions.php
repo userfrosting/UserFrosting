@@ -940,6 +940,36 @@ function updateSiteSettings($settings){
     return updateConfig($settings);
 }
 
+/**
+ * Retrieve all site plugin settings in a array
+ * @return array $results contains all plugin settings
+ */
+function loadSitePluginSettings(){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    return fetchConfigParametersPlugins();
+}
+
+/**
+ * Update site plugin settings
+ * @param string $name the name of the value to update.
+ * @param string $value the value to update with
+ * @return boolean true for success, false if failed
+ */
+function updateSitePluginSettings($name, $value){
+    // This block automatically checks this action against the permissions database before running.
+    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) {
+        addAlert("danger", "Sorry, you do not have permission to access this resource.");
+        return false;
+    }
+
+    return updatePluginConfig($name, $value);
+}
+
 /************************* Site page functions *************************/
 
 // Load list of all site pages from DB, updating as necessary.  Recommend only allow root access.
