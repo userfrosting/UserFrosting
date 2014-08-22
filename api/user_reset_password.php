@@ -89,14 +89,14 @@ if(!empty($confirm)) {
 
         // Check if the password is empty or not
         if($password == "") {
-            $errors = lang("ACCOUNT_SPECIFY_NEW_PASSWORD");
+            $errors[] = lang("ACCOUNT_SPECIFY_NEW_PASSWORD");
             // Check if the confirm password is empty or not
         } else if($passwordc == "") {
-            $errors = lang("ACCOUNT_SPECIFY_CONFIRM_PASSWORD");
+            $errors[] = lang("ACCOUNT_SPECIFY_CONFIRM_PASSWORD");
         }
         // Validate length of the password to be changed
         else if(minMaxRange(8,50,$password)) {
-            $errors = lang("ACCOUNT_NEW_PASSWORD_LENGTH",array(8,50));
+            $errors[] = lang("ACCOUNT_NEW_PASSWORD_LENGTH",array(8,50));
         }
         // Check if the Password and PasswordC match or not
         else if($password != $passwordc) {
