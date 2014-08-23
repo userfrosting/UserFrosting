@@ -83,7 +83,7 @@ if(isUserLoggedIn()) {
       <div class="jumbotron">
         <h1>Account Activation</h1>
         <p class="lead">Please enter your username and the email address you used to sign up, and an activation email will be resent.</p> 
-		<form class='form-horizontal' role='form' name='resend' action='user_resend_activation.php' method='post'>
+		<form class='form-horizontal' role='form' name='resend' action='api/user_resend_activation.php' method='post'>
 		  <div class="row">
 			<div id='display-alerts' class="col-lg-12">
   
@@ -123,7 +123,7 @@ if(isUserLoggedIn()) {
 			  
 		  	$("form[name='resend']").submit(function(e){
 				var form = $(this);
-				var url = 'user_resend_activation.php';
+				var url = APIPATH + 'user_resend_activation.php';
 				$.ajax({  
 				  type: "POST",  
 				  url: url,  
