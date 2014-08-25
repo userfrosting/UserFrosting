@@ -334,12 +334,16 @@ function securePage($file){
 }
 
 function fetchSecureFunctions(){
+    global $files_secure_functions;
     # The Regular Expression for Function Declarations
     $functionFinder = '/function[\s\n]+(\S+)[\s\n]*\(/';
     # Init an Array to hold the Function Names
     $functionArray = array();
-    # Load the Content of the PHP File
-    $fileContents = file_get_contents( FILE_SECURE_FUNCTIONS );
+    # Load the Content of the secure function files   
+    $fileContents = "";
+    foreach($files_secure_functions as $file){
+        $fileContents .= file_get_contents( $file );
+    }
 
     # Apply the Regular Expression to the PHP File Contents
     preg_match_all( $functionFinder , $fileContents , $functionArray );

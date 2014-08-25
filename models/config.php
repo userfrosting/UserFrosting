@@ -84,8 +84,10 @@ defined("MENU_TEMPLATES")
 defined("MAIL_TEMPLATES")
 	or define("MAIL_TEMPLATES", dirname(__FILE__) . "/mail-templates/");
 
-defined("FILE_SECURE_FUNCTIONS")
-	or define("FILE_SECURE_FUNCTIONS", dirname(__FILE__) . "/secure_functions.php");	
+// Include paths for files containing secure functions
+$files_secure_functions = array(
+	dirname(__FILE__) . "/secure_functions.php"
+);
 
 // Include paths for pages to add to site page management
 $page_include_paths = array(
