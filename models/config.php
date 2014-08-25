@@ -95,7 +95,15 @@ $page_include_paths = array(
 	"forms"
 	// Define more include paths here
 );
-	
+
+// Other constants
+defined("ACCOUNT_HEAD_FILE")
+	or define("ACCOUNT_HEAD_FILE", "head-account.html");	
+
+// Set to true if you want authorization failures to be logged to the PHP error log.
+defined("LOG_AUTH_FAILURES")
+	or define("LOG_AUTH_FAILURES", false);
+
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
 $master_account = 1;
