@@ -169,7 +169,7 @@ $response .= "
         <h5>Username</h5>
         <div class='input-group'>
             <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <select type='text' class='form-control' name='user_name' autocomplete='off' value='$user_name' data-validate='{\"minLength\": 1, \"maxLength\": 25, \"label\": \"Username\" }' $username_disable_str>
+            <input type='text' class='form-control' name='user_name' autocomplete='off' value='$user_name' data-validate='{\"minLength\": 1, \"maxLength\": 25, \"label\": \"Username\" }' $username_disable_str>
         </div>
     </div>
     <div class='col-sm-6'>
