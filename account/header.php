@@ -52,62 +52,6 @@ if ($loggedInUser->user_id == $master_account){
     $hooks['#HEADERMESSAGE#'] = "";
 }
 
-//echo fetchUserMenu($loggedInUser->user_id, $hooks)['value'];
-$menu = fetchMenu($loggedInUser->user_id, $hooks);
+$contents = buildMenu($loggedInUser->user_id, $hooks);
 
-echo '<!-- Brand and toggle get grouped for better mobile display -->
-
-<div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="../account/index.php">'.$hooks["#WEBSITENAME#"].'</a>
-    '.$hooks["#HEADERMESSAGE#"].'
-</div>
-
-<div class="collapse navbar-collapse navbar-ex1-collapse">
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <ul class="nav navbar-nav side-nav">';
-foreach ($menu as $r => $v){
-    if ($v['menu'] == 'left' AND $v['menu'] != 'left-sub'){
-        echo "<li class='navitem-".$v['class_name']."'><a href='../".$v['page']."'><i class='".$v['icon']."'></i> ".$v['name']."</a></li>";
-    }
-    if ($v['menu'] == 'left-sub' AND $v['parent_id'] == 0){
-        echo "<li class='dropdown'>
-                <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='".$v['icon']."'></i> ".$v['name']." <b class='caret'></b></a>
-                <ul class='dropdown-menu'>";
-        // Grab submenu items based on parent_id = $v['menu_id']
-        $subs = gatherSubMenuItems($v['menu_id']);
-
-        // If subs are found print them out to the parent element
-        foreach ($subs as $s){
-            echo "<li class='navitem-".$s['class_name']."'><a href='../".$s['page']."'><i class='".$s['icon']."'></i> ".$s['name']."</a></li>";
-        }
-        echo '</ul></li>';
-    }
-}
-echo '</ul>';
-//top nav bar
-echo '<ul class="nav navbar-master navbar-nav navbar-right">';
-foreach ($menu as $r => $v){
-    if ($v['menu'] == 'top-main' AND $v['menu'] != 'top-main-sub'){
-        echo "<li class='navitem-".$v['class_name']."'><a href='../".$v['page']."'><i class='".$v['icon']."'></i> ".$v['name']."</a></li>";
-    }
-    if ($v['menu'] == 'top-main-sub' AND $v['parent_id'] == 0){
-        echo "<li class='dropdown'>
-            <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='".$v['icon']."'></i> ".$v['name']." <b class='caret'></b></a>
-                <ul class='dropdown-menu'>";
-        // Grab submenu items based on parent_id = $v['menu_id']
-        $subs = gatherSubMenuItems($v['menu_id']);
-
-        // If subs are found print them out to the parent element
-        foreach ($subs as $s){
-            echo "<li class='navitem-".$s['class_name']."'><a href='../".$s['page']."'><i class='".$s['icon']."'></i> ".$s['name']."</a></li>";
-        }
-        echo '</ul></li>';
-    }
-}
-echo '</ul></div>';
+echo $contents;
