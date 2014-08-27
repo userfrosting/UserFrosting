@@ -47,6 +47,19 @@ require_once("db_functions.php");
 
 $settings = fetchConfigParameters();
 
+//Grab plugin settings, used in plugin like so:
+//$pvalue = $plugin_settings['variable_name']['config_value'];
+/*
+ $pvalue = $plugin_settings['$pmsystem']['value'];
+ if ($pvalue != 1){
+    // Forward to index page
+    addAlert("danger", "Whoops, looks like the private message system is not enabled");
+    header("Location: ".SITE_ROOT."account/index.php");
+    exit();
+ }
+ */
+$plugin_settings = fetchConfigParametersPlugins();
+
 //Set Settings
 $emailDate = date('dmy');
 $emailActivation = $settings['activation'];
@@ -60,6 +73,7 @@ $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
 
+
 // Determine if this is SSL or unsecured connection
 $url_prefix = "http://";
 // Determine if connection is http or https
@@ -72,6 +86,9 @@ if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
 defined("SITE_ROOT")
     or define("SITE_ROOT", $url_prefix.$websiteUrl);
 
+defined("ACCOUNT_ROOT")
+    or define("ACCOUNT_ROOT", SITE_ROOT . "account/");
+		
 defined("LOCAL_ROOT")
 	or define ("LOCAL_ROOT", realpath(dirname(__FILE__)."/.."));
 	
@@ -149,6 +166,7 @@ function getRelativeDocumentPath($localPath){
 require_once($language);
 require_once("class_validator.php");
 require_once("authorization.php");
+require_once("error_functions.php");
 require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");
@@ -156,9 +174,6 @@ require_once("class.user.php");
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
 require_once("chrome.php");
-
-// Temp value for pm system while in dev
-$pmsystem_enabled = 0;//$settings['plugin_pmsystem'];;
 
 session_start();
 
