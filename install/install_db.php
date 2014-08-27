@@ -318,6 +318,56 @@ $plugin_configuration_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."plu
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 ";
 
+$nav_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."nav` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu` varchar(75) NOT NULL,
+  `page` varchar(175) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `position` int(11) NOT NULL,
+  `class_name` varchar(150) NOT NULL,
+  `icon` varchar(150) NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+";
+
+
+$nav_entry = "INSERT INTO `".$db_table_prefix."nav` (`id`, `menu`, `page`, `name`, `position`, `class_name`, `icon`, `parent_id`) VALUES
+(1, 'left', 'account/dashboard_admin.php', 'Admin Dashboard', 1, 'dashboard-admin', 'fa fa-dashboard', 0),
+(2, 'left', 'account/users.php', 'Users', 2, 'users', 'fa fa-users', 0),
+(3, 'left', 'account/dashboard.php', 'Dashboard', 3, 'dashboard', 'fa fa-dashboard', 0),
+(4, 'left', 'account/account_settings.php', 'Account Settings', 4, 'settings', 'fa fa-gear', 0),
+(5, 'left-sub', '#', 'Site Settings', 5, '', 'fa fa-wrench', 0),
+(6, 'left-sub', 'account/site_settings.php', 'Site Configuration', 6, 'site-settings', 'fa fa-globe', 5),
+(7, 'left-sub', 'account/groups.php', 'Groups', 7, 'groups', 'fa fa-users', 5),
+(8, 'left-sub', 'account/site_authorization.php', 'Authorization', 8, 'site-pages', 'fa fa-key', 5),
+(9, 'top-main-sub', '#', '#USERNAME#', 1, 'site-settings', 'fa fa-user', 0),
+(10, 'top-main-sub', 'account/account_settings.php', 'Account Settings', 1, '', 'fa fa-gear', 9),
+(11, 'top-main-sub', 'account/logout.php', 'Log Out', 2, '', 'fa fa-power-off', 9);
+";
+
+$nav_group_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."nav_group_matches` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+";
+
+$nav_group_matches_entry = "INSERT INTO `".$db_table_prefix."nav_group_matches` (`id`, `menu_id`, `group_id`) VALUES
+(1, 3, 1),
+(2, 4, 1),
+(3, 9, 1),
+(4, 10, 1),
+(5, 11, 1),
+(6, 1, 2),
+(7, 2, 2),
+(8, 5, 2),
+(9, 6, 2),
+(10, 7, 2),
+(11, 8, 2);
+";
+
 $stmt = $db->prepare($configuration_sql);
 if($stmt->execute())
 {
@@ -480,6 +530,50 @@ if($stmt->execute())
 else
 {
     $errors[] = "<p>Error constructing plugin_configuration table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($nav_sql);
+if($stmt->execute())
+{
+    $successes[] = "<p>".$db_table_prefix."nav_sql table created.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error constructing nav table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($nav_entry);
+if($stmt->execute())
+{
+    $successes[] = "<p>Added default navigation items to the database</p>";
+}
+else
+{
+    $errors[] = "<p>Error adding default navigation items to the database</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($nav_group_matches_sql);
+if($stmt->execute())
+{
+    $successes[] = "<p>".$db_table_prefix."nav_group_matches table created.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error constructing nav_group_matches table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($nav_group_matches_entry);
+if($stmt->execute())
+{
+    $successes[] = "<p>Added default navigation group matches to the database</p>";
+}
+else
+{
+    $errors[] = "<p>Error adding default navigation group matches to the database</p>";
     $db_issue = true;
 }
 

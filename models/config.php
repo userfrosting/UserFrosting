@@ -173,7 +173,7 @@ require_once("class.user.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
-require_once("chrome.php");
+//require_once("chrome.php");
 
 session_start();
 
