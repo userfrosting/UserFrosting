@@ -1,5 +1,4 @@
 <?php
-
 /*
 
 UserFrosting Version: 0.2.0
@@ -32,19 +31,6 @@ THE SOFTWARE.
 
 require_once("db_functions.php");
 
-// TODO: Add table user_action_permits to installer
-// TODO: Create interface for adding/removing permissions
-
-/** Sample actions that can be access-controlled through PermissionValidators. */
-function createSession($student_id, $user_id){
-    // This line automatically checks this action against the permissions database before running.
-    if (!checkActionPermissionSelf(__FUNCTION__, func_get_args())) return false;
-
-    // Do stuff here
-    
-    return true;
-}
-
 /** Contains methods for validating user permissions.  Used in conjunction with action functions and checkActionPermission. */
 class PermissionValidators {
 
@@ -63,7 +49,7 @@ class PermissionValidators {
      */
     static function isLoggedInUser($user_id){
         global $loggedInUser;
-        if ($loggedInUser->user_id == $user_id)
+        if (intval($loggedInUser->user_id) == intval($user_id))
             return true;
         else
             return false;
@@ -129,7 +115,8 @@ class PermissionValidators {
 function checkActionPermissionSelf($action_function, $function_args){
     // Error if the specified function does not exist.
     if (!function_exists($action_function)){
-        //echo "FAILED: action '$action_function' does not exist.<br><br>";
+        if (LOG_AUTH_FAILURES)
+            error_log("Authorization failed: action '$action_function' does not exist.");
         return false;
     }
     
@@ -144,8 +131,8 @@ function checkActionPermissionSelf($action_function, $function_args){
         } else if ($param->isOptional()) {
             $mapped_args[$param_name] = $param->getDefaultValue();
         } else {
-            // Missing argument!
-            addAlert("danger", "Missing a parameter required by secure function!");
+            if (LOG_AUTH_FAILURES)
+                error_log("Authorization failed: Missing one or more parameters required by $action_function.");
             return false;
         }
         $i++;
@@ -160,6 +147,8 @@ function checkActionPermission($action_function, $args) {
     
     // Error if user is not logged in
     if (!isUserLoggedIn()){
+        if (LOG_AUTH_FAILURES)
+            error_log("Authorization failed: user is not logged in.");
         return false;
     }    
     
@@ -169,17 +158,10 @@ function checkActionPermission($action_function, $args) {
     
     // Error if the specified function does not exist.
     if (!function_exists($action_function)){
-        //echo "FAILED: action '$action_function' does not exist.<br><br>";
+        if (LOG_AUTH_FAILURES)
+            error_log("Authorization failed: action '$action_function' does not exist.");
         return false;
     }
-    
-    /*
-    $parameters = $method->getParameters();
-    //echo var_dump($parameters);
-    foreach ($parameters as $id => $param ){
-        echo $param->getName() . "<br>";
-    }
-    */
     
     // Fetch individual level permits
     $action_permits = fetchUserPermits($loggedInUser->user_id, $action_function);
@@ -194,26 +176,19 @@ function checkActionPermission($action_function, $args) {
     // If the handlers pass, return true.  Otherwise, move on to the next mapping.
     foreach ($action_permits as $idx => $action_permit){
         $action = $action_permit['action'];
-        //echo "Checking action $action<br>";
-        // Get names of action parameters
-        /*
-        $action_param_str = array();
-        preg_match('/\((*?)\)/i', $action, $action_param_str);
-        $action_params = split(',', $action_param_str);
-        */
         
         // Process permits for this mapping
         $permits_str = $action_permit['permits'];
         $permits = explode('&', $permits_str);
-        //echo "Checking $action_function on arguments " . print_r($args, true) . "<br><br>";
+
         if (checkActionPermits($permits, $args)) {
-            
             return true;
         }
     }
 
     // Return false if no mappings pass.
-    //echo "FAILED validating $action_function on arguments " . print_r($args, true) . "<br><br>";
+    if (LOG_AUTH_FAILURES)
+        error_log("Authorization failed: User {$loggedInUser->username} (user_id={$loggedInUser->user_id}) could not be validated for $action_function on arguments " . print_r($args, true));
     return false;
     
 }
@@ -226,7 +201,6 @@ function parsePermitString($permit_str){
         $permit_obj = array();
         // Extract permit parameters
         $permit_param_str = array();
-        //echo $permit;
         preg_match('/(.*?)\((.*?)\)/', $permit, $permit_param_str);
         if ($permit_param_str[1]){
             $permit_obj['name'] = $permit_param_str[1];
@@ -247,8 +221,11 @@ function checkActionPermits($permits, $args){
     global $loggedInUser;
     
     $permitReflector = new ReflectionClass('PermissionValidators');
-    if (count($permits) == 0)
+    if (count($permits) == 0){
+        if (LOG_AUTH_FAILURES)
+            error_log("Authorization failed: no permits found.");
         return false;
+    }
     foreach ($permits as $permit){
         // Extract permit parameters
         $permit_param_str = array();
@@ -272,24 +249,28 @@ function checkActionPermits($permits, $args){
                     //echo "Found literal parameter $param";
                     $mappedArgs[] = $val[1];
                 } else {
-                    //echo "Error: Required parameter $param not specified.<br>";
+                    if (LOG_AUTH_FAILURES)
+                        error_log("Authorization failed: Required parameter $param not specified in permit handler $permit_name.");
                     return false;   // Unspecified parameter name
                 }
             }
         }
         
         try{
-            $permit_handler = $permitReflector->getMethod($permit_name);
+            $permit_handler = $permitReflector->getMethod($permit_name);     
         } catch (Exception $e){
-            //echo "Error: permit handler '$permit_name' does not exist.<br>";
+            if (LOG_AUTH_FAILURES)
+                error_log("Authorization failed: permit handler '$permit_name' does not exist.");
             return false;
         }         
-        
+
         if (!$permit_handler->invokeArgs(null, $mappedArgs)){
-            //echo "Failed $permit_name with parameters " . print_r($mappedArgs, true) . "<br>";
+            if (LOG_AUTH_FAILURES)
+                error_log("Authorization failed: User {$loggedInUser->username} (user_id={$loggedInUser->user_id}) failed permit $permit_name with parameters: \n" . print_r($mappedArgs, true));
             return false;
         } else {
-            //echo "Passed $permit_name with parameters " . print_r($mappedArgs, true) . "<br>";
+            //Passed!
+            //error_log("Passed $permit_name with parameters " . print_r($mappedArgs, true));
         }
     }
     return true;
@@ -307,7 +288,8 @@ function securePage($file){
     
 	//If page does not exist in DB or page is not permitted for any groups, disallow access		//Modified by Alex 9/18/2013 to NOT allow access by default
 	if (empty($pageDetails)){
-		//echo "Access denied: " . $page . " not found in DB.";
+		if (LOG_AUTH_FAILURES)
+            error_log("Authorization failed: $page not found in DB.");
 		return false;
 	}
 	//If page is public, allow access
@@ -316,7 +298,8 @@ function securePage($file){
 	}
 	//If user is not logged in, deny access
 	elseif(!isUserLoggedIn()) {
-		//header("Location: login.php");
+		if (LOG_AUTH_FAILURES)
+            error_log("Authorization failed: user is not logged in.");
 		return false;
 	}
 	else {	
@@ -328,18 +311,24 @@ function securePage($file){
 		if (userPageMatchExists($loggedInUser->user_id, $pageDetails['id'])){ 
 			return true;
 		} else {
+            if (LOG_AUTH_FAILURES)
+                error_log("Authorization failed: {$loggedInUser->username} does not have permission to access page $page.");
 			return false;	
 		}
 	}
 }
 
 function fetchSecureFunctions(){
+    global $files_secure_functions;
     # The Regular Expression for Function Declarations
     $functionFinder = '/function[\s\n]+(\S+)[\s\n]*\(/';
     # Init an Array to hold the Function Names
     $functionArray = array();
-    # Load the Content of the PHP File
-    $fileContents = file_get_contents( FILE_SECURE_FUNCTIONS );
+    # Load the Content of the secure function files   
+    $fileContents = "";
+    foreach($files_secure_functions as $file){
+        $fileContents .= file_get_contents( $file );
+    }
 
     # Apply the Regular Expression to the PHP File Contents
     preg_match_all( $functionFinder , $fileContents , $functionArray );

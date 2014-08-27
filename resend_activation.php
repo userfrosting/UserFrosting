@@ -123,7 +123,7 @@ if(isUserLoggedIn()) {
 			  
 		  	$("form[name='resend']").submit(function(e){
 				var form = $(this);
-				var url = APIPATH +'user_resend_activation.php';
+				var url = APIPATH + 'user_resend_activation.php';
 				$.ajax({  
 				  type: "POST",  
 				  url: url,  
