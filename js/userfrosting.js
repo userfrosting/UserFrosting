@@ -1,6 +1,6 @@
 /*
 
-UserFrosting Version: 0.2.0
+UserFrosting Version: 0.2.1 (beta)
 By Alex Weissman
 Copyright (c) 2014
 
