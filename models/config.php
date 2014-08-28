@@ -48,6 +48,19 @@ require_once("error_functions.php");
 
 $settings = fetchConfigParameters();
 
+//Grab plugin settings, used in plugin like so:
+//$pvalue = $plugin_settings['variable_name']['config_value'];
+/*
+ $pvalue = $plugin_settings['$pmsystem']['value'];
+ if ($pvalue != 1){
+    // Forward to index page
+    addAlert("danger", "Whoops, looks like the private message system is not enabled");
+    header("Location: ".SITE_ROOT."account/index.php");
+    exit();
+ }
+ */
+$plugin_settings = fetchConfigParametersPlugins();
+
 //Set Settings
 $emailDate = date('dmy');
 $emailActivation = $settings['activation'];
@@ -60,6 +73,7 @@ $language = $settings['language'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
+
 
 // Determine if this is SSL or unsecured connection
 $url_prefix = "http://";
@@ -87,24 +101,26 @@ defined("MAIL_TEMPLATES")
 
 // Include paths for files containing secure functions
 $files_secure_functions = array(
-	dirname(__FILE__) . "/secure_functions.php"
+    dirname(__FILE__) . "/secure_functions.php"
 );
 
 // Include paths for pages to add to site page management
 $page_include_paths = array(
 	"account",
 	"forms"
-	// Define more include paths here
+    //"privatemessages",
+    //"privatemessages/forms",
+    // Define more include paths here
 );
 
 // Other constants
 defined("ACCOUNT_HEAD_FILE")
-	or define("ACCOUNT_HEAD_FILE", "head-account.html");	
+	or define("ACCOUNT_HEAD_FILE", "head-account.html");
 
 // Set to true if you want authorization failures to be logged to the PHP error log.
 defined("LOG_AUTH_FAILURES")
-	or define("LOG_AUTH_FAILURES", false);
-
+    or define("LOG_AUTH_FAILURES", false);
+	
 // This is the user id of the master (root) account.
 // The root user cannot be deleted, and automatically has permissions to everything regardless of group membership.
 $master_account = 1;
@@ -166,5 +182,3 @@ if(isset($_SESSION["userCakeUser"]) && is_object($_SESSION["userCakeUser"]))
 {
 	$loggedInUser = $_SESSION["userCakeUser"];
 }
-
-?>

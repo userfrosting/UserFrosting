@@ -161,7 +161,7 @@ if ($group_id){
 }
 
 $response .= "<div class='form-group'>
-    <input class='form-control input-lg typeahead typeahead-action-name' type='text' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' value='$action_name' $action_name_disable_str />";
+    <input class='form-control input-lg typeahead typeahead-action-name' data-selected_id='' placeholder='Search by name or description' name='action_name' autocomplete='off' value='$action_name' $action_name_disable_str />";
 $response .= "
 </div>
 <h4>for</h4>

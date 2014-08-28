@@ -1,0 +1,14 @@
+# robots.txt
+User-agent: *
+Disallow:
+Disallow: /cgi-bin/
+Disallow: /account/
+Disallow: /api/
+Disallow: /models/
+Disallow: /js/
+Disallow: /forms/
+Disallow: /fonts/
+Disallow: /install/
+Disallow: /css/
+Disallow: /privatemessages/
+Sitemap: http://www.domain.com/sitemap.xml
