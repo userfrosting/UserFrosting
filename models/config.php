@@ -42,6 +42,7 @@ require_once("db-settings.php"); //Require DB connection
 require_once("funcs.php");
 require_once("password.php");
 require_once("db_functions.php");
+require_once("error_functions.php");
 
 //Retrieve basic configuration settings
 
@@ -165,7 +166,6 @@ function getRelativeDocumentPath($localPath){
 require_once($language);
 require_once("class_validator.php");
 require_once("authorization.php");
-require_once("error_functions.php");
 require_once("secure_functions.php");
 require_once("class.mail.php");
 require_once("class.user.php");
