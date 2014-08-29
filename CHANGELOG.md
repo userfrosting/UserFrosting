@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+Change Log - v0.2.0 (butterflyknife)
+-------------------
+
+- Converted all DB calls to PDO.
+- Renamed "permissions" to "groups".  Same concept, but using the word "group" suggests that it can be used for more than just access control.
+- Implemented "primary group" membership for users.  A user can belong to multiple groups, but only one of those will be their primary group.
+- Implemented DB-driven home pages for groups.  Upon login, a user will be redirected to the `home_page` for their primary group.
+- Implemented templated menus.  Every group has a corresponding menu template in `models/menu-templates`.  Upon login, the menu for a user's primary group is automatically loaded and rendered.
+- Implemented function-level user authorization.  Whenever a function in `secure_functions` is called, the `user_action_permits` table is checked to see whether or not that user has access to the function (the `action` column), conditional on the boolean functions specified in the `permits` column.
+- Organized pages into four categories: account pages, API pages, form pages, and public pages.  Public pages reside in the root directory and can be accessed by anyone.  Account pages are in the `account` directory and are only accessible after logging in.  API pages are in the `api` directory, and consist of all the pages that process or fetch data from the DB and interact with the frontend via AJAX/JSON.  They are accessible by any logged in user, but will only perform a function if the user is authorized.  Form pages are in the `forms` directory, and consist of pages that generate forms (for creating/updating users, groups, etc.)  
+- Converted registration page to AJAX.
+- Improved installer with site configuration.
+
 Change Log - v0.1.7
 -------------------
 - Page scrolls back to top after AJAX submit.
