@@ -327,7 +327,7 @@ $nav_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."nav` (
   `icon` varchar(150) NOT NULL,
   `parent_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 ";
 
 
@@ -350,7 +350,7 @@ $nav_group_matches_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."nav_gr
   `menu_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 ";
 
 $nav_group_matches_entry = "INSERT INTO `".$db_table_prefix."nav_group_matches` (`id`, `menu_id`, `group_id`) VALUES
