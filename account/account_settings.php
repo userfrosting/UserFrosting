@@ -44,17 +44,9 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>UserFrosting Admin - Settings</title>
-
-	<?php require_once("includes.php");  ?>
-	
-  </head>
+  <?php
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE" => SITE_TITLE, "#PAGE_TITLE#" => "Account Settings"));
+  ?>
 
   <body>
 

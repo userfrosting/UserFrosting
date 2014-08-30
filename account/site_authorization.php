@@ -43,27 +43,9 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>UserFrosting Admin - Site Pages</title>
-
-	<?php require_once("includes.php");  ?>
-
-	<link rel="stylesheet" href="../css/typeahead.css"></link>
-		 
-    <!-- Page Specific Plugins -->
-	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/tables.js"></script>	
-	<script src="../js/typeahead.js"></script>
-	<script src="../js/handlebars-v1.2.0.js"></script>
-	<script src="../js/widget-pages.js"></script>
-	<script src="../js/widget-permits.js"></script>	
-  </head>
-
+  <?php
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE" => "Authorization Management"));
+  ?>
   <body>
 
     <div id="wrapper">
@@ -111,6 +93,8 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 	
 	</div>
 	</div>
+	<script src="../js/widget-pages.js"></script>
+	<script src="../js/widget-permits.js"></script>	    
 	<script>
         $(document).ready(function() {          
           // Load the header

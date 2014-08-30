@@ -230,6 +230,11 @@ function validateFormFields(dialog_id) {
 	$fields.each(function(idx, input) {
 		// Get handle for closest input-group indicator
 		var closestGroup = $( this ).closest('.input-group');
+		// Skip disabled fields
+		if ($(this).prop('disabled')) {
+			console.log("Field " + $(this).prop("name") + "is disabled");
+			return;  //this is equivalent of 'continue' for jQuery loop
+		}
 		// Get field value
 		var val = "";
 		// Check that radio box has one option selected

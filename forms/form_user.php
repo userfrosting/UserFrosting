@@ -33,14 +33,19 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 if (!securePage(__FILE__)){
   // Forward to index page
   addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
+  apiReturnError($ajax, ACCOUNT_ROOT);
 }
 
 // TODO: allow setting default groups
+
+// Sanitize input data
+$get = filter_input_array(INPUT_GET, FILTER_SANITIZE_SPECIAL_CHARS);
 
 // Parameters: box_id, render_mode, [user_id, show_dates, disabled]
 // box_id: the desired name of the div that will contain the form.
@@ -50,91 +55,218 @@ if (!securePage(__FILE__)){
 // show_passwords (optional): if set to true, will show the password creation fields
 // disabled (optional): if set to true, disable all fields
 
-$validator = new Validator();
+// Set up Valitron validator
+$v = new Valitron\DefaultValidator($get);
 
-$box_id = $validator->requiredGetVar('box_id');
-$render_mode = $validator->requiredGetVar('render_mode');
-$show_dates = $validator->optionalBooleanGetVar('show_dates', false);
-$show_passwords = $validator->optionalBooleanGetVar('show_passwords', true);
+$v->rule('required', 'box_id');
+$v->rule('required', 'render_mode');
+$v->rule('in', 'render_mode', array('modal', 'panel'));
+$v->rule('integer', 'user_id');
 
-// Buttons (optional)
-// button_submit: If set to true, display the submission button for this form.
-// button_edit: If set to true, display the edit button for panel mode.
-// button_disable: If set to true, display the enable/disable button.
-// button_activate: If set to true, display the activate button for inactive users.
-// button_delete: If set to true, display the deletion button for deletable users.
+$v->setDefault('user_id', null);
+$v->setDefault('fields', array());
+$v->setDefault('buttons', array());
 
-$button_submit = $validator->optionalBooleanGetVar('button_submit', true);
-$button_edit = $validator->optionalBooleanGetVar('button_edit', false);
-$button_disable = $validator->optionalBooleanGetVar('button_disable', false);
-$button_activate = $validator->optionalBooleanGetVar('button_activate', false);
-$button_delete = $validator->optionalBooleanGetVar('button_delete', false);
-$disabled = $validator->optionalBooleanGetVar('disabled', false);
+// Validate!
+$v->validate();
 
-$disable_str = "";
-if ($disabled) {
-    $disable_str = "disabled";
-    $username_disable_str = "disabled";
+// Process errors
+if (count($v->errors()) > 0) {	
+  foreach ($v->errors() as $idx => $error){
+    addAlert("danger", $error);
+  }
+  apiReturnError($ajax, ACCOUNT_ROOT);    
+} else {
+    $get = $v->data();
 }
 
-$userid = $validator->optionalNumericGetVar('user_id');
 // Create appropriate labels
-if ($userid){
+if ($get['user_id']){
     $populate_fields = true;
     $button_submit_text = "Update user";
-    $user_id = htmlentities($userid);
     $target = "update_user.php";
     $box_title = "Update User";
-    $username_disable_str = "disabled";
 } else {
     $populate_fields = false;
     $button_submit_text = "Create user";
     $target = "create_user.php";
     $box_title = "New User";
-    $username_disable_str = "";
 }
-
-$user_name = "";
-$display_name = "";
-$email = "";
-$user_title = "";
-$user_active = "0";
-$user_enabled = "0";
 
 // If we're in update mode, load user data
 if ($populate_fields){
-    $user = loadUser($user_id);
-    $user_name = $user['user_name'];
-    $display_name = $user['display_name'];
-    $email = $user['email'];
-    $user_title = $user['title'];
-    $user_active = $user['active'];
-    $user_enabled = $user['enabled'];
-    $primary_group_id = $user['primary_group_id'];
-    
-    if ($user['last_sign_in_stamp'] == '0'){
-        $last_sign_in_date = "Brand new!";
-    } else {
-        $last_sign_in_date_obj = new DateTime();
-        $last_sign_in_date_obj->setTimestamp($user['last_sign_in_stamp']);
-        $last_sign_in_date = $last_sign_in_date_obj->format('l, F j Y');
-    }
-    
-    $sign_up_date_obj = new DateTime();
-    $sign_up_date_obj->setTimestamp($user['sign_up_stamp']);
-    $sign_up_date = $sign_up_date_obj->format('l, F j Y');
-    
-    $user_permissions = loadUserGroups($user_id);
-    if ($render_mode == "panel"){
-        $box_title = $display_name; 
+    $user = loadUser($get['user_id']);
+    $deleteLabel = $user['user_name'];
+    $user_permissions = loadUserGroups($get['user_id']);
+    if ($get['render_mode'] == "panel"){
+        $box_title = $user['display_name']; 
     }   
+} else {
+    $user = array();
+    $deleteLabel = "";
 }
 
-$response = "";
+$fields_default = [
+    'user_name' => [
+        'type' => 'text',
+        'label' => 'Username',
+        'display' => 'disabled',
+        'validator' => [
+            'minLength' => 1,
+            'maxLength' => 25,
+            'label' => 'Username'
+        ],
+        'placeholder' => 'Please enter the user name'
+    ],
+    'display_name' => [
+        'type' => 'text',
+        'label' => 'Display Name',
+        'display' => 'disabled',
+        'validator' => [
+            'minLength' => 1,
+            'maxLength' => 50,
+            'label' => 'Display name'
+        ],
+        'placeholder' => 'Please enter the display name'
+    ],          
+    'email' => [
+        'type' => 'text',
+        'label' => 'Email',
+        'display' => 'disabled',
+        'icon' => 'fa fa-envelope',
+        'icon_link' => 'mailto: {{value}}',
+        'validator' => [
+            'minLength' => 1,
+            'maxLength' => 150,
+            'email' => true,
+            'label' => 'Email'
+        ],
+        'placeholder' => 'Email goes here'
+    ],
+    'title' => [
+        'type' => 'text',
+        'label' => 'Title',
+        'display' => 'disabled',
+        'validator' => [
+            'minLength' => 1,
+            'maxLength' => 100,
+            'label' => 'Title'
+        ],
+        'default' => 'New User'
+    ],
+    'sign_up_stamp' => [
+        'type' => 'text',
+        'label' => 'Registered Since',
+        'display' => 'disabled',
+        'icon' => 'fa fa-calendar',
+        'preprocess' => 'formatSignInDate'
+    ],
+    'last_sign_in_stamp' => [
+        'type' => 'text',
+        'label' => 'Last Sign-in',
+        'display' => 'disabled',
+        'icon' => 'fa fa-calendar',
+        'preprocess' => 'formatSignInDate',
+        'default' => 0
+    ],
+    'password' => [
+        'type' => 'password',
+        'label' => 'Password',
+        'display' => 'hidden',
+        'icon' => 'fa fa-key',
+        'validator' => [
+            'minLength' => 8,
+            'maxLength' => 50,
+            'label' => 'Password',
+            'passwordMatch' => 'passwordc'
+        ]        
+    ],
+    'passwordc' => [
+        'type' => 'password',
+        'label' => 'Confirm password',
+        'display' => 'hidden',
+        'icon' => 'fa fa-key',
+        'validator' => [
+            'minLength' => 8,
+            'maxLength' => 50,
+            'label' => 'Password'
+        ]     
+    ],
+    'groups' => [
+        'display' => 'disabled'
+    ]
+];
 
-if ($render_mode == "modal"){
-    $response .=
-    "<div id='$box_id' class='modal fade'>
+$fields = array_merge_recursive_distinct($fields_default, $get['fields']);
+
+// Buttons (optional)
+// submit: display the submission button for this form.
+// edit: display the edit button for panel mode.
+// disable: display the enable/disable button.
+// delete: display the deletion button.
+// activate: display the activate button for inactive users.
+
+$buttons_default = [
+  "btn_submit" => [
+    "type" => "submit",
+    "label" => $button_submit_text,
+    "display" => "hidden",
+    "style" => "success",
+    "size" => "lg"  
+  ],
+  "btn_edit" => [
+    "type" => "launch",
+    "label" => "Edit",
+    "icon" => "fa fa-edit",    
+    "display" => "show"            
+  ],
+  "btn_activate" => [
+    "type" => "button",
+    "label" => "Activate",
+    "icon" => "fa fa-bolt",
+    "display" => (isset($user['active']) && $user['active'] == '0') ? "show" : "hidden",
+    "style" => "success"
+  ],
+  "btn_disable" => [
+    "type" => "button",
+    "label" => "Disable",
+    "icon" => "fa fa-minus-circle",
+    "display" => (isset($user['enabled']) && $user['enabled'] == '1') ? "show" : "hidden",
+    "style" => "warning"
+  ],
+  "btn_enable" => [
+    "type" => "button",
+    "label" => "Enable",
+    "icon" => "fa fa-plus-circle",
+    "display" => (isset($user['enabled']) && $user['enabled'] == '1') ? "hidden" : "show",
+    "style" => "warning"
+  ],  
+  "btn_delete" => [
+    "type" => "launch",
+    "label" => "Delete",
+    "icon" => "fa fa-trash-o",    
+    "display" => "show",
+    "data" => array(
+        "label" => $deleteLabel
+    ),
+    "style" => "danger"
+  ],
+  "btn_cancel" => [
+    "type" => "cancel",
+    "label" => "Cancel",
+    "display" => ($get['render_mode'] == 'modal') ? "show" : "hidden",
+    "style" => "link",
+    "size" => "lg"    
+  ]
+];
+
+$buttons = array_merge_recursive_distinct($buttons_default, $get['buttons']);
+
+$template = "";
+
+if ($get['render_mode'] == "modal"){
+    $template .=
+    "<div id='{$get['box_id']}' class='modal fade'>
         <div class='modal-dialog'>
             <div class='modal-content'>
                 <div class='modal-header'>
@@ -143,8 +275,8 @@ if ($render_mode == "modal"){
                 </div>
                 <div class='modal-body'>
                     <form method='post' action='$target'>";        
-} else if ($render_mode == "panel"){
-    $response .=
+} else if ($get['render_mode'] == "panel"){
+    $template .=
     "<div class='panel panel-primary'>
         <div class='panel-heading'>
             <h2 class='panel-title pull-left'>$box_title</h2>
@@ -159,175 +291,133 @@ if ($render_mode == "modal"){
 
 // Load CSRF token
 $csrf_token = $loggedInUser->csrf_token;
-$response .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
+$template .= "<input type='hidden' name='csrf_token' value='$csrf_token'/>";
 
-$response .= "
+$template .= "
 <div class='dialog-alert'>
 </div>
 <div class='row'>
     <div class='col-sm-6'>
-        <h5>Username</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='user_name' autocomplete='off' value='$user_name' data-validate='{\"minLength\": 1, \"maxLength\": 25, \"label\": \"Username\" }' $username_disable_str>
-        </div>
+        {{user_name}}
     </div>
     <div class='col-sm-6'>
-        <h5>Display Name</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='display_name' autocomplete='off' value='$display_name' data-validate='{\"minLength\": 1, \"maxLength\": 50, \"label\": \"Display name\" }' $disable_str>
-        </div>
-    </div>
+        {{display_name}}
+    </div>    
 </div>
 <div class='row'>
     <div class='col-sm-6'>
-        <h5>Email</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><a id='email-link' href=''><i class='fa fa-envelope'></i></a></span>
-            <input type='text' class='form-control' name='email' autocomplete='off' value='$email' data-validate='{\"email\": true, \"label\": \"Email\" }' $disable_str>
-        </div>
+        {{email}}
     </div>
     <div class='col-sm-6'>
-        <h5>Title</h5>
-        <div class='input-group'>
-            <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-            <input type='text' class='form-control' name='user_title' autocomplete='off' value='$user_title' data-validate='{\"minLength\": 1, \"maxLength\": 100, \"label\": \"Title\" }' $disable_str>
-        </div>
-    </div>
-</div>";
-
-if ($show_dates){
-    $response .= "
-    <div class='row'>
-        <div class='col-sm-6'>
-        <h5>Last Sign-in</h5>
-        <div class='input-group optional'>
-            <span class='input-group-addon'><i class='fa fa-calendar'></i></span>
-            <input type='text' class='form-control' name='last_sign_in_date' value='$last_sign_in_date' disabled>
-        </div>
-        </div>
-        <div class='col-sm-6'>
-        <h5>Registered Since</h5>
-        <div class='input-group optional'>
-            <span class='input-group-addon'><i class='fa fa-calendar'></i></span>
-            <input type='text' class='form-control' name='sign_up_date' value='$sign_up_date' disabled>
-        </div>
-        </div>
-    </div>";
-}
-
-$response .= "<div class='row'>";
-
-if ($show_passwords){
-    $response .= "
+        {{title}}
+    </div>    
+</div>
+<div class='row'>
     <div class='col-sm-6'>
-        <div class='input-group'>
-            <h5>Password</h5>
-            <div class='input-group'>
-                <span class='input-group-addon'><i class='fa fa-lock'></i></span>
-                <input type='password' name='password' class='form-control'  autocomplete='off' data-validate='{\"minLength\": 8, \"maxLength\": 50, \"passwordMatch\": \"passwordc\", \"label\": \"Password\"}'>
-            </div>
-        </div>
-        <div class='input-group'>
-            <h5>Confirm password</h5>
-            <div class='input-group'>
-                <span class='input-group-addon'><i class='fa fa-lock'></i></span>
-                <input type='password' name='passwordc' class='form-control'  autocomplete='off' data-validate='{\"minLength\": 8, \"maxLength\": 50, \"label\": \"Confirm password\"}'>
-            </div>
-        </div>         
+        {{last_sign_in_stamp}}
+    </div>
+    <div class='col-sm-6'>
+        {{sign_up_stamp}}
+    </div>    
+</div>
+<div class='row'>
+    <div class='col-sm-6'>
+        {{password}}
+        {{passwordc}}
     </div>";
-}
 
-// Attempt to load all user groups
-$groups = loadGroups();
-
-if ($groups){
-  $response .= "    
-      <div class='col-sm-6'>
-          <h5>Groups</h5>
-          <ul class='list-group permission-summary-rows'>";
-  
-  foreach ($groups as $id => $group){
-      $group_name = $group['name'];
-      $is_default = $group['is_default'];
-      $disable_primary_toggle = $disable_str;
-      $response .= "
-      <li class='list-group-item'>
-          $group_name
-          <span class='pull-right'>
-          <input name='select_permissions' type='checkbox' class='form-control' data-id='$id' $disable_str";
-      if ((!$populate_fields and $is_default >= 1) || ($populate_fields && isset($user_permissions[$id]))){
-          $response .= " checked";
+// Attempt to load all user groups, if the groups field is enabled
+if ($fields['groups']['display'] != "hidden"){
+    $groups = loadGroups();
+    
+    if ($groups){
+    
+      if ($fields['groups']['display'] == "disabled"){
+        $disable_str = "disabled";
       } else {
-        $disable_primary_toggle = "disabled";
+        $disable_str = "";
       }
-      $response .= "/>";
-      if ((!$populate_fields and $is_default == 2) || ($populate_fields && ($id == $primary_group_id))){
-        $primary_group_class = "btn-toggle-primary-group btn-toggle-primary-group-on";
-      } else {
-        $primary_group_class = "btn-toggle-primary-group";
+    
+      $template .= "    
+          <div class='col-sm-6'>
+              <h5>Groups</h5>
+              <ul class='list-group permission-summary-rows'>";
+      
+      foreach ($groups as $id => $group){
+          $group_name = $group['name'];
+          $is_default = $group['is_default'];
+          $disable_primary_toggle = $disable_str; 
+          $template .= "
+          <li class='list-group-item'>
+              $group_name
+              <span class='pull-right'>
+              <input name='select_permissions' type='checkbox' class='form-control' data-id='$id' $disable_str";
+          if ((!$populate_fields and $is_default >= 1) || ($populate_fields && isset($user_permissions[$id]))){
+              $template .= " checked";
+          } else {
+            $disable_primary_toggle = "disabled";
+          }
+          $template .= "/>";
+          if ((!$populate_fields and $is_default == 2) || ($populate_fields && ($id == $user['primary_group_id']))){
+            $primary_group_class = "btn-toggle-primary-group btn-toggle-primary-group-on";
+          } else {
+            $primary_group_class = "btn-toggle-primary-group";
+          }
+          
+          $template .= "  <button type='button' class='btn btn-xs $primary_group_class $disable_primary_toggle' data-id='$id' title='Set as primary group'><i class='fa fa-home'></i></button>";
+          
+          
+          $template .= "</span>
+          </li>";  
       }
-      
-      $response .= "  <button type='button' class='btn btn-xs $primary_group_class $disable_primary_toggle' data-id='$id' title='Set as primary group'><i class='fa fa-home'></i></button>";
-      
-      
-      $response .= "</span>
-      </li>";  
-  }
-        
-  $response .= "
-          </ul>
-      </div>";
-}
-
-$response .= "</div>";
-
-// Buttons
-$response .= "
-<br><div class='row'>
-";
-
-if ($button_submit){
-    $response .= "<div class='col-xs-8'><div class='vert-pad'><button type='submit' data-loading-text='Please wait...' class='btn btn-lg btn-success'>$button_submit_text</button></div></div>";
-}
-
-// Create the edit button
-if ($button_edit){
-    $response .= "<div class='col-xs-6 col-sm-3'><div class='vert-pad'><button class='btn btn-block btn-primary btn-edit-dialog' data-toggle='modal'><i class='fa fa-edit'></i> Edit</button></div></div>";
-}
-
-// Create the activate button if the user is inactive
-if ($button_activate and ($user_active == '0')){
-    $response .= "<div class='col-xs-6 col-sm-3'><div class='vert-pad'><button class='btn btn-block btn-success btn-activate-user' data-toggle='modal'><i class='fa fa-bolt'></i> Activate</button></div></div>";
-}
-
-// Create the disable/enable buttons
-if ($button_disable){
-    if ($user_enabled == '1') {
-        $response .= "<div class='col-xs-6 col-sm-3'><div class='vert-pad'><button class='btn btn-block btn-warning btn-disable-user' data-toggle='modal'><i class='fa fa-minus-circle'></i> Disable</button></div></div>";
-    } else {
-        $response .= "<div class='col-xs-6 col-sm-3'><div class='vert-pad'><button class='btn btn-block btn-warning btn-enable-user' data-toggle='modal'><i class='fa fa-plus-circle'></i> Re-enable</button></div></div>";
+            
+      $template .= "
+              </ul>
+          </div>";
     }
 }
 
-// Create the deletion button
-if ($button_delete){
-    $response .= "<div class='col-xs-6 col-sm-3'><div class='vert-pad'><button class='btn btn-block btn-danger btn-delete-user' data-toggle='modal' data-user_name='$user_name'><i class='fa fa-trash-o'></i> Delete</button></div></div>";
-}
+$template .= "</div>";
 
-// Create the cancel button for modal mode
-if ($render_mode == 'modal'){
-    $response .= "<div class='col-xs-4 col-sm-3 pull-right'><div class='vert-pad'><button class='btn btn-block btn-lg btn-link' data-dismiss='modal'>Cancel</button></div></div>";
-}
-$response .= "</div>";
+// Buttons
+$template .= "<br>
+<div class='row'>
+    <div class='col-xs-8 col-sm-4 hideable'>
+        {{btn_submit}}
+    </div>
+    <div class='col-xs-6 col-sm-3 hideable'>
+        {{btn_edit}}
+    </div>    
+    <div class='col-xs-6 col-sm-3 hideable'>
+        {{btn_activate}}
+    </div>
+    <div class='col-xs-6 col-sm-3 hideable'> 
+      {{btn_enable}}
+    </div>
+    <div class='col-xs-6 col-sm-3 hideable'> 
+      {{btn_disable}}
+    </div>
+    <div class='col-xs-6 col-sm-3 hideable'>
+      {{btn_delete}}
+    </div>    
+    <div class='col-xs-4 col-sm-3 pull-right'>
+      {{btn_cancel}}
+    </div>
+</div>";
 
 // Add closing tags as appropriate
-if ($render_mode == "modal")
-    $response .= "</form></div></div></div></div>";
+if ($get['render_mode'] == "modal")
+    $template .= "</form></div></div></div></div>";
 else
-    $response .= "</form></div></div>";
-    
-echo json_encode(array("data" => $response), JSON_FORCE_OBJECT);
+    $template .= "</form></div></div>";
+
+// Render form
+$fb = new FormBuilder($template, $fields, $buttons, $user);
+$response = $fb->render();
+     
+if ($ajax)
+    echo json_encode(array("data" => $response), JSON_FORCE_OBJECT);
+else
+    echo $response;
 
 ?>

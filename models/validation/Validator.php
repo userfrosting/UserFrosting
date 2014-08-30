@@ -40,6 +40,20 @@ namespace Valitron;
 
 use InvalidArgumentException;
 
+/** Custom class defined by Alex Weissman to extend default value capabilities
+ *
+ */
+class DefaultValidator extends Validator {
+    
+    public function setDefault($field, $defaultValue) {
+        if (!isset($this->_fields[$field])){
+            $this->_fields[$field] = $defaultValue;
+        }
+        return true;
+    }
+
+}
+
 /**
  * Validation Class
  *

@@ -43,30 +43,12 @@ if (!securePage(__FILE__)){
 setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
 // Admin page
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    
-    <title>UserFrosting Admin - Admin Dashboard</title>
-
-    <?php require_once("includes.php");  ?>
-
-    <!-- Page-specific CSS -->
-    <link rel="stylesheet" href="../css/typeahead.css" type="text/css" />
-    <link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
-    
-    <!-- Page Specific Plugins -->
-	<script src="../js/jquery.tablesorter.js"></script>
-	<script src="../js/tables.js"></script>
-    <script src="../js/bootstrap-switch.min.js"></script>
- 
-  </head>
+  <?php
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE" => "Admin Dashboard"));
+  ?>
 
   <body>
 

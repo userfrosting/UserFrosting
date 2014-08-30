@@ -42,25 +42,9 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>UserFrosting Admin - Groups</title>
-		
-	<?php require_once("includes.php");  ?>
-	
-	<!-- Page Specific Plugins -->
-	<link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
-
-	<script src="../js/bootstrap-switch.min.js"></script>
-	<script src="../js/widget-groups.js"></script>
-	
-  </head>
-
-  <body>
+  <?php
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE" => "Groups"));
+  ?>
 
     <div id="wrapper">
 
@@ -85,6 +69,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 		</div>
       </div>
 	</div>
+	<script src="../js/widget-groups.js"></script>
 	<script>
         $(document).ready(function() {
           // Load the header

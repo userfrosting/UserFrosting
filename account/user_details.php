@@ -56,24 +56,9 @@ if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>UserFrosting Admin - User Details</title>
-
-	<?php require_once("includes.php");  ?>
-
-    <!-- Page Specific Plugins -->
-	<link rel="stylesheet" href="../css/bootstrap-switch.min.css" type="text/css" />
-
-	<script src="../js/date.min.js"></script>
-    <script src="../js/handlebars-v1.2.0.js"></script> 
-    <script src="../js/bootstrap-switch.min.js"></script>
-	<script src="../js/widget-users.js"></script>
-  </head>
+  <?php
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE" => "User Details"));
+  ?>
 <body>
   
 <?php
@@ -101,7 +86,8 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
   </div><!-- /#page-wrapper -->
 
 </div><!-- /#wrapper -->
-    
+
+    <script src="../js/widget-users.js"></script>    
     <script>
 		$(document).ready(function() {
 			// Load the header

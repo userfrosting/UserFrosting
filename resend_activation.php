@@ -43,36 +43,10 @@ if(isUserLoggedIn()) {
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="css/favicon.ico">
-
-    <title>UserFrosting - Resend Activation Email</title>
-
-	<link rel="icon" type="image/x-icon" href="css/favicon.ico" />
-	
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/jumbotron-narrow.css" rel="stylesheet">
-	
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/bootstrap-switch.min.css" type="text/css" />
-	 
-    <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.min.js"></script>
-	<script src="js/bootstrap.js"></script>
-	<script src="js/userfrosting.js"></script>
-	<script src="js/date.min.js"></script>
-    <script src="js/handlebars-v1.2.0.js"></script> 
-
-  </head>
-
+  <?php
+	echo renderTemplate("head.html", array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE#" => "Resend Activation"));
+  ?>
+  
   <body>
     <div class="container">
       <div class="header">
@@ -106,9 +80,7 @@ if(isUserLoggedIn()) {
 		  </div>
 		</form>
       </div>	
-      <div class="footer">
-        <p>&copy; <a href='http://www.userfrosting.com'>UserFrosting</a>, 2014</p>
-      </div>
+      <?php echo renderTemplate("footer.html"); ?>
 
     </div> <!-- /container -->
 
