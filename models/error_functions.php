@@ -11,6 +11,25 @@ function addAlert($type, $message){
     $_SESSION["userAlerts"][] = $alert;
 }
 
+// Get the last referral page.
+function getReferralPage(){
+	if (isset($_SESSION['referral_page'])){
+		return $_SESSION['referral_page'];
+	} else {
+		if(isUserLoggedIn()) {
+			return ACCOUNT_ROOT;
+		} else {
+			return SITE_ROOT;
+		}
+	}
+}
+
+// Set the referral page to the specified page.
+function setReferralPage($page){
+	$_SESSION['referral_page'] = $page;
+}
+
+
 // Halt execution of an API page and either return the error code (AJAX mode), or forward to a page
 function apiReturnError($ajax = false, $failure_landing_page = null){
 	// Default page

@@ -29,7 +29,8 @@ THE SOFTWARE.
 
 */
 
-session_start();
+require_once("config.php");
+
 $md5_hash = md5(rand(0,99999)); 
 $security_code = substr($md5_hash, 25, 5); 
 $enc = md5($security_code);

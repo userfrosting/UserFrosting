@@ -41,4 +41,11 @@ function replaceKeyHooks($data, $template){
     return $template;
 }
 
+// UserCake's basic templating system.  Replaces hooks with specified text
+function replaceDefaultHook($str)
+{
+	global $default_hooks,$default_replace;	
+	return (str_replace($default_hooks,$default_replace,$str));
+}
+
 ?>

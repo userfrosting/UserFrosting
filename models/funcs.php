@@ -29,9 +29,151 @@ THE SOFTWARE.
 
 */
 
-//Functions that do not interact with DB
-//------------------------------------------------------------------------------
+/*********************************
+ * Formatting Functions
+ *********************************/
 
+/**
+* Converts phone numbers to the formatting standard
+*
+* @param   String   $num   A unformatted phone number
+* @return  String   Returns the formatted phone number
+*/
+function formatPhone($num)
+{
+$num = preg_replace('/[^0-9]/', '', $num);
+ 
+$len = strlen($num);
+if($len == 7)
+$num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
+elseif($len == 10)
+$num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
+ 
+return $num;
+}
+
+function formatCurrency($num){
+	if ($num === "")
+		return "";
+	else
+		return number_format($num, 2);
+}
+
+function formatDateComponents($stamp) {
+	$formatted = [];
+	$formatted['date'] = date("M jS, Y", $stamp);
+	$formatted['day'] = date("l", $stamp);
+	$formatted['time'] = date("g:i a", $stamp);
+	return $formatted;
+}
+
+function formatSignInDate($stamp){
+	$stamp = intval($stamp);
+    if ($stamp == '0'){
+        return "Brand new!";
+    } else {
+        $datetime = new DateTime();
+        $datetime->setTimestamp($stamp);
+        return $datetime->format('l, F j Y');
+    }
+}
+
+// Filter out all non-digits from a string
+function filterNonDigits($num){
+	return preg_replace("/[^0-9]/", "", $num);
+}
+
+// Convert text that might be in a different case or with trailing/leading whitespace to a standard form
+function str_normalize($str)
+{
+	return strtolower(trim($str));
+}
+
+// Parse a comment block into a description and array of parameters
+function parseCommentBlock($comment){
+	$lines = explode("\n", $comment);
+	$result = array('description' => "", 'parameters' => array());
+	foreach ($lines as $line){
+		if (!preg_match('/^\s*\/?\*+\/?\s*$/', $line)){
+			// Extract description or parameters
+			if (preg_match('/^\s*\**\s*@param\s+(\w+)\s+\$(\w+)\s+(.*)$/', $line, $matches)){
+				$type = $matches[1];
+				$name = $matches[2];
+				$description = $matches[3];
+				$result['parameters'][$name] = array('type' => $type, 'description' => $description);
+			} else if (preg_match('/^\s*\**\s*@(.*)$/', $line, $matches)){
+				// Skip other types of special entities
+			} else if (preg_match('/^\s*\**\s*(.*)$/', $line, $matches)){
+				$description = $matches[1];
+				$result['description'] .= $description;
+			}
+		}
+	}
+	return $result;
+}
+
+// Useful for testing output of API functions
+function prettyPrint( $json )
+{
+    $result = '';
+    $level = 0;
+    $in_quotes = false;
+    $in_escape = false;
+    $ends_line_level = NULL;
+    $json_length = strlen( $json );
+
+    for( $i = 0; $i < $json_length; $i++ ) {
+        $char = $json[$i];
+        $new_line_level = NULL;
+        $post = "";
+        if( $ends_line_level !== NULL ) {
+            $new_line_level = $ends_line_level;
+            $ends_line_level = NULL;
+        }
+        if ( $in_escape ) {
+            $in_escape = false;
+        } else if( $char === '"' ) {
+            $in_quotes = !$in_quotes;
+        } else if( ! $in_quotes ) {
+            switch( $char ) {
+                case '}': case ']':
+                    $level--;
+                    $ends_line_level = NULL;
+                    $new_line_level = $level;
+                    break;
+
+                case '{': case '[':
+                    $level++;
+                case ',':
+                    $ends_line_level = $level;
+                    break;
+
+                case ':':
+                    $post = " ";
+                    break;
+
+                case " ": case "\t": case "\n": case "\r":
+                    $char = "";
+                    $ends_line_level = $new_line_level;
+                    $new_line_level = NULL;
+                    break;
+            }
+        } else if ( $char === '\\' ) {
+            $in_escape = true;
+        }
+        if( $new_line_level !== NULL ) {
+            $result .= "\n".str_repeat( "\t", $new_line_level );
+        }
+        $result .= $char.$post;
+    }
+
+    return $result;
+}
+
+/*********************************
+ * Language Functions
+ *********************************/
+ 
 //Retrieve a list of all .php files in models/languages
 function getLanguageFiles()
 {
@@ -40,6 +182,41 @@ function getLanguageFiles()
 	//print each file name
 	return $languages;
 }
+
+
+//Inputs language strings from selected language.
+function lang($key,$markers = NULL)
+{
+	global $lang;
+	if($markers == NULL)
+	{
+		$str = $lang[$key];
+	}
+	else
+	{
+		//Replace any dyamic markers
+		$str = $lang[$key];
+		$iteration = 1;
+		foreach($markers as $marker)
+		{
+			$str = str_replace("%m".$iteration."%",$marker,$str);
+			$iteration++;
+		}
+	}
+	//Ensure we have something to return
+	if($str == "")
+	{
+		return ("No language key found");
+	}
+	else
+	{
+		return $str;
+	}
+}
+
+/*********************************
+ * Security Functions
+ *********************************/
 
 //Retrieve a list of all .php files in a given directory
 function getPageFiles($directory)
@@ -122,187 +299,6 @@ function getPasswordHashTypeUF($hash){
 		return "homegrown";
 	else
 		return "modern";
-}
-
-//Checks if an email is valid
-function isValidEmail($email)
-{
-	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-function isValidName($name) {
-	return preg_match('/^[A-Za-z0-9 ]+$/', $name);
-}
-
-//Inputs language strings from selected language.
-function lang($key,$markers = NULL)
-{
-	global $lang;
-	if($markers == NULL)
-	{
-		$str = $lang[$key];
-	}
-	else
-	{
-		//Replace any dyamic markers
-		$str = $lang[$key];
-		$iteration = 1;
-		foreach($markers as $marker)
-		{
-			$str = str_replace("%m".$iteration."%",$marker,$str);
-			$iteration++;
-		}
-	}
-	//Ensure we have something to return
-	if($str == "")
-	{
-		return ("No language key found");
-	}
-	else
-	{
-		return $str;
-	}
-}
-
-//Checks if a string is within a min and max length
-function minMaxRange($min, $max, $what)
-{
-	if(strlen(trim($what)) < $min)
-		return true;
-	else if(strlen(trim($what)) > $max)
-		return true;
-	else
-	return false;
-}
-
-// Basic templating system.  Replaces hooks with specified text
-function replaceDefaultHook($str)
-{
-	global $default_hooks,$default_replace;	
-	return (str_replace($default_hooks,$default_replace,$str));
-}
-
-// Convert text that might be in a different case or with trailing/leading whitespace to a standard form
-function str_normalize($str)
-{
-	return strtolower(trim($str));
-}
-
-/**
-* array_merge_recursive does indeed merge arrays, but it converts values with duplicate
-* keys to arrays rather than overwriting the value in the first array with the duplicate
-* value in the second array, as array_merge does. I.e., with array_merge_recursive,
-* this happens (documented behavior):
-*
-* array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
-*     => array('key' => array('org value', 'new value'));
-*
-* array_merge_recursive_distinct does not change the datatypes of the values in the arrays.
-* Matching keys' values in the second array overwrite those in the first array, as is the
-* case with array_merge, i.e.:
-*
-* array_merge_recursive_distinct(array('key' => 'org value'), array('key' => 'new value'));
-*     => array('key' => array('new value'));
-*
-* Parameters are passed by reference, though only for performance reasons. They're not
-* altered by this function.
-*
-* @param array $array1
-* @param array $array2
-* @return array
-* @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
-* @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
-*/
-function array_merge_recursive_distinct ( array &$array1, array &$array2 )
-{
-  $merged = $array1;
-
-  foreach ( $array2 as $key => &$value )
-  {
-    if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
-    {
-      $merged [$key] = array_merge_recursive_distinct ( $merged [$key], $value );
-    }
-    else
-    {
-      $merged [$key] = $value;
-    }
-  }
-
-  return $merged;
-}
-
-// Get the last referral page.
-function getReferralPage(){
-	if (isset($_SESSION['referral_page'])){
-		return $_SESSION['referral_page'];
-	} else {
-		if(isUserLoggedIn()) {
-			return ACCOUNT_ROOT;
-		} else {
-			return SITE_ROOT;
-		}
-	}
-}
-
-// Set the referral page to the specified page.
-function setReferralPage($page){
-	$_SESSION['referral_page'] = $page;
-}
-
-/**
-* Converts phone numbers to the formatting standard
-*
-* @param   String   $num   A unformatted phone number
-* @return  String   Returns the formatted phone number
-*/
-function formatPhone($num)
-{
-$num = preg_replace('/[^0-9]/', '', $num);
- 
-$len = strlen($num);
-if($len == 7)
-$num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
-elseif($len == 10)
-$num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
- 
-return $num;
-}
-
-function formatCurrency($num){
-	if ($num === "")
-		return "";
-	else
-		return number_format($num, 2);
-}
-
-function formatDateComponents($stamp) {
-	$formatted = [];
-	$formatted['date'] = date("M jS, Y", $stamp);
-	$formatted['day'] = date("l", $stamp);
-	$formatted['time'] = date("g:i a", $stamp);
-	return $formatted;
-}
-
-function formatSignInDate($stamp){
-	$stamp = intval($stamp);
-    if ($stamp == '0'){
-        return "Brand new!";
-    } else {
-        $datetime = new DateTime();
-        $datetime->setTimestamp($stamp);
-        return $datetime->format('l, F j Y');
-    }
-}
-
-// Filter out all non-digits from a string
-function filterNonDigits($num){
-	return preg_replace("/[^0-9]/", "", $num);
 }
 
 //multipurpose security function. works on strings, array's etc.
@@ -429,85 +425,82 @@ function form_protect($token)
 	{echo '<input type="hidden" name="csrf_token" value="'. $token .'">';}	
 }
 
-// Useful for testing output of API functions
-function prettyPrint( $json )
+/*********************************
+ * Validation Functions.  TODO: Switch over to Valitron.
+ *********************************/
+
+//Checks if an email is valid
+function isValidEmail($email)
 {
-    $result = '';
-    $level = 0;
-    $in_quotes = false;
-    $in_escape = false;
-    $ends_line_level = NULL;
-    $json_length = strlen( $json );
-
-    for( $i = 0; $i < $json_length; $i++ ) {
-        $char = $json[$i];
-        $new_line_level = NULL;
-        $post = "";
-        if( $ends_line_level !== NULL ) {
-            $new_line_level = $ends_line_level;
-            $ends_line_level = NULL;
-        }
-        if ( $in_escape ) {
-            $in_escape = false;
-        } else if( $char === '"' ) {
-            $in_quotes = !$in_quotes;
-        } else if( ! $in_quotes ) {
-            switch( $char ) {
-                case '}': case ']':
-                    $level--;
-                    $ends_line_level = NULL;
-                    $new_line_level = $level;
-                    break;
-
-                case '{': case '[':
-                    $level++;
-                case ',':
-                    $ends_line_level = $level;
-                    break;
-
-                case ':':
-                    $post = " ";
-                    break;
-
-                case " ": case "\t": case "\n": case "\r":
-                    $char = "";
-                    $ends_line_level = $new_line_level;
-                    $new_line_level = NULL;
-                    break;
-            }
-        } else if ( $char === '\\' ) {
-            $in_escape = true;
-        }
-        if( $new_line_level !== NULL ) {
-            $result .= "\n".str_repeat( "\t", $new_line_level );
-        }
-        $result .= $char.$post;
-    }
-
-    return $result;
+	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
-// Parse a comment block into a description and array of parameters
-function parseCommentBlock($comment){
-	$lines = explode("\n", $comment);
-	$result = array('description' => "", 'parameters' => array());
-	foreach ($lines as $line){
-		if (!preg_match('/^\s*\/?\*+\/?\s*$/', $line)){
-			// Extract description or parameters
-			if (preg_match('/^\s*\**\s*@param\s+(\w+)\s+\$(\w+)\s+(.*)$/', $line, $matches)){
-				$type = $matches[1];
-				$name = $matches[2];
-				$description = $matches[3];
-				$result['parameters'][$name] = array('type' => $type, 'description' => $description);
-			} else if (preg_match('/^\s*\**\s*@(.*)$/', $line, $matches)){
-				// Skip other types of special entities
-			} else if (preg_match('/^\s*\**\s*(.*)$/', $line, $matches)){
-				$description = $matches[1];
-				$result['description'] .= $description;
-			}
-		}
-	}
-	return $result;
+function isValidName($name) {
+	return preg_match('/^[A-Za-z0-9 ]+$/', $name);
+}
+
+//Checks if a string is within a min and max length
+function minMaxRange($min, $max, $what)
+{
+	if(strlen(trim($what)) < $min)
+		return true;
+	else if(strlen(trim($what)) > $max)
+		return true;
+	else
+	return false;
+}
+
+/*********************************
+ * Miscellaneous Functions
+ *********************************/
+ 
+/**
+* array_merge_recursive does indeed merge arrays, but it converts values with duplicate
+* keys to arrays rather than overwriting the value in the first array with the duplicate
+* value in the second array, as array_merge does. I.e., with array_merge_recursive,
+* this happens (documented behavior):
+*
+* array_merge_recursive(array('key' => 'org value'), array('key' => 'new value'));
+*     => array('key' => array('org value', 'new value'));
+*
+* array_merge_recursive_distinct does not change the datatypes of the values in the arrays.
+* Matching keys' values in the second array overwrite those in the first array, as is the
+* case with array_merge, i.e.:
+*
+* array_merge_recursive_distinct(array('key' => 'org value'), array('key' => 'new value'));
+*     => array('key' => array('new value'));
+*
+* Parameters are passed by reference, though only for performance reasons. They're not
+* altered by this function.
+*
+* @param array $array1
+* @param array $array2
+* @return array
+* @author Daniel <daniel (at) danielsmedegaardbuus (dot) dk>
+* @author Gabriel Sobrinho <gabriel (dot) sobrinho (at) gmail (dot) com>
+*/
+function array_merge_recursive_distinct ( array &$array1, array &$array2 )
+{
+  $merged = $array1;
+
+  foreach ( $array2 as $key => &$value )
+  {
+    if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
+    {
+      $merged [$key] = array_merge_recursive_distinct ( $merged [$key], $value );
+    }
+    else
+    {
+      $merged [$key] = $value;
+    }
+  }
+
+  return $merged;
 }
 
 ?>
