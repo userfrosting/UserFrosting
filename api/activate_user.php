@@ -37,6 +37,9 @@ require_once("../models/config.php");
 set_error_handler('logAllErrors');
 
 // Request method: GET
+$ajax = checkRequestMode("get");
+
+// Request method: GET
 // Parameters: [token or user_id]
 $validator = new Validator();
 $token = $validator->optionalGetVar('token');

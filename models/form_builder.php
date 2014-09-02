@@ -44,6 +44,10 @@ class FormBuilder {
                 $rendered_fields[$field_name] = $this->renderToggleField($field_name);
             } else if ($type == "select") {
                 $rendered_fields[$field_name] = $this->renderSelectField($field_name);
+            } else if ($type == "switch") {
+                $rendered_fields[$field_name] = $this->renderSwitchField($field_name);
+            } else if ($type == "radioGroup") {
+                $rendered_fields[$field_name] = $this->renderRadioGroupField($field_name);
             }
         }
         // Render buttons
@@ -154,6 +158,60 @@ class FormBuilder {
         return replaceKeyHooks($field_data, $result);
     }
 
+    private function renderSwitchField($field_name){
+    
+        $field_data = $this->generateFieldData($field_name);
+        
+        $field = $this->_fields[$field_name];
+        $checked = $field_data['value'] ? "checked" : "";
+        $icon = isset($field['icon']) ? $field['icon'] : null;
+        $on = isset($field['on']) ? $field['on'] : "";
+        $off = isset($field['off']) ? $field['off'] : "";
+        
+        if ($icon)
+            $center_label = "data-label-text=\"{{addon}}\"";
+        else 
+            $center_label = "";
+        
+        $result = "
+        <div class='form-group {{hidden}}'>
+            <label class='label-switch'>{{label}}</label>
+            <span class='pull-right'>
+                <input class='form-control bootstrapswitch' type='checkbox' data-on-text='$on' data-off-text='$off' $center_label name='{{name}}' {{disabled}} $checked>
+            </span>
+        </div>";
+        
+        return replaceKeyHooks($field_data, $result);
+    }    
+
+    private function renderRadioGroupField($field_name){
+    
+        $field_data = $this->generateFieldData($field_name);
+        
+        $field = $this->_fields[$field_name];
+        $choices = isset($field['choices']) ? $field['choices'] : array();
+        
+        $result = "
+        <div class='form-group {{hidden}}'>
+            <label>{{label}}</label>
+            <div class='input-group'>";
+        
+        // Render choices (buttons)
+        foreach ($choices as $choice_value => $choice){
+            if ($field_data['value'] == $choice_value){ 
+                $result .=  "<button type='button' class='bootstrapradio' name='{{name}}' value='$choice_value' title='{$choice['label']}' {{disabled}} data-selected='true'><i class='{$choice['icon']}'></i></button> ";
+            } else {
+                $result .=  "<button type='button' class='bootstrapradio' name='{{name}}' value='$choice_value' title='{$choice['label']}' {{disabled}} data-selected='false'><i class='{$choice['icon']}'></i></button> ";
+            }	
+        }
+        
+        $result .= "
+            </div>
+        </div>";
+        
+        return replaceKeyHooks($field_data, $result);
+    }      
+        
     private function renderButton($button_name){
         $button = $this->_buttons[$button_name];
         $display = isset($button['display']) ? $button['display'] : "show";

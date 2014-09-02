@@ -213,25 +213,21 @@ function userForm(box_id, user_id) {
 		switches.bootstrapSwitch('setSizeClass', 'switch-mini' );
 		
 		// Initialize primary group buttons
-		$('#' + box_id + ' .btn-toggle-primary-group').click(function() {
-			$('#' + box_id + ' .btn-toggle-primary-group-on').removeClass('btn-toggle-primary-group-on');
-			$(this).addClass('btn-toggle-primary-group-on');
-		});
+		$(".bootstrapradio").bootstrapradio();
 		
 		// Enable/disable primary group buttons when switch is toggled
 		switches.on('switch-change', function(event, data){
 			var el = data.el;
 			var id = el.data('id');
 			// Get corresponding primary button
-			var primary_button = $('#' + box_id + ' button.btn-toggle-primary-group[data-id="' + id + '"]');
+			var primary_button = $('#' + box_id + ' button.bootstrapradio[name="primary_group_id"][value="' + id + '"]');
 			// If switch is turned on, enable the corresponding button, otherwise turn off and disable it
 			if (data.value) {
 				console.log("enabling");
-				primary_button.removeClass('disabled');
+				primary_button.bootstrapradio('disabled', false);
 			} else {
 				console.log("disabling");
-				primary_button.removeClass('btn-toggle-primary-group-on');
-				primary_button.addClass('disabled');
+				primary_button.bootstrapradio('disabled', true);
 			}	
 		});
 		
@@ -313,7 +309,10 @@ function userDisplay(box_id, user_id) {
 		switches.data('off-label', '<i class="fa fa-times"></i>');
 		switches.bootstrapSwitch();
 		switches.bootstrapSwitch('setSizeClass', 'switch-mini' );
-	
+
+		// Initialize primary group buttons
+		$(".bootstrapradio").bootstrapradio();
+		
 		// Link buttons
 		$('#' + box_id + ' button[name="btn_edit"]').click(function() { 
 			userForm('user-update-dialog', user_id);
@@ -393,9 +392,6 @@ function createUser(dialog_id) {
 		}
 	});
 	//console.log("Adding user to groups: " + add_permissions.join(','));
-
-	// Set primary group
-	var primary_group_id = $('#' + dialog_id + ' button.btn-toggle-primary-group-on').data('id');
 	
 	var data = {
 		user_name: $('#' + dialog_id + ' input[name="user_name"]' ).val(),
@@ -408,7 +404,7 @@ function createUser(dialog_id) {
 		pay_rate: $('#' + dialog_id + ' input[name="pay_rate"]' ).val(),
 		pay_type: $('#' + dialog_id + ' input[name="pay_type"]' ).filter(':checked').val(),
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
-		primary_group_id: primary_group_id,
+		primary_group_id: $('#' + dialog_id + ' input[name="primary_group_id"]' ).val(),
 		admin: "true",
 		skip_activation: "true",
 		ajaxMode: "true"
@@ -451,9 +447,6 @@ function updateUser(dialog_id, user_id) {
 	console.log("Adding permissions: " + add_permissions.join(','));
 	console.log("Removing permissions: " + remove_permissions.join(','));
 	
-	// Set primary group
-	var primary_group_id = $('#' + dialog_id + ' button.btn-toggle-primary-group-on').data('id');
-	
 	var data = {
 		user_id: user_id,
 		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
@@ -463,7 +456,7 @@ function updateUser(dialog_id, user_id) {
 		pay_type: $('#' + dialog_id + ' input[name="pay_type"]' ).filter(':checked').val(),		
 		add_permissions: add_permissions.join(','),
 		remove_permissions: remove_permissions.join(','),
-		primary_group_id: primary_group_id,
+		primary_group_id: $('#' + dialog_id + ' input[name="primary_group_id"]' ).val(),
 		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
 		ajaxMode:	"true"
 	};

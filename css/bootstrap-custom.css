@@ -8,6 +8,12 @@
     cursor: pointer;
 }
 
+/* Use to collapse empty button columns */
+
 .hideable {
     min-height: 0px;
+}
+
+label.label-switch {
+    margin-top: 5px;
 }

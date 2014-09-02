@@ -359,12 +359,12 @@ if ($fields['groups']['display'] != "hidden"){
           }
           $template .= "/>";
           if ((!$populate_fields and $is_default == 2) || ($populate_fields && ($id == $user['primary_group_id']))){
-            $primary_group_class = "btn-toggle-primary-group btn-toggle-primary-group-on";
+            $primary_group_checked = "true";
           } else {
-            $primary_group_class = "btn-toggle-primary-group";
+            $primary_group_checked = "false";
           }
           
-          $template .= "  <button type='button' class='btn btn-xs $primary_group_class $disable_primary_toggle' data-id='$id' title='Set as primary group'><i class='fa fa-home'></i></button>";
+          $template .= "  <button type='button' class='bootstrapradio' name='primary_group_id' value='$id' title='Set as primary group' data-selected='$primary_group_checked' $disable_primary_toggle><i class='fa fa-home'></i></button>";
           
           
           $template .= "</span>
