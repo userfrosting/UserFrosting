@@ -218,7 +218,6 @@ PRIMARY KEY (`id`)
 
 $pages_entry = "INSERT INTO `".$db_table_prefix."pages` (`id`, `page`, `private`) VALUES
 (1, 'forms/table_users.php', 1),
-(2, 'account/header.php', 1),
 (3, 'account/logout.php', 1),
 (4, 'account/dashboard.php', 1),
 (5, 'account/dashboard_admin.php', 1),
@@ -245,7 +244,6 @@ PRIMARY KEY (`id`)
 
 $group_page_matches_entry = "INSERT INTO `".$db_table_prefix."group_page_matches` (`id`, `group_id`, `page_id`) VALUES
 (1, 1, 1),
-(2, 2, 2),
 (3, 2, 3),
 (4, 2, 4),
 (5, 2, 5),
@@ -260,7 +258,6 @@ $group_page_matches_entry = "INSERT INTO `".$db_table_prefix."group_page_matches
 (14, 2, 14),
 (15, 2, 15),
 (16, 2, 16),
-(18, 1, 2),
 (19, 1, 3),
 (20, 1, 4),
 (21, 1, 6),

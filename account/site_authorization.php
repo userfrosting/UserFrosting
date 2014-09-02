@@ -51,8 +51,10 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
     <div id="wrapper">
 
       <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      </nav>
+        <?php
+          echo renderMenu("site-pages");
+        ?>
+        
       <div id="page-wrapper">
 	  	<div class="row">
 		  <div id='display-alerts' class="col-lg-12">
@@ -97,10 +99,6 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 	<script src="../js/widget-permits.js"></script>	    
 	<script>
         $(document).ready(function() {          
-          // Load the header
-          $('.navbar').load('header.php', function() {
-			$('.navitem-site-pages').addClass('active');
-          });
 
 		  alertWidget('display-alerts');
 		  

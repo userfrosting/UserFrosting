@@ -51,8 +51,9 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 <div id="wrapper">
 
 <!-- Sidebar -->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-</nav>
+        <?php
+          echo renderMenu("site-settings");
+        ?>  
 
 <div id="page-wrapper">
 <div class="row">
@@ -188,12 +189,6 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
         // Get id of the logged in user to determine how to render this page.
         var user = loadCurrentUser();
         var user_id = user['user_id'];
-
-        // Load the header
-        $('.navbar').load('header.php', function() {
-            $('.navitem-site-settings').addClass('active');
-        });
-
         /*
          * start site settings form submit
          */

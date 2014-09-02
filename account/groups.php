@@ -48,9 +48,9 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 
     <div id="wrapper">
 
-      <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      </nav>
+        <?php
+          echo renderMenu("groups");
+        ?>  
 
       <div id="page-wrapper">
 	  	<div class="row">
@@ -72,11 +72,6 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 	<script src="../js/widget-groups.js"></script>
 	<script>
         $(document).ready(function() {
-          // Load the header
-          $('.navbar').load('header.php', function() {
-			$('.navitem-groups').addClass('active');
-          });
-		  
 		  alertWidget('display-alerts');
 		  groupsWidget('widget-groups', {});
 		  

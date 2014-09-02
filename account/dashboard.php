@@ -53,8 +53,9 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
     <div id="wrapper">
 
       <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      </nav>
+        <?php
+          echo renderMenu("dashboard");
+        ?>  
 
       <div id="page-wrapper">
 	  	<div class="row">
@@ -138,11 +139,6 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 	<script>
         $(document).ready(function() {       
           alertWidget('display-alerts');
-          
-          // Load the header
-          $('.navbar').load('header.php', function() {
-			$('.navitem-dashboard').addClass('active');
-          });
 		});
 	</script>
   </body>

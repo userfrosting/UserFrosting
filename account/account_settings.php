@@ -45,16 +45,16 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 <!DOCTYPE html>
 <html lang="en">
   <?php
-  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE" => SITE_TITLE, "#PAGE_TITLE#" => "Account Settings"));
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE#" => "Account Settings"));
   ?>
 
   <body>
-
     <div id="wrapper">
 
       <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      </nav>
+        <?php
+          echo renderMenu("settings");
+        ?>  
 
       <div id="page-wrapper">
 	  	<div class="row">
@@ -111,11 +111,6 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
           var user_id = user['user_id'];
           
 		  alertWidget('display-alerts');
-		  
-          // Load the header
-          $('.navbar').load('header.php', function() {
-			$('.navitem-settings').addClass('active');
-          });
 
 		  // Set default form field values
 		  $('form[name="updateAccount"] input[name="email"]').val(user['email']);

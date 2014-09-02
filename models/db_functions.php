@@ -423,44 +423,36 @@ function fetchUserField($user_id, $field_name){
     }
 }
 
-// Fetch the appropriate menu for a user based on their primary group.
+// Fetch the appropriate menu for a user based on their group membership.
 // TODO: make this cacheable so it doesn't have to be processed each time a page is loaded.
-// Hooks is an array of hook names mapped to their values
 function fetchMenu($user_id){
+
+    // First, get the user's group membership
+    $groups = fetchUserGroups($user_id);
+    
+    // Construct an array of group id's.  Group id of '0' is considered public, everyone has access to these nav options.
+    $group_ids = array('0');
+    $group_ids = array_merge($group_ids, array_keys($groups));
 
     try {
         global $db_table_prefix;
 
         $db = pdoConnect();
+        
         $results = array();
 
-        // Get the user's primary group
-        if (!($primary_group = fetchUserPrimaryGroup($user_id))){
-            return null;
-        }
-
-        if (!($default_group = fetchDefaultPrimaryGroup())){
-            return null;
-        }
-
-        // $group_id = the id of the template we want to grab
-        $group_id = $primary_group['id'];
-        $dgroup = $default_group['id'];
-
-        $sqlVars = array();
-
+        // Safe to interpolate directly because group_ids are trusted data
+        $group_list = "(" . join(',', $group_ids) . ")";
+        
         $query = "SELECT
             *
             FROM ".$db_table_prefix."nav AS n
             JOIN ".$db_table_prefix."nav_group_matches as m ON (n.id = m.menu_id)
-            WHERE m.group_id = :group_id || m.group_id = :dgroup_id ORDER BY n.position";
+            WHERE m.group_id IN $group_list ORDER BY n.position";
 
         $stmt = $db->prepare($query);
 
-        $sqlVars[':group_id'] = $group_id;
-        $sqlVars[':dgroup_id'] = $dgroup;
-
-        $stmt->execute($sqlVars);
+        $stmt->execute();
 
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $id = $r['id'];
@@ -516,77 +508,6 @@ function gatherSubMenuItems($pid){
         addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
         return false;
     }
-}
-
-function buildMenu($user_id, $hooks){
-    $html = '';
-
-    $menu = fetchMenu($user_id);
-
-    $html .= '<!-- Brand and toggle get grouped for better mobile display -->
-
-<div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="../account/index.php">#WEBSITENAME#</a>
-    #HEADERMESSAGE#
-</div>
-
-<div class="collapse navbar-collapse navbar-ex1-collapse">
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <ul class="nav navbar-nav side-nav">';
-    foreach ($menu as $r => $v){
-        if ($v['menu'] == 'left' AND $v['menu'] != 'left-sub'){
-            $html .= "<li class='navitem-".$v['class_name']."'><a href='../".$v['page']."'><i class='".$v['icon']."'></i> ".$v['name']."</a></li>";
-        }
-        if ($v['menu'] == 'left-sub' AND $v['parent_id'] == 0){
-            $html .= "<li class='dropdown'>
-                <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='".$v['icon']."'></i> ".$v['name']." <b class='caret'></b></a>
-                <ul class='dropdown-menu'>";
-            // Grab submenu items based on parent_id = $v['menu_id']
-            $subs = gatherSubMenuItems($v['menu_id']);
-
-            // If subs are found print them out to the parent element
-            foreach ($subs as $s){
-                $html .= "<li class='navitem-".$s['class_name']."'><a href='../".$s['page']."'><i class='".$s['icon']."'></i> ".$s['name']."</a></li>";
-            }
-            $html .= '</ul></li>';
-        }
-    }
-    $html .= '</ul>';
-//top nav bar
-    $html .= '<ul class="nav navbar-master navbar-nav navbar-right">';
-    foreach ($menu as $r => $v){
-        if ($v['menu'] == 'top-main' AND $v['menu'] != 'top-main-sub'){
-            $html .= "<li class='navitem-".$v['class_name']."'><a href='../".$v['page']."'><i class='".$v['icon']."'></i> ".$v['name']."</a></li>";
-        }
-        if ($v['menu'] == 'top-main-sub' AND $v['parent_id'] == 0){
-            $html .= "<li class='dropdown'>
-            <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='".$v['icon']."'></i> ".$v['name']." <b class='caret'></b></a>
-                <ul class='dropdown-menu'>";
-            // Grab submenu items based on parent_id = $v['menu_id']
-            $subs = gatherSubMenuItems($v['menu_id']);
-
-            // If subs are found print them out to the parent element
-            foreach ($subs as $s){
-                $html .= "<li class='navitem-".$s['class_name']."'><a href='../".$s['page']."'><i class='".$s['icon']."'></i> ".$s['name']."</a></li>";
-            }
-            $html .= '</ul></li>';
-        }
-    }
-    $html .= '</ul></div>';
-
-    $find = array_keys($hooks);
-    $replace = array_values($hooks);
-
-//Replace hooks
-    $contents = str_replace($find, $replace, $html);
-
-    return $contents;
 }
 
 // Fetch the primary group for the specified user

@@ -69,8 +69,9 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
 <div id="wrapper">
 
 <!-- Sidebar -->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-</nav>
+        <?php
+          echo renderMenu("users");
+        ?>  
 
 	<div id="page-wrapper">
 		<div class="row">
@@ -90,11 +91,6 @@ echo "<script>selected_user_id = $selected_user_id;</script>";
     <script src="../js/widget-users.js"></script>    
     <script>
 		$(document).ready(function() {
-			// Load the header
-			$('.navbar').load('header.php', function() {
-			    $('.navitem-users').addClass('active');
-			});
-			
 			userDisplay('widget-user-info', selected_user_id);
 			
 			alertWidget('display-alerts');

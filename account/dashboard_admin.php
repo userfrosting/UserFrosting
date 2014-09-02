@@ -50,13 +50,13 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
   	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE" => "Admin Dashboard"));
   ?>
 
-  <body>
-
+  <body>    
     <div id="wrapper">
 
       <!-- Sidebar -->
-      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      </nav>
+        <?php
+            echo renderMenu("dashboard-admin");
+        ?>
 
       <div id="page-wrapper">
         <div class="row">
@@ -356,11 +356,6 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
     <script src="../js/morris/chart-data-morris.js"></script>
     <script>
         $(document).ready(function() {          
-          // Load the header
-          $('.navbar').load('header.php', function() {
-            $('.navitem-dashboard-admin').addClass('active');
-          });
-
           alertWidget('display-alerts');
           
           // Initialize the transactions tablesorter

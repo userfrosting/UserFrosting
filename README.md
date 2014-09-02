@@ -81,6 +81,7 @@ Change Log - v0.2.1
 -------------------
 
 - Implemented db-driven menu system.  Menu items are pulled from the database, and can be modified via plugins.
+- Implemented backend templating of forms and tables via [Bootsole](https://github.com/alexweissman/bootsole).
 
 [Older changes](CHANGELOG.md)   
 
@@ -95,10 +96,11 @@ The back end account management system is derived from [UserCake 2.0.2](http://u
 *  Twitter Bootstrap 3.0
 *  [Font Awesome](http://fontawesome.io)
 *  [Handlebars templating](http://handlebarsjs.com/)
-*  [Tablesorter 2.0](http://tablesorter.com)
+*  [Tablesorter 2.17.7](http://tablesorter.com)
 *  [Typeahead addon for Bootstrap](https://github.com/twitter/typeahead.js)
 *  [DateJS](http://www.datejs.com)
 *  [Bootstrap Switch](http://bootstrap-switch.org) 
+*  [Bootsole PHP templating](https://github.com/alexweissman/bootsole)
 
 All components are copyright of their respective creators.
 
