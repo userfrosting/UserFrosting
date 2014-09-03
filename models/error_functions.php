@@ -43,6 +43,19 @@ function apiReturnError($ajax = false, $failure_landing_page = null){
 	exit();
 }
 
+// Halt execution of an API page and either return the success code (AJAX mode), or forward to a page
+function apiReturnSuccess($ajax = false, $landing_page = null){
+	// Default page
+	if ($landing_page == null)
+		$landing_page = ACCOUNT_ROOT;
+	if ($ajax) {
+	  echo json_encode(array("errors" => 0, "successes" => 1));
+	} else {
+	  header('Location: ' . $landing_page);
+	}
+	exit();
+}
+
 // Checks that the request mode (get or post) matches the parameter.  If so, return the AJAX mode.  Otherwise, halt with error.
 function checkRequestMode($mode){
 	if (strtolower($mode) == "post"){

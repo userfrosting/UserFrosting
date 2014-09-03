@@ -425,6 +425,64 @@ function form_protect($token)
 	{echo '<input type="hidden" name="csrf_token" value="'. $token .'">';}	
 }
 
+// Checks the logged in user and CSRF token when GETting/POSTing to an API page from a form
+function apiSecurityCheck($method = "post", $field_name = "csrf_token", $failure_landing_page = "404.php"){
+		$csrf_token = "";
+	$ajax = false;
+	if ($method == "post"){
+		// Confirm that data has been submitted via POST
+		if (!($_SERVER['REQUEST_METHOD'] == 'POST')) {
+			addAlert("danger", "Error: data must be submitted via POST.");
+			apiReturnError(false, $failure_landing_page);
+		} else if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+			$ajax = true;
+		}
+		
+		// Request must be from a logged in user.  Do we want to make this customizable?
+		if (!isUserLoggedIn()){
+			addAlert("danger", "You must be logged in to access this resource.");
+			apiReturnError($ajax, $failure_landing_page);
+		}
+		
+		if (isset($_POST[$field_name])) {
+			$csrf_token = htmlentities($_POST[$field_name]);
+			if (!$_SESSION["userCakeUser"]->csrf_validate(trim($csrf_token))){
+				addAlert("danger", lang("ACCESS_DENIED"));
+				apiReturnError($ajax, $failure_landing_page);
+			}
+		} else {
+			addAlert("danger", lang("ACCESS_DENIED"));
+			apiReturnError($ajax, $failure_landing_page);		
+		}
+		
+	} else {
+		// Confirm that data has been submitted via GET
+		if (!($_SERVER['REQUEST_METHOD'] == 'GET')) {
+			addAlert("danger", "Error: data must be submitted via GET.");
+			apiReturnError(false, $failure_landing_page);
+		} else if (isset($_GET['ajaxMode']) and $_GET['ajaxMode'] == "true" ){
+			$ajax = true;
+		}
+
+		// Request must be from a logged in user.  Do we want to make this customizable?
+		if (!isUserLoggedIn()){
+			addAlert("danger", "You must be logged in to access this resource.");
+			apiReturnError($ajax, $failure_landing_page);
+		}
+		
+		if (isset($_GET[$field_name])) {
+			$csrf_token = htmlentities($_GET[$field_name]);
+			if (!$loggedInUser->csrf_validate(trim($csrf_token))){
+				addAlert("danger", lang("ACCESS_DENIED"));
+				apiReturnError($ajax, $failure_landing_page);
+			}
+		} else {
+			addAlert("danger", lang("ACCESS_DENIED"));
+			apiReturnError($ajax, $failure_landing_page);		
+		}
+	}
+}
+
 /*********************************
  * Validation Functions.  TODO: Switch over to Valitron.
  *********************************/
