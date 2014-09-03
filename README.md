@@ -72,6 +72,15 @@ UserFrosting is designed to address the most common security issues with website
 
 See the [security](http://www.userfrosting.com/security.html) section of our website for more details.
 
+Language Support
+----------------
+Database and data-handling functions are compliant with UTF8 character set.
+
+#### Current languages offered:
+
+- English
+- Internationalized Spanish
+
 Installation
 --------------
 
@@ -89,6 +98,8 @@ Creds
 -----
 
 Thanks to user @r3wt for help with the CSRF and improved hashing, and @lilfade for significant contributions in getting `butterflyknife` ready and tested for release.
+
+Thanks to @arochwer for translating system messages into internationalized Spanish!
 
 The back end account management system is derived from [UserCake 2.0.2](http://usercake.com), while the dashboard and admin account features are based on the SB Admin Template by [Start Bootstrap](http://startbootstrap.com). Other key frameworks and plugins used in this system are:
 
