@@ -383,7 +383,7 @@ function fetchUserField($user_id, $field_name){
             FROM ".$db_table_prefix."users
             LIKE :field_name");
         
-        $sqlVars[':field_name'] = $field_name;
+        $sqlVars[':field_name'] = "%" . $field_name . "%";
         
         $stmt_field_exists->execute($sqlVars);
         
