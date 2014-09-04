@@ -47,7 +47,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 <!DOCTYPE html>
 <html lang="en">
   <?php
-  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE" => "Admin Dashboard"));
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE#" => "Admin Dashboard"));
   ?>
 
   <body>    

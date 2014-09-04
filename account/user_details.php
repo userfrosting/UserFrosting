@@ -57,7 +57,7 @@ if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
 <!DOCTYPE html>
 <html lang="en">
   <?php
-  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE" => "User Details"));
+  	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE#" => "User Details"));
   ?>
 <body>
   
