@@ -335,7 +335,8 @@ function fetchUserAuth($column, $data){
             title,
             sign_up_stamp,
             last_sign_in_stamp,
-            enabled
+            enabled,
+            primary_group_id
             FROM ".$db_table_prefix."users
             WHERE
             $column = :data
@@ -365,60 +366,6 @@ function fetchUserAuth($column, $data){
     } catch (RuntimeException $e) {
       addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    }
-}
-
-// Get the value of a specified field for a specified user
-function fetchUserField($user_id, $field_name){    
-    try {
-        global $db_table_prefix;
-        
-        $db = pdoConnect();
-        
-        $sqlVars = array();
-        
-        // First, check that the specified field exists.  Very important as we are using other unsanitized data in the following query.
-        $stmt_field_exists = $db->prepare("SHOW COLUMNS
-            FROM ".$db_table_prefix."users
-            LIKE :field_name");
-        
-        $sqlVars[':field_name'] = "%" . $field_name . "%";
-        
-        $stmt_field_exists->execute($sqlVars);
-        
-        if (!($results = $stmt_field_exists->fetch(PDO::FETCH_ASSOC))){
-            // The field does not exist
-            return false;
-        }
-
-        $query = "SELECT 
-            `$field_name`
-            FROM ".$db_table_prefix."users
-            WHERE
-            id = :user_id
-            LIMIT 1";
-            
-        $stmt = $db->prepare($query);
-        
-        $sqlVars[':user_id'] = $user_id;
-        
-        $stmt->execute($sqlVars);
-          
-        if (!($results = $stmt->fetch(PDO::FETCH_ASSOC))){
-            // The user does not exist
-            return false;
-        }
-        
-        $stmt = null;
-        return $results[$field_name];
-      
-    } catch (PDOException $e) {
-      addAlert("danger", "Oops, looks like our database encountered an error.");
-      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-      return false;
-    } catch (ErrorException $e) {
-      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
       return false;
     }
 }

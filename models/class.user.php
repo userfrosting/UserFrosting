@@ -39,12 +39,7 @@ class loggedInUser {
 	public function updateLastSignIn() {
 		updateUserLastSignIn($this->user_id);
 	}
-	
-	// Return the timestamp when this user's account was registered
-	public function signupTimeStamp() {
-		return fetchUserField($this->user_id, 'sign_up_stamp');
-	}
-	
+		
 	//csrf tokens
 	public function csrf_token($regen = false)
     {

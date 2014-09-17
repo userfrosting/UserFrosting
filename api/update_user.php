@@ -47,8 +47,8 @@ $display_name = trim($validator->optionalPostVar('display_name'));
 $email = str_normalize($validator->optionalPostVar('email'));
 $title = trim($validator->optionalPostVar('title'));
 
-$rm_groups = $validator->optionalPostVar('remove_permissions');
-$add_groups = $validator->optionalPostVar('add_permissions');
+$rm_groups = $validator->optionalPostVar('remove_groups');
+$add_groups = $validator->optionalPostVar('add_groups');
 $enabled = $validator->optionalPostVar('enabled');
 $primary_group_id = $validator->optionalPostVar('primary_group_id');
 
@@ -196,8 +196,8 @@ if(!empty($add_groups)){
 	}
 }
 
-// Set primary group
-if(!empty($primary_group_id)){
+// Set primary group (must be done after group membership is set)
+if ($primary_group_id && $userdetails['primary_group_id'] != $primary_group_id){
 	if (updateUserPrimaryGroup($user_id, $primary_group_id)){
 		$success_count++;
 	} else {

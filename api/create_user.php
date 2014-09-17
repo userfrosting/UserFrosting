@@ -148,9 +148,8 @@ if ($error_count == 0){
 	  if(!empty($primary_group_id)){
 		  if (updateUserPrimaryGroup($new_user_id, $primary_group_id)){
 		  	  // Account creation was successful!
-			  addAlert("success", lang("ACCOUNT_CREATION_COMPLETE", array($user_name)));
-			  addAlert("success", lang("ACCOUNT_GROUP_ADDED", array($addition_count)));
 			  addAlert("success", lang("ACCOUNT_PRIMARY_GROUP_SET"));
+              addAlert("success", lang("ACCOUNT_CREATION_COMPLETE", array($user_name)));
 		  } else {
 			  $error_count++;
 		  }
