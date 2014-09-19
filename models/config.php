@@ -38,6 +38,15 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
+//This is used for upgrading and should not need to be changed unless you do manual upgrades
+//eg. manual code edits instead of using repo version
+$version = '0.2.1';
+$dev_env = TRUE;
+
+//Home page settings either login only or display blog
+//User options Login or Blog
+$homepage = 'Blog';
+
 require_once("db-settings.php"); //Require DB connection
 require_once("funcs.php");
 require_once("error_functions.php");
@@ -113,14 +122,17 @@ $files_secure_functions = array(
     dirname(__FILE__) . "/secure_functions.php"
 );
 
-// Include paths for pages to add to site page management
-$page_include_paths = array(
+//Outdated: Include paths for pages to add to site page management
+/*$page_include_paths = array(
 	"account",
 	"forms"
     //"privatemessages",
     //"privatemessages/forms",
     // Define more include paths here
-);
+);*/
+
+// New way to do it
+$page_include_paths = fetchFileList();
 
 // Other constants
 defined("ACCOUNT_HEAD_FILE")
@@ -189,7 +201,7 @@ require_once("class.user.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
-//require_once("chrome.php");
+require_once("chrome.php");
 
 session_name(SESSION_NAME);
 session_start();
