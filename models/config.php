@@ -40,9 +40,14 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 
 //This is used for upgrading and should not need to be changed unless you do manual upgrades
 //eg. manual code edits instead of using repo version
+// TODO: move to db storage instead of hard coded
 $version = '0.2.1';
+
+// This will stop the installer / upgrader from running as it normally would and should always be set to false
+// Options TRUE | FALSE bool
 $dev_env = TRUE;
 
+// TODO: Not used at the moment
 //Home page settings either login only or display blog
 //User options Login or Blog
 $homepage = 'Blog';
@@ -122,6 +127,7 @@ $files_secure_functions = array(
     dirname(__FILE__) . "/secure_functions.php"
 );
 
+// TODO: Remove this small code peice as its implimented in the db now
 //Outdated: Include paths for pages to add to site page management
 /*$page_include_paths = array(
 	"account",
