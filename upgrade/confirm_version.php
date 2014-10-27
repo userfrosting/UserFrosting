@@ -60,7 +60,7 @@ if($newVersion == NULL){
 echo 'key is '.$nV.' - Current version = '.$version.' - New version = '.$newVersion.'<br />';
 var_dump($nV);
 echo '<br />';
-$doesExist = is_url_exist('http://www.userfrosting.com/about.html');
+$doesExist = is_url_exist('https://raw.githubusercontent.com/lilfade/UserFrosting/master/upgrade/'.$newVersion.'.install.php');
 
 var_dump($doesExist);
 
