@@ -10,6 +10,22 @@
 require_once('../models/config.php');
 require_once('../models/db-settings.php');
 
+// Simple function to see if the update file exists on the remote host, for checking for a upgrade script
+function is_url_exist($url){
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if($code == 200){
+        $status = true;
+    }else{
+        $status = false;
+    }
+    curl_close($ch);
+    return $status;
+}
+
 // This will be set when requesting file changes from github always from the same location
 //$upgrade_version = '0.2.2';
 $upgrade_version = '';
@@ -41,5 +57,13 @@ if($newVersion == NULL){
     $newVersion = $versionList[$nV-1];}
 
 //simply some output for reference
-//echo 'key is '.$nV.' - Current version = '.$version.' - New version = '.$newVersion.'<br />';
-//var_dump($nV);
+echo 'key is '.$nV.' - Current version = '.$version.' - New version = '.$newVersion.'<br />';
+var_dump($nV);
+echo '<br />';
+$doesExist = is_url_exist('http://www.userfrosting.com/about.html');
+
+var_dump($doesExist);
+
+echo '<br />';
+
+echo 'forward to: '.SITE_ROOT.'update/'.$newVersion.'.install.php';
