@@ -39,7 +39,7 @@
 		<div class='alert alert-warning'>Before you begin, please make sure you have UserFrosting installed or this upgrade script will not work.</div>
 		<div id='display-alerts'>
 		</div>        
-		<a class="btn btn-primary" href='confirm_version.php'>Start Upgrade</a>
+		<a class="btn btn-primary" href='get_versions.php'>Start Upgrade</a>
 	  </div>
       <div class="footer">
         <p>&copy; UserFrosting Installer, 2014</p>

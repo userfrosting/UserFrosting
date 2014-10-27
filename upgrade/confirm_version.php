@@ -10,33 +10,11 @@
 require_once('../models/config.php');
 require_once('../models/db-settings.php');
 
-// Simple function to see if the update file exists on the remote host, for checking for a upgrade script
-function is_url_exist($url){
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_exec($ch);
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if($code == 200){
-        $status = true;
-    }else{
-        $status = false;
-    }
-    curl_close($ch);
-    return $status;
-}
-
-// This will be set when requesting file changes from github always from the same location
-//$upgrade_version = '0.2.2';
-$upgrade_version = '';
-
 // Grab up the current changes from the master repo so that we can update (cache them to file if able to otherwise move on)
-//$update_url = 'https://raw.githubusercontent.com/alexweissman/UserFrosting/master/update.md';
-$updateUrl = file_get_contents('versions.txt');
-// This will be where the change log is stored with version info and changes associated with them
+$versions = file_get_contents('versions.txt');
 
 // Grab all versions from the update url and push the values to a array
-$versionList = explode("\n", $updateUrl);
+$versionList = explode("\n", $versions);
 
 // Remove new lines and carriage returns from the array
 $versionList = str_replace(array("\n", "\r"), '', $versionList);
@@ -50,20 +28,33 @@ $newVersion = isset($versionList[$nV - 1]);
 // Find out if we need to do the update or not based on the version information
 // If update is found then forward to the installer to run the script else exit
 if($newVersion == NULL){
-    $sql = '';
-    $newVersion = 'already at latest version';
+    header('Location: ../index.php');
+    exit();
 } else {
-    $sql = '';
-    $newVersion = $versionList[$nV-1];}
+    $newVersion = $versionList[$nV-1];
+}
 
-//simply some output for reference
-echo 'key is '.$nV.' - Current version = '.$version.' - New version = '.$newVersion.'<br />';
-var_dump($nV);
-echo '<br />';
-$doesExist = is_url_exist('https://raw.githubusercontent.com/lilfade/UserFrosting/master/upgrade/'.$newVersion.'.install.php');
+// Get the new install file if it's not already downloaded
+if (!file_exists($newVersion.'.install.php')) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'https://raw.githubusercontent.com/alexweissman/UserFrosting/master/upgrade/' . $newVersion . '.install.php');
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $data = curl_exec($ch);
+    curl_close($ch);
 
-var_dump($doesExist);
+    // Save the new data to the file
+    if($data != NULL){
+        // New update data
+        $fileData = $data;
 
-echo '<br />';
+        // New filename
+        $saveToFile = $newVersion.'.install.php';
 
-echo 'forward to: '.SITE_ROOT.'update/'.$newVersion.'.install.php';
+        // Prep file for writing
+        $fileOp = file_put_contents($saveToFile, $fileData);
+    }
+}
+
+// Execute the new version upgrade
+header('Location: '.$newVersion.'.install.php');

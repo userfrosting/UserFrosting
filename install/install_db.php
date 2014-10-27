@@ -93,7 +93,11 @@ $tables = array(
     $db_table_prefix."group_page_matches",
     $db_table_prefix."user_action_permits",
     $db_table_prefix."group_action_permits",
-    $db_table_prefix."configuration"
+    $db_table_prefix."configuration",
+    $db_table_prefix."nav",
+    $db_table_prefix."nav_group_matches",
+    $db_table_prefix."plugin_configuration",
+    $db_table_prefix."uf_filelist"
 );
 
 $table_exists_sql = "
@@ -206,7 +210,7 @@ INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
 (10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "'),
 (11, 'email_login', '".$selected_email."'),
 (12, 'token_timeout', '10800'),
-(13, 'software_version', $version);
+(13, 'version', $version);
 ";
 
 $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (

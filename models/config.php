@@ -38,19 +38,9 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
-//This is used for upgrading and should not need to be changed unless you do manual upgrades
-//eg. manual code edits instead of using repo version
-// TODO: move to db storage instead of hard coded
-$version = '0.2.1';
-
 // This will stop the installer / upgrader from running as it normally would and should always be set to false
 // Options TRUE | FALSE bool
 $dev_env = TRUE;
-
-// TODO: Not used at the moment
-//Home page settings either login only or display blog
-//User options Login or Blog
-$homepage = 'Blog';
 
 require_once("db-settings.php"); //Require DB connection
 require_once("funcs.php");
@@ -96,6 +86,7 @@ $language = $settings['language'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
+$version = $settings['version'];
 
 
 // Determine if this is SSL or unsecured connection
@@ -127,17 +118,7 @@ $files_secure_functions = array(
     dirname(__FILE__) . "/secure_functions.php"
 );
 
-// TODO: Remove this small code peice as its implimented in the db now
-//Outdated: Include paths for pages to add to site page management
-/*$page_include_paths = array(
-	"account",
-	"forms"
-    //"privatemessages",
-    //"privatemessages/forms",
-    // Define more include paths here
-);*/
-
-// New way to do it
+// Include paths for pages to add to site page management
 $page_include_paths = fetchFileList();
 
 // Other constants
@@ -207,7 +188,7 @@ require_once("class.user.php");
 
 //ChromePhp debugger for chrome console
 // http://craig.is/writing/chrome-logger
-require_once("chrome.php");
+//require_once("chrome.php");
 
 session_name(SESSION_NAME);
 session_start();
@@ -218,5 +199,3 @@ if(isset($_SESSION["userCakeUser"]) && is_object($_SESSION["userCakeUser"]))
 {
 	$loggedInUser = $_SESSION["userCakeUser"];
 }
-
-?>
