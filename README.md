@@ -92,6 +92,7 @@ Change Log - v0.2.2
 - Implemented upgrade system, will pull new version list from github and automatically grab update files as well.
 - Moved file list from config.php to the database to be easier to add and remove file paths
 - Added version to the configuration table to aid in the upgrading of Userfrosting
+- Added dev_env to config.php as well as new setting to db-setting.php when set to true UF will no longer check for the install or upgrade directory (good for development defaults to FALSE)
 
 [Older changes](CHANGELOG.md)   
 

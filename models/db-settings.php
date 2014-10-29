@@ -60,7 +60,7 @@ if(is_dir("install/") && $dev_env != TRUE)
 
 }
 
-if(is_dir("upgrade") && $dev_env != TRUE)
+if(is_dir("upgrade/") && $dev_env != TRUE)
 {
     header("Location: upgrade/");
     die();

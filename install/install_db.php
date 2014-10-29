@@ -377,7 +377,7 @@ $filelist_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."uf_filelist` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 ";
 
-$filelist_entry = "INSERT INTO `".$db_file_prefix."uf_filelist` (`id`, `path`) VALUES
+$filelist_entry = "INSERT INTO `".$db_table_prefix."uf_filelist` (`id`, `path`) VALUES
 (1, 'account'),
 (2, 'forms');
 ";
