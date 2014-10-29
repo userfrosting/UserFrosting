@@ -369,7 +369,7 @@ $nav_group_matches_entry = "INSERT INTO `".$db_table_prefix."nav_group_matches` 
 (11, 8, 2);
 ";
 
-$filelist_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."uf_filelist` (
+$filelist_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."filelist` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
   `path` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
@@ -377,7 +377,7 @@ $filelist_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."uf_filelist` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 ";
 
-$filelist_entry = "INSERT INTO `".$db_table_prefix."uf_filelist` (`id`, `path`) VALUES
+$filelist_entry = "INSERT INTO `".$db_table_prefix."filelist` (`id`, `path`) VALUES
 (1, 'account'),
 (2, 'forms');
 ";
