@@ -564,7 +564,7 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 )
 
 function generateCaptcha(){
 	/* 
-	generates a base 64 captcha image to be placed inside the src attribute of an html image tag.
+	generates a base 64 string to be placed inside the src attribute of an html image tag.
 	@blame -r3wt
 	*/
 	
@@ -576,13 +576,17 @@ function generateCaptcha(){
 	$width = 150;
 	$height = 30; 
 
-	$image = ImageCreate($width, $height);  
+	$image = ImageCreateTrueColor(150, 30);  
+	
 	$white = ImageColorAllocate($image, 255, 255, 255);
 	$black = ImageColorAllocate($image, 0, 0, 0);
 	$grey = ImageColorAllocate($image, 200, 200, 200);
 
 	ImageFill($image, 0, 0, $white); 
-	ImageString($image, 10, 5, 0, $security_code, $black); 
-	return 'data:image/png;base64,' . base64_encode($image); //return the base64 encoded image.
+	ImageString($image,5, 5, 0, $security_code, $black); 
+	ob_start();
+	ImagePng($image);
+	$data = ob_get_clean();
+	return 'data:image/png;base64,'.chunk_split(base64_encode($data)); //return the base64 encoded image.
 }
 ?>
