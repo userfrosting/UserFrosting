@@ -210,7 +210,7 @@ INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
 (10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "'),
 (11, 'email_login', '".$selected_email."'),
 (12, 'token_timeout', '10800'),
-(13, 'version', $version);
+(13, 'version', '0.2.2');
 ";
 
 $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (

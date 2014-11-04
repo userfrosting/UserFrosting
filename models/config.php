@@ -40,7 +40,7 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 
 // This will stop the installer / upgrader from running as it normally would and should always be set to false
 // Options TRUE | FALSE bool
-$dev_env = TRUE;
+$dev_env = FALSE;
 
 require_once("db-settings.php"); //Require DB connection
 require_once("funcs.php");
