@@ -38,6 +38,10 @@ function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
 	throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
+// This will stop the installer / upgrader from running as it normally would and should always be set to false
+// Options TRUE | FALSE bool
+$dev_env = TRUE;
+
 require_once("db-settings.php"); //Require DB connection
 require_once("funcs.php");
 require_once("error_functions.php");
@@ -82,6 +86,7 @@ $language = $settings['language'];
 $new_user_title = $settings['new_user_title'];
 $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
+$version = $settings['version'];
 
 
 // Determine if this is SSL or unsecured connection
@@ -114,13 +119,7 @@ $files_secure_functions = array(
 );
 
 // Include paths for pages to add to site page management
-$page_include_paths = array(
-	"account",
-	"forms"
-    //"privatemessages",
-    //"privatemessages/forms",
-    // Define more include paths here
-);
+$page_include_paths = fetchFileList();
 
 // Other constants
 defined("ACCOUNT_HEAD_FILE")
@@ -200,5 +199,3 @@ if(isset($_SESSION["userCakeUser"]) && is_object($_SESSION["userCakeUser"]))
 {
 	$loggedInUser = $_SESSION["userCakeUser"];
 }
-
-?>

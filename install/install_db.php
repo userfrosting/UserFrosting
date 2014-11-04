@@ -93,7 +93,11 @@ $tables = array(
     $db_table_prefix."group_page_matches",
     $db_table_prefix."user_action_permits",
     $db_table_prefix."group_action_permits",
-    $db_table_prefix."configuration"
+    $db_table_prefix."configuration",
+    $db_table_prefix."nav",
+    $db_table_prefix."nav_group_matches",
+    $db_table_prefix."plugin_configuration",
+    $db_table_prefix."uf_filelist"
 );
 
 $table_exists_sql = "
@@ -205,7 +209,8 @@ INSERT INTO `".$db_table_prefix."configuration` (`id`, `name`, `value`) VALUES
 (9, 'new_user_title', '".$user_title."'),
 (10, 'root_account_config_token', '" . md5(uniqid(mt_rand(), false)) . "'),
 (11, 'email_login', '".$selected_email."'),
-(12, 'token_timeout', '10800');
+(12, 'token_timeout', '10800'),
+(13, 'version', $version);
 ";
 
 $pages_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."pages` (
@@ -362,6 +367,19 @@ $nav_group_matches_entry = "INSERT INTO `".$db_table_prefix."nav_group_matches` 
 (9, 6, 2),
 (10, 7, 2),
 (11, 8, 2);
+";
+
+$filelist_sql = "CREATE TABLE IF NOT EXISTS `".$db_table_prefix."filelist` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+  `path` varchar(150) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `path` (`path`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+";
+
+$filelist_entry = "INSERT INTO `".$db_table_prefix."filelist` (`id`, `path`) VALUES
+(1, 'account'),
+(2, 'forms');
 ";
 
 $stmt = $db->prepare($configuration_sql);
@@ -570,6 +588,28 @@ if($stmt->execute())
 else
 {
     $errors[] = "<p>Error adding default navigation group matches to the database</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($filelist_sql);
+if($stmt->execute())
+{
+    $successes[] = "<p>".$db_table_prefix."filelist table created.....</p>";
+}
+else
+{
+    $errors[] = "<p>Error constructing file list table.</p>";
+    $db_issue = true;
+}
+
+$stmt = $db->prepare($filelist_entry);
+if($stmt->execute())
+{
+    $successes[] = "<p>Added default file list to the database</p>";
+}
+else
+{
+    $errors[] = "<p>Error adding file list to the database</p>";
     $db_issue = true;
 }
 
