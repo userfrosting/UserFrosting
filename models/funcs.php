@@ -561,4 +561,57 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 )
   return $merged;
 }
 
+
+	function generateCaptcha(){
+		/* 
+		generates a base 64 string to be placed inside the src attribute of an html image tag.
+		@blame -r3wt
+		*/
+		
+		$md5_hash = md5(rand(0,99999)); 
+		$security_code = substr($md5_hash, 25, 5); 
+		$enc = md5($security_code);
+		$_SESSION['captcha'] = $enc;
+
+		$width = 150;
+		$height = 30; 
+
+		$image = imagecreatetruecolor(150, 30);  
+		
+		//color pallette
+		$white = imagecolorallocate($image, 255, 255, 255);
+		$black = imagecolorallocate($image, 0, 0, 0);
+		$red = imagecolorallocate($image,255,0,0);
+		$yellow = imagecolorallocate($image, 255, 255, 0);
+		$dark_grey = imagecolorallocate($image, 64,64,64);
+		$blue = imagecolorallocate($image, 0,0,255); 
+		
+		//create white rectangle
+		imagefilledrectangle($image,0,0,150,30,$white);
+		
+		//add some lines
+		for($i=0;$i<2;$i++) {
+			imageline($image,0,rand()%10,10,rand()%30,$dark_grey);
+			imageline($image,0,rand()%30,150,rand()%30,$red);
+			imageline($image,0,rand()%30,150,rand()%30,$yellow);
+		}
+		//add some dots
+		for($i=0;$i<1000;$i++) {
+			imagesetpixel($image,rand()%200,rand()%50,$pixel_color);
+		}  
+		//calculate center of text
+		$x = ( 150 - 0 - imagefontwidth( 5 ) * strlen( $security_code ) ) / 2 + 0 + 5;
+		
+		//write string twice
+		ImageString($image,5, $x, 7, $security_code, $black); 
+		ImageString($image,5, $x, 7, $security_code, $black);
+		//start ob
+		ob_start();
+		ImagePng($image);
+		
+		//get binary image data
+		$data = ob_get_clean();
+		//return base64
+		return 'data:image/png;base64,'.chunk_split(base64_encode($data)); //return the base64 encoded image.
+	}
 ?>
