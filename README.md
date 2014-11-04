@@ -93,6 +93,7 @@ Change Log - v0.2.2
 - Moved file list from config.php to the database to be easier to add and remove file paths
 - Added version to the configuration table to aid in the upgrading of Userfrosting
 - Added dev_env to config.php as well as new setting to db-setting.php when set to true UF will no longer check for the install or upgrade directory (good for development defaults to FALSE)
+- Removal of models/captcha.php and replace with base64 captcha function.
 
 [Older changes](CHANGELOG.md)   
 

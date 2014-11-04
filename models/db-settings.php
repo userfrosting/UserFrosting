@@ -32,7 +32,7 @@ THE SOFTWARE.
 //Database Information
 $db_host = "localhost"; //Host address (most likely localhost)
 $db_name = "userfrosting"; //Name of Database
-$db_user = "root"; //Name of database user
+$db_user = "username"; //Name of database user
 $db_pass = "password"; //Password for database user
 $db_table_prefix = "uf_";
 
