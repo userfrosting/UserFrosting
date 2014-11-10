@@ -88,6 +88,8 @@ $email_login = $settings['email_login'];
 $token_timeout = $settings['token_timeout'];
 $version = $settings['version'];
 
+// Check for upgrade, do this hear for access to $version
+checkUpgrade($version, $dev_env);
 
 // Determine if this is SSL or unsecured connection
 $url_prefix = "http://";
