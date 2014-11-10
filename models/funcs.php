@@ -214,6 +214,12 @@ function lang($key,$markers = NULL)
 	}
 }
 
+function getCurrentLanguage($language){
+    $ex_l = explode('/', $language);
+    $ex_l_2 = explode('.', $ex_l[2]);
+    return $ex_l_2[0];
+}
+
 /*********************************
  * Security Functions
  *********************************/
@@ -561,4 +567,29 @@ function array_merge_recursive_distinct ( array &$array1, array &$array2 )
   return $merged;
 }
 
-?>
+function checkUpgrade($version, $dev_env){
+    if(is_dir("upgrade/") && $dev_env != TRUE)
+    {
+        // Grab up the current changes from the master repo so that we can update (cache them to file if able to otherwise move on)
+        $versions = file_get_contents('upgrade/versions.txt');
+
+        // Grab all versions from the update url and push the values to a array
+        $versionList = explode("\n", $versions);
+
+        // Remove new lines and carriage returns from the array
+        $versionList = str_replace(array("\n", "\r"), '', $versionList);
+
+        // Search the array to find out where the currently installed version falls
+        $nV = array_search($version, $versionList);
+
+        // Find out if the update is in the list or not
+        $newVersion = isset($versionList[$nV - 1]);
+
+        // Find out if we need to do the update or not based on the version information
+        // If update is found then forward to the installer to run the script else exit
+        if($newVersion != NULL) {
+            header('Location: upgrade/');
+            die();
+        }
+    }
+}
