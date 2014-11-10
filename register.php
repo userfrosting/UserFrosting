@@ -129,7 +129,7 @@ if(isUserLoggedIn()) {
 				</div>
 			</div>
 			<div class="col-sm-4">
-			  <img src='models/captcha.php' id="captcha">
+			  <img src='<?php echo generateCaptcha(); ?>' id="captcha">
 			</div>
 		  </div>
 		  <br>
