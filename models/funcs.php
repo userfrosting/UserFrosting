@@ -593,16 +593,24 @@ function generateCaptcha(){
 
     //create white rectangle
     imagefilledrectangle($image,0,0,150,30,$white);
-
+	
     //add some lines
     for($i=0;$i<2;$i++) {
         imageline($image,0,rand()%10,10,rand()%30,$dark_grey);
         imageline($image,0,rand()%30,150,rand()%30,$red);
         imageline($image,0,rand()%30,150,rand()%30,$yellow);
     }
+    
+    // RandTab color pallette
+    $randc[0] = imagecolorallocate($image, 0, 0, 0);
+    $randc[1] = imagecolorallocate($image,255,0,0);
+    $randc[2] = imagecolorallocate($image, 255, 255, 0);
+    $randc[3] = imagecolorallocate($image, 64,64,64);
+    $randc[4] = imagecolorallocate($image, 0,0,255);
+    
     //add some dots
     for($i=0;$i<1000;$i++) {
-        imagesetpixel($image,rand()%200,rand()%50,$pixel_color);
+        imagesetpixel($image,rand()%200,rand()%50,$randc[rand()%5]);
     }
     //calculate center of text
     $x = ( 150 - 0 - imagefontwidth( 5 ) * strlen( $security_code ) ) / 2 + 0 + 5;
