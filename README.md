@@ -1,5 +1,5 @@
 
-# UserFrosting 0.2.1
+# UserFrosting 0.2.2
 ## http://www.userfrosting.com
 
 ### By Alex Weissman
@@ -86,11 +86,14 @@ Installation
 
 UserFrosting comes with an easy-to-use installer.  Simply download the code to a directory on your server, and navigate to the <code>/install</code> subdirectory.  UserFrosting will guide you through setting up the database, configuring settings, and creating the master account.
 
-Change Log - v0.2.1 
+Change Log - v0.2.2 
 -------------------
 
-- Implemented db-driven menu system.  Menu items are pulled from the database, and can be modified via plugins.
-- Implemented backend templating of forms and tables via [Bootsole](https://github.com/alexweissman/bootsole).
+- Implemented upgrade system, will pull new version list from github and automatically grab update files as well.
+- Moved file list from config.php to the database to be easier to add and remove file paths
+- Added version to the configuration table to aid in the upgrading of Userfrosting
+- Added dev_env to config.php as well as new setting to db-setting.php when set to true UF will no longer check for the install or upgrade directory (good for development defaults to FALSE)
+- Removal of models/captcha.php and replace with base64 captcha function.
 
 [Older changes](CHANGELOG.md)   
 

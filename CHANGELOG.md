@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Change Log - v0.2.1 
+-------------------
+
+- Implemented db-driven menu system.  Menu items are pulled from the database, and can be modified via plugins.
+- Implemented backend templating of forms and tables via [Bootsole](https://github.com/alexweissman/bootsole).
+
 Change Log - v0.2.0 (butterflyknife)
 -------------------
 
