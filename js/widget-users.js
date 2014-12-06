@@ -206,7 +206,7 @@ function userForm(box_id, user_id) {
 		$('#' + box_id).modal('show');
 		
 		// Initialize bootstrap switches
-		var switches = $('#' + box_id + ' input[name="select_permissions"]');
+		var switches = $('#' + box_id + ' input[name="select_groups"]');
 		switches.data('on-label', '<i class="fa fa-check"></i>');
 		switches.data('off-label', '<i class="fa fa-times"></i>');
 		switches.bootstrapSwitch();
@@ -304,7 +304,7 @@ function userDisplay(box_id, user_id) {
 		$('#' + box_id).html(result['data']);
 
 		// Initialize bootstrap switches for user groups
-		var switches = $('#' + box_id + ' input[name="select_permissions"]');
+		var switches = $('#' + box_id + ' input[name="select_groups"]');
 		switches.data('on-label', '<i class="fa fa-check"></i>');
 		switches.data('off-label', '<i class="fa fa-times"></i>');
 		switches.bootstrapSwitch();
@@ -383,38 +383,30 @@ function deleteUserDialog(box_id, user_id, name){
 
 // Create user with specified data from the dialog
 function createUser(dialog_id) {	
-	var add_permissions = [];
-	var permission_switches = $('#' + dialog_id + ' input[name="select_permissions"]');
-	permission_switches.each(function(idx, element) {
-		permission_id = $(element).data('id');
+	var add_groups = [];
+	var group_switches = $('#' + dialog_id + ' input[name="select_groups"]');
+	group_switches.each(function(idx, element) {
+		group_id = $(element).data('id');
 		if ($(element).prop('checked')) {
-			add_permissions.push(permission_id);
+			add_groups.push(group_id);
 		}
 	});
-	//console.log("Adding user to groups: " + add_permissions.join(','));
-	
-	var data = {
-		user_name: $('#' + dialog_id + ' input[name="user_name"]' ).val(),
-		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
-		title: $('#' + dialog_id + ' input[name="title"]' ).val(),
-		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
-		add_groups: add_permissions.join(','),
-		password: $('#' + dialog_id + ' input[name="password"]' ).val(),
-		passwordc: $('#' + dialog_id + ' input[name="passwordc"]' ).val(),
-		pay_rate: $('#' + dialog_id + ' input[name="pay_rate"]' ).val(),
-		pay_type: $('#' + dialog_id + ' input[name="pay_type"]' ).filter(':checked').val(),
-		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
-		primary_group_id: $('#' + dialog_id + ' input[name="primary_group_id"]' ).val(),
-		admin: "true",
-		skip_activation: "true",
-		ajaxMode: "true"
-	};
-	
+        // Process form
+    var $form = $('#' + dialog_id + ' form');
+        
+    // Serialize and post to the backend script in ajax mode
+    var serializedData = $form.serialize();
+    
+    serializedData += '&' + encodeURIComponent('add_groups') + '=' + encodeURIComponent(add_groups.join(','));
+    serializedData += '&admin=true&skip_activation=true';         
+    serializedData += '&ajaxMode=true';     
+    //console.log(serializedData);
+
 	var url = APIPATH + "create_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
-	  data: data
+	  data: serializedData
 	}).done(function(result) {
 		processJSONResult(result);
 		window.location.reload();
@@ -433,39 +425,35 @@ function updateUser(dialog_id, user_id) {
 		return false;
 	}
 	
-	var add_permissions = [];
-	var remove_permissions = [];
-	var permission_switches = $('#' + dialog_id + ' input[name="select_permissions"]');
-	permission_switches.each(function(idx, element) {
-		permission_id = $(element).data('id');
+	var add_groups = [];
+	var remove_groups = [];
+	var group_switches = $('#' + dialog_id + ' input[name="select_groups"]');
+	group_switches.each(function(idx, element) {
+		group_id = $(element).data('id');
 		if ($(element).prop('checked')) {
-			add_permissions.push(permission_id);
+			add_groups.push(group_id);
 		} else {
-			remove_permissions.push(permission_id);
+			remove_groups.push(group_id);
 		}
 	});
-	console.log("Adding permissions: " + add_permissions.join(','));
-	console.log("Removing permissions: " + remove_permissions.join(','));
-	
-	var data = {
-		user_id: user_id,
-		display_name: $('#' + dialog_id + ' input[name="display_name"]' ).val(),
-		title: $('#' + dialog_id + ' input[name="title"]' ).val(),
-		email: $('#' + dialog_id + ' input[name="email"]' ).val(),
-		pay_rate: $('#' + dialog_id + ' input[name="pay_rate"]' ).val(),
-		pay_type: $('#' + dialog_id + ' input[name="pay_type"]' ).filter(':checked').val(),		
-		add_permissions: add_permissions.join(','),
-		remove_permissions: remove_permissions.join(','),
-		primary_group_id: $('#' + dialog_id + ' input[name="primary_group_id"]' ).val(),
-		csrf_token: $('#' + dialog_id + ' input[name="csrf_token"]' ).val(),
-		ajaxMode:	"true"
-	};
+
+    // Process form
+    var $form = $('#' + dialog_id + ' form');
+        
+    // Serialize and post to the backend script in ajax mode
+    var serializedData = $form.serialize();
+    
+    serializedData += '&' + encodeURIComponent('add_groups') + '=' + encodeURIComponent(add_groups.join(','));
+    serializedData += '&' + encodeURIComponent('remove_groups') + '=' + encodeURIComponent(remove_groups.join(','));
+    serializedData += '&user_id=' + user_id;         
+    serializedData += '&ajaxMode=true';     
+    console.log(serializedData);
 	
 	var url = APIPATH + "update_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  
-	  data: data
+	  data: serializedData
 	}).done(function(result) {
 		processJSONResult(result);
 		window.location.reload();

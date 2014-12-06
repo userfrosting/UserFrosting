@@ -97,7 +97,7 @@ if ($get['user_id']){
 if ($populate_fields){
     $user = loadUser($get['user_id']);
     $deleteLabel = $user['user_name'];
-    $user_permissions = loadUserGroups($get['user_id']);
+    $user_groups = loadUserGroups($get['user_id']);
     if ($get['render_mode'] == "panel"){
         $box_title = $user['display_name']; 
     }   
@@ -351,8 +351,8 @@ if ($fields['groups']['display'] != "hidden"){
           <li class='list-group-item'>
               $group_name
               <span class='pull-right'>
-              <input name='select_permissions' type='checkbox' class='form-control' data-id='$id' $disable_str";
-          if ((!$populate_fields and $is_default >= 1) || ($populate_fields && isset($user_permissions[$id]))){
+              <input name='select_groups' type='checkbox' class='form-control' data-id='$id' $disable_str";
+          if ((!$populate_fields and $is_default >= 1) || ($populate_fields && isset($user_groups[$id]))){
               $template .= " checked";
           } else {
             $disable_primary_toggle = "disabled";
