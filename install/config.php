@@ -52,6 +52,9 @@ require_once("../models/secure_functions.php");
 defined("MENU_TEMPLATES")
     or define("MENU_TEMPLATES", dirname(__FILE__) . "/menu-templates/");
 
+defined("SESSION_NAME")
+    or define("SESSION_NAME", "UserFrosting");
+    
 // Construct default site path for inserting into the database
 $hostname = $_SERVER['HTTP_HOST'];
 $app_path = $_SERVER['PHP_SELF'];
@@ -64,4 +67,5 @@ $app_dir = str_replace('\\', '/', $app_dir_raw);
 
 $url = $hostname . $app_dir . '/';
 
+session_name(SESSION_NAME);
 session_start();

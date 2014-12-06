@@ -31,6 +31,10 @@ THE SOFTWARE.
 
 require_once("../models/funcs.php");
 
+defined("SESSION_NAME")
+    or define("SESSION_NAME", "UserFrosting");
+    
+session_name(SESSION_NAME);
 session_start();
 
 // Always a publically accessible script
