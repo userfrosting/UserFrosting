@@ -11,11 +11,11 @@ if (!defined('PHP_VERSION_ID')) {
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
-if (PHP_VERSION_ID < 50307){
-    addAlert("danger", "I'm sorry, due to a security flaw in older versions of PHP, UserFrosting requires PHP 5.3.7 or later.  For more information, please see <a href='http://www.userfrosting.com/security.html'>http://www.userfrosting.com/security.html</a>.");
+if (PHP_VERSION_ID < 50400){
+    addAlert("danger", "I'm sorry, due to a security flaw in older versions of PHP, UserFrosting requires PHP 5.4 or later.  For more information, please see <a href='http://www.userfrosting.com/security.html'>http://www.userfrosting.com/security.html</a>.");
     header("Location: ./");
     exit();
-} else if (PHP_VERSION_ID >= 50307 && PHP_VERSION_ID < 50500){
+} else if (PHP_VERSION_ID >= 50400 && PHP_VERSION_ID < 50500){
     addAlert("warning", "You currently have version " . PHP_VERSION . " of PHP installed.  We recommend version 5.5 or later.  UserFrosting can still be installed, but we highly recommend you upgrade soon.");    
 }
 
