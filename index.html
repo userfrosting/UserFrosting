@@ -42,13 +42,13 @@ title: "UserFrosting: A secure, modern user management system based on UserCake,
 There are, of course, frameworks that can do user management, but you don't want to spend your valuable time learning the ins and outs of a particular framework, only to discover that it's not really what you need.  You might also have some existing code and content that you don't want to have to rewrite to fit the framework's way of doing things.  UserFrosting is meant for developers who want to take advantage of a pre-designed user management system, but write their own code in native PHP.
   </p>
   <p>
-Whatever the case may be, you probably want something that is ready to go straight out of the box, without forcing you to start from `Hello World`.  UserFrosting delivers this and more.  With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less - all you need is a web server running PHP 5.3 or greater, and a SQL database.
+Whatever the case may be, you probably want something that is ready to go straight out of the box, without forcing you to start from `Hello World`.  UserFrosting delivers this and more.  With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less - all you need is a web server running PHP 5.4 or greater, and a SQL database.
   </p>
 </div>
 <h2 id="requirements">Requirements</h2>
   <p class="lead">UserFrosting is designed to have as few dependencies as possible.  All you need to run UserFrosting is a web server of your choice, along with the following components:</p>
   <ul>
-    <li>PHP version 5.3.7 or higher.  This is because of a security flaw in password-related algorithms in older versions of PHP.</li>
+    <li>PHP version <b>5.4</b> or higher.  This is because of a security flaw in password-related algorithms in older versions of PHP, and because we have started to use the short-array syntax that is only available starting in version 5.4.</li>
     <li>MySQL server version 4.1.3, with PDO database connections enabled.</li>
   </ul>
 </h2>
