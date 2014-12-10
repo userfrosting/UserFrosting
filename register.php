@@ -138,6 +138,10 @@ if(isUserLoggedIn()) {
 			  <button type="submit" class="btn btn-success submit" value='Register'>Register</button>
 			</div>
 		  </div>
+          <div class="collapse">
+            <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
+            <input name="spiderbro" id="spiderbro" value="http://"/>
+          </div>          
 		</form>
 	  </div>	
       <?php echo renderTemplate("footer.html"); ?>
@@ -162,29 +166,33 @@ if(isUserLoggedIn()) {
 					$('#display-alerts').append("<div class='alert alert-danger'>" + msg + "</div>");
 				});	
 			} else {
-                var url = APIPATH + 'create_user.php';
+                // Process form                    
+                // Serialize and post to the backend script in ajax mode
+                var serializedData = form.serialize();
+                serializedData += '&ajaxMode=true';     
+                //console.log(serializedData);
+            
+                var url = APIPATH + "create_user.php";
                 $.ajax({  
                   type: "POST",  
                   url: url,  
-                  data: {
-					user_name: 		form.find('input[name="user_name"]' ).val(),
-					display_name: 	form.find('input[name="display_name"]' ).val(),
-					email: 			form.find('input[name="email"]' ).val(),
-					password: 		form.find('input[name="password"]' ).val(),
-					passwordc: 		form.find('input[name="passwordc"]' ).val(),
-					captcha: 		form.find('input[name="captcha"]' ).val(),
-                    ajaxMode:		"true"
-                  }		  
+                  data: serializedData
                 }).done(function(result) {
                   var resultJSON = processJSONResult(result);
                   if (resultJSON['errors'] && resultJSON['errors'] > 0){
                         console.log("error");
 						// Reload captcha
-						var img_src = 'models/captcha.php?' + new Date().getTime();
-						$('#captcha').attr('src', img_src);
-						form.find('input[name="captcha"]' ).val("");
-                        alertWidget('display-alerts');
-                        return;
+						var img_src = APIPATH + 'generate_captcha.php?' + new Date().getTime();
+                        $.ajax({  
+                          type: "GET",  
+                          url: img_src,  
+                          dataType: "text"
+                        }).done(function(result) {                        
+                            $('#captcha').attr('src', result);
+                            form.find('input[name="captcha"]' ).val("");
+                            alertWidget('display-alerts');
+                            return;
+                        });
                   } else {
                     window.location.replace('login.php');
                   }

@@ -79,6 +79,7 @@ if ($admin == "true"){
 	  addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
 	  apiReturnError($ajax, ACCOUNT_ROOT);
   }
+    
 }
 
 $user_name = str_normalize($validator->requiredPostVar('user_name'));
@@ -101,6 +102,7 @@ $primary_group_id = $validator->optionalPostVar('primary_group_id');
 
 // Required for non-admin mode
 $captcha = $validator->optionalPostVar('captcha');
+$spiderbro = $validator->optionalPostVar('spiderbro');
 
 // Add alerts for any failed input validation
 foreach ($validator->errors as $error){
@@ -109,12 +111,19 @@ foreach ($validator->errors as $error){
 
 $error_count = count($validator->errors);
 
-// Check captcha if not in admin mode
+// Check captcha and honeypot if not in admin mode
 if ($admin != "true"){
-  if (!$captcha || md5($captcha) != $_SESSION['captcha']){
-	  addAlert("danger", lang("CAPTCHA_FAIL"));
-	  $error_count++;
-  }
+    if (!$captcha || md5($captcha) != $_SESSION['captcha']){
+        addAlert("danger", lang("CAPTCHA_FAIL"));
+        $error_count++;
+    }
+  
+    // Check the honeypot. 'spiderbro' is not a real field, it is hidden on the main page and must be submitted with its default value for this to be processed.
+    if ($spiderbro != "http://"){
+        error_log("Possible spam received:" . print_r($_POST, true));
+        addAlert("danger", "Aww hellllls no!");
+        $error_count++;
+    }     
 }
 
 if ($error_count == 0){
