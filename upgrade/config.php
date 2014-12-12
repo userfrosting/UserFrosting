@@ -60,7 +60,12 @@ $app_path = $_SERVER['PHP_SELF'];
 $app_dir_raw = dirname(dirname($app_path));
 
 // Replace backslashes in local root (if we're in a windows environment)
-$app_dir = str_replace('\\', '/', $app_dir_raw);	
+$app_dir = str_replace('\\', '/', $app_dir_raw);
+
+// Known issue with dirname: If the path is the root path, dirname will return a single slash.  Otherwise, it does not use a trailing slash. So, we need to check for this.
+if ($app_dir == "/"){
+    $app_dir = "";
+}
 
 $url = $hostname . $app_dir . '/';
 

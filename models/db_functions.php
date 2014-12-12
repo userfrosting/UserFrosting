@@ -583,8 +583,53 @@ function fetchUserHomePage($user_id){
 
 /*****************  User account activation functions *******************/
 
+function activateUserById($user_id){
+    if (!userIdExists($user_id)){
+        addAlert("danger", lang("ACCOUNT_INVALID_USER_ID"));
+        return false;
+    }
+    
+    try {
+        global $db_table_prefix;
+
+        $db = pdoConnect();
+
+        $sqlVars = array();
+
+        $query = "UPDATE ".$db_table_prefix."users
+            SET active = 1
+            WHERE
+            id = :user_id
+            LIMIT 1";
+
+        $stmt = $db->prepare($query);
+        $sqlVars[':user_id'] = $user_id;
+        $stmt->execute($sqlVars);
+        
+        return true;
+
+    } catch (PDOException $e) {
+        addAlert("danger", "Oops, looks like our database encountered an error.");
+        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+        return false;
+    } catch (ErrorException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      return false;
+    } catch (RuntimeException $e) {
+      addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
+      error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+      return false;
+    }
+}
+
 // Change a user from inactive to active by providing the secret token
 function setUserActive($token) {
+    // Check that token exists
+    if (!valueExists('users', 'activation_token', $token)){
+        addAlert("danger", "Invalid token specified.");
+        return false;    
+    }
+    
     try {
         global $db_table_prefix;
         
@@ -609,12 +654,7 @@ function setUserActive($token) {
             return false;
         }
         
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            addAlert("danger", "Invalid token specified.");
-            return false;
-        }
+        return true;
       
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
@@ -679,6 +719,12 @@ function validateActivationToken($token) {
 
 //Input new activation token, and update the time of the most recent activation request
 function updateLastActivationRequest($new_activation_token,$user_name,$email) {
+    // Check that email, user_name exist and are linked
+    if (!(emailExists($email) && usernameExists($user_name) && emailUsernameLinked($email, $user_name))){
+        addAlert("danger", "Invalid email/username specified.");
+        return false;    
+    }
+    
     try {
         global $db_table_prefix;
         
@@ -706,11 +752,8 @@ function updateLastActivationRequest($new_activation_token,$user_name,$email) {
             return false;
         }
         
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            return false;
-        } 
+        return true;
+
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
@@ -776,6 +819,11 @@ function validateLostPasswordToken($token) {
 
 //Toggle if lost password request flag on or off.  Return true on success, false on failure.
 function flagLostPasswordRequest($user_name, $value) {
+    if (!usernameExists($user_name)){
+        addAlert("danger", "Invalid username specified.");
+        return false;    
+    }
+    
     try {
         global $db_table_prefix;
         
@@ -799,11 +847,8 @@ function flagLostPasswordRequest($user_name, $value) {
             return false;
         }
         
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            return false;
-        } 
+        return true;
+
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
@@ -820,6 +865,12 @@ function flagLostPasswordRequest($user_name, $value) {
 
 //Generate a random password, and new token
 function updatePasswordFromToken($password, $current_token) {
+    // Check that token exists
+    if (!valueExists("users", "activation_token", $current_token)){
+        addAlert("danger", "Invalid token specified.");
+        return false;    
+    }    
+    
     try {
         global $db_table_prefix;
         
@@ -844,11 +895,8 @@ function updatePasswordFromToken($password, $current_token) {
             return false;
         }
         
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            return false;
-        } 
+        return true;
+
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
       error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
@@ -1775,18 +1823,11 @@ function checkBinaryConfig($name){
         $stmt = $db->prepare($query);
 
         $sqlVars = array(':name' => $name);
-        //$stmt->execute($sqlVars);
 
         if (!$stmt->execute($sqlVars)){
             // Error
             return false;
         }
-
-        /*if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            return false;
-        }*/
 
         while ($r = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $binary = $r['binary'];
@@ -1864,6 +1905,7 @@ function deleteConfigParameter($name){
         if ($stmt->rowCount() > 0)
             return true;
         else {
+            addAlert("danger", "No configuration parameter '$name' exists.");
             return false;
         } 
         
@@ -2076,6 +2118,7 @@ function createPages($pages) {
         if ($stmt->rowCount() > 0)
             return true;
         else {
+            addAlert("danger", lang("SQL_ERROR"));
             return false;
         } 
     } catch (PDOException $e) {
@@ -2153,6 +2196,7 @@ function deletePages($pages) {
         if ($stmt->rowCount() > 0)
             return true;
         else {
+            addAlert("danger", lang("PAGE_INVALID_ID"));
             return false;
         } 
     } catch (PDOException $e) {
@@ -2685,6 +2729,7 @@ function dbCreateActionPermit($owner_id, $action, $permits, $type) {
         if ($stmt->rowCount() > 0)
             return true;
         else {
+            addAlert("danger", lang("SQL_ERROR"));
             return false;
         }
         
@@ -2711,6 +2756,13 @@ function dbUpdateActionPermit($action_id, $permits, $type){
         } else if ($type == "group"){
             $table = "group_action_permits";
         } else {
+            addAlert("danger", "Action type must be 'user' or 'group'.");
+            return false;
+        }
+        
+        // Check that action_id exists
+        if (!valueExists($table, "id", $action_id)){
+            addAlert("danger", "Invalid action_id specified.");
             return false;
         }
         
@@ -2724,12 +2776,7 @@ function dbUpdateActionPermit($action_id, $permits, $type){
         
         $stmt->execute($sqlVars);
         
-        if ($stmt->rowCount() > 0)
-          return true;
-        else {
-          addAlert("danger", "Invalid action_id specified.");
-          return false;
-        }
+        return true;
     
     } catch (PDOException $e) {
       addAlert("danger", "Oops, looks like our database encountered an error.");
@@ -2767,6 +2814,7 @@ function dbDeleteActionPermit($action_id, $type){
         if ($stmt->rowCount() > 0)
             return true;
         else {
+            addAlert("danger", "Invalid action_id specified.");
             return false;
         }
         

@@ -228,35 +228,7 @@ function activateUser($user_id) {
         return false;
     }
 
-    try {
-        global $db_table_prefix;
-
-        $db = pdoConnect();
-
-        $sqlVars = array();
-
-        $query = "UPDATE ".$db_table_prefix."users
-            SET active = 1
-            WHERE
-            id = :user_id
-            LIMIT 1";
-
-        $stmt = $db->prepare($query);
-        $sqlVars[':user_id'] = $user_id;
-        $stmt->execute($sqlVars);
-
-        if ($stmt->rowCount() > 0)
-            return true;
-        else {
-            addAlert("danger", "Invalid user id specified.");
-            return false;
-        }
-
-    } catch (PDOException $e) {
-        addAlert("danger", "Oops, looks like our database encountered an error.");
-        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-        return false;
-    }
+    return activateUserById($user_id);
 }
 
 /**
