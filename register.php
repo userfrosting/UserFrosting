@@ -187,7 +187,7 @@ if(isUserLoggedIn()) {
                           type: "GET",  
                           url: img_src,  
                           dataType: "text"
-                        }).done(function(result) {                        
+                        }).done(function(result) { 
                             $('#captcha').attr('src', result);
                             form.find('input[name="captcha"]' ).val("");
                             alertWidget('display-alerts');

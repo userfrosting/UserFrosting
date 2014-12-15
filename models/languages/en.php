@@ -78,8 +78,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_CREATION_COMPLETE"		=> "Account for new user %m1% has been created.",
     "ACCOUNT_ACTIVATION_COMPLETE"		=> "You have successfully activated your account. You can now login.",
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "You have successfully registered. You can now login.",
-	"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "You have successfully registered. You will soon receive an activation email. 
-	You must activate your account before logging in.",
+	"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "You have successfully registered. You will soon receive an activation email. You must activate your account before logging in.",
 	"ACCOUNT_PASSWORD_NOTHING_TO_UPDATE"	=> "You cannot update with the same password",
 	"ACCOUNT_PASSWORD_UPDATED"		=> "Account password updated",
 	"ACCOUNT_EMAIL_UPDATED"			=> "Account email updated",
