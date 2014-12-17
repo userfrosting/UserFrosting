@@ -37,10 +37,13 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
+// Request method: POST
+$ajax = checkRequestMode("post");
+
 //Prevent the user visiting the logged in page if he/she is already logged in
 if(isUserLoggedIn()) {
-	addAlert("danger", "I'm sorry, you cannot register for an account while logged in.  Please log out first.");
-	apiReturnError($ajax, ACCOUNT_ROOT);
+	addAlert("danger", "I'm sorry, you cannot activate an account while logged in.  Please log out first.");
+	apiReturnError($ajax, getReferralPage());
 }
 
 //Forms posted
@@ -155,19 +158,11 @@ foreach ($successes as $success){
   addAlert("success", $success);
 }
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+// Send to home page if failure
+if (count($errors) > 0){
+    apiReturnError($ajax, SITE_ROOT . "index.php");
 } else {
-  // Send successes to the home page, while errors should return them to the activation page.
-  if(count($errors) == 0) {
-	header('Location: index.php');
-	exit();
-  } else {
-	header('Location: resend_activation.php');
-	exit();	
-  }
+    apiReturnSuccess($ajax, SITE_ROOT . "resend_activation.php");
 }
 
 ?>

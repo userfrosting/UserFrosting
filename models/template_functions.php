@@ -14,9 +14,8 @@ function renderAccountPageHeader($hooks = array()){
 function renderMenu($highlighted_item_class){
     // User must be logged in
     if (!isUserLoggedIn()){
-      addAlert("danger", "You must be logged in to access the account page.");
-      header("Location: ../login.php");
-      exit();
+      addAlert("danger", lang("LOGIN_REQUIRED"));
+      apiReturnError(false, SITE_ROOT . "login.php");
     }
     
     global $loggedInUser, $master_account;

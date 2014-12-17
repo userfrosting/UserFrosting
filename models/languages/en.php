@@ -150,10 +150,12 @@ $lang = array_merge($lang,array(
 	"SQL_ERROR"				=> "Fatal SQL error",
 	"FEATURE_DISABLED"			=> "This feature is currently disabled",
 	"PAGE_INVALID_ID"              => "The requested page id does not exist",
+	"PAGE_INVALID"              => "The requested page could not be found in the database",    
     "PAGE_PRIVATE_TOGGLED"			=> "This page is now %m1%",
 	"PAGE_ACCESS_REMOVED"			=> "Page access removed for %m1% permission level(s)",
 	"PAGE_ACCESS_ADDED"			=> "Page access added for %m1% permission level(s)",
     "ACCESS_DENIED" => "Hmm, looks like you don't have permission to do that.",
+    "LOGIN_REQUIRED" => "Sorry, you must be logged in to access this resource.",
 	));
 
 //Permissions

@@ -31,14 +31,12 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 // Recommended admin-only access
 if (!securePage(__FILE__)){
-    if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-        echo json_encode(array("errors" => 1, "successes" => 0));
-    } else {
-        header("Location: " . getReferralPage());
-    }
-    exit();
+    apiReturnError($ajax);
 }
 
 $validator = new Validator();
@@ -47,9 +45,8 @@ $validator = new Validator();
 $selected_user_id = $validator->requiredGetVar('id');
 
 if (!is_numeric($selected_user_id) || !userIdExists($selected_user_id)){
-	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
-	header("Location: " . getReferralPage());
-	exit();
+	addAlert("danger", lang("ACCOUNT_INVALID_USER_ID"));
+	apiReturnError($ajax, getReferralPage());
 }
 
 ?>

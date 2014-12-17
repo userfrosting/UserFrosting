@@ -33,8 +33,13 @@ function setReferralPage($page){
 // Halt execution of an API page and either return the error code (AJAX mode), or forward to a page
 function apiReturnError($ajax = false, $failure_landing_page = null){
 	// Default page
-	if ($failure_landing_page == null)
-		$failure_landing_page = SITE_ROOT . "404.php";
+	if ($failure_landing_page == null) {
+		if(isUserLoggedIn()) {
+			$failure_landing_page = ACCOUNT_ROOT . "404.php";
+		} else {
+			$failure_landing_page = SITE_ROOT . "login.php";
+		}
+    }
 	if ($ajax) {
 	  echo json_encode(array("errors" => 1, "successes" => 0));
 	} else {

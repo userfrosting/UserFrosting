@@ -31,17 +31,15 @@ THE SOFTWARE.
 
 // Request method: GET
 
-include('../models/db-settings.php');
-include('../models/config.php');
+require_once('../models/config.php');
 
 set_error_handler('logAllErrors');
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 // User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
+checkLoggedInUser($ajax);
 
 // GET Parameters: [user_id, group_id]
 // If a user_id is specified, attempt to load group information for all groups associated with the specified user.
@@ -56,6 +54,10 @@ foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
 
+if (count($validator->errors) > 0){
+    apiReturnError($ajax, getReferralPage());
+}
+
 if ($user_id){
   // Special case to load groups for the logged in user
   if ($user_id == "0"){
@@ -64,20 +66,17 @@ if ($user_id){
   
   // Attempt to load group information for the specified user.
   if (!($results = loadUserGroups($user_id))){
-      echo json_encode(array("errors" => 1, "successes" => 0));
-      exit();
+      apiReturnError($ajax, getReferralPage());
   }
 } else if ($group_id){	
   // Attempt to load information for the specified group.
   if (!($results = loadGroup($group_id))){
-      echo json_encode(array("errors" => 1, "successes" => 0));
-      exit();
+      apiReturnError($ajax, getReferralPage());
   }
 } else {
   // Attempt to load information for all groups
   if (!($results = loadGroups())){
-      echo json_encode(array("errors" => 1, "successes" => 0));
-      exit();
+      apiReturnError($ajax, getReferralPage());
   }
 }
 

@@ -33,15 +33,14 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 // User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
+checkLoggedInUser($ajax);
 
 // Load a list of preset permit options
-// POST: [fields]
+// GET: [fields]
 
 $validator = new Validator();
 $fields = $validator->optionalGetArray('fields');
@@ -52,13 +51,11 @@ foreach ($validator->errors as $error){
 }
 
 if (count($validator->errors) > 0){
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
+    apiReturnError($ajax, getReferralPage());
 }
 
 if (!$results = loadPresetPermitOptions($fields)){
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
+    apiReturnError($ajax, getReferralPage());
 }
 
 echo json_encode($results);

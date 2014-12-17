@@ -29,22 +29,16 @@ THE SOFTWARE.
 
 */
 require_once("../models/config.php");
-require_once("../models/validation/validate_form.php");
 
 set_error_handler('logAllErrors');
 
-// User must be logged in
-if (!isUserLoggedIn()){
-    addAlert("danger", "You must be logged in to access this resource.");
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
-}
+// Request method: POST
+$ajax = checkRequestMode("post");
 
-$validator = new Validator();
-//Forms posted
-if (isset($_POST)){
-    $newSettings = $_POST;
-}
+// User must be logged in
+checkLoggedInUser($ajax);
+
+$newSettings = $_POST;
 
 if(!empty($newSettings)) {
 
@@ -95,13 +89,10 @@ foreach ($successes as $success){
   addAlert("success", $success);
 }
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => count($errors),
-	"successes" => count($successes)));
+if (count($errors) > 0){
+    apiReturnError($ajax, getReferralPage());
 } else {
-  header('Location: ' . getReferralPage());
-  exit();
+    apiReturnSuccess($ajax, getReferralPage());
 }
 
 ?>

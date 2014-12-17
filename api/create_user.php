@@ -46,19 +46,13 @@ $validator = new Validator();
 $admin = $validator->optionalPostVar('admin');
 
 if ($admin == "true"){
-  // Admin mode must be from a logged in user
-  if (!isUserLoggedIn()){
-	  addAlert("danger", "You must be logged in to access this resource.");
-	  apiReturnError($ajax, ACCOUNT_ROOT);
-  }
+    // Admin mode must be from a logged in user
+    checkLoggedInUser($ajax);
+    
+    $csrf_token = $validator->requiredPostVar('csrf_token');
   
-  $csrf_token = $validator->requiredPostVar('csrf_token');
-  
-  // Validate csrf token
-  if (!$csrf_token or !$loggedInUser->csrf_validate(trim($csrf_token))){
-	  addAlert("danger", lang("ACCESS_DENIED"));
-	  apiReturnError($ajax, ACCOUNT_ROOT);
-  }
+    // Validate csrf token
+    checkCSRF($ajax, $csrf_token);
   
 } else {
   global $can_register;
@@ -182,13 +176,6 @@ if ($error_count == 0){
 
 restore_error_handler();
   
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => 0,
-	"successes" => 1));
-} else {
-  header('Location: ' . getReferralPage());
-  exit();
-}
+apiReturnSuccess($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
 
 ?>

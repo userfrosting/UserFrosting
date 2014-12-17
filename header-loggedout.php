@@ -30,7 +30,7 @@ THE SOFTWARE.
 */
 
 // Request method: GET
-include('models/config.php');
+require_once('models/config.php');
 
 if ($can_register){
 	echo "

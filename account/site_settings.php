@@ -31,11 +31,11 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 if (!securePage(__FILE__)){
-    // Forward to index page
-    addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-    header("Location: index.php");
-    exit();
+    apiReturnError($ajax);
 }
 
 setReferralPage(getAbsoluteDocumentPath(__FILE__));
@@ -150,7 +150,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
     function updateCheckbox(cb){
         var name = cb.name;
         var value = cb.value;
-        var url = '../api/update_plugin_settings.php';
+        var url = APIPATH + 'update_plugin_settings.php';
 
         $.ajax({
             type: "POST",
@@ -168,7 +168,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
     function updateTextbox(tb){
         var name = tb.name;
         var value = tb.value;
-        var url = '../api/update_plugin_settings.php';
+        var url = APIPATH + 'update_plugin_settings.php';
 
         $.ajax({
             type: "POST",
@@ -194,7 +194,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
          */
         $("form[name='adminConfiguration']").submit(function(e){
             var form = $(this);
-            var url = '../api/update_site_settings.php';
+            var url = APIPATH + 'update_site_settings.php';
             $.ajax({
                 type: "POST",
                 url: url,
@@ -225,7 +225,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
          * start site settings config load
          */
         $('#regbox input[type="checkbox"]').bootstrapSwitch();
-        var url = "../api/load_site_settings.php";
+        var url = APIPATH + "load_site_settings.php";
         $.getJSON( url, {})
             .fail(function(result) {
                 addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
@@ -277,7 +277,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
         /*
          * Load plugin config settings
          */
-        var url = "../api/load_plugin_settings.php";
+        var url = APIPATH + "load_plugin_settings.php";
         $.getJSON( url, {})
             .fail(function(data) {
                 addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");

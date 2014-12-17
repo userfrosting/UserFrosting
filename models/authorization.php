@@ -288,6 +288,7 @@ function securePage($file){
     
 	//If page does not exist in DB or page is not permitted for any groups, disallow access		//Modified by Alex 9/18/2013 to NOT allow access by default
 	if (empty($pageDetails)){
+        addAlert("danger", lang("PAGE_INVALID"));
 		if (LOG_AUTH_FAILURES)
             error_log("Authorization failed: $page not found in DB.");
 		return false;
@@ -298,6 +299,7 @@ function securePage($file){
 	}
 	//If user is not logged in, deny access
 	elseif(!isUserLoggedIn()) {
+        addAlert("danger", lang("LOGIN_REQUIRED"));
 		if (LOG_AUTH_FAILURES)
             error_log("Authorization failed: user is not logged in.");
 		return false;
@@ -311,6 +313,7 @@ function securePage($file){
 		if (userPageMatchExists($loggedInUser->user_id, $pageDetails['id'])){ 
 			return true;
 		} else {
+            addAlert("danger", lang("ACCESS_DENIED"));
             if (LOG_AUTH_FAILURES)
                 error_log("Authorization failed: {$loggedInUser->username} does not have permission to access page $page.");
 			return false;	

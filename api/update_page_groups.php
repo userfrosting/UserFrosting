@@ -33,12 +33,11 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
+// Request method: POST
+$ajax = checkRequestMode("post");
+
 // User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
+checkLoggedInUser($ajax);
 
 // POST: page_id, group_id, checked.  if group_id is set to "private", will change private/public status of page.
 
@@ -52,22 +51,18 @@ foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
 
+if (count($validator->errors) > 0){
+    apiReturnError($ajax, getReferralPage());
+}
+
 //Forms posted
 if($page_id !== null && $group_id !== null && $checked !== null ){
   if (!updatePageGroupLink($page_id, $group_id, $checked)){
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+	apiReturnError($ajax, getReferralPage());
   }
 }
 
 restore_error_handler();
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => 0,
-	"successes" => 1));
-} else {
-  header('Location: ' . getReferralPage());
-  exit();
-}
+apiReturnSuccess($ajax, getReferralPage());
 ?>

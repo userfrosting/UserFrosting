@@ -32,11 +32,11 @@ THE SOFTWARE.
 require_once("../models/config.php");
 set_error_handler('logAllErrors');
 
-if (!isUserLoggedIn()){
-    addAlert("danger", "You must be logged in to access this resource.");
-    echo json_encode(array("errors" => 1, "successes" => 0));
-    exit();
-}
+// Request method: POST
+$ajax = checkRequestMode("post");
+
+// User must be logged in
+checkLoggedInUser($ajax);
 
 $validator = new Validator();
 // Required: csrf_token, user_id
@@ -63,10 +63,10 @@ foreach ($validator->errors as $error){
 }
 
 // Validate csrf token
-if (!$csrf_token or !$loggedInUser->csrf_validate(trim($csrf_token))){
-	addAlert("danger", lang("ACCESS_DENIED"));
-    echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+checkCSRF($ajax, $csrf_token);
+
+if (count($validator->errors) > 0){
+    apiReturnError($ajax, getReferralPage());
 }
 
 // Special case to update the logged in user (self)
@@ -78,13 +78,8 @@ if ($user_id == "0"){
 
 //Check if selected user exists
 if(!$user_id or !userIdExists($user_id)){
-	addAlert("danger", "I'm sorry, the user id you specified is invalid!");
-	if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	} else {
-	  header("Location: " . getReferralPage());
-	}
-	exit();
+	addAlert("danger", lang("ACCOUNT_INVALID_USER_ID"));
+	apiReturnError($ajax, getReferralPage());
 }
 	
 $userdetails = fetchUserAuthById($user_id); //Fetch user details
@@ -95,7 +90,6 @@ $success_count = 0;
 //Update display name if specified and different from current value
 if ($display_name && $userdetails['display_name'] != $display_name){
 	if (!updateUserDisplayName($user_id, $display_name)){
-		addAlert("danger", "Failed updating user display name.");
 		$error_count++;
 		$display_name = $userdetails['display_name'];
 	} else {
@@ -139,21 +133,18 @@ if ($password) {
 		//Confirm the hashes match before updating a users password		
 		if ($passwordcheck == ""){
 			addAlert("danger", lang("ACCOUNT_SPECIFY_PASSWORD"));
-			echo json_encode(array("errors" => 1, "successes" => 0));
-			exit();
+			apiReturnError($ajax, getReferralPage());
 		} else if (!passwordVerifyUF($passwordcheck, $loggedInUser->hash_pw)) {
 			//No match
 			addAlert("danger", lang("ACCOUNT_PASSWORD_INVALID"));
-			echo json_encode(array("errors" => 1, "successes" => 0));
-			exit();	
+			apiReturnError($ajax, getReferralPage());
 		}	
 	}
 	
 	// Prevent updating if someone attempts to update with the same password	
 	if(passwordVerifyUF($password, $loggedInUser->hash_pw)) {
 		addAlert("danger", lang("ACCOUNT_PASSWORD_NOTHING_TO_UPDATE"));
-		echo json_encode(array("errors" => 1, "successes" => 0));
-		exit();
+		apiReturnError($ajax, getReferralPage());
 	}
 	
 	if (!$password_hash = updateUserPassword($user_id, $password, $passwordc)){
@@ -181,7 +172,6 @@ if(!empty($rm_groups)){
 	}
 }
 
-
 // Add groups
 if(!empty($add_groups)){
 	// Convert string of comma-separated group_id's into array
@@ -207,14 +197,10 @@ if ($primary_group_id && $userdetails['primary_group_id'] != $primary_group_id){
 
 restore_error_handler();
 
-$ajaxMode = $validator->optionalBooleanPostVar('ajaxMode', 'true');
-if ($ajaxMode == "true" ){
-  echo json_encode(array(
-	"errors" => $error_count,
-	"successes" => $success_count));
+if ($error_count > 0){
+    apiReturnError($ajax, getReferralPage());
 } else {
-  header('Location: ' . getReferralPage());
-  exit();
+    apiReturnSuccess($ajax, getReferralPage());
 }
 
 ?>

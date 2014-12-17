@@ -49,8 +49,7 @@ $user_id = $validator->optionalGetVar('user_id');
 if($user_id){
   if (!userIdExists($user_id)){
 	addAlert("danger", lang("ACCOUNT_INVALID_USER_ID"));
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+    apiReturnError($ajax, getReferralPage());
   }
     
     //Activate account
@@ -59,34 +58,26 @@ if($user_id){
 	$display_name = $details['display_name'];
 	addAlert("success", lang("ACCOUNT_MANUALLY_ACTIVATED", array($display_name)));	
   } else {
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+	apiReturnError($ajax, getReferralPage());
   }
   
 } else if ($token) {
   if(!validateActivationToken($token)) { //Check for a valid token. Must exist and active must be = 0
 	addAlert("danger", lang("ACCOUNT_TOKEN_NOT_FOUND"));
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+	apiReturnError($ajax, getReferralPage());
   } else {
 	//Activate the users account
 	if(setUserActive($token)) {
 	  addAlert("success", lang("ACCOUNT_ACTIVATION_COMPLETE"));
 	} else {	  
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
+	  apiReturnError($ajax, getReferralPage());
 	}
   }
 }
 
 restore_error_handler();
 
-// Allows for functioning in either ajax mode or graceful degradation to PHP/HTML only
-if (isset($_GET['ajaxMode']) and $_GET['ajaxMode'] == "true" ){
-  echo json_encode(array("errors" => 0, "successes" => 1));
-} else {
-  header("Location: " . getReferralPage());
-  exit();
-}
+// Allows for functioning in either ajax mode or synchronous request mode
+apiReturnSuccess($ajax, getReferralPage());
 
 ?>

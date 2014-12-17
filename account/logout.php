@@ -31,11 +31,11 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 if (!securePage(__FILE__)){
-  // Forward to index page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  header("Location: 404.php");
-  exit();
+    apiReturnError($ajax);
 }
 
 setReferralPage(getAbsoluteDocumentPath(__FILE__));

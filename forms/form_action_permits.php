@@ -33,11 +33,11 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 if (!securePage(__FILE__)){
-  // Forward to index page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
+  apiReturnError($ajax);
 }
 
 // Parameters: box_id, render_mode, [action_permit_id]
@@ -58,8 +58,7 @@ $disabled = $validator->optionalBooleanGetVar('disabled', false);
 
 if (!($user_id xor $group_id)){
   addAlert("danger", "Exactly one of {user_id, group_id} must be specified.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();  
+  apiReturnError($ajax, getReferralPage()); 
 }
 
 // Buttons (optional)

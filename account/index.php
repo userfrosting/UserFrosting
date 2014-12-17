@@ -30,12 +30,14 @@ THE SOFTWARE.
 */
 
 require_once("../models/config.php");
-	
+
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 // User must be logged in
 if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access the account page.");
-  header("Location: ../login.php");
-  exit();
+  addAlert("danger", lang("LOGIN_REQUIRED"));
+  apiReturnError($ajax, SITE_ROOT . "login.php");
 }
 
 setReferralPage(getAbsoluteDocumentPath(__FILE__));

@@ -32,11 +32,11 @@ THE SOFTWARE.
 // UserCake authentication
 require_once("../models/config.php");
 
+// Request method: GET
+$ajax = checkRequestMode("get");
 
 if (!securePage(__FILE__)){
-  // TODO: account section has its own 404 page
-  header("Location: index.php");
-  exit();
+    apiReturnError($ajax);
 }
 
 

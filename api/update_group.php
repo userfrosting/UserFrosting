@@ -36,12 +36,11 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
+// Request method: POST
+$ajax = checkRequestMode("post");
+
 // User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
+checkLoggedInUser($ajax);
 
 // Update a group, specified by id, with the given group name, is_default setting, and home page id.
 // POST: group_id, [group_name, is_default, home_page_id]
@@ -54,13 +53,15 @@ foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
 
-if(!$group_id){
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();  
+if (count($validator->errors) > 0){
+    apiReturnError($ajax, getReferralPage());
 }
 
 // Fetch data for this group
 $group = fetchGroupDetails($group_id);
+if(!$group){
+  apiReturnError($ajax, getReferralPage());
+}
 
 $group_name = $validator->optionalPostVar('group_name');
 if (!$group_name){
@@ -78,43 +79,11 @@ if (!$home_page_id){
 }
 
 if (!updateGroup($group_id, $group_name, $is_default, $home_page_id)){
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
+  apiReturnError($ajax, getReferralPage());
 }
-
-	/*
-	//Remove access for users
-	if(!empty($_POST['removePermission'])){
-		$remove = $_POST['removePermission'];
-		if ($deletion_count = removeUsersFromGroup($permissionId, $remove)) {
-			$successes[] = lang("PERMISSION_REMOVE_USERS", array($deletion_count));
-		}
-		else {
-			$errors[] = lang("SQL_ERROR");
-		}
-	}
-	
-	//Add access for users
-	if(!empty($_POST['addPermission'])){
-		$add = $_POST['addPermission'];
-		if ($addition_count = addUsersToGroup($permissionId, $add)) {
-			$successes[] = lang("PERMISSION_ADD_USERS", array($addition_count));
-		}
-		else {
-			$errors[] = lang("SQL_ERROR");
-		}
-	}
-*/
 
 restore_error_handler();
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => 0,
-	"successes" => 1));
-} else {
-  header('Location: ' . getReferralPage());
-  exit();
-}
+apiReturnSuccess($ajax, getReferralPage());
 
 ?>

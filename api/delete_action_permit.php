@@ -33,12 +33,11 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
+// Request method: POST
+$ajax = checkRequestMode("post");
+
 // User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
+checkLoggedInUser($ajax);
 
 // Delete an action-permit mapping, specified by action_id
 // POST: action_id, type = (user, group)
@@ -52,36 +51,31 @@ foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
 
+if (count($validator->errors) > 0){
+    apiReturnError($ajax, getReferralPage());
+}
+
 //Forms posted
 if($action_id && $type) {
 	if ($type == "user"){
 	  if (!deleteUserActionPermit($action_id)){
-		echo json_encode(array("errors" => 1, "successes" => 0));
-		exit();
+		apiReturnError($ajax, getReferralPage());
 	  } 
 	} else if ($type == "group"){
 	  if (!deleteGroupActionPermit($action_id)){
-		echo json_encode(array("errors" => 1, "successes" => 0));
-		exit();
+		apiReturnError($ajax, getReferralPage());
 	  } 
 	} else {
 	  addAlert("danger", "Invalid action type (user, group) specified.");
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
+	  apiReturnError($ajax, getReferralPage());
 	}
 } else {
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+	apiReturnError($ajax, getReferralPage());
 }
 
 restore_error_handler();
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => 0,
-	"successes" => 1));
-} else {
-  header('Location: ' . getReferralPage());
-  exit();
-}
+// Allows for functioning in either ajax mode or synchronous request mode
+apiReturnSuccess($ajax, getReferralPage());
+
 ?>

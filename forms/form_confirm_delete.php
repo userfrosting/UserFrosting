@@ -31,11 +31,11 @@ THE SOFTWARE.
 
 require_once("../models/config.php");
 
+// Request method: GET
+$ajax = checkRequestMode("get");
+
 if (!securePage(__FILE__)){
-  // Forward to index page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
+  apiReturnError($ajax);
 }
 
 $validator = new Validator();
@@ -52,8 +52,7 @@ foreach ($validator->errors as $error){
 }
 
 if (count($validator->errors) > 0){
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
+  apiReturnError($ajax, getReferralPage()); 
 }
 
 $response = "

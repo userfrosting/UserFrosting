@@ -6,9 +6,7 @@ require_once("../models/config.php");
 $ajax = checkRequestMode("get");
 
 if (!securePage(__FILE__)){
-  // Forward to index page
-  addAlert("danger", "Whoops, looks like you don't have permission to view that page.");
-  apiReturnError($ajax, ACCOUNT_ROOT);
+  apiReturnError($ajax);
 }
 
 // Sanitize input data

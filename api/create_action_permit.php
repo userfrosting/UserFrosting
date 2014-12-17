@@ -33,12 +33,11 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
+// Request method: POST
+$ajax = checkRequestMode("post");
+
 // User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
+checkLoggedInUser($ajax);
 
 // Create a new action_permit mapping for a user or group.
 // POST: action_name, permit, [user_id, group_id]
@@ -54,31 +53,26 @@ foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
 
+if (count($validator->errors) > 0){
+    apiReturnError($ajax, getReferralPage());
+}
+
 //Forms posted
 if($group_id) {
 	if (!createGroupActionPermit($group_id, $action_name, $permit)){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
+        apiReturnError($ajax, getReferralPage());
 	}
 } else if ($user_id){
 	if (!createUserActionPermit($user_id, $action_name, $permit)){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
+        apiReturnError($ajax, getReferralPage());
 	}
 } else {
 	addAlert("danger", "You must specify a user or group id!");
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+    apiReturnError($ajax, getReferralPage());
 }
 
 restore_error_handler();
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => 0,
-	"successes" => 1));
-} else {
-  header('Location: ' . getReferralPage());
-  exit();
-}
+// Allows for functioning in either ajax mode or synchronous request mode
+apiReturnSuccess($ajax, getReferralPage());
 ?>

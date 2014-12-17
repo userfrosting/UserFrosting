@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     addAlert($_POST['type'], $_POST['message']);
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET'){
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SESSION["userAlerts"])){
     echo json_encode($_SESSION["userAlerts"]);
     
     // Reset alerts after they have been delivered

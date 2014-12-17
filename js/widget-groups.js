@@ -41,6 +41,7 @@ function groupsWidget(widget_id, options) {
 	})
 	.done(function( result ) {
 		var data = processJSONResult(result);
+        alertWidget('display-alerts');
 		// Don't bother unless there are some records found
 		if (Object.keys(data).length > 0) { 
 			// Get JSON object of all secure functions

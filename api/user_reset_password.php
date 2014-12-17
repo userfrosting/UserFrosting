@@ -29,11 +29,17 @@ THE SOFTWARE.
 
 */
 
-// Request method: GET or POST
-
 require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
+
+// Request method: GET or POST
+$ajax = null;
+if (isset($_POST)){
+    $ajax = checkRequestMode("post");
+} else {
+    $ajax = checkRequestMode("get");
+}
 
 $validate = new Validator();
 $confirm = $validate->optionalPostVar('token');
@@ -261,19 +267,11 @@ foreach ($successes as $success){
     addAlert("success", $success);
 }
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-    echo json_encode(array(
-        "errors" => count($errors),
-        "successes" => count($successes)));
+// Send to login page if failure
+if (count($errors) > 0){
+    apiReturnError($ajax, SITE_ROOT . "login.php");
 } else {
-    // Send successes to the login page, while errors should return them to the forgot_password page.
-    if(count($errors) == 0) {
-        header('Location: ' . SITE_ROOT . 'login.php');
-        exit();
-    } else {
-        header('Location: ' . SITE_ROOT . 'forgot_password.php');
-        exit();
-    }
+    apiReturnSuccess($ajax, SITE_ROOT . "forgot_password.php");
 }
 
 ?>

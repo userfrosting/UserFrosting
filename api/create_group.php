@@ -33,12 +33,11 @@ require_once("../models/config.php");
 
 set_error_handler('logAllErrors');
 
+// Request method: POST
+$ajax = checkRequestMode("post");
+
 // User must be logged in
-if (!isUserLoggedIn()){
-  addAlert("danger", "You must be logged in to access this resource.");
-  echo json_encode(array("errors" => 1, "successes" => 0));
-  exit();
-}
+checkLoggedInUser($ajax);
 
 // Create a new group with the specified name and home page id
 // POST: group_name, home_page_id
@@ -51,26 +50,22 @@ foreach ($validator->errors as $error){
   addAlert("danger", $error);
 }
 
+if (count($validator->errors) > 0){
+    apiReturnError($ajax, getReferralPage());
+}
+
 //Forms posted
 if($group_name) {
 	if (!createGroup($group_name, $home_page_id)){
-	  echo json_encode(array("errors" => 1, "successes" => 0));
-	  exit();
+        apiReturnError($ajax, getReferralPage());
 	}
 } else {
 	addAlert("danger", lang("PERMISSION_CHAR_LIMIT", array(1, 50)));
-	echo json_encode(array("errors" => 1, "successes" => 0));
-	exit();
+    apiReturnError($ajax, getReferralPage());
 }
 
 restore_error_handler();
 
-if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
-  echo json_encode(array(
-	"errors" => 0,
-	"successes" => 1));
-} else {
-  header('Location: ' . getReferralPage());
-  exit();
-}
+// Allows for functioning in either ajax mode or synchronous request mode
+apiReturnSuccess($ajax, getReferralPage());
 ?>
