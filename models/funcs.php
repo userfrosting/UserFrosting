@@ -60,7 +60,6 @@ function formatCurrency($num){
 }
 
 function formatDateComponents($stamp) {
-	$formatted = [];
 	$formatted['date'] = date("M jS, Y", $stamp);
 	$formatted['day'] = date("l", $stamp);
 	$formatted['time'] = date("g:i a", $stamp);
