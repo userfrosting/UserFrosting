@@ -1,5 +1,30 @@
 <?php
 
+/**********
+bootsole, v0.1.1
+
+Copyright 2014 by Alex Weissman
+
+MIT License:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the 'Software'), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+**********/
+
 require_once("template_functions.php");
 
 class FormBuilder {
@@ -23,11 +48,12 @@ class FormBuilder {
     
     protected $_template = "";
     
-    public function __construct($template, $fields = array(), $buttons = array(), $data = array()) {
+    public function __construct($template, $fields = array(), $buttons = array(), $data = array(), $horizontal = false) {
         $this->_fields = $fields;
         $this->_buttons = $buttons;
         $this->_data = $data;
         $this->_template = $template;
+        $this->_horizontal = $horizontal;
     }
     
     public function render(){
@@ -62,14 +88,14 @@ class FormBuilder {
     private function renderTextField($field_name){
         $field_data = $this->generateFieldData($field_name);
         
-        $result = "
-            <div class='form-group {{hidden}}'>
-                <label>{{label}}</label>
-                <div class='input-group'>
+        $label = "{{label}}";
+        $input = "
+            <div class='input-group'>
                     <span class='input-group-addon'>{{addon}}</span>
                     <input type='text' class='form-control' name='{{name}}' autocomplete='off' value='{{value}}' placeholder='{{placeholder}}' data-validate='{{validator_str}}' {{disabled}}>
-                </div>
             </div>";
+        
+        $result = $this->renderField($label, $input);
         
         return replaceKeyHooks($field_data, $result);
     }
@@ -78,14 +104,14 @@ class FormBuilder {
     private function renderPasswordField($field_name){
         $field_data = $this->generateFieldData($field_name);
         
-        $result = "
-            <div class='form-group {{hidden}}'>
-                <label>{{label}}</label>
+        $label = "{{label}}";
+        $input = "
                 <div class='input-group'>
                     <span class='input-group-addon'>{{addon}}</span>
                     <input type='password' class='form-control' name='{{name}}' autocomplete='off' value='{{value}}' placeholder='{{placeholder}}' data-validate='{{validator_str}}' {{disabled}}>
-                </div>
             </div>";
+        
+        $result = $this->renderField($label, $input);
         
         return replaceKeyHooks($field_data, $result);
     }    
@@ -97,9 +123,8 @@ class FormBuilder {
         $field = $this->_fields[$field_name];
         $choices = isset($field['choices']) ? $field['choices'] : array();
         
-        $result = "
-        <div class='form-group {{hidden}}'>
-            <label>{{label}}</label>
+        $label = "{{label}}";
+        $input = "
             <div class='input-group'>
               <span class='input-group-addon'>{{addon}}</span>
               <div class='btn-group' data-toggle='buttons'>";
@@ -108,20 +133,21 @@ class FormBuilder {
         foreach ($choices as $choice => $choice_label){
             // Special trick for making readonly radio buttons: make one checked and the rest disabled
             if ($field_data['value'] == $choice){ 
-                $result .=  "<label class='btn btn-primary active'>
+                $input .=  "<label class='btn btn-primary active'>
                   <input class='form-control' type='radio' name='{{name}}' value='$choice' data-validate='{{validator_str}}' checked> $choice_label
                   </label>";
             } else {
-                $result .=  "<label class='btn btn-primary' {{disabled}}>
+                $input .=  "<label class='btn btn-primary' {{disabled}}>
                   <input class='form-control' type='radio' name='{{name}}' value='$choice' data-validate='{{validator_str}}' {{disabled}}> $choice_label
                   </label>";     
             }	
         }
         
-        $result .= "
+        $input .= "
               </div>
-            </div>
         </div>";
+        
+        $result = $this->renderField($label, $input);
         
         return replaceKeyHooks($field_data, $result);
     }
@@ -133,9 +159,8 @@ class FormBuilder {
         $field = $this->_fields[$field_name];
         $choices = isset($field['choices']) ? $field['choices'] : array();
         
-        $result = "
-        <div class='form-group {{hidden}}'>
-            <label>{{label}}</label>
+        $label = "{{label}}";
+        $input = "
             <div class='input-group'>
               <span class='input-group-addon'>{{addon}}</span>
               <select class='form-control' name='{{name}}' {{disabled}}>";
@@ -144,17 +169,17 @@ class FormBuilder {
         foreach ($choices as $choice => $choice_label){
             // Special trick for making readonly radio buttons: make one checked and the rest disabled
             if ($field_data['value'] == $choice){ 
-                $result .=  "<option value='$choice' selected>$choice_label</option>";
+                $input .=  "<option value='$choice' selected>$choice_label</option>";
             } else {
-                $result .=  "<option value='$choice'>$choice_label</option>";     
+                $input .=  "<option value='$choice'>$choice_label</option>";     
             }	
         }
         
-        $result .= "
+        $input .= "
               </select>
-            </div>
         </div>";
         
+        $result = $this->renderField($label, $input);
         return replaceKeyHooks($field_data, $result);
     }
 
@@ -173,14 +198,13 @@ class FormBuilder {
         else 
             $center_label = "";
         
-        $result = "
-        <div class='form-group {{hidden}}'>
-            <label class='label-switch'>{{label}}</label>
+        $label = "{{label}}";
+        $input = "
             <span class='pull-right'>
                 <input class='form-control bootstrapswitch' type='checkbox' data-on-text='$on' data-off-text='$off' $center_label name='{{name}}' {{disabled}} $checked>
-            </span>
-        </div>";
+            </span>";
         
+        $result = $this->renderField($label, $input, true);
         return replaceKeyHooks($field_data, $result);
     }    
 
@@ -191,9 +215,8 @@ class FormBuilder {
         $field = $this->_fields[$field_name];
         $choices = isset($field['choices']) ? $field['choices'] : array();
         
-        $result = "
-        <div class='form-group {{hidden}}'>
-            <label>{{label}}</label>
+        $label = "{{label}}";
+        $input = "
             <div class='input-group'>";
         
         // Render choices (buttons)
@@ -205,13 +228,35 @@ class FormBuilder {
             }	
         }
         
-        $result .= "
-            </div>
-        </div>";
-        
+        $input .= "
+            </div>";
+            
+        $result = $this->renderField($label, $input);
         return replaceKeyHooks($field_data, $result);
     }      
-        
+    
+    private function renderField($label, $field, $switch = false){
+        if ($switch){
+            return "
+                <div class='form-group {{hidden}}'>
+                    <label class='label-switch'>$label</label>
+                    $field
+                </div>";         
+        } else if ($this->_horizontal){
+            return "
+                <div class='form-group {{hidden}}'>
+                    <label class='col-sm-4 control-label'>$label</label>
+                    <div class='col-sm-8'>$field</div>
+                </div>";
+        } else {
+            return "
+                <div class='form-group {{hidden}}'>
+                    <label>$label</label>
+                    $field
+                </div>";        
+        }
+    }
+    
     private function renderButton($button_name){
         $button = $this->_buttons[$button_name];
         $display = isset($button['display']) ? $button['display'] : "show";

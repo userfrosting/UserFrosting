@@ -1,6 +1,6 @@
 <?php
 /*
-UserFrosting Version: 0.2.1 (beta)
+UserFrosting Version: 0.2.2
 By Alex Weissman
 Copyright (c) 2014
 Based on the UserCake user management system, v2.0.2.

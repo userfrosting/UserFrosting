@@ -1,7 +1,7 @@
 <?php
 /*
 
-UserFrosting Version: 0.2.1 (beta)
+UserFrosting Version: 0.2.2
 By Alex Weissman
 Copyright (c) 2014
 
@@ -57,6 +57,131 @@ if(isUserLoggedIn()) {
 <html lang="en">
   <?php
 	echo renderTemplate("head.html", array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE#" => "Register"));
+    
+    $fields = [
+        'user_name' => [
+            'type' => 'text',
+            'label' => 'Username',
+            'validator' => [
+                'minLength' => 1,
+                'maxLength' => 25,
+                'label' => 'Username'
+            ],
+            'placeholder' => 'Please enter the user name'
+        ],
+        'display_name' => [
+            'type' => 'text',
+            'label' => 'Display Name',
+            'validator' => [
+                'minLength' => 1,
+                'maxLength' => 50,
+                'label' => 'Display name'
+            ],
+            'placeholder' => 'Please enter the display name'
+        ],          
+        'email' => [
+            'type' => 'text',
+            'label' => 'Email',
+            'icon' => 'fa fa-envelope',
+            'validator' => [
+                'minLength' => 1,
+                'maxLength' => 150,
+                'email' => true,
+                'label' => 'Email'
+            ],
+            'placeholder' => 'Email goes here'
+        ],
+        'password' => [
+            'type' => 'password',
+            'label' => 'Password',
+            'icon' => 'fa fa-key',
+            'validator' => [
+                'minLength' => 8,
+                'maxLength' => 50,
+                'label' => 'Password',
+                'passwordMatch' => 'passwordc'
+            ]        
+        ],
+        'passwordc' => [
+            'type' => 'password',
+            'label' => 'Confirm password',
+            'icon' => 'fa fa-key',
+            'validator' => [
+                'minLength' => 8,
+                'maxLength' => 50,
+                'label' => 'Password'
+            ]     
+        ],
+        'captcha' => [
+            'type' => 'text',
+            'label' => 'Confirm Security Code',
+            'icon' => 'fa fa-eye',
+            'validator' => [
+                'minLength' => 1,
+                'maxLength' => 50,
+                'label' => 'Security code'
+            ]                 
+        ]
+    ];
+    
+    $captcha = generateCaptcha();
+    
+    $template = "
+        <form name='newUser' class='form-horizontal' id='newUser' role='form' action='api/create_user.php' method='post'>
+		  <div class='row'>
+			<div id='display-alerts' class='col-lg-12'>
+		  
+			</div>
+		  </div>		
+		  <div class='row'>
+			<div class='col-sm-12'>
+                {{user_name}}
+            </div>
+		  </div>
+		  <div class='row'>
+            <div class='col-sm-12'>
+                {{display_name}}
+            </div>
+		  </div>
+		  <div class='row'>
+			<div class='col-sm-12'>
+                {{email}}
+            </div>
+		  </div>		  
+		  <div class='row'>
+            <div class='col-sm-12'>
+                {{password}}
+            </div>
+		  </div>
+		  <div class='row'>
+            <div class='col-sm-12'>
+                {{passwordc}}
+            </div>
+		  </div>
+		  <div class='row'>
+            <div class='col-sm-12'>
+                {{captcha}}
+            </div>
+          </div>
+          <div class='form-group'>
+            <div class='col-sm-12'>
+                <img src='$captcha' id='captcha'>
+            </div>
+		  </div>
+		  <br>
+		  <div class='form-group'>
+			<div class='col-sm-12'>
+			  <button type='submit' class='btn btn-success submit' value='Register'>Register</button>
+			</div>
+		  </div>
+          <div class='collapse'>
+            <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
+            <input name='spiderbro' id='spiderbro' value='http://'/>
+          </div>          
+		</form>";
+    
+    $fb = new FormBuilder($template, $fields, [], [], true);
+    
   ?>
 
   <body>
@@ -69,80 +194,8 @@ if(isUserLoggedIn()) {
       <div class="jumbotron">
         <h1>Let's get started!</h1>
         <p class="lead">Registration is fast and simple.</p>
-		<form name='newUser' id='newUser' class='form-horizontal' role='form' action='api/create_user.php' method='post'>
-		  <div class="row">
-				<div id='display-alerts' class="col-lg-12">
-		  
-				</div>
-		  </div>		
-		  <div class="row form-group">
-			<label class="col-sm-4 control-label">Username</label>
-			<div class="col-sm-8">
-			    <div class="input-group">
-                    <span class='input-group-addon'><i class='fa fa-edit'></i></span>
-					<input type="text" class="form-control" placeholder="Username" name = 'user_name' value='' data-validate='{"minLength": 1, "maxLength": 25, "label": "Username" }'>
-				</div>
-			</div>
-		  </div>
-		  <div class="row form-group">
-			<label class="col-sm-4 control-label">Display Name</label>
-			<div class="col-sm-8">
-				<div class="input-group">
-					<span class='input-group-addon'><i class='fa fa-edit'></i></span>
-					<input type="text" class="form-control" placeholder="Display Name" name='display_name' data-validate='{"minLength": 1, "maxLength": 50, "label": "Display Name" }'>
-				</div>
-			</div>
-		  </div>
-		  <div class="row form-group">
-			<label class="col-sm-4 control-label">Email</label>
-			<div class="col-sm-8">
-				<div class="input-group">
-					<span class='input-group-addon'><i class='fa fa-envelope'></i></span>
-					<input type="email" class="form-control" placeholder="Email" name='email' data-validate='{"email": true, "minLength": 1, "maxLength": 150, "label": "Email" }'>
-				</div>
-			</div>
-		  </div>		  
-		  <div class="row form-group">
-			<label class="col-sm-4 control-label">Password</label>
-			<div class="col-sm-8">
-				<div class="input-group">
-					<span class='input-group-addon'><i class='fa fa-lock'></i></span>
-					<input type="password" class="form-control" placeholder="Password" name='password' data-validate='{"minLength": 8, "maxLength": 50, "passwordMatch": "passwordc", "label": "Password" }'>
-				</div>
-			</div>
-		  </div>
-		  <div class="row form-group">
-			<label class="col-sm-4 control-label">Confirm Password</label>
-			<div class="col-sm-8">
-			  	<div class="input-group">
-					<span class='input-group-addon'><i class='fa fa-lock'></i></span>
-					<input type="password" class="form-control" placeholder="Confirm Password" name='passwordc' data-validate='{"minLength": 8, "maxLength": 50, "label": "Confirm Password" }'>
-				</div>
-			</div>
-		  </div>
-		  <div class="form-group">
-			<label class="col-sm-4 control-label">Confirm Security Code</label>
-			<div class="col-sm-4">
-				<div class="input-group">
-					<span class='input-group-addon'><i class='fa fa-eye'></i></span>
-					<input type="text" class="form-control" name='captcha' data-validate='{"minLength": 1, "maxLength": 50, "label": "Confirm Security Code" }'>
-				</div>
-			</div>
-			<div class="col-sm-4">
-			  <img src='<?php echo generateCaptcha(); ?>' id="captcha">
-			</div>
-		  </div>
-		  <br>
-		  <div class="form-group">
-			<div class="col-sm-12">
-			  <button type="submit" class="btn btn-success submit" value='Register'>Register</button>
-			</div>
-		  </div>
-          <div class="collapse">
-            <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
-            <input name="spiderbro" id="spiderbro" value="http://"/>
-          </div>          
-		</form>
+        <?php echo $fb->render(); ?>
+        
 	  </div>	
       <?php echo renderTemplate("footer.html"); ?>
 
