@@ -19,4 +19,5 @@ If you find a problem in any of the tutorials, let us know on the Issues page.  
 
 ## Adding new navigation menu items
 
-Coming soon!
+Please see the wiki page, https://github.com/alexweissman/UserFrosting/wiki/Adding-a-navigation-menu-item.
+
