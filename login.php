@@ -86,7 +86,8 @@ if ($email_login == 1) {
 		  <div class="form-group">
 			<div class="col-md-12">
 			  <button type="submit" class="btn btn-success submit" value='Login'>Login</button>
-			</div>
+                          <a class="btn btn-success submit" href="<?php echo SITE_ROOT.'samlauth/index.php?sso';?>">SAML Login</a>
+ 			</div>
 		  </div>
 		  <div class="jumbotron-links">
 		  </div>		  
