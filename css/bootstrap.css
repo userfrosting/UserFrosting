@@ -3969,6 +3969,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
   background-color: #eeeeee;
   border: 1px solid #cccccc;
   border-radius: 4px;
+  width: 39px;
 }
 
 .input-group-addon.input-sm {
