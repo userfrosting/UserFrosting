@@ -49,9 +49,7 @@ $get = filter_input_array(INPUT_GET, FILTER_SANITIZE_SPECIAL_CHARS);
 // box_id: the desired name of the div that will contain the form.
 // render_mode: modal or panel
 // user_id (optional): if specified, will load the relevant data for the user into the form.  Form will then be in "update" mode.
-// show_dates (optional): if set to true, will show the registered and last signed in date fields (fields will be read-only)
-// show_passwords (optional): if set to true, will show the password creation fields
-// disabled (optional): if set to true, disable all fields
+
 
 // Set up Valitron validator
 $v = new Valitron\DefaultValidator($get);

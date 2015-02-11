@@ -62,65 +62,71 @@ if(isUserLoggedIn()) {
         'user_name' => [
             'type' => 'text',
             'label' => 'Username',
+            'icon' => 'fa fa-fw fa-edit',
             'validator' => [
                 'minLength' => 1,
                 'maxLength' => 25,
                 'label' => 'Username'
             ],
-            'placeholder' => 'Please enter the user name'
+            'placeholder' => 'User name'
         ],
         'display_name' => [
             'type' => 'text',
             'label' => 'Display Name',
+            'icon' => 'fa fa-fw fa-edit',
             'validator' => [
                 'minLength' => 1,
                 'maxLength' => 50,
                 'label' => 'Display name'
             ],
-            'placeholder' => 'Please enter the display name'
+            'placeholder' => 'Display name'
         ],          
         'email' => [
             'type' => 'text',
             'label' => 'Email',
-            'icon' => 'fa fa-envelope',
+            'icon' => 'fa fa-fw fa-envelope',
             'validator' => [
                 'minLength' => 1,
                 'maxLength' => 150,
                 'email' => true,
                 'label' => 'Email'
             ],
-            'placeholder' => 'Email goes here'
+            'placeholder' => 'Email address'
         ],
         'password' => [
             'type' => 'password',
             'label' => 'Password',
-            'icon' => 'fa fa-key',
+            'icon' => 'fa fa-fw fa-key',
             'validator' => [
                 'minLength' => 8,
                 'maxLength' => 50,
                 'label' => 'Password',
                 'passwordMatch' => 'passwordc'
-            ]        
+            ],
+            'placeholder' => '8-50 characters'
         ],
         'passwordc' => [
             'type' => 'password',
             'label' => 'Confirm password',
-            'icon' => 'fa fa-key',
+            'icon' => 'fa fa-fw fa-key',
             'validator' => [
                 'minLength' => 8,
                 'maxLength' => 50,
                 'label' => 'Password'
-            ]     
+            ],
+            'placeholder' => 'Re-enter your password'
+            
         ],
         'captcha' => [
             'type' => 'text',
             'label' => 'Confirm Security Code',
-            'icon' => 'fa fa-eye',
+            'icon' => 'fa fa-fw fa-eye',
             'validator' => [
                 'minLength' => 1,
                 'maxLength' => 50,
                 'label' => 'Security code'
-            ]                 
+            ],
+            'placeholder' => "Enter the code below, human!"            
         ]
     ];
     
