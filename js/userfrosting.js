@@ -259,7 +259,6 @@ function validateFormFields(dialog_id) {
 			// Skip blank, optional fields
 			if (!(validationData.optional && val == "")) {
 				if (validationData.minLength && validationData.maxLength) {
-					console.log("validating for length " + val.length);
 					if (val.length < validationData.minLength || val.length > validationData.maxLength) {
 						errorMessages.push("'" + label + "' must be between " + validationData.minLength + " and " + validationData.maxLength + " characters long.");
 						fieldErrors += 1;
