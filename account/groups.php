@@ -45,7 +45,7 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
   <?php
   	echo renderAccountPageHeader(array("#SITE_ROOT#" => SITE_ROOT, "#SITE_TITLE#" => SITE_TITLE, "#PAGE_TITLE#" => "Groups"));
   ?>
-
+<body>
     <div id="wrapper">
 
         <?php
