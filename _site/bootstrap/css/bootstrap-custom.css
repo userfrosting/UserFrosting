@@ -93,6 +93,10 @@ padding: 10px 0px 0px 0px;
 	
 }
 
+h1 {
+    padding-bottom: 40px;
+}
+
 .nopadding {
    padding: 5px !important;
    margin: 0 !important;
@@ -161,6 +165,45 @@ padding: 10px 0px 0px 0px;
 
 .panel-marketing .list-group-item {
 	border: none;
+}
+
+.main-feature {
+    text-align: center;
+}
+
+.main-feature h2 {
+  font-size: 40px;
+  margin-bottom: 30px;
+}
+.main-feature .col-sm-4 {
+  margin-bottom: 40px;
+}
+.main-feature i {
+  background: #428BCA;
+  border-radius: 30px;
+  color: #f3f9f9;
+  font-size: 60px;
+  line-height: 120px;
+  height: 120px;
+  width: 120px;
+}
+.main-feature h4 {
+  font-size: 30px;
+  text-transform: uppercase;
+}
+.main-feature p {
+  margin: 0 auto;
+  width: 75%;
+}
+.main-feature.btn {
+  background: #3498db;
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+.main-feature .btn:hover {
+  color: #fff;
 }
 
 .help-block {

@@ -11,12 +11,12 @@
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="//css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
     
    <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="bootstrap/css/bootstrap-custom.css" rel="stylesheet">
-    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <link rel="canonical" href="http://www.userfrosting.com">
 
@@ -116,15 +116,28 @@ These are pages which accept a GET request and return a prerendered HTML form.  
         <tbody>
         <tr><td><code>box_id</code></td><td>The desired <code>id</code> of the div that will contain the form.</td></tr>         
         <tr><td><code>render_mode</code></td><td>Render the form as a popup (modal) window, or in a flat panel.  Set to <b>modal</b> or <b>panel</b>.</td></tr> 
-        <tr><td><code>[user_id]</code></td><td>If specified, will load the relevant data for the user into the form.  Form will then be in "update" mode.</td></tr>
-        <tr><td><code>[show_dates]</code></td><td>If set to <b>true</b>, will show the registered and last signed in date fields (fields will be read-only).</td></tr>
-        <tr><td><code>[show_passwords]</code></td><td>If set to <b>true</b>, will display the password creation fields ("create" mode only).</td></tr>
-        <tr><td><code>[disabled]</code></td><td>If set to <b>true</b>, disable all fields.  Good if you want to display user data without making it editable.</td></tr>
-        <tr><td><code>button_submit</code></td><td>If set to <b>true</b>, display the submission button for this form.</td></tr>        
-        <tr><td><code>button_edit</code></td><td>If set to <b>true</b>, display the edit button (panel mode only).</td></tr>        
-        <tr><td><code>button_disable</code></td><td>If set to <b>true</b>, display the enable/disable button.</td></tr>        
-        <tr><td><code>button_activate</code></td><td>If set to <b>true</b>, display the activate button for inactive users.</td></tr>        
-        <tr><td><code>button_delete</code></td><td>If set to <b>true</b>, display the deletion button for deletable users.</td></tr>                
+        <tr><td><code>[user_id]</code></td><td>If specified, will load the relevant data for the user into the form.  Used for viewing/updating a user.</td></tr>
+        <tr><td><code>[fields]</code></td><td>A list of fields to render.  If not specified, the following fields will be rendered by default:
+          <ul>
+          <li>user_name</li>
+          <li>display_name</li>
+          <li>email</li>
+          <li>title</li>
+          <li>sign_up_stamp</li>
+          <li>last_sign_in_stamp</li>
+          <li>groups</li>
+          </ul>
+          By default, they will all be read-only fields.
+        </td></tr>
+        <tr><td><code>[buttons]</code></td><td>A list of buttons to render.  If not specified, the following fields will be rendered by default:
+          <ul>
+          <li>btn_edit</li>
+          <li>btn_activate (inactive users only)</li>
+          <li>btn_enable (disabled users only)</li>
+          <li>btn_disable (enabled users only)</li>
+          <li>btn_delete</li>
+          </ul>
+        </td></tr>
         </tbody>
         </table>
         <p><strong>GET response</strong></p>
