@@ -52,6 +52,8 @@ function renderMenu($highlighted_item_class){
     <!-- Collect the nav links, forms, and other content for toggling -->
     <ul class="nav navbar-nav side-nav">';
     foreach ($menu as $r => $v){
+        // Split the highlighted classes into an array to allow us to set left-sub menus to active
+        $highlighted_classes=explode(" ",$highlighted_item_class);
         // Set active class if this item is currently selected
         $active = ($highlighted_item_class == $v['class_name']) ? "active" : "";
     
@@ -59,7 +61,8 @@ function renderMenu($highlighted_item_class){
             $html .= "<li class='navitem-".$v['class_name']." $active'><a href='../".$v['page']."'><i class='".$v['icon']."'></i> ".$v['name']."</a></li>";
         }
         if ($v['menu'] == 'left-sub' AND $v['parent_id'] == 0){
-            $html .= "<li class='dropdown'>
+            $open = (in_array($v['class_name'],$highlighted_classes)) ? "open" : "";
+            $html .= "<li class='dropdown navitem-".$v['class_name']." $open'>
                 <a href='#' class='dropdown-toggle' data-toggle='dropdown'><i class='".$v['icon']."'></i> ".$v['name']." <b class='caret'></b></a>
                 <ul class='dropdown-menu'>";
             // Grab submenu items based on parent_id = $v['menu_id']
@@ -67,7 +70,8 @@ function renderMenu($highlighted_item_class){
 
             // If subs are found print them out to the parent element
             foreach ($subs as $s){
-                $html .= "<li class='navitem-".$s['class_name']."'><a href='../".$s['page']."'><i class='".$s['icon']."'></i> ".$s['name']."</a></li>";
+                $sub_active = (in_array($s['class_name'],$highlighted_classes)) ? "active" : "";
+                $html .= "<li class='navitem-".$s['class_name']." $sub_active'><a href='../".$s['page']."'><i class='".$s['icon']."'></i> ".$s['name']."</a></li>";
             }
             $html .= '</ul></li>';
         }
