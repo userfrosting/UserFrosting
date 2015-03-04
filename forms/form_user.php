@@ -348,13 +348,13 @@ if ($fields['groups']['display'] != "hidden"){
               $group_name
               <span class='pull-right'>
               <input name='select_groups' type='checkbox' class='form-control' data-id='$id' $disable_str";
-          if ((!$populate_fields and $is_default >= 1) || ($populate_fields && isset($user_groups[$id]))){
+          if ((!$populate_fields && $is_default >= 1) || ($populate_fields && isset($user_groups[$id]))){
               $template .= " checked";
           } else {
             $disable_primary_toggle = "disabled";
           }
           $template .= "/>";
-          if ((!$populate_fields and $is_default == 2) || ($populate_fields && ($id == $user['primary_group_id']))){
+          if ((!$populate_fields && $is_default == 2) || ($populate_fields && ($id == $user['primary_group_id']))){
             $primary_group_checked = "true";
           } else {
             $primary_group_checked = "false";

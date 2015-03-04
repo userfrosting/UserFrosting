@@ -2,7 +2,7 @@
 
 function renderAccountPageHeader($hooks = array()){
     global $master_account;
-	if(isset($_SESSION["userCakeUser"]) && is_object($_SESSION["userCakeUser"]) and $_SESSION["userCakeUser"]->user_id == $master_account){
+	if(isset($_SESSION["userCakeUser"]) && is_object($_SESSION["userCakeUser"]) && $_SESSION["userCakeUser"]->user_id == $master_account){
         $hooks["#SB_STYLE#"] = 'sb-admin-master.css';
     } else {
         $hooks["#SB_STYLE#"] = 'sb-admin.css';
