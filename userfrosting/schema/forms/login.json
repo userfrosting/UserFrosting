@@ -1,0 +1,19 @@
+{
+    "user_name" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_USERNAME"
+            }
+        }
+    },
+    "password" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_PASSWORD"
+            }
+        },
+        "sanitizers" : {
+            "raw" : {}
+        }
+    }
+}

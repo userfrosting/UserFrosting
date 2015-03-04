@@ -1,0 +1,19 @@
+.pager-lg {
+    font-size: large;
+}
+
+.pager-control {
+    font-size: x-large;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+/* Use to collapse empty button columns */
+
+.hideable {
+    min-height: 0px;
+}
+
+label.label-switch {
+    margin-top: 5px;
+}

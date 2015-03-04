@@ -1,0 +1,33 @@
+{
+    "name": "slim/views",
+    "type": "library",
+    "description": "Smarty and Twig View Parser package for the Slim Framework",
+    "keywords": ["templating", "extensions", "slimphp"],
+    "homepage": "http://github.com/codeguy/Slim-Views",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Josh Lockhart",
+            "email": "info@joshlockhart.com",
+            "homepage": "http://www.joshlockhart.com/"
+        },
+        {
+            "name": "Andrew Smith",
+            "email": "a.smith@silentworks.co.uk",
+            "homepage": "http://thoughts.silentworks.co.uk/"
+        }
+    ],
+    "require": {
+        "slim/slim": ">=2.4.0",
+        "php": ">=5.3.0"
+    },
+    "suggest": {
+        "smarty/smarty": "Smarty templating system",
+        "twig/twig": "Twig templating system"
+    },
+    "autoload": {
+        "psr-4": {
+            "Slim\\Views\\": "./"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+<div id="userfrosting-alerts">
+    {% for alert in page.alerts %}
+    <div class="alert alert-{{alert.type}}">{{alert.message}}</div>
+    {% endfor %}
+</div>

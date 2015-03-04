@@ -1,0 +1,37 @@
+{
+    "default" : {
+        "pages": [
+        
+        ],
+        "css": [
+            "font-awesome-4.3.0.css",
+            "bootstrap-3.3.2.css",
+            "jumbotron-narrow.css",
+            "bootstrap-custom.css",
+            "bootstrap-switch.css",
+            "formValidation/formValidation.css",            
+            "tablesorter/theme.bootstrap.css",
+            "tablesorter/jquery.tablesorter.pager.css",
+            "select2/select2.css",
+            "select2/select2-bootstrap.css",
+            "bootstrapradio.css"
+        ],
+        "js": [
+            "jquery-1.11.2.js",
+            "bootstrap-3.3.2.js",
+            "formValidation/formValidation.js",
+            "formValidation/bootstrap.js",
+            "userfrosting.js",
+            "date.min.js",
+            "tablesorter/jquery.tablesorter.min.js",
+            "tablesorter/tables.js",
+            "tablesorter/jquery.tablesorter.pager.min.js",
+            "tablesorter/jquery.tablesorter.widgets.min.js",
+            "select2/select2.min.js",
+            "bootstrapradio.js",
+            "bootstrap-switch.js"
+        ],
+        "min_css": "min/default.min.css",
+        "min_js": "min/default.min.js"
+    }
+}

@@ -1,0 +1,75 @@
+{
+    "user_name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 50,
+                "message" : "ACCOUNT_USER_CHAR_LIMIT"
+            },
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_USERNAME"
+            }
+        }
+    },
+    "display_name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 50,
+                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
+            },
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_DISPLAY_NAME"
+            }
+        }
+    },          
+    "email" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_EMAIL"
+            },
+            "length" : {
+                "min" : 1,
+                "max" : 150,
+                "message" : "ACCOUNT_EMAIL_CHAR_LIMIT"
+            },
+            "email" : {
+                "message" : "ACCOUNT_INVALID_EMAIL"
+            }
+        }
+    },
+    "password" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_PASSWORD"
+            },
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        },
+        "sanitizers" : {
+            "raw" : {}
+        }    
+    },
+    "passwordc" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_PASSWORD"
+            },
+            "matches" : {
+                "field" : "password",
+                "message" : "ACCOUNT_PASS_MISMATCH"
+            },
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        },
+        "sanitizers" : {
+            "raw" : {}
+        }    
+    }
+}

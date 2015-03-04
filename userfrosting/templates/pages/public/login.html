@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include 'pages/public/components/head.html' %}
+  <body>
+    <div class="container">
+        {% include 'pages/public/components/main-nav.html' %}
+      <div class="jumbotron">
+        <h1>Welcome to UserFrosting!</h1>
+        <p class="lead">Please sign in.</p>
+        {% include 'pages/public/components/alerts.html' %}
+        <form name="login" method="post" action="{{userfrosting.uri.public}}/account/login" class="form-horizontal">
+            <div class="row">
+              <div class="col-md-offset-3 col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control " name="user_name" autocomplete="off" value="" placeholder="{{ (userfrosting.email_login == 1) ? 'Username or Email' : 'Username' }}"   >
+                    </div>
+              </div>
+              <div class="col-md-offset-3 col-md-6">
+                <div class="form-group   ">
+                    <input type="password" class="form-control " name="password" autocomplete="off" value="" placeholder="Password"   >
+                </div>
+              </div>
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-success  "  data-loading-text="Please wait..." >
+                    Login
+                </button>
+              </div>
+            </div>
+        </form>
+        {% include 'pages/public/components/jumbotron-links.html' %}	
+      </div>	
+    </div> <!-- /container -->
+    {% include 'pages/public/components/footer.html' %}	
+    <script>
+        $(document).ready(function() {            
+          // Process form     
+
+          $("form[name='login']").formValidation({
+            framework: 'bootstrap',
+            // Feedback icons
+            icon: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+            fields: {{validators | raw}}
+          }).on('success.form.fv', function(e) {
+            // Prevent double form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var form = $(e.target);
+
+            // Serialize and post to the backend script in ajax mode
+            var serializedData = form.serialize();
+            serializedData += '&ajaxMode=true';     
+            //console.log(serializedData);
+            var url = form.attr('action');
+            $.ajax({  
+              type: "POST",  
+              url: url,  
+              data: serializedData
+            }).done(function(result) {
+                var resultJSON = processJSONResult(result);
+                if (resultJSON['errors'] && resultJSON['errors'] > 0){
+                  alertWidget('display-alerts');
+                } else {
+                  window.location.replace("{{uri_public_root}}account/");
+                }
+            });    
+          });
+          
+        });
+    </script>
+  </body>
+</html>

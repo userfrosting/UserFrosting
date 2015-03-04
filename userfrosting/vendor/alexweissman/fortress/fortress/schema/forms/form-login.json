@@ -1,0 +1,22 @@
+{
+    "user_name" : {
+        "validators" : {
+            "required" : {
+                "messages" : {
+                    "default" : "'User name' is required.",
+                    "es_US" : "Por favor, ingrese su nombre de usuario"
+                }
+            }
+        }
+    },
+    "password" : {
+        "validators" : {
+            "required" : {
+                "messages" : {
+                    "default" : "'Password' is required.",
+                    "es_US" : "Por favor, ingrese su contraseña"
+                }
+            }
+        }      
+    }
+}
