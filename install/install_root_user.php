@@ -83,7 +83,7 @@ if ($error_count == 0){
 	  // Uncomment this if you want self-registered users to know about permission groups
 	  //$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
 	} else {
-	  if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+	  if (isset($_POST['ajaxMode']) && $_POST['ajaxMode'] == "true" ){
 		echo json_encode(array("errors" => 1, "successes" => 0));
 	  } else {
 		header('Location: register_root.php');
