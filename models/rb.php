@@ -701,7 +701,7 @@ class RPDO implements Driver
 
 		$this->debug = (bool) $tf;
 
-		if ( $this->debug && !$logger ) {
+		if ( $this->debug and !$logger ) {
 			$logger = new RDefault();
 		}
 
