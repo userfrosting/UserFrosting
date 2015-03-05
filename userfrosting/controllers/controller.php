@@ -27,13 +27,24 @@ class BaseController {
         ]);
     }
     
-    /* Get flash messages. */
-    public function getMessages(){
-        if ($this->_app->messages){
-            echo json_encode($this->_app->messages->messages());
-            
-            // Reset alerts after they have been delivered
-            $this->_app->messages->resetMessageStream();
+    /* Render a JS file containing client-side configuration data (paths, etc)
+    */
+    public function configJS(){
+        $this->_app->response->headers->set("Content-Type", "application/javascript");
+        $this->_app->response->setBody("var userfrosting = " . json_encode(
+            [
+                "uri" => [
+                    "public" => $this->_app->userfrosting['uri']['public']
+                ]
+            ]
+        ));
+    }
+    
+    
+    /* Get flash alerts and reset message stream. */
+    public function alerts(){
+        if ($this->_app->alerts){
+            echo json_encode($this->_app->alerts->getAndClearMessages());
         }
     }    
 }

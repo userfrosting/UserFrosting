@@ -9,6 +9,7 @@
         <p class="lead">Please sign in.</p>
         {% include 'pages/public/components/alerts.html' %}
         <form name="login" method="post" action="{{userfrosting.uri.public}}/account/login" class="form-horizontal">
+            {% include 'forms/components/csrf.html' %}
             <div class="row">
               <div class="col-md-offset-3 col-md-6">
                     <div class="form-group">
@@ -53,24 +54,25 @@
 
             // Serialize and post to the backend script in ajax mode
             var serializedData = form.serialize();
-            serializedData += '&ajaxMode=true';     
-            //console.log(serializedData);
             var url = form.attr('action');
             $.ajax({  
               type: "POST",  
               url: url,  
-              data: serializedData
-            }).done(function(result) {
-                var resultJSON = processJSONResult(result);
-                if (resultJSON['errors'] && resultJSON['errors'] > 0){
-                  alertWidget('display-alerts');
-                } else {
-                  window.location.replace("{{uri_public_root}}account/");
-                }
-            });    
+              data: serializedData       
+            }).done(function(data, statusText, jqXHR) {
+                // Forward to account home page on success
+                window.location.replace("{{userfrosting.uri.public}}/account/");
+            }).fail(function(jqXHR) {
+                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                console.log("Public root URI is " + userfrosting.uri.public);
+                // Display errors on failure
+                $('#userfrosting-alerts').flashAlerts().done(function() {
+                    // Re-enable submit button
+                    form.data('formValidation').disableSubmitButtons(false);
+                });
+            });
           });
-          
-        });
+        });        
     </script>
   </body>
 </html>

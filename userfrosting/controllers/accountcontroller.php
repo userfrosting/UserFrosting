@@ -31,7 +31,7 @@ class AccountController extends BaseController {
                 'title' =>          "Login",
                 'description' =>    "Login to your UserFrosting account.",
                 'schema' =>         $this->_page_schema,
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(),
+                'alerts' =>         $this->_app->alerts->getAndClearMessages(),     // Starting to violate the Law of Demeter here...
                 'active_page' =>    "account/login",
             ],
             'validators' => $validators->formValidationRulesJson()
@@ -109,21 +109,23 @@ class AccountController extends BaseController {
         
         // Get the alert message stream
         $ms = $this->_app->alerts; 
-               
-        // Expect a POST request
-        $rf = new Fortress\HTTPRequestFortress("post", $requestSchema, UF\URI_PUBLIC_ROOT);
         
+        // Expect a POST request
+        $rf = new Fortress\HTTPRequestFortress("post", $requestSchema, $this->_app->userfrosting['uri']['public']);
+        
+        /*
         //Forward the user to their default page if he/she is already logged in
         if(isUserLoggedIn()) {
             $ms->addMessageTranslated("danger", "LOGIN_ALREADY_COMPLETE");
             $rf->raiseFatalError();
         }
+        */
         
         // Remove ajaxMode and csrf_token from the request data
-        $rf->removeFields(['ajaxMode', 'csrf_token']);
+        //$rf->removeFields(['ajaxMode', 'csrf_token']);
         
         // Sanitize data
-        $rf->sanitize();
+        //$rf->sanitize();
 
         // Validate, and halt on validation errors.
         $rf->validate();
@@ -137,7 +139,7 @@ class AccountController extends BaseController {
         // If it's an email address, but email login is not enabled, raise an error.
         if ($isEmail && !$email_login){
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-            $rf->raiseFatalError();
+            $this->_app->halt(400);
         }
         
         // Try to load the user data
@@ -146,7 +148,7 @@ class AccountController extends BaseController {
                 $userdetails = fetchUserAuthByEmail($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-                $rf->raiseFatalError();            
+                $this->_app->halt(400);         
             }
             
         } else {
@@ -154,7 +156,7 @@ class AccountController extends BaseController {
                 $userdetails = fetchUserAuthByUserName($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-                $rf->raiseFatalError();
+                $this->_app->halt(400);
             }
         }
         

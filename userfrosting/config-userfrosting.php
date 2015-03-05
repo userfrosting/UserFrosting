@@ -2,6 +2,8 @@
 
     require_once 'vendor/autoload.php';
    
+    use \Slim\Extras\Middleware\CsrfGuard;
+   
     // Use native PHP sessions
     session_cache_limiter(false);
     session_name("UserFrosting");
@@ -14,6 +16,11 @@
         'schema.path' =>    __DIR__ . '/schema',
         'locales.path' =>   __DIR__ . '/locale'
     ]);
+    
+    
+    // Middleware
+    $app->add(new CsrfGuard());
+    
     
     // Auto-detect the public root URI
     $environment = $app->environment();
