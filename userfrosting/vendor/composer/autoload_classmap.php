@@ -11,7 +11,7 @@ return array(
     'BaseTestCase' => $vendorDir . '/vlucas/valitron/tests/Valitron/BaseTestCase.php',
     'CExtDisablingNodeVisitor' => $vendorDir . '/twig/twig/test/Twig/Tests/TemplateTest.php',
     'CliTestCase' => $vendorDir . '/ezyang/htmlpurifier/tests/CliTestCase.php',
-    'ComposerAutoloaderInit6c0621b65d5d1584810946039421d93c' => $vendorDir . '/composer/autoload_real.php',
+    'ComposerAutoloaderInit24896195b64594dccf44752e17f9e260' => $vendorDir . '/composer/autoload_real.php',
     'Composer\\Autoload\\ClassLoader' => $vendorDir . '/composer/ClassLoader.php',
     'ConfigDoc_HTMLXSLTProcessor' => $vendorDir . '/ezyang/htmlpurifier/extras/ConfigDoc/HTMLXSLTProcessor.php',
     'ContentTypesTest' => $vendorDir . '/slim/slim/tests/Middleware/ContentTypesTest.php',

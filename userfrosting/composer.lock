@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/alexweissman/fortress.git",
-                "reference": "87975e8f0902e934c11635a229b6cd14427c1614"
+                "reference": "ee9baadad6d83b143d1b77c8b4fe958834b611f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alexweissman/fortress/zipball/87975e8f0902e934c11635a229b6cd14427c1614",
-                "reference": "87975e8f0902e934c11635a229b6cd14427c1614",
+                "url": "https://api.github.com/repos/alexweissman/fortress/zipball/ee9baadad6d83b143d1b77c8b4fe958834b611f9",
+                "reference": "ee9baadad6d83b143d1b77c8b4fe958834b611f9",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 "php sanitization",
                 "php validation"
             ],
-            "time": "2015-03-04 04:15:57"
+            "time": "2015-03-05 22:44:58"
         },
         {
             "name": "ezyang/htmlpurifier",

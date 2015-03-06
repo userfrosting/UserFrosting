@@ -2,7 +2,7 @@
 
 namespace Fortress;
 
-// Implements a message stream, with i18n support via gettext
+// Implements a message stream, with i18n support via the MessageTranslator class
 
 class MessageStream {
 

@@ -110,9 +110,6 @@ class AccountController extends BaseController {
         // Get the alert message stream
         $ms = $this->_app->alerts; 
         
-        // Expect a POST request
-        $rf = new Fortress\HTTPRequestFortress("post", $requestSchema, $this->_app->userfrosting['uri']['public']);
-        
         /*
         //Forward the user to their default page if he/she is already logged in
         if(isUserLoggedIn()) {
@@ -121,16 +118,19 @@ class AccountController extends BaseController {
         }
         */
         
-        // Remove ajaxMode and csrf_token from the request data
-        //$rf->removeFields(['ajaxMode', 'csrf_token']);
+        $rf = new Fortress\HTTPRequestFortress($ms, $requestSchema, $this->_app->request->post());
+        // Remove csrf_token from the request data, if specified
+        //$rf->removeFields(['csrf_token']);
         
         // Sanitize data
-        //$rf->sanitize();
-
+        $rf->sanitize();
+                
         // Validate, and halt on validation errors.
-        $rf->validate();
+        if (!$rf->validate(true)) {
+            $this->_app->halt(400);
+        }
         
-        // Create a new group with the filtered data
+        // Get the filtered data
         $data = $rf->data();
         
         // Determine whether we are trying to log in with an email address or a username
@@ -139,7 +139,7 @@ class AccountController extends BaseController {
         // If it's an email address, but email login is not enabled, raise an error.
         if ($isEmail && !$email_login){
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-            $this->_app->halt(400);
+            $this->_app->halt(403);
         }
         
         // Try to load the user data
@@ -148,7 +148,7 @@ class AccountController extends BaseController {
                 $userdetails = fetchUserAuthByEmail($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-                $this->_app->halt(400);         
+                $this->_app->halt(403);         
             }
             
         } else {
@@ -156,20 +156,20 @@ class AccountController extends BaseController {
                 $userdetails = fetchUserAuthByUserName($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-                $this->_app->halt(400);
+                $this->_app->halt(403);
             }
         }
         
         // Check that the user's account is activated
         if ($userdetails["active"] == 0) {
             $ms->addMessageTranslated("danger", "ACCOUNT_INACTIVE");
-            $rf->raiseFatalError();
+            $this->_app->halt(403);
         }
         
         // Check that the user's account is enabled
         if ($userdetails["enabled"] == 0){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLED");
-            $rf->raiseFatalError();
+            $this->_app->halt(403);
         }
         
         
@@ -177,7 +177,7 @@ class AccountController extends BaseController {
         if(!passwordVerifyUF($data['password'], $userdetails["password"]))  {
             //Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-            $rf->raiseFatalError();
+            $this->_app->halt(403);
         }
         
         //Passwords match! we're good to go'

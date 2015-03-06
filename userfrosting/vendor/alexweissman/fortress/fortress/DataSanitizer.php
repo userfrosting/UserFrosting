@@ -4,7 +4,7 @@ namespace Fortress;
 
 interface DataSanitizerInterface {
     public function setSchema($schema);
-    public function sanitize($data, $schemaRequired);
+    public function sanitize($data, $on_unexpected_var);
 }
 
 /* Perform sanitization and transformation on a set of data fields, as specified by a RequestSchema. */    
@@ -30,13 +30,23 @@ class DataSanitizer implements DataSanitizerInterface {
      * 2. Set any default values for unspecified fields.
      * 3. Perform any other specified transformations.
      */
-    public function sanitize($data, $schemaRequired = true) {
+    public function sanitize($data, $on_unexpected_var = "skip") {
+        $schemaFields = $this->_schema->getSchema();
         
         // 1. Perform sanitization on each value in the $data array.  This is important for preventing XSS attacks.
         // If there is a sanitization rule specified in the schema, use that.  Otherwise, apply the FILTER_SANITIZE_SPECIAL_CHARS filter by default.
         $sanitizedData = [];
-        foreach ($data as $name => $value){
-            $sanitizedData[$name] = $this->sanitizeField($name, $value, $schemaRequired);   
+        foreach ($data as $name => $value){        
+            // Default sanitization behavior
+            if (!isset($schemaFields[$name])) {
+                switch ($on_unexpected_var) {
+                    case "allow" : $sanitizedData[$name] = $this->purgeHtmlCharacters($value); break;
+                    case "error" : throw new \Exception("The field '$name' is not a valid input field."); break;
+                    case "skip" : default: continue;
+                }
+            } else {
+                $sanitizedData[$name] = $this->sanitizeField($name, $value);
+            }
         }
         
         // 2. Get default values for any fields missing from $data.  Especially useful for checkboxes, etc which are not submitted when they are unchecked
@@ -51,17 +61,9 @@ class DataSanitizer implements DataSanitizerInterface {
     }
     
     // Sanitize a raw field value.  If $schemaRequired is set to true, it will also require that the field exists in the schema.
-    public function sanitizeField($name, $rawValue, $schemaRequired = true){
+    public function sanitizeField($name, $rawValue){
         $schemaFields = $this->_schema->getSchema();
-        // Default sanitization behavior
-        if (!isset($schemaFields[$name])) {
-            if ($schemaRequired)
-                throw new \Exception("The field '$name' is not a valid input field.");
-            else {
-                return $this->escapeHtmlCharacters($rawValue);
-            }
-        }
-        
+
         $fieldParameters = $schemaFields[$name];
         
         $sanitizedValue = $rawValue;

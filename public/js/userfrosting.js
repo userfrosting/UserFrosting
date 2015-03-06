@@ -1,12 +1,12 @@
 (function( $ ) {
     $.fn.flashAlerts = function() {
-        var deferred = $.Deferred();
+        //var deferred = $.Deferred();
      
         var field = $(this);
         console.log("Displaying alerts");
         var url = userfrosting.uri.public + "/alerts";
-        $.getJSON( url, {})
-        .done(function( data ) {
+        return $.getJSON( url, {})
+        .then(function( data ) {        // Pass the deferral back
             // Display alerts
             var alertHTML = "";
             jQuery.each(data, function(alert_idx, alert_message) {
@@ -23,8 +23,9 @@
             field.html(alertHTML);
             $("html, body").animate({ scrollTop: 0 }, "fast");		// Scroll back to top of page
             
-            deferred.resolve();
+            return data;
+            //deferred.resolve();
         });
-        return deferred.promise();
+        //return deferred.promise();
     };
-}( jQuery ));  
+}( jQuery ));

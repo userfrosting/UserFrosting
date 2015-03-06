@@ -119,6 +119,7 @@ $lang = array_merge($lang,array(
 	"DENY"					=> "Deny",
 	"SUCCESS"				=> "Success",
 	"ERROR"					=> "Error",
+    "SERVER_ERROR"          => "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.",
 	"NOTHING_TO_UPDATE"			=> "Nothing to update",
 	"SQL_ERROR"				=> "Fatal SQL error",
 	"FEATURE_DISABLED"			=> "This feature is currently disabled",

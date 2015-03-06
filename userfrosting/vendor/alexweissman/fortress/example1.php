@@ -3,46 +3,50 @@
 
 require_once("fortress/config-fortress.php");
 
-// Set the message stream (should be done in config file)
-
+/******** Do this in a project-wide config file ********/
+// Start the session
 session_start();
+// Set the message stream
+if (!isset($_SESSION['Fortress']['alerts']))
+    $_SESSION['Fortress']['alerts'] = new Fortress\MessageStream();
+$ms = $_SESSION['Fortress']['alerts'];
 
-Fortress\HTTPRequestFortress::setMessageStream('userAlerts');
 // Set the translation path
-Fortress\MessageTranslator::setTranslationTable("fortress/locale/es_ES.php");
+Fortress\MessageTranslator::setTranslationTable("fortress/locale/en_US.php");
+
+/*******************************************************/
 
 // Test the error stream and reset
+echo "<h2>Current message stream</h2>";
 echo "<pre>";
-print_r(Fortress\HTTPRequestFortress::$message_stream->messages());
+print_r($ms->messages());
 echo "</pre>";
-Fortress\HTTPRequestFortress::$message_stream->resetMessageStream();
-
-// Force new message stream object
-//$_SESSION['Fortress']["userAlerts"] = new Fortress\MessageStream("userAlerts");
+$ms->resetMessageStream();
 
 // Load the request schema
 $requestSchema = new Fortress\RequestSchema("fortress/schema/forms/register.json");
 
-// Expect a POST request
-$rf = new Fortress\HTTPRequestFortress("get", $requestSchema, "index");
-// Remove ajaxMode and csrf_token from the request data
-$rf->removeFields(['ajaxMode', 'csrf_token']);
+// POST request
+$rf = new Fortress\HTTPRequestFortress($ms, $requestSchema, $_GET);
+// Remove csrf_token from the request data, if specified
+$rf->removeFields(['csrf_token']);
 
 // Sanitize, and print sanitized data for demo purposes
-$rf->sanitize();
+$rf->sanitize(true, "error");
 
-echo "Sanitized data: <br>";
-
+echo "<h2>Sanitized data</h2>";
+echo "<pre>";
 print_r($rf->data());
+echo "</pre>";
 
-
-// Validate.  In normal usage we'd want the script to simply halt on validation errors.  But for this demo, we will simply print the message stream.
-if (!$rf->validate(true, false)) {
-    Fortress\HTTPRequestFortress::$message_stream->addMessageTranslated("danger", "Validation failed for {{placeholder}}", ["placeholder" => "the form"]);
+// Validate.  Normally we'd want to halt on validation errors.  But for this demo, we will simply print the message stream.
+if (!$rf->validate(true)) {
+    $ms->addMessageTranslated("danger", "Validation failed for {{placeholder}}", ["placeholder" => "the form"]);
 }
 
 // Test client validators
 $clientVal = new Fortress\ClientSideValidator("fortress/schema/forms/register.json");
+echo "<h2>Client-side validation schema (JSON)</h2>";
 echo "<pre>";
 print_r($clientVal->formValidationRulesJson());
 echo "</pre>";
@@ -51,12 +55,10 @@ echo "</pre>";
 $data = $rf->data();
 
 if (!yourFunctionHere($data)){
-    $rf->raiseFatalError();
+    exit();
 }
 
 // If we've made it this far, success!
-$rf->raiseSuccess();
-
 
 
 ?>
