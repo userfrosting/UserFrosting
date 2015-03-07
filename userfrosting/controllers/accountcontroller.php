@@ -1,9 +1,9 @@
 <?php
 
-use \UserFrosting as UF;
+namespace UserFrosting;
 
 // Handles account controller options
-class AccountController extends BaseController {
+class AccountController extends \UserFrosting\BaseController {
 
     public function pageHome(){
         
@@ -23,7 +23,7 @@ class AccountController extends BaseController {
     }
     
     public function pageLogin(){
-        $validators = new Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/login.json");
+        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/login.json");
         
         $this->_app->render('pages/public/login.html', [
             'page' => [
@@ -47,7 +47,7 @@ class AccountController extends BaseController {
         }
         */        
 
-        $validators = new Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/register.json");
+        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/register.json");
 
         $userfrosting = $this->_app->userfrosting;
         
@@ -72,7 +72,7 @@ class AccountController extends BaseController {
 
     public function pageForgotPassword($token = null){
       
-        $validators = new Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/forgot-password.json");
+        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/forgot-password.json");
         
        $this->_app->render('pages/public/forgot-password.html', [
             'page' => [
@@ -89,7 +89,7 @@ class AccountController extends BaseController {
     }
     
     public function pageResendActivation(){
-        $validators = new Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/resend-activation.json");
+        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/resend-activation.json");
          
         $this->_app->render('pages/public/resend-activation.html', [
             'page' => [
@@ -105,7 +105,7 @@ class AccountController extends BaseController {
     
     public function login(){
         // Load the request schema
-        $requestSchema = new Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
         
         // Get the alert message stream
         $ms = $this->_app->alerts; 
@@ -114,13 +114,11 @@ class AccountController extends BaseController {
         //Forward the user to their default page if he/she is already logged in
         if(isUserLoggedIn()) {
             $ms->addMessageTranslated("danger", "LOGIN_ALREADY_COMPLETE");
-            $rf->raiseFatalError();
+            
         }
         */
         
-        $rf = new Fortress\HTTPRequestFortress($ms, $requestSchema, $this->_app->request->post());
-        // Remove csrf_token from the request data, if specified
-        //$rf->removeFields(['csrf_token']);
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $this->_app->request->post());
         
         // Sanitize data
         $rf->sanitize();
@@ -144,16 +142,16 @@ class AccountController extends BaseController {
         
         // Try to load the user data
         if($isEmail){
-            if (emailExists($data['user_name'])){
-                $userdetails = fetchUserAuthByEmail($data['user_name']);
+            if (User::emailExists($data['user_name'])){
+                $user = User::fetchByEmail($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);         
             }
             
         } else {
-            if (usernameExists($data['user_name'])){
-                $userdetails = fetchUserAuthByUserName($data['user_name']);
+            if (User::usernameExists($data['user_name'])){
+                $user = User::fetchByUsername($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);
@@ -161,69 +159,33 @@ class AccountController extends BaseController {
         }
         
         // Check that the user's account is activated
-        if ($userdetails["active"] == 0) {
+        if ($user->active == 0) {
             $ms->addMessageTranslated("danger", "ACCOUNT_INACTIVE");
             $this->_app->halt(403);
         }
         
         // Check that the user's account is enabled
-        if ($userdetails["enabled"] == 0){
+        if ($user->enabled == 0){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLED");
             $this->_app->halt(403);
         }
         
-        
-        // Validate the password
-        if(!passwordVerifyUF($data['password'], $userdetails["password"]))  {
-            //Again, we know the password is at fault here, but lets not give away the combination incase of someone bruteforcing
+        // Here is my password.  May I please assume the identify of this user now?
+        if ($user->login($data['password']))  {
+            $_SESSION["userfrosting"]["user"] = $user;
+            $this->_app->user = $_SESSION["userfrosting"]["user"];
+            $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->bean());
+        } else {
+            //Again, we know the password is at fault here, but lets not give away the combination in case of someone bruteforcing
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
             $this->_app->halt(403);
         }
         
-        //Passwords match! we're good to go'
-        
-        //Construct a new logged in user object
-        //Transfer some db data to the session object
-        $loggedInUser = new loggedInUser();
-        $loggedInUser->email = $userdetails["email"];
-        $loggedInUser->user_id = $userdetails["id"];
-        $loggedInUser->hash_pw = $userdetails["password"];
-        $loggedInUser->title = $userdetails["title"];
-        $loggedInUser->displayname = $userdetails["display_name"];
-        $loggedInUser->username = $userdetails["user_name"];
-        $loggedInUser->alerts = array();
-        
-        //Update last sign in
-        $loggedInUser->updateLastSignIn();
-        
-        // Update password if we had encountered an outdated hash
-        if (getPasswordHashTypeUF($userdetails["password"]) != "modern"){
-            // Hash the user's password and update
-            $password_hash = passwordHashUF($data['password']);
-            if ($password_hash === null){
-                error_log("Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?");
-            } else {
-                $loggedInUser->hash_pw = $password_hash;
-                updateUserField($loggedInUser->user_id, 'password', $password_hash);
-                error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
-            }
-        }
-        
-        // Create the user's CSRF token
-        $loggedInUser->csrf_token(true);
-        
-        $_SESSION["userCakeUser"] = $loggedInUser;
-        
-        $ms->addMessage("success", "Welcome back, " . $loggedInUser->displayname);
-
-        restore_error_handler();
-        
-        $rf->raiseSuccess();
-
     }
     
     public function logout(){
         session_destroy();
+        $this->_app->redirect($this->_app->userfrosting['uri']['public']);
     }
 
     /*

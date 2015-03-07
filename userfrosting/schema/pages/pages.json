@@ -1,4 +1,32 @@
 {
+    "user" : {
+        "pages" : [
+            "user"
+        ],
+        "css" : [
+            "font-awesome-4.3.0.css",
+            "bootstrap-3.3.2.css",
+            "lib/metisMenu.min.css",
+            "timeline.css",
+            "sb-admin-2.css",
+            "lib/morris.css"
+        ],
+       "js": [
+            "jquery-1.11.2.js",
+            "bootstrap-3.3.2.js",
+            "formValidation/formValidation.js",
+            "formValidation/bootstrap.js",
+            "userfrosting.js",
+            "lib/metisMenu.js",
+            "lib/raphael.js",
+            "lib/morris.js",
+            "morris-data.js",
+            "sb-admin-2.js" 
+        ],
+        "min_css": "min/account.min.css",
+        "min_js": "min/account.min.js"   
+    },
+
     "default" : {
         "pages": [
         

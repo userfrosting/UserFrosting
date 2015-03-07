@@ -1,7 +1,9 @@
 <?php
 
     require_once 'vendor/autoload.php';
-   
+    require_once 'redbean/rb.php';
+    require_once 'auth/password.php';
+    
     use \Slim\Extras\Middleware\CsrfGuard;
    
     // Use native PHP sessions
@@ -11,16 +13,59 @@
    
     /* Instantiate the Slim application */
     $app = new \Slim\Slim([
-        'debug' =>          false,
         'view' =>           new \Slim\Views\Twig(),
-        'templates.path' => __DIR__ . '/templates',
-        'schema.path' =>    __DIR__ . '/schema',
-        'locales.path' =>   __DIR__ . '/locale'
+        'mode' =>           'dev'
     ]);
+    
+    /* Set up slim configuration modes */
+    $app->configureMode('production', function () use ($app) {
+        $app->config([
+            'log.enable' => true,
+            'debug' => false,
+            'templates.path' => __DIR__ . '/templates',
+            'schema.path' =>    __DIR__ . '/schema',
+            'locales.path' =>   __DIR__ . '/locale',
+            'db'            =>  [
+                'host'      => 'localhost',
+                'dbname'    => 'userfrosting',
+                'username'  => 'admin',
+                'password'  => 'password'
+            ]            
+        ]);
+    });
+    
+    $app->configureMode('dev', function () use ($app) {
+        $app->config([
+            'log.enable' => false,
+            'debug' => true,
+            'templates.path' => __DIR__ . '/templates',
+            'schema.path' =>    __DIR__ . '/schema',
+            'locales.path' =>   __DIR__ . '/locale',
+            'db'            =>  [
+                'host'      => 'localhost',
+                'dbname'    => 'userfrosting',
+                'username'  => 'admin',
+                'password'  => 'password'
+            ]
+        ]);
+    });
     
     // Middleware
     $app->add(new CsrfGuard());
-           
+    
+    // Set user, if one is logged in
+    if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {
+    	$app->user = $_SESSION["userfrosting"]["user"];
+    }    
+       
+    /* Initialize RedBean DB */
+    $DB = R::setup("mysql:host={$app->config('db')['host']};dbname={$app->config('db')['dbname']}",$app->config('db')['username'], $app->config('db')['password']);      
+    
+    // Allow use of table prefixes
+    R::ext('xdispense', function( $type ){ 
+        return R::getRedBean()->dispense( $type ); 
+    });
+          
     // Auto-detect the public root URI
     $environment = $app->environment();
     
@@ -62,7 +107,7 @@
     
     // Also handle fatal errors
     register_shutdown_function( "fatal_handler" );
-    ini_set("display_errors", "off");
+    //ini_set("display_errors", "off");
     
     function fatal_handler() {
         global $app;

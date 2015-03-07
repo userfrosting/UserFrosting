@@ -20,7 +20,7 @@
     },
     "autoload": {
         "classmap" : [
-            "./"
+            "auth", "controllers", "models"
         ]
     }
 }

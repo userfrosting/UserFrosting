@@ -9,25 +9,31 @@
     
     // Front page
     $app->get('/', function () use ($app) {
-        $controller = new AccountController($app);
+        $controller = new UF\AccountController($app);
         $controller->pageHome();
     });
 
+    // Dashboard
+    $app->get('/account(/)', function () use ($app) {
+        $controller = new UF\UserController($app);
+        $controller->pageDashboard();
+    });
+    
     // Alert stream
     $app->get('/alerts', function () use ($app) {
-        $controller = new BaseController($app);
+        $controller = new UF\BaseController($app);
         $controller->alerts();
     });
     
     // JS Config
     $app->get('/js/config.js', function () use ($app) {
-        $controller = new BaseController($app);
+        $controller = new UF\BaseController($app);
         $controller->configJS();
     });
     
     // Account management pages
     $app->get('/account/:action', function ($action) use ($app) {    
-        $controller = new AccountController($app);
+        $controller = new UF\AccountController($app);
     
         switch ($action) {
             case "login":               return $controller->pageLogin();
@@ -40,7 +46,7 @@
     });
 
     $app->post('/account/:action', function ($action) use ($app) {    
-        $controller = new AccountController($app);
+        $controller = new UF\AccountController($app);
     
         switch ($action) {
             case "login":               return $controller->login();     
@@ -53,7 +59,7 @@
     
     // Not found page (404)
     $app->notFound(function () use ($app) {
-        $controller = new BaseController($app);
+        $controller = new UF\BaseController($app);
         $controller->page404();
     });
 

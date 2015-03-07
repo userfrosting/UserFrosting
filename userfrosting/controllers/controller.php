@@ -1,6 +1,6 @@
 <?php
 
-use \UserFrosting as UF;
+namespace UserFrosting;
 
 class BaseController {
 
@@ -11,7 +11,7 @@ class BaseController {
         $this->_app = $app;
     
         // Load a page schema.  You may override this in individual pages.
-        $this->_page_schema = UF\PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json");
+        $this->_page_schema = PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json");
     }
     
     /* Renders the 404 error page.
