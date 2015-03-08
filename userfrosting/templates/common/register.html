@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  {% include 'pages/public/components/head.html' %}
+  {% include 'common/components/head.html' %}
   <body>
     <div class="container">
-        {% include 'pages/public/components/main-nav.html' %}
+        {% include 'common/components/main-nav.html' %}
       <div class="jumbotron">
         <h1>Let's get started!</h1>
         <p class="lead">Registration is fast and simple.</p>
@@ -91,10 +91,10 @@
               <input name="spiderbro" id="spiderbro" value="http://"/>
             </div>          
         </form>
-        {% include 'pages/public/components/jumbotron-links.html' %}	
+        {% include 'common/components/jumbotron-links.html' %}	
       </div>	
     </div> <!-- /container -->
-    {% include 'pages/public/components/footer.html' %}
+    {% include 'common/components/footer.html' %}
     <script>
         $(document).ready(function() {            
           alertWidget('display-alerts');

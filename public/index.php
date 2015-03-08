@@ -31,6 +31,13 @@
         $controller->configJS();
     });
     
+    // Theme CSS
+    $app->get('/css/theme.css', function () use ($app) {
+        $controller = new UF\BaseController($app);
+        $controller->themeCSS();
+    });
+        
+    
     // Account management pages
     $app->get('/account/:action', function ($action) use ($app) {    
         $controller = new UF\AccountController($app);

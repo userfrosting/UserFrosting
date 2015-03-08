@@ -11,7 +11,7 @@ class User extends DBObject {
         if (is_a($data, 'RedBeanPHP\OODBBean'))
             $this->_user = $data;
         else if (is_array($data)){
-            $this->_user = R::xdispense('uf_user');
+            $this->_user = R::xdispense(static::$table_prefix . "user");
             $this->_user->import($data);
         } else {
             $class = get_class($data);
@@ -20,27 +20,27 @@ class User extends DBObject {
     }
     
     public static function idExists($id){
-        $results = R::find( 'uf_user', ' id = :id ', [':id' => $id]);
+        $results = R::find( static::$table_prefix . "user", ' id = :id ', [':id' => $id]);
         return (count($results) > 0);
     }
     
     public static function displayNameExists($display_name){
-        $results = R::find( 'uf_user', ' display_name = :display_name ', [':display_name' => $display_name]);
+        $results = R::find( static::$table_prefix . "user", ' display_name = :display_name ', [':display_name' => $display_name]);
         return (count($results) > 0);
     }
     
     public static function usernameExists($user_name){
-        $results = R::find( 'uf_user', ' user_name = :user_name ', [':user_name' => $user_name]);
+        $results = R::find( static::$table_prefix . "user", ' user_name = :user_name ', [':user_name' => $user_name]);
         return (count($results) > 0);
     }
     
     public static function emailExists($email){
-        $results = R::find( 'uf_user', ' email = :email ', [':email' => $email]);
+        $results = R::find( static::$table_prefix . "user", ' email = :email ', [':email' => $email]);
         return (count($results) > 0);
     }
 
     public static function fetchByEmail($email){
-        $results = R::findOne( 'uf_user', ' email = :email ', [':email' => $email]);
+        $results = R::findOne( static::$table_prefix . "user", ' email = :email ', [':email' => $email]);
         if ($results)
             return new User($results);
         else
@@ -48,7 +48,7 @@ class User extends DBObject {
     }
 
     public static function fetchByUsername($user_name){
-        $results = R::findOne( 'uf_user', ' user_name = :user_name ', [':user_name' => $user_name]);
+        $results = R::findOne( static::$table_prefix . "user", ' user_name = :user_name ', [':user_name' => $user_name]);
         if ($results)
             return new User($results);
         else

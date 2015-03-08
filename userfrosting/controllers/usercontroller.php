@@ -13,7 +13,7 @@ class UserController extends \UserFrosting\BaseController {
     }
 
     public function pageDashboard(){
-        $this->_app->render('pages/user/dashboard.html', [
+        $this->_app->render('dashboard.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
                 'title' =>          "Dashboard",

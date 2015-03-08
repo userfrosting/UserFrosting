@@ -23,6 +23,7 @@
             'log.enable' => true,
             'debug' => false,
             'templates.path' => __DIR__ . '/templates',
+            'themes.path'    =>  __DIR__ . '/templates/themes',
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'db'            =>  [
@@ -37,8 +38,9 @@
     $app->configureMode('dev', function () use ($app) {
         $app->config([
             'log.enable' => false,
-            'debug' => true,
+            'debug' => false,
             'templates.path' => __DIR__ . '/templates',
+            'themes.path'    =>  __DIR__ . '/templates/themes',
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'db'            =>  [
@@ -65,7 +67,10 @@
     R::ext('xdispense', function( $type ){ 
         return R::getRedBean()->dispense( $type ); 
     });
-          
+    
+    // Set table prefix here
+    \UserFrosting\DBObject::$table_prefix = "uf_";
+    
     // Auto-detect the public root URI
     $environment = $app->environment();
     
@@ -81,6 +86,7 @@
             'favicon' =>   $uri_public_root . "/css/favicon.ico",
             'image' =>     $uri_public_root . "/images/"
         ],
+        'theme' =>              "default",
         'site_title'    =>      "UserFrosting",
         'author'    =>          "Alex Weissman",
         'email_login' => false,
@@ -126,6 +132,7 @@
           $errstr  = $error["message"];
           // Inform the client of a fatal error
           $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+          error_log("Error ($errno) in $errfile on line $errline: $errstr");
           header("HTTP/1.1 500 Internal Server Error");
         }
     }
@@ -134,6 +141,11 @@
     $twig = $app->view()->getEnvironment();   
     $twig->addGlobal("userfrosting", $userfrosting);
     
+    // Load default account theme and current account theme
+    // Thanks to https://diarmuid.ie/blog/post/multiple-twig-template-folders-with-slim-framework
+    $loader = $twig->getLoader();
+    $loader->addPath($app->config('themes.path') . "/default");
+    $loader->addPath($app->config('themes.path') . "/" . $app->userfrosting['theme']);
     /*
     $view = $app->view();
     $view->parserOptions = array(

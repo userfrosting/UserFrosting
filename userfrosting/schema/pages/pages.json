@@ -6,7 +6,7 @@
         "css" : [
             "font-awesome-4.3.0.css",
             "bootstrap-3.3.2.css",
-            "lib/metisMenu.min.css",
+            "lib/metisMenu.css",
             "timeline.css",
             "sb-admin-2.css",
             "lib/morris.css"

@@ -17,7 +17,7 @@ class BaseController {
     /* Renders the 404 error page.
     */
     public function page404(){
-        $this->_app->render('pages/public/404.html', [
+        $this->_app->render('common/404.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
                 'title' =>          "404 Error",
@@ -40,6 +40,12 @@ class BaseController {
         ));
     }
     
+    /* Render theme CSS */
+    public function themeCSS(){
+        $this->_app->response->headers->set("Content-Type", "text/css");
+        $css_include = $this->_app->config('themes.path') . "/" . $this->_app->userfrosting['theme'] . "/css/theme.css";
+        $this->_app->response->setBody(file_get_contents($css_include));
+    }    
     
     /* Get flash alerts and reset message stream. */
     public function alerts(){

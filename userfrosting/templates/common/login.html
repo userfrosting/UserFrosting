@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  {% include 'pages/public/components/head.html' %}
+  {% include 'common/components/head.html' %}
   <body>
     <div class="container">
-        {% include 'pages/public/components/main-nav.html' %}
+        {% include 'common/components/main-nav.html' %}
       <div class="jumbotron">
         <h1>Welcome to UserFrosting!</h1>
         <p class="lead">Please sign in.</p>
-        {% include 'pages/public/components/alerts.html' %}
+        {% include 'common/components/alerts.html' %}
         <form name="login" method="post" action="{{userfrosting.uri.public}}/account/login" class="form-horizontal">
-            {% include 'forms/components/csrf.html' %}
+            {% include 'common/components/csrf.html' %}
             <div class="row">
               <div class="col-md-offset-3 col-md-6">
                     <div class="form-group">
@@ -28,10 +28,10 @@
               </div>
             </div>
         </form>
-        {% include 'pages/public/components/jumbotron-links.html' %}	
+        {% include 'common/components/jumbotron-links.html' %}	
       </div>	
     </div> <!-- /container -->
-    {% include 'pages/public/components/footer.html' %}	
+    {% include 'common/components/footer.html' %}	
     <script>
         $(document).ready(function() {            
           // Process form     

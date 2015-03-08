@@ -11,7 +11,7 @@ class AccountController extends \UserFrosting\BaseController {
         
         // 2. Render
                
-        $this->_app->render('pages/public/home.html', [
+        $this->_app->render('common/home.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
                 'title' =>          "A secure, modern user management system based on UserCake, jQuery, and Bootstrap.",
@@ -25,7 +25,7 @@ class AccountController extends \UserFrosting\BaseController {
     public function pageLogin(){
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/login.json");
         
-        $this->_app->render('pages/public/login.html', [
+        $this->_app->render('common/login.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
                 'title' =>          "Login",
@@ -57,7 +57,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->redirect('login');
         }
     
-        $this->_app->render('pages/public/register.html', [
+        $this->_app->render('common/register.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
                 'title' =>          "Register",
@@ -74,7 +74,7 @@ class AccountController extends \UserFrosting\BaseController {
       
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/forgot-password.json");
         
-       $this->_app->render('pages/public/forgot-password.html', [
+       $this->_app->render('common/forgot-password.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
                 'title' =>          "Reset Password",
@@ -91,7 +91,7 @@ class AccountController extends \UserFrosting\BaseController {
     public function pageResendActivation(){
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/resend-activation.json");
          
-        $this->_app->render('pages/public/resend-activation.html', [
+        $this->_app->render('common/resend-activation.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
                 'title' =>          "Resend Activation",
