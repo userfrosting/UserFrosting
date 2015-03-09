@@ -27,7 +27,10 @@ UserFrosting will control access of three types of resources:
  - database objects
  - custom functions
 
- 
+### Data Sanitization and Validation
+
+UserFrosting provides a schema-based system for sanitizing and validating user data.  This schema consists of a simple JSON file, with rules for how each user-submitted field should be processed.  The `HTTPRequestFortress` class handles backend sanitization and validation, while the `ClientSideValidator` class generates client-side validation rules compatible with the [FormValidation](http://formvalidation.io) Javascript plugin.
+
  
 We need a better interface for modifying permissions:
 https://github.com/alexweissman/UserFrosting/issues/127
@@ -42,6 +45,11 @@ Our theming system consists of a separate folder for each theme, which contains 
 
 Menus should be automatically built based on a users' permissions.  So, a menu item should show up if and only if a user has permission to access that item.
  
+### Plugins
+
+
+### Internationalization (i18n)
+
 
 ### Alerts
 

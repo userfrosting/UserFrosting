@@ -86,7 +86,7 @@
             'favicon' =>   $uri_public_root . "/css/favicon.ico",
             'image' =>     $uri_public_root . "/images/"
         ],
-        'theme' =>              "default",
+        'theme' =>              "root",
         'site_title'    =>      "UserFrosting",
         'author'    =>          "Alex Weissman",
         'email_login' => false,
@@ -144,8 +144,11 @@
     // Load default account theme and current account theme
     // Thanks to https://diarmuid.ie/blog/post/multiple-twig-template-folders-with-slim-framework
     $loader = $twig->getLoader();
-    $loader->addPath($app->config('themes.path') . "/default");
+    // First look in theme...
     $loader->addPath($app->config('themes.path') . "/" . $app->userfrosting['theme']);
+    // THEN in default.
+    $loader->addPath($app->config('themes.path') . "/default");
+
     /*
     $view = $app->view();
     $view->parserOptions = array(
