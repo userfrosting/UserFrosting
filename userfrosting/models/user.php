@@ -6,6 +6,7 @@ use R;
 class User extends DBObject {
 
     protected $_user = null;
+    protected $_theme = "default";
 
     public function __construct($data) {
         if (is_a($data, 'RedBeanPHP\OODBBean'))
@@ -61,6 +62,14 @@ class User extends DBObject {
  
     public function __get($name){
         return $this->_user[$name];
+    }
+ 
+    public function getTheme(){
+        return $this->_theme;
+    }
+    
+    public function setTheme($theme){
+        $this->_theme = $theme;
     }
  
     public function store(){

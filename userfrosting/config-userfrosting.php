@@ -31,7 +31,8 @@
                 'dbname'    => 'userfrosting',
                 'username'  => 'admin',
                 'password'  => 'password'
-            ]            
+            ],
+            'user_id_master' => 1
         ]);
     });
     
@@ -48,7 +49,8 @@
                 'dbname'    => 'userfrosting',
                 'username'  => 'admin',
                 'password'  => 'password'
-            ]
+            ],
+            'user_id_master' => 1
         ]);
     });
     
@@ -86,11 +88,11 @@
             'favicon' =>   $uri_public_root . "/css/favicon.ico",
             'image' =>     $uri_public_root . "/images/"
         ],
-        'theme' =>              "root",
         'site_title'    =>      "UserFrosting",
         'author'    =>          "Alex Weissman",
         'email_login' => false,
-        'can_register' => true      
+        'can_register' => true,
+        'theme' => isset($app->user) ? $app->user->getTheme() : 'default'
     ];
 
     /* Import UserFrosting variables as Slim variables */
@@ -144,7 +146,7 @@
     // Load default account theme and current account theme
     // Thanks to https://diarmuid.ie/blog/post/multiple-twig-template-folders-with-slim-framework
     $loader = $twig->getLoader();
-    // First look in theme...
+    // First look in user's theme...
     $loader->addPath($app->config('themes.path') . "/" . $app->userfrosting['theme']);
     // THEN in default.
     $loader->addPath($app->config('themes.path') . "/default");

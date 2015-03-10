@@ -174,6 +174,14 @@ class AccountController extends \UserFrosting\BaseController {
         if ($user->login($data['password']))  {
             $_SESSION["userfrosting"]["user"] = $user;
             $this->_app->user = $_SESSION["userfrosting"]["user"];
+            
+            // Set up environment for this user.  Links, theme, etc.
+            if ($user->id == $this->_app->config('user_id_master'))
+                $this->_app->user->setTheme('root');
+            
+            // TODO
+            
+            
             $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->bean());
         } else {
             //Again, we know the password is at fault here, but lets not give away the combination in case of someone bruteforcing
