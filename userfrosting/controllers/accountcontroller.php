@@ -140,7 +140,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(403);
         }
         
-        // Try to load the user data
+        // Load user by email address
         if($isEmail){
             if (User::emailExists($data['user_name'])){
                 $user = User::fetchByEmail($data['user_name']);
@@ -148,7 +148,7 @@ class AccountController extends \UserFrosting\BaseController {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);         
             }
-            
+        // Load user by user name    
         } else {
             if (User::usernameExists($data['user_name'])){
                 $user = User::fetchByUsername($data['user_name']);
