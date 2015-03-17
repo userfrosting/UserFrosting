@@ -95,16 +95,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "2.6.1",
+            "version": "2.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "365dbfa0c02a31e76888eaec693dacd9dca1c82a"
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/365dbfa0c02a31e76888eaec693dacd9dca1c82a",
-                "reference": "365dbfa0c02a31e76888eaec693dacd9dca1c82a",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/20a02782f76830b67ae56a5c08eb1f563c351a37",
+                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37",
                 "shasum": ""
             },
             "require": {
@@ -137,7 +137,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2015-03-02 19:09:48"
+            "time": "2015-03-08 18:41:17"
         },
         {
             "name": "slim/views",

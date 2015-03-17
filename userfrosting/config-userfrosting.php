@@ -92,6 +92,7 @@
         'author'    =>          "Alex Weissman",
         'email_login' => false,
         'can_register' => true,
+        'enable_captcha' => true,
         'theme' => isset($app->user) ? $app->user->getTheme() : 'default'
     ];
 

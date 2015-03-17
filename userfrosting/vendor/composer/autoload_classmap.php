@@ -20,8 +20,10 @@ return array(
     'UserFrosting\\Authentication' => $baseDir . '/auth/authentication.php',
     'UserFrosting\\Authorization' => $baseDir . '/auth/auth.php',
     'UserFrosting\\BaseController' => $baseDir . '/controllers/controller.php',
+    'UserFrosting\\DBMapper' => $baseDir . '/models/dbmapper.php',
     'UserFrosting\\DBObject' => $baseDir . '/models/dbobject.php',
     'UserFrosting\\PageSchema' => $baseDir . '/controllers/pageschema.php',
     'UserFrosting\\User' => $baseDir . '/models/user.php',
     'UserFrosting\\UserController' => $baseDir . '/controllers/usercontroller.php',
+    'UserFrosting\\UserMapper' => $baseDir . '/models/usermapper.php',
 );

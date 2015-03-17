@@ -118,6 +118,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         */
         
+        // Set up Fortress to process the request
         $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $this->_app->request->post());
         
         // Sanitize data
@@ -142,16 +143,16 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Load user by email address
         if($isEmail){
-            if (User::emailExists($data['user_name'])){
-                $user = User::fetchByEmail($data['user_name']);
+            if (UserMapper::emailExists($data['user_name'])){
+                $user = UserMapper::fetchByEmail($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);         
             }
         // Load user by user name    
         } else {
-            if (User::usernameExists($data['user_name'])){
-                $user = User::fetchByUsername($data['user_name']);
+            if (UserMapper::usernameExists($data['user_name'])){
+                $user = UserMapper::fetchByUsername($data['user_name']);
             } else {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);
@@ -196,6 +197,101 @@ class AccountController extends \UserFrosting\BaseController {
         $this->_app->redirect($this->_app->userfrosting['uri']['public']);
     }
 
+    public function register(){
+        // POST: user_name, display_name, email, title, password, passwordc, captcha, spiderbro, csrf_token
+        $post = $this->_app->request->post();
+        
+        // Get the alert message stream
+        $ms = $this->_app->alerts; 
+        
+        // Check the honeypot. 'spiderbro' is not a real field, it is hidden on the main page and must be submitted with its default value for this to be processed.
+        if (!$post['spiderbro'] || $post['spiderbro'] != "http://"){
+            error_log("Possible spam received:" . print_r($this->_app->request->post(), true));
+            $ms->addMessage("danger", "Aww hellllls no!");
+            $this->_app->halt(500);     // Don't let on about why the request failed ;-)
+        }  
+        
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
+                   
+        // Set up Fortress to process the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);        
+
+        // Security measure: do not allow registering new users until the master account has been created.        
+        if (!UserMapper::idExists($this->_app->config('user_id_master'))){
+            $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
+            $this->_app->halt(403);
+        }
+          
+        // Check if registration is currently enabled
+        if (!$this->_app->userfrosting['can_register']){
+            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
+            $this->_app->halt(403);
+        }
+          
+        // Prevent the user from registering if he/she is already logged in
+        if(isUserLoggedIn()) {
+            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_LOGOUT");
+            $this->_app->halt(403);
+        }
+        
+        // Sanitize data
+        $rf->sanitize();
+                
+        // Validate, and halt on validation errors.
+        $error = $rf->validate(true);
+        
+        // Get the filtered data
+        $data = $rf->data();        
+        
+        // Check captcha, if required
+        if ($this->_app->userfrosting['enable_captcha']){
+            if (!$data['captcha'] || md5($data['captcha']) != $_SESSION['userfrosting']['captcha']){
+                $ms->addMessageTranslated("danger", "CAPTCHA_FAIL");
+                $error = true;
+            }
+        }
+        
+        // Halt on any validation errors
+        if ($error)
+            $this->_app->halt(400);
+        
+        // Remove captcha, password confirmation from object data
+        $rf->removeFields(['captcha', 'passwordc']);
+        
+        // Post-process fields
+        $data['user_name'] = strtolower(trim($data['user_name']));
+        $data['display_name'] = trim($data['display_name']);
+        $data['email'] = strtolower(trim($data['email']));
+        // Set default title for new users
+        $title = $this->_app->userfrosting['new_user_title'];
+
+        
+            // Try to create the new user
+            if ($new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc)){
+        
+            } else {
+                apiReturnError($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
+            }
+            
+
+            // Add default groups and set primary group for new users
+
+              if (dbAddUserToDefaultGroups($new_user_id)){
+                if ($require_activation)
+                  // Activation required
+                  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE2"));
+                else
+                  // No activation required
+                  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1"));
+              } else {
+                apiReturnError($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
+              }
+
+    }
+    
+    
+    
     /*
     generates a base 64 string to be placed inside the src attribute of an html image tag.
     @blame -r3wt

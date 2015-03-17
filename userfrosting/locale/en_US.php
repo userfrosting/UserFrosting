@@ -27,6 +27,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USER_OR_PASS_INVALID"		=> "Username or password is invalid.",
 	"ACCOUNT_ALREADY_ACTIVE"		=> "Your account is already activated.",
 	"ACCOUNT_REGISTRATION_DISABLED" => "We're sorry, account registration has been disabled.",
+    "ACCOUNT_REGISTRATION_LOGOUT"   => "I'm sorry, you cannot register for an account while logged in.  Please log out first.",
     "ACCOUNT_INACTIVE"			=> "Your account is in-active. Check your emails / spam folder for account activation instructions.",
 	"ACCOUNT_DISABLED"			=> "This account has been disabled.  Please contact us for more information.",
     "ACCOUNT_USER_CHAR_LIMIT"		=> "Your username must be between {{min}} and {{max}} characters in length.",

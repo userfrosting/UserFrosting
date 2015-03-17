@@ -1,6 +1,23 @@
 
 # UserFrosting
 
+## Goals
+
+### For developers:
+
+- lightweight and zero-config, works out of the box
+- modular, builds on existing, widely used components
+- up-to-date, using modern programming patterns including MVC
+- flexible, and easy for novice developers to adapt to their needs
+- clean, consistent, and well-documented code
+
+### For users:
+
+- secure
+- easily configured from an admin interface
+- attractive interface
+- full-featured
+
 ## Libraries
 
 - URL Routing and micro-framework: [Slim](http://www.slimframework.com/)
@@ -9,12 +26,26 @@
 
 ## Features
 
+### Configuration
+
+
+
 ### Sessions
+
+UserFrosting will use native PHP sessions.  We could use Slim's [encrypted session cookies](http://docs.slimframework.com/#Cookie-Session-Store), but unfortunately they only allow a max of 4KB of data - too little for what a typical use case will require.
+
+UF will keep everything that it needs in the `$_SESSION["userfrosting"]` key.  This includes the following:
+
+- `$_SESSION["userfrosting"]["user"]`: A `User` object for the currently logged-in user.
+- `$_SESSION["userfrosting"]["alerts"]`: A `MessageStream` object, that stores persistent messages.
+- `$_SESSION["userfrosting"]["captcha"]`: The most recently generated captcha code, used to verify new account registration.
 
 The old version of UF suffers from PHP's native sessions randomly expiring.  This may be an issue related to server configuration, rather than a problem with UF itself.  More research is needed.
 http://board.phpbuilder.com/showthread.php?10313632-Sessions-randomly-dropped!
 https://stackoverflow.com/questions/1327351/session-should-never-expire-by-itself
 http://jaspan.com/improved_persistent_login_cookie_best_practice
+
+It could also be due to issues with other PHP applications running on the same server: https://stackoverflow.com/questions/3476538/php-sessions-timing-out-too-quickly
 
 ### Authentication
 
