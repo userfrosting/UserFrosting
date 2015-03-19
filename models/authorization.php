@@ -233,7 +233,7 @@ function checkActionPermits($permits, $args){
         $permit_name = $permit_param_str[1];
         $mappedArgs = array();
         // Extract and map arguments, if any
-        if ($permit_param_str[2] and $permit_params = explode(',', $permit_param_str[2])){
+        if ($permit_param_str[2] && ($permit_params = explode(',', $permit_param_str[2]))){
             // For each parameter, try to match its value from the arguments, or the logged in user
             foreach ($permit_params as $param){
                 // Trim
