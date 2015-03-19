@@ -236,7 +236,7 @@ function fetchAllUsers($limit = null){
             $limit = 9999999;
         }
         $i = 0;
-        while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
+        while (($r = $stmt->fetch(PDO::FETCH_ASSOC)) && ($i < $limit)) {
             $id = $r['user_id'];
             $results[$id] = $r;
             $i++;

@@ -77,7 +77,7 @@ if ($user_id == "0"){
 }
 
 //Check if selected user exists
-if(!$user_id or !userIdExists($user_id)){
+if(!$user_id || !userIdExists($user_id)){
 	addAlert("danger", lang("ACCOUNT_INVALID_USER_ID"));
 	apiReturnError($ajax, getReferralPage());
 }
