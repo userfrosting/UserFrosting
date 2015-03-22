@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\QueryWriter\PostgreSQL | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html">AQueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.MySQL.html">MySQL</a></li>
+				<li class="active"><a href="class-RedBeanPHP.QueryWriter.PostgreSQL.html">PostgreSQL</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.SQLiteT.html">SQLiteT</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.QueryWriter.html" title="Summary of RedBeanPHP\QueryWriter"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class PostgreSQL</h1>
+
+
+	<div class="description">
+	<p>RedBean PostgreSQL Query Writer</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html"><span>RedBeanPHP\QueryWriter\AQueryWriter</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>RedBeanPHP\QueryWriter\PostgreSQL</span></b>			
+			 implements 
+				<a href="class-RedBeanPHP.QueryWriter.html"><span>RedBeanPHP\QueryWriter</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a>\<a href="namespace-RedBeanPHP.QueryWriter.html">QueryWriter</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">(c) copyright G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP Community<br>
+				<b>Desc:</b>
+				QueryWriter for the PostgreSQL database system.<br>
+				<b>File:</b>
+				RedBean/QueryWriter/PostgreSQL.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4934-5319" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getInsertSuffix" id="_getInsertSuffix">
+
+		<td class="attributes"><code>
+			 protected 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getInsertSuffix">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4977-4987" title="Go to source code">getInsertSuffix</a>( <span>string <var>$table</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns the insert suffix SQL Snippet</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the insert suffix SQL Snippet</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$table</var></dt>
+					<dd>table</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>$sql SQL Snippet
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_getInsertSuffix">RedBeanPHP\QueryWriter\AQueryWriter::getInsertSuffix()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="constrain" id="_constrain">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_constrain">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4989-5040" title="Go to source code">constrain</a>( <span>string <var>$table</var></span>, <span>string <var>$table1</var></span>, <span>string <var>$table2</var></span>, <span>string <var>$property1</var></span>, <span>string <var>$property2</var></span> )</code>
+
+		<div class="description short">
+			<p>Add the constraints for a specific database driver: PostgreSQL.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Add the constraints for a specific database driver: PostgreSQL.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$table</var></dt>
+					<dd>table to add fk constraints to</dd>
+					<dt><var>$table1</var></dt>
+					<dd>first reference table</dd>
+					<dt><var>$table2</var></dt>
+					<dd>second reference table</dd>
+					<dt><var>$property1</var></dt>
+					<dd>first reference column</dd>
+					<dt><var>$property2</var></dt>
+					<dd>second reference column</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5042-5068" title="Go to source code">__construct</a>( <span><code><a href="class-RedBeanPHP.Adapter.html">RedBeanPHP\Adapter</a></code> <var>$adapter</var></span> )</code>
+
+		<div class="description short">
+			<p>Constructor</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Constructor</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$adapter</var></dt>
+					<dd>Database Adapter</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getTypeForID" id="_getTypeForID">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getTypeForID">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5070-5079" title="Go to source code">getTypeForID</a>( )</code>
+
+		<div class="description short">
+			<p>This method returns the datatype to be used for primary key IDS and
+foreign keys. Returns one if the data type constants.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>This method returns the datatype to be used for primary key IDS and
+foreign keys. Returns one if the data type constants.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>$const data type to be used for IDS.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getTables" id="_getTables">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getTables">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5081-5087" title="Go to source code">getTables</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::getTables<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_getTables">RedBeanPHP\QueryWriter::getTables()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createTable" id="_createTable">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createTable">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5089-5097" title="Go to source code">createTable</a>( <span>string <var>$table</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$table</var></dt>
+					<dd>$type type of bean you want to create a table for</dd>
+				</dl></div>
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::createTable<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_createTable">RedBeanPHP\QueryWriter::createTable()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getColumns" id="_getColumns">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getColumns">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5099-5114" title="Go to source code">getColumns</a>( <span>string <var>$table</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$table</var></dt>
+					<dd>$type type of bean you want to obtain a column list of</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::getColumns<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_getColumns">RedBeanPHP\QueryWriter::getColumns()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="scanType" id="_scanType">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_scanType">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5116-5166" title="Go to source code">scanType</a>( <span>string <var>$value</var></span>, <span> <var>$flagSpecial</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd>value</dd>
+					<dt><var>$flagSpecial</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::scanType<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_scanType">RedBeanPHP\QueryWriter::scanType()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="code" id="_code">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_code">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5168-5182" title="Go to source code">code</a>( <span>string <var>$typedescription</var></span>, <span>boolean <var>$includeSpecials</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$typedescription</var></dt>
+					<dd>description</dd>
+					<dt><var>$includeSpecials</var></dt>
+					<dd>whether you want to get codes for special columns as well</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::code<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_code">RedBeanPHP\QueryWriter::code()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="widenColumn" id="_widenColumn">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_widenColumn">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5184-5198" title="Go to source code">widenColumn</a>( <span>string <var>$type</var></span>, <span>string <var>$column</var></span>, <span>integer <var>$datatype</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type / table that needs to be adjusted</dd>
+					<dt><var>$column</var></dt>
+					<dd>column that needs to be altered</dd>
+					<dt><var>$datatype</var></dt>
+					<dd>target data type</dd>
+				</dl></div>
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::widenColumn<br>
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_widenColumn">RedBeanPHP\QueryWriter\AQueryWriter::widenColumn()</a></code></div>
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_widenColumn">RedBeanPHP\QueryWriter::widenColumn()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addUniqueIndex" id="_addUniqueIndex">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addUniqueIndex">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5200-5237" title="Go to source code">addUniqueIndex</a>( <span>string <var>$table</var></span>, <span>array <var>$columns</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$table</var></dt>
+					<dd>$type               type</dd>
+					<dt><var>$columns</var></dt>
+					<dd>$columnsPartOfIndex columns to include in index</dd>
+				</dl></div>
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::addUniqueIndex<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_addUniqueIndex">RedBeanPHP\QueryWriter::addUniqueIndex()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="sqlStateIn" id="_sqlStateIn">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_sqlStateIn">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5239-5251" title="Go to source code">sqlStateIn</a>( <span>string <var>$state</var></span>, <span>array <var>$list</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$state</var></dt>
+					<dd>sql state</dd>
+					<dt><var>$list</var></dt>
+					<dd>list</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::sqlStateIn<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_sqlStateIn">RedBeanPHP\QueryWriter::sqlStateIn()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addIndex" id="_addIndex">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addIndex">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5253-5273" title="Go to source code">addIndex</a>( <span>string <var>$type</var></span>, <span>string <var>$name</var></span>, <span>string <var>$column</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type to add index to</dd>
+					<dt><var>$name</var></dt>
+					<dd>name of the new index</dd>
+					<dt><var>$column</var></dt>
+					<dd>field to index</dd>
+				</dl></div>
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::addIndex<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_addIndex">RedBeanPHP\QueryWriter::addIndex()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addFK" id="_addFK">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addFK">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5275-5301" title="Go to source code">addFK</a>( <span>string <var>$type</var></span>, <span>string <var>$targetType</var></span>, <span>string <var>$field</var></span>, <span>string <var>$targetField</var></span>, <span>string <var>$isDep</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type that will have a foreign key field</dd>
+					<dt><var>$targetType</var></dt>
+					<dd>points to this type</dd>
+					<dt><var>$field</var></dt>
+					<dd>field that contains the foreign key value</dd>
+					<dt><var>$targetField</var></dt>
+					<dd>field where the fk points to</dd>
+					<dt><var>$isDep</var></dt>
+					<dd>whether target is dependent and should cascade on update/delete</dd>
+				</dl></div>
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::addFK<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_addFK">RedBeanPHP\QueryWriter::addFK()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="wipeAll" id="_wipeAll">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_wipeAll">#</a>
+		<code><a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#5303-5317" title="Go to source code">wipeAll</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+				<h4>See</h4>
+				<div class="list">
+						QueryWriter::wipeAll<br>
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-RedBeanPHP.QueryWriter.html#_wipeAll">RedBeanPHP\QueryWriter::wipeAll()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#methods">RedBeanPHP\QueryWriter\AQueryWriter</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_addColumn">addColumn()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_addConstraintForTypes">addConstraintForTypes()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_addDataType">addDataType()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_camelsSnake">camelsSnake()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_canBeTreatedAsInt">canBeTreatedAsInt()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_check">check()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_clearRenames">clearRenames()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_deleteRecord">deleteRecord()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_deleteRelations">deleteRelations()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_esc">esc()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_flushCache">flushCache()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_getAssocTable">getAssocTable()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_getAssocTableFormat">getAssocTableFormat()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_getParametersForInClause">getParametersForInClause()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_glueSQLCondition">glueSQLCondition()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_insertRecord">insertRecord()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_queryRecord">queryRecord()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_queryRecordCount">queryRecordCount()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_queryRecordCountRelated">queryRecordCountRelated()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_queryRecordLink">queryRecordLink()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_queryRecordRelated">queryRecordRelated()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_renameAssocTable">renameAssocTable()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_renameAssociation">renameAssociation()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_setUseCache">setUseCache()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_startsWithZeros">startsWithZeros()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_tableExists">tableExists()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_updateRecord">updateRecord()</a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#_wipe">wipe()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="C_DATATYPE_INTEGER" id="C_DATATYPE_INTEGER">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4948-4951" title="Go to source code"><b>C_DATATYPE_INTEGER</b></a>
+			</code>
+
+			<div class="description short">
+				<p>Data types</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Data types</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_INTEGER" class="anchor">#</a>
+				<code><span class="php-num">0</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_DOUBLE" id="C_DATATYPE_DOUBLE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4952" title="Go to source code"><b>C_DATATYPE_DOUBLE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_DOUBLE" class="anchor">#</a>
+				<code><span class="php-num">1</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_TEXT" id="C_DATATYPE_TEXT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4953" title="Go to source code"><b>C_DATATYPE_TEXT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_TEXT" class="anchor">#</a>
+				<code><span class="php-num">3</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_SPECIAL_DATE" id="C_DATATYPE_SPECIAL_DATE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4954" title="Go to source code"><b>C_DATATYPE_SPECIAL_DATE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_SPECIAL_DATE" class="anchor">#</a>
+				<code><span class="php-num">80</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_SPECIAL_DATETIME" id="C_DATATYPE_SPECIAL_DATETIME">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4955" title="Go to source code"><b>C_DATATYPE_SPECIAL_DATETIME</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_SPECIAL_DATETIME" class="anchor">#</a>
+				<code><span class="php-num">81</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_SPECIAL_POINT" id="C_DATATYPE_SPECIAL_POINT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4956" title="Go to source code"><b>C_DATATYPE_SPECIAL_POINT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_SPECIAL_POINT" class="anchor">#</a>
+				<code><span class="php-num">90</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_SPECIAL_LSEG" id="C_DATATYPE_SPECIAL_LSEG">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4957" title="Go to source code"><b>C_DATATYPE_SPECIAL_LSEG</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_SPECIAL_LSEG" class="anchor">#</a>
+				<code><span class="php-num">91</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_SPECIAL_CIRCLE" id="C_DATATYPE_SPECIAL_CIRCLE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4958" title="Go to source code"><b>C_DATATYPE_SPECIAL_CIRCLE</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_SPECIAL_CIRCLE" class="anchor">#</a>
+				<code><span class="php-num">92</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_SPECIAL_MONEY" id="C_DATATYPE_SPECIAL_MONEY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4959" title="Go to source code"><b>C_DATATYPE_SPECIAL_MONEY</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_SPECIAL_MONEY" class="anchor">#</a>
+				<code><span class="php-num">93</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="C_DATATYPE_SPECIFIED" id="C_DATATYPE_SPECIFIED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4960" title="Go to source code"><b>C_DATATYPE_SPECIFIED</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_DATATYPE_SPECIFIED" class="anchor">#</a>
+				<code><span class="php-num">99</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Constants inherited from <a href="class-RedBeanPHP.QueryWriter.html#constants">RedBeanPHP\QueryWriter</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-RedBeanPHP.QueryWriter.html#C_DATATYPE_RANGE_SPECIAL"><b>C_DATATYPE_RANGE_SPECIAL</b></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.html#C_DATATYPE_RANGE_SPECIFIED"><b>C_DATATYPE_RANGE_SPECIFIED</b></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.html#C_GLUE_AND"><b>C_GLUE_AND</b></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.html#C_GLUE_WHERE"><b>C_GLUE_WHERE</b></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.html#C_SQLSTATE_INTEGRITY_CONSTRAINT_VIOLATION"><b>C_SQLSTATE_INTEGRITY_CONSTRAINT_VIOLATION</b></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.html#C_SQLSTATE_NO_SUCH_COLUMN"><b>C_SQLSTATE_NO_SUCH_COLUMN</b></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.html#C_SQLSTATE_NO_SUCH_TABLE"><b>C_SQLSTATE_NO_SUCH_TABLE</b></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="adapter" id="$adapter">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4962-4965" title="Go to source code"><var>$adapter</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$adapter" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="quoteCharacter" id="$quoteCharacter">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4967-4970" title="Go to source code"><var>$quoteCharacter</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$quoteCharacter" class="anchor">#</a>
+				<code><span class="php-quote">'&quot;'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="defaultValue" id="$defaultValue">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.QueryWriter.PostgreSQL.html#4972-4975" title="Go to source code"><var>$defaultValue</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$defaultValue" class="anchor">#</a>
+				<code><span class="php-quote">'DEFAULT'</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#properties">RedBeanPHP\QueryWriter\AQueryWriter</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#$cache"><var>$cache</var></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#$flagUseCache"><var>$flagUseCache</var></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#$renames"><var>$renames</var></a>, 
+			<a href="class-RedBeanPHP.QueryWriter.AQueryWriter.html#$typeno_sqltype"><var>$typeno_sqltype</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

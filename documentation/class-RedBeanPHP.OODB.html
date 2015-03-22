@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\OODB | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li class="active"><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class OODB</h1>
+
+
+	<div class="description">
+	<p>RedBean Object Oriented DataBase</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-RedBeanPHP.Observable.html"><span>RedBeanPHP\Observable</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>RedBeanPHP\OODB</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">The RedBean OODB Class is the main class of RedBeanPHP.
+It takes OODBBean objects and stores them to and loads them from the
+database as well as providing other CRUD functions. This class acts as a
+object database.
+
+copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP community<br>
+				<b>Desc:</b>
+				RedBean Object Database<br>
+				<b>File:</b>
+				RedBean/OODB.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.OODB.html#5415-6516" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6001-6011" title="Go to source code">__construct</a>( <span><code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code> <var>$writer</var></span> )</code>
+
+		<div class="description short">
+			<p>Constructor, requires a query writer.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Constructor, requires a query writer.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$writer</var></dt>
+					<dd>writer</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="freeze" id="_freeze">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_freeze">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6013-6034" title="Go to source code">freeze</a>( <span>boolean|array <var>$toggle</var></span> )</code>
+
+		<div class="description short">
+			<p>Toggles fluid or frozen mode. In fluid mode the database
+structure is adjusted to accomodate your objects. In frozen mode
+this is not the case.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Toggles fluid or frozen mode. In fluid mode the database
+structure is adjusted to accomodate your objects. In frozen mode
+this is not the case.</p>
+
+<p>You can also pass an array containing a selection of frozen types.
+Let's call this chilly mode, it's just like fluid mode except that
+certain types (i.e. tables) aren't touched.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$toggle</var></dt>
+					<dd>TRUE if you want to use OODB instance in frozen mode</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isFrozen" id="_isFrozen">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isFrozen">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6036-6048" title="Go to source code">isFrozen</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the current mode of operation of RedBean.
+In fluid mode the database
+structure is adjusted to accomodate your objects.
+In frozen mode
+this is not the case.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the current mode of operation of RedBean.
+In fluid mode the database
+structure is adjusted to accomodate your objects.
+In frozen mode
+this is not the case.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isChilled" id="_isChilled">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isChilled">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6050-6064" title="Go to source code">isChilled</a>( <span>string <var>$type</var></span> )</code>
+
+		<div class="description short">
+			<p>Determines whether a type is in the chill list.
+If a type is 'chilled' it's frozen, so its schema cannot be
+changed anymore. However other bean types may still be modified.
+This method is a convenience method for other objects to check if
+the schema of a certain type is locked for modification.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Determines whether a type is in the chill list.
+If a type is 'chilled' it's frozen, so its schema cannot be
+changed anymore. However other bean types may still be modified.
+This method is a convenience method for other objects to check if
+the schema of a certain type is locked for modification.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>the type you wish to check</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dispense" id="_dispense">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dispense">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6066-6100" title="Go to source code">dispense</a>( <span>string <var>$type</var></span>, <span>string <var>$number</var> = <span class="php-num">1</span></span>, <span>boolean <var>$alwaysReturnArray</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Dispenses a new bean (a OODBBean Bean Object)
+of the specified type. Always
+use this function to get an empty bean object. Never
+instantiate a OODBBean yourself because it needs
+to be configured before you can use it with RedBean. This
+function applies the appropriate initialization /
+configuration for you.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Dispenses a new bean (a OODBBean Bean Object)
+of the specified type. Always
+use this function to get an empty bean object. Never
+instantiate a OODBBean yourself because it needs
+to be configured before you can use it with RedBean. This
+function applies the appropriate initialization /
+configuration for you.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean you want to dispense</dd>
+					<dt><var>$number</var></dt>
+					<dd>number of beans you would like to get</dd>
+					<dt><var>$alwaysReturnArray</var></dt>
+					<dd>if TRUE always returns the result as an array</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setBeanHelper" id="_setBeanHelper">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setBeanHelper">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6102-6113" title="Go to source code">setBeanHelper</a>( <span><code><a href="class-RedBeanPHP.BeanHelper.html">RedBeanPHP\BeanHelper</a></code> <var>$beanhelper</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets bean helper to be given to beans.
+Bean helpers assist beans in getting a reference to a toolbox.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets bean helper to be given to beans.
+Bean helpers assist beans in getting a reference to a toolbox.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beanhelper</var></dt>
+					<dd>helper</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="check" id="_check">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_check">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6115-6155" title="Go to source code">check</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Checks whether a OODBBean bean is valid.
+If the type is not valid or the ID is not valid it will
+throw an exception: Security.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Checks whether a OODBBean bean is valid.
+If the type is not valid or the ID is not valid it will
+throw an exception: Security.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>the bean that needs to be checked</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security<br>$exception
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="find" id="_find">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_find">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6157-6201" title="Go to source code">find</a>( <span>string <var>$type</var></span>, <span>array <var>$conditions</var> = <span class="php-keyword1">array</span>()</span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Searches the database for a bean that matches conditions $conditions and sql $addSQL
+and returns an array containing all the beans that have been found.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Searches the database for a bean that matches conditions $conditions and sql $addSQL
+and returns an array containing all the beans that have been found.</p>
+
+<p>Conditions need to take form:</p>
+
+<p>array( 'PROPERTY' => array( POSSIBLE VALUES... 'John', 'Steve' ) 'PROPERTY' => array( POSSIBLE VALUES... )
+);</p>
+
+<p>All conditions are glued together using the AND-operator, while all value lists
+are glued using IN-operators thus acting as OR-conditions.</p>
+
+<p>Note that you can use property names; the columns will be extracted using the
+appropriate bean formatter.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of beans you are looking for</dd>
+					<dt><var>$conditions</var></dt>
+					<dd>list of conditions</dd>
+					<dt><var>$sql</var></dt>
+					<dd>$addSQL     SQL to be used in query</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>whether you prefer to use a WHERE clause or not (TRUE = not)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.RedException.SQL.html">RedBeanPHP\RedException\SQL</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="store" id="_store">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer|string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_store">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6218-6257" title="Go to source code">store</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|<code><a href="class-RedBeanPHP.SimpleModel.html">RedBeanPHP\SimpleModel</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Stores a bean in the database. This method takes a
+OODBBean Bean Object $bean and stores it
+in the database. If the database schema is not compatible
+with this bean and RedBean runs in fluid mode the schema
+will be altered to store the bean correctly.
+If the database schema is not compatible with this bean and
+RedBean runs in frozen mode it will throw an exception.
+This function returns the primary key ID of the inserted
+bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Stores a bean in the database. This method takes a
+OODBBean Bean Object $bean and stores it
+in the database. If the database schema is not compatible
+with this bean and RedBean runs in fluid mode the schema
+will be altered to store the bean correctly.
+If the database schema is not compatible with this bean and
+RedBean runs in frozen mode it will throw an exception.
+This function returns the primary key ID of the inserted
+bean.</p>
+
+<p>The return value is an integer if possible. If it is not possible to
+represent the value as an integer a string will be returned. We use
+explicit casts instead of functions to preserve performance
+(0.13 vs 0.28 for 10000 iterations on Core i3).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to store</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer|string
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="load" id="_load">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_load">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6259-6316" title="Go to source code">load</a>( <span>string <var>$type</var></span>, <span>integer <var>$id</var></span> )</code>
+
+		<div class="description short">
+			<p>Loads a bean from the object database.
+It searches for a OODBBean Bean Object in the
+database. It does not matter how this bean has been stored.
+RedBean uses the primary key ID $id and the string $type
+to find the bean. The $type specifies what kind of bean you
+are looking for; this is the same type as used with the
+dispense() function. If RedBean finds the bean it will return
+the OODB Bean object; if it cannot find the bean
+RedBean will return a new bean of type $type and with
+primary key ID 0. In the latter case it acts basically the
+same as dispense().</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Loads a bean from the object database.
+It searches for a OODBBean Bean Object in the
+database. It does not matter how this bean has been stored.
+RedBean uses the primary key ID $id and the string $type
+to find the bean. The $type specifies what kind of bean you
+are looking for; this is the same type as used with the
+dispense() function. If RedBean finds the bean it will return
+the OODB Bean object; if it cannot find the bean
+RedBean will return a new bean of type $type and with
+primary key ID 0. In the latter case it acts basically the
+same as dispense().</p>
+
+<p>Important note:
+If the bean cannot be found in the database a new bean of
+the specified type will be generated and returned.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean you want to load</dd>
+					<dt><var>$id</var></dt>
+					<dd>ID of the bean you want to load</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.RedException.SQL.html">RedBeanPHP\RedException\SQL</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="trash" id="_trash">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_trash">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6318-6360" title="Go to source code">trash</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|<code><a href="class-RedBeanPHP.SimpleModel.html">RedBeanPHP\SimpleModel</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Removes a bean from the database.
+This function will remove the specified OODBBean
+Bean Object from the database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Removes a bean from the database.
+This function will remove the specified OODBBean
+Bean Object from the database.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean you want to remove from database</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="batch" id="_batch">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_batch">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6362-6401" title="Go to source code">batch</a>( <span>string <var>$type</var></span>, <span>array <var>$ids</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns an array of beans. Pass a type and a series of ids and
+this method will bring you the corresponding beans.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns an array of beans. Pass a type and a series of ids and
+this method will bring you the corresponding beans.</p>
+
+<p>important note: Because this method loads beans using the load()
+function (but faster) it will return empty beans with ID 0 for
+every bean that could not be located. The resulting beans will have the
+passed IDs as their keys.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of beans</dd>
+					<dt><var>$ids</var></dt>
+					<dd>ids to load</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="convertToBeans" id="_convertToBeans">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_convertToBeans">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6403-6426" title="Go to source code">convertToBeans</a>( <span>string <var>$type</var></span>, <span>array <var>$rows</var></span> )</code>
+
+		<div class="description short">
+			<p>This is a convenience method; it converts database rows
+(arrays) into beans. Given a type and a set of rows this method
+will return an array of beans of the specified type loaded with
+the data fields provided by the result set from the database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>This is a convenience method; it converts database rows
+(arrays) into beans. Given a type and a set of rows this method
+will return an array of beans of the specified type loaded with
+the data fields provided by the result set from the database.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of beans you would like to have</dd>
+					<dt><var>$rows</var></dt>
+					<dd>rows from the database result</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6428-6459" title="Go to source code">count</a>( <span>string <var>$type</var></span>, <span>string <var>$addSQL</var> = <span class="php-quote">''</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Counts the number of beans of type $type.
+This method accepts a second argument to modify the count-query.
+A third argument can be used to provide bindings for the SQL snippet.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Counts the number of beans of type $type.
+This method accepts a second argument to modify the count-query.
+A third argument can be used to provide bindings for the SQL snippet.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean we are looking for</dd>
+					<dt><var>$addSQL</var></dt>
+					<dd>additional SQL snippet</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>parameters to bind to SQL</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.RedException.SQL.html">RedBeanPHP\RedException\SQL</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="wipe" id="_wipe">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_wipe">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6461-6483" title="Go to source code">wipe</a>( <span>string <var>$type</var></span> )</code>
+
+		<div class="description short">
+			<p>Trash all beans of a given type. Wipes an entire type of bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Trash all beans of a given type. Wipes an entire type of bean.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean you wish to delete all instances of</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.RedException.SQL.html">RedBeanPHP\RedException\SQL</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAssociationManager" id="_getAssociationManager">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.AssociationManager.html">RedBeanPHP\AssociationManager</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAssociationManager">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6485-6501" title="Go to source code">getAssociationManager</a>( )</code>
+
+		<div class="description short">
+			<p>Returns an Association Manager for use with OODB.
+A simple getter function to obtain a reference to the association manager used for
+storage and more.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns an Association Manager for use with OODB.
+A simple getter function to obtain a reference to the association manager used for
+storage and more.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.AssociationManager.html">RedBeanPHP\AssociationManager</a></code>
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setAssociationManager" id="_setAssociationManager">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setAssociationManager">#</a>
+		<code><a href="source-class-RedBeanPHP.OODB.html#6503-6515" title="Go to source code">setAssociationManager</a>( <span><code><a href="class-RedBeanPHP.AssociationManager.html">RedBeanPHP\AssociationManager</a></code> <var>$assocManager</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the association manager instance to be used by this OODB.
+A simple setter function to set the association manager to be used for storage and
+more.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the association manager instance to be used by this OODB.
+A simple setter function to set the association manager to be used for storage and
+more.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$assocManager</var></dt>
+					<dd>$assoc sets the association manager to be used</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-RedBeanPHP.Observable.html#methods">RedBeanPHP\Observable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-RedBeanPHP.Observable.html#_addEventListener">addEventListener()</a>, 
+			<a href="class-RedBeanPHP.Observable.html#_signal">signal()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="chillList" id="$chillList">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.OODB.html#5435-5438" title="Go to source code"><var>$chillList</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$chillList" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="stash" id="$stash">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.OODB.html#5441-5444" title="Go to source code"><var>$stash</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$stash" class="anchor">#</a>
+				<code><span class="php-keyword1">NULL</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="nesting" id="$nesting">
+		<td class="attributes"><code>
+			protected  
+			integer
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.OODB.html#5449" title="Go to source code"><var>$nesting</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$nesting" class="anchor">#</a>
+				<code><span class="php-num">0</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="writer" id="$writer">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.OODB.html#5451-5454" title="Go to source code"><var>$writer</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$writer" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="isFrozen" id="$isFrozen">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.OODB.html#5456-5459" title="Go to source code"><var>$isFrozen</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$isFrozen" class="anchor">#</a>
+				<code><span class="php-keyword1">FALSE</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="beanhelper" id="$beanhelper">
+		<td class="attributes"><code>
+			protected  
+			RedBeanPHP\BeanHelper\FacadeBeanHelper
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.OODB.html#5461-5464" title="Go to source code"><var>$beanhelper</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$beanhelper" class="anchor">#</a>
+				<code><span class="php-keyword1">NULL</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="assocManager" id="$assocManager">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.AssociationManager.html">RedBeanPHP\AssociationManager</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.OODB.html#5466-5469" title="Go to source code"><var>$assocManager</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$assocManager" class="anchor">#</a>
+				<code><span class="php-keyword1">NULL</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

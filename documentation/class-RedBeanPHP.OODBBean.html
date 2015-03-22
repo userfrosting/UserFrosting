@@ -1,0 +1,2456 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\OODBBean | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li class="active"><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class OODBBean</h1>
+
+
+	<div class="description">
+	<p>OODBBean (Object Oriented DataBase Bean)</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>RedBeanPHP\OODBBean</span></b>			
+			 implements 
+				<a href="class-IteratorAggregate.html"><span>IteratorAggregate</span></a>, 
+			
+				<a href="class-ArrayAccess.html"><span>ArrayAccess</span></a>, 
+			
+				<a href="class-Countable.html"><span>Countable</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP community<br>
+				<b>Desc:</b>
+				The Bean class used for passing information<br>
+				<b>File:</b>
+				RedBean/OODBBean.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.OODBBean.html#830-2306" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="setMetaAll" id="_setMetaAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setMetaAll">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1019-1038" title="Go to source code">setMetaAll</a>( <span>array <var>$beans</var></span>, <span>string <var>$property</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets a meta property for all beans. This is a quicker way to set
+the meta properties for a collection of beans because this method
+can directly access the property arrays of the beans.
+This method returns the beans.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets a meta property for all beans. This is a quicker way to set
+the meta properties for a collection of beans because this method
+can directly access the property arrays of the beans.
+This method returns the beans.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans</var></dt>
+					<dd>beans to set the meta property of</dd>
+					<dt><var>$property</var></dt>
+					<dd>property to set</dd>
+					<dt><var>$value</var></dt>
+					<dd>value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="initializeForDispense" id="_initializeForDispense">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_initializeForDispense">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1040-1059" title="Go to source code">initializeForDispense</a>( <span>string <var>$type</var></span>, <span><code><a href="class-RedBeanPHP.BeanHelper.html">RedBeanPHP\BeanHelper</a></code> <var>$beanhelper</var></span> )</code>
+
+		<div class="description short">
+			<p>Initializes a bean. Used by OODB for dispensing beans.
+It is not recommended to use this method to initialize beans. Instead
+use the OODB object to dispense new beans. You can use this method
+if you build your own bean dispensing mechanism.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Initializes a bean. Used by OODB for dispensing beans.
+It is not recommended to use this method to initialize beans. Instead
+use the OODB object to dispense new beans. You can use this method
+if you build your own bean dispensing mechanism.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of the new bean</dd>
+					<dt><var>$beanhelper</var></dt>
+					<dd>bean helper to obtain a toolbox and a model</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setBeanHelper" id="_setBeanHelper">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setBeanHelper">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1061-1075" title="Go to source code">setBeanHelper</a>( <span><code><a href="class-RedBeanPHP.BeanHelper.html">RedBeanPHP\BeanHelper</a></code> <var>$helper</var></span> )</code>
+
+		<div class="description short">
+			<p>Sets the Bean Helper. Normally the Bean Helper is set by OODB.
+Here you can change the Bean Helper. The Bean Helper is an object
+providing access to a toolbox for the bean necessary to retrieve
+nested beans (bean lists: ownBean, sharedBean) without the need to
+rely on static calls to the facade (or make this class dep. on OODB).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets the Bean Helper. Normally the Bean Helper is set by OODB.
+Here you can change the Bean Helper. The Bean Helper is an object
+providing access to a toolbox for the bean necessary to retrieve
+nested beans (bean lists: ownBean, sharedBean) without the need to
+rely on static calls to the facade (or make this class dep. on OODB).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$helper</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getIterator" id="_getIterator">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getIterator">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1077-1092" title="Go to source code">getIterator</a>( )</code>
+
+		<div class="description short">
+			<p>Returns an\ArrayIterator so you can treat the bean like
+an array with the properties container as its contents.
+This method is meant for PHP and allows you to access beans as if
+they were arrays, i.e. using array notation:</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns an\ArrayIterator so you can treat the bean like
+an array with the properties container as its contents.
+This method is meant for PHP and allows you to access beans as if
+they were arrays, i.e. using array notation:</p>
+
+<p>$bean[ $key ] = $value;</p>
+
+<p>Note that not all PHP functions work with the array interface.</p>
+
+
+
+
+
+				<h4>Return\arrayiterator</h4>
+				<div class="list">
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-IteratorAggregate.html#_getIterator">IteratorAggregate::getIterator()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="import" id="_import">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_import">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1094-1147" title="Go to source code">import</a>( <span>array <var>$array</var></span>, <span>string|array <var>$selection</var> = <span class="php-keyword1">FALSE</span></span>, <span>boolean <var>$notrim</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Imports all values from an associative array $array. Chainable.
+This method imports the values in the first argument as bean
+propery and value pairs. Use the second parameter to provide a
+selection. If a selection array is passed, only the entries
+having keys mentioned in the selection array will be imported.
+Set the third parameter to TRUE to preserve spaces in selection keys.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Imports all values from an associative array $array. Chainable.
+This method imports the values in the first argument as bean
+propery and value pairs. Use the second parameter to provide a
+selection. If a selection array is passed, only the entries
+having keys mentioned in the selection array will be imported.
+Set the third parameter to TRUE to preserve spaces in selection keys.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$array</var></dt>
+					<dd>what you want to import</dd>
+					<dt><var>$selection</var></dt>
+					<dd>selection of values</dd>
+					<dt><var>$notrim</var></dt>
+					<dd>if TRUE selection keys will NOT be trimmed</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="importRow" id="_importRow">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_importRow">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1149-1162" title="Go to source code">importRow</a>( <span>array <var>$row</var></span> )</code>
+
+		<div class="description short">
+			<p>Fast way to import a row.
+Does not perform any checks.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Fast way to import a row.
+Does not perform any checks.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$row</var></dt>
+					<dd>a database row</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="importFrom" id="_importFrom">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_importFrom">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1164-1180" title="Go to source code">importFrom</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$sourceBean</var></span> )</code>
+
+		<div class="description short">
+			<p>Imports data from another bean. Chainable.
+Copies the properties from the source bean to the internal
+property list.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Imports data from another bean. Chainable.
+Copies the properties from the source bean to the internal
+property list.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sourceBean</var></dt>
+					<dd>the source bean to take properties from</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="inject" id="_inject">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_inject">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1182-1200" title="Go to source code">inject</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$otherBean</var></span> )</code>
+
+		<div class="description short">
+			<p>Injects the properties of another bean but keeps the original ID.
+Just like import() but keeps the original ID.
+Chainable.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Injects the properties of another bean but keeps the original ID.
+Just like import() but keeps the original ID.
+Chainable.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$otherBean</var></dt>
+					<dd>the bean whose properties you would like to copy</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="export" id="_export">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_export">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1202-1253" title="Go to source code">export</a>( <span>boolean <var>$meta</var> = <span class="php-keyword1">FALSE</span></span>, <span>boolean <var>$parents</var> = <span class="php-keyword1">FALSE</span></span>, <span>boolean <var>$onlyMe</var> = <span class="php-keyword1">FALSE</span></span>, <span>array <var>$filters</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Exports the bean as an array.
+This function exports the contents of a bean to an array and returns
+the resulting array.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Exports the bean as an array.
+This function exports the contents of a bean to an array and returns
+the resulting array.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$meta</var></dt>
+					<dd>set to TRUE if you want to export meta data as well</dd>
+					<dt><var>$parents</var></dt>
+					<dd>set to TRUE if you want to export parents as well</dd>
+					<dt><var>$onlyMe</var></dt>
+					<dd>set to TRUE if you want to export only this bean</dd>
+					<dt><var>$filters</var></dt>
+					<dd>optional whitelist for export</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__isset" id="___isset">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___isset">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1255-1270" title="Go to source code">__isset</a>( <span>string <var>$property</var></span> )</code>
+
+		<div class="description short">
+			<p>Implements isset() function for use as an array.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Implements isset() function for use as an array.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>name of the property you want to check</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getID" id="_getID">
+
+		<td class="attributes"><code>
+			 public 
+
+			string|null
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getID">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1272-1280" title="Go to source code">getID</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the ID of the bean no matter what the ID field is.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the ID of the bean no matter what the ID field is.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string|null
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__unset" id="___unset">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___unset">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1282-1313" title="Go to source code">__unset</a>( <span>string <var>$property</var></span> )</code>
+
+		<div class="description short">
+			<p>Unsets a property. This method will load the property first using
+__get.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Unsets a property. This method will load the property first using
+__get.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>property</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="with" id="_with">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_with">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1315-1336" title="Go to source code">with</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Adds WHERE clause conditions to ownList retrieval.
+For instance to get the pages that belong to a book you would
+issue the following command: $book->ownPage
+However, to order these pages by number use:</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Adds WHERE clause conditions to ownList retrieval.
+For instance to get the pages that belong to a book you would
+issue the following command: $book->ownPage
+However, to order these pages by number use:</p>
+
+<p>$book->with(' ORDER BY <code>number</code> ASC ')->ownPage</p>
+
+<p>the additional SQL snippet will be merged into the final
+query.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL to be added to retrieval query.</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>array with parameters to bind to SQL snippet</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="withCondition" id="_withCondition">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_withCondition">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1338-1358" title="Go to source code">withCondition</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Just like with(). Except that this method prepends the SQL query snippet
+with AND which makes it slightly more comfortable to use a conditional
+SQL snippet. For instance to filter an own-list with pages (belonging to
+a book) on specific chapters you can use:</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Just like with(). Except that this method prepends the SQL query snippet
+with AND which makes it slightly more comfortable to use a conditional
+SQL snippet. For instance to filter an own-list with pages (belonging to
+a book) on specific chapters you can use:</p>
+
+<p>$book->withCondition(' chapter = 3 ')->ownPage</p>
+
+<p>This will return in the own list only the pages having 'chapter == 3'.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL to be added to retrieval query (prefixed by AND)</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>array with parameters to bind to SQL snippet</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="all" id="_all">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_all">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1360-1369" title="Go to source code">all</a>( )</code>
+
+		<div class="description short">
+			<p>When prefix for a list, this causes the list to reload.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>When prefix for a list, this causes the list to reload.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="noLoad" id="_noLoad">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_noLoad">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1371-1382" title="Go to source code">noLoad</a>( )</code>
+
+		<div class="description short">
+			<p>Tells the bean to only access the list but not load
+its contents. Use this if you only want to add something to a list
+and you have no interest in retrieving its contents from the database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Tells the bean to only access the list but not load
+its contents. Use this if you only want to add something to a list
+and you have no interest in retrieving its contents from the database.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="alias" id="_alias">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_alias">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1384-1414" title="Go to source code">alias</a>( <span>string <var>$aliasName</var></span> )</code>
+
+		<div class="description short">
+			<p>Prepares an own-list to use an alias. This is best explained using
+an example. Imagine a project and a person. The project always involves
+two persons: a teacher and a student. The person beans have been aliased in this
+case, so to the project has a teacher_id pointing to a person, and a student_id
+also pointing to a person. Given a project, we obtain the teacher like this:</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Prepares an own-list to use an alias. This is best explained using
+an example. Imagine a project and a person. The project always involves
+two persons: a teacher and a student. The person beans have been aliased in this
+case, so to the project has a teacher_id pointing to a person, and a student_id
+also pointing to a person. Given a project, we obtain the teacher like this:</p>
+
+<p>$project->fetchAs('person')->teacher;</p>
+
+<p>Now, if we want all projects of a teacher we cant say:</p>
+
+<p>$teacher->ownProject</p>
+
+<p>because the $teacher is a bean of type 'person' and no project has been
+assigned to a person. Instead we use the alias() method like this:</p>
+
+<p>$teacher->alias('teacher')->ownProject</p>
+
+<p>now we get the projects associated with the person bean aliased as
+a teacher.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$aliasName</var></dt>
+					<dd>the alias name to use</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getProperties" id="_getProperties">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getProperties">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1416-1427" title="Go to source code">getProperties</a>( )</code>
+
+		<div class="description short">
+			<p>Returns properties of bean as an array.
+This method returns the raw internal property list of the
+bean. Only use this method for optimization purposes. Otherwise
+use the export() method to export bean data to arrays.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns properties of bean as an array.
+This method returns the raw internal property list of the
+bean. Only use this method for optimization purposes. Otherwise
+use the export() method to export bean data to arrays.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getPropertiesAndType" id="_getPropertiesAndType">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getPropertiesAndType">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1429-1442" title="Go to source code">getPropertiesAndType</a>( )</code>
+
+		<div class="description short">
+			<p>Returns properties of bean as an array.
+This method returns the raw internal property list of the
+bean. Only use this method for optimization purposes. Otherwise
+use the export() method to export bean data to arrays.
+This method returns an array with the properties array and
+the type (string).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns properties of bean as an array.
+This method returns the raw internal property list of the
+bean. Only use this method for optimization purposes. Otherwise
+use the export() method to export bean data to arrays.
+This method returns an array with the properties array and
+the type (string).</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="beau" id="_beau">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_beau">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1444-1477" title="Go to source code">beau</a>( <span>string <var>$property</var></span> )</code>
+
+		<div class="description short">
+			<p>Turns a camelcase property name into an underscored property name.
+Examples:
+   oneACLRoute -> one_acl_route
+   camelCase -> camel_case</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Turns a camelcase property name into an underscored property name.
+Examples: oneACLRoute -> one_acl_route camelCase -> camel_case</p>
+
+<p>Also caches the result to improve performance.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getModFlags" id="_getModFlags">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getModFlags">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1479-1494" title="Go to source code">getModFlags</a>( )</code>
+
+		<div class="description short">
+			<p>Returns current status of modification flags.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns current status of modification flags.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="clearModifiers" id="_clearModifiers">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_clearModifiers">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1496-1511" title="Go to source code">clearModifiers</a>( )</code>
+
+		<div class="description short">
+			<p>Clears all modifiers.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Clears all modifiers.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isListInExclusiveMode" id="_isListInExclusiveMode">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isListInExclusiveMode">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1513-1533" title="Go to source code">isListInExclusiveMode</a>( <span>string <var>$listName</var></span> )</code>
+
+		<div class="description short">
+			<p>Determines whether a list is opened in exclusive mode or not.
+If a list has been opened in exclusive mode this method will return TRUE,
+othwerwise it will return FALSE.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Determines whether a list is opened in exclusive mode or not.
+If a list has been opened in exclusive mode this method will return TRUE,
+othwerwise it will return FALSE.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$listName</var></dt>
+					<dd>name of the list to check</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__get" id="___get">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			&amp;
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___get">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1535-1653" title="Go to source code">__get</a>( <span>string <var>$property</var></span> )</code>
+
+		<div class="description short">
+			<p>Magic Getter. Gets the value for a specific property in the bean.
+If the property does not exist this getter will make sure no error
+occurs. This is because RedBean allows you to query (probe) for
+properties. If the property can not be found this method will
+return NULL instead.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Magic Getter. Gets the value for a specific property in the bean.
+If the property does not exist this getter will make sure no error
+occurs. This is because RedBean allows you to query (probe) for
+properties. If the property can not be found this method will
+return NULL instead.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>name of the property you wish to obtain the value of</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__set" id="___set">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___set">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1655-1742" title="Go to source code">__set</a>( <span>string <var>$property</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Magic Setter. Sets the value for a specific property.
+This setter acts as a hook for OODB to mark beans as tainted.
+The tainted meta property can be retrieved using getMeta("tainted").
+The tainted meta property indicates whether a bean has been modified and
+can be used in various caching mechanisms.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Magic Setter. Sets the value for a specific property.
+This setter acts as a hook for OODB to mark beans as tainted.
+The tainted meta property can be retrieved using getMeta("tainted").
+The tainted meta property indicates whether a bean has been modified and
+can be used in various caching mechanisms.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>name of the property you wish to assign a value to</dd>
+					<dt><var>$value</var></dt>
+					<dd>the value you want to assign</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setProperty" id="_setProperty">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setProperty">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1744-1765" title="Go to source code">setProperty</a>( <span>string <var>$property</var></span>, <span>mixed <var>$value</var></span>, <span>boolean <var>$updateShadow</var> = <span class="php-keyword1">FALSE</span></span>, <span>boolean <var>$taint</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Sets a property directly, for internal use only.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sets a property directly, for internal use only.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>property</dd>
+					<dt><var>$value</var></dt>
+					<dd>value</dd>
+					<dt><var>$updateShadow</var></dt>
+					<dd>whether you want to update the shadow</dd>
+					<dt><var>$taint</var></dt>
+					<dd>whether you want to mark the bean as tainted</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMeta" id="_getMeta">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMeta">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1767-1787" title="Go to source code">getMeta</a>( <span>string <var>$path</var></span>, <span>mixed <var>$default</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Returns the value of a meta property. A meta property
+contains extra information about the bean object that will not
+get stored in the database. Meta information is used to instruct
+RedBean as well as other systems how to deal with the bean.
+For instance: $bean->setMeta("buildcommand.unique", array(
+array("column1", "column2", "column3") ) );
+Will add a UNIQUE constraint for the bean on columns: column1, column2 and
+column 3.
+To access a Meta property we use a dot separated notation.
+If the property cannot be found this getter will return NULL instead.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the value of a meta property. A meta property
+contains extra information about the bean object that will not
+get stored in the database. Meta information is used to instruct
+RedBean as well as other systems how to deal with the bean.
+For instance: $bean->setMeta("buildcommand.unique", array(
+array("column1", "column2", "column3") ) );
+Will add a UNIQUE constraint for the bean on columns: column1, column2 and
+column 3.
+To access a Meta property we use a dot separated notation.
+If the property cannot be found this getter will return NULL instead.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd>path</dd>
+					<dt><var>$default</var></dt>
+					<dd>default value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setMeta" id="_setMeta">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setMeta">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1789-1805" title="Go to source code">setMeta</a>( <span>string <var>$path</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Stores a value in the specified Meta information property. $value contains
+the value you want to store in the Meta section of the bean and $path
+specifies the dot separated path to the property. For instance "my.meta.property".
+If "my" and "meta" do not exist they will be created automatically.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Stores a value in the specified Meta information property. $value contains
+the value you want to store in the Meta section of the bean and $path
+specifies the dot separated path to the property. For instance "my.meta.property".
+If "my" and "meta" do not exist they will be created automatically.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$path</var></dt>
+					<dd>path</dd>
+					<dt><var>$value</var></dt>
+					<dd>value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="copyMetaFrom" id="_copyMetaFrom">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_copyMetaFrom">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1807-1821" title="Go to source code">copyMetaFrom</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Copies the meta information of the specified bean
+This is a convenience method to enable you to
+exchange meta information easily.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Copies the meta information of the specified bean
+This is a convenience method to enable you to
+exchange meta information easily.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__call" id="___call">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___call">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1823-1847" title="Go to source code">__call</a>( <span>string <var>$method</var></span>, <span>array <var>$args</var></span> )</code>
+
+		<div class="description short">
+			<p>Sends the call to the registered model.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Sends the call to the registered model.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$method</var></dt>
+					<dd>name of the method</dd>
+					<dt><var>$args</var></dt>
+					<dd>argument list</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__toString" id="___toString">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___toString">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1849-1868" title="Go to source code">__toString</a>( )</code>
+
+		<div class="description short">
+			<p>Implementation of __toString Method
+Routes call to Model. If the model implements a __toString() method this
+method will be called and the result will be returned. In case of an
+echo-statement this result will be printed. If the model does not
+implement a __toString method, this method will return a JSON
+representation of the current bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Implementation of __toString Method
+Routes call to Model. If the model implements a __toString() method this
+method will be called and the result will be returned. In case of an
+echo-statement this result will be printed. If the model does not
+implement a __toString method, this method will return a JSON
+representation of the current bean.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetSet" id="_offsetSet">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetSet">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1870-1883" title="Go to source code">offsetSet</a>( <span>mixed <var>$offset</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.
+Call gets routed to __set.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.
+Call gets routed to __set.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd>offset string</dd>
+					<dt><var>$value</var></dt>
+					<dd>value</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetSet">ArrayAccess::offsetSet()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetExists" id="_offsetExists">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetExists">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1885-1900" title="Go to source code">offsetExists</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.</p>
+
+<p>Array functions do not reveal x-own-lists and list-alias because
+you dont want duplicate entries in foreach-loops.
+Also offers a slight performance improvement for array access.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd>property</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetExists">ArrayAccess::offsetExists()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetUnset" id="_offsetUnset">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetUnset">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1902-1918" title="Go to source code">offsetUnset</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.
+Unsets a value from the array/bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.
+Unsets a value from the array/bean.</p>
+
+<p>Array functions do not reveal x-own-lists and list-alias because
+you dont want duplicate entries in foreach-loops.
+Also offers a slight performance improvement for array access.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd>property</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetUnset">ArrayAccess::offsetUnset()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetGet" id="_offsetGet">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			&amp;
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetGet">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1920-1936" title="Go to source code">offsetGet</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.
+Returns value of a property.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Implementation of Array Access Interface, you can access bean objects
+like an array.
+Returns value of a property.</p>
+
+<p>Array functions do not reveal x-own-lists and list-alias because
+you dont want duplicate entries in foreach-loops.
+Also offers a slight performance improvement for array access.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd>property</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetGet">ArrayAccess::offsetGet()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetchAs" id="_fetchAs">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_fetchAs">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1938-1952" title="Go to source code">fetchAs</a>( <span>string <var>$type</var></span> )</code>
+
+		<div class="description short">
+			<p>Chainable method to cast a certain ID to a bean; for instance:
+$person = $club->fetchAs('person')->member;
+This will load a bean of type person using member_id as ID.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Chainable method to cast a certain ID to a bean; for instance:
+$person = $club->fetchAs('person')->member;
+This will load a bean of type person using member_id as ID.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>preferred fetch type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="poly" id="_poly">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_poly">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1954-1965" title="Go to source code">poly</a>( <span>string <var>$field</var></span> )</code>
+
+		<div class="description short">
+			<p>For polymorphic bean relations.
+Same as fetchAs but uses a column instead of a direct value.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>For polymorphic bean relations.
+Same as fetchAs but uses a column instead of a direct value.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd>$column</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="traverse" id="_traverse">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_traverse">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#1967-2014" title="Go to source code">traverse</a>( <span>string <var>$property</var></span>, <span>closure <var>$function</var></span>, <span> <var>$maxDepth</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Traverses a bean property with the specified function.
+Recursively iterates through the property invoking the
+function for each bean along the way passing the bean to it.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Traverses a bean property with the specified function.
+Recursively iterates through the property invoking the
+function for each bean along the way passing the bean to it.</p>
+
+<p>Can be used together with with, withCondition, alias and fetchAs.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>property</dd>
+					<dt><var>$function</var></dt>
+					<dd>function</dd>
+					<dt><var>$maxDepth</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2016-2025" title="Go to source code">count</a>( )</code>
+
+		<div class="description short">
+			<p>Implementation of\Countable interface. Makes it possible to use
+count() function on a bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Implementation of\Countable interface. Makes it possible to use
+count() function on a bean.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Countable.html#_count">Countable::count()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isEmpty" id="_isEmpty">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isEmpty">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2027-2047" title="Go to source code">isEmpty</a>( )</code>
+
+		<div class="description short">
+			<p>Checks whether a bean is empty or not.
+A bean is empty if it has no other properties than the id field OR
+if all the other property are empty().</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Checks whether a bean is empty or not.
+A bean is empty if it has no other properties than the id field OR
+if all the other property are empty().</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setAttr" id="_setAttr">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setAttr">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2049-2062" title="Go to source code">setAttr</a>( <span>string <var>$property</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Chainable setter.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Chainable setter.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>the property of the bean</dd>
+					<dt><var>$value</var></dt>
+					<dd>the value you want to set</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="unsetAll" id="_unsetAll">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_unsetAll">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2064-2081" title="Go to source code">unsetAll</a>( <span>array <var>$properties</var></span> )</code>
+
+		<div class="description short">
+			<p>Comfort method.
+Unsets all properties in array.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Comfort method.
+Unsets all properties in array.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$properties</var></dt>
+					<dd>properties you want to unset.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="old" id="_old">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_old">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2083-2101" title="Go to source code">old</a>( <span>string <var>$property</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns original (old) value of a property.
+You can use this method to see what has changed in a
+bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns original (old) value of a property.
+You can use this method to see what has changed in a
+bean.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>name of the property you want the old value of</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isTainted" id="_isTainted">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isTainted">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2103-2117" title="Go to source code">isTainted</a>( )</code>
+
+		<div class="description short">
+			<p>Convenience method.
+Returns TRUE if the bean has been changed, or FALSE otherwise.
+Same as $bean->getMeta('tainted');
+Note that a bean becomes tainted as soon as you retrieve a list from
+the bean. This is because the bean lists are arrays and the bean cannot
+determine whether you have made modifications to a list so RedBeanPHP
+will mark the whole bean as tainted.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience method.
+Returns TRUE if the bean has been changed, or FALSE otherwise.
+Same as $bean->getMeta('tainted');
+Note that a bean becomes tainted as soon as you retrieve a list from
+the bean. This is because the bean lists are arrays and the bean cannot
+determine whether you have made modifications to a list so RedBeanPHP
+will mark the whole bean as tainted.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hasChanged" id="_hasChanged">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasChanged">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2119-2131" title="Go to source code">hasChanged</a>( <span>string <var>$property</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns TRUE if the value of a certain property of the bean has been changed and
+FALSE otherwise.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns TRUE if the value of a certain property of the bean has been changed and
+FALSE otherwise.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$property</var></dt>
+					<dd>name of the property you want the change-status of</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="link" id="_link">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_link">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2133-2184" title="Go to source code">link</a>( <span>string|<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$typeOrBean</var></span>, <span>string|array <var>$qualification</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Creates a N-M relation by linking an intermediate bean.
+This method can be used to quickly connect beans using indirect
+relations. For instance, given an album and a song you can connect the two
+using a track with a number like this:</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Creates a N-M relation by linking an intermediate bean.
+This method can be used to quickly connect beans using indirect
+relations. For instance, given an album and a song you can connect the two
+using a track with a number like this:</p>
+
+<p>Usage:</p>
+
+<p>$album->link('track', array('number'=>1))->song = $song;</p>
+
+<p>or:</p>
+
+<p>$album->link($trackBean)->song = $song;</p>
+
+<p>What this method does is adding the link bean to the own-list, in this case
+ownTrack. If the first argument is a string and the second is an array or
+a JSON string then the linking bean gets dispensed on-the-fly as seen in
+example #1. After preparing the linking bean, the bean is returned thus
+allowing the chained setter: ->song = $song.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$typeOrBean</var></dt>
+					<dd>$type          type of bean to dispense or the full bean</dd>
+					<dt><var>$qualification</var></dt>
+					<dd>JSON string or array (optional)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fresh" id="_fresh">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_fresh">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2186-2194" title="Go to source code">fresh</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the same bean freshly loaded from the database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the same bean freshly loaded from the database.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="via" id="_via">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_via">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2196-2208" title="Go to source code">via</a>( <span>string <var>$via</var></span> )</code>
+
+		<div class="description short">
+			<p>Registers a association renaming globally.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Registers a association renaming globally.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$via</var></dt>
+					<dd>type you wish to use for shared lists</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="countOwn" id="_countOwn">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_countOwn">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2210-2253" title="Go to source code">countOwn</a>( <span>string <var>$type</var></span> )</code>
+
+		<div class="description short">
+			<p>Counts all own beans of type $type.
+Also works with alias(), with() and withCondition().</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Counts all own beans of type $type.
+Also works with alias(), with() and withCondition().</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>the type of bean you want to count</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="countShared" id="_countShared">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_countShared">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2255-2288" title="Go to source code">countShared</a>( <span>string <var>$type</var></span> )</code>
+
+		<div class="description short">
+			<p>Counts all shared beans of type $type.
+Also works with via(), with() and withCondition().</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Counts all shared beans of type $type.
+Also works with via(), with() and withCondition().</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean you wish to count</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="equals" id="_equals">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_equals">#</a>
+		<code><a href="source-class-RedBeanPHP.OODBBean.html#2290-2303" title="Go to source code">equals</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Tests whether the database identities of two beans are equal.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Tests whether the database identities of two beans are equal.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>other bean</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

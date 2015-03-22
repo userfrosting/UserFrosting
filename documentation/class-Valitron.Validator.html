@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Valitron\Validator | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li class="active">
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Valitron.DefaultValidator.html">DefaultValidator</a></li>
+				<li class="active"><a href="class-Valitron.Validator.html">Validator</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Valitron.html" title="Summary of Valitron"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Validator</h1>
+
+
+	<div class="description">
+	<p>Validation Class</p>
+
+<p>Validates input against certain criteria</p>
+	</div>
+
+
+
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-Valitron.DefaultValidator.html">Valitron\DefaultValidator</a>
+	</div>
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Valitron.html">Valitron</a><br>
+		<b>Package:</b> Valitron<br>
+
+				<b>Author:</b>
+				Vance Lucas <a href="&#x6d;&#97;&#105;l&#x74;&#x6f;&#58;v&#x61;&#x6e;&#99;&#101;&#x40;&#x76;&#97;&#110;&#x63;&#x65;&#108;&#117;&#x63;&#x61;&#115;&#46;&#x63;&#x6f;&#109;">v&#x61;&#x6e;&#99;&#101;&#x40;&#x76;&#97;&#110;&#x63;&#x65;&#108;&#117;&#x63;&#x61;&#115;&#46;&#x63;&#x6f;&#109;</a><br>
+				<b>Link:</b>
+				<a href="http://www.vancelucas.com/">http://www.vancelucas.com/</a><br>
+			<b>Located at</b> <a href="source-class-Valitron.Validator.html#57-999" title="Go to source code">models/validation/Validator.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Valitron.Validator.html#118-151" title="Go to source code">__construct</a>( <span>array <var>$data</var></span>, <span>array <var>$fields</var> = <span class="php-keyword1">array</span>()</span>, <span>string <var>$lang</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$langDir</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Setup validation</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Setup validation</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd></dd>
+					<dt><var>$fields</var></dt>
+					<dd></dd>
+					<dt><var>$lang</var></dt>
+					<dd></dd>
+					<dt><var>$langDir</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-InvalidArgumentException.html">InvalidArgumentException</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lang" id="_lang">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lang">#</a>
+		<code><a href="source-class-Valitron.Validator.html#153-165" title="Go to source code">lang</a>( <span>string <var>$lang</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Get/set language to use for validation messages</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get/set language to use for validation messages</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$lang</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="langDir" id="_langDir">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_langDir">#</a>
+		<code><a href="source-class-Valitron.Validator.html#167-179" title="Go to source code">langDir</a>( <span>string <var>$dir</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Get/set language file path</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get/set language file path</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dir</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateRequired" id="_validateRequired">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateRequired">#</a>
+		<code><a href="source-class-Valitron.Validator.html#181-196" title="Go to source code">validateRequired</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Required field validator</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Required field validator</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateEquals" id="_validateEquals">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateEquals">#</a>
+		<code><a href="source-class-Valitron.Validator.html#198-211" title="Go to source code">validateEquals</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that two values match</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that two values match</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateDifferent" id="_validateDifferent">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateDifferent">#</a>
+		<code><a href="source-class-Valitron.Validator.html#213-226" title="Go to source code">validateDifferent</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is different from another field</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is different from another field</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateAccepted" id="_validateAccepted">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateAccepted">#</a>
+		<code><a href="source-class-Valitron.Validator.html#228-241" title="Go to source code">validateAccepted</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field was "accepted" (based on PHP's string evaluation rules)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field was "accepted" (based on PHP's string evaluation rules)</p>
+
+<p>This validation rule implies the field is "required"</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateNumeric" id="_validateNumeric">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateNumeric">#</a>
+		<code><a href="source-class-Valitron.Validator.html#243-253" title="Go to source code">validateNumeric</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is numeric</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is numeric</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateInteger" id="_validateInteger">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateInteger">#</a>
+		<code><a href="source-class-Valitron.Validator.html#255-265" title="Go to source code">validateInteger</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is an integer</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is an integer</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateLength" id="_validateLength">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateLength">#</a>
+		<code><a href="source-class-Valitron.Validator.html#267-285" title="Go to source code">validateLength</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the length of a string</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the length of a string</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateLengthBetween" id="_validateLengthBetween">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateLengthBetween">#</a>
+		<code><a href="source-class-Valitron.Validator.html#287-299" title="Go to source code">validateLengthBetween</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the length of a string (between)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the length of a string (between)</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateLengthMin" id="_validateLengthMin">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateLengthMin">#</a>
+		<code><a href="source-class-Valitron.Validator.html#301-313" title="Go to source code">validateLengthMin</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the length of a string (min)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the length of a string (min)</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateLengthMax" id="_validateLengthMax">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateLengthMax">#</a>
+		<code><a href="source-class-Valitron.Validator.html#315-327" title="Go to source code">validateLengthMax</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the length of a string (max)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the length of a string (max)</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="stringLength" id="_stringLength">
+
+		<td class="attributes"><code>
+			 protected 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_stringLength">#</a>
+		<code><a href="source-class-Valitron.Validator.html#329-341" title="Go to source code">stringLength</a>( <span>string <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Get the length of a string</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get the length of a string</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateMin" id="_validateMin">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateMin">#</a>
+		<code><a href="source-class-Valitron.Validator.html#343-359" title="Go to source code">validateMin</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the size of a field is greater than a minimum value.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the size of a field is greater than a minimum value.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateMax" id="_validateMax">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateMax">#</a>
+		<code><a href="source-class-Valitron.Validator.html#361-377" title="Go to source code">validateMax</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the size of a field is less than a maximum value</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the size of a field is less than a maximum value</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateIn" id="_validateIn">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateIn">#</a>
+		<code><a href="source-class-Valitron.Validator.html#379-395" title="Go to source code">validateIn</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate a field is contained within a list of values</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate a field is contained within a list of values</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateNotIn" id="_validateNotIn">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateNotIn">#</a>
+		<code><a href="source-class-Valitron.Validator.html#397-409" title="Go to source code">validateNotIn</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate a field is not contained within a list of values</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate a field is not contained within a list of values</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateContains" id="_validateContains">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateContains">#</a>
+		<code><a href="source-class-Valitron.Validator.html#411-428" title="Go to source code">validateContains</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate a field contains a given string</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate a field contains a given string</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateIp" id="_validateIp">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateIp">#</a>
+		<code><a href="source-class-Valitron.Validator.html#430-440" title="Go to source code">validateIp</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is a valid IP address</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is a valid IP address</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateEmail" id="_validateEmail">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateEmail">#</a>
+		<code><a href="source-class-Valitron.Validator.html#442-452" title="Go to source code">validateEmail</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is a valid e-mail address</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is a valid e-mail address</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateUrl" id="_validateUrl">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateUrl">#</a>
+		<code><a href="source-class-Valitron.Validator.html#454-469" title="Go to source code">validateUrl</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is a valid URL by syntax</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is a valid URL by syntax</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateUrlActive" id="_validateUrlActive">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateUrlActive">#</a>
+		<code><a href="source-class-Valitron.Validator.html#471-488" title="Go to source code">validateUrlActive</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is an active URL by verifying DNS record</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is an active URL by verifying DNS record</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateAlpha" id="_validateAlpha">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateAlpha">#</a>
+		<code><a href="source-class-Valitron.Validator.html#490-500" title="Go to source code">validateAlpha</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field contains only alphabetic characters</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field contains only alphabetic characters</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateAlphaNum" id="_validateAlphaNum">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateAlphaNum">#</a>
+		<code><a href="source-class-Valitron.Validator.html#502-512" title="Go to source code">validateAlphaNum</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field contains only alpha-numeric characters</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field contains only alpha-numeric characters</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateSlug" id="_validateSlug">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateSlug">#</a>
+		<code><a href="source-class-Valitron.Validator.html#514-524" title="Go to source code">validateSlug</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field contains only alpha-numeric characters, dashes, and underscores</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field contains only alpha-numeric characters, dashes, and underscores</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateRegex" id="_validateRegex">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateRegex">#</a>
+		<code><a href="source-class-Valitron.Validator.html#526-537" title="Go to source code">validateRegex</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field passes a regular expression check</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field passes a regular expression check</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateDate" id="_validateDate">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateDate">#</a>
+		<code><a href="source-class-Valitron.Validator.html#539-555" title="Go to source code">validateDate</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field is a valid date</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field is a valid date</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateDateFormat" id="_validateDateFormat">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateDateFormat">#</a>
+		<code><a href="source-class-Valitron.Validator.html#557-571" title="Go to source code">validateDateFormat</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field matches a date format</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field matches a date format</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateDateBefore" id="_validateDateBefore">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateDateBefore">#</a>
+		<code><a href="source-class-Valitron.Validator.html#573-587" title="Go to source code">validateDateBefore</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the date is before a given date</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the date is before a given date</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateDateAfter" id="_validateDateAfter">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateDateAfter">#</a>
+		<code><a href="source-class-Valitron.Validator.html#589-603" title="Go to source code">validateDateAfter</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate the date is after a given date</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate the date is after a given date</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateBoolean" id="_validateBoolean">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateBoolean">#</a>
+		<code><a href="source-class-Valitron.Validator.html#605-615" title="Go to source code">validateBoolean</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field contains a boolean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field contains a boolean.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateCreditCard" id="_validateCreditCard">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateCreditCard">#</a>
+		<code><a href="source-class-Valitron.Validator.html#617-724" title="Go to source code">validateCreditCard</a>( <span>string <var>$field</var></span>, <span>mixed <var>$value</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Validate that a field contains a valid credit card
+optionally filtered by an array</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Validate that a field contains a valid credit card
+optionally filtered by an array</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateInstanceOf" id="_validateInstanceOf">
+
+		<td class="attributes"><code>
+			 protected 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateInstanceOf">#</a>
+		<code><a href="source-class-Valitron.Validator.html#726-743" title="Go to source code">validateInstanceOf</a>( <span> <var>$field</var></span>, <span> <var>$value</var></span>, <span> <var>$params</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="data" id="_data">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_data">#</a>
+		<code><a href="source-class-Valitron.Validator.html#746-754" title="Go to source code">data</a>( )</code>
+
+		<div class="description short">
+			<p>Get array of fields and data</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get array of fields and data</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="errors" id="_errors">
+
+		<td class="attributes"><code>
+			 public 
+
+			array|boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_errors">#</a>
+		<code><a href="source-class-Valitron.Validator.html#756-768" title="Go to source code">errors</a>( <span>null|string <var>$field</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Get array of error messages</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get array of error messages</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array|boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="error" id="_error">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_error">#</a>
+		<code><a href="source-class-Valitron.Validator.html#770-804" title="Go to source code">error</a>( <span>string <var>$field</var></span>, <span>string <var>$msg</var></span>, <span>array <var>$params</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			<p>Add an error to error messages array</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Add an error to error messages array</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$field</var></dt>
+					<dd></dd>
+					<dt><var>$msg</var></dt>
+					<dd></dd>
+					<dt><var>$params</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="message" id="_message">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_message">#</a>
+		<code><a href="source-class-Valitron.Validator.html#806-816" title="Go to source code">message</a>( <span>string <var>$msg</var></span> )</code>
+
+		<div class="description short">
+			<p>Specify validation message to use for error for the last validation rule</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Specify validation message to use for error for the last validation rule</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$msg</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<br>$this
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reset" id="_reset">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reset">#</a>
+		<code><a href="source-class-Valitron.Validator.html#818-827" title="Go to source code">reset</a>( )</code>
+
+		<div class="description short">
+			<p>Reset object properties</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Reset object properties</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validate" id="_validate">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validate">#</a>
+		<code><a href="source-class-Valitron.Validator.html#829-860" title="Go to source code">validate</a>( )</code>
+
+		<div class="description short">
+			<p>Run validations and return boolean result</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Run validations and return boolean result</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hasRule" id="_hasRule">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasRule">#</a>
+		<code><a href="source-class-Valitron.Validator.html#862-879" title="Go to source code">hasRule</a>( <span>string <var>$name</var></span>, <span>string <var>$field</var></span> )</code>
+
+		<div class="description short">
+			<p>Determine whether a field is being validated by the given rule.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Determine whether a field is being validated by the given rule.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>The name of the rule</dd>
+					<dt><var>$field</var></dt>
+					<dd>The name of the field</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addRule" id="_addRule">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addRule">#</a>
+		<code><a href="source-class-Valitron.Validator.html#881-897" title="Go to source code">addRule</a>( <span>string <var>$name</var></span>, <span>mixed <var>$callback</var></span>, <span>string <var>$message</var> = <code><a href="class-Valitron.Validator.html#ERROR_DEFAULT">Valitron\Validator::<b>ERROR_DEFAULT</b></a></code></span> )</code>
+
+		<div class="description short">
+			<p>Register new validation rule callback</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Register new validation rule callback</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd></dd>
+					<dt><var>$callback</var></dt>
+					<dd></dd>
+					<dt><var>$message</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-InvalidArgumentException.html">InvalidArgumentException</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rule" id="_rule">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rule">#</a>
+		<code><a href="source-class-Valitron.Validator.html#899-929" title="Go to source code">rule</a>( <span>string <var>$rule</var></span>, <span>array <var>$fields</var></span> )</code>
+
+		<div class="description short">
+			<p>Convenience method to add a single validation rule</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience method to add a single validation rule</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$rule</var></dt>
+					<dd></dd>
+					<dt><var>$fields</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<br>$this
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-InvalidArgumentException.html">InvalidArgumentException</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="label" id="_label">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_label">#</a>
+		<code><a href="source-class-Valitron.Validator.html#931-942" title="Go to source code">label</a>( <span>string <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<br>$this
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="labels" id="_labels">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_labels">#</a>
+		<code><a href="source-class-Valitron.Validator.html#944-952" title="Go to source code">labels</a>( <span>array <var>$labels</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$labels</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rules" id="_rules">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rules">#</a>
+		<code><a href="source-class-Valitron.Validator.html#981-998" title="Go to source code">rules</a>( <span>array <var>$rules</var></span> )</code>
+
+		<div class="description short">
+			<p>Convenience method to add multiple validation rules with an array</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience method to add multiple validation rules with an array</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$rules</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="ERROR_DEFAULT" id="ERROR_DEFAULT">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-Valitron.Validator.html#68-71" title="Go to source code"><b>ERROR_DEFAULT</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#ERROR_DEFAULT" class="anchor">#</a>
+				<code><span class="php-quote">'Invalid'</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="_fields" id="$_fields">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#73-76" title="Go to source code"><var>$_fields</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_fields" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_errors" id="$_errors">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#78-81" title="Go to source code"><var>$_errors</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_errors" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_validations" id="$_validations">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#83-86" title="Go to source code"><var>$_validations</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_validations" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_labels" id="$_labels">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#88-91" title="Go to source code"><var>$_labels</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_labels" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_lang" id="$_lang">
+		<td class="attributes"><code>
+			protected static 
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#93-96" title="Go to source code"><var>$_lang</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_lang" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_langDir" id="$_langDir">
+		<td class="attributes"><code>
+			protected static 
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#98-101" title="Go to source code"><var>$_langDir</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_langDir" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_rules" id="$_rules">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#103-106" title="Go to source code"><var>$_rules</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_rules" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="_ruleMessages" id="$_ruleMessages">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#108-111" title="Go to source code"><var>$_ruleMessages</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$_ruleMessages" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="validUrlPrefixes" id="$validUrlPrefixes">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Valitron.Validator.html#113-116" title="Go to source code"><var>$validUrlPrefixes</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$validUrlPrefixes" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>(<span class="php-quote">'http://'</span>, <span class="php-quote">'https://'</span>, <span class="php-quote">'ftp://'</span>)</code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

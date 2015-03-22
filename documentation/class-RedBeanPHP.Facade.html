@@ -1,0 +1,3405 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\Facade | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li class="active"><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Facade</h1>
+
+
+	<div class="description">
+	<p>RedBean Facade</p>
+
+<p>Version Information
+RedBean Version @version 4</p>
+	</div>
+
+
+
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-R.html">R</a>
+	</div>
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">This class hides the object landscape of
+RedBeanPHP behind a single letter class providing
+almost all functionality with simple static calls.
+
+copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP Community<br>
+				<b>Desc:</b>
+				Convenience class for RedBeanPHP.<br>
+				<b>File:</b>
+				RedBean/Facade.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.Facade.html#7931-9369" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getVersion" id="_getVersion">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getVersion">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8053-8064" title="Go to source code">getVersion</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the RedBeanPHP version string.
+The RedBeanPHP version string always has the same format "X.Y"
+where X is the major version number and Y is the minor version number.
+Point releases are not mentioned in the version string.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the RedBeanPHP version string.
+The RedBeanPHP version string always has the same format "X.Y"
+where X is the major version number and Y is the minor version number.
+Point releases are not mentioned in the version string.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setup" id="_setup">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setup">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8066-8088" title="Go to source code">setup</a>( <span>string <var>$dsn</var> = <span class="php-keyword1">NULL</span></span>, <span>string <var>$username</var> = <span class="php-keyword1">NULL</span></span>, <span>string <var>$password</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$frozen</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Kickstarts redbean for you. This method should be called before you start using
+RedBean. The Setup() method can be called without any arguments, in this case it will
+try to create a SQLite database in /tmp called red.db (this only works on UNIX-like systems).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Kickstarts redbean for you. This method should be called before you start using
+RedBean. The Setup() method can be called without any arguments, in this case it will
+try to create a SQLite database in /tmp called red.db (this only works on UNIX-like systems).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dsn</var></dt>
+					<dd>Database connection string</dd>
+					<dt><var>$username</var></dt>
+					<dd>Username for database</dd>
+					<dt><var>$password</var></dt>
+					<dd>Password for database</dd>
+					<dt><var>$frozen</var></dt>
+					<dd>TRUE if you want to setup in frozen mode</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="transaction" id="_transaction">
+
+		<td class="attributes"><code>
+			 public static
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_transaction">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8090-8147" title="Go to source code">transaction</a>( <span>callable <var>$callback</var></span> )</code>
+
+		<div class="description short">
+			<p>Starts a transaction within a closure (or other valid callback).
+If an\Exception is thrown inside, the operation is automatically rolled back.
+If no\Exception happens, it commits automatically.
+It also supports (simulated) nested transactions (that is useful when
+you have many methods that needs transactions but are unaware of
+each other).
+ex:
+       $from = 1;
+       $to = 2;
+       $amount = 300;</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Starts a transaction within a closure (or other valid callback).
+If an\Exception is thrown inside, the operation is automatically rolled back.
+If no\Exception happens, it commits automatically.
+It also supports (simulated) nested transactions (that is useful when
+you have many methods that needs transactions but are unaware of
+each other).
+ex: $from = 1; $to = 2; $amount = 300;</p>
+
+<p>R::transaction(function() use($from, $to, $amount) { $accountFrom = R::load('account', $from); $accountTo = R::load('account', $to);
+ $accountFrom->money -= $amount; $accountTo->money += $amount;
+ R::store($accountFrom); R::store($accountTo); });</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$callback</var></dt>
+					<dd>Closure (or other callable) with the transaction logic</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addDatabase" id="_addDatabase">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addDatabase">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8149-8198" title="Go to source code">addDatabase</a>( <span>string <var>$key</var></span>, <span>string <var>$dsn</var></span>, <span>string <var>$user</var> = <span class="php-keyword1">NULL</span></span>, <span>null|string <var>$pass</var> = <span class="php-keyword1">NULL</span></span>, <span>boolean <var>$frozen</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Adds a database to the facade, afterwards you can select the database using
+selectDatabase($key), where $key is the name you assigned to this database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Adds a database to the facade, afterwards you can select the database using
+selectDatabase($key), where $key is the name you assigned to this database.</p>
+
+<p>Usage:</p>
+
+<p>R::addDatabase( 'database-1', 'sqlite:/tmp/db1.txt' );
+R::selectDatabase( 'database-1' ); //to select database again</p>
+
+<p>This method allows you to dynamically add (and select) new databases
+to the facade. Adding a database with the same key will cause an exception.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>ID for the database</dd>
+					<dt><var>$dsn</var></dt>
+					<dd>DSN for the database</dd>
+					<dt><var>$user</var></dt>
+					<dd>User for connection</dd>
+					<dt><var>$pass</var></dt>
+					<dd>Password for connection</dd>
+					<dt><var>$frozen</var></dt>
+					<dd>Whether this database is frozen or not</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="selectDatabase" id="_selectDatabase">
+
+		<td class="attributes"><code>
+			 public static
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_selectDatabase">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8200-8224" title="Go to source code">selectDatabase</a>( <span>string <var>$key</var></span> )</code>
+
+		<div class="description short">
+			<p>Selects a different database for the Facade to work with.
+If you use the R::setup() you don't need this method. This method is meant
+for multiple database setups. This method selects the database identified by the
+database ID ($key). Use addDatabase() to add a new database, which in turn
+can be selected using selectDatabase(). If you use R::setup(), the resulting
+database will be stored under key 'default', to switch (back) to this database
+use R::selectDatabase( 'default' ). This method returns TRUE if the database has been
+switched and FALSE otherwise (for instance if you already using the specified database).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Selects a different database for the Facade to work with.
+If you use the R::setup() you don't need this method. This method is meant
+for multiple database setups. This method selects the database identified by the
+database ID ($key). Use addDatabase() to add a new database, which in turn
+can be selected using selectDatabase(). If you use R::setup(), the resulting
+database will be stored under key 'default', to switch (back) to this database
+use R::selectDatabase( 'default' ). This method returns TRUE if the database has been
+switched and FALSE otherwise (for instance if you already using the specified database).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>Key of the database to select</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="debug" id="_debug">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.Logger.RDefault.html">RedBeanPHP\Logger\RDefault</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_debug">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8226-8252" title="Go to source code">debug</a>( <span>boolean <var>$tf</var> = <span class="php-keyword1">TRUE</span></span>, <span>integer <var>$mode</var> = <span class="php-num">0</span> </span> )</code>
+
+		<div class="description short">
+			<p>Toggles DEBUG mode.
+In Debug mode all SQL that happens under the hood will
+be printed to the screen or logged by provided logger.
+If no database connection has been configured using R::setup() or
+R::selectDatabase() this method will throw an exception.
+Returns the attached logger instance.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Toggles DEBUG mode.
+In Debug mode all SQL that happens under the hood will
+be printed to the screen or logged by provided logger.
+If no database connection has been configured using R::setup() or
+R::selectDatabase() this method will throw an exception.
+Returns the attached logger instance.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tf</var></dt>
+					<dd></dd>
+					<dt><var>$mode</var></dt>
+					<dd>(0 = to STDOUT, 1 = to ARRAY)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.Logger.RDefault.html">RedBeanPHP\Logger\RDefault</a></code>
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="inspect" id="_inspect">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_inspect">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8254-8268" title="Go to source code">inspect</a>( <span>string <var>$type</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Inspects the database schema. If you pass the type of a bean this
+method will return the fields of its table in the database.
+The keys of this array will be the field names and the values will be
+the column types used to store their values.
+If no type is passed, this method returns a list of all tables in the database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Inspects the database schema. If you pass the type of a bean this
+method will return the fields of its table in the database.
+The keys of this array will be the field names and the values will be
+the column types used to store their values.
+If no type is passed, this method returns a list of all tables in the database.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>Type of bean (i.e. table) you want to inspect</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="store" id="_store">
+
+		<td class="attributes"><code>
+			 public static
+
+			integer|string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_store">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8270-8293" title="Go to source code">store</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|<code><a href="class-RedBeanPHP.SimpleModel.html">RedBeanPHP\SimpleModel</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Stores a bean in the database. This method takes a
+OODBBean Bean Object $bean and stores it
+in the database. If the database schema is not compatible
+with this bean and RedBean runs in fluid mode the schema
+will be altered to store the bean correctly.
+If the database schema is not compatible with this bean and
+RedBean runs in frozen mode it will throw an exception.
+This function returns the primary key ID of the inserted
+bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Stores a bean in the database. This method takes a
+OODBBean Bean Object $bean and stores it
+in the database. If the database schema is not compatible
+with this bean and RedBean runs in fluid mode the schema
+will be altered to store the bean correctly.
+If the database schema is not compatible with this bean and
+RedBean runs in frozen mode it will throw an exception.
+This function returns the primary key ID of the inserted
+bean.</p>
+
+<p>The return value is an integer if possible. If it is not possible to
+represent the value as an integer a string will be returned.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to store</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer|string
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="freeze" id="_freeze">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_freeze">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8295-8309" title="Go to source code">freeze</a>( <span>boolean|array <var>$tf</var> = <span class="php-keyword1">TRUE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Toggles fluid or frozen mode. In fluid mode the database
+structure is adjusted to accomodate your objects. In frozen mode
+this is not the case.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Toggles fluid or frozen mode. In fluid mode the database
+structure is adjusted to accomodate your objects. In frozen mode
+this is not the case.</p>
+
+<p>You can also pass an array containing a selection of frozen types.
+Let's call this chilly mode, it's just like fluid mode except that
+certain types (i.e. tables) aren't touched.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tf</var></dt>
+					<dd>$trueFalse</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadMulti" id="_loadMulti">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadMulti">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8311-8339" title="Go to source code">loadMulti</a>( <span>string|array <var>$types</var></span>, <span>mixed <var>$id</var></span> )</code>
+
+		<div class="description short">
+			<p>Loads multiple types of beans with the same ID.
+This might look like a strange method, however it can be useful
+for loading a one-to-one relation.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Loads multiple types of beans with the same ID.
+This might look like a strange method, however it can be useful
+for loading a one-to-one relation.</p>
+
+<p>Usage:
+list($author, $bio) = R::load('author, bio', $id);</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$types</var></dt>
+					<dd></dd>
+					<dt><var>$id</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="load" id="_load">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_load">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8341-8368" title="Go to source code">load</a>( <span>string <var>$type</var></span>, <span>integer <var>$id</var></span> )</code>
+
+		<div class="description short">
+			<p>Loads a bean from the object database.
+It searches for a OODBBean Bean Object in the
+database. It does not matter how this bean has been stored.
+RedBean uses the primary key ID $id and the string $type
+to find the bean. The $type specifies what kind of bean you
+are looking for; this is the same type as used with the
+dispense() function. If RedBean finds the bean it will return
+the OODB Bean object; if it cannot find the bean
+RedBean will return a new bean of type $type and with
+primary key ID 0. In the latter case it acts basically the
+same as dispense().</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Loads a bean from the object database.
+It searches for a OODBBean Bean Object in the
+database. It does not matter how this bean has been stored.
+RedBean uses the primary key ID $id and the string $type
+to find the bean. The $type specifies what kind of bean you
+are looking for; this is the same type as used with the
+dispense() function. If RedBean finds the bean it will return
+the OODB Bean object; if it cannot find the bean
+RedBean will return a new bean of type $type and with
+primary key ID 0. In the latter case it acts basically the
+same as dispense().</p>
+
+<p>Important note:
+If the bean cannot be found in the database a new bean of
+the specified type will be generated and returned.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean you want to load</dd>
+					<dt><var>$id</var></dt>
+					<dd>ID of the bean you want to load</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.RedException.SQL.html">RedBeanPHP\RedException\SQL</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="trash" id="_trash">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_trash">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8370-8384" title="Go to source code">trash</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|<code><a href="class-RedBeanPHP.SimpleModel.html">RedBeanPHP\SimpleModel</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Removes a bean from the database.
+This function will remove the specified OODBBean
+Bean Object from the database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Removes a bean from the database.
+This function will remove the specified OODBBean
+Bean Object from the database.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean you want to remove from database</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dispense" id="_dispense">
+
+		<td class="attributes"><code>
+			 public static
+
+			array|<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dispense">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8386-8420" title="Go to source code">dispense</a>( <span>string|array <var>$typeOrBeanArray</var></span>, <span>integer <var>$num</var> = <span class="php-num">1</span></span>, <span>boolean <var>$alwaysReturnArray</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Dispenses a new RedBean OODB Bean for use with
+the rest of the methods.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Dispenses a new RedBean OODB Bean for use with
+the rest of the methods.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$typeOrBeanArray</var></dt>
+					<dd>type or bean array to import</dd>
+					<dt><var>$num</var></dt>
+					<dd>$number            number of beans to dispense</dd>
+					<dt><var>$alwaysReturnArray</var></dt>
+					<dd>if TRUE always returns the result as an array</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array|<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dispenseAll" id="_dispenseAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dispenseAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8422-8463" title="Go to source code">dispenseAll</a>( <span>string <var>$order</var></span>, <span>boolean <var>$onlyArrays</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Takes a comma separated list of bean types
+and dispenses these beans. For each type in the list
+you can specify the number of beans to be dispensed.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Takes a comma separated list of bean types
+and dispenses these beans. For each type in the list
+you can specify the number of beans to be dispensed.</p>
+
+<p>Usage:</p>
+
+<p>list($book, $page, $text) = R::dispenseAll('book,page,text');</p>
+
+<p>This will dispense a book, a page and a text. This way you can
+quickly dispense beans of various types in just one line of code.</p>
+
+<p>Usage:</p>
+
+<p>list($book, $pages) = R::dispenseAll('book,page*100');</p>
+
+<p>This returns an array with a book bean and then another array
+containing 100 page beans.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$order</var></dt>
+					<dd>a description of the desired dispense order using the syntax above</dd>
+					<dt><var>$onlyArrays</var></dt>
+					<dd>return only arrays even if amount &lt; 2</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findOrDispense" id="_findOrDispense">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findOrDispense">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8465-8478" title="Go to source code">findOrDispense</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convience method. Tries to find beans of a certain type,
+if no beans are found, it dispenses a bean of that type.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convience method. Tries to find beans of a certain type,
+if no beans are found, it dispenses a bean of that type.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>SQL code for finding the bean</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>parameters to bind to SQL</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="find" id="_find">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_find">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8480-8496" title="Go to source code">find</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Finds a bean using a type and a where clause (SQL).
+As with most Query tools in RedBean you can provide values to
+be inserted in the SQL statement by populating the value
+array parameter; you can either use the question mark notation
+or the slot-notation (:keyname).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Finds a bean using a type and a where clause (SQL).
+As with most Query tools in RedBean you can provide values to
+be inserted in the SQL statement by populating the value
+array parameter; you can either use the question mark notation
+or the slot-notation (:keyname).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findAll" id="_findAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8498-8516" title="Go to source code">findAll</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Facade::find
+     The findAll() method differs from the find() method in that it does
+     not assume a WHERE-clause</p>, <p>so this is valid:</p>
+
+<p>R::findAll('person'</p>, <p>' ORDER BY name DESC ');</p>
+
+<p>Your SQL does not have to start with a valid WHERE-clause condition.</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findAndExport" id="_findAndExport">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findAndExport">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8518-8531" title="Go to source code">findAndExport</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Facade::find
+The variation also exports the beans (i.e. it returns arrays).</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findOne" id="_findOne">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findOne">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8533-8546" title="Go to source code">findOne</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Facade::find
+This variation returns the first bean only.</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findLast" id="_findLast">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findLast">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8548-8561" title="Go to source code">findLast</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Facade::find
+This variation returns the last bean only.</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="batch" id="_batch">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_batch">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8563-8580" title="Go to source code">batch</a>( <span>string <var>$type</var></span>, <span>array <var>$ids</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns an array of beans. Pass a type and a series of ids and
+this method will bring you the corresponding beans.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns an array of beans. Pass a type and a series of ids and
+this method will bring you the corresponding beans.</p>
+
+<p>important note: Because this method loads beans using the load()
+function (but faster) it will return empty beans with ID 0 for
+every bean that could not be located. The resulting beans will have the
+passed IDs as their keys.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of beans</dd>
+					<dt><var>$ids</var></dt>
+					<dd>ids to load</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadAll" id="_loadAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8582-8598" title="Go to source code">loadAll</a>( <span>string <var>$type</var></span>, <span>array <var>$ids</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of beans</dd>
+					<dt><var>$ids</var></dt>
+					<dd>ids to load</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Facade::batch</p>
+
+<p>Alias for batch(). Batch method is older but since we added so-called *All
+methods like storeAll</p>, <code><a href="class-RedBeanPHP.Facade.html#_trashAll">RedBeanPHP\Facade::trashAll()</a></code>, <p>dispenseAll and findAll it seemed logical to
+improve the consistency of the Facade API and also add an alias for batch() called
+loadAll.</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="exec" id="_exec">
+
+		<td class="attributes"><code>
+			 public static
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_exec">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8600-8612" title="Go to source code">exec</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to execute</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values a list of values to be bound to query parameters</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAll" id="_getAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8614-8626" title="Go to source code">getAll</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to execute</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values a list of values to be bound to query parameters</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCell" id="_getCell">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCell">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8628-8640" title="Go to source code">getCell</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to execute</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values a list of values to be bound to query parameters</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRow" id="_getRow">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRow">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8642-8654" title="Go to source code">getRow</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to execute</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values a list of values to be bound to query parameters</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCol" id="_getCol">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCol">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8656-8668" title="Go to source code">getCol</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to execute</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values a list of values to be bound to query parameters</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAssoc" id="_getAssoc">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAssoc">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8670-8687" title="Go to source code">getAssoc</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.
+Results will be returned as an associative array. The first
+column in the select clause will be used for the keys in this array and
+the second column will be used for the values. If only one column is
+selected in the query, both key and value of the array will have the
+value of this field for each row.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.
+Results will be returned as an associative array. The first
+column in the select clause will be used for the keys in this array and
+the second column will be used for the values. If only one column is
+selected in the query, both key and value of the array will have the
+value of this field for each row.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to execute</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values a list of values to be bound to query parameters</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAssocRow" id="_getAssocRow">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAssocRow">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8689-8703" title="Go to source code">getAssocRow</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.
+Results will be returned as an associative array indexed by the first
+column in the select.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Convenience function to execute Queries directly.
+Executes SQL.
+Results will be returned as an associative array indexed by the first
+column in the select.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to execute</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values a list of values to be bound to query parameters</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dup" id="_dup">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dup">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8705-8730" title="Go to source code">dup</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array <var>$trail</var> = <span class="php-keyword1">array</span>()</span>, <span>boolean <var>$pid</var> = <span class="php-keyword1">FALSE</span></span>, <span> <var>$filters</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Makes a copy of a bean. This method makes a deep copy
+of the bean.The copy will have the following features.
+- All beans in own-lists will be duplicated as well
+- All references to shared beans will be copied but not the shared beans themselves
+- All references to parent objects (_id fields) will be copied but not the parents themselves
+In most cases this is the desired scenario for copying beans.
+This function uses a trail-array to prevent infinite recursion, if a recursive bean is found
+(i.e. one that already has been processed) the ID of the bean will be returned.
+This should not happen though.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Makes a copy of a bean. This method makes a deep copy
+of the bean.The copy will have the following features.
+- All beans in own-lists will be duplicated as well
+- All references to shared beans will be copied but not the shared beans themselves
+- All references to parent objects (_id fields) will be copied but not the parents themselves
+In most cases this is the desired scenario for copying beans.
+This function uses a trail-array to prevent infinite recursion, if a recursive bean is found
+(i.e. one that already has been processed) the ID of the bean will be returned.
+This should not happen though.</p>
+
+<p>Note:
+This function does a reflectional database query so it may be slow.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to be copied</dd>
+					<dt><var>$trail</var></dt>
+					<dd>for internal usage, pass array()</dd>
+					<dt><var>$pid</var></dt>
+					<dd>for internal usage</dd>
+					<dt><var>$filters</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="exportAll" id="_exportAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_exportAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8732-8749" title="Go to source code">exportAll</a>( <span>array|<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$beans</var></span>, <span>boolean <var>$parents</var> = <span class="php-keyword1">FALSE</span></span>, <span>array <var>$filters</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Exports a collection of beans. Handy for XML/JSON exports with a
+Javascript framework like Dojo or ExtJS.
+What will be exported:
+- contents of the bean
+- all own bean lists (recursively)
+- all shared beans (not THEIR own lists)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Exports a collection of beans. Handy for XML/JSON exports with a
+Javascript framework like Dojo or ExtJS.
+What will be exported:
+- contents of the bean
+- all own bean lists (recursively)
+- all shared beans (not THEIR own lists)</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans</var></dt>
+					<dd>beans to be exported</dd>
+					<dt><var>$parents</var></dt>
+					<dd>whether you want parent beans to be exported</dd>
+					<dt><var>$filters</var></dt>
+					<dd>whitelist of types</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="convertToBeans" id="_convertToBeans">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_convertToBeans">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8751-8766" title="Go to source code">convertToBeans</a>( <span>string <var>$type</var></span>, <span>array <var>$rows</var></span> )</code>
+
+		<div class="description short">
+			<p>Converts a series of rows to beans.
+This method converts a series of rows to beans.
+The type of the desired output beans can be specified in the
+first parameter. The second parameter is meant for the database
+result rows.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Converts a series of rows to beans.
+This method converts a series of rows to beans.
+The type of the desired output beans can be specified in the
+first parameter. The second parameter is meant for the database
+result rows.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of beans to produce</dd>
+					<dt><var>$rows</var></dt>
+					<dd>must contain an array of array</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hasTag" id="_hasTag">
+
+		<td class="attributes"><code>
+			 public static
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasTag">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8768-8787" title="Go to source code">hasTag</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array <var>$tags</var></span>, <span>boolean <var>$all</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Part of RedBeanPHP Tagging API.
+Tests whether a bean has been associated with one ore more
+of the listed tags. If the third parameter is TRUE this method
+will return TRUE only if all tags that have been specified are indeed
+associated with the given bean, otherwise FALSE.
+If the third parameter is FALSE this
+method will return TRUE if one of the tags matches, FALSE if none
+match.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Part of RedBeanPHP Tagging API.
+Tests whether a bean has been associated with one ore more
+of the listed tags. If the third parameter is TRUE this method
+will return TRUE only if all tags that have been specified are indeed
+associated with the given bean, otherwise FALSE.
+If the third parameter is FALSE this
+method will return TRUE if one of the tags matches, FALSE if none
+match.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to check for tags</dd>
+					<dt><var>$tags</var></dt>
+					<dd>list of tags</dd>
+					<dt><var>$all</var></dt>
+					<dd>whether they must all match or just some</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="untag" id="_untag">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_untag">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8789-8802" title="Go to source code">untag</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Part of RedBeanPHP Tagging API.
+Removes all specified tags from the bean. The tags specified in
+the second parameter will no longer be associated with the bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Part of RedBeanPHP Tagging API.
+Removes all specified tags from the bean. The tags specified in
+the second parameter will no longer be associated with the bean.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>tagged bean</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags (names)</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="tag" id="_tag">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_tag">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8804-8821" title="Go to source code">tag</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>mixed <var>$tagList</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Part of RedBeanPHP Tagging API.
+Tags a bean or returns tags associated with a bean.
+If $tagList is NULL or omitted this method will return a
+comma separated list of tags associated with the bean provided.
+If $tagList is a comma separated list (string) of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Part of RedBeanPHP Tagging API.
+Tags a bean or returns tags associated with a bean.
+If $tagList is NULL or omitted this method will return a
+comma separated list of tags associated with the bean provided.
+If $tagList is a comma separated list (string) of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>tags</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addTags" id="_addTags">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addTags">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8823-8838" title="Go to source code">addTags</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Part of RedBeanPHP Tagging API.
+Adds tags to a bean.
+If $tagList is a comma separated list of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Part of RedBeanPHP Tagging API.
+Adds tags to a bean.
+If $tagList is a comma separated list of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags to add to bean</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="tagged" id="_tagged">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_tagged">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8840-8852" title="Go to source code">tagged</a>( <span>string <var>$beanType</var></span>, <span>array <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Part of RedBeanPHP Tagging API.
+Returns all beans that have been tagged with one of the tags given.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Part of RedBeanPHP Tagging API.
+Returns all beans that have been tagged with one of the tags given.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beanType</var></dt>
+					<dd>type of bean you are looking for</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags to match</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="taggedAll" id="_taggedAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_taggedAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8854-8866" title="Go to source code">taggedAll</a>( <span>string <var>$beanType</var></span>, <span>array <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Part of RedBeanPHP Tagging API.
+Returns all beans that have been tagged with ALL of the tags given.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Part of RedBeanPHP Tagging API.
+Returns all beans that have been tagged with ALL of the tags given.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beanType</var></dt>
+					<dd>type of bean you are looking for</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags to match</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="wipe" id="_wipe">
+
+		<td class="attributes"><code>
+			 public static
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_wipe">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8868-8878" title="Go to source code">wipe</a>( <span>string <var>$beanType</var></span> )</code>
+
+		<div class="description short">
+			<p>Wipes all beans of type $beanType.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Wipes all beans of type $beanType.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beanType</var></dt>
+					<dd>type of bean you want to destroy entirely</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public static
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8880-8896" title="Go to source code">count</a>( <span>string <var>$type</var></span>, <span>string <var>$addSQL</var> = <span class="php-quote">''</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Counts the number of beans of type $type.
+This method accepts a second argument to modify the count-query.
+A third argument can be used to provide bindings for the SQL snippet.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Counts the number of beans of type $type.
+This method accepts a second argument to modify the count-query.
+A third argument can be used to provide bindings for the SQL snippet.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of bean we are looking for</dd>
+					<dt><var>$addSQL</var></dt>
+					<dd>additional SQL snippet</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>parameters to bind to SQL</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.RedException.SQL.html">RedBeanPHP\RedException\SQL</a></code>
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="configureFacadeWithToolbox" id="_configureFacadeWithToolbox">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_configureFacadeWithToolbox">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8898-8936" title="Go to source code">configureFacadeWithToolbox</a>( <span><code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code> <var>$tb</var></span> )</code>
+
+		<div class="description short">
+			<p>Configures the facade, want to have a new Writer? A new Object Database or a new
+Adapter and you want it on-the-fly? Use this method to hot-swap your facade with a new
+toolbox.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Configures the facade, want to have a new Writer? A new Object Database or a new
+Adapter and you want it on-the-fly? Use this method to hot-swap your facade with a new
+toolbox.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tb</var></dt>
+					<dd>toolbox</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="begin" id="_begin">
+
+		<td class="attributes"><code>
+			 public static
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_begin">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8938-8951" title="Go to source code">begin</a>( )</code>
+
+		<div class="description short">
+			<p>Facade Convience method for adapter transaction system.
+Begins a transaction.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Facade Convience method for adapter transaction system.
+Begins a transaction.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="commit" id="_commit">
+
+		<td class="attributes"><code>
+			 public static
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_commit">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8953-8966" title="Go to source code">commit</a>( )</code>
+
+		<div class="description short">
+			<p>Facade Convience method for adapter transaction system.
+Commits a transaction.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Facade Convience method for adapter transaction system.
+Commits a transaction.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rollback" id="_rollback">
+
+		<td class="attributes"><code>
+			 public static
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rollback">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8968-8981" title="Go to source code">rollback</a>( )</code>
+
+		<div class="description short">
+			<p>Facade Convience method for adapter transaction system.
+Rolls back a transaction.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Facade Convience method for adapter transaction system.
+Rolls back a transaction.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getColumns" id="_getColumns">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getColumns">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8983-8996" title="Go to source code">getColumns</a>( <span>string <var>$table</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns a list of columns. Format of this array:
+array( fieldname => type )
+Note that this method only works in fluid mode because it might be
+quite heavy on production servers!</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns a list of columns. Format of this array:
+array( fieldname => type )
+Note that this method only works in fluid mode because it might be
+quite heavy on production servers!</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$table</var></dt>
+					<dd>name of the table (not type) you want to get columns of</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="genSlots" id="_genSlots">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_genSlots">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#8998-9008" title="Go to source code">genSlots</a>( <span>array <var>$array</var></span> )</code>
+
+		<div class="description short">
+			<p>Generates question mark slots for an array of values.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Generates question mark slots for an array of values.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$array</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="nuke" id="_nuke">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_nuke">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9010-9024" title="Go to source code">nuke</a>( )</code>
+
+		<div class="description short">
+			<p>Nukes the entire database.
+This will remove all schema structures from the database.
+Only works in fluid mode. Be careful with this method.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Nukes the entire database.
+This will remove all schema structures from the database.
+Only works in fluid mode. Be careful with this method.</p>
+
+
+
+
+
+				<h4>Warning</h4>
+				<div class="list">
+						dangerous method, will remove all tables, columns etc.<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="storeAll" id="_storeAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_storeAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9026-9044" title="Go to source code">storeAll</a>( <span>array <var>$beans</var></span> )</code>
+
+		<div class="description short">
+			<p>Short hand function to store a set of beans at once, IDs will be
+returned as an array. For information please consult the R::store()
+function.
+A loop saver.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Short hand function to store a set of beans at once, IDs will be
+returned as an array. For information please consult the R::store()
+function.
+A loop saver.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans</var></dt>
+					<dd>list of beans to be stored</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="trashAll" id="_trashAll">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_trashAll">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9046-9060" title="Go to source code">trashAll</a>( <span>array <var>$beans</var></span> )</code>
+
+		<div class="description short">
+			<p>Short hand function to trash a set of beans at once.
+For information please consult the R::trash() function.
+A loop saver.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Short hand function to trash a set of beans at once.
+For information please consult the R::trash() function.
+A loop saver.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans</var></dt>
+					<dd>list of beans to be trashed</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="useWriterCache" id="_useWriterCache">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_useWriterCache">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9062-9080" title="Go to source code">useWriterCache</a>( <span>boolean <var>$yesNo</var></span> )</code>
+
+		<div class="description short">
+			<p>Toggles Writer Cache.
+Turns the Writer Cache on or off. The Writer Cache is a simple
+query based caching system that may improve performance without the need
+for cache management. This caching system will cache non-modifying queries
+that are marked with special SQL comments. As soon as a non-marked query
+gets executed the cache will be flushed. Only non-modifying select queries
+have been marked therefore this mechanism is a rather safe way of caching, requiring
+no explicit flushes or reloads. Of course this does not apply if you intend to test
+or simulate concurrent querying.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Toggles Writer Cache.
+Turns the Writer Cache on or off. The Writer Cache is a simple
+query based caching system that may improve performance without the need
+for cache management. This caching system will cache non-modifying queries
+that are marked with special SQL comments. As soon as a non-marked query
+gets executed the cache will be flushed. Only non-modifying select queries
+have been marked therefore this mechanism is a rather safe way of caching, requiring
+no explicit flushes or reloads. Of course this does not apply if you intend to test
+or simulate concurrent querying.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$yesNo</var></dt>
+					<dd>TRUE to enable cache, FALSE to disable cache</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dispenseLabels" id="_dispenseLabels">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dispenseLabels">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9083-9097" title="Go to source code">dispenseLabels</a>( <span>string <var>$type</var></span>, <span>array <var>$labels</var></span> )</code>
+
+		<div class="description short">
+			<p>A label is a bean with only an id, type and name property.
+This function will dispense beans for all entries in the array. The
+values of the array will be assigned to the name property of each
+individual bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>A label is a bean with only an id, type and name property.
+This function will dispense beans for all entries in the array. The
+values of the array will be assigned to the name property of each
+individual bean.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type of beans you would like to have</dd>
+					<dt><var>$labels</var></dt>
+					<dd>list of labels, names for each bean</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="enum" id="_enum">
+
+		<td class="attributes"><code>
+			 public static
+
+			array|<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_enum">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9099-9127" title="Go to source code">enum</a>( <span>string <var>$enum</var></span> )</code>
+
+		<div class="description short">
+			<p>Generates and returns an ENUM value. This is how RedBeanPHP handles ENUMs.
+Either returns a (newly created) bean respresenting the desired ENUM
+value or returns a list of all enums for the type.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Generates and returns an ENUM value. This is how RedBeanPHP handles ENUMs.
+Either returns a (newly created) bean respresenting the desired ENUM
+value or returns a list of all enums for the type.</p>
+
+<p>To obtain (and add if necessary) an ENUM value:</p>
+
+<p>$tea->flavour = R::enum( 'flavour:apple' );</p>
+
+<p>Returns a bean of type 'flavour' with  name = apple.
+This will add a bean with property name (set to APPLE) to the database
+if it does not exist yet.</p>
+
+<p>To obtain all flavours:</p>
+
+<p>R::enum('flavour');</p>
+
+<p>To get a list of all flavour names:</p>
+
+<p>R::gatherLabels( R::enum( 'flavour' ) );</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$enum</var></dt>
+					<dd>either type or type-value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array|<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="gatherLabels" id="_gatherLabels">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_gatherLabels">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9129-9142" title="Go to source code">gatherLabels</a>( <span>array <var>$beans</var></span> )</code>
+
+		<div class="description short">
+			<p>Gathers labels from beans. This function loops through the beans,
+collects the values of the name properties of each individual bean
+and stores the names in a new array. The array then gets sorted using the
+default sort function of PHP (sort).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Gathers labels from beans. This function loops through the beans,
+collects the values of the name properties of each individual bean
+and stores the names in a new array. The array then gets sorted using the
+default sort function of PHP (sort).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans</var></dt>
+					<dd>list of beans to loop</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="close" id="_close">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_close">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9144-9154" title="Go to source code">close</a>( )</code>
+
+		<div class="description short">
+			<p>Closes the database connection.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Closes the database connection.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isoDate" id="_isoDate">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isoDate">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9156-9171" title="Go to source code">isoDate</a>( <span>mixed <var>$time</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Simple convenience function, returns ISO date formatted representation
+of $time.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Simple convenience function, returns ISO date formatted representation
+of $time.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$time</var></dt>
+					<dd>UNIX timestamp</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isoDateTime" id="_isoDateTime">
+
+		<td class="attributes"><code>
+			 public static
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isoDateTime">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9173-9187" title="Go to source code">isoDateTime</a>( <span>mixed <var>$time</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Simple convenience function, returns ISO date time
+formatted representation
+of $time.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Simple convenience function, returns ISO date time
+formatted representation
+of $time.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$time</var></dt>
+					<dd>UNIX timestamp</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setDatabaseAdapter" id="_setDatabaseAdapter">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setDatabaseAdapter">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9189-9200" title="Go to source code">setDatabaseAdapter</a>( <span><code><a href="class-RedBeanPHP.Adapter.html">RedBeanPHP\Adapter</a></code> <var>$adapter</var></span> )</code>
+
+		<div class="description short">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$adapter</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setWriter" id="_setWriter">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setWriter">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9202-9213" title="Go to source code">setWriter</a>( <span><code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code> <var>$writer</var></span> )</code>
+
+		<div class="description short">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$writer</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setRedBean" id="_setRedBean">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setRedBean">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9215-9224" title="Go to source code">setRedBean</a>( <span><code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code> <var>$redbean</var></span> )</code>
+
+		<div class="description short">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$redbean</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDatabaseAdapter" id="_getDatabaseAdapter">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDatabaseAdapter">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9226-9235" title="Go to source code">getDatabaseAdapter</a>( )</code>
+
+		<div class="description short">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDuplicationManager" id="_getDuplicationManager">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.DuplicationManager.html">RedBeanPHP\DuplicationManager</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDuplicationManager">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9237-9245" title="Go to source code">getDuplicationManager</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the current duplication manager instance.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the current duplication manager instance.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.DuplicationManager.html">RedBeanPHP\DuplicationManager</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getWriter" id="_getWriter">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getWriter">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9247-9256" title="Go to source code">getWriter</a>( )</code>
+
+		<div class="description short">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRedBean" id="_getRedBean">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRedBean">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9258-9267" title="Go to source code">getRedBean</a>( )</code>
+
+		<div class="description short">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Optional accessor for neat code.
+Sets the database adapter you want to use.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getToolBox" id="_getToolBox">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getToolBox">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9269-9280" title="Go to source code">getToolBox</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the toolbox currently used by the facade.
+To set the toolbox use R::setup() or R::configureFacadeWithToolbox().
+To create a toolbox use Setup::kickstart(). Or create a manual
+toolbox using the ToolBox class.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the toolbox currently used by the facade.
+To set the toolbox use R::setup() or R::configureFacadeWithToolbox().
+To create a toolbox use Setup::kickstart(). Or create a manual
+toolbox using the ToolBox class.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getExtractedToolbox" id="_getExtractedToolbox">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getExtractedToolbox">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9282-9290" title="Go to source code">getExtractedToolbox</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renameAssociation" id="_renameAssociation">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renameAssociation">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9292-9303" title="Go to source code">renameAssociation</a>( <span>string|array <var>$from</var></span>, <span>string <var>$to</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Facade method for AQueryWriter::renameAssociation()</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Facade method for AQueryWriter::renameAssociation()</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$from</var></dt>
+					<dd></dd>
+					<dt><var>$to</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="beansToArray" id="_beansToArray">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_beansToArray">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9305-9323" title="Go to source code">beansToArray</a>( <span>array <var>$beans</var></span> )</code>
+
+		<div class="description short">
+			<p>Little helper method for Resty Bean Can server and others.
+Takes an array of beans and exports each bean.
+Unlike exportAll this method does not recurse into own lists
+and shared lists, the beans are exported as-is, only loaded lists
+are exported.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Little helper method for Resty Bean Can server and others.
+Takes an array of beans and exports each bean.
+Unlike exportAll this method does not recurse into own lists
+and shared lists, the beans are exported as-is, only loaded lists
+are exported.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans</var></dt>
+					<dd>beans</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="ext" id="_ext">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_ext">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9325-9348" title="Go to source code">ext</a>( <span>string <var>$pluginName</var></span>, <span>callable <var>$callable</var></span> )</code>
+
+		<div class="description short">
+			<p>Dynamically extends the facade with a plugin.
+Using this method you can register your plugin with the facade and then
+use the plugin by invoking the name specified plugin name as a method on
+the facade.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Dynamically extends the facade with a plugin.
+Using this method you can register your plugin with the facade and then
+use the plugin by invoking the name specified plugin name as a method on
+the facade.</p>
+
+<p>Usage:</p>
+
+<p>R::ext( 'makeTea', function() { ... }  );</p>
+
+<p>Now you can use your makeTea plugin like this:</p>
+
+<p>R::makeTea();</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$pluginName</var></dt>
+					<dd>name of the method to call the plugin</dd>
+					<dt><var>$callable</var></dt>
+					<dd>a PHP callable</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__callStatic" id="___callStatic">
+
+		<td class="attributes"><code>
+			 public static
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___callStatic">#</a>
+		<code><a href="source-class-RedBeanPHP.Facade.html#9350-9368" title="Go to source code">__callStatic</a>( <span>string <var>$pluginName</var></span>, <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Call static for use with dynamic plugins. This magic method will
+intercept static calls and route them to the specified plugin.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Call static for use with dynamic plugins. This magic method will
+intercept static calls and route them to the specified plugin.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$pluginName</var></dt>
+					<dd>name of the plugin</dd>
+					<dt><var>$params</var></dt>
+					<dd>list of arguments to pass to plugin method</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="C_REDBEANPHP_VERSION" id="C_REDBEANPHP_VERSION">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-RedBeanPHP.Facade.html#7952-7955" title="Go to source code"><b>C_REDBEANPHP_VERSION</b></a>
+			</code>
+
+			<div class="description short">
+				<p>RedBeanPHP version constant.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>RedBeanPHP version constant.</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#C_REDBEANPHP_VERSION" class="anchor">#</a>
+				<code><span class="php-quote">'4.0'</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

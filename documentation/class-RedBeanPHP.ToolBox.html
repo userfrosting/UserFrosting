@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\ToolBox | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li class="active"><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class ToolBox</h1>
+
+
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">ToolBox.
+The toolbox is an integral part of RedBeanPHP providing the basic
+architectural building blocks to manager objects, helpers and additional tools
+like plugins. A toolbox contains the three core components of RedBeanPHP:
+the adapter, the query writer and the core functionality of RedBeanPHP in
+OODB.
+
+copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP community<br>
+				<b>Desc:</b>
+				A RedBeanPHP-wide service locator<br>
+				<b>File:</b>
+				RedBean/ToolBox.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.ToolBox.html#6526-6620" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-RedBeanPHP.ToolBox.html#6561-6582" title="Go to source code">__construct</a>( <span><code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code> <var>$oodb</var></span>, <span><code><a href="class-RedBeanPHP.Adapter.html">RedBeanPHP\Adapter</a></code> <var>$adapter</var></span>, <span><code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code> <var>$writer</var></span> )</code>
+
+		<div class="description short">
+			<p>Constructor.
+The toolbox is an integral part of RedBeanPHP providing the basic
+architectural building blocks to manager objects, helpers and additional tools
+like plugins. A toolbox contains the three core components of RedBeanPHP:
+the adapter, the query writer and the core functionality of RedBeanPHP in
+OODB.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Constructor.
+The toolbox is an integral part of RedBeanPHP providing the basic
+architectural building blocks to manager objects, helpers and additional tools
+like plugins. A toolbox contains the three core components of RedBeanPHP:
+the adapter, the query writer and the core functionality of RedBeanPHP in
+OODB.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$oodb</var></dt>
+					<dd>Object Database</dd>
+					<dt><var>$adapter</var></dt>
+					<dd>Adapter</dd>
+					<dt><var>$writer</var></dt>
+					<dd>Writer</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getWriter" id="_getWriter">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getWriter">#</a>
+		<code><a href="source-class-RedBeanPHP.ToolBox.html#6584-6594" title="Go to source code">getWriter</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the query writer in this toolbox.
+The Query Writer is responsible for building the queries for a
+specific database and executing them through the adapter.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the query writer in this toolbox.
+The Query Writer is responsible for building the queries for a
+specific database and executing them through the adapter.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRedBean" id="_getRedBean">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRedBean">#</a>
+		<code><a href="source-class-RedBeanPHP.ToolBox.html#6596-6607" title="Go to source code">getRedBean</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the OODB instance in this toolbox.
+OODB is responsible for creating, storing, retrieving and deleting
+single beans. Other components rely
+on OODB for their basic functionality.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the OODB instance in this toolbox.
+OODB is responsible for creating, storing, retrieving and deleting
+single beans. Other components rely
+on OODB for their basic functionality.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDatabaseAdapter" id="_getDatabaseAdapter">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDatabaseAdapter">#</a>
+		<code><a href="source-class-RedBeanPHP.ToolBox.html#6609-6619" title="Go to source code">getDatabaseAdapter</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the database adapter in this toolbox.
+The adapter is responsible for executing the query and binding the values.
+The adapter also takes care of transaction handling.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the database adapter in this toolbox.
+The adapter is responsible for executing the query and binding the values.
+The adapter also takes care of transaction handling.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="oodb" id="$oodb">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.ToolBox.html#6546-6549" title="Go to source code"><var>$oodb</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$oodb" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="writer" id="$writer">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.ToolBox.html#6551-6554" title="Go to source code"><var>$writer</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$writer" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="adapter" id="$adapter">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.ToolBox.html#6556-6559" title="Go to source code"><var>$adapter</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$adapter" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

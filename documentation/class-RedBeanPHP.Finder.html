@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\Finder | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li class="active"><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Finder</h1>
+
+
+	<div class="description">
+	<p>RedBean Finder</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP Community<br>
+				<b>Desc:</b>
+				Helper class to harmonize APIs.<br>
+				<b>File:</b>
+				RedBean/Finder.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.Finder.html#6630-6776" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-RedBeanPHP.Finder.html#6655-6665" title="Go to source code">__construct</a>( <span><code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code> <var>$toolbox</var></span> )</code>
+
+		<div class="description short">
+			<p>Constructor.
+The Finder requires a toolbox.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Constructor.
+The Finder requires a toolbox.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$toolbox</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="find" id="_find">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_find">#</a>
+		<code><a href="source-class-RedBeanPHP.Finder.html#6667-6691" title="Go to source code">find</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Finds a bean using a type and a where clause (SQL).
+As with most Query tools in RedBean you can provide values to
+be inserted in the SQL statement by populating the value
+array parameter; you can either use the question mark notation
+or the slot-notation (:keyname).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Finds a bean using a type and a where clause (SQL).
+As with most Query tools in RedBean you can provide values to
+be inserted in the SQL statement by populating the value
+array parameter; you can either use the question mark notation
+or the slot-notation (:keyname).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findAndExport" id="_findAndExport">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findAndExport">#</a>
+		<code><a href="source-class-RedBeanPHP.Finder.html#6693-6711" title="Go to source code">findAndExport</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Finder::find
+     The variation also exports the beans (i.e. it returns arrays).</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findOne" id="_findOne">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findOne">#</a>
+		<code><a href="source-class-RedBeanPHP.Finder.html#6713-6732" title="Go to source code">findOne</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>type   the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>sql    SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Finder::find
+     This variation returns the first bean only.</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findLast" id="_findLast">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findLast">#</a>
+		<code><a href="source-class-RedBeanPHP.Finder.html#6734-6753" title="Go to source code">findLast</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Finder::find
+     This variation returns the last bean only.</p><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findOrDispense" id="_findOrDispense">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findOrDispense">#</a>
+		<code><a href="source-class-RedBeanPHP.Finder.html#6755-6775" title="Go to source code">findOrDispense</a>( <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>the type of bean you are looking for</dd>
+					<dt><var>$sql</var></dt>
+					<dd>SQL query to find the desired bean, starting right after WHERE clause</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values array of values to be bound to parameters in query</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<p>Finder::find
+     Convience method. Tries to find beans of a certain type</p>, if no beans are found, it dispenses a bean of that type.<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="toolbox" id="$toolbox">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.Finder.html#6645-6648" title="Go to source code"><var>$toolbox</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$toolbox" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="redbean" id="$redbean">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.Finder.html#6650-6653" title="Go to source code"><var>$redbean</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$redbean" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
