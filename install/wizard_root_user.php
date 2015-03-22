@@ -87,7 +87,7 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
       </div>
       <div class="jumbotron">
         <h1>Master Account Setup</h1>
-        <p class="lead">Please set up the master (root) account for UserFrosting at the bottom of this page. The configuration token can be found in the <code><?php echo $db_table_prefix ?>configuration</code> table of your database as the value for <code>root_account_config_token</code>.</p>
+        <p class="lead">Please set up the master (root) account for UserFrosting at the bottom of this page.</p>
 		<form name='newUser' id='newUser' class='form-horizontal' role='form' action='install_root_user.php' method='post'>
 		  <div class="row">
 				<div id='display-alerts' class="col-lg-12">
