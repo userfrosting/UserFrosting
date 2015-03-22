@@ -46,16 +46,6 @@
         <pre>
         <strong>/models/config.php</strong>
 
-        <strong><u>Find:</u></strong>
-
-            function logAllErrors($errno, $errstr, $errfile, $errline, array $errcontext) {
-            ini_set("log_errors", 1);
-            ini_set("display_errors", 0);
-
-            error_log("Error ($errno): $errstr in $errfile on line $errline");
-            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-            }
-
         <strong><u>Add after:</u></strong>
 
             // This will stop the installer / upgrader from running as it normally would and should always be set to false
