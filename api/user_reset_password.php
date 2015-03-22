@@ -35,7 +35,7 @@ set_error_handler('logAllErrors');
 
 // Request method: GET or POST
 $ajax = null;
-if (isset($_POST)){
+if (count($_POST)){
     $ajax = checkRequestMode("post");
 } else {
     $ajax = checkRequestMode("get");
