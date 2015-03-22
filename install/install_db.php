@@ -616,10 +616,10 @@ else
 $result = array();
 
 if(!$db_issue) {
-    $successes[] = "<p><strong>Database setup complete, please create the master (root) account.  The configuration token can be found in the 'uc_configuration' table of your database, as the value for 'root_account_config_token'.</strong></p>";
+    $successes[] = "<p><strong>Your database tables are all set! <p>Create the master (root) account below. The configuration token you'll need to enter below can be found in the <code>" . $db_table_prefix . "configuration</code> table of your database as the value for <code>root_account_config_token</code>.</strong></p>";
 }
 else
-    $errors[] = "<p><strong>Database setup did not complete successfully.  Please delete all tables and try again.</strong></p>";
+    $errors[] = "<p><strong>Database setup did not complete successfully. Please delete all tables and try again.</strong></p>";
 
 $result['errors'] = $errors;
 $result['successes'] = $successes;
