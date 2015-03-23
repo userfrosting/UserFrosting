@@ -34,7 +34,7 @@ $db_host = "localhost"; //Host address (most likely localhost)
 $db_name = "userfrosting"; //Name of Database
 $db_user = "root"; //Name of database user
 $db_pass = "password"; //Password for database user
-$db_table_prefix = "uf_";
+$db_table_prefix = "uf_"; // Change default "uf_" to something different (but still ending with an underscore) for better security
 
 // All SQL queries use PDO now
 function pdoConnect(){

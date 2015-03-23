@@ -34,7 +34,7 @@ require_once("config.php");
 
 // To register the root account, two conditions apply:
 // 1. the root config token (root_account_config_token) must exist
-// 2. the uc_users table must not have a user with id=1
+// 2. the uf_users table must not have a user with id=1
 
 //if (userIdExists('1')){
 //	addAlert("danger", lang("MASTER_ACCOUNT_EXISTS"));
@@ -87,8 +87,7 @@ if (!($root_account_config_token = fetchConfigParameter('root_account_config_tok
       </div>
       <div class="jumbotron">
         <h1>Master Account Setup</h1>
-        <p class="lead">Please set up the master (root) account for UserFrosting.<br>
-		<small>The configuration token can be found in the <code>uc_configuration</code> table of your database, as the value for <code>root_account_config_token</code>.</small></p>
+        <p class="lead">Please set up the master (root) account for UserFrosting at the bottom of this page.</p>
 		<form name='newUser' id='newUser' class='form-horizontal' role='form' action='install_root_user.php' method='post'>
 		  <div class="row">
 				<div id='display-alerts' class="col-lg-12">
