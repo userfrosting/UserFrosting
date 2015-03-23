@@ -75,7 +75,7 @@ $settings = fetchConfigParameters();
 $plugin_settings = fetchConfigParametersPlugins();
 
 //Set Settings
-$emailDate = date('dmy');
+$emailDate = date('F j, Y');
 $emailActivation = $settings['activation'];
 $can_register = $settings['can_register'];
 $websiteName = $settings['website_name'];
