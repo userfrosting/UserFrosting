@@ -180,4 +180,3 @@ $lang = array_merge($lang,array(
     "PM_RECEIVER_DELETION_SUCCESSFUL"   => "Bericht verwijderd",
 ));
 ?>
-
