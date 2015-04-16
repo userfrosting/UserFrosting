@@ -70,7 +70,7 @@ function checkRequestMode($mode){
 			error_log("Error: data must be submitted via POST.");
 			exit();
 			return false;
-		} else if (isset($_POST['ajaxMode']) and $_POST['ajaxMode'] == "true" ){
+		} else if (isset($_POST['ajaxMode']) && ($_POST['ajaxMode'] == "true")){
 			return true;
 		} else {
 			return false;
@@ -81,7 +81,7 @@ function checkRequestMode($mode){
 			echo "Error: data must be submitted via GET.";
 			error_log("Error: data must be submitted via GET.");
 			exit();
-		} else if (isset($_GET['ajaxMode']) and $_GET['ajaxMode'] == "true" ){
+		} else if (isset($_GET['ajaxMode']) && ($_GET['ajaxMode'] == "true")){
 			return true;
 		} else {
 			return false;

@@ -236,7 +236,7 @@ function fetchAllUsers($limit = null){
             $limit = 9999999;
         }
         $i = 0;
-        while ($r = $stmt->fetch(PDO::FETCH_ASSOC) and $i < $limit) {
+        while (($r = $stmt->fetch(PDO::FETCH_ASSOC)) && ($i < $limit)) {
             $id = $r['user_id'];
             $results[$id] = $r;
             $i++;
@@ -2600,7 +2600,7 @@ function fetchAllPermits($type) {
 				$permit_name = $permit_param_str[1];
 				//$permit_with_params['name'] = $permit_name;
 				// Extract and map parameters, if any
-				if ($permit_param_str[2] and $permit_params = explode(',', $permit_param_str[2])){
+				if ($permit_param_str[2] && ($permit_params = explode(',', $permit_param_str[2]))){
 					$permit_with_params = array();
 					foreach ($permit_params as $param){
 						$permit_with_params[] = $param;
