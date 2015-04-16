@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\DuplicationManager | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li class="active"><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class DuplicationManager</h1>
+
+
+	<div class="description">
+	<p>Duplication Manager</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP Community<br>
+				<b>Desc:</b>
+				Creates deep copies of beans<br>
+				<b>File:</b>
+				RedBean/DuplicationManager.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.DuplicationManager.html#9381-9761" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="hasOwnList" id="_hasOwnList">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasOwnList">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9533-9545" title="Go to source code">hasOwnList</a>( <span>string <var>$type</var></span>, <span>string <var>$target</var></span> )</code>
+
+		<div class="description short">
+			<p>Determines whether the bean has an own list based on
+schema inspection from realtime schema or cache.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Determines whether the bean has an own list based on
+schema inspection from realtime schema or cache.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>bean type to get list for</dd>
+					<dt><var>$target</var></dt>
+					<dd>type of list you want to detect</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hasSharedList" id="_hasSharedList">
+
+		<td class="attributes"><code>
+			 protected 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasSharedList">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9547-9559" title="Go to source code">hasSharedList</a>( <span>string <var>$type</var></span>, <span>string <var>$target</var></span> )</code>
+
+		<div class="description short">
+			<p>Determines whether the bea has a shared list based on
+schema inspection from realtime schema or cache.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Determines whether the bea has a shared list based on
+schema inspection from realtime schema or cache.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd>bean type to get list for</dd>
+					<dt><var>$target</var></dt>
+					<dd>type of list you are looking for</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="duplicate" id="_duplicate">
+
+		<td class="attributes"><code>
+			 protected 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_duplicate">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9561-9603" title="Go to source code">duplicate</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array <var>$trail</var> = <span class="php-keyword1">array</span>()</span>, <span>boolean <var>$preserveIDs</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to be copied</dd>
+					<dt><var>$trail</var></dt>
+					<dd>trail to prevent infinite loops</dd>
+					<dt><var>$preserveIDs</var></dt>
+					<dd>preserve IDs</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<code><a href="class-RedBeanPHP.DuplicationManager.html#_dup">RedBeanPHP\DuplicationManager::dup()</a></code><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9605-9616" title="Go to source code">__construct</a>( <span><code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code> <var>$toolbox</var></span> )</code>
+
+		<div class="description short">
+			<p>Constructor,
+creates a new instance of DupManager.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Constructor,
+creates a new instance of DupManager.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$toolbox</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setTables" id="_setTables">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setTables">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9618-9639" title="Go to source code">setTables</a>( <span>array <var>$tables</var></span> )</code>
+
+		<div class="description short">
+			<p>For better performance you can pass the tables in an array to this method.
+If the tables are available the duplication manager will not query them so
+this might be beneficial for performance.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>For better performance you can pass the tables in an array to this method.
+If the tables are available the duplication manager will not query them so
+this might be beneficial for performance.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tables</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getSchema" id="_getSchema">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getSchema">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9641-9649" title="Go to source code">getSchema</a>( )</code>
+
+		<div class="description short">
+			<p>Returns a schema array for cache.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns a schema array for cache.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setCacheTables" id="_setCacheTables">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setCacheTables">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9651-9662" title="Go to source code">setCacheTables</a>( <span>boolean <var>$yesNo</var></span> )</code>
+
+		<div class="description short">
+			<p>Indicates whether you want the duplication manager to cache the database schema.
+If this flag is set to TRUE the duplication manager will query the database schema
+only once. Otherwise the duplicationmanager will, by default, query the schema
+every time a duplication action is performed (dup()).</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Indicates whether you want the duplication manager to cache the database schema.
+If this flag is set to TRUE the duplication manager will query the database schema
+only once. Otherwise the duplicationmanager will, by default, query the schema
+every time a duplication action is performed (dup()).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$yesNo</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setFilters" id="_setFilters">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setFilters">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9664-9680" title="Go to source code">setFilters</a>( <span>array <var>$filters</var></span> )</code>
+
+		<div class="description short">
+			<p>A filter array is an array with table names.
+By setting a table filter you can make the duplication manager only take into account
+certain bean types. Other bean types will be ignored when exporting or making a
+deep copy. If no filters are set all types will be taking into account, this is
+the default behavior.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>A filter array is an array with table names.
+By setting a table filter you can make the duplication manager only take into account
+certain bean types. Other bean types will be ignored when exporting or making a
+deep copy. If no filters are set all types will be taking into account, this is
+the default behavior.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$filters</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dup" id="_dup">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dup">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9682-9727" title="Go to source code">dup</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array <var>$trail</var> = <span class="php-keyword1">array</span>()</span>, <span>boolean <var>$preserveIDs</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Makes a copy of a bean. This method makes a deep copy
+of the bean.The copy will have the following features.
+- All beans in own-lists will be duplicated as well
+- All references to shared beans will be copied but not the shared beans themselves
+- All references to parent objects (_id fields) will be copied but not the parents themselves
+In most cases this is the desired scenario for copying beans.
+This function uses a trail-array to prevent infinite recursion, if a recursive bean is found
+(i.e. one that already has been processed) the ID of the bean will be returned.
+This should not happen though.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Makes a copy of a bean. This method makes a deep copy
+of the bean.The copy will have the following features.
+- All beans in own-lists will be duplicated as well
+- All references to shared beans will be copied but not the shared beans themselves
+- All references to parent objects (_id fields) will be copied but not the parents themselves
+In most cases this is the desired scenario for copying beans.
+This function uses a trail-array to prevent infinite recursion, if a recursive bean is found
+(i.e. one that already has been processed) the ID of the bean will be returned.
+This should not happen though.</p>
+
+<p>Note:
+This function does a reflectional database query so it may be slow.</p>
+
+<p>Note:
+this function actually passes the arguments to a protected function called
+duplicate() that does all the work. This method takes care of creating a clone
+of the bean to avoid the bean getting tainted (triggering saving when storing it).</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to be copied</dd>
+					<dt><var>$trail</var></dt>
+					<dd>for internal usage, pass array()</dd>
+					<dt><var>$preserveIDs</var></dt>
+					<dd>for internal usage</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="exportAll" id="_exportAll">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_exportAll">#</a>
+		<code><a href="source-class-RedBeanPHP.DuplicationManager.html#9729-9760" title="Go to source code">exportAll</a>( <span>array|<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$beans</var></span>, <span>boolean <var>$parents</var> = <span class="php-keyword1">FALSE</span></span>, <span>array <var>$filters</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Exports a collection of beans. Handy for XML/JSON exports with a
+Javascript framework like Dojo or ExtJS.
+What will be exported:
+- contents of the bean
+- all own bean lists (recursively)
+- all shared beans (not THEIR own lists)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Exports a collection of beans. Handy for XML/JSON exports with a
+Javascript framework like Dojo or ExtJS.
+What will be exported:
+- contents of the bean
+- all own bean lists (recursively)
+- all shared beans (not THEIR own lists)</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans</var></dt>
+					<dd>beans to be exported</dd>
+					<dt><var>$parents</var></dt>
+					<dd>also export parents</dd>
+					<dt><var>$filters</var></dt>
+					<dd>only these types (whitelist)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="toolbox" id="$toolbox">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.DuplicationManager.html#9396-9399" title="Go to source code"><var>$toolbox</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$toolbox" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="associationManager" id="$associationManager">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.AssociationManager.html">RedBeanPHP\AssociationManager</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.DuplicationManager.html#9401-9404" title="Go to source code"><var>$associationManager</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$associationManager" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="redbean" id="$redbean">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.DuplicationManager.html#9406-9409" title="Go to source code"><var>$redbean</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$redbean" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="tables" id="$tables">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.DuplicationManager.html#9411-9414" title="Go to source code"><var>$tables</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$tables" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="columns" id="$columns">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.DuplicationManager.html#9416-9419" title="Go to source code"><var>$columns</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$columns" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="filters" id="$filters">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.DuplicationManager.html#9421-9424" title="Go to source code"><var>$filters</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$filters" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="cacheTables" id="$cacheTables">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.DuplicationManager.html#9426-9429" title="Go to source code"><var>$cacheTables</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$cacheTables" class="anchor">#</a>
+				<code><span class="php-keyword1">FALSE</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

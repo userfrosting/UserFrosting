@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\AssociationManager | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class AssociationManager</h1>
+
+
+	<div class="description">
+	<p>Association Manager</p>
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-RedBeanPHP.Observable.html"><span>RedBeanPHP\Observable</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>RedBeanPHP\AssociationManager</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">(c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP Community<br>
+				<b>Desc:</b>
+				Manages simple bean associations.<br>
+				<b>File:</b>
+				RedBean/AssociationManager.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.AssociationManager.html#6791-7169" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="associateBeans" id="_associateBeans">
+
+		<td class="attributes"><code>
+			 protected 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_associateBeans">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#6869-6946" title="Go to source code">associateBeans</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean1</var></span>, <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean2</var></span>, <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span> )</code>
+
+		<div class="description short">
+			<p>Associates a pair of beans. This method associates two beans, no matter
+what types. Accepts a base bean that contains data for the linking record.
+This method is used by associate. This method also accepts a base bean to be used
+as the template for the link record in the database.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Associates a pair of beans. This method associates two beans, no matter
+what types. Accepts a base bean that contains data for the linking record.
+This method is used by associate. This method also accepts a base bean to be used
+as the template for the link record in the database.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean1</var></dt>
+					<dd>first bean</dd>
+					<dt><var>$bean2</var></dt>
+					<dd>second bean</dd>
+					<dt><var>$bean</var></dt>
+					<dd>base bean (association record)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+				<h4>Throws\exception|sql</h4>
+				<div class="list">
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#6948-6959" title="Go to source code">__construct</a>( <span><code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code> <var>$tools</var></span> )</code>
+
+		<div class="description short">
+			<p>Constructor</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Constructor</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tools</var></dt>
+					<dd>toolbox</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getTable" id="_getTable">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getTable">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#6961-6975" title="Go to source code">getTable</a>( <span>array <var>$types</var></span> )</code>
+
+		<div class="description short">
+			<p>Creates a table name based on a types array.
+Manages the get the correct name for the linking table for the
+types provided.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Creates a table name based on a types array.
+Manages the get the correct name for the linking table for the
+types provided.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$types</var></dt>
+					<dd>2 types as strings</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+				<h4>Todo</h4>
+				<div class="list">
+						find a nice way to decouple this class from QueryWriter?<br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="associate" id="_associate">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_associate">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#6977-7008" title="Go to source code">associate</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|array <var>$beans1</var></span>, <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|array <var>$beans2</var></span> )</code>
+
+		<div class="description short">
+			<p>Associates two beans in a many-to-many relation.
+This method will associate two beans and store the connection between the
+two in a link table. Instead of two single beans this method also accepts
+two sets of beans. Returns the ID or the IDs of the linking beans.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Associates two beans in a many-to-many relation.
+This method will associate two beans and store the connection between the
+two in a link table. Instead of two single beans this method also accepts
+two sets of beans. Returns the ID or the IDs of the linking beans.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans1</var></dt>
+					<dd>one or more beans to form the association</dd>
+					<dt><var>$beans2</var></dt>
+					<dd>one or more beans to form the association</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="relatedCount" id="_relatedCount">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_relatedCount">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#7010-7046" title="Go to source code">relatedCount</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|array <var>$bean</var></span>, <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-keyword1">NULL</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Counts the number of related beans in an N-M relation.
+This method returns the number of beans of type $type associated
+with reference bean(s) $bean. The query can be tuned using an
+SQL snippet for additional filtering.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Counts the number of related beans in an N-M relation.
+This method returns the number of beans of type $type associated
+with reference bean(s) $bean. The query can be tuned using an
+SQL snippet for additional filtering.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>a bean object or an array of beans</dd>
+					<dt><var>$type</var></dt>
+					<dd>type of bean you're interested in</dd>
+					<dt><var>$sql</var></dt>
+					<dd>SQL snippet (optional)</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>bindings for your SQL string</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					RedBeanPHP\RedException\Security
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="unassociate" id="_unassociate">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_unassociate">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#7048-7097" title="Go to source code">unassociate</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$beans1</var></span>, <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$beans2</var></span>, <span>boolean <var>$fast</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Breaks the association between two beans. This method unassociates two beans. If the
+method succeeds the beans will no longer form an association. In the database
+this means that the association record will be removed. This method uses the
+OODB trash() method to remove the association links, thus giving FUSE models the
+opportunity to hook-in additional business logic. If the $fast parameter is
+set to boolean TRUE this method will remove the beans without their consent,
+bypassing FUSE. This can be used to improve performance.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Breaks the association between two beans. This method unassociates two beans. If the
+method succeeds the beans will no longer form an association. In the database
+this means that the association record will be removed. This method uses the
+OODB trash() method to remove the association links, thus giving FUSE models the
+opportunity to hook-in additional business logic. If the $fast parameter is
+set to boolean TRUE this method will remove the beans without their consent,
+bypassing FUSE. This can be used to improve performance.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beans1</var></dt>
+					<dd>$bean1 first bean</dd>
+					<dt><var>$beans2</var></dt>
+					<dd>$bean2 second bean</dd>
+					<dt><var>$fast</var></dt>
+					<dd>If TRUE, removes the entries by query without FUSE</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="clearRelations" id="_clearRelations">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_clearRelations">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#7099-7119" title="Go to source code">clearRelations</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>string <var>$type</var></span> )</code>
+
+		<div class="description short">
+			<p>Removes all relations for a bean. This method breaks every connection between
+a certain bean $bean and every other bean of type $type. Warning: this method
+is really fast because it uses a direct SQL query however it does not inform the
+models about this. If you want to notify FUSE models about deletion use a foreach-loop
+with unassociate() instead. (that might be slower though)</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Removes all relations for a bean. This method breaks every connection between
+a certain bean $bean and every other bean of type $type. Warning: this method
+is really fast because it uses a direct SQL query however it does not inform the
+models about this. If you want to notify FUSE models about deletion use a foreach-loop
+with unassociate() instead. (that might be slower though)</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>reference bean</dd>
+					<dt><var>$type</var></dt>
+					<dd>type of beans that need to be unassociated</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="related" id="_related">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_related">#</a>
+		<code><a href="source-class-RedBeanPHP.AssociationManager.html#7121-7168" title="Go to source code">related</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>|array <var>$bean</var></span>, <span>string <var>$type</var></span>, <span>string <var>$sql</var> = <span class="php-quote">''</span></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span>, <span>boolean <var>$glue</var>,…</span> )</code>
+
+		<div class="description short">
+			<p>Returns all the beans associated with $bean.
+This method will return an array containing all the beans that have
+been associated once with the associate() function and are still
+associated with the bean specified. The type parameter indicates the
+type of beans you are looking for. You can also pass some extra SQL and
+values for that SQL to filter your results after fetching the
+related beans.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns all the beans associated with $bean.
+This method will return an array containing all the beans that have
+been associated once with the associate() function and are still
+associated with the bean specified. The type parameter indicates the
+type of beans you are looking for. You can also pass some extra SQL and
+values for that SQL to filter your results after fetching the
+related beans.</p>
+
+<p>Don't try to make use of subqueries, a subquery using IN() seems to
+be slower than two queries!</p>
+
+<p>Since 3.2, you can now also pass an array of beans instead just one
+bean as the first parameter.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>the bean you have</dd>
+					<dt><var>$type</var></dt>
+					<dd>the type of beans you want</dd>
+					<dt><var>$sql</var></dt>
+					<dd>SQL snippet for extra filtering</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values to be inserted in SQL slots</dd>
+					<dt><var>$glue</var>,…</dt>
+					<dd>whether the SQL should be prefixed with WHERE</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-RedBeanPHP.Observable.html#methods">RedBeanPHP\Observable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-RedBeanPHP.Observable.html#_addEventListener">addEventListener()</a>, 
+			<a href="class-RedBeanPHP.Observable.html#_signal">signal()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="oodb" id="$oodb">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.OODB.html">RedBeanPHP\OODB</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.AssociationManager.html#6806-6809" title="Go to source code"><var>$oodb</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$oodb" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="adapter" id="$adapter">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.AssociationManager.html#6811-6814" title="Go to source code"><var>$adapter</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$adapter" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="writer" id="$writer">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.QueryWriter.html">RedBeanPHP\QueryWriter</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.AssociationManager.html#6816-6819" title="Go to source code"><var>$writer</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$writer" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

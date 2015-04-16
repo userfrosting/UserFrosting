@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class RedBeanPHP\TagManager | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li class="active"><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class TagManager</h1>
+
+
+	<div class="description">
+	<p>RedBean Tag Manager.
+The tag manager offers an easy way to quickly implement basic tagging
+functionality.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">Provides methods to tag beans and perform tag-based searches in the
+bean database.
+
+copyright (c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP community<br>
+				<b>Desc:</b>
+				RedBean Tag Manager<br>
+				<b>File:</b>
+				RedBean/TagManager.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.TagManager.html#7509-7784" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7564-7577" title="Go to source code">__construct</a>( <span><code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code> <var>$toolbox</var></span> )</code>
+
+		<div class="description short">
+			<p>Constructor.
+The tag manager offers an easy way to quickly implement basic tagging
+functionality.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Constructor.
+The tag manager offers an easy way to quickly implement basic tagging
+functionality.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$toolbox</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findTagByTitle" id="_findTagByTitle">
+
+		<td class="attributes"><code>
+			 protected 
+
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findTagByTitle">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7579-7598" title="Go to source code">findTagByTitle</a>( <span>string <var>$title</var></span> )</code>
+
+		<div class="description short">
+			<p>Finds a tag bean by it's title.
+Internal method.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Finds a tag bean by it's title.
+Internal method.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$title</var></dt>
+					<dd>title</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hasTag" id="_hasTag">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasTag">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7600-7630" title="Go to source code">hasTag</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array|string <var>$tags</var></span>, <span>boolean <var>$all</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Tests whether a bean has been associated with one ore more
+of the listed tags. If the third parameter is TRUE this method
+will return TRUE only if all tags that have been specified are indeed
+associated with the given bean, otherwise FALSE.
+If the third parameter is FALSE this
+method will return TRUE if one of the tags matches, FALSE if none
+match.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Tests whether a bean has been associated with one ore more
+of the listed tags. If the third parameter is TRUE this method
+will return TRUE only if all tags that have been specified are indeed
+associated with the given bean, otherwise FALSE.
+If the third parameter is FALSE this
+method will return TRUE if one of the tags matches, FALSE if none
+match.</p>
+
+<p>Tag list can be either an array with tag names or a comma separated list
+of tag names.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to check for tags</dd>
+					<dt><var>$tags</var></dt>
+					<dd>list of tags</dd>
+					<dt><var>$all</var></dt>
+					<dd>whether they must all match or just some</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="untag" id="_untag">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_untag">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7632-7653" title="Go to source code">untag</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array|string <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Removes all sepcified tags from the bean. The tags specified in
+the second parameter will no longer be associated with the bean.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Removes all sepcified tags from the bean. The tags specified in
+the second parameter will no longer be associated with the bean.</p>
+
+<p>Tag list can be either an array with tag names or a comma separated list
+of tag names.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>tagged bean</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags (names)</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="tag" id="_tag">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_tag">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7655-7689" title="Go to source code">tag</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array|string <var>$tagList</var> = <span class="php-keyword1">NULL</span> </span> )</code>
+
+		<div class="description short">
+			<p>Tags a bean or returns tags associated with a bean.
+If $tagList is NULL or omitted this method will return a
+comma separated list of tags associated with the bean provided.
+If $tagList is a comma separated list (string) of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Tags a bean or returns tags associated with a bean.
+If $tagList is NULL or omitted this method will return a
+comma separated list of tags associated with the bean provided.
+If $tagList is a comma separated list (string) of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+
+<p>Tag list can be either an array with tag names or a comma separated list
+of tag names.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to be tagged</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>a list of tags</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addTags" id="_addTags">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addTags">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7691-7723" title="Go to source code">addTags</a>( <span><code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code> <var>$bean</var></span>, <span>array|string <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Adds tags to a bean.
+If $tagList is a comma separated list of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Adds tags to a bean.
+If $tagList is a comma separated list of tags all tags will
+be associated with the bean.
+You may also pass an array instead of a string.</p>
+
+<p>Tag list can be either an array with tag names or a comma separated list
+of tag names.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$bean</var></dt>
+					<dd>bean to add tags to</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags to add to bean</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="tagged" id="_tagged">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_tagged">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7725-7754" title="Go to source code">tagged</a>( <span>string <var>$beanType</var></span>, <span>array|string <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns all beans that have been tagged with one or more
+of the specified tags.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns all beans that have been tagged with one or more
+of the specified tags.</p>
+
+<p>Tag list can be either an array with tag names or a comma separated list
+of tag names.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beanType</var></dt>
+					<dd>type of bean you are looking for</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags to match</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="taggedAll" id="_taggedAll">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_taggedAll">#</a>
+		<code><a href="source-class-RedBeanPHP.TagManager.html#7756-7783" title="Go to source code">taggedAll</a>( <span>string <var>$beanType</var></span>, <span>array|string <var>$tagList</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns all beans that have been tagged with ALL of the tags given.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns all beans that have been tagged with ALL of the tags given.</p>
+
+<p>Tag list can be either an array with tag names or a comma separated list
+of tag names.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$beanType</var></dt>
+					<dd>type of bean you are looking for</dd>
+					<dt><var>$tagList</var></dt>
+					<dd>list of tags to match</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="toolbox" id="$toolbox">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.ToolBox.html">RedBeanPHP\ToolBox</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.TagManager.html#7529-7532" title="Go to source code"><var>$toolbox</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$toolbox" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="associationManager" id="$associationManager">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.AssociationManager.html">RedBeanPHP\AssociationManager</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.TagManager.html#7534-7537" title="Go to source code"><var>$associationManager</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$associationManager" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="redbean" id="$redbean">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-RedBeanPHP.OODBBean.html">RedBeanPHP\OODBBean</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-RedBeanPHP.TagManager.html#7539-7542" title="Go to source code"><var>$redbean</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$redbean" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

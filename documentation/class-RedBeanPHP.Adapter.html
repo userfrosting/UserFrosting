@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Interface RedBeanPHP\Adapter | UserFrosting Documentation - Master Branch</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li>
+					<a href="namespace-None.html">
+						None					</a>
+
+						</li>
+				<li>
+					<a href="namespace-PHP.html">
+						PHP					</a>
+
+						</li>
+				<li class="active">
+					<a href="namespace-RedBeanPHP.html">
+						RedBeanPHP<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-RedBeanPHP.Adapter.html">
+						Adapter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.BeanHelper.html">
+						BeanHelper					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Driver.html">
+						Driver					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.Logger.html">
+						Logger					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.QueryWriter.html">
+						QueryWriter					</a>
+
+						</li>
+				<li>
+					<a href="namespace-RedBeanPHP.RedException.html">
+						RedException					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Valitron.html">
+						Valitron					</a>
+
+						</li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-RedBeanPHP.AssociationManager.html">AssociationManager</a></li>
+				<li><a href="class-RedBeanPHP.DuplicationManager.html">DuplicationManager</a></li>
+				<li><a href="class-RedBeanPHP.Facade.html">Facade</a></li>
+				<li><a href="class-RedBeanPHP.Finder.html">Finder</a></li>
+				<li><a href="class-RedBeanPHP.LabelMaker.html">LabelMaker</a></li>
+				<li><a href="class-RedBeanPHP.Observable.html">Observable</a></li>
+				<li><a href="class-RedBeanPHP.OODB.html">OODB</a></li>
+				<li><a href="class-RedBeanPHP.OODBBean.html">OODBBean</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModel.html">SimpleModel</a></li>
+				<li><a href="class-RedBeanPHP.SimpleModelHelper.html">SimpleModelHelper</a></li>
+				<li><a href="class-RedBeanPHP.TagManager.html">TagManager</a></li>
+				<li><a href="class-RedBeanPHP.ToolBox.html">ToolBox</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li class="active"><a href="class-RedBeanPHP.Adapter.html">Adapter</a></li>
+				<li><a href="class-RedBeanPHP.BeanHelper.html">BeanHelper</a></li>
+				<li><a href="class-RedBeanPHP.Driver.html">Driver</a></li>
+				<li><a href="class-RedBeanPHP.Logger.html">Logger</a></li>
+				<li><a href="class-RedBeanPHP.Observer.html">Observer</a></li>
+				<li><a href="class-RedBeanPHP.Plugin.html">Plugin</a></li>
+				<li><a href="class-RedBeanPHP.QueryWriter.html">QueryWriter</a></li>
+				<li><a href="class-RedBeanPHP.RedException.html">RedException</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-RedBeanPHP.html" title="Summary of RedBeanPHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Interface Adapter</h1>
+
+
+	<div class="description">
+	<p>Adapter Interface</p>
+	</div>
+
+
+
+
+
+	<div>
+		<h4>Direct known implementers</h4>
+			<a href="class-RedBeanPHP.Adapter.DBAdapter.html">RedBeanPHP\Adapter\DBAdapter</a>
+	</div>
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-RedBeanPHP.html">RedBeanPHP</a><br>
+		
+
+				<b>License:</b>
+				<a href="BSD/GPLv2">(c) G.J.G.T. (Gabor) de Mooij and the RedBeanPHP Community.
+This source file is subject to the BSD/GPLv2 License that is bundled
+with this source code in the file license.txt.</a><br>
+				<b>Author:</b>
+				Gabor de Mooij and the RedBeanPHP Community<br>
+				<b>Desc:</b>
+				Describes the API for a RedBean Database Adapter.<br>
+				<b>File:</b>
+				RedBean/Adapter.php<br>
+			<b>Located at</b> <a href="source-class-RedBeanPHP.Adapter.html#2420-2590" title="Go to source code">models/rb.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getSQL" id="_getSQL">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getSQL">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2435-2440" title="Go to source code">getSQL</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the latest SQL statement</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the latest SQL statement</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="exec" id="_exec">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_exec">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2442-2452" title="Go to source code">exec</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>()</span>, <span>boolean <var>$noevent</var> = <span class="php-keyword1">FALSE</span> </span> )</code>
+
+		<div class="description short">
+			<p>Executes an SQL Statement using an array of values to bind
+If $noevent is TRUE then this function will not signal its
+observers to notify about the SQL execution; this to prevent
+infinite recursion when using observers.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Executes an SQL Statement using an array of values to bind
+If $noevent is TRUE then this function will not signal its
+observers to notify about the SQL execution; this to prevent
+infinite recursion when using observers.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values</dd>
+					<dt><var>$noevent</var></dt>
+					<dd>no event firing</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get" id="_get">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2454-2465" title="Go to source code">get</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a multi dimensional resultset similar to getAll
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a multi dimensional resultset similar to getAll
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRow" id="_getRow">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRow">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2467-2478" title="Go to source code">getRow</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a single row (one array) resultset.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a single row (one array) resultset.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values to bind</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCol" id="_getCol">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCol">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2480-2491" title="Go to source code">getCol</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a single column (one array) resultset.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a single column (one array) resultset.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values to bind</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCell" id="_getCell">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCell">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2493-2504" title="Go to source code">getCell</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a single cell, a scalar value as the resultset.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Executes an SQL Query and returns a resultset.
+This method returns a single cell, a scalar value as the resultset.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values to bind</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAssoc" id="_getAssoc">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAssoc">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2506-2519" title="Go to source code">getAssoc</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Executes the SQL query specified in $sql and takes
+the first two columns of the resultset. This function transforms the
+resultset into an associative array. Values from the the first column will
+serve as keys while the values of the second column will be used as values.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Executes the SQL query specified in $sql and takes
+the first two columns of the resultset. This function transforms the
+resultset into an associative array. Values from the the first column will
+serve as keys while the values of the second column will be used as values.
+The values array can be used to bind values to the place holders in the
+SQL query.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values to bind</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAssocRow" id="_getAssocRow">
+
+		<td class="attributes"><code>
+			 public 
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAssocRow">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2521-2530" title="Go to source code">getAssocRow</a>( <span>string <var>$sql</var></span>, <span>array <var>$bindings</var> = <span class="php-keyword1">array</span>() </span> )</code>
+
+		<div class="description short">
+			<p>Executes the SQL query specified in $sql and indexes
+the row by the first column.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Executes the SQL query specified in $sql and indexes
+the row by the first column.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd>SQL</dd>
+					<dt><var>$bindings</var></dt>
+					<dd>values to bind</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getInsertID" id="_getInsertID">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getInsertID">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2532-2537" title="Go to source code">getInsertID</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the latest insert ID.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the latest insert ID.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAffectedRows" id="_getAffectedRows">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAffectedRows">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2539-2545" title="Go to source code">getAffectedRows</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the number of rows that have been
+affected by the last update statement.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the number of rows that have been
+affected by the last update statement.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDatabase" id="_getDatabase">
+
+		<td class="attributes"><code>
+			 public 
+
+			object
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDatabase">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2547-2555" title="Go to source code">getDatabase</a>( )</code>
+
+		<div class="description short">
+			<p>Returns the original database resource. This is useful if you want to
+perform operations on the driver directly instead of working with the
+adapter. RedBean will only access the adapter and never to talk
+directly to the driver though.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns the original database resource. This is useful if you want to
+perform operations on the driver directly instead of working with the
+adapter. RedBean will only access the adapter and never to talk
+directly to the driver though.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					object
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="startTransaction" id="_startTransaction">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_startTransaction">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2557-2564" title="Go to source code">startTransaction</a>( )</code>
+
+		<div class="description short">
+			<p>This method is part of the RedBean Transaction Management
+mechanisms.
+Starts a transaction.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>This method is part of the RedBean Transaction Management
+mechanisms.
+Starts a transaction.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="commit" id="_commit">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_commit">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2566-2573" title="Go to source code">commit</a>( )</code>
+
+		<div class="description short">
+			<p>This method is part of the RedBean Transaction Management
+mechanisms.
+Commits the transaction.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>This method is part of the RedBean Transaction Management
+mechanisms.
+Commits the transaction.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rollback" id="_rollback">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rollback">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2575-2582" title="Go to source code">rollback</a>( )</code>
+
+		<div class="description short">
+			<p>This method is part of the RedBean Transaction Management
+mechanisms.
+Rolls back the transaction.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>This method is part of the RedBean Transaction Management
+mechanisms.
+Rolls back the transaction.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="close" id="_close">
+
+		<td class="attributes"><code>
+			 public 
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_close">#</a>
+		<code><a href="source-class-RedBeanPHP.Adapter.html#2584-2589" title="Go to source code">close</a>( )</code>
+
+		<div class="description short">
+			<p>Closes database connection.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Closes database connection.</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		UserFrosting Documentation - Master Branch API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
