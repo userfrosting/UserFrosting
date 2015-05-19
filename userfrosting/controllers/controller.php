@@ -35,7 +35,8 @@ class BaseController {
             [
                 "uri" => [
                     "public" => $this->_app->userfrosting['uri']['public']
-                ]
+                ],
+                "debug" => $this->_app->config('debug')
             ]
         ));
     }
@@ -52,7 +53,7 @@ class BaseController {
         if ($this->_app->alerts){
             echo json_encode($this->_app->alerts->getAndClearMessages());
         }
-    }    
+    }
 }
 
 

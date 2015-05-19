@@ -5,10 +5,10 @@
         ],
         "css" : [
             "font-awesome-4.3.0.css",
+            "font-starcraft.css",
             "bootstrap-3.3.2.css",
             "lib/metisMenu.css",
             "timeline.css",
-            "sb-admin-2.css",
             "lib/morris.css"
         ],
        "js": [
@@ -33,7 +33,9 @@
         ],
         "css": [
             "font-awesome-4.3.0.css",
+            "font-starcraft.css",
             "bootstrap-3.3.2.css",
+            "lib/metisMenu.css",
             "jumbotron-narrow.css",
             "bootstrap-custom.css",
             "bootstrap-switch.css",
@@ -47,6 +49,8 @@
         "js": [
             "jquery-1.11.2.js",
             "bootstrap-3.3.2.js",
+            "sb-admin-2.js",
+            "lib/metisMenu.js",
             "formValidation/formValidation.js",
             "formValidation/bootstrap.js",
             "userfrosting.js",

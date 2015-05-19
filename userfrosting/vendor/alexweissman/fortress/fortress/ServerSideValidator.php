@@ -52,6 +52,8 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
     /* Generate and add rules from the schema */
     private function generateSchemaRules(){
         foreach ($this->_schema->getSchema() as $field_name => $field){
+            if (!isset($field['validators']))
+                continue;
             $validators = $field['validators'];
             foreach ($validators as $validator_name => $validator){
                 if (isset($validator['message'])){

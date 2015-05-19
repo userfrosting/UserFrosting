@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+    $vendorDir . '/nikic/php-parser/lib/bootstrap.php',
 );

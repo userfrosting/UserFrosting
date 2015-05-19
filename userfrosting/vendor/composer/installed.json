@@ -1,64 +1,5 @@
 [
     {
-        "name": "twig/twig",
-        "version": "v1.18.0",
-        "version_normalized": "1.18.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "4cf7464348e7f9893a93f7096a90b73722be99cf"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/4cf7464348e7f9893a93f7096a90b73722be99cf",
-            "reference": "4cf7464348e7f9893a93f7096a90b73722be99cf",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.4"
-        },
-        "time": "2015-01-25 17:32:08",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.18-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
-            },
-            {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
-            },
-            {
-                "name": "Twig Team",
-                "homepage": "http://twig.sensiolabs.org/contributors",
-                "role": "Contributors"
-            }
-        ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
-        "keywords": [
-            "templating"
-        ]
-    },
-    {
         "name": "slim/views",
         "version": "0.1.3",
         "version_normalized": "0.1.3.0",
@@ -208,51 +149,6 @@
         ]
     },
     {
-        "name": "alexweissman/fortress",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/alexweissman/fortress.git",
-            "reference": "ee9baadad6d83b143d1b77c8b4fe958834b611f9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/ee9baadad6d83b143d1b77c8b4fe958834b611f9",
-            "reference": "ee9baadad6d83b143d1b77c8b4fe958834b611f9",
-            "shasum": ""
-        },
-        "require": {
-            "ezyang/htmlpurifier": ">=4.6.0",
-            "php": ">=5.4.0",
-            "vlucas/valitron": "1.2.3"
-        },
-        "time": "2015-03-05 22:44:58",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "fortress/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Alexander Weissman",
-                "homepage": "http://alexanderweissman.com"
-            }
-        ],
-        "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
-        "homepage": "https://github.com/alexweissman/fortress",
-        "keywords": [
-            "php sanitization",
-            "php validation"
-        ]
-    },
-    {
         "name": "slim/slim",
         "version": "2.6.2",
         "version_normalized": "2.6.2.0",
@@ -298,6 +194,157 @@
             "microframework",
             "rest",
             "router"
+        ]
+    },
+    {
+        "name": "twig/twig",
+        "version": "v1.18.1",
+        "version_normalized": "1.18.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "9f70492f44398e276d1b81c1b43adfe6751c7b7f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/9f70492f44398e276d1b81c1b43adfe6751c7b7f",
+            "reference": "9f70492f44398e276d1b81c1b43adfe6751c7b7f",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.7"
+        },
+        "time": "2015-04-19 08:30:27",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.18-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com",
+                "homepage": "http://fabien.potencier.org",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Twig Team",
+                "homepage": "http://twig.sensiolabs.org/contributors",
+                "role": "Contributors"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
+        "name": "nikic/php-parser",
+        "version": "v1.3.0",
+        "version_normalized": "1.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nikic/PHP-Parser.git",
+            "reference": "dff239267fd1befa1cd40430c9ed12591aa720ca"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/dff239267fd1befa1cd40430c9ed12591aa720ca",
+            "reference": "dff239267fd1befa1cd40430c9ed12591aa720ca",
+            "shasum": ""
+        },
+        "require": {
+            "ext-tokenizer": "*",
+            "php": ">=5.3"
+        },
+        "time": "2015-05-02 15:40:40",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "lib/bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Nikita Popov"
+            }
+        ],
+        "description": "A PHP parser written in PHP",
+        "keywords": [
+            "parser",
+            "php"
+        ]
+    },
+    {
+        "name": "alexweissman/fortress",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/alexweissman/fortress.git",
+            "reference": "88af8c29329f3289993a66b81091b6be51cc068c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/88af8c29329f3289993a66b81091b6be51cc068c",
+            "reference": "88af8c29329f3289993a66b81091b6be51cc068c",
+            "shasum": ""
+        },
+        "require": {
+            "ezyang/htmlpurifier": ">=4.6.0",
+            "php": ">=5.4.0",
+            "vlucas/valitron": "1.2.3"
+        },
+        "time": "2015-05-17 00:30:39",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "fortress/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Alexander Weissman",
+                "homepage": "http://alexanderweissman.com"
+            }
+        ],
+        "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
+        "homepage": "https://github.com/alexweissman/fortress",
+        "keywords": [
+            "php sanitization",
+            "php validation"
         ]
     }
 ]

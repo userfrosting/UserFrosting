@@ -27,9 +27,11 @@ class ClientSideValidator {
         foreach ($this->_schema as $field_name => $field){
             $client_rules[$field_name] = [];
             $client_rules[$field_name]['validators'] = [];
-            $validators = $field['validators'];
-            foreach ($validators as $validator_name => $validator){
-                $client_rules[$field_name]['validators'] = array_merge($client_rules[$field_name]['validators'], $this->transformValidator($validator_name, $validator));
+            if (isset($field['validators'])){
+                $validators = $field['validators'];
+                foreach ($validators as $validator_name => $validator){
+                    $client_rules[$field_name]['validators'] = array_merge($client_rules[$field_name]['validators'], $this->transformValidator($validator_name, $validator));
+                }
             }
         }
         if ($encode)

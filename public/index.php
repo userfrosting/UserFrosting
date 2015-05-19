@@ -3,10 +3,7 @@
     
 
     use UserFrosting as UF;
-
-    // Auth layer
-    $app->add(new UF\Authorization());
-    
+   
     // Front page
     $app->get('/', function () use ($app) {
         $controller = new UF\AccountController($app);
@@ -15,8 +12,16 @@
 
     // Dashboard
     $app->get('/account(/)', function () use ($app) {
+        // Forward to the user's landing page (if logged in), otherwise take them to the login page
+        
         $controller = new UF\UserController($app);
         $controller->pageDashboard();
+    });
+    
+    // User account pages
+    $app->get('/account/zerg', function () use ($app) {    
+        $controller = new UF\UserController($app);
+        $controller->pageZerg();
     });
     
     // Alert stream
@@ -85,7 +90,47 @@
         echo "</pre>";
     });
     
+    // Query logs (debug mode only)
+    $app->get('/queries', function () use ($app) {    
+        $logs = R::getDatabaseAdapter()
+            ->getDatabase()
+            ->getLogger();
+
+        print_r( $logs);
+    });
+    
+    
+    $app->get('/test', function () use ($app){
+        // Check permissions to view this page
+        if (!UF\Authorization::checkAccess("uri_test", [])){
+            $app->alerts->addMessage("danger", "Sorry, you do not have access to that page.");
+            $app->redirect($app->userfrosting['uri']['public'] . "/account");
+        } else {
+            echo "Passed action uri_test";
+        }
+    });
+    
+    $app->get('/test/auth', function() use ($app){
+        $params = [
+            "user" => [
+                "id" => 1
+            ],
+            "post" => [
+                "id" => 7
+            ]
+        ];
+        
+        $conditions = "(equals(self.id,user.id)||hasPost(self.id,post.id))&&subset(post, [\"id\", \"title\", \"content\", \"subject\", 3])";
+        
+        $ace = new UF\AccessConditionExpression($app);
+        $result = $ace->evaluateCondition($conditions, $params);
+        
+        if ($result){
+            echo "Passed $conditions";
+        } else {
+            echo "Failed $conditions";
+        }
+    });
+    
     $app->run();
-
-
 ?>

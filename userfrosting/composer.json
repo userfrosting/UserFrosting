@@ -16,6 +16,7 @@
         "twig/twig": "~1.0",
         "slim/slim": "2.*",
         "slim/views": "*",
+        "nikic/php-parser": "*",
         "alexweissman/fortress" : "dev-master"
     },
     "autoload": {

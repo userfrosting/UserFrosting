@@ -63,13 +63,17 @@
                 // Forward to account home page on success
                 window.location.replace("{{userfrosting.uri.public}}/account");
             }).fail(function(jqXHR) {
-                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-                console.log("Public root URI is " + userfrosting.uri.public);
-                // Display errors on failure
-                $('#userfrosting-alerts').flashAlerts().done(function() {
-                    // Re-enable submit button
-                    form.data('formValidation').disableSubmitButtons(false);
-                });
+                if (userfrosting['debug'] == true) {
+                    document.body.innerHTML = jqXHR.responseText;
+                } else {
+                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                    console.log("Public root URI is " + userfrosting.uri.public);
+                    // Display errors on failure
+                    $('#userfrosting-alerts').flashAlerts().done(function() {
+                        // Re-enable submit button
+                        form.data('formValidation').disableSubmitButtons(false);
+                    });
+                }
             });
           });
         });        

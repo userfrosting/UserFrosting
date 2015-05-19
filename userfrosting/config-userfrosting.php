@@ -1,7 +1,6 @@
 <?php
 
     require_once 'vendor/autoload.php';
-    require_once 'redbean/rb.php';
     require_once 'auth/password.php';
     
     use \Slim\Extras\Middleware\CsrfGuard;
@@ -27,10 +26,10 @@
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'db'            =>  [
-                'host'      => 'localhost',
-                'dbname'    => 'userfrosting',
-                'username'  => 'admin',
-                'password'  => 'password'
+                'db_host'  => 'localhost',
+                'db_name'  => 'userfrosting',
+                'db_user'  => 'admin',
+                'db_pass'  => 'password'
             ],
             'user_id_master' => 1
         ]);
@@ -45,33 +44,41 @@
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'db'            =>  [
-                'host'      => 'localhost',
-                'dbname'    => 'userfrosting',
-                'username'  => 'admin',
-                'password'  => 'password'
+                'db_host'  => 'localhost',
+                'db_name'  => 'userfrosting',
+                'db_user'  => 'admin',
+                'db_pass'  => 'password'
             ],
             'user_id_master' => 1
         ]);
     });
     
-    // Middleware
+    // CSRF Middleware
     $app->add(new CsrfGuard());
+    
+    // Specify which database model you want to use
+    class_alias("UserFrosting\MySqlDatabase",   "UserFrosting\Database");
+    class_alias("UserFrosting\MySqlUser",       "UserFrosting\User");
+    class_alias("UserFrosting\MySqlUserLoader", "UserFrosting\UserLoader");
+    class_alias("UserFrosting\MySqlAuthLoader", "UserFrosting\AuthLoader");
+    class_alias("UserFrosting\MySqlGroup",      "UserFrosting\Group");
+    
+    // Set up UFDB connection variables
+    \UserFrosting\Database::$params = $app->config('db');
+    \UserFrosting\Database::$prefix = "uf_";
     
     // Set user, if one is logged in
     if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {
-    	$app->user = $_SESSION["userfrosting"]["user"];
-    }    
-       
-    /* Initialize RedBean DB */
-    $DB = R::setup("mysql:host={$app->config('db')['host']};dbname={$app->config('db')['dbname']}",$app->config('db')['username'], $app->config('db')['password']);      
-    
-    // Allow use of table prefixes
-    R::ext('xdispense', function( $type ){ 
-        return R::getRedBean()->dispense( $type ); 
-    });
-    
-    // Set table prefix here
-    \UserFrosting\DBObject::$table_prefix = "uf_";
+    	$_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
+        $app->user = $_SESSION["userfrosting"]["user"];
+        
+        // Set up environment for this user.  Links, theme, etc.
+        if ($app->user->id == $app->config('user_id_master'))
+            $theme = 'root';
+        else {
+            $theme = $app->user->getTheme();
+        }        
+    }   
     
     // Auto-detect the public root URI
     $environment = $app->environment();
@@ -93,7 +100,7 @@
         'email_login' => false,
         'can_register' => true,
         'enable_captcha' => true,
-        'theme' => isset($app->user) ? $app->user->getTheme() : 'default'
+        'theme' => isset($app->user) ? $theme : 'default'
     ];
 
     /* Import UserFrosting variables as Slim variables */
@@ -109,6 +116,7 @@
     $app->alerts = $_SESSION['userfrosting']['alerts'];
          
     // Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
+    // A Slim application uses its built-in error handler if its debug setting is true; otherwise, it uses the custom error handler.
     $app->error(function (\Exception $e) use ($app) {
         $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
         error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
@@ -144,6 +152,10 @@
     $twig = $app->view()->getEnvironment();   
     $twig->addGlobal("userfrosting", $userfrosting);
     
+    // If a user is logged in, add the user object as a global Twig variable
+    if ($app->user)
+        $twig->addGlobal("user", $app->user);
+    
     // Load default account theme and current account theme
     // Thanks to https://diarmuid.ie/blog/post/multiple-twig-template-folders-with-slim-framework
     $loader = $twig->getLoader();
@@ -152,6 +164,14 @@
     // THEN in default.
     $loader->addPath($app->config('themes.path') . "/default");
 
+    // Add Twig function for checking permissions during dynamic menu rendering
+    $function_check_access = new Twig_SimpleFunction('checkAccess', function ($hook, $params = []) {
+        return \UserFrosting\Authorization::checkAccess($hook, $params);
+    });
+    
+    $twig->addFunction($function_check_access);    
+    
+    
     /*
     $view = $app->view();
     $view->parserOptions = array(

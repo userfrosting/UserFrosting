@@ -2,7 +2,7 @@
 
 namespace UserFrosting;
 
-// Handles account controller options
+// Handles a user's activities, such as user account settings, user dashboard, etc.
 class UserController extends \UserFrosting\BaseController {
 
     public function __construct($app){
@@ -22,9 +22,21 @@ class UserController extends \UserFrosting\BaseController {
                 'schema' =>         $this->_page_schema,
                 'active_page' =>    ""
             ]
-        ]);        
-        
-        
+        ]);          
+    }
+
+    public function pageZerg(){
+        $this->_page_schema = PageSchema::load("starcraft", $this->_app->config('schema.path') . "/pages/pages.json");
+        $this->_app->render('zerg.html', [
+            'page' => [
+                'author' =>         $this->_app->userfrosting['author'],
+                'title' =>          "Zerg",
+                'description' =>    "Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.",
+                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
+                'schema' =>         $this->_page_schema,
+                'active_page' =>    "zerg"
+            ]
+        ]);          
     }
 }
 ?>

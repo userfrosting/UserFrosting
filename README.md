@@ -22,7 +22,6 @@
 
 - URL Routing and micro-framework: [Slim](http://www.slimframework.com/)
 - Templating: [Twig](http://twig.sensiolabs.org/)
-- Database layer / ORM: [RedBeanPHP](http://redbeanphp.com/)
 
 ## Features
 
@@ -51,56 +50,51 @@ It could also be due to issues with other PHP applications running on the same s
 
 UserFrosting 0.3.0 will use the same robust authentication system, with Blowfish password hashing.  Password resets will be done via a short-term expiring token.
 
-### Authorization
+### Authorization Hooks
 
-UserFrosting will control access for two types of resources:
+UserFrosting will control access via **authorization hooks**, which represent a "checkpoint" in the codebase to determine whether or not a user is allowed to view or manipulate the model in some way.  Hooks are represented by a unique name.
 
-#### uri's
+The developer can then call the function `checkAccess` on a given hook at any place in the code where she wants to control access.  Think of them as the guards of the castle that is your website.  Hooks can be used to control access to entire pages (by calling them at the beginning of a route), or to control specific components and behaviors of your application.
 
-Slim's middleware can be used to automatically check if the currently logged-in user has permission to access the routed URI.
-
-#### actions
-
-Developers can create **actions**, which represent a "checkpoint" in the codebase to determine whether or not a user is allowed to view or manipulate the model in some way.  Actions are represented by a unique name.
+For example, suppose we want to control whether or not someone is allowed to update a message on a message board.  Let's call our hook `updateMessage`.  Suppose we are processing a POST request that contains the updated contents of the message.  For the sake of example, we've just hardcoded the request data as `$post` (in reality, you'd probably get it from `$app->request->post()`, then do some sanitization, validation, etc).
 
 ```
-$params = [
-    "title" => "Authorization control in UserFrosting",
-    "content" => "Everything you ever wanted to know!"
+$post = [
+    "id"        => 42,
+    "title"     => "Authorization control in UserFrosting",
+    "content"   => "Everything you ever wanted to know!"
 ];
 
-$authParams = [
-    "post" => $params
-];
-
-$authParams["post"]["id"] = $post->id;
-
-if (Authorization::checkAccess("updatePost", $authParams)){
-    $post->update($params);
+if (Authorization::checkAccess("updateMessage", $post)){
+    $message = MessageBoard::fetchMessage($post["id"]);
+    $message->update($post);
 } else {
     $ms->addMessage("danger", "The user does not have permission to update this post!");
     $this->_app->halt(403);
 }
-
 ```
 
-The access control list will associate a user/group with actions that they can perform, along with a set of conditions.
+So, where exactly do we decide who is authorized on the `updateMessage` hook?  In the database, of course!
 
-| id  | group_id | action | conditions |
+We use two tables, `uf_authorize_user` and `uf_authorize_group`, which we will collectively refer to as the **access control list (ACL)**.  Note that our concept of "access control list" is far more sophisticated than the traditional meaning.  UserFrosting's ACL not only handles roles (which we call groups), making it more like RBAC, but it also allows for context-sensitive access control via a set of **conditions**.  Thus, UF provides for extremely powerful, fine-grained access control.  Rules like "allow users in group 'Tutor' to schedule sessions for students, but only if they are assigned to that student" can be defined with a single entry in the `uf_authorize_group` table.  **As far as we know, this is the only system that allows for fully programmatic, role- and context- based access control for users.**
+
+The tables `uf_authorize_user` and `uf_authorize_group` will associate a user/group with hooks that they are authorized for, along with a set of conditions that must be satisfied.
+
+| id  | group_id | hook | conditions |
 | ------------- | ------------- | ------------- | ------------- |
 | 1 | 1 | updateUser | equals(self.id,user.id)&&subset(user, ["display_name", "email"]) |
-| 2 | 1 | updatePost | hasPost(self.id,post.id)&&subset(post, ["id", "title", "content", "subject"]) |
+| 2 | 1 | updateMessage | hasMessage(self.id,message.id)&&subset(message, ["id", "title", "content", "subject"]) |
 
 When `checkAccess("updateUser", $params)` is called, the authorization module performs the following steps:
 
-1. Find an entry for the action name (`updateUser`) in the access control tables that either match the currently logged-in user directly, or one of the logged-in user's groups.
+1. Find an entry for the hook (e.g., `updateUser`) in the access control tables that either match the currently logged-in user directly, or one of the logged-in user's groups.
 2. If the entry exists, check whether the conditions are satisfied (conditions can be joined together with the logical operators && and ||.)
   - A condition is checked by passing in the contents of `$params` to the `AccessCondition` function of the same name.
-  - All `AccessCondition` functions also have access to the special `self` scope, which contains the information for the currently logged-in user.
+  - All `AccessCondition` functions also have access to the special `self` scope, which contains the information for the currently logged-in user, and the `route` scope, which contains the parameters of the current request route.
   - In this example, `equals` is an `AccessCondition` function that returns true if the two parameters are equal, and false otherwise.  In this case, we are checking to see if the currently logged-in user's (`self`) `id` matches the `id` of the user they are trying to update.  In other words, this checks that the user is only attempting to modify their own information.
 3. If the conditions are met (such that the boolean string evaluates to `true`), then access is granted.
 4. If the entry does not exist, or the conditions were not met, then access is denied.
-5. There can only be one entry in the access control tables per group/action pair or user/action pair. 
+5. There can only be one entry in the access control tables per group/hook pair or user/hook pair. 
  
 ### Data Sanitization and Validation
 
@@ -119,7 +113,9 @@ Themes allow custom css and layouts for different groups and users.  Twig templa
 Our theming system consists of a separate folder for each theme, which contains one or more HTML template files and a theme stylesheet, `css/theme.css`.  This stylesheet is imported into the public folder via a special route.  The default theme is "default", and other themes work by overriding this content.  UF will by default look in the "default" theme for template files if if cannot find them in the current theme.
 
 Menus should be automatically built based on a users' permissions.  So, a menu item should show up if and only if a user has permission to access that item.
- 
+
+If you want to completely change the *content* of a page for a particular group, you should make a completely new page and then set permissions appropriately.  If you just want to change the *layout and style* of a page, then you should use a theme on top of an existing page.
+
 ### Plugins
 
 We need a plugin system that is easily extendable, and exposes the Slim `$app` instance to the plugin developer.  It should also allow the developer to modify the user's environment.
