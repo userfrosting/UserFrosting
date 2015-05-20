@@ -5,6 +5,9 @@
     
     use \Slim\Extras\Middleware\CsrfGuard;
    
+    // Set your timezone here
+    date_default_timezone_set('America/New_York');
+    
     // Use native PHP sessions
     session_cache_limiter(false);
     session_name("UserFrosting");

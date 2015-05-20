@@ -9,18 +9,25 @@ interface GroupObjectInterface {
 }
 
 interface UserObjectInterface {
+    public function getGroups();
     public function getPrimaryGroup();
+    public function getTheme();
+    public function checkAccess($hook, $params);
     public function verifyPassword($password);
     public function login($password);
 }
 
 interface UserLoaderInterface {
+    public static function exists($value, $name = "id");
     public static function fetch($value, $name = "id");
 }
 
 interface DatabaseObjectInterface {
     public function columns();
     public function table();
+    public function __isset($name);
+    public function __get($name);
+    public function __set($name, $value);  
     public function fresh();
     public function export();
     public function store();
