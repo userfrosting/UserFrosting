@@ -53,16 +53,20 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             throw new \Exception("This user does not appear to have a primary group id set.");
         }
         $db = static::connection();
-        $table = static::$prefix . static::$_table;
         // TODO: somehow make this fetchable from the TableInfoGroup trait instead of hardcoded
         $group_table = static::$prefix . "group";
         
         $query = "
             SELECT $group_table.*
-            FROM $table, $group_table
-            WHERE $table.primary_group_id = $group_table.id LIMIT 1";
+            FROM $group_table
+            WHERE $group_table.id = :primary_group_id LIMIT 1";
         
-        $stmt = $db->query($query);          
+        $stmt = $db->prepare($query);
+        
+        $sqlVars[':primary_group_id'] = $this->primary_group_id;
+        
+        $stmt->execute($sqlVars);
+        
         $results = $stmt->fetch(\PDO::FETCH_ASSOC);
         
         if ($results)
@@ -79,6 +83,43 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     
     public function setTheme($theme){
         // TODO
+    }
+ 
+    // Determine if this user has access to the given $hook under the given $params
+    public function checkAccess($hook, $params){
+        if (!$this->_id){   // TODO: use isset?  Should '0' be the 'guest user'?
+            return false;
+        }
+    
+        // The master (root) account has access to everything.
+        if ($this->_id == static::$app->config('user_id_master'))
+            return true;
+             
+        // Try to find an authorization rule for $hook that matches the currently logged-in user, or one of their groups.
+        $rule = AuthLoader::fetchUserAuthHook($this->_id, $hook);
+        
+        if (empty($rule))
+            $pass = false;
+        else {      
+            $ace = new AccessConditionExpression(static::$app); // TODO: should we have to pass the app in, or just make it available statically?
+            $pass = $ace->evaluateCondition($rule['conditions'], $params);
+        }
+        
+        // If no user-specific rule is passed, look for a group-level rule
+        if (!$pass){
+            $ace = new AccessConditionExpression(static::$app);
+            $groups = $this->getGroups();
+            foreach ($groups as $group){
+                // Try to find an authorization rule for $hook that matches this group
+                $rule = AuthLoader::fetchGroupAuthHook($group->id, $hook);
+                if (!$rule)
+                    continue;
+                $pass = $ace->evaluateCondition($rule['conditions'], $params);
+                if ($pass)
+                    break;
+            }
+        }
+        return $pass;
     }
  
     // Check that the specified password (unhashed) matches this user's password (hashed).

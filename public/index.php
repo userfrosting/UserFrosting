@@ -102,7 +102,7 @@
     
     $app->get('/test', function () use ($app){
         // Check permissions to view this page
-        if (!UF\Authorization::checkAccess("uri_test", [])){
+        if (!$app->user->checkAccess("uri_test", [])){
             $app->alerts->addMessage("danger", "Sorry, you do not have access to that page.");
             $app->redirect($app->userfrosting['uri']['public'] . "/account");
         } else {

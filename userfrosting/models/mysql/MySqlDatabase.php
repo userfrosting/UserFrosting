@@ -5,6 +5,7 @@ namespace UserFrosting;
 // Represents the UserFrosting database.  Used for initializing connections for queries.  Set $params to the connection variables you'd like to use.
 abstract class MySqlDatabase implements DatabaseInterface {
 
+    public static $app;         // The Slim app, containing configuration info
     public static $params;      // The connection parameters for the database
     public static $prefix;      // The table prefix to use in the database
     

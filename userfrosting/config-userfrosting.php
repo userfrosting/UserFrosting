@@ -38,7 +38,7 @@
     $app->configureMode('dev', function () use ($app) {
         $app->config([
             'log.enable' => false,
-            'debug' => false,
+            'debug' => true,
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
             'schema.path' =>    __DIR__ . '/schema',
@@ -64,7 +64,8 @@
     class_alias("UserFrosting\MySqlGroup",      "UserFrosting\Group");
     
     // Set up UFDB connection variables
-    \UserFrosting\Database::$params = $app->config('db');
+    \UserFrosting\Database::$app =    $app;
+    \UserFrosting\Database::$params = $app->config('db');       // TODO: do we need to pass this in separately?  Should we just have a single "config" array?
     \UserFrosting\Database::$prefix = "uf_";
     
     // Set user, if one is logged in
@@ -165,8 +166,9 @@
     $loader->addPath($app->config('themes.path') . "/default");
 
     // Add Twig function for checking permissions during dynamic menu rendering
-    $function_check_access = new Twig_SimpleFunction('checkAccess', function ($hook, $params = []) {
-        return \UserFrosting\Authorization::checkAccess($hook, $params);
+    $function_check_access = new Twig_SimpleFunction('checkAccess', function ($hook, $params = []) use ($app) {
+        // TODO: what if there is no logged-in user?
+        return $app->user->checkAccess($hook, $params);
     });
     
     $twig->addFunction($function_check_access);    

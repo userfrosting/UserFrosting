@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'AccessCondition' => $baseDir . '/auth/accesscondition.php',
+    'AccessCondition' => $baseDir . '/auth/AccessCondition.php',
     'Fortress\\ClientSideValidator' => $vendorDir . '/alexweissman/fortress/fortress/ClientSideValidator.php',
     'Fortress\\DataSanitizer' => $vendorDir . '/alexweissman/fortress/fortress/DataSanitizer.php',
     'Fortress\\DataSanitizerInterface' => $vendorDir . '/alexweissman/fortress/fortress/DataSanitizer.php',
@@ -18,13 +18,13 @@ return array(
     'Fortress\\ServerSideValidatorInterface' => $vendorDir . '/alexweissman/fortress/fortress/ServerSideValidator.php',
     'ParserNodeFunctionEvaluator' => $baseDir . '/auth/ParserNodeFunctionEvaluator.php',
     'Slim\\Extras\\Middleware\\CsrfGuard' => $baseDir . '/auth/csrfguard.php',
-    'UserFrosting\\AccessConditionExpression' => $baseDir . '/auth/authorization.php',
+    'UserFrosting\\AccessConditionExpression' => $baseDir . '/auth/AccessConditionExpression.php',
     'UserFrosting\\AccountController' => $baseDir . '/controllers/accountcontroller.php',
     'UserFrosting\\Authentication' => $baseDir . '/auth/authentication.php',
-    'UserFrosting\\Authorization' => $baseDir . '/auth/authorization.php',
     'UserFrosting\\BaseController' => $baseDir . '/controllers/controller.php',
     'UserFrosting\\DatabaseInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\DatabaseObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
+    'UserFrosting\\GroupObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\MySqlAuthLoader' => $baseDir . '/models/mysql/MySqlAuthLoader.php',
     'UserFrosting\\MySqlDatabase' => $baseDir . '/models/mysql/MySqlDatabase.php',
     'UserFrosting\\MySqlDatabaseObject' => $baseDir . '/models/mysql/MySqlDatabaseObject.php',
