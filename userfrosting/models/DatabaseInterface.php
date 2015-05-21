@@ -9,6 +9,7 @@ interface GroupObjectInterface {
 }
 
 interface UserObjectInterface {
+    public function isGuest();
     public function getGroups();
     public function getPrimaryGroup();
     public function getTheme();

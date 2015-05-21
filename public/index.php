@@ -6,22 +6,24 @@
    
     // Front page
     $app->get('/', function () use ($app) {
-        $controller = new UF\AccountController($app);
-        $controller->pageHome();
-    });
+        // Forward to the user's landing page (if logged in), otherwise take them to the home page
+        if ($app->user->isGuest()){
+            $controller = new UF\AccountController($app);
+            $controller->pageHome();
+        } else {
+            $app->redirect($app->user->getPrimaryGroup()->landing_page);        
+        }
+    })->name('uri_home');
 
-    // Dashboard
-    $app->get('/account(/)', function () use ($app) {
-        // Forward to the user's landing page (if logged in), otherwise take them to the login page
-        
-        $controller = new UF\UserController($app);
-        $controller->pageDashboard();
-    });
-    
-    // User account pages
-    $app->get('/account/zerg', function () use ($app) {    
+    // User pages
+    $app->get('/zerg', function () use ($app) {    
         $controller = new UF\UserController($app);
         $controller->pageZerg();
+    });
+
+    $app->get('/dashboard', function () use ($app) {    
+        $controller = new UF\UserController($app);
+        $controller->pageDashboard();
     });
     
     // Alert stream
@@ -52,7 +54,7 @@
             case "logout":              return $controller->logout();        
             case "register":            return $controller->pageRegister();
             case "resend-activation":   return $controller->pageResendActivation();
-            case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));    
+            case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));
             default:                    return $controller->page404();   
         }
     });

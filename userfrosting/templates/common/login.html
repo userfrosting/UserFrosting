@@ -61,7 +61,7 @@
               data: serializedData       
             }).done(function(data, statusText, jqXHR) {
                 // Forward to account home page on success
-                window.location.replace("{{userfrosting.uri.public}}/account");
+                window.location.replace("{{userfrosting.uri.public}}");
             }).fail(function(jqXHR) {
                 if (userfrosting['debug'] == true) {
                     document.body.innerHTML = jqXHR.responseText;

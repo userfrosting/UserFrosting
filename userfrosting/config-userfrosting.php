@@ -34,6 +34,7 @@
                 'db_user'  => 'admin',
                 'db_pass'  => 'password'
             ],
+            'user_id_guest'  => 0,
             'user_id_master' => 1
         ]);
     });
@@ -52,12 +53,15 @@
                 'db_user'  => 'admin',
                 'db_pass'  => 'password'
             ],
+            'user_id_guest'  => 0,
             'user_id_master' => 1
         ]);
     });
     
     // CSRF Middleware
     $app->add(new CsrfGuard());
+    
+    /**** Database Setup ****/
     
     // Specify which database model you want to use
     class_alias("UserFrosting\MySqlDatabase",   "UserFrosting\Database");
@@ -71,6 +75,8 @@
     \UserFrosting\Database::$params = $app->config('db');       // TODO: do we need to pass this in separately?  Should we just have a single "config" array?
     \UserFrosting\Database::$prefix = "uf_";
     
+    /**** User Context Setup ****/
+    
     // Set user, if one is logged in
     if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {
     	$_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
@@ -82,7 +88,11 @@
         else {
             $theme = $app->user->getTheme();
         }        
-    }   
+    // Otherwise, create a dummy "guest" user
+    } else {
+        $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
+        $theme = 'default';
+    }
     
     // Auto-detect the public root URI
     $environment = $app->environment();
@@ -104,11 +114,13 @@
         'email_login' => false,
         'can_register' => true,
         'enable_captcha' => true,
-        'theme' => isset($app->user) ? $theme : 'default'
+        'theme' => $theme
     ];
 
     /* Import UserFrosting variables as Slim variables */
     $app->userfrosting = $userfrosting;
+    
+    /**** Message Stream Setup ****/
     
     /* Set the translation path */
     \Fortress\MessageTranslator::setTranslationTable(__DIR__ . "/locale/en_US.php");
@@ -118,7 +130,9 @@
         $_SESSION['userfrosting']['alerts'] = new \Fortress\MessageStream();
 
     $app->alerts = $_SESSION['userfrosting']['alerts'];
-         
+    
+    /**** Error Handling Setup ****/
+    
     // Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
     // A Slim application uses its built-in error handler if its debug setting is true; otherwise, it uses the custom error handler.
     $app->error(function (\Exception $e) use ($app) {
@@ -151,6 +165,8 @@
           header("HTTP/1.1 500 Internal Server Error");
         }
     }
+    
+    /**** Templating Engine Setup ****/
     
     /* Also, import UserFrosting variables as global Twig variables */    
     $twig = $app->view()->getEnvironment();   

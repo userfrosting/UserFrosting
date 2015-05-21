@@ -13,6 +13,11 @@ class UserController extends \UserFrosting\BaseController {
     }
 
     public function pageDashboard(){
+        // Access-controlled page
+        if (!$this->_app->user->checkAccess('uri_dashboard')){
+            $this->_app->notFound();
+        }
+        
         $this->_app->render('dashboard.html', [
             'page' => [
                 'author' =>         $this->_app->userfrosting['author'],
@@ -26,6 +31,11 @@ class UserController extends \UserFrosting\BaseController {
     }
 
     public function pageZerg(){
+        // Access-controlled page
+        if (!$this->_app->user->checkAccess('uri_zerg')){
+            $this->_app->notFound();
+        }
+        
         $this->_page_schema = PageSchema::load("starcraft", $this->_app->config('schema.path') . "/pages/pages.json");
         $this->_app->render('zerg.html', [
             'page' => [

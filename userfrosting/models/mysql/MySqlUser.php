@@ -18,6 +18,14 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     // TODO: not sure if we should store this in the object, or just access it on demand
     protected $_theme = "default";
     
+    // Determine whether this User is a guest (id set to user_id_guest) or a live, logged-in user
+    public function isGuest(){
+        if (!isset($this->_id) || $this->_id === static::$app->config('user_id_guest'))
+            return true;
+        else
+            return false;
+    }
+    
     // Get a list of groups to which this user belongs.
     public function getGroups(){
         $db = static::connection();
@@ -86,8 +94,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     }
  
     // Determine if this user has access to the given $hook under the given $params
-    public function checkAccess($hook, $params){
-        if (!$this->_id){   // TODO: use isset?  Should '0' be the 'guest user'?
+    public function checkAccess($hook, $params = []){
+        if ($this->isGuest()){   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?
             return false;
         }
     

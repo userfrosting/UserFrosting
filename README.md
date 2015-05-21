@@ -50,6 +50,8 @@ It could also be due to issues with other PHP applications running on the same s
 
 UserFrosting 0.3.0 will use the same robust authentication system, with Blowfish password hashing.  Password resets will be done via a short-term expiring token.
 
+We will model a "guest user", which basically means any user who is not logged in.  This means that we will no longer need to do a separate check to see if a user is logged in - the controller can simply check if a user is authorized, and by default, the guest user is not authorized to do anything.
+
 ### Authorization Hooks
 
 UserFrosting will control access via **authorization hooks**, which represent a "checkpoint" in the codebase to determine whether or not a user is allowed to view or manipulate the model in some way.  Hooks are represented by a unique name.
@@ -99,6 +101,10 @@ When `checkAccess("updateUser", $params)` is called, the authorization module pe
 ### Data Sanitization and Validation
 
 UserFrosting uses the [Fortress](https://github.com/alexweissman/fortress) project to provide a schema-based system for sanitizing and validating user data.  This schema consists of a simple JSON file, with rules for how each user-submitted field should be processed.  The `HTTPRequestFortress` class handles backend sanitization and validation, while the `ClientSideValidator` class generates client-side validation rules compatible with the [FormValidation](http://formvalidation.io) Javascript plugin.
+
+Sanitization should probably happen when data is used (i.e. displayed), rather than when input.  See http://lukeplant.me.uk/blog/posts/why-escape-on-input-is-a-bad-idea/.
+So, it should go something like:
+raw input -> validation -> database -> sanitization -> output
 
  
 We need a better interface for modifying permissions:

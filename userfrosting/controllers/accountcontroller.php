@@ -23,6 +23,11 @@ class AccountController extends \UserFrosting\BaseController {
     }
     
     public function pageLogin(){
+        // Forward to home page if user is already logged in
+        if (!$this->_app->user->isGuest()){
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }        
+        
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/login.json");
         
         $this->_app->render('common/login.html', [
