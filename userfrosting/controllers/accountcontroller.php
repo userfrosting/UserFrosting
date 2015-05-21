@@ -115,13 +115,11 @@ class AccountController extends \UserFrosting\BaseController {
         // Get the alert message stream
         $ms = $this->_app->alerts; 
         
-        /*
-        //Forward the user to their default page if he/she is already logged in
-        if(isUserLoggedIn()) {
-            $ms->addMessageTranslated("danger", "LOGIN_ALREADY_COMPLETE");
-            
+        // Forward the user to their default page if he/she is already logged in
+        if(!$this->_app->user->isGuest()) {
+            $ms->addMessageTranslated("warning", "LOGIN_ALREADY_COMPLETE");
+            $this->_app->halt(200);
         }
-        */
         
         // Set up Fortress to process the request
         $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $this->_app->request->post());
@@ -205,7 +203,7 @@ class AccountController extends \UserFrosting\BaseController {
             $ms->addMessage("danger", "Aww hellllls no!");
             $this->_app->halt(500);     // Don't let on about why the request failed ;-)
         }  
-        
+               
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
                    
@@ -213,7 +211,7 @@ class AccountController extends \UserFrosting\BaseController {
         $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);        
 
         // Security measure: do not allow registering new users until the master account has been created.        
-        if (!UserMapper::idExists($this->_app->config('user_id_master'))){
+        if (!UserLoader::exists($this->_app->config('user_id_master'))){
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
             $this->_app->halt(403);
         }
@@ -225,16 +223,16 @@ class AccountController extends \UserFrosting\BaseController {
         }
           
         // Prevent the user from registering if he/she is already logged in
-        if(isUserLoggedIn()) {
+        if(!$this->_app->user->isGuest()) {
             $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_LOGOUT");
-            $this->_app->halt(403);
+            $this->_app->halt(200);
         }
-        
+                
         // Sanitize data
         $rf->sanitize();
                 
         // Validate, and halt on validation errors.
-        $error = $rf->validate(true);
+        $error = !$rf->validate(true);
         
         // Get the filtered data
         $data = $rf->data();        
@@ -247,45 +245,60 @@ class AccountController extends \UserFrosting\BaseController {
             }
         }
         
-        // Halt on any validation errors
-        if ($error)
-            $this->_app->halt(400);
-        
         // Remove captcha, password confirmation from object data
         $rf->removeFields(['captcha', 'passwordc']);
         
-        // Post-process fields
+        // Perform desired data transformations.  Is this a feature we could add to Fortress?
         $data['user_name'] = strtolower(trim($data['user_name']));
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
         // Set default title for new users
-        $title = $this->_app->userfrosting['new_user_title'];
+        $data['title'] = $this->_app->userfrosting['new_user_title'];
+        
+        if ($this->_app->userfrosting['require_activation'])
+            $data['active'] = 0;
+        else
+            $data['active'] = 1;
+        
+        // Check if username or email already exists
+        if (UserLoader::exists($data['user_name'], 'user_name')){
+            $ms->addMessageTranslated("danger", "ACCOUNT_USERNAME_IN_USE", $data);
+            $error = true;
+        }
 
+        if (UserLoader::exists($data['email'], 'email')){
+            $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
+            $error = true;
+        }
         
-            // Try to create the new user
-            if ($new_user_id = createUser($user_name, $display_name, $email, $title, $password, $passwordc)){
-        
-            } else {
-                apiReturnError($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
-            }
+        // Halt on any validation errors
+        if ($error) {
+            error_log("Validation error");
+            $this->_app->halt(400);
+        }
             
+        // TODO: set primary group for new users
+        
+        // Create the user
+        $user = new User($data);
 
-            // Add default groups and set primary group for new users
+        // TODO: add user to default groups
 
-              if (dbAddUserToDefaultGroups($new_user_id)){
-                if ($require_activation)
-                  // Activation required
-                  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE2"));
-                else
-                  // No activation required
-                  addAlert("success", lang("ACCOUNT_REGISTRATION_COMPLETE_TYPE1"));
-              } else {
-                apiReturnError($ajax, ($admin == "true") ? ACCOUNT_ROOT : SITE_ROOT);
-              }
-
+        
+        // Store new user to database
+        $user->store();
+        if ($this->_app->userfrosting['require_activation'])
+          // Activation required
+          $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
+        else
+          // No activation required
+          $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
+        
     }
     
-    
+    public function captcha(){
+        echo $this->generateCaptcha();
+    }
     
     /*
     generates a base 64 string to be placed inside the src attribute of an html image tag.

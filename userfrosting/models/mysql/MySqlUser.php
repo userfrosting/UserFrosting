@@ -18,6 +18,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     // TODO: not sure if we should store this in the object, or just access it on demand
     protected $_theme = "default";
     
+    protected $_groups; // An undefined value means that the user's groups have not been loaded yet
+    
     // Determine whether this User is a guest (id set to user_id_guest) or a live, logged-in user
     public function isGuest(){
         if (!isset($this->_id) || $this->_id === static::$app->config('user_id_guest'))
@@ -26,8 +28,63 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return false;
     }
     
-    // Get a list of groups to which this user belongs.
+    /* Determine if this user is currently logged in. */
+    public static function isLoggedIn(){
+        // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
+    }
+    
+    // Get a list of groups to which this user belongs, lazily loading them if not already set
     public function getGroups(){
+        if (!isset($this->_groups))
+            $this->_groups = $this->fetchGroups();
+            
+        return $this->_groups;
+    }
+
+    // Add this user to a specified group.  Won't be stored in DB until store() is called.
+    public function addGroup($group_id){
+        // First, load current groups for user
+        $this->getGroups();
+        // Return if user already in group
+        if (isset($this->_groups[$group_id]))
+            return $this;
+        
+        // Next, check that the requested group actually exists
+        if (!GroupLoader::exists($group_id))
+            throw new \Exception("The specified group_id ($group_id) does not exist.");
+                
+        // Ok, add to the list of groups
+        $this->_groups[$group_id] = GroupLoader::fetch($group_id);
+        
+        return $this;        
+    }
+    
+    // Remove this user from a specified group.  Won't be stored in DB until store() is called.
+    public function removeGroup($group_id){
+        // First, load current groups for user
+        $this->getGroups();
+        // Return if user not in group
+        if (!isset($this->_groups[$group_id]))
+            return $this;
+                
+        // Ok, remove from the list of groups
+        unset($this->_groups[$group_id]);
+        
+        return $this;           
+    
+    }
+    
+    /* Refresh the User and their associated Groups from the DB.
+     *
+     */
+    public function fresh(){
+        $user = new User(parent::fresh(), $this->_id);
+        $user->_groups = $this->fetchGroups();
+        return $user;
+    }
+       
+    // Fetch an array of Groups that this User belongs to from the database
+    private function fetchGroups(){
         $db = static::connection();
 
         // TODO: somehow make this fetchable from the TableInfoGroup trait instead of hardcoded
@@ -46,7 +103,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         
         $stmt->execute($sqlVars);
         
-        // For now just return a list of Group objects.  Later we can implement GroupCollection for faster access.
+        // For now just create an array of Group objects.  Later we can implement GroupCollection for faster access.
         $results = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $id = $row['id'];
@@ -54,8 +111,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         }
         return $results;        
     }
- 
-    // Get the primary group to which this user belongs.
+
+    // Get the primary group to which this user belongs.  TODO: cache in object
     public function getPrimaryGroup(){
         if (!isset($this->primary_group_id)){
             throw new \Exception("This user does not appear to have a primary group id set.");
@@ -93,6 +150,67 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         // TODO
     }
  
+    public function store(){
+        // Initialize timestamps, etc for new Users.  Should this be done here, or somewhere else?
+        if (!isset($this->_id)){
+            $this->sign_up_stamp = date("Y-m-d H:i:s");
+            $this->password = Authentication::hashPassword($this->password);    // Should this be done in the constructor?   
+            $this->activation_token = UserLoader::generateActivationToken();
+            $this->last_activation_request = date("Y-m-d H:i:s");
+        }
+        
+        // Update the user record itself
+        parent::store();
+        
+        // Get the User object's current groups
+        $this->getGroups();
+        
+        // Get the User's groups as stored in the DB
+        $db_groups = $this->fetchGroups();
+
+        // TODO: somehow make this fetchable from the TableInfoGroup trait instead of hardcoded
+        $link_table = static::$prefix . "group_user";
+
+        // Add any groups in object that are not in DB yet
+        $db = static::connection();
+        $query = "
+            INSERT INTO $link_table (user_id, group_id)
+            VALUES (:user_id, :group_id);";
+        foreach ($this->_groups as $group_id => $group){
+            $stmt = $db->prepare($query);          
+            if (!isset($db_groups[$group_id])){
+                $sqlVars = [
+                    $group_id = $group_id,
+                    $user_id = $this->_id
+                ];
+                $stmt->execute($sqlVars);
+            } 
+        }
+        
+        // Remove any group links in DB that are no longer modeled in this object
+        if ($db_groups){
+            $db = static::connection();
+            $query = "
+                DELETE FROM $link_table
+                WHERE group_id = :group_id
+                AND user_id = :user_id LIMIT 1";
+            
+            $stmt = $db->prepare($query);          
+            foreach ($db_groups as $group_id => $group){
+                if (!isset($this->_groups[$group_id])){
+                    $sqlVars = [
+                        $group_id = $group_id,
+                        $user_id = $this->_id
+                    ];
+                    $stmt->execute($sqlVars);
+                }
+            }
+        }
+        
+        // Store function should always return the id of the object
+        return $this->_id;
+    }
+    
     // Determine if this user has access to the given $hook under the given $params
     public function checkAccess($hook, $params = []){
         if ($this->isGuest()){   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?

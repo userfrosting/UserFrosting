@@ -7,82 +7,94 @@
       <div class="jumbotron">
         <h1>Let's get started!</h1>
         <p class="lead">Registration is fast and simple.</p>
-        <form name="register" method="post" action="api/create_user.php" class="form-horizontal">
+        {% include 'common/components/alerts.html' %}
+        <form name="register" method="post" action="{{userfrosting.uri.public}}/account/register" class="form-horizontal">
+        {% include 'common/components/csrf.html' %}
             <div class="row">
-                <div id="display-alerts" class="col-lg-12">
-                
-                </div>
-            </div>		
-            <div class="row">
-              <div class="col-sm-12">
-                    <div class="form-group   ">
+                <div class="col-sm-12">
+                    <div class="form-group">
                         <label class="control-label  col-sm-4">Username</label>
-                        <div class="col-sm-8"><div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
-                    <input type="text" class="form-control " name="user_name" autocomplete="off" value="" placeholder="User name"   ></div></div>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                                <input type="text" class="form-control" name="user_name" autocomplete="off" value="derp" placeholder="User name">
+                            </div>
+                        </div>
                     </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                    <div class="form-group   ">
-                        <label class="control-label  col-sm-4">Display Name</label>
-                        <div class="col-sm-8"><div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
-                    <input type="text" class="form-control " name="display_name" autocomplete="off" value="" placeholder="Display name"   ></div></div>
-                    </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                    <div class="form-group   ">
-                        <label class="control-label  col-sm-4">Email</label>
-                        <div class="col-sm-8"><div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
-                    <input type="text" class="form-control " name="email" autocomplete="off" value="" placeholder="Email address"   ></div></div>
-                    </div>
-              </div>
-            </div>		  
-            <div class="row">
-              <div class="col-sm-12">
-                    <div class="form-group   ">
-                        <label class="control-label  col-sm-4">Password</label>
-                        <div class="col-sm-8"><div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
-                    <input type="password" class="form-control " name="password" autocomplete="off" value="" placeholder="8-50 characters"   ></div></div>
-                    </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                    <div class="form-group   ">
-                        <label class="control-label  col-sm-4">Confirm password</label>
-                        <div class="col-sm-8"><div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
-                    <input type="password" class="form-control " name="passwordc" autocomplete="off" value="" placeholder="Re-enter your password"   ></div></div>
-                    </div>
-              </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="form-group   ">
-                        <label class="control-label  col-sm-4">Confirm captcha code</label>
-                        <div class="col-sm-4">
-                            <div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-eye"></i></span>
-                                <input type="text" class="form-control " name="captcha" autocomplete="off" value="" placeholder="Organics only!"   >
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Display Name</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                                <input type="text" class="form-control" name="display_name" autocomplete="off" value="derp" placeholder="Display name">
                             </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <img src="{{captcha_image}}" id="captcha">
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-        
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Email</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+                                <input type="text" class="form-control" name="email" placeholder="Email address" value="derp@derp.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>		  
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Password</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="password" class="form-control" name="password" autocomplete="off" value="buttbutt" placeholder="8-50 characters">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Confirm password</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="password" class="form-control" name="passwordc" autocomplete="off" value="buttbutt" placeholder="Re-enter your password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Confirm captcha code</label>
+                        <div class="col-sm-4">
+                            <div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-eye"></i></span>
+                                <input type="text" class="form-control" id="captcha-input" name="captcha" autocomplete="off" value="" placeholder="Organics only!">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <img src="{{captcha_image}}" id="captcha" data-target="#captcha-input">
+                        </div>
+                    </div>
+                </div>
             </div>
             <br>
             <div class="row">
                 <div class="col-sm-12">
                     <div>  
-                        <button type="submit" name="btn_register" class="btn btn-success  "  data-loading-text="Please wait..." >
-                            Register
-                        </button>
+                        <button type="submit" name="btn_register" class="btn btn-success"  data-loading-text="Please wait..." >Register</button>
                     </div>
                 </div>
             </div>
@@ -96,9 +108,8 @@
     </div> <!-- /container -->
     {% include 'common/components/footer.html' %}
     <script>
-        $(document).ready(function() {            
-          alertWidget('display-alerts');
-          // Process form     
+        $(document).ready(function() {           
+         // Process form 
           $("form[name='register']").formValidation({
             framework: 'bootstrap',
             // Feedback icons
@@ -107,45 +118,61 @@
                 invalid: 'fa fa-times',
                 validating: 'fa fa-refresh'
             },
-            fields: {{validators | raw}}
-          });
-          
-          // Process form     
-          $("form[name='register']").submit(function(e){
-            // Prevent form from submitting twice
+            fields: {{ validators | raw }}
+          }).on('success.form.fv', function(e) {
+            // Prevent double form submission
             e.preventDefault();
-            var form = $(this);   
+
+            // Get the form instance
+            var form = $(e.target);
+
             // Serialize and post to the backend script in ajax mode
             var serializedData = form.serialize();
-            serializedData += '&ajaxMode=true';     
-            //console.log(serializedData);
-            var url = APIPATH + "create_user.php";
+            var url = form.attr('action');
             $.ajax({  
               type: "POST",  
               url: url,  
-              data: serializedData
-            }).done(function(result) {
-                var resultJSON = processJSONResult(result);
-                if (resultJSON['errors'] && resultJSON['errors'] > 0){
-                      console.log("error");
-                      // Reload captcha
-                      var img_src = APIPATH + 'generate_captcha.php?' + new Date().getTime();
-                      $.ajax({  
-                        type: "GET",  
-                        url: img_src,  
-                        dataType: "text"
-                      }).done(function(result) { 
-                          $('#captcha').attr('src', result);
-                          form.find('input[name="captcha"]' ).val("");
-                          alertWidget('display-alerts');
-                          return;
-                      });
+              data: serializedData       
+            }).done(function(data, statusText, jqXHR) {
+                // Forward to login page on success
+                window.location.replace(userfrosting.uri.public + "/account/login");
+            }).fail(function(jqXHR) {
+                if (userfrosting['debug'] == true) {
+                    document.body.innerHTML = jqXHR.responseText;
                 } else {
-                  window.location.replace('login.php');
+                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                    // Display errors on failure
+                    $('#userfrosting-alerts').flashAlerts().done(function() {
+                        // Re-enable submit button
+                        form.data('formValidation').disableSubmitButtons(false);
+                        // Reload captcha
+                        $("#captcha").captcha();
+                    });
                 }
             });
           });
         });
+        
+        // This plugin reloads the captcha in the specified field
+        (function( $ ) {
+            $.fn.captcha = function() {
+                var field = $(this);
+                console.log("Reloading captcha");
+                
+                var img_src = userfrosting.uri.public + "/account/captcha?" + new Date().getTime();
+                
+                return $.ajax({  
+                  type: "GET",  
+                  url: img_src,  
+                  dataType: "text"
+                }).then(function(data, statusText, jqXHR) {  // Pass the deferral back
+                    field.attr('src', data);
+                    var target = field.data('target');
+                    $(target).val("");
+                    return data;
+                });
+            };
+        }( jQuery ));        
     </script>
   </body>
 </html>

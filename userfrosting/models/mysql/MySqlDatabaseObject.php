@@ -58,9 +58,10 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         }
     }
     
-    /* Refresh the user from the DB.
+    /* Refresh the object from the DB.
      *
      */
+    // TODO: Should this just update the internal contents of this object, rather than create a new one?
     public function fresh(){
         if (isset($this->_id)){
             $db = static::connection();
@@ -77,20 +78,21 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
               
             $results = $stmt->fetch(\PDO::FETCH_ASSOC);
             
+            // PDO returns false if no record found
             if ($results)
-                return new User($results, $results['id']);
+                return $results;
         }
         throw new \Exception("Could not refresh this object!  Either it does not exist in the database, or is in an invalid state.");
     }
       
-    /* Get the properties of this User as an associative array.
+    /* Get the properties of this object as an associative array.
      *
      */  
     public function export(){
         return $this->_properties;
     }
     
-    /* Store the user from the DB, creating a new record if one doesn't already exist.
+    /* Store the object in the DB, creating a new record if one doesn't already exist.
      *
      */    
     public function store() {
@@ -119,8 +121,6 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
             $stmt = $db->prepare($query);
             $stmt->execute($sqlVars);
         } else {
-            // TODO: initialize timestamps, etc for new Users
-            
             $sqlVars = [];
             foreach ($this->_properties as $name => $value){
                 $column_list[] = $name;

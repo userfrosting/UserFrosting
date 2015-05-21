@@ -8,9 +8,15 @@ interface GroupObjectInterface {
     public function getUsers();
 }
 
+interface GroupLoaderInterface {
+
+}
+
 interface UserObjectInterface {
     public function isGuest();
     public function getGroups();
+    public function addGroup($group_id);
+    public function removeGroup($group_id);
     public function getPrimaryGroup();
     public function getTheme();
     public function checkAccess($hook, $params);
@@ -19,6 +25,10 @@ interface UserObjectInterface {
 }
 
 interface UserLoaderInterface {
+
+}
+
+interface ObjectLoaderInterface {
     public static function exists($value, $name = "id");
     public static function fetch($value, $name = "id");
 }

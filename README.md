@@ -67,12 +67,12 @@ $post = [
     "content"   => "Everything you ever wanted to know!"
 ];
 
-if (Authorization::checkAccess("updateMessage", $post)){
+if ($app->user->checkAccess("updateMessage", $post)){
     $message = MessageBoard::fetchMessage($post["id"]);
     $message->update($post);
 } else {
     $ms->addMessage("danger", "The user does not have permission to update this post!");
-    $this->_app->halt(403);
+    $app->halt(403);
 }
 ```
 

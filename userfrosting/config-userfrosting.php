@@ -42,7 +42,7 @@
     $app->configureMode('dev', function () use ($app) {
         $app->config([
             'log.enable' => false,
-            'debug' => true,
+            'debug' => false,
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
             'schema.path' =>    __DIR__ . '/schema',
@@ -64,11 +64,12 @@
     /**** Database Setup ****/
     
     // Specify which database model you want to use
-    class_alias("UserFrosting\MySqlDatabase",   "UserFrosting\Database");
-    class_alias("UserFrosting\MySqlUser",       "UserFrosting\User");
-    class_alias("UserFrosting\MySqlUserLoader", "UserFrosting\UserLoader");
-    class_alias("UserFrosting\MySqlAuthLoader", "UserFrosting\AuthLoader");
-    class_alias("UserFrosting\MySqlGroup",      "UserFrosting\Group");
+    class_alias("UserFrosting\MySqlDatabase",       "UserFrosting\Database");
+    class_alias("UserFrosting\MySqlUser",           "UserFrosting\User");
+    class_alias("UserFrosting\MySqlUserLoader",     "UserFrosting\UserLoader");
+    class_alias("UserFrosting\MySqlAuthLoader",     "UserFrosting\AuthLoader");
+    class_alias("UserFrosting\MySqlGroup",          "UserFrosting\Group");
+    class_alias("UserFrosting\MySqlGroupLoader",    "UserFrosting\GroupLoader");
     
     // Set up UFDB connection variables
     \UserFrosting\Database::$app =    $app;
@@ -79,7 +80,8 @@
     
     // Set user, if one is logged in
     if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {
-    	$_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
+    	// Refresh the user.  If they don't exist any more, then an exception will be thrown.
+        $_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
         $app->user = $_SESSION["userfrosting"]["user"];
         
         // Set up environment for this user.  Links, theme, etc.
@@ -93,6 +95,8 @@
         $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
         $theme = 'default';
     }
+        
+    /***** Environment Setup *****/
     
     // Auto-detect the public root URI
     $environment = $app->environment();
@@ -114,6 +118,8 @@
         'email_login' => false,
         'can_register' => true,
         'enable_captcha' => true,
+        'require_activation' => false,
+        'new_user_title' => "New User", // TODO: make this a parameter for each group?
         'theme' => $theme
     ];
 

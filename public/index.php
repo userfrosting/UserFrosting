@@ -51,10 +51,11 @@
     
         switch ($action) {
             case "login":               return $controller->pageLogin();
-            case "logout":              return $controller->logout();        
+            case "logout":              return $controller->logout(); 
             case "register":            return $controller->pageRegister();
             case "resend-activation":   return $controller->pageResendActivation();
             case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));
+            case "captcha":             return $controller->captcha(); 
             default:                    return $controller->page404();   
         }
     });
@@ -64,9 +65,9 @@
     
         switch ($action) {
             case "login":               return $controller->login();     
-            case "register":            return $controller->pageRegister();
-            case "resend-activation":   return $controller->pageResendActivation();
-            case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));    
+            case "register":            return $controller->register();
+            case "resend-activation":   return $controller->resendActivation();
+            case "forgot-password":     return $controller->forgotPassword($app->request()->get('token'));    
             default:                    return $controller->page404();   
         }
     });    
