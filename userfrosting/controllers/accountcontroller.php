@@ -44,14 +44,21 @@ class AccountController extends \UserFrosting\BaseController {
     }
 
     public function pageRegister($can_register = false){
-        /*
-        if (!userIdExists('1')){
-            addAlert("danger", lang("MASTER_ACCOUNT_NOT_EXISTS"));
-            header("Location: install/wizard_root_user.php");
-            exit();
+        // Get the alert message stream
+        $ms = $this->_app->alerts;
+        
+        // Prevent the user from registering if he/she is already logged in
+        if(!$this->_app->user->isGuest()) {
+            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_LOGOUT");
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
-        */        
 
+        // Security measure: do not allow registering new users until the master account has been created.        
+        if (!UserLoader::exists($this->_app->config('user_id_master'))){
+            $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }
+        
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/register.json");
 
         $userfrosting = $this->_app->userfrosting;
@@ -273,17 +280,21 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Halt on any validation errors
         if ($error) {
-            error_log("Validation error");
             $this->_app->halt(400);
         }
-            
-        // TODO: set primary group for new users
+        
+        // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
+        $primaryGroup = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        $data['primary_group_id'] = $primaryGroup->id;
         
         // Create the user
         $user = new User($data);
 
-        // TODO: add user to default groups
-
+        // Add user to default groups, including default primary group
+        $defaultGroups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+        $user->addGroup($primaryGroup->id);
+        foreach ($defaultGroups as $group_id => $group)
+            $user->addGroup($group_id);    
         
         // Store new user to database
         $user->store();

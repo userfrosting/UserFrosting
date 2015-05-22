@@ -30,6 +30,22 @@ class MySqlGroupLoader extends MySqlObjectLoader implements GroupLoaderInterface
         else
             return false;
     }
+
+    /* Fetch a list of groups based on the value of a given column.  Returns empty array if no match is found.
+     * @param value $value The value to find. (defaults to null, which means return all records in the table)
+     * @param string $name The name of the column to match (defaults to null)
+     * @return array An array of Group objects
+    */
+    public static function fetchAll($value = null, $name = null){
+        $resultArr = parent::fetchAll($value, $name);
+        
+        $results = [];
+        foreach ($resultArr as $id => $group)
+            $results[$id] = new Group($group, $id);
+
+        return $results;
+    }
+    
 }
 
 ?>

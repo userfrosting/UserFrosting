@@ -31,6 +31,21 @@ class MySqlUserLoader extends MySqlObjectLoader implements UserLoaderInterface {
             return false;
     }
     
+    /* Fetch a list of users based on the value of a given column.  Returns empty array if no match is found.
+     * @param value $value The value to find. (defaults to null, which means return all records in the table)
+     * @param string $name The name of the column to match (defaults to null)
+     * @return array An array of User objects
+    */
+    public static function fetchAll($value = null, $name = null){
+        $resultArr = parent::fetchAll($value, $name);
+        
+        $results = [];
+        foreach ($resultArr as $id => $user)
+            $results[$id] = new User($user, $id);
+
+        return $results;
+    }
+    
     //Generate an activation key for a user
     public static function generateActivationToken($gen = null) {
         do {

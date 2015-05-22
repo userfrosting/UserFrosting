@@ -71,6 +71,11 @@
     class_alias("UserFrosting\MySqlGroup",          "UserFrosting\Group");
     class_alias("UserFrosting\MySqlGroupLoader",    "UserFrosting\GroupLoader");
     
+    // Set enumerative values
+    defined("GROUP_NOT_DEFAULT") or define("GROUP_NOT_DEFAULT", 0);    
+    defined("GROUP_DEFAULT") or define("GROUP_DEFAULT", 1);
+    defined("GROUP_DEFAULT_PRIMARY") or define("GROUP_DEFAULT_PRIMARY", 2);
+    
     // Set up UFDB connection variables
     \UserFrosting\Database::$app =    $app;
     \UserFrosting\Database::$params = $app->config('db');       // TODO: do we need to pass this in separately?  Should we just have a single "config" array?

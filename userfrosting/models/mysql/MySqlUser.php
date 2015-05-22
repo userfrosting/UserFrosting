@@ -180,8 +180,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             $stmt = $db->prepare($query);          
             if (!isset($db_groups[$group_id])){
                 $sqlVars = [
-                    $group_id = $group_id,
-                    $user_id = $this->_id
+                    ':group_id' => $group_id,
+                    ':user_id' => $this->_id
                 ];
                 $stmt->execute($sqlVars);
             } 
@@ -199,8 +199,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             foreach ($db_groups as $group_id => $group){
                 if (!isset($this->_groups[$group_id])){
                     $sqlVars = [
-                        $group_id = $group_id,
-                        $user_id = $this->_id
+                        ':group_id' => $group_id,
+                        ':user_id' => $this->_id
                     ];
                     $stmt->execute($sqlVars);
                 }

@@ -25,12 +25,13 @@ interface UserObjectInterface {
 }
 
 interface UserLoaderInterface {
-
+    public static function generateActivationToken($gen = null);
 }
 
 interface ObjectLoaderInterface {
     public static function exists($value, $name = "id");
     public static function fetch($value, $name = "id");
+    public static function fetchAll($value = null, $name = null);
 }
 
 interface DatabaseObjectInterface {
