@@ -18,7 +18,6 @@ interface UserObjectInterface {
     public function addGroup($group_id);
     public function removeGroup($group_id);
     public function getPrimaryGroup();
-    public function getTheme();
     public function checkAccess($hook, $params);
     public function verifyPassword($password);
     public function login($password);

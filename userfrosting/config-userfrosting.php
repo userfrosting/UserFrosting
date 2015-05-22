@@ -93,7 +93,7 @@
         if ($app->user->id == $app->config('user_id_master'))
             $theme = 'root';
         else {
-            $theme = $app->user->getTheme();
+            $theme = $app->user->theme;
         }        
     // Otherwise, create a dummy "guest" user
     } else {
@@ -101,7 +101,7 @@
         $theme = 'default';
     }
         
-    /***** Environment Setup *****/
+    /***** Site Environment Setup *****/
     
     // Auto-detect the public root URI
     $environment = $app->environment();
@@ -110,6 +110,7 @@
     $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] . $environment['SCRIPT_NAME'];
 
     /* UserFrosting config options */
+    // TODO: load (some of these) from configuration table
     $userfrosting = [
         'uri' => [
             'public' =>    $uri_public_root,
@@ -124,7 +125,6 @@
         'can_register' => true,
         'enable_captcha' => true,
         'require_activation' => false,
-        'new_user_title' => "New User", // TODO: make this a parameter for each group?
         'theme' => $theme
     ];
 

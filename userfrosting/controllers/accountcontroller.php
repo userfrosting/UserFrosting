@@ -259,8 +259,6 @@ class AccountController extends \UserFrosting\BaseController {
         $data['user_name'] = strtolower(trim($data['user_name']));
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
-        // Set default title for new users
-        $data['title'] = $this->_app->userfrosting['new_user_title'];
         
         if ($this->_app->userfrosting['require_activation'])
             $data['active'] = 0;
@@ -282,11 +280,13 @@ class AccountController extends \UserFrosting\BaseController {
         if ($error) {
             $this->_app->halt(400);
         }
-        
+    
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
         $primaryGroup = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
         $data['primary_group_id'] = $primaryGroup->id;
-        
+        // Set default title for new users
+        $data['title'] = $primaryGroup->new_user_title;
+            
         // Create the user
         $user = new User($data);
 

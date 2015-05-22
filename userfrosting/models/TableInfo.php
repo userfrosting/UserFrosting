@@ -29,7 +29,9 @@ trait TableInfoGroup {
             "is_default",
             "can_delete",
             "theme",
-            "landing_page"
+            "landing_page",
+            "new_user_title",
+            "icon"
         ];
     
     protected static $_table = "group";

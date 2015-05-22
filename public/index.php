@@ -11,7 +11,7 @@
             $controller = new UF\AccountController($app);
             $controller->pageHome();
         } else {
-            $app->redirect($app->user->getPrimaryGroup()->landing_page);        
+            $app->redirect($app->user->landing_page);        
         }
     })->name('uri_home');
 

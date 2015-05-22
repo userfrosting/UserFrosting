@@ -15,10 +15,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
 
     use TableInfoUser;  // Trait to supply static info on the User table
     
-    // TODO: not sure if we should store this in the object, or just access it on demand
-    protected $_theme = "default";
-    
-    protected $_groups; // An undefined value means that the user's groups have not been loaded yet
+    protected $_groups;         // An undefined value means that the user's groups have not been loaded yet
+    protected $_primary_group;  // The primary group for the user
     
     // Determine whether this User is a guest (id set to user_id_guest) or a live, logged-in user
     public function isGuest(){
@@ -31,6 +29,38 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     /* Determine if this user is currently logged in. */
     public static function isLoggedIn(){
         // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
+    }
+    
+    /* Refresh the User and their associated Groups from the DB.
+     *
+     */
+    public function fresh(){
+        $user = new User(parent::fresh(), $this->_id);
+        $user->_groups = $this->fetchGroups();
+        $user->_primary_group = $this->fetchPrimaryGroup();
+        return $user;
+    }
+    
+    // Must be implemented for compatibility with Twig
+    public function __isset($name) {
+        if ($name == "primary_group" || $name == "theme" || $name == "icon" || $name == "landing_page")
+            return isset($this->_primary_group);
+        else
+            return parent::__isset($name);
+    }
+    
+    // Getter
+    public function __get($name){
+        if ($name == "primary_group")
+            return $this->getPrimaryGroup();
+        else if ($name == "theme")
+            return $this->getPrimaryGroup()->theme;
+        else if ($name == "icon")
+            return $this->getPrimaryGroup()->icon;
+        else if ($name == "landing_page")
+            return $this->getPrimaryGroup()->landing_page;
+        else
+            return parent::__get($name);
     }
     
     // Get a list of groups to which this user belongs, lazily loading them if not already set
@@ -73,15 +103,6 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $this;           
     
     }
-    
-    /* Refresh the User and their associated Groups from the DB.
-     *
-     */
-    public function fresh(){
-        $user = new User(parent::fresh(), $this->_id);
-        $user->_groups = $this->fetchGroups();
-        return $user;
-    }
        
     // Fetch an array of Groups that this User belongs to from the database
     private function fetchGroups(){
@@ -112,8 +133,15 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $results;        
     }
 
-    // Get the primary group to which this user belongs.  TODO: cache in object
+    // Get the primary group to which this user belongs.  Lazy load into object.
     public function getPrimaryGroup(){
+        if (!isset($this->_primary_group))
+            $this->_primary_group = $this->fetchPrimaryGroup();
+            
+        return $this->_primary_group;
+    }
+    
+    private function fetchPrimaryGroup() {
         if (!isset($this->primary_group_id)){
             throw new \Exception("This user does not appear to have a primary group id set.");
         }
@@ -138,16 +166,6 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return new Group($results, $results['id']);
         else
             return false;        
-    }
- 
-    /* Gets the theme associated with the user. */
-    public function getTheme(){
-        $theme = $this->getPrimaryGroup()->theme;
-        return $theme;
-    }
-    
-    public function setTheme($theme){
-        // TODO
     }
  
     public function store(){
