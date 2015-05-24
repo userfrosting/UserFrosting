@@ -8,7 +8,7 @@
         <h1>Let's get started!</h1>
         <p class="lead">Registration is fast and simple.</p>
         {% include 'common/components/alerts.html' %}
-        <form name="register" method="post" action="{{userfrosting.uri.public}}/account/register" class="form-horizontal">
+        <form name="register" method="post" action="{{site.uri.public}}/account/register" class="form-horizontal">
         {% include 'common/components/csrf.html' %}
             <div class="row">
                 <div class="col-sm-12">
@@ -135,7 +135,7 @@
               data: serializedData       
             }).done(function(data, statusText, jqXHR) {
                 // Forward to login page on success
-                window.location.replace(userfrosting.uri.public + "/account/login");
+                window.location.replace(site.uri.public + "/account/login");
             }).fail(function(jqXHR) {
                 if (userfrosting['debug'] == true) {
                     document.body.innerHTML = jqXHR.responseText;
@@ -159,7 +159,7 @@
                 var field = $(this);
                 console.log("Reloading captcha");
                 
-                var img_src = userfrosting.uri.public + "/account/captcha?" + new Date().getTime();
+                var img_src = site.uri.public + "/account/captcha?" + new Date().getTime();
                 
                 return $.ajax({  
                   type: "GET",  

@@ -29,6 +29,21 @@
 
 
 
+### Site Settings
+
+class SiteSettings
+
+$app->site = new SiteSettings();        // Loads all settings from the database on instantiation
+echo $app->site->site_title;            // Print site title
+$app->site->site_title = "Something Different";     // Change site title
+$app->site->new_option = "Something";               // FAILS!  cannot add/remove settings in core context
+$app->site->set("myPlugin", "setting1", "val");    // Create or update a setting called "setting1" in the "myPlugin" context, and set its value
+$app->site->register("myPlugin", "setting1", "Ninjas?", "toggle", [0 => "off", 1 => "on"]);     // Register a setting with the Site Settings page, and the specified parameters.
+$app->site->store();    // Save all settings in DB
+
+
+
+
 ### Sessions
 
 UserFrosting will use native PHP sessions.  We could use Slim's [encrypted session cookies](http://docs.slimframework.com/#Cookie-Session-Store), but unfortunately they only allow a max of 4KB of data - too little for what a typical use case will require.
@@ -97,7 +112,18 @@ When `checkAccess("updateUser", $params)` is called, the authorization module pe
 3. If the conditions are met (such that the boolean string evaluates to `true`), then access is granted.
 4. If the entry does not exist, or the conditions were not met, then access is denied.
 5. There can only be one entry in the access control tables per group/hook pair or user/hook pair. 
- 
+
+#### Preset URI hooks:
+
+- uri_home
+- uri_dashboard
+- uri_site_settings
+- uri_slim_info
+- uri_php_info
+- uri_zerg
+- uri_users
+- uri_error_log
+
 ### Data Sanitization and Validation
 
 UserFrosting uses the [Fortress](https://github.com/alexweissman/fortress) project to provide a schema-based system for sanitizing and validating user data.  This schema consists of a simple JSON file, with rules for how each user-submitted field should be processed.  The `HTTPRequestFortress` class handles backend sanitization and validation, while the `ClientSideValidator` class generates client-side validation rules compatible with the [FormValidation](http://formvalidation.io) Javascript plugin.

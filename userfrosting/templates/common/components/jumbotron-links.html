@@ -1,20 +1,20 @@
-{% set can_register = userfrosting.can_register|default(false) %}
+{% set can_register = site.can_register|default(false) %}
 <div class="jumbotron-links">
     {% if can_register %}
     <div class='row'>
         <div class='col-md-12'>
-          <a href='{{userfrosting.uri.public}}/account/register' class='btn btn-link' role='button' value='Register'>Not a member yet?  Register here.</a>
+          <a href='{{site.uri.public}}/account/register' class='btn btn-link' role='button' value='Register'>Not a member yet?  Register here.</a>
         </div>
     </div>
     {% endif%}
     <div class='row'>
         <div class='col-md-12'>
-          <a href='{{userfrosting.uri.public}}/account/forgot-password' class='btn btn-link' role='button' value='Forgot Password'>Forgot your password?</a>
+          <a href='{{site.uri.public}}/account/forgot-password' class='btn btn-link' role='button' value='Forgot Password'>Forgot your password?</a>
         </div>
     </div>
     <div class='row'>
         <div class='col-md-12'>
-          <a href='{{userfrosting.uri.public}}/account/resend-activation' class='btn btn-link' role='button' value='Activate'>Resend activation email</a>
+          <a href='{{site.uri.public}}/account/resend-activation' class='btn btn-link' role='button' value='Activate'>Resend activation email</a>
         </div>
     </div>
 </div>

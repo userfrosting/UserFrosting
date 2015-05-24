@@ -13,7 +13,7 @@ class AccountController extends \UserFrosting\BaseController {
                
         $this->_app->render('common/home.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $this->_app->site->author,
                 'title' =>          "A secure, modern user management system based on UserCake, jQuery, and Bootstrap.",
                 'description' =>    "Main landing page for public access to this website.",
                 'schema' =>         $this->_page_schema,
@@ -32,7 +32,7 @@ class AccountController extends \UserFrosting\BaseController {
         
         $this->_app->render('common/login.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $this->_app->site->author,
                 'title' =>          "Login",
                 'description' =>    "Login to your UserFrosting account.",
                 'schema' =>         $this->_page_schema,
@@ -61,17 +61,17 @@ class AccountController extends \UserFrosting\BaseController {
         
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/register.json");
 
-        $userfrosting = $this->_app->userfrosting;
+        $settings = $this->_app->site;
         
         // If registration is disabled, send them back to the home page with an error message
-        if (!$userfrosting['can_register']){
+        if (!$settings->can_register){
             $this->_app->alerts->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
             $this->_app->redirect('login');
         }
     
         $this->_app->render('common/register.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $settings->author,
                 'title' =>          "Register",
                 'description' =>    "Register for a new UserFrosting account.",
                 'schema' =>         $this->_page_schema, 
@@ -88,7 +88,7 @@ class AccountController extends \UserFrosting\BaseController {
         
        $this->_app->render('common/forgot-password.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $this->_app->site['author'],
                 'title' =>          "Reset Password",
                 'description' =>    "Reset your UserFrosting password.",
                 'schema' =>         $this->_page_schema,
@@ -105,7 +105,7 @@ class AccountController extends \UserFrosting\BaseController {
          
         $this->_app->render('common/resend-activation.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $this->_app->site['author'],
                 'title' =>          "Resend Activation",
                 'description' =>    "Resend the activation email for your new UserFrosting account.",
                 'schema' =>         $this->_page_schema,
@@ -194,7 +194,7 @@ class AccountController extends \UserFrosting\BaseController {
     
     public function logout(){
         session_destroy();
-        $this->_app->redirect($this->_app->userfrosting['uri']['public']);
+        $this->_app->redirect($this->_app->site->uri['public']);
     }
 
     public function register(){
@@ -224,7 +224,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
           
         // Check if registration is currently enabled
-        if (!$this->_app->userfrosting['can_register']){
+        if (!$this->_app->site->can_register){
             $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
             $this->_app->halt(403);
         }
@@ -245,7 +245,7 @@ class AccountController extends \UserFrosting\BaseController {
         $data = $rf->data();        
         
         // Check captcha, if required
-        if ($this->_app->userfrosting['enable_captcha']){
+        if ($this->_app->site->enable_captcha){
             if (!$data['captcha'] || md5($data['captcha']) != $_SESSION['userfrosting']['captcha']){
                 $ms->addMessageTranslated("danger", "CAPTCHA_FAIL");
                 $error = true;
@@ -260,7 +260,7 @@ class AccountController extends \UserFrosting\BaseController {
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
         
-        if ($this->_app->userfrosting['require_activation'])
+        if ($this->_app->site->require_activation)
             $data['active'] = 0;
         else
             $data['active'] = 1;
@@ -298,7 +298,7 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Store new user to database
         $user->store();
-        if ($this->_app->userfrosting['require_activation'])
+        if ($this->_app->site->require_activation)
           // Activation required
           $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
         else

@@ -1,14 +1,22 @@
 <?php
 
 namespace UserFrosting;
-use R;
 
 /**
  * @property string user_name
  * @property string display_name
  * @property string email
  * @property string password
- * @property string title 
+ * @property string title
+ * @property int activation_token",
+ * @property datetime last_activation_request",
+ * @property int lost_password_request",
+ * @property datetime lost_password_timestamp",
+ * @property int active",
+ * @property datetime sign_up_stamp",
+ * @property datetime last_sign_in_stamp",
+ * @property int enabled",
+ * @property int primary_group_id" 
  */
 
 class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
@@ -133,6 +141,16 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $results;        
     }
 
+    // Get the theme for this user, based on their primary group.  Guest/undefined user returns the default theme.  Master user returns the root theme.  Lazy load.
+    public function getTheme(){
+        if (!isset($this->_id) || $this->_id == static::$app->config('user_id_guest'))
+            return "default";
+        else if ($this->_id == static::$app->config('user_id_master'))
+            return "root";
+        else
+            return $this->getPrimaryGroup()->theme;
+    }
+    
     // Get the primary group to which this user belongs.  Lazy load into object.
     public function getPrimaryGroup(){
         if (!isset($this->_primary_group))

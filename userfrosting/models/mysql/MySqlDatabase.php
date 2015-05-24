@@ -19,4 +19,23 @@ abstract class MySqlDatabase implements DatabaseInterface {
         $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);       // Let this function throw a PDO exception if it cannot connect.
         return $db;    
     }
+    
+    // Get information about this database as key->value pairs
+    public static function getInfo(){
+        $connection = static::connection();
+        $results = [];
+        try {
+            $results['db_type'] = $connection->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        } catch (Exception $e){
+            $results['db_type'] = "Unknown";
+        }
+        try {
+            $results['db_version'] = $connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        } catch (Exception $e){
+            $results['db_type'] = "";
+        }
+        $results['db_name'] = static::$params['db_name'];
+        $results['table_prefix'] = static::$prefix;
+        return $results;
+    }
 }

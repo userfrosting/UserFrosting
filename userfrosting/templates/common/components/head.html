@@ -2,14 +2,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{page.description}}">
-    <meta name="author" content="{{userfrosting.author}}">
+    <meta name="author" content="{{site.author}}">
     
-    <title>{{userfrosting.site_title}} | {{page.title}}</title>
+    <title>{{site.site_title}} | {{page.title}}</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{userfrosting.uri.favicon}}" />
+    <link rel="icon" type="image/x-icon" href="{{site.uri.favicon}}" />
     
     {% for item in page.schema.css %}
-      <link rel="stylesheet" href="{{userfrosting.uri.css}}{{item}}" type="text/css" >
+      <link rel="stylesheet" href="{{site.uri.css}}{{item}}" type="text/css" >
     {% endfor %}   
 </head>

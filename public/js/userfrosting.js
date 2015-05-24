@@ -4,7 +4,7 @@
      
         var field = $(this);
         console.log("Displaying alerts");
-        var url = userfrosting.uri.public + "/alerts";
+        var url = site.uri.public + "/alerts";
         return $.getJSON( url, {})
         .then(function( data ) {        // Pass the deferral back
             // Display alerts
@@ -31,3 +31,17 @@
         //return deferred.promise();
     };
 }( jQuery ));
+
+// Initialize bootstrap switches, if enabled
+if (jQuery().bootstrapSwitch){
+    $('.bootstrapswitch').bootstrapSwitch();
+} else {
+    console.error("The bootstrap-switch plugin has not been added.");
+}
+
+// Initialize select2 dropdowns, if enabled
+if (jQuery().select2){
+    $('.select2').select2();
+} else {
+    console.error("The select2 plugin has not been added.");
+}

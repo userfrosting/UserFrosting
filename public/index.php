@@ -78,36 +78,80 @@
         $controller->page404();
     });
 
+    // Admin tools
+    $app->get('/config/settings', function () use ($app) {
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_site_settings')){
+            $app->notFound();
+        }
+        
+        // Register core site settings
+        $app->site->register('userfrosting', 'site_title', "Site Title");
+        $app->site->register('userfrosting', 'author', "Site Author");
+        $app->site->register('userfrosting', 'admin_email', "Account Management Email");
+        $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
+        $app->site->register('userfrosting', 'can_register', "Public Registration", "toggle", [0 => "Off", 1 => "On"]);
+        $app->site->register('userfrosting', 'enable_captcha', "Registration Captcha", "toggle", [0 => "Off", 1 => "On"]);
+        $app->site->register('userfrosting', 'require_activation', "Require Account Activation", "toggle", [0 => "Off", 1 => "On"]);
+        $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
+        
+        // Hook to allow plugins to register their settings
+        $app->applyHook("settings.register");
+        
+        $app->render('site-settings.html', [
+            'page' => [
+                'author' =>         $app->site->author,
+                'title' =>          "Site Settings",
+                'description' =>    "Global settings for the site, including registration and activation settings, site title, admin emails, and default languages.",
+                'alerts' =>         $app->alerts->getAndClearMessages(), 
+                'schema' =>         UF\PageSchema::load("default", $app->config('schema.path') . "/pages/pages.json"),
+                'active_page' =>    ""
+            ],
+            'settings' => $app->site->getRegisteredSettings(),
+            'info'     => $app->site->getSystemInfo(),
+            'error_log'=> $app->site->getLog(50)
+        ]);
+    });   
     
-    // Slim info page (debug mode only)
+    // Slim info page
     $app->get('/sliminfo', function () use ($app) {
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_slim_info')){
+            $app->notFound();
+        }
         echo "<pre>";
         print_r($app->environment());
         echo "</pre>";
     });
 
-    // PHP info page (debug mode only)
+    // PHP info page
     $app->get('/phpinfo', function () use ($app) {
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_php_info')){
+            $app->notFound();
+        }    
         echo "<pre>";
         print_r(phpinfo());
         echo "</pre>";
     });
-    
-    // Query logs (debug mode only)
-    $app->get('/queries', function () use ($app) {    
-        $logs = R::getDatabaseAdapter()
-            ->getDatabase()
-            ->getLogger();
 
-        print_r( $logs);
-    });
-    
+    // PHP info page
+    $app->get('/errorlog', function () use ($app) {
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_error_log')){
+            $app->notFound();
+        }
+        $log = $app->site->getLog();
+        echo "<pre>";
+        echo implode("<br>",$log['messages']);
+        echo "</pre>";
+    });       
     
     $app->get('/test', function () use ($app){
         // Check permissions to view this page
         if (!$app->user->checkAccess("uri_test", [])){
             $app->alerts->addMessage("danger", "Sorry, you do not have access to that page.");
-            $app->redirect($app->userfrosting['uri']['public'] . "/account");
+            $app->redirect($app->site->uri['public'] . "/account");
         } else {
             echo "Passed action uri_test";
         }

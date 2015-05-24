@@ -7,12 +7,7 @@
    
     // Set your timezone here
     date_default_timezone_set('America/New_York');
-    
-    // Use native PHP sessions
-    session_cache_limiter(false);
-    session_name("UserFrosting");
-    session_start();
-   
+       
     /* Instantiate the Slim application */
     $app = new \Slim\Slim([
         'view' =>           new \Slim\Views\Twig(),
@@ -24,10 +19,12 @@
         $app->config([
             'log.enable' => true,
             'debug' => false,
+            'base.path'     => __DIR__,
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
+            'log.path' =>   __DIR__ . '/log',
             'db'            =>  [
                 'db_host'  => 'localhost',
                 'db_name'  => 'userfrosting',
@@ -41,12 +38,14 @@
     
     $app->configureMode('dev', function () use ($app) {
         $app->config([
-            'log.enable' => false,
-            'debug' => false,
+            'log.enable' => true,
+            'debug' => true,
+            'base.path'     => __DIR__,            
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
+            'log.path' =>   __DIR__ . '/log',
             'db'            =>  [
                 'db_host'  => 'localhost',
                 'db_name'  => 'userfrosting',
@@ -57,6 +56,8 @@
             'user_id_master' => 1
         ]);
     });
+    
+    //$app->environment['slim.errors'] = fopen($app->config('log.path') . "/errors.txt", 'a');
     
     // CSRF Middleware
     $app->add(new CsrfGuard());
@@ -70,6 +71,7 @@
     class_alias("UserFrosting\MySqlAuthLoader",     "UserFrosting\AuthLoader");
     class_alias("UserFrosting\MySqlGroup",          "UserFrosting\Group");
     class_alias("UserFrosting\MySqlGroupLoader",    "UserFrosting\GroupLoader");
+    class_alias("UserFrosting\MySqlSiteSettings",    "UserFrosting\SiteSettings");
     
     // Set enumerative values
     defined("GROUP_NOT_DEFAULT") or define("GROUP_NOT_DEFAULT", 0);    
@@ -81,60 +83,30 @@
     \UserFrosting\Database::$params = $app->config('db');       // TODO: do we need to pass this in separately?  Should we just have a single "config" array?
     \UserFrosting\Database::$prefix = "uf_";
     
-    /**** User Context Setup ****/
+    /**** Session and User Setup ****/
+    
+    // Use native PHP sessions
+    session_cache_limiter(false);
+    session_name("UserFrosting");
+    session_start();
     
     // Set user, if one is logged in
     if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {
     	// Refresh the user.  If they don't exist any more, then an exception will be thrown.
         $_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
         $app->user = $_SESSION["userfrosting"]["user"];
-        
-        // Set up environment for this user.  Links, theme, etc.
-        if ($app->user->id == $app->config('user_id_master'))
-            $theme = 'root';
-        else {
-            $theme = $app->user->theme;
-        }        
     // Otherwise, create a dummy "guest" user
     } else {
         $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
-        $theme = 'default';
     }
         
-    /***** Site Environment Setup *****/
-    
-    // Auto-detect the public root URI
-    $environment = $app->environment();
-    
-    // TODO: can we trust this?  should we revert to storing this in the DB?
-    $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] . $environment['SCRIPT_NAME'];
-
-    /* UserFrosting config options */
-    // TODO: load (some of these) from configuration table
-    $userfrosting = [
-        'uri' => [
-            'public' =>    $uri_public_root,
-            'js' =>        $uri_public_root . "/js/",
-            'css' =>       $uri_public_root . "/css/",        
-            'favicon' =>   $uri_public_root . "/css/favicon.ico",
-            'image' =>     $uri_public_root . "/images/"
-        ],
-        'site_title'    =>      "UserFrosting",
-        'author'    =>          "Alex Weissman",
-        'email_login' => false,
-        'can_register' => true,
-        'enable_captcha' => true,
-        'require_activation' => false,
-        'theme' => $theme
-    ];
-
-    /* Import UserFrosting variables as Slim variables */
-    $app->userfrosting = $userfrosting;
+    /* Load UserFrosting site settings */
+    $app->site = new \UserFrosting\SiteSettings();
     
     /**** Message Stream Setup ****/
     
     /* Set the translation path */
-    \Fortress\MessageTranslator::setTranslationTable(__DIR__ . "/locale/en_US.php");
+    \Fortress\MessageTranslator::setTranslationTable($app->config("locales.path") . "/" . $app->site->default_locale . ".php");
     
     /* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
     if (!isset($_SESSION['userfrosting']['alerts']))
@@ -181,7 +153,7 @@
     
     /* Also, import UserFrosting variables as global Twig variables */    
     $twig = $app->view()->getEnvironment();   
-    $twig->addGlobal("userfrosting", $userfrosting);
+    $twig->addGlobal("site", $app->site);
     
     // If a user is logged in, add the user object as a global Twig variable
     if ($app->user)
@@ -191,13 +163,12 @@
     // Thanks to https://diarmuid.ie/blog/post/multiple-twig-template-folders-with-slim-framework
     $loader = $twig->getLoader();
     // First look in user's theme...
-    $loader->addPath($app->config('themes.path') . "/" . $app->userfrosting['theme']);
+    $loader->addPath($app->config('themes.path') . "/" . $app->user->getTheme());
     // THEN in default.
     $loader->addPath($app->config('themes.path') . "/default");
 
     // Add Twig function for checking permissions during dynamic menu rendering
     $function_check_access = new Twig_SimpleFunction('checkAccess', function ($hook, $params = []) use ($app) {
-        // TODO: what if there is no logged-in user?
         return $app->user->checkAccess($hook, $params);
     });
     

@@ -20,7 +20,7 @@ class UserController extends \UserFrosting\BaseController {
         
         $this->_app->render('dashboard.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $this->_app->site->author,
                 'title' =>          "Dashboard",
                 'description' =>    "Your user dashboard.",
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
@@ -39,7 +39,7 @@ class UserController extends \UserFrosting\BaseController {
         $this->_page_schema = PageSchema::load("starcraft", $this->_app->config('schema.path') . "/pages/pages.json");
         $this->_app->render('zerg.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $this->_app->site->author,
                 'title' =>          "Zerg",
                 'description' =>    "Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.",
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 

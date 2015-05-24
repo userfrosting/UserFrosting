@@ -19,7 +19,7 @@ class BaseController {
     public function page404(){
         $this->_app->render('common/404.html', [
             'page' => [
-                'author' =>         $this->_app->userfrosting['author'],
+                'author' =>         $this->_app->site->author,
                 'title' =>          "404 Error",
                 'description' =>    "We couldn't deliver.  We're sorry.",
                 'schema' =>         $this->_page_schema
@@ -31,10 +31,10 @@ class BaseController {
     */
     public function configJS(){
         $this->_app->response->headers->set("Content-Type", "application/javascript");
-        $this->_app->response->setBody("var userfrosting = " . json_encode(
+        $this->_app->response->setBody("var site = " . json_encode(
             [
                 "uri" => [
-                    "public" => $this->_app->userfrosting['uri']['public']
+                    "public" => $this->_app->site->uri['public']
                 ],
                 "debug" => $this->_app->config('debug')
             ]
@@ -44,7 +44,7 @@ class BaseController {
     /* Render theme CSS */
     public function themeCSS(){
         $this->_app->response->headers->set("Content-Type", "text/css");
-        $css_include = $this->_app->config('themes.path') . "/" . $this->_app->userfrosting['theme'] . "/css/theme.css";
+        $css_include = $this->_app->config('themes.path') . "/" . $this->_app->user->getTheme() . "/css/theme.css";
         $this->_app->response->setBody(file_get_contents($css_include));
     }    
     
