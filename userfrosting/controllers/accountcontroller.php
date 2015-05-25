@@ -245,7 +245,7 @@ class AccountController extends \UserFrosting\BaseController {
         $data = $rf->data();        
         
         // Check captcha, if required
-        if ($this->_app->site->enable_captcha){
+        if ($this->_app->site->enable_captcha == "1"){
             if (!$data['captcha'] || md5($data['captcha']) != $_SESSION['userfrosting']['captcha']){
                 $ms->addMessageTranslated("danger", "CAPTCHA_FAIL");
                 $error = true;

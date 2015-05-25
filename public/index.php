@@ -85,17 +85,7 @@
             $app->notFound();
         }
         
-        // Register core site settings
-        $app->site->register('userfrosting', 'site_title', "Site Title");
-        $app->site->register('userfrosting', 'author', "Site Author");
-        $app->site->register('userfrosting', 'admin_email', "Account Management Email");
-        $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
-        $app->site->register('userfrosting', 'can_register', "Public Registration", "toggle", [0 => "Off", 1 => "On"]);
-        $app->site->register('userfrosting', 'enable_captcha', "Registration Captcha", "toggle", [0 => "Off", 1 => "On"]);
-        $app->site->register('userfrosting', 'require_activation', "Require Account Activation", "toggle", [0 => "Off", 1 => "On"]);
-        $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
-        
-        // Hook to allow plugins to register their settings
+        // Hook for core and plugins to register their settings
         $app->applyHook("settings.register");
         
         $app->render('site-settings.html', [
@@ -112,6 +102,52 @@
             'error_log'=> $app->site->getLog(50)
         ]);
     });   
+    
+    $app->post('/config/settings', function () use ($app) {
+        // Get the alert message stream
+        $ms = $app->alerts;
+        
+        $post = $app->request->post();
+        
+        // Remove CSRF token
+        if (isset($post['csrf_token']))
+            unset($post['csrf_token']);
+            
+        // Access-controlled page
+        if (!$app->user->checkAccess('update_site_settings')){
+            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+            $app->halt(403);
+        }
+        
+        // Hook for core and plugins to register their settings
+        $app->applyHook("settings.register");
+        
+        // Get registered settings
+        $registered_settings = $app->site->getRegisteredSettings();
+        
+        // Ok, check that all posted settings are registered
+        foreach ($post as $plugin => $settings){
+            if (!isset($registered_settings[$plugin])){
+                $ms->addMessageTranslated("danger", "CONFIG_PLUGIN_INVALID", ["plugin" => $plugin]);
+                $app->halt(400);
+            }
+            foreach ($settings as $name => $value){
+                if (!isset($registered_settings[$plugin][$name])){
+                    $ms->addMessageTranslated("danger", "CONFIG_SETTING_INVALID", ["plugin" => $plugin, "name" => $name]);
+                    $app->halt(400);
+                }
+            }
+        }
+        
+        // If validation passed, then update
+        foreach ($post as $plugin => $settings){
+            foreach ($settings as $name => $value){
+                $app->site->set($plugin, $name, $value);
+            }
+        }
+        $app->site->store();
+        
+    });
     
     // Slim info page
     $app->get('/sliminfo', function () use ($app) {
@@ -146,17 +182,7 @@
         echo implode("<br>",$log['messages']);
         echo "</pre>";
     });       
-    
-    $app->get('/test', function () use ($app){
-        // Check permissions to view this page
-        if (!$app->user->checkAccess("uri_test", [])){
-            $app->alerts->addMessage("danger", "Sorry, you do not have access to that page.");
-            $app->redirect($app->site->uri['public'] . "/account");
-        } else {
-            echo "Passed action uri_test";
-        }
-    });
-    
+       
     $app->get('/test/auth', function() use ($app){
         $params = [
             "user" => [

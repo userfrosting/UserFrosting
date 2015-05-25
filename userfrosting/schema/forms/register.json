@@ -74,9 +74,7 @@
     },
     "captcha" : {
         "validators" : {
-            "required" : {
-                "message" : "Please enter the captcha code."
-            }
+
         }
     }
 }

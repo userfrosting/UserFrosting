@@ -8,15 +8,15 @@ namespace UserFrosting;
  * @property string email
  * @property string password
  * @property string title
- * @property int activation_token",
- * @property datetime last_activation_request",
- * @property int lost_password_request",
- * @property datetime lost_password_timestamp",
- * @property int active",
- * @property datetime sign_up_stamp",
- * @property datetime last_sign_in_stamp",
- * @property int enabled",
- * @property int primary_group_id" 
+ * @property int activation_token
+ * @property datetime last_activation_request
+ * @property int lost_password_request
+ * @property datetime lost_password_timestamp
+ * @property int active
+ * @property datetime sign_up_stamp
+ * @property datetime last_sign_in_stamp
+ * @property int enabled
+ * @property int primary_group_id
  */
 
 class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
@@ -24,7 +24,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     use TableInfoUser;  // Trait to supply static info on the User table
     
     protected $_groups;         // An undefined value means that the user's groups have not been loaded yet
-    protected $_primary_group;  // The primary group for the user
+    protected $_primary_group;  // The primary group for the user.  TODO: simply fetch it from the _groups array?
     
     // Determine whether this User is a guest (id set to user_id_guest) or a live, logged-in user
     public function isGuest(){

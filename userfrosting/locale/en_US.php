@@ -20,7 +20,8 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_SPECIFY_DISPLAY_NAME" 	=> "Please enter your display name.",
     "ACCOUNT_SPECIFY_PASSWORD" 		=> "Please enter your password.",
 	"ACCOUNT_SPECIFY_EMAIL"			=> "Please enter your email address.",
-	"ACCOUNT_INVALID_EMAIL"			=> "Invalid email address",
+	"ACCOUNT_SPECIFY_CAPTCHA"		=> "Please enter the captcha code.",
+    "ACCOUNT_INVALID_EMAIL"			=> "Invalid email address",
     "ACCOUNT_INVALID_USER_ID"		=> "The requested user id does not exist.",
     "ACCOUNT_INVALID_PAY_TYPE"		=> "Invalid pay type.  Pay type must be either 'deduct fee' or 'hourly'.",
 	"ACCOUNT_USER_OR_EMAIL_INVALID"		=> "Username or email address is invalid.",
@@ -77,7 +78,9 @@ $lang = array_merge($lang,array(
 
 //Configuration
 $lang = array_merge($lang,array(
-	"CONFIG_NAME_CHAR_LIMIT"		=> "Site name must be between %m1% and %m2% characters in length",
+	"CONFIG_PLUGIN_INVALID"         => "You are trying to update settings for plugin '{{plugin}}', but there is no plugin by that name.",
+	"CONFIG_SETTING_INVALID"         => "You are trying to update the setting '{{name}}' for plugin '{{plugin}}', but it does not exist.",    
+    "CONFIG_NAME_CHAR_LIMIT"		=> "Site name must be between %m1% and %m2% characters in length",
 	"CONFIG_URL_CHAR_LIMIT"			=> "Site url must be between %m1% and %m2% characters in length",
 	"CONFIG_EMAIL_CHAR_LIMIT"		=> "Site email must be between %m1% and %m2% characters in length",
 	"CONFIG_TITLE_CHAR_LIMIT"		=> "New user title must be between %m1% and %m2% characters in length",

@@ -39,7 +39,7 @@
     $app->configureMode('dev', function () use ($app) {
         $app->config([
             'log.enable' => true,
-            'debug' => true,
+            'debug' => false,
             'base.path'     => __DIR__,            
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
@@ -100,8 +100,22 @@
         $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
     }
         
-    /* Load UserFrosting site settings */
+    /* Load UserFrosting site settings */    
     $app->site = new \UserFrosting\SiteSettings();
+    
+    $app->hook('settings.register', function () use ($app){
+        // Register core site settings
+        $app->site->register('userfrosting', 'site_title', "Site Title");
+        $app->site->register('userfrosting', 'author', "Site Author");
+        $app->site->register('userfrosting', 'admin_email', "Account Management Email");
+        $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
+        $app->site->register('userfrosting', 'can_register', "Public Registration", "toggle", [0 => "Off", 1 => "On"]);
+        $app->site->register('userfrosting', 'enable_captcha', "Registration Captcha", "toggle", [0 => "Off", 1 => "On"]);
+        $app->site->register('userfrosting', 'require_activation', "Require Account Activation", "toggle", [0 => "Off", 1 => "On"]);
+        $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
+        $app->site->register('userfrosting', 'resend_activation_threshold', "Resend Activation Email Cooloff (s)");
+        $app->site->register('userfrosting', 'reset_password_timeout', "Password Recovery Timeout (s)");
+    }, 1);        
     
     /**** Message Stream Setup ****/
     
@@ -129,11 +143,6 @@
     
     function fatal_handler() {
         global $app;
-        $errfile = "unknown file";
-        $errstr  = "shutdown";
-        $errno   = E_CORE_ERROR;
-        $errline = 0;
-      
         $error = error_get_last();
       
         // Handle fatal errors

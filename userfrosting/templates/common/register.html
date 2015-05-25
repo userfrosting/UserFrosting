@@ -75,6 +75,7 @@
                     </div>
                 </div>
             </div>
+            {% if site.enable_captcha %}
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -90,6 +91,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <br>
             <div class="row">
                 <div class="col-sm-12">
@@ -137,7 +139,7 @@
                 // Forward to login page on success
                 window.location.replace(site.uri.public + "/account/login");
             }).fail(function(jqXHR) {
-                if (userfrosting['debug'] == true) {
+                if (site['debug'] == true) {
                     document.body.innerHTML = jqXHR.responseText;
                 } else {
                     console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );

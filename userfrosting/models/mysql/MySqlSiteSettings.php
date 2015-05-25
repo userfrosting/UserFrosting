@@ -4,6 +4,7 @@ namespace UserFrosting;
 
 class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
 
+    protected $_environment;            // An array of UF environment variables.  Should be read-only.
     protected $_settings;               // A list of plugins => arrays of settings for that plugin.  The core plugin is "userfrosting".
     protected $_descriptions;
     protected $_settings_registered;    // A list of settings that have been registered to appear in the site settings interface.
@@ -12,9 +13,16 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
 
     // Construct the site settings object, loading values from the database
     public function __construct() {
-        // Initialize static site settings
-        $this->initStaticSettings();        
+        // Initialize UF environment
+        $this->initEnvironment();        
         
+        $results = $this->fetchSettings();
+        $this->_settings = $results['settings'];
+        $this->_descriptions = $results['descriptions'];
+    }
+    
+    // Fetch the settings from the database
+    public function fetchSettings(){
         $db = static::connection();
         
         $table = static::$prefix . static::$_table;
@@ -22,16 +30,25 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         $stmt = $db->query("SELECT * FROM $table");
                   
         $results = [];
+        $results['settings'] = [];
+        $results['descriptions'] = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $name = $row['name'];
             $value = $row['value'];
             $plugin = $row['plugin'];
             $description = $row['description'];
-            $this->set($plugin, $name, $value, $description);
-        }     
+            if (!isset($results['settings'][$plugin])) {
+                $results['settings'][$plugin] = [];
+                $results['descriptions'][$plugin] = [];
+            }
+            
+            $results['settings'][$plugin][$name] = $value;
+            $results['descriptions'][$plugin][$name] = $description;
+        }
+        return $results;
     }
     
-    private function initStaticSettings(){
+    private function initEnvironment(){
         /***** Site Environment Setup *****/
         
         // Auto-detect the public root URI
@@ -40,7 +57,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         // TODO: can we trust this?  should we revert to storing this in the DB?
         $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] . $environment['SCRIPT_NAME'];
         
-        $this->_settings['userfrosting'] = [
+        $this->_environment = [
             'uri' => [
                 'public' =>    $uri_public_root,
                 'js' =>        $uri_public_root . "/js/",
@@ -52,7 +69,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     }
     
     public function __isset($name) {
-        if (isset($this->_settings['userfrosting'][$name]))
+        if (isset($this->_environment[$name]) || isset($this->_settings['userfrosting'][$name]))
             return true;
         else
             return false;
@@ -65,7 +82,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
 
     // Get a core UF setting
     public function __get($name){
-        if (isset($this->_settings['userfrosting'][$name])){
+        if (isset($this->_environment[$name])){
+            return $this->_environment[$name];
+        } else if (isset($this->_settings['userfrosting'][$name])){
             return $this->_settings['userfrosting'][$name];
         } else {
             throw new \Exception("The value '$name' does not exist in the core userfrosting settings.");
@@ -78,13 +97,13 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
             $this->_settings[$plugin] = [];
             $this->_descriptions[$plugin] = [];
         }
-        if ($value) {
+        if ($value !== null) {
             $this->_settings[$plugin][$name] = $value; 
         } else {
             if (!isset($this->_settings[$plugin][$name]))
                 $this->_settings[$plugin][$name] = ""; 
         }
-        if ($description) {
+        if ($description !== null) {
             $this->_descriptions[$plugin][$name] = $description; 
         } else {
             if (!isset($this->_descriptions[$plugin][$name]))
@@ -175,7 +194,38 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     
     // Update site settings in database
     public function store(){
-        //TODO
+        // Get current values as stored in DB
+        $db_settings = $this->fetchSettings();
+        
+        $db = static::connection();
+        $table = static::$prefix . static::$_table;
+        
+        $stmt_insert = $db->prepare("INSERT INTO $table
+            (plugin, name, value, description)
+            VALUES (:plugin, :name, :value, :description);");
+        
+        $stmt_update = $db->prepare("UPDATE $table SET
+            value = :value,
+            description = :description 
+            WHERE plugin = :plugin and name = :name;");
+        
+        // For each setting in this object, check if it exists in DB.  If it does not exist, add.  If it exists and is different from the current value, update.
+        foreach ($this->_settings as $plugin => $setting){
+            foreach ($setting as $name => $value){
+                $sqlVars = [
+                    ":plugin" => $plugin,
+                    ":name" => $name,
+                    ":value" => $value,
+                    ":description" => $this->_descriptions[$plugin][$name]
+                ];
+                if (!isset($db_settings['settings'][$plugin]) || !isset($db_settings['settings'][$plugin][$name])){
+                    $stmt_insert->execute($sqlVars);
+                } else if (($db_settings['settings'][$plugin][$name] !== $this->_settings[$plugin][$name]) || ($db_settings['descriptions'][$plugin][$name] !== $this->_descriptions[$plugin][$name])){
+                    $stmt_update->execute($sqlVars);
+                }
+            }
+        }
+        
+        return true;   
     }
-
 }
