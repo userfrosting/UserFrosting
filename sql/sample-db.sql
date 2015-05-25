@@ -73,27 +73,29 @@ INSERT INTO `uf_authorize_user` (`id`, `user_id`, `hook`, `conditions`) VALUES
 
 CREATE TABLE IF NOT EXISTS `uf_configuration` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(150) NOT NULL,
-  `value` longtext NOT NULL,
-  `description` text NOT NULL,
+  `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
+  `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
+  `value` longtext NOT NULL COMMENT 'The current value of the setting.',
+  `description` text NOT NULL COMMENT 'A brief description of this setting.',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=15 ;
 
 --
 -- Dumping data for table `uf_configuration`
 --
 
-INSERT INTO `uf_configuration` (`id`, `name`, `value`, `description`) VALUES
-(1, 'site_title', 'UserFrosting', 'The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.'),
-(2, 'admin_email', 'admin@userfrosting.com', 'The administrative email for the site.  Automated emails, such as activation emails and password reset links, will come from this address.'),
-(3, 'email_login', '1', 'Set to 1 to enable login with an email address, 0 to disable.'),
-(4, 'can_register', '1', 'Set to 1 to enable public registration, 0 to disable.'),
-(5, 'enable_captcha', '1', 'Set to 1 to enable captcha on the registration page, 0 to disable.'),
-(6, 'require_activation', '0', 'Set to 1 to require email activation for newly registered accounts (recommended), 0 to disable.  Accounts created on the admin side never need to be activated.'),
-(7, 'resend_activation_threshold', '0', 'The time, in seconds, that a user must wait before requesting that the activation email be resent.'),
-(8, 'reset_password_timeout', '10800', 'The time, in seconds, before a user''s password reminder email expires.'),
-(9, 'default_locale', 'en_US', 'The default language for newly registered users.'),
-(10, 'version', '0.3.0', 'The current version of UserFrosting.');
+INSERT INTO `uf_configuration` (`id`, `plugin`, `name`, `value`, `description`) VALUES
+(1, 'userfrosting', 'site_title', 'UserFrosting', 'The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.'),
+(2, 'userfrosting', 'admin_email', 'admin@userfrosting.com', 'The administrative email for the site.  Automated emails, such as activation emails and password reset links, will come from this address.'),
+(3, 'userfrosting', 'email_login', '1', 'Specify whether users can login via email address or username instead of just username.'),
+(4, 'userfrosting', 'can_register', '1', 'Specify whether public registration of new accounts is enabled.  Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.'),
+(5, 'userfrosting', 'enable_captcha', '1', 'Specify whether new users must complete a captcha code when registering for an account.'),
+(6, 'userfrosting', 'require_activation', '0', 'Specify whether email activation is required for newly registered accounts.  Accounts created on the admin side never need to be activated.'),
+(7, 'userfrosting', 'resend_activation_threshold', '0', 'The time, in seconds, that a user must wait before requesting that the activation email be resent.'),
+(8, 'userfrosting', 'reset_password_timeout', '10800', 'The time, in seconds, before a user''s password reminder email expires.'),
+(9, 'userfrosting', 'default_locale', 'en_US', 'The default language for newly registered users.'),
+(10, 'userfrosting', 'version', '0.3.0', 'The current version of UserFrosting.'),
+(11, 'userfrosting', 'author', 'Alex Weissman', 'The author of the site.  Will be used in the site''s author meta tag.');
 
 -- --------------------------------------------------------
 
@@ -179,8 +181,8 @@ CREATE TABLE IF NOT EXISTS `uf_user` (
 
 INSERT INTO `uf_user` (`id`, `user_name`, `display_name`, `password`, `email`, `activation_token`, `last_activation_request`, `lost_password_request`, `lost_password_timestamp`, `active`, `title`, `sign_up_stamp`, `last_sign_in_stamp`, `enabled`, `primary_group_id`) VALUES
 (1, 'admin', 'Admin', '$2y$10$ssRwANKk/cj7XXyjmZSj9OvmfKawWzIHu1yNMP6AM2Ans8.g/Nau.', 'alex@bloomingtontutors.com', '1f9668f3acacc6e693fdf47be7e41872', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 'Master Account', '0000-00-00 00:00:00', '2015-05-22 00:43:58', 1, 2),
-(2, 'patch', 'Patch Adams', '$2y$10$Bcdl3ajiBLwOsX5rLXl7R.5Vt9Iksvg.TfnzMmGv8EAAOiIYqkDrq', 'duh@duh.com', '0fb0c5f64ccecc3c2281467b118d325a', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 'RIP', '0000-00-00 00:00:00', '2015-05-22 00:52:18', 1, 2),
-(3, 'tweety', 'Tweetyboid', '$2y$10$Mu8g2TAoVb.FzGKbRvmZIOGnrshdNTkFShCtQqV8Sv/H0fLnGlwbm', 'abweissman@gmail.com', '5dd2a3dca2ad5e888941cbbfd95eaebb', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 'New Member', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 1),
+(2, 'patch', 'Patch Adams', '$2y$10$Bcdl3ajiBLwOsX5rLXl7R.5Vt9Iksvg.TfnzMmGv8EAAOiIYqkDrq', 'robin@userfrosting.com', '0fb0c5f64ccecc3c2281467b118d325a', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 'RIP', '0000-00-00 00:00:00', '2015-05-22 00:52:18', 1, 2),
+(3, 'tweety', 'Tweetyboid', '$2y$10$Mu8g2TAoVb.FzGKbRvmZIOGnrshdNTkFShCtQqV8Sv/H0fLnGlwbm', 'tweety@userfrosting.com', '5dd2a3dca2ad5e888941cbbfd95eaebb', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 1, 'New Member', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 1),
 (10, 'derp', 'derp', '$2y$10$eJ3XUf11G8r48kWoQhrAE.G/GLhGhoSFVksSKDL5xytrXLs.pf8EG', 'derp@derp.com', 'c7ebb6f1a66628bf422d86764f1d2d2f', '2015-05-21 22:31:17', 0, NULL, 1, 'New User', '2015-05-21 22:31:17', '2015-05-22 00:52:56', 1, 3);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
