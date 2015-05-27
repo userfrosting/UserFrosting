@@ -1,5 +1,4 @@
 <?php
-
     require_once 'vendor/autoload.php';
     require_once 'auth/password.php';
     
@@ -11,31 +10,10 @@
     /* Instantiate the Slim application */
     $app = new \Slim\Slim([
         'view' =>           new \Slim\Views\Twig(),
-        'mode' =>           'dev'
+        'mode' =>           'dev'   // Set to 'dev' or 'production'
     ]);
     
-    /* Set up slim configuration modes */
-    $app->configureMode('production', function () use ($app) {
-        $app->config([
-            'log.enable' => true,
-            'debug' => false,
-            'base.path'     => __DIR__,
-            'templates.path' => __DIR__ . '/templates',
-            'themes.path'    =>  __DIR__ . '/templates/themes',
-            'schema.path' =>    __DIR__ . '/schema',
-            'locales.path' =>   __DIR__ . '/locale',
-            'log.path' =>   __DIR__ . '/log',
-            'db'            =>  [
-                'db_host'  => 'localhost',
-                'db_name'  => 'userfrosting',
-                'db_user'  => 'admin',
-                'db_pass'  => 'password'
-            ],
-            'user_id_guest'  => 0,
-            'user_id_master' => 1
-        ]);
-    });
-    
+    /********* DEVELOPMENT SETTINGS *********/
     $app->configureMode('dev', function () use ($app) {
         $app->config([
             'log.enable' => true,
@@ -50,17 +28,40 @@
                 'db_host'  => 'localhost',
                 'db_name'  => 'userfrosting',
                 'db_user'  => 'admin',
-                'db_pass'  => 'password'
+                'db_pass'  => 'password',
+                'db_prefix'=> 'uf_'
+            ],
+            'user_id_guest'  => 0,
+            'user_id_master' => 1
+        ]);
+    });    
+
+    /********* PRODUCTION SETTINGS *********/    
+    $app->configureMode('production', function () use ($app) {
+        $app->config([
+            'log.enable' => true,
+            'debug' => false,
+            'base.path'     => __DIR__,
+            'templates.path' => __DIR__ . '/templates',
+            'themes.path'    =>  __DIR__ . '/templates/themes',
+            'schema.path' =>    __DIR__ . '/schema',
+            'locales.path' =>   __DIR__ . '/locale',
+            'log.path' =>   __DIR__ . '/log',
+            'db'            =>  [
+                'db_host'  => 'localhost',
+                'db_name'  => 'userfrosting',
+                'db_user'  => 'admin',
+                'db_pass'  => 'password',
+                'db_prefix'=> 'uf_'
             ],
             'user_id_guest'  => 0,
             'user_id_master' => 1
         ]);
     });
-    
-    //$app->environment['slim.errors'] = fopen($app->config('log.path') . "/errors.txt", 'a');
-    
+       
     // CSRF Middleware
     $app->add(new CsrfGuard());
+    
     
     /**** Database Setup ****/
     
@@ -71,17 +72,18 @@
     class_alias("UserFrosting\MySqlAuthLoader",     "UserFrosting\AuthLoader");
     class_alias("UserFrosting\MySqlGroup",          "UserFrosting\Group");
     class_alias("UserFrosting\MySqlGroupLoader",    "UserFrosting\GroupLoader");
-    class_alias("UserFrosting\MySqlSiteSettings",    "UserFrosting\SiteSettings");
+    class_alias("UserFrosting\MySqlSiteSettings",   "UserFrosting\SiteSettings");
     
     // Set enumerative values
     defined("GROUP_NOT_DEFAULT") or define("GROUP_NOT_DEFAULT", 0);    
     defined("GROUP_DEFAULT") or define("GROUP_DEFAULT", 1);
     defined("GROUP_DEFAULT_PRIMARY") or define("GROUP_DEFAULT_PRIMARY", 2);
     
-    // Set up UFDB connection variables
-    \UserFrosting\Database::$app =    $app;
-    \UserFrosting\Database::$params = $app->config('db');       // TODO: do we need to pass this in separately?  Should we just have a single "config" array?
-    \UserFrosting\Database::$prefix = "uf_";
+    // Pass Slim app to database
+    \UserFrosting\Database::$app = $app;
+    // Initialize static loader classes
+    \UserFrosting\GroupLoader::init();
+    \UserFrosting\UserLoader::init();
     
     /**** Session and User Setup ****/
     
@@ -99,7 +101,7 @@
     } else {
         $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
     }
-        
+    
     /* Load UserFrosting site settings */    
     $app->site = new \UserFrosting\SiteSettings();
     

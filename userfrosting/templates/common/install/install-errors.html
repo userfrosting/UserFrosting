@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include 'common/components/head.html' %}
+  <body>
+    <div class="container">
+        <h1 class = "text-center">Something's not right here.</h1>
+        <br>
+        <div class="row">
+            <div class="col-lg-6">
+                <img src="{{site.uri.image}}stuck.jpg">
+            </div>
+            <div class="col-lg-6">
+                <p class="h3 text-center">Please fix the following errors, then <a href="{{site.uri.public}}/install">reload</a>.</p>
+                {% for message in messages %}
+                    <div class="list-group">
+                      <div class="list-group-item list-group-item-danger">
+                        <h4 class="list-group-item-heading">{{message.title}}</h4>
+                        <p class="list-group-item-text">{{message.message | raw}}</p>
+                      </div>
+                    </div>
+                {% endfor %}
+            </div>
+    </div> <!-- /container -->
+    {% include 'common/components/footer.html' %}	
+  </body>
+</html>

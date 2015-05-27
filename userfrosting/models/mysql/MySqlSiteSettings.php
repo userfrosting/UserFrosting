@@ -9,23 +9,59 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     protected $_descriptions;
     protected $_settings_registered;    // A list of settings that have been registered to appear in the site settings interface.
     
-    protected static $_table = "configuration";
+    protected $_table;
 
     // Construct the site settings object, loading values from the database
     public function __construct() {
+        $this->_table = static::getTableConfiguration();
+        
         // Initialize UF environment
         $this->initEnvironment();        
         
-        $results = $this->fetchSettings();
-        $this->_settings = $results['settings'];
-        $this->_descriptions = $results['descriptions'];
+        try {
+            $results = $this->fetchSettings();
+            $this->_settings = $results['settings'];
+            $this->_descriptions = $results['descriptions'];
+        } catch (\PDOException $e){
+            // Use default values if cannot connect to DB
+            $this->_settings = [
+                'userfrosting' => [
+                    'site_title' => 'UserFrosting', 
+                    'admin_email' => 'admin@userfrosting.com', 
+                    'email_login' => '1', 
+                    'can_register' => '1', 
+                    'enable_captcha' => '1',
+                    'require_activation' => '1', 
+                    'resend_activation_threshold' => '0', 
+                    'reset_password_timeout' => '10800', 
+                    'default_locale' => 'en_US', 
+                    'version' => '0.3.0', 
+                    'author' => 'Alex Weissman'
+                ]
+            ];
+            $this->_descriptions = [
+                'userfrosting' => [
+                    "site_title" => "The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.", 
+                    "admin_email" => "The administrative email for the site.  Automated emails, such as activation emails and password reset links, will come from this address.", 
+                    "email_login" => "Specify whether users can login via email address or username instead of just username.", 
+                    "can_register" => "Specify whether public registration of new accounts is enabled.  Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.", 
+                    "enable_captcha" => "Specify whether new users must complete a captcha code when registering for an account.",
+                    "require_activation" => "Specify whether email activation is required for newly registered accounts.  Accounts created on the admin side never need to be activated.", 
+                    "resend_activation_threshold" => "The time, in seconds, that a user must wait before requesting that the activation email be resent.", 
+                    "reset_password_timeout" => "The time, in seconds, before a user's password reminder email expires.", 
+                    "default_locale" => "The default language for newly registered users.", 
+                    "version" => "The current version of UserFrosting.", 
+                    "author" => "The author of the site.  Will be used in the site's author meta tag."
+                ]
+            ];
+        }
     }
     
     // Fetch the settings from the database
     public function fetchSettings(){
         $db = static::connection();
         
-        $table = static::$prefix . static::$_table;
+        $table = $this->_table;
         
         $stmt = $db->query("SELECT * FROM $table");
                   
@@ -198,7 +234,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         $db_settings = $this->fetchSettings();
         
         $db = static::connection();
-        $table = static::$prefix . static::$_table;
+        $table = $this->_table;
         
         $stmt_insert = $db->prepare("INSERT INTO $table
             (plugin, name, value, description)

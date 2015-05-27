@@ -6,7 +6,7 @@ namespace UserFrosting;
 // TODO: expand fetch functions to support arbitrary filtering, perhaps allowing for with() type clauses that support arbitary SQL
 
 abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderInterface {
-        
+    
     /* Determine if an object exists based on the value of a given column.  Returns true if a match is found, false otherwise.
      * @param value $value The value to find.
      * @param string $name The name of the column to match (defaults to id)
@@ -27,7 +27,7 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
     public static function fetch($value, $name = "id"){
         $db = static::connection();
         
-        $table = static::$prefix . static::$_table;
+        $table = static::$_table;
         
         // Check that the column name exists in the table schema.
         if ($name != "id" && !in_array($name, static::$_columns))
@@ -55,7 +55,7 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
     public static function fetchAll($value = null, $name = null){
         $db = static::connection();
         
-        $table = static::$prefix . static::$_table;
+        $table = static::$_table;
         
         // Check that the column name, if specified, exists in the table schema.
         if ($name && !in_array($name, static::$_columns))

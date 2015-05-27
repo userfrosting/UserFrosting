@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'components/head.html' %}
+  
+<body>
+    <div class="container container-narrow">
+        <h1 class="text-center">Register Master Account</h1>
+        <hr>
+        {% include 'components/alerts.html' %}
+        <div class="alert alert-info">
+            <i class='fa fa-hand-o-right'></i> The master account must be created before any other user accounts can be created.  The master account will have full permissions to all access-controlled resources on your UserFrosting installation, regardless of any individual- or group-level permissions that they have been assigned.
+        </div>
+        <form name="register" method="post" action="{{site.uri.public}}/install/master" class="form-horizontal">
+        {% include 'common/components/csrf.html' %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label  col-sm-4">Username</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                                <input type="text" class="form-control" name="user_name" autocomplete="off" value="" placeholder="User name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Display Name</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                                <input type="text" class="form-control" name="display_name" autocomplete="off" value="" placeholder="Display name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Email</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+                                <input type="text" class="form-control" name="email" placeholder="Email address" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>		  
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Password</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="password" class="form-control" name="password" autocomplete="off" value="" placeholder="8-50 characters">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Confirm password</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="password" class="form-control" name="passwordc" autocomplete="off" value="" placeholder="Re-enter your password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Configuration Token</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="text" class="form-control" name="root_account_config_token" autocomplete="off" value="" placeholder="Look in your '{{table_config}}' table for the value of 'root_account_config_token'.">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-lg btn-success" data-loading-text="Please wait...">Register</button>
+            </div>
+            <div class="collapse">
+              <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
+              <input name="spiderbro" id="spiderbro" value="http://"/>
+            </div>          
+        </form>
+      </div>	
+    </div> <!-- /container -->
+    {% include 'common/components/footer.html' %}
+    <script>
+        $(document).ready(function() {           
+         // Process form 
+          $("form[name='register']").formValidation({
+            framework: 'bootstrap',
+            // Feedback icons
+            icon: {
+                valid: 'fa fa-check',
+                invalid: 'fa fa-times',
+                validating: 'fa fa-refresh'
+            },
+            fields: {{ validators | raw }}
+          }).on('success.form.fv', function(e) {
+            // Prevent double form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var form = $(e.target);
+
+            // Serialize and post to the backend script in ajax mode
+            var serializedData = form.serialize();
+            var url = form.attr('action');
+            $.ajax({  
+              type: "POST",  
+              url: url,  
+              data: serializedData       
+            }).done(function(data, statusText, jqXHR) {
+                // Forward to login page on success
+                window.location.replace(site.uri.public + "/account/login");
+            }).fail(function(jqXHR) {
+                if (site['debug'] == true) {
+                    document.body.innerHTML = jqXHR.responseText;
+                } else {
+                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                    // Display errors on failure
+                    $('#userfrosting-alerts').flashAlerts().done(function() {
+                        // Re-enable submit button
+                        form.data('formValidation').disableSubmitButtons(false);
+                    });
+                }
+            });
+          });
+        });     
+    </script>
+  </body>
+</html>

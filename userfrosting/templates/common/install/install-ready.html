@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include 'common/components/head.html' %}
+  <body>
+    <div class="container">
+        <h1 class = "text-center">Congratulations.<br><small>UserFrosting is ready to rock.</small></h1>
+        <br>
+        <div class="row">
+            <div class="col-lg-6">
+                <img src="{{site.uri.image}}install-ready.jpg">
+            </div>
+            <div class="col-lg-6">
+                {% for message in messages %}
+                    <div class="list-group">
+                      <div class="list-group-item list-group-item-{{message.class}}">
+                        <h4 class="list-group-item-heading">{{message.title | raw}}</h4>
+                        <p class="list-group-item-text">{{message.message | raw}}</p>
+                      </div>
+                    </div>
+                {% endfor %}
+                <div class="text-center">
+                    <p class="h3">Next Step</p>
+                    <a href="{{site.uri.public}}/install/master" class="btn btn-lg btn-success">Create Master Account <i class='fa fa-angle-right'></i></a>
+                </div>
+            </div>
+        </div>
+    </div> <!-- /container -->
+    
+    {% include 'common/components/footer.html' %}	
+  </body>
+</html>

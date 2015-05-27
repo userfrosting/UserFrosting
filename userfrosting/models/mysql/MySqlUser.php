@@ -20,11 +20,15 @@ namespace UserFrosting;
  */
 
 class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
-
-    use TableInfoUser;  // Trait to supply static info on the User table
     
     protected $_groups;         // An undefined value means that the user's groups have not been loaded yet
     protected $_primary_group;  // The primary group for the user.  TODO: simply fetch it from the _groups array?
+    
+    public function __construct($properties, $id = null) {
+        $this->_table = static::getTableUser();
+        $this->_columns = static::$columns_user;
+        parent::__construct($properties, $id);
+    }
     
     // Determine whether this User is a guest (id set to user_id_guest) or a live, logged-in user
     public function isGuest(){
@@ -116,9 +120,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     private function fetchGroups(){
         $db = static::connection();
 
-        // TODO: somehow make this fetchable from the TableInfoGroup trait instead of hardcoded
-        $link_table = static::$prefix . "group_user";
-        $group_table = static::$prefix . "group";
+        $link_table = static::getTableGroupUser();
+        $group_table = static::getTableGroup();
         
         $query = "
             SELECT $group_table.*
@@ -164,8 +167,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             throw new \Exception("This user does not appear to have a primary group id set.");
         }
         $db = static::connection();
-        // TODO: somehow make this fetchable from the TableInfoGroup trait instead of hardcoded
-        $group_table = static::$prefix . "group";
+        $group_table = static::getTableGroup();
         
         $query = "
             SELECT $group_table.*
@@ -186,9 +188,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return false;        
     }
  
-    public function store(){
+    public function store($force_create = false){
         // Initialize timestamps, etc for new Users.  Should this be done here, or somewhere else?
-        if (!isset($this->_id)){
+        if (!isset($this->_id) || $force_create){
             $this->sign_up_stamp = date("Y-m-d H:i:s");
             $this->password = Authentication::hashPassword($this->password);    // Should this be done in the constructor?   
             $this->activation_token = UserLoader::generateActivationToken();
@@ -204,8 +206,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         // Get the User's groups as stored in the DB
         $db_groups = $this->fetchGroups();
 
-        // TODO: somehow make this fetchable from the TableInfoGroup trait instead of hardcoded
-        $link_table = static::$prefix . "group_user";
+        $link_table = static::getTableGroupUser();
 
         // Add any groups in object that are not in DB yet
         $db = static::connection();

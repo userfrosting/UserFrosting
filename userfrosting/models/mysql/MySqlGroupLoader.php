@@ -5,8 +5,14 @@ namespace UserFrosting;
 /* This class is responsible for retrieving Group object(s) from the database, checking for existence, etc. */
 
 class MySqlGroupLoader extends MySqlObjectLoader implements GroupLoaderInterface {
+    protected static $_columns;     // A list of the allowed columns for this type of DB object. Must be set in the child concrete class.  DO NOT USE `id` as a column!
+    protected static $_table;       // The name of the table whose rows this class represents. Must be set in the child concrete class.    
     
-    use TableInfoGroup;
+    public static function init(){
+        // Set table and columns for this class.  Kinda hacky but I don't see any other way to do it.
+        static::$_table = static::getTableGroup();
+        static::$_columns = static::$columns_group;
+    }
     
     /* Determine if a group exists based on the value of a given column.  Returns true if a match is found, false otherwise.
      * @param value $value The value to find.

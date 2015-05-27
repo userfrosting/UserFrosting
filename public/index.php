@@ -1,33 +1,44 @@
 <?php
     require_once "../userfrosting/config-userfrosting.php";
-    
 
+
+    
     use UserFrosting as UF;
    
     // Front page
     $app->get('/', function () use ($app) {
+        // Forward to installation if not complete
+        if (!isset($app->site->install_status) || $app->site->install_status == "pending"){
+            $app->redirect($app->urlFor('uri_install'));
+        }        
         // Forward to the user's landing page (if logged in), otherwise take them to the home page
         if ($app->user->isGuest()){
             $controller = new UF\AccountController($app);
             $controller->pageHome();
+        // If this is the first the root user is logging in, take them to site settings
+        } else if ($app->user->id == $app->config('user_id_master') && $app->site->install_status == "new"){
+            $app->site->install_status = "complete";
+            $app->site->store();
+            $app->alerts->addMessage("success", "Congratulations, you've successfully logged in for the first time.  Please take a moment to customize your site settings.");
+            $app->redirect($app->urlFor('uri_settings'));  
         } else {
             $app->redirect($app->user->landing_page);        
         }
     })->name('uri_home');
 
     // User pages
-    $app->get('/zerg', function () use ($app) {    
+    $app->get('/zerg/?', function () use ($app) {    
         $controller = new UF\UserController($app);
         $controller->pageZerg();
     });
 
-    $app->get('/dashboard', function () use ($app) {    
+    $app->get('/dashboard/?', function () use ($app) {    
         $controller = new UF\UserController($app);
         $controller->pageDashboard();
     });
     
     // Alert stream
-    $app->get('/alerts', function () use ($app) {
+    $app->get('/alerts/?', function () use ($app) {
         $controller = new UF\BaseController($app);
         $controller->alerts();
     });
@@ -46,7 +57,12 @@
         
     
     // Account management pages
-    $app->get('/account/:action', function ($action) use ($app) {    
+    $app->get('/account/:action/?', function ($action) use ($app) {    
+        // Forward to installation if not complete
+        if (!isset($app->site->install_status) || $app->site->install_status == "pending"){
+            $app->redirect($app->urlFor('uri_install'));
+        }
+        
         $controller = new UF\AccountController($app);
     
         switch ($action) {
@@ -60,7 +76,7 @@
         }
     });
 
-    $app->post('/account/:action', function ($action) use ($app) {    
+    $app->post('/account/:action/?', function ($action) use ($app) {    
         $controller = new UF\AccountController($app);
     
         switch ($action) {
@@ -68,18 +84,55 @@
             case "register":            return $controller->register();
             case "resend-activation":   return $controller->resendActivation();
             case "forgot-password":     return $controller->forgotPassword($app->request()->get('token'));    
-            default:                    return $controller->page404();   
+            default:                    $app->notFound();
         }
     });    
     
+    // Installation pages
+    $app->get('/install/?', function () use ($app) {
+        $controller = new UF\InstallController($app);
+        if (isset($app->site->install_status)){
+            // If tables have been created, move on to master account setup
+            if ($app->site->install_status == "pending"){
+                $app->redirect($app->site->uri['public'] . "/install/master");
+            } else {
+                // Everything is set up, so go to the home page!
+                $app->redirect($app->urlFor('uri_home'));
+            }
+        } else {
+            return $controller->pageSetupDB();
+        }
+    })->name('uri_install');
+    
+    $app->get('/install/master/?', function () use ($app) {
+        $controller = new UF\InstallController($app);
+        if (isset($app->site->install_status) && ($app->site->install_status == "pending")){
+            return $controller->pageSetupMasterAccount();
+        } else {
+            $app->redirect($app->urlFor('uri_install'));
+        }
+    });
+
+    $app->post('/install/:action/?', function ($action) use ($app) {
+        $controller = new UF\InstallController($app);
+        switch ($action) {
+            case "master":            return $controller->setupMasterAccount();      
+            default:                  $app->notFound();
+        }   
+    });
+    
     // Not found page (404)
     $app->notFound(function () use ($app) {
-        $controller = new UF\BaseController($app);
-        $controller->page404();
+        if ($app->request->isGet()) {
+            $controller = new UF\BaseController($app);
+            $controller->page404();
+        } else {
+            $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+        }
     });
 
     // Admin tools
-    $app->get('/config/settings', function () use ($app) {
+    $app->get('/config/settings/?', function () use ($app) {
         // Access-controlled page
         if (!$app->user->checkAccess('uri_site_settings')){
             $app->notFound();
@@ -101,9 +154,9 @@
             'info'     => $app->site->getSystemInfo(),
             'error_log'=> $app->site->getLog(50)
         ]);
-    });   
+    })->name('uri_settings');   
     
-    $app->post('/config/settings', function () use ($app) {
+    $app->post('/config/settings/?', function () use ($app) {
         // Get the alert message stream
         $ms = $app->alerts;
         
@@ -150,7 +203,7 @@
     });
     
     // Slim info page
-    $app->get('/sliminfo', function () use ($app) {
+    $app->get('/sliminfo/?', function () use ($app) {
         // Access-controlled page
         if (!$app->user->checkAccess('uri_slim_info')){
             $app->notFound();
@@ -161,7 +214,7 @@
     });
 
     // PHP info page
-    $app->get('/phpinfo', function () use ($app) {
+    $app->get('/phpinfo/?', function () use ($app) {
         // Access-controlled page
         if (!$app->user->checkAccess('uri_php_info')){
             $app->notFound();
@@ -172,7 +225,7 @@
     });
 
     // PHP info page
-    $app->get('/errorlog', function () use ($app) {
+    $app->get('/errorlog/?', function () use ($app) {
         // Access-controlled page
         if (!$app->user->checkAccess('uri_error_log')){
             $app->notFound();
@@ -182,7 +235,7 @@
         echo implode("<br>",$log['messages']);
         echo "</pre>";
     });       
-       
+    
     $app->get('/test/auth', function() use ($app){
         $params = [
             "user" => [

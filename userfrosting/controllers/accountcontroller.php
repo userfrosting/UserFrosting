@@ -5,18 +5,21 @@ namespace UserFrosting;
 // Handles account-related activities, including login, registration, and password recovery
 class AccountController extends \UserFrosting\BaseController {
 
+    public function __construct($app){
+        $this->_app = $app;
+    
+        // Load a page schema.  You may override this in individual pages.
+        $this->_page_schema = PageSchema::load("loggedout", $this->_app->config('schema.path') . "/pages/pages.json");
+    }
+
     public function pageHome(){
-        
-        // 1. Forward the user to their default page if he/she is already logged in.  Middleware layer?
-        
-        // 2. Render
-               
         $this->_app->render('common/home.html', [
             'page' => [
                 'author' =>         $this->_app->site->author,
                 'title' =>          "A secure, modern user management system based on UserCake, jQuery, and Bootstrap.",
                 'description' =>    "Main landing page for public access to this website.",
                 'schema' =>         $this->_page_schema,
+                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ]
         ]);
@@ -56,7 +59,7 @@ class AccountController extends \UserFrosting\BaseController {
         // Security measure: do not allow registering new users until the master account has been created.        
         if (!UserLoader::exists($this->_app->config('user_id_master'))){
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
+            $this->_app->redirect($this->_app->urlFor('uri_install'));
         }
         
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/register.json");
@@ -74,7 +77,8 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $settings->author,
                 'title' =>          "Register",
                 'description' =>    "Register for a new UserFrosting account.",
-                'schema' =>         $this->_page_schema, 
+                'schema' =>         $this->_page_schema,
+                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    "account/register"                
             ],
             'captcha_image' =>  $this->generateCaptcha(),
@@ -92,6 +96,7 @@ class AccountController extends \UserFrosting\BaseController {
                 'title' =>          "Reset Password",
                 'description' =>    "Reset your UserFrosting password.",
                 'schema' =>         $this->_page_schema,
+                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ],
             'token' =>          $token,
@@ -109,6 +114,7 @@ class AccountController extends \UserFrosting\BaseController {
                 'title' =>          "Resend Activation",
                 'description' =>    "Resend the activation email for your new UserFrosting account.",
                 'schema' =>         $this->_page_schema,
+                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ],
             'validators' => $validators->formValidationRulesJson()

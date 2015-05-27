@@ -62,7 +62,7 @@
                 // Forward to account home page on success
                 window.location.replace(site.uri.public);
             }).fail(function(jqXHR) {
-                if (userfrosting['debug'] == true) {
+                if ((typeof site !== "undefined") && site['debug'] == true) {
                     document.body.innerHTML = jqXHR.responseText;
                 } else {
                     console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );

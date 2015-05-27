@@ -53,6 +53,7 @@ interface SiteSettingsInterface {
     public function __isset($name);
     public function __set($name, $value);
     public function __get($name);
+    public function fetchSettings();
     public function set($plugin, $name, $value = null, $description = null);
     public function register($plugin, $name, $label, $type = "text", $options = []);
     public function getRegisteredSettings();

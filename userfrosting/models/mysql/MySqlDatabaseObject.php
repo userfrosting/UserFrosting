@@ -4,9 +4,8 @@ namespace UserFrosting;
 
 abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObjectInterface {
     
-    /* The following members MUST be implemented as a trait (e.g., TableInfoUser), which can then be used in the child class. */
-    // protected static $_columns;     // A list of the allowed columns for this type of DB object. Must be set in the child concrete class.  DO NOT USE `id` as a column!
-    // protected static $_table;       // The name of the table whose rows this class represents. Must be set in the child concrete class.
+    protected $_columns;     // A list of the allowed columns for this type of DB object. Must be set in the child concrete class.  DO NOT USE `id` as a column!
+    protected $_table;       // The name of the table whose rows this class represents. Must be set in the child concrete class.
     
     protected $_id;          // The id of this object.  Table must have an `id` column.
     protected $_properties;  // A mapping of the columns in the table that this object can access, to their values.
@@ -14,7 +13,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
     public function __construct($properties, $id = null) {
         // Set all valid properties
         foreach ($properties as $column => $value){
-            if ($column != "id" && in_array($column, static::$_columns))
+            if ($column != "id" && in_array($column, $this->_columns))
                 $this->_properties[$column] = $value;
         }
     
@@ -23,11 +22,11 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
     }
     
     public function columns(){
-        return static::$_columns;
+        return $this->_columns;
     }
     
     public function table(){
-        return static::$_table;
+        return $this->_table;
     }
     
     // Must be implemented for compatibility with Twig
@@ -41,19 +40,20 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
     public function __get($name){
         if ($name == "id")
             return $this->_id;
-        else if (in_array($name, static::$_columns))
+        else if (in_array($name, $this->_columns))
             return $this->_properties[$name];
         else {
-            $table = static::$prefix . static::$_table;
+            $table = $this->_table;
             throw new \Exception("The column '$name' does not exist in the table '$table'.");
         }
     }
 
+    // This function only allows whitelisted column names!  This is VERY IMPORTANT, otherwise the database will be open to SQL injection attacks.
     public function __set($name, $value){
-        if (in_array($name, static::$_columns))
+        if (in_array($name, $this->_columns))
             return $this->_properties[$name] = $value;
         else {
-            $table = static::$prefix . static::$_table;
+            $table = $this->_table;
             throw new \Exception("The column '$name' does not exist in the table '$table'.");
         }
     }
@@ -66,7 +66,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         if (isset($this->_id)){
             $db = static::connection();
             
-            $table = static::$prefix . static::$_table;
+            $table = $this->_table;
             
             $query = "SELECT * FROM $table WHERE id = :id LIMIT 1";
             
@@ -98,25 +98,31 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
     public function store() {
         // Get connection
         $db = static::connection();
-        $table = static::$prefix . static::$_table;
+        $table = $this->_table;
         
-        // If `id` is set, then we assume that this object already exists and needs to be updated.
+        // If `id` is set, then try to update an existing object before creating a new one.
         if ($this->_id) {
             $set_terms = [];
             $sqlVars = [];
             foreach ($this->_properties as $name => $value){
-                $set_terms[] = "$name = :$name";
+                $column_list[] = $name;
+                $value_list[] = ":$name";                
+                $set_terms[] = "$name = :$name" . "_2";
                 $sqlVars[":$name"] = $value;
+                $sqlVars[":$name" . "_2"] = $value;
             }
-        
+           
             $sqlVars[':id'] = $this->_id;
         
             $set_clause = implode(",", $set_terms);
+            $column_clause = implode(",", $column_list);            
+            $value_clause = implode(",", $value_list);
+            
             $query = "
-                UPDATE $table
-                SET $set_clause
-                WHERE
-                id = :id;";
+                INSERT INTO $table
+                ( id, $column_clause )
+                VALUES ( :id, $value_clause )
+                ON DUPLICATE KEY UPDATE $set_clause";
                 
             $stmt = $db->prepare($query);
             $stmt->execute($sqlVars);

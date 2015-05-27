@@ -1,3 +1,7 @@
+.container-narrow {
+    width: 800px;
+}
+
 .pager-lg {
     font-size: large;
 }
