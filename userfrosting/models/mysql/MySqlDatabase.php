@@ -157,7 +157,10 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         $connection->query("INSERT INTO `uf_authorize_group` (`group_id`, `hook`, `conditions`) VALUES
           (1, 'uri_dashboard', 'always()'),
           (2, 'uri_dashboard', 'always()'),
-          (2, 'uri_users', 'always()');");    
+          (2, 'uri_users', 'always()'),
+          (1, 'uri_account_settings', 'always()'),
+          (1, 'update_account_setting', 'equals(self.id, user.id)&&in(property,[\"email\",\"locale\"])'),
+          (2, 'update_account_setting', 'equals(self.id, user.id)&&in(property,[\"email\",\"display_name\", \"password\",\"locale\"])');");    
     }
     
 }
