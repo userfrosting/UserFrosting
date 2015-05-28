@@ -2,6 +2,8 @@
 # UserFrosting 0.2.2
 ## http://www.userfrosting.com
 
+[![Join the chat at https://gitter.im/alexweissman/UserFrosting](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexweissman/UserFrosting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ### By Alex Weissman
 
 Copyright (c) 2014
