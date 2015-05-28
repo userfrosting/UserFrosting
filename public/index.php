@@ -1,8 +1,6 @@
 <?php
     require_once "../userfrosting/config-userfrosting.php";
 
-
-    
     use UserFrosting as UF;
    
     // Front page
@@ -26,47 +24,50 @@
         }
     })->name('uri_home');
 
-    // User pages
-    $app->get('/zerg/?', function () use ($app) {    
-        $controller = new UF\UserController($app);
-        $controller->pageZerg();
-    });
-
+    // Miscellaneous pages
     $app->get('/dashboard/?', function () use ($app) {    
-        $controller = new UF\UserController($app);
-        $controller->pageDashboard();
-    });
-    
-    // Alert stream
-    $app->get('/alerts/?', function () use ($app) {
-        $controller = new UF\BaseController($app);
-        $controller->alerts();
-    });
-    
-    // JS Config
-    $app->get('/js/config.js', function () use ($app) {
-        $controller = new UF\BaseController($app);
-        $controller->configJS();
-    });
-    
-    // Theme CSS
-    $app->get('/css/theme.css', function () use ($app) {
-        $controller = new UF\BaseController($app);
-        $controller->themeCSS();
-    });
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_dashboard')){
+            $app->notFound();
+        }
         
+        $page_schema = UF\PageSchema::load("user", $app->config('schema.path') . "/pages/pages.json");
+        
+        $app->render('dashboard.html', [
+            'page' => [
+                'author' =>         $app->site->author,
+                'title' =>          "Dashboard",
+                'description' =>    "Your user dashboard.",
+                'alerts' =>         $app->alerts->getAndClearMessages(), 
+                'schema' =>         $page_schema
+            ]
+        ]);          
+    });
     
+    $app->get('/zerg/?', function () use ($app) {    
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_zerg')){
+            $app->notFound();
+        }
+        
+        $page_schema = UF\PageSchema::load("starcraft", $app->config('schema.path') . "/pages/pages.json");
+        
+        $app->render('zerg.html', [
+            'page' => [
+                'author' =>         $app->site->author,
+                'title' =>          "Zerg",
+                'description' =>    "Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.",
+                'alerts' =>         $app->alerts->getAndClearMessages(), 
+                'schema' =>         $page_schema
+            ]
+        ]); 
+    });    
+       
     // Account management pages
     $app->get('/account/:action/?', function ($action) use ($app) {    
         // Forward to installation if not complete
         if (!isset($app->site->install_status) || $app->site->install_status == "pending"){
             $app->redirect($app->urlFor('uri_install'));
-        }
-        
-        // User account settings
-        if ($action == "settings"){
-            $controller = new UF\UserController($app);
-            return $controller->pageAccountSettings();
         }
         
         $controller = new UF\AccountController($app);
@@ -78,33 +79,40 @@
             case "resend-activation":   return $controller->pageResendActivation();
             case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));
             case "captcha":             return $controller->captcha();
+            case "settings":            return $controller->pageAccountSettings();
             default:                    return $controller->page404();   
         }
     });
 
-    $app->post('/account/:action/?', function ($action) use ($app) {    
-        // User account settings
-        if ($action == "settings"){
-            $controller = new UF\UserController($app);
-            return $controller->accountSettings();
-        }
-        
+    $app->post('/account/:action/?', function ($action) use ($app) {            
         $controller = new UF\AccountController($app);
     
         switch ($action) {
             case "login":               return $controller->login();     
             case "register":            return $controller->register();
             case "resend-activation":   return $controller->resendActivation();
-            case "forgot-password":     return $controller->forgotPassword($app->request()->get('token'));    
+            case "forgot-password":     return $controller->forgotPassword($app->request()->get('token'));
+            case "settings":            return $controller->accountSettings();
             default:                    $app->notFound();
         }
     });    
     
     // User management pages
     $app->get('/users/?', function () use ($app) {
-        $controller = new UF\AdminController($app);
+        $controller = new UF\UserController($app);
         return $controller->pageUsers();
     });    
+    
+    // Admin tools
+    $app->get('/config/settings/?', function () use ($app) {
+        $controller = new UF\AdminController($app);
+        return $controller->pageSiteSettings();
+    })->name('uri_settings');   
+    
+    $app->post('/config/settings/?', function () use ($app) {
+        $controller = new UF\AdminController($app);
+        return $controller->siteSettings();        
+    });
     
     // Installation pages
     $app->get('/install/?', function () use ($app) {
@@ -139,87 +147,6 @@
         }   
     });
     
-    // Not found page (404)
-    $app->notFound(function () use ($app) {
-        if ($app->request->isGet()) {
-            $controller = new UF\BaseController($app);
-            $controller->page404();
-        } else {
-            $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
-        }
-    });
-
-    // Admin tools
-    $app->get('/config/settings/?', function () use ($app) {
-        // Access-controlled page
-        if (!$app->user->checkAccess('uri_site_settings')){
-            $app->notFound();
-        }
-        
-        // Hook for core and plugins to register their settings
-        $app->applyHook("settings.register");
-        
-        $app->render('site-settings.html', [
-            'page' => [
-                'author' =>         $app->site->author,
-                'title' =>          "Site Settings",
-                'description' =>    "Global settings for the site, including registration and activation settings, site title, admin emails, and default languages.",
-                'alerts' =>         $app->alerts->getAndClearMessages(), 
-                'schema' =>         UF\PageSchema::load("default", $app->config('schema.path') . "/pages/pages.json"),
-                'active_page' =>    ""
-            ],
-            'settings' => $app->site->getRegisteredSettings(),
-            'info'     => $app->site->getSystemInfo(),
-            'error_log'=> $app->site->getLog(50)
-        ]);
-    })->name('uri_settings');   
-    
-    $app->post('/config/settings/?', function () use ($app) {
-        // Get the alert message stream
-        $ms = $app->alerts;
-        
-        $post = $app->request->post();
-        
-        // Remove CSRF token
-        if (isset($post['csrf_token']))
-            unset($post['csrf_token']);
-            
-        // Access-controlled page
-        if (!$app->user->checkAccess('update_site_settings')){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $app->halt(403);
-        }
-        
-        // Hook for core and plugins to register their settings
-        $app->applyHook("settings.register");
-        
-        // Get registered settings
-        $registered_settings = $app->site->getRegisteredSettings();
-        
-        // Ok, check that all posted settings are registered
-        foreach ($post as $plugin => $settings){
-            if (!isset($registered_settings[$plugin])){
-                $ms->addMessageTranslated("danger", "CONFIG_PLUGIN_INVALID", ["plugin" => $plugin]);
-                $app->halt(400);
-            }
-            foreach ($settings as $name => $value){
-                if (!isset($registered_settings[$plugin][$name])){
-                    $ms->addMessageTranslated("danger", "CONFIG_SETTING_INVALID", ["plugin" => $plugin, "name" => $name]);
-                    $app->halt(400);
-                }
-            }
-        }
-        
-        // If validation passed, then update
-        foreach ($post as $plugin => $settings){
-            foreach ($settings as $name => $value){
-                $app->site->set($plugin, $name, $value);
-            }
-        }
-        $app->site->store();
-        
-    });
-    
     // Slim info page
     $app->get('/sliminfo/?', function () use ($app) {
         // Access-controlled page
@@ -252,7 +179,35 @@
         echo "<pre>";
         echo implode("<br>",$log['messages']);
         echo "</pre>";
-    });       
+    });      
+    
+    // Alert stream
+    $app->get('/alerts/?', function () use ($app) {
+        $controller = new UF\BaseController($app);
+        $controller->alerts();
+    });
+    
+    // JS Config
+    $app->get('/js/config.js', function () use ($app) {
+        $controller = new UF\BaseController($app);
+        $controller->configJS();
+    });
+    
+    // Theme CSS
+    $app->get('/css/theme.css', function () use ($app) {
+        $controller = new UF\BaseController($app);
+        $controller->themeCSS();
+    });
+    
+    // Not found page (404)
+    $app->notFound(function () use ($app) {
+        if ($app->request->isGet()) {
+            $controller = new UF\BaseController($app);
+            $controller->page404();
+        } else {
+            $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+        }
+    });     
     
     $app->get('/test/auth', function() use ($app){
         $params = [

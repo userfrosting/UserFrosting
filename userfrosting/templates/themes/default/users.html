@@ -41,13 +41,15 @@
                                     <td data-num="{{user.sign_up_stamp | date('U')}}">
                                         {{user.sign_up_stamp | date("l")}}<br>{{user.sign_up_stamp | date("M j, Y g:i a")}}
                                     </td>
-                                    <td data-num="{{user.last_sign_in_stamp | date("U")}}">
-                                        {% if user.last_sign_in_stamp %}
-                                            {{user.last_sign_in_stamp | date("l")}}<br>{{user.last_sign_in_stamp | date("M j, Y g:i a")}}
-                                        {% else %}
-                                            <i>Brand new!</i>
-                                        {% endif %}
+                                    {% if user.last_sign_in_stamp %}
+                                    <td data-num="{{user.last_sign_in_stamp | date('U')}}">
+                                        {{user.last_sign_in_stamp | date("l")}}<br>{{user.last_sign_in_stamp | date("M j, Y g:i a")}}
                                     </td>
+                                    {% else %}
+                                    <td data-num="0">
+                                            <i>Brand new!</i>
+                                    </td>
+                                    {% endif %}
                                     <td>
                                         <div class="btn-group">
                                             {% if user.enabled == 0 %}
