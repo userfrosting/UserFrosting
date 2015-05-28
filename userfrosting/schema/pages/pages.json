@@ -23,10 +23,41 @@
             "sb-admin-2.js",
             "userfrosting.js"
         ],
-        "min_css": "min/account.min.css",
-        "min_js": "min/account.min.js"   
+        "min_css": "min/user.min.css",
+        "min_js": "min/user.min.js"   
     },
-
+    "loggedin-simple" : {
+        "pages": [
+            "loggedin-simple"
+        ],
+        "css": [
+            "font-awesome-4.3.0.css",
+            "bootstrap-3.3.2.css",
+            "font-starcraft.css",
+            "bootstrap-custom.css",
+            "bootstrap-switch.css",
+            "formValidation/formValidation.css",
+            "lib/metisMenu.css",
+            "select2/select2.css",
+            "select2/select2-bootstrap.css",
+            "bootstrapradio.css"
+        ],
+        "js": [
+            "jquery-1.11.2.js",
+            "bootstrap-3.3.2.js",
+            "formValidation/formValidation.js",
+            "formValidation/bootstrap.js",
+            "date.min.js",
+            "lib/metisMenu.js",
+            "select2/select2.min.js",
+            "bootstrapradio.js",
+            "bootstrap-switch.js",
+            "sb-admin-2.js",
+            "userfrosting.js"
+        ],
+        "min_css": "min/loggedin-simple.min.css",
+        "min_js": "min/loggedin-simple.min.js"
+    },
     "loggedout" : {
         "pages": [
             "loggedout"

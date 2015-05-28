@@ -173,6 +173,7 @@ class InstallController extends \UserFrosting\BaseController {
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
         $data['active'] = 1;
+        $data['locale'] = $this->_app->site->default_locale;
                 
         // Halt on any validation errors
         if ($error) {
@@ -184,6 +185,8 @@ class InstallController extends \UserFrosting\BaseController {
         $data['primary_group_id'] = $primaryGroup->id;
         // Set default title for new users
         $data['title'] = $primaryGroup->new_user_title;
+        // Hash password
+        $data['password'] = Authentication::hashPassword($data['password']);
             
         // Create the user
         $user = new User($data, $this->_app->config('user_id_master'));

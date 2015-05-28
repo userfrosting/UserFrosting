@@ -29,7 +29,8 @@ class AccessConditionExpression {
 
     // Evaluates a condition expression, based on the given parameters.  Returns true if the condition is passed for the given parameters, otherwise returns false.
     public function evaluateCondition($condition, $params){
-        // Set the reserved `self` and `route` parameters
+        // Set the reserved `self` and `route` parameters.
+        // This replaces any values of `self` or `route` specified in the arguments, thus preventing them from being overridden in malicious user input.
         $params['self'] = $this->_app->user->export();
         
         $route = $this->_app->router()->getCurrentRoute();
@@ -38,17 +39,17 @@ class AccessConditionExpression {
         /* Traverse the parse tree, and execute all function calls as methods of class AccessCondition.
            Replace the function node with the return value of the method.
         */
-        $pv = new \ParserNodeFunctionEvaluator($params);
+        $pv = new \ParserNodeFunctionEvaluator($params, $this->_debug);
         $this->_traverser->addVisitor($pv);
         
         $code = "<?php $condition;";
         
         if ($this->_debug){
-            echo "<pre>Evaluating access conditions:\n";
-            echo htmlentities($condition). "\n\n".
+            error_log("<pre>Evaluating access conditions:\n");
+            error_log($condition. "\n\n".
             "on params: \n" .
             print_r($params, true) . "\n" .
-            "</pre>";
+            "</pre>");
         }
         
         try {
@@ -65,12 +66,20 @@ class AccessConditionExpression {
             $result = eval($expr_eval);
             
             if ($this->_debug){
-                echo "<pre>\"$expr\" evaluates to " . ($result == true ? "true" : "false") . "</pre>";
+                error_log("<pre>\"$expr\" evaluates to " . ($result == true ? "true" : "false") . "</pre>");
             }
             
             return $result;
         } catch (\PhpParser\Error $e) {
-            throw new \Exception("Error parsing access condition \"$condition\": \n" . $e->getMessage());
+            if ($this->_debug){
+                error_log("Error parsing access condition \"$condition\": \n" . $e->getMessage());
+            }
+            return false;   // Access fails if the access condition can't be parsed.
+        } catch (\UserFrosting\AuthorizationException $e) {
+            if ($this->_debug){
+                error_log("Error parsing access condition \"$condition\": \n" . $e->getMessage());
+            }
+            return false;
         }
     }
 

@@ -28,7 +28,8 @@ abstract class UFDatabase {
             "sign_up_stamp",
             "last_sign_in_stamp",
             "enabled",
-            "primary_group_id"
+            "primary_group_id",
+            "locale"
         ];
 
     protected static $columns_group = [

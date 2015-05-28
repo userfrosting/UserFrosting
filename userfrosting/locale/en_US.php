@@ -5,6 +5,12 @@
 */
 
 $lang = array();
+// Site Content
+$lang = array_merge($lang, [
+    "REGISTER_WELCOME" => "Registration is fast and simple.",
+    "MENU_DASHBOARD" => "Users",
+    "MENU_CONFIGURATION" => "Configuration"
+]);
 
 // Installer
 $lang = array_merge($lang,array(
@@ -21,9 +27,9 @@ $lang = array_merge($lang,array(
     "ACCOUNT_SPECIFY_PASSWORD" 		=> "Please enter your password.",
 	"ACCOUNT_SPECIFY_EMAIL"			=> "Please enter your email address.",
 	"ACCOUNT_SPECIFY_CAPTCHA"		=> "Please enter the captcha code.",
+    "ACCOUNT_SPECIFY_LOCALE"        => "Please specify a valid locale.",
     "ACCOUNT_INVALID_EMAIL"			=> "Invalid email address",
     "ACCOUNT_INVALID_USER_ID"		=> "The requested user id does not exist.",
-    "ACCOUNT_INVALID_PAY_TYPE"		=> "Invalid pay type.  Pay type must be either 'deduct fee' or 'hourly'.",
 	"ACCOUNT_USER_OR_EMAIL_INVALID"		=> "Username or email address is invalid.",
 	"ACCOUNT_USER_OR_PASS_INVALID"		=> "Username or password is invalid.",
 	"ACCOUNT_ALREADY_ACTIVE"		=> "Your account is already activated.",
@@ -55,7 +61,9 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "You have successfully registered. You can now login.",
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "You have successfully registered. You will soon receive an activation email. You must activate your account before logging in.",
 	"ACCOUNT_PASSWORD_NOTHING_TO_UPDATE"	=> "You cannot update with the same password",
-	"ACCOUNT_PASSWORD_UPDATED"		=> "Account password updated",
+    "ACCOUNT_PASSWORD_CONFIRM_CURRENT"  => "Please confirm your current password",
+	"ACCOUNT_SETTINGS_UPDATED"		=> "Account settings updated",
+    "ACCOUNT_PASSWORD_UPDATED"		=> "Account password updated",
 	"ACCOUNT_EMAIL_UPDATED"			=> "Account email updated",
 	"ACCOUNT_TOKEN_NOT_FOUND"		=> "Token does not exist / Account is already activated",
 	"ACCOUNT_USER_INVALID_CHARACTERS"	=> "Username can only include alpha-numeric characters",
@@ -63,10 +71,10 @@ $lang = array_merge($lang,array(
     "ACCOUNT_DISABLE_MASTER"     => "You cannot disable the master account!",
     "ACCOUNT_DISABLE_SUCCESSFUL"     => "Account has been successfully disabled.",
     "ACCOUNT_ENABLE_SUCCESSFUL"     => "Account has been successfully enabled.",
-    "ACCOUNT_DELETIONS_SUCCESSFUL"		=> "You have successfully deleted %m1% users",
+    "ACCOUNT_DELETIONS_SUCCESSFUL"		=> "You have successfully deleted {{count}} users",
 	"ACCOUNT_MANUALLY_ACTIVATED"		=> "{{user_name}}'s account has been manually activated",
 	"ACCOUNT_DISPLAYNAME_UPDATED"		=> "Displayname changed to {{display_name}}",
-	"ACCOUNT_TITLE_UPDATED"			=> "%m1%'s title changed to %m2%",
+	"ACCOUNT_TITLE_UPDATED"			=> "{{user_name}}'s title changed to {{title}}",
 	"ACCOUNT_GROUP_ADDED"		=> "Added user to group %m1%.",
 	"ACCOUNT_GROUP_REMOVED"		=> "Removed user from group %m1%.",
 	"ACCOUNT_GROUP_NOT_MEMBER"		=> "User is not a member of group %m1%.",

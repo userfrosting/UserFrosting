@@ -63,6 +63,12 @@
             $app->redirect($app->urlFor('uri_install'));
         }
         
+        // User account settings
+        if ($action == "settings"){
+            $controller = new UF\UserController($app);
+            return $controller->pageAccountSettings();
+        }
+        
         $controller = new UF\AccountController($app);
     
         switch ($action) {
@@ -71,12 +77,18 @@
             case "register":            return $controller->pageRegister();
             case "resend-activation":   return $controller->pageResendActivation();
             case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));
-            case "captcha":             return $controller->captcha(); 
+            case "captcha":             return $controller->captcha();
             default:                    return $controller->page404();   
         }
     });
 
     $app->post('/account/:action/?', function ($action) use ($app) {    
+        // User account settings
+        if ($action == "settings"){
+            $controller = new UF\UserController($app);
+            return $controller->accountSettings();
+        }
+        
         $controller = new UF\AccountController($app);
     
         switch ($action) {

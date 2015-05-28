@@ -6,6 +6,13 @@
 
 $lang = array();
 
+// Site Content
+$lang = array_merge($lang, [
+    "REGISTER_WELCOME" => "El registro es rápido y sencillo.",
+    "MENU_DASHBOARD" => "Usuarios",
+    "MENU_CONFIGURATION" => "Configuración"
+]);
+
 // Installer
 $lang = array_merge($lang,array(
 "INSTALLER_INCOMPLETE"      => "No puedes registrar una cuenta hasta que el instalador haya finalizado!",

@@ -17,6 +17,7 @@ namespace UserFrosting;
  * @property datetime last_sign_in_stamp
  * @property int enabled
  * @property int primary_group_id
+ * @property string locale
  */
 
 class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
@@ -27,6 +28,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     public function __construct($properties, $id = null) {
         $this->_table = static::getTableUser();
         $this->_columns = static::$columns_user;
+        // Set default locale, if not specified
+        if (!isset($properties['locale']))
+            $properties['locale'] = static::$app->site->default_locale;       
         parent::__construct($properties, $id);
     }
     
@@ -189,10 +193,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     }
  
     public function store($force_create = false){
-        // Initialize timestamps, etc for new Users.  Should this be done here, or somewhere else?
+        // Initialize timestamps for new Users.  Should this be done here, or somewhere else?
         if (!isset($this->_id) || $force_create){
             $this->sign_up_stamp = date("Y-m-d H:i:s");
-            $this->password = Authentication::hashPassword($this->password);    // Should this be done in the constructor?   
             $this->activation_token = UserLoader::generateActivationToken();
             $this->last_activation_request = date("Y-m-d H:i:s");
         }

@@ -22,13 +22,13 @@
         {% endif %}
         {% if checkAccess('uri_users') %}
         <li>
-            <a href="{{site.uri.public}}/user/list"><i class="fa fa-users fa-fw"></i> Users</a>
+            <a href="{{site.uri.public}}/user/list"><i class="fa fa-users fa-fw"></i> {{ translate("MENU_DASHBOARD") }}</a>
         </li>
         {% endif %}
     
         {% if checkAccess('uri_site_settings') or checkAccess('uri_manage_groups') %}
         <li>
-            <a href="#"><i class="fa fa-wrench fa-fw"></i> Configuration<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-wrench fa-fw"></i> {{ translate("MENU_CONFIGURATION") }}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 {% if checkAccess('uri_site_settings') %}
                 <li>

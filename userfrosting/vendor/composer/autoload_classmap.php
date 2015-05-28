@@ -22,6 +22,7 @@ return array(
     'UserFrosting\\AccessConditionExpression' => $baseDir . '/auth/AccessConditionExpression.php',
     'UserFrosting\\AccountController' => $baseDir . '/controllers/AccountController.php',
     'UserFrosting\\Authentication' => $baseDir . '/auth/authentication.php',
+    'UserFrosting\\AuthorizationException' => $baseDir . '/auth/AuthorizationException.php',
     'UserFrosting\\BaseController' => $baseDir . '/controllers/BaseController.php',
     'UserFrosting\\DatabaseInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\DatabaseObjectInterface' => $baseDir . '/models/DatabaseInterface.php',

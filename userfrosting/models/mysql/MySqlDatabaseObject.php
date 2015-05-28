@@ -29,9 +29,8 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         return $this->_table;
     }
     
-    // Must be implemented for compatibility with Twig
     public function __isset($name) {
-        if (isset($this->_properties[$name]))
+        if ($name == "id" || isset($this->_properties[$name]))
             return true;
         else
             return false;
@@ -89,7 +88,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
      *
      */  
     public function export(){
-        return $this->_properties;
+        return array_merge(["id" => $this->_id], $this->_properties);
     }
     
     /* Store the object in the DB, creating a new record if one doesn't already exist.

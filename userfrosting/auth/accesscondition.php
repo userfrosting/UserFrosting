@@ -11,16 +11,23 @@ class AccessCondition {
     
     }
 
+    // Check if the specified values are equal to one another.
     static function equals($val1, $val2){
-        return ($val1 == $val2);
+        return ($val1 === $val2);
     }    
 
-    // Check if all keys in $needle are present in $haystack
-    static function subset($needle, $haystack){
+    // Check if all keys of the array $needle are present in the values of $haystack
+    static function subset_keys($needle, $haystack){
         return count($needle) == count(array_intersect(array_keys($needle), $haystack));
     }
 
-    static function hasPost($user_id, $post_id){
-        return false;
+    // Check if all values in the array $needle are present in the values of $haystack
+    static function subset($needle, $haystack){
+        return count($needle) == count(array_intersect($needle, $haystack));
+    }
+    
+    // Check if the specified value $needle is in the values of $haystack
+    static function in($needle, $haystack){
+        return in_array($needle, $haystack);
     } 
 }

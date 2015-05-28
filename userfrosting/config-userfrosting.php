@@ -85,23 +85,6 @@
     \UserFrosting\GroupLoader::init();
     \UserFrosting\UserLoader::init();
     
-    /**** Session and User Setup ****/
-    
-    // Use native PHP sessions
-    session_cache_limiter(false);
-    session_name("UserFrosting");
-    session_start();
-    
-    // Set user, if one is logged in
-    if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {
-    	// Refresh the user.  If they don't exist any more, then an exception will be thrown.
-        $_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
-        $app->user = $_SESSION["userfrosting"]["user"];
-    // Otherwise, create a dummy "guest" user
-    } else {
-        $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
-    }
-    
     /* Load UserFrosting site settings */    
     $app->site = new \UserFrosting\SiteSettings();
     
@@ -117,12 +100,30 @@
         $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
         $app->site->register('userfrosting', 'resend_activation_threshold', "Resend Activation Email Cooloff (s)");
         $app->site->register('userfrosting', 'reset_password_timeout', "Password Recovery Timeout (s)");
-    }, 1);        
+    }, 1);       
+    
+    /**** Session and User Setup ****/
+    
+    // Use native PHP sessions
+    session_cache_limiter(false);
+    session_name("UserFrosting");
+    session_start();
+    
+    // Set user, if one is logged in
+    if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {
+    	// Refresh the user.  If they don't exist any more, then an exception will be thrown.
+        $_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
+        $app->user = $_SESSION["userfrosting"]["user"];
+    // Otherwise, create a dummy "guest" user
+    } else {
+        $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
+    }   
     
     /**** Message Stream Setup ****/
     
-    /* Set the translation path */
-    \Fortress\MessageTranslator::setTranslationTable($app->config("locales.path") . "/" . $app->site->default_locale . ".php");
+    /* Set the translation path and default language path. */
+    \Fortress\MessageTranslator::setTranslationTable($app->config("locales.path") . "/" . $app->user->locale . ".php");
+    \Fortress\MessageTranslator::setDefaultTable($app->config("locales.path") . "/en_US.php");
     
     /* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
     if (!isset($_SESSION['userfrosting']['alerts']))
@@ -141,7 +142,9 @@
     
     // Also handle fatal errors
     register_shutdown_function( "fatal_handler" );
-    //ini_set("display_errors", "off");
+    
+    // Do not send fatal errors to the response body!
+    ini_set("display_errors", "off");
     
     function fatal_handler() {
         global $app;
@@ -185,6 +188,12 @@
     
     $twig->addFunction($function_check_access);    
     
+    // Add Twig function for translating message hooks
+    $function_translate = new Twig_SimpleFunction('translate', function ($hook, $params = []) use ($app) {
+        return \Fortress\MessageTranslator::translate($hook, $params);
+    });
+    
+    $twig->addFunction($function_translate);
     
     /*
     $view = $app->view();

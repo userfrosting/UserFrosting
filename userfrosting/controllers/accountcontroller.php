@@ -265,6 +265,7 @@ class AccountController extends \UserFrosting\BaseController {
         $data['user_name'] = strtolower(trim($data['user_name']));
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
+        $data['locale'] = $this->_app->site->default_locale;
         
         if ($this->_app->site->require_activation)
             $data['active'] = 0;
@@ -292,7 +293,9 @@ class AccountController extends \UserFrosting\BaseController {
         $data['primary_group_id'] = $primaryGroup->id;
         // Set default title for new users
         $data['title'] = $primaryGroup->new_user_title;
-            
+        // Hash password
+        $data['password'] = Authentication::hashPassword($data['password']);
+        
         // Create the user
         $user = new User($data);
 

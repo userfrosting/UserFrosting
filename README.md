@@ -82,7 +82,7 @@ $post = [
     "content"   => "Everything you ever wanted to know!"
 ];
 
-if ($app->user->checkAccess("updateMessage", $post)){
+if ($app->user->checkAccess("updateMessage", ["message" => $post])){
     $message = MessageBoard::fetchMessage($post["id"]);
     $message->update($post);
 } else {

@@ -42,41 +42,44 @@ class ParserNodeFunctionEvaluator extends PhpParser\NodeVisitorAbstract {
             }
             
             if ($this->debug) {
-                echo "<pre>";
-                echo "Evaluating method '$method' on \n";            
-                print_r($args);
+                //echo "<pre>";
+                error_log("Evaluating method '$method' on \n");            
+                error_log(print_r($args, true));
             }
             
             // Call the specified function with the specified arguments.
             try{
                 $method_handler = $this->acReflector->getMethod($method);     
             } catch (Exception $e){
-                throw new Exception("Authorization failed: Access condition method '$method' does not exist.");
+                throw new UserFrosting\AuthorizationException("Authorization failed: Access condition method '$method' does not exist.");
             }         
     
             $result = $method_handler->invokeArgs(null, $args);
             
             if ($this->debug){
-                echo "Result: " . ($result ? "1" : "0");
-                echo "</pre>";
+                error_log("Result: " . ($result ? "1" : "0"));
+                //echo "</pre>";
             }
             
             return new PhpParser\Node\Scalar\LNumber($result ? "1" : "0");
         }
     }
     
-    /* Resolve a parameter path (e.g. "user.id", "post", etc)
+    /* Resolve a parameter path (e.g. "user.id", "post", etc) into its value
     */
     private function resolveParamPath($path){
         $pathTokens = explode(".", $path);
         $value = $this->params;
         foreach ($pathTokens as $token){
             $token = trim($token);
-            if (isset($value[$token])){
+            if (is_array($value) && isset($value[$token])){
                 $value = $value[$token];
                 continue;
+            } else if (is_object($value) && isset($value->$token)) {
+                $value = $value->$token;
+                continue;
             } else {
-                throw new Exception("Cannot resolve the path \"$path\".  Error at token \"$token\".");
+                throw new UserFrosting\AuthorizationException("Cannot resolve the path \"$path\".  Error at token \"$token\".");
             }
         }
         return $value;

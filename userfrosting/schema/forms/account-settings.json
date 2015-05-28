@@ -1,0 +1,71 @@
+{
+    "display_name" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_DISPLAY_NAME"
+            },
+            "length" : {
+                "min" : 1,
+                "max" : 50,
+                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
+            }
+        }
+    },          
+    "email" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_EMAIL"
+            },
+            "length" : {
+                "min" : 1,
+                "max" : 150,
+                "message" : "ACCOUNT_EMAIL_CHAR_LIMIT"
+            },
+            "email" : {
+                "message" : "ACCOUNT_INVALID_EMAIL"
+            }
+        }
+    },
+    "locale" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_LOCALE"
+            }
+        }
+    },
+    "password" : {
+        "validators" : {
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        },
+        "sanitizers" : {
+            "raw" : {}
+        }    
+    },
+    "passwordc" : {
+        "validators" : {
+            "matches" : {
+                "field" : "password",
+                "message" : "ACCOUNT_PASS_MISMATCH"
+            },
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        },
+        "sanitizers" : {
+            "raw" : {}
+        }    
+    },
+    "passwordcheck" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_PASSWORD_CONFIRM_CURRENT"
+            }
+        }
+    }
+}
