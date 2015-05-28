@@ -100,6 +100,12 @@
         }
     });    
     
+    // User management pages
+    $app->get('/users/?', function () use ($app) {
+        $controller = new UF\AdminController($app);
+        return $controller->pageUsers();
+    });    
+    
     // Installation pages
     $app->get('/install/?', function () use ($app) {
         $controller = new UF\InstallController($app);

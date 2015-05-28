@@ -22,7 +22,7 @@
         {% endif %}
         {% if checkAccess('uri_users') %}
         <li>
-            <a href="{{site.uri.public}}/user/list"><i class="fa fa-users fa-fw"></i> {{ translate("MENU_DASHBOARD") }}</a>
+            <a href="{{site.uri.public}}/users"><i class="fa fa-users fa-fw"></i> {{ translate("MENU_DASHBOARD") }}</a>
         </li>
         {% endif %}
     
@@ -37,7 +37,7 @@
                 {% endif %}
                 {% if checkAccess('uri_manage_groups') %}
                 <li>
-                    <a href="{{site.uri.public}}/group/list"><i class="fa fa-tags fa-fw"></i> Groups</a>
+                    <a href="{{site.uri.public}}/groups"><i class="fa fa-tags fa-fw"></i> Groups</a>
                 </li>
                 {% endif %}
             </ul>

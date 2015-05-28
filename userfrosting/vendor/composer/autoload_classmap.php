@@ -21,6 +21,7 @@ return array(
     'Slim\\Extras\\Middleware\\DatabaseCheck' => $baseDir . '/models/DatabaseCheck.php',
     'UserFrosting\\AccessConditionExpression' => $baseDir . '/auth/AccessConditionExpression.php',
     'UserFrosting\\AccountController' => $baseDir . '/controllers/AccountController.php',
+    'UserFrosting\\AdminController' => $baseDir . '/controllers/AdminController.php',
     'UserFrosting\\Authentication' => $baseDir . '/auth/authentication.php',
     'UserFrosting\\AuthorizationException' => $baseDir . '/auth/AuthorizationException.php',
     'UserFrosting\\BaseController' => $baseDir . '/controllers/BaseController.php',

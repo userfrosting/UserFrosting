@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'components/head.html' %}
+  
+<body>
+    <div id="wrapper">
+        {% include 'components/nav-account.html' %}
+        <div id="page-wrapper">
+            {% include 'components/alerts.html' %}
+            <div class="row">
+                <div class="col-md-12">
+                <div class='panel panel-primary'>
+                <div class='panel-heading'>
+                    <h3 class='panel-title'><i class='fa fa-users'></i> Users</h3>
+                </div>
+                <div class='panel-body'>
+                    <div class="table-responsive">
+                        <table class="tablesorter table table-bordered table-hover table-striped tablesorter-bootstrap" data-sortlist="[[0, 0]]">
+                            <thead>
+                                <tr>
+                                    <th class="sorter-metatext">User/Info <i class="fa fa-sort"></i></th>
+                                    <th class="sorter-metanum">Registered Since <i class="fa fa-sort"></i></th>
+                                    <th class="sorter-metanum">Last Sign-in <i class="fa fa-sort"></i></th>
+                                    <th>Status/Actions <i class="fa fa-sort"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td data-text="{{user.user_name}}">
+                                        <strong>
+                                            <a href="{{site.uri.public}}/users/u/{{user.id}}">{{user.user_name}} ({{user.display_name}})</a>
+                                        </strong>
+                                        <div>
+                                            <i>{{user.title}}</i>
+                                        </div>
+                                        <div>
+                                            <i class="fa fa-envelope"></i> <a href="mailto:{{user.email}}">{{user.email}}</a>
+                                        </div>
+                                    </td>
+                                    <td data-num="{{user.sign_up_stamp | date('U')}}">
+                                        {{user.sign_up_stamp | date("l")}}<br>{{user.sign_up_stamp | date("M j, Y g:i a")}}
+                                    </td>
+                                    <td data-num="{{user.last_sign_in_stamp | date("U")}}">
+                                        {% if user.last_sign_in_stamp %}
+                                            {{user.last_sign_in_stamp | date("l")}}<br>{{user.last_sign_in_stamp | date("M j, Y g:i a")}}
+                                        {% else %}
+                                            <i>Brand new!</i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            {% if user.enabled == 0 %}
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    Disabled
+                                                    <span class="caret"></span>
+                                                </button>
+                                            {% elseif user.active == 0 %}
+                                                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                                                    Unactivated
+                                                    <span class="caret"></span>
+                                                </button>                                                    
+                                            {% else %}
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                                    Active
+                                                    <span class="caret"></span>
+                                                </button>                                                    
+                                            {% endif %}
+                                            <ul class="dropdown-menu" role="menu">
+                                                {% if user.active == 0 %}
+                                                <li>
+                                                    <a href="#" data-id="{{user.id}}" class="btn-activate-user">
+                                                    <i class="fa fa-bolt"></i> Activate user
+                                                    </a>
+                                                </li>
+                                                {% endif %}
+                                                <li>
+                                                    <a href="#" data-id="{{user.id}}" class="btn-edit-user" data-target="#user-update-dialog" data-toggle="modal">
+                                                    <i class="fa fa-edit"></i> Edit user
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                {% if user.enabled == 1 %}
+                                                    <a href="#" data-id="{{user.id}}" class="btn-disable-user">
+                                                    <i class="fa fa-minus-circle"></i> Disable user
+                                                    </a>
+                                                {% else %}
+                                                    <a href="#" data-id="{{user.id}}" class="btn-disable-user">
+                                                    <i class="fa fa-plus-circle"></i> Enable user
+                                                    </a> 
+                                                {% endif %}
+                                                </li>
+                                                <li>
+                                                    <a href="#" data-id="{{user.id}}" class="btn-delete-user" data-user_name="{{user.user_name}}" data-target="#user-delete-dialog" data-toggle="modal">
+                                                    <i class="fa fa-trash-o"></i> Delete user</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="pager pager-lg tablesorter-pager">
+                            <span class='pager-control first' title='First page'><i class='fa fa-angle-double-left'></i></span>
+                            <span class='pager-control prev' title='Previous page'><i class='fa fa-angle-left'></i></span>
+                            <span class='pagedisplay'></span> <!-- this can be any element, including an input -->
+                            <span class='pager-control next' title='Next page'><i class='fa fa-angle-right'></i></span>
+                            <span class='pager-control last' title= 'Last page'><i class='fa fa-angle-double-right'></i></span>
+                            <br><br>
+                            Jump to Page: <select class='gotoPage'></select>
+                            &bull; Show: <select class='pagesize'>
+                                <option value='2'>2</option>
+                                <option value='5'>5</option>
+                                <option value='10'>10</option>
+                                <option value='100'>100</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <button type="button" class="btn btn-success btn-add-user" data-toggle="modal" data-target="#user-create-dialog">
+                                <i class="fa fa-plus-square"></i>  Create New User
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-right ">
+                            <a href="users.php">View All Users <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+            {% include 'components/footer.html' %}    
+        </div>
+    </div>
+    
+<script>
+    $(document).ready(function() {                   
+ 
+
+    });
+
+</script>
+</body>
+</html>
+

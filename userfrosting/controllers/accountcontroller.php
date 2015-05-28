@@ -173,15 +173,15 @@ class AccountController extends \UserFrosting\BaseController {
             }
         }
         
-        // Check that the user's account is activated
-        if ($user->active == 0) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_INACTIVE");
-            $this->_app->halt(403);
-        }
-        
         // Check that the user's account is enabled
         if ($user->enabled == 0){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLED");
+            $this->_app->halt(403);
+        }        
+        
+        // Check that the user's account is activated
+        if ($user->active == 0) {
+            $ms->addMessageTranslated("danger", "ACCOUNT_INACTIVE");
             $this->_app->halt(403);
         }
         
