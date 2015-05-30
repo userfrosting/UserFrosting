@@ -31,6 +31,7 @@
 
 ### Site Settings
 
+```
 class SiteSettings
 
 $app->site = new SiteSettings();        // Loads all settings from the database on instantiation
@@ -40,9 +41,17 @@ $app->site->new_option = "Something";               // FAILS!  cannot add/remove
 $app->site->set("myPlugin", "setting1", "val");    // Create or update a setting called "setting1" in the "myPlugin" context, and set its value
 $app->site->register("myPlugin", "setting1", "Ninjas?", "toggle", [0 => "off", 1 => "on"]);     // Register a setting with the Site Settings page, and the specified parameters.
 $app->site->store();    // Save all settings in DB
+```
 
+### URL Scheme
 
-
+```
+GET  /users             // List users
+GET  /users/u/1         // View info for user 1
+POST /users             // Create a new user
+POST /users/u/1         // Update info for user 1
+POST /users/u/1/delete  // Delete user 1 (this is not RESTful, but many browsers still don't support DELETE)
+```
 
 ### Sessions
 

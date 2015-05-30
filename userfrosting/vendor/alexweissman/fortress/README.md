@@ -130,4 +130,24 @@ and running `composer install`.
 
 ## Usage
 
+In the definitions of translatable message hooks, the keyword "self" is reserved to refer to the name of the field being validated.  Thus, a message like this:
 
+"MIN_LENGTH" => "The field '{{self}}' must be at least {{min}} characters long"
+
+for a field defined as:
+
+```
+"tagline": {
+    "validators" : {
+        "length" : {
+            "min" : 10,
+            "message" : "MIN_LENGTH"
+        }
+    }
+}
+```
+
+Would translate to:
+
+ "The field 'tagline' must be at least 10 characters long"
+ 

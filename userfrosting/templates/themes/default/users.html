@@ -61,39 +61,39 @@
                                                 <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                                                     Unactivated
                                                     <span class="caret"></span>
-                                                </button>                                                    
+                                                </button>            
                                             {% else %}
                                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                                     Active
                                                     <span class="caret"></span>
-                                                </button>                                                    
+                                                </button>            
                                             {% endif %}
                                             <ul class="dropdown-menu" role="menu">
                                                 {% if user.active == 0 %}
                                                 <li>
-                                                    <a href="#" data-id="{{user.id}}" class="btn-activate-user">
+                                                    <a href="#" data-id="{{user.id}}" class="js-user-activate">
                                                     <i class="fa fa-bolt"></i> Activate user
                                                     </a>
                                                 </li>
                                                 {% endif %}
                                                 <li>
-                                                    <a href="#" data-id="{{user.id}}" class="btn-edit-user" data-target="#user-update-dialog" data-toggle="modal">
+                                                    <a href="#" data-id="{{user.id}}" class="js-user-edit" data-target="#dialog-user-update" data-toggle="modal">
                                                     <i class="fa fa-edit"></i> Edit user
                                                     </a>
                                                 </li>
                                                 <li>
                                                 {% if user.enabled == 1 %}
-                                                    <a href="#" data-id="{{user.id}}" class="btn-disable-user">
+                                                    <a href="#" data-id="{{user.id}}" class="js-user-disable">
                                                     <i class="fa fa-minus-circle"></i> Disable user
                                                     </a>
                                                 {% else %}
-                                                    <a href="#" data-id="{{user.id}}" class="btn-disable-user">
+                                                    <a href="#" data-id="{{user.id}}" class="js-user-enable">
                                                     <i class="fa fa-plus-circle"></i> Enable user
                                                     </a> 
                                                 {% endif %}
                                                 </li>
                                                 <li>
-                                                    <a href="#" data-id="{{user.id}}" class="btn-delete-user" data-user_name="{{user.user_name}}" data-target="#user-delete-dialog" data-toggle="modal">
+                                                    <a href="#" data-id="{{user.id}}" class="js-user-delete" data-user_name="{{user.user_name}}" data-target="#dialog-user-delete" data-toggle="modal">
                                                     <i class="fa fa-trash-o"></i> Delete user</a>
                                                 </li>
                                             </ul>
@@ -136,14 +136,6 @@
             {% include 'components/footer.html' %}    
         </div>
     </div>
-    
-<script>
-    $(document).ready(function() {                   
- 
-
-    });
-
-</script>
 </body>
 </html>
 

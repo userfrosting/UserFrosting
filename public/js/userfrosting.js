@@ -32,7 +32,6 @@
     };
 }( jQuery ));
 
-
 // define tablesorter pager options
 var pagerOptions = {
   // target the pager markup - see the HTML block below

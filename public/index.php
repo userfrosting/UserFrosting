@@ -102,7 +102,20 @@
         $controller = new UF\UserController($app);
         return $controller->pageUsers();
     });    
+
+    // User info page
+    $app->get('/users/u/:user_id/?', function ($user_id) use ($app) {
+        $controller = new UF\UserController($app);
+        return $controller->pageUser($user_id);
+    });       
+
+    // Update user info
+    $app->post('/users/u/:user_id/?', function ($user_id) use ($app) {
+        $controller = new UF\UserController($app);
+        return $controller->updateUser($user_id);
+    });       
     
+        
     // Admin tools
     $app->get('/config/settings/?', function () use ($app) {
         $controller = new UF\AdminController($app);
@@ -210,6 +223,9 @@
     });     
     
     $app->get('/test/auth', function() use ($app){
+        if (0 == "php")
+            echo "0 = php";
+        
         $params = [
             "user" => [
                 "id" => 1

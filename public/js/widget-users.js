@@ -1,13 +1,9 @@
 /*
 
-UserFrosting Version: 0.2.2
+UserFrosting
 By Alex Weissman
-Copyright (c) 2014
 
-Based on the UserCake user management system, v2.0.2.
-Copyright (c) 2009-2012
-
-UserFrosting, like UserCake, is 100% free and open-source.
+UserFrosting is 100% free and open-source.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the 'Software'), to deal
@@ -28,90 +24,69 @@ THE SOFTWARE.
 
 */
 
-/* Display a table of users */
-function userTable(box_id, options) {	
-	options = typeof options !== 'undefined' ? options : {};
-	
-	var data = options;
-	data['ajaxMode'] = true;
-	
-	// Generate the form
-	$.ajax({  
-	  type: "GET",  
-	  url: FORMSPATH + "table_users.php",  
-	  data: data,
-	  dataType: 'json',
-	  cache: false
-	})
-	.fail(function(result) {
-		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-		alertWidget('display-alerts');
-	})
-	.done(function(result) {
-		$('#' + box_id).html(result['data']);
-		
-		// define pager options
-		var pagerOptions = {
-		  // target the pager markup - see the HTML block below
-		  container: $('#' + box_id + ' .pager'),
-		  // output string - default is '{page}/{totalPages}'; possible variables: {page}, {totalPages}, {startRow}, {endRow} and {totalRows}
-		  output: '{startRow} - {endRow} / {filteredRows} ({totalRows})',
-		  // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
-		  // table row set to a height to compensate; default is false
-		  fixedHeight: true,
-		  // remove rows from the table to speed up the sort of large tables.
-		  // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-		  removeRows: false,
-		  size: 10,
-		  // go to page selector - select dropdown that sets the current page
-		  cssGoto: '.gotoPage'
-		};
-		
-		// Initialize the tablesorter
-		$('#' + box_id + ' .table').tablesorter({
-			debug: false,
-			theme: 'bootstrap',
-			widthFixed: true,
-			widgets: ['filter']
-		}).tablesorterPager(pagerOptions);		
-	
-		// Link buttons
-		$('#' + box_id + ' .btn-add-user').click(function() { 
-			userForm('user-create-dialog');
-		});
-		
-		$('#' + box_id + ' .btn-edit-user').click(function() {
-            var btn = $(this);
-            var user_id = btn.data('id');
-			userForm('user-update-dialog', user_id);
-		});
+$(document).ready(function() {                   
+    // Link buttons
+    $('.js-user-create').click(function() { 
+        userForm('user-create-dialog');
+    });
+    
+    $('.js-user-edit').click(function() {
+        var btn = $(this);
+        var user_id = btn.data('id');
+        userForm('user-update-dialog', user_id);
+    });
 
-		$('#' + box_id + ' .btn-activate-user').click(function() {
-		    var btn = $(this);
-            var user_id = btn.data('id');
-			activateUser(user_id);
-		});
-		
-		$('#' + box_id + ' .btn-enable-user').click(function () {
-			var btn = $(this);
-            var user_id = btn.data('id');
-			updateUserEnabledStatus(user_id, true, $('#' + box_id + ' input[name="csrf_token"]' ).val());
-		});
-		
-		$('#' + box_id + ' .btn-disable-user').click(function () {
-			var btn = $(this);
-            var user_id = btn.data('id');
-			updateUserEnabledStatus(user_id, false, $('#' + box_id + ' input[name="csrf_token"]' ).val());
-		});	
-		
-		$('#' + box_id + ' .btn-delete-user').click(function() {
-			var btn = $(this);
-            var user_id = btn.data('id');
-			var user_name = btn.data('user_name');
-			deleteUserDialog('user-delete-dialog', user_id, user_name);
-			$('#user-delete-dialog').modal('show');
-		});	 	
-	});
+    $('.js-user-activate').click(function() {
+        var btn = $(this);
+        var user_id = btn.data('id');
+        activateUser(user_id);
+    });
+    
+    $('.js-user-enable').click(function () {
+        var btn = $(this);
+        var user_id = btn.data('id');
+        updateUserEnabledStatus(user_id, "1")
+        .always(function(response) {
+            // Reload page after updating user details
+            window.location.reload();
+        });
+    });
+    
+    $('.js-user-disable').click(function () {
+        var btn = $(this);
+        var user_id = btn.data('id');
+        updateUserEnabledStatus(user_id, "0")
+        .always(function(response) {
+            // Reload page after updating user details
+            window.location.reload();
+        });
+    });	
+    
+    $('.js-user-delete').click(function() {
+        var btn = $(this);
+        var user_id = btn.data('id');
+        var user_name = btn.data('user_name');
+        deleteUserDialog('user-delete-dialog', user_id, user_name);
+        $('#user-delete-dialog').modal('show');
+    });	 	
+});
+
+// Enable/disable the specified user
+function updateUserEnabledStatus(user_id, enabled) {
+	enabled = typeof enabled !== 'undefined' ? enabled : 1;
+	csrf_token = $("meta[name=csrf_token]").attr("content");
+    var data = {
+		enabled: enabled,
+		csrf_token: csrf_token
+	};
+	
+	var url = site.uri.public + "/users/u/" + user_id;
+	
+    return $.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: data	  
+    });
 }
 
 /* Display a modal form for updating/creating a user */
@@ -478,26 +453,7 @@ function activateUser(user_id) {
 	return;
 }
 
-// Enable/disable the specified user
-function updateUserEnabledStatus(user_id, enabled, csrf_token) {
-	enabled = typeof enabled !== 'undefined' ? enabled : true;
-	var data = {
-		user_id: user_id,
-		enabled: enabled,
-		csrf_token: csrf_token,
-		ajaxMode:	"true"
-	};
-	
-	url = APIPATH + "update_user.php";
-	$.ajax({  
-	  type: "POST",  
-	  url: url,  
-	  data: data	  
-    }).done(function(result) {
-		processJSONResult(result);
-		window.location.reload();
-	});
-}
+
 
 function deleteUser(user_id) {
 	var url = APIPATH + "delete_user.php";

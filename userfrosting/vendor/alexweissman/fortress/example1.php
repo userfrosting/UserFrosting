@@ -40,7 +40,7 @@ print_r($rf->data());
 echo "</pre>";
 
 // Validate.  Normally we'd want to halt on validation errors.  But for this demo, we will simply print the message stream.
-if (!$rf->validate(true)) {
+if (!$rf->validate()) {
     $ms->addMessageTranslated("danger", "Validation failed for {{placeholder}}", ["placeholder" => "the form"]);
 }
 

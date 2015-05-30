@@ -4,7 +4,7 @@ namespace Fortress;
 
 interface ServerSideValidatorInterface {
     public function setSchema($schema);
-    public function validate($data, $schemaRequired);
+    public function validate($data);
     public function data();
     public function errors();    
 }
@@ -32,7 +32,7 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
     }
     
     /* Validate the specified data against the schema rules. */
-    public function validate($data, $schemaRequired = true){
+    public function validate($data){
         $this->_fields = $data;         // Setting the parent class Validator's field data.
         $this->generateSchemaRules();   // Build Validator rules from the schema.
         return parent::validate();      // Validate!
@@ -57,7 +57,8 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
             $validators = $field['validators'];
             foreach ($validators as $validator_name => $validator){
                 if (isset($validator['message'])){
-                    $message_set = MessageTranslator::translate($validator['message'], $validator);
+                    $params = array_merge(["self" => $field_name], $validator);
+                    $message_set = MessageTranslator::translate($validator['message'], $params);
                 }else
                     $message_set = null;
                 // Required validator
@@ -77,6 +78,14 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
                         }
                     }
                 }
+                // Integer validator
+                if ($validator_name == "integer"){
+                    $this->ruleWithMessage("integer", $message_set, $field_name);
+                }                  
+                // Numeric validator
+                if ($validator_name == "numeric"){
+                    $this->ruleWithMessage("numeric", $message_set, $field_name);
+                }                
                 // Numeric range validator
                 if ($validator_name == "range"){
                     if (isset($validator['min'])){
@@ -86,10 +95,6 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
                         $this->ruleWithMessage("max", $message_set, $field_name, $validator['max']);
                     }
                 }
-                // Integer validator
-                if ($validator_name == "integer"){
-                    $this->ruleWithMessage("integer", $message_set, $field_name);
-                }                  
                 // Array validator
                 if ($validator_name == "array"){
                     // For now, just check that it is an array.  Really we need a new validation rule here.
@@ -102,6 +107,18 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
                 // Match another field
                 if ($validator_name == "matches"){
                     $this->ruleWithMessage("equals", $message_set, $field_name, $validator['field']);
+                }
+                // Negation of match another field
+                if ($validator_name == "not_matches"){
+                    $this->ruleWithMessage("different", $message_set, $field_name, $validator['field']);
+                }
+                // Check membership in array
+                if ($validator_name == "member_of"){
+                    $this->ruleWithMessage("in", $message_set, $field_name, $validator['values'], true);    // Strict comparison
+                }
+                // Negation of membership
+                if ($validator_name == "not_member_of"){
+                    $this->ruleWithMessage("notIn", $message_set, $field_name, $validator['values'], true);  // Strict comparison
                 }
             }
         }

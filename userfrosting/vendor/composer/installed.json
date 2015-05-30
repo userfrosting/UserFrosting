@@ -309,12 +309,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/alexweissman/fortress.git",
-            "reference": "20cd20168066f6c5343dee1cd67f887e84f6a010"
+            "reference": "a90e95925f418cea4ac7dcce6aa42524d0b46e69"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/20cd20168066f6c5343dee1cd67f887e84f6a010",
-            "reference": "20cd20168066f6c5343dee1cd67f887e84f6a010",
+            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/a90e95925f418cea4ac7dcce6aa42524d0b46e69",
+            "reference": "a90e95925f418cea4ac7dcce6aa42524d0b46e69",
             "shasum": ""
         },
         "require": {
@@ -322,7 +322,7 @@
             "php": ">=5.4.0",
             "vlucas/valitron": "1.2.3"
         },
-        "time": "2015-05-28 00:22:37",
+        "time": "2015-05-30 15:02:47",
         "type": "library",
         "installation-source": "source",
         "autoload": {

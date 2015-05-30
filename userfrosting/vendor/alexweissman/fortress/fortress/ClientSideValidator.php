@@ -51,11 +51,19 @@ class ClientSideValidator {
         $transformedValidatorJson = [];        
         switch ($validator_name){
             // Required validator
-
+            case "required":
+                $transformedValidatorJson['notEmpty'] = $params;
+                break;
             case "length":
                 if (isset($validator['min'])) $params['min'] = $validator['min'];
                 if (isset($validator['max'])) $params['max'] = $validator['max'];
                 $transformedValidatorJson['stringLength'] = $params;
+                break;
+            case "integer":
+                $transformedValidatorJson['integer'] = $params;
+                break;
+            case "numeric":
+                $transformedValidatorJson['numeric'] = $params;
                 break;
             case "range":
                 if (isset($validator['min'])) $params['min'] = $validator['min'];
@@ -66,9 +74,6 @@ class ClientSideValidator {
                     $transformedValidatorJson['greaterThan'] = $params;
                 else if (isset($validator['max']))
                     $transformedValidatorJson['lessThan'] = $params;
-                break;
-            case "integer":
-                $transformedValidatorJson['integer'] = $params;
                 break;
             case "array":
                 if (isset($validator['min'])) $params['min'] = $validator['min'];
@@ -82,8 +87,15 @@ class ClientSideValidator {
                 if (isset($validator['field'])) $params['field'] = $validator['field'];   
                 $transformedValidatorJson['identical'] = $params;
                 break;
-            case "required":
-                $transformedValidatorJson['notEmpty'] = $params;
+            case "not_matches":
+                if (isset($validator['field'])) $params['field'] = $validator['field'];   
+                $transformedValidatorJson['different'] = $params;
+                break;
+            case "member_of":
+                $transformedValidatorJson['regexp'] = "^" . implode("|", $validator['values']) . "$";
+                break;
+            case "not_member_of":
+                $transformedValidatorJson['regexp'] = "^(?!" . implode("|", $validator['values']) . "$).*$";
                 break;
             default:
                 break;

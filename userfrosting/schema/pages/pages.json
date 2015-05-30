@@ -1,7 +1,7 @@
 {
-    "user" : {
+    "dashboard" : {
         "pages" : [
-            "user"
+            "dashboard"
         ],
         "css" : [
             "font-awesome-4.3.0.css",
@@ -23,9 +23,43 @@
             "sb-admin-2.js",
             "userfrosting.js"
         ],
+        "min_css": "min/dashboard.min.css",
+        "min_js": "min/dashboard.min.js"   
+    },
+    "user" : {
+        "pages" : [
+            "user"
+        ],
+        "css" : [
+            "font-awesome-4.3.0.css",
+            "font-starcraft.css",
+            "bootstrap-3.3.2.css",
+            "lib/metisMenu.css",
+            "tablesorter/theme.bootstrap.css",
+            "tablesorter/jquery.tablesorter.pager.css",
+            "select2/select2.css",
+            "select2/select2-bootstrap.css"
+        ],
+       "js": [
+            "jquery-1.11.2.js",
+            "bootstrap-3.3.2.js",
+            "formValidation/formValidation.js",
+            "formValidation/bootstrap.js",
+            "tablesorter/jquery.tablesorter.min.js",
+            "tablesorter/tables.js",
+            "tablesorter/jquery.tablesorter.pager.min.js",
+            "tablesorter/jquery.tablesorter.widgets.min.js",
+            "select2/select2.min.js",
+            "bootstrapradio.js",
+            "bootstrap-switch.js",            
+            "lib/metisMenu.js",
+            "sb-admin-2.js",
+            "userfrosting.js",
+            "widget-users.js"
+        ],
         "min_css": "min/user.min.css",
         "min_js": "min/user.min.js"   
-    },
+    },    
     "loggedin-simple" : {
         "pages": [
             "loggedin-simple"
@@ -85,8 +119,8 @@
             "bootstrap-switch.js",
             "userfrosting.js"
         ],
-        "min_css": "min/default.min.css",
-        "min_js": "min/default.min.js"
+        "min_css": "min/loggedout.min.css",
+        "min_js": "min/loggedout.min.js"
     },
     "default" : {
         "pages": [

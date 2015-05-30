@@ -69,8 +69,8 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USER_INVALID_CHARACTERS"	=> "Username can only include alpha-numeric characters",
     "ACCOUNT_DELETE_MASTER"     => "You cannot delete the master account!",
     "ACCOUNT_DISABLE_MASTER"     => "You cannot disable the master account!",
-    "ACCOUNT_DISABLE_SUCCESSFUL"     => "Account has been successfully disabled.",
-    "ACCOUNT_ENABLE_SUCCESSFUL"     => "Account has been successfully enabled.",
+    "ACCOUNT_DISABLE_SUCCESSFUL"     => "Account for user '{{user_name}}' has been successfully disabled.",
+    "ACCOUNT_ENABLE_SUCCESSFUL"     => "Account for user '{{user_name}}' has been successfully enabled.",
     "ACCOUNT_DELETIONS_SUCCESSFUL"		=> "You have successfully deleted {{count}} users",
 	"ACCOUNT_MANUALLY_ACTIVATED"		=> "{{user_name}}'s account has been manually activated",
 	"ACCOUNT_DISPLAYNAME_UPDATED"		=> "Displayname changed to {{display_name}}",
@@ -83,6 +83,12 @@ $lang = array_merge($lang,array(
     "ACCOUNT_PRIMARY_GROUP_SET" => "Successfully set user primary group.",
     "ACCOUNT_WELCOME" => "Welcome back, {{display_name}}"
 	));
+
+// Generic validation
+$lang = array_merge($lang, array(
+    "VALIDATE_BOOLEAN" => "The value for '{{self}}' must be either '0' or '1'."
+
+));
 
 //Configuration
 $lang = array_merge($lang,array(
