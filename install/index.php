@@ -53,17 +53,19 @@
 		  $.getJSON( url, {})
 		  .done(function( data ) {	
 			  var alertHTML = "";
-			  jQuery.each(data, function(alert_idx, alert_message) {
-				  if (alert_message['type'] == "success"){
-					  alertHTML += "<div class='alert alert-success'>" + alert_message['message'] + "</div>";
-				  } else if (alert_message['type'] == "warning"){
-					  alertHTML += "<div class='alert alert-warning'>" + alert_message['message'] + "</div>";
-				  } else 	if (alert_message['type'] == "info"){
-					  alertHTML += "<div class='alert alert-info'>" + alert_message['message'] + "</div>";
-				  } else if (alert_message['type'] == "danger"){
-					  alertHTML += "<div class='alert alert-danger'>" + alert_message['message'] + "</div>";
-				  }
-			  });	
+		  	  if(data){			  
+				  jQuery.each(data, function(alert_idx, alert_message) {
+					  if (alert_message['type'] == "success"){
+						  alertHTML += "<div class='alert alert-success'>" + alert_message['message'] + "</div>";
+					  } else if (alert_message['type'] == "warning"){
+						  alertHTML += "<div class='alert alert-warning'>" + alert_message['message'] + "</div>";
+					  } else 	if (alert_message['type'] == "info"){
+						  alertHTML += "<div class='alert alert-info'>" + alert_message['message'] + "</div>";
+					  } else if (alert_message['type'] == "danger"){
+						  alertHTML += "<div class='alert alert-danger'>" + alert_message['message'] + "</div>";
+					  }
+				  });
+		  	  }
 			  $('#' + widget_id).html(alertHTML);
 			  return false;
 		  });
