@@ -34,11 +34,14 @@
             "font-awesome-4.3.0.css",
             "font-starcraft.css",
             "bootstrap-3.3.2.css",
+            "bootstrap-custom.css",
+            "bootstrap-switch.css",
             "lib/metisMenu.css",
             "tablesorter/theme.bootstrap.css",
             "tablesorter/jquery.tablesorter.pager.css",
             "select2/select2.css",
-            "select2/select2-bootstrap.css"
+            "select2/select2-bootstrap.css",
+            "bootstrapradio.css"
         ],
        "js": [
             "jquery-1.11.2.js",

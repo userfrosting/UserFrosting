@@ -36,9 +36,9 @@
                                 {% endif %}
                                 {% if checkAccess('update_account_setting', {('user'): user, ('property'): 'locale'}) %}
                                 <div class="form-group">
-                                    <label for="input_display_name" class="col-sm-4 control-label">Locale</label>
+                                    <label for="input_locale" class="col-sm-4 control-label">Locale</label>
                                     <div class="col-sm-8">
-                                        <select class='form-control select2' name="locale">
+                                        <select id="input_locale" class='form-control select2' name="locale">
                                             {% for option, label in locales %}
                                             <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
                                             {% endfor %}

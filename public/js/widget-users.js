@@ -33,7 +33,7 @@ $(document).ready(function() {
     $('.js-user-edit').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
-        userForm('user-update-dialog', user_id);
+        userForm('dialog-user-edit', user_id);
     });
 
     $('.js-user-activate').click(function() {
@@ -100,88 +100,31 @@ function userForm(box_id, user_id) {
 	
 	var data = {
 		box_id: box_id,
-		render_mode: 'modal',
-		ajaxMode: "true",
-		fields: {
-			'user_name' : {
-				'display' : 'show'
-			},
-			'display_name' : {
-				'display' : 'show'
-			},
-			'email' : {
-				'display' : 'show'
-			},
-			'title' : {
-				'display' : 'show'
-			},			
-			'last_sign_in_stamp' : {
-				'display': 'disabled',
-				'preprocess' : 'formatSignInDate'
-			},
-			'sign_up_stamp' : {
-				'display': 'disabled',
-				'preprocess' : 'formatSignInDate'
-			},
-			'password' : {
-				'display' : 'show'
-			},
-			'passwordc' : {
-				'display' : 'show'
-			},
-			'groups' : {
-				'display' : 'show'
-			}
-		},
-		buttons: {
-			'btn_submit' : {
-				'display' : 'show'
-			},
-			'btn_edit' : {
-				'display' : 'hidden'
-			},
-			'btn_disable' : {
-				'display' : 'hidden'
-			},
-			'btn_enable' : {
-				'display' : 'hidden'
-			},
-			'btn_activate' : {
-				'display' : 'hidden'
-			},
-			'btn_delete' : {
-				'display' : 'hidden'
-			}
-		}
+		render: 'modal'
 	};
-	
-	if (user_id != "") {
-		console.log("Update mode");
-		data['user_id'] = user_id;
-		data['fields']['user_name']['display'] = "disabled";
-		data['fields']['password']['display'] = "hidden";
-		data['fields']['passwordc']['display'] = "hidden";
-	}
 	
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: FORMSPATH + "form_user.php",  
+	  url: site.uri.public + "/forms/users/u/" + user_id,  
 	  data: data,
-	  dataType: 'json',
 	  cache: false
 	})
 	.fail(function(result) {
-		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-		alertWidget('display-alerts');
+        // Display errors on failure
+        $('#userfrosting-alerts').flashAlerts().done(function() {
+        });
 	})
 	.done(function(result) {
 		// Append the form as a modal dialog to the body
-		$( "body" ).append(result['data']);
+		$( "body" ).append(result);
 		$('#' + box_id).modal('show');
 		
+        // Initialize select2's
+        $('.select2').select2();
+        
 		// Initialize bootstrap switches
-		var switches = $('#' + box_id + ' input[name="select_groups"]');
+		var switches = $('#' + box_id + ' input[name^="groups"]');
 		switches.data('on-label', '<i class="fa fa-check"></i>');
 		switches.data('off-label', '<i class="fa fa-times"></i>');
 		switches.bootstrapSwitch();
@@ -207,21 +150,55 @@ function userForm(box_id, user_id) {
 		});
 		
 		// Link submission buttons
-		$('#' + box_id + ' form').submit(function(e){ 
-			var errorMessages = validateFormFields(box_id);
-			if (errorMessages.length > 0) {
-				$('#' + box_id + ' .dialog-alert').html("");
-				$.each(errorMessages, function (idx, msg) {
-					$('#' + box_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
-				});	
-			} else {
-				if (user_id != "")
-					updateUser(box_id, user_id);
-				else
-					createUser(box_id);
-			}
-			e.preventDefault();
-		});    	
+        $("form[name='user']").formValidation({
+          framework: 'bootstrap',
+          // Feedback icons
+          icon: {
+              valid: 'fa fa-check',
+              invalid: 'fa fa-times',
+              validating: 'fa fa-refresh'
+          },
+          fields: {none : ""}
+        }).on('success.form.fv', function(e) {
+          // Prevent double form submission
+          e.preventDefault();
+    
+          // Get the form instance
+          var form = $(e.target);
+    
+          // Serialize and post to the backend script in ajax mode
+          var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
+          // Get non-disabled, unchecked checkbox values, set them to 0
+          form.find('input[type=checkbox]:enabled').each(function() {
+              if ($(this).is(':checked'))
+                  serializedData += "&" + encodeURIComponent(this.name) + "=1";
+              else
+                  serializedData += "&" + encodeURIComponent(this.name) + "=0";
+          });
+          // Append page CSRF token
+          var csrf_token = $("meta[name=csrf_token]").attr("content");
+          serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);
+          
+          var url = form.attr('action');
+          return $.ajax({  
+            type: "POST",  
+            url: url,  
+            data: serializedData       
+          }).done(function(data, statusText, jqXHR) {
+              // Reload the page
+              window.location.reload();         
+          }).fail(function(jqXHR) {
+              if (site['debug'] == true) {
+                  document.body.innerHTML = jqXHR.responseText;
+              } else {
+                  console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+              }
+              $('#form-alerts').flashAlerts().done(function() {
+                  // Re-enable submit button
+                  form.data('formValidation').disableSubmitButtons(false);
+              });              
+          });
+        }); 	
 	});
 }
 
@@ -378,53 +355,6 @@ function createUser(dialog_id) {
     //console.log(serializedData);
 
 	var url = APIPATH + "create_user.php";
-	$.ajax({  
-	  type: "POST",  
-	  url: url,  
-	  data: serializedData
-	}).done(function(result) {
-		processJSONResult(result);
-		window.location.reload();
-	});
-	return;
-}
-
-// Update user with specified data from the dialog
-function updateUser(dialog_id, user_id) {
-	var errorMessages = validateFormFields(dialog_id);
-	if (errorMessages.length > 0) {
-		$('#' + dialog_id + ' .dialog-alert').html("");
-		$.each(errorMessages, function (idx, msg) {
-			$('#' + dialog_id + ' .dialog-alert').append("<div class='alert alert-danger'>" + msg + "</div>");
-		});	
-		return false;
-	}
-	
-	var add_groups = [];
-	var remove_groups = [];
-	var group_switches = $('#' + dialog_id + ' input[name="select_groups"]');
-	group_switches.each(function(idx, element) {
-		group_id = $(element).data('id');
-		if ($(element).prop('checked')) {
-			add_groups.push(group_id);
-		} else {
-			remove_groups.push(group_id);
-		}
-	});
-
-    // Process form
-    var $form = $('#' + dialog_id + ' form');
-        
-    // Serialize and post to the backend script in ajax mode
-    var serializedData = $form.serialize();
-    
-    serializedData += '&' + encodeURIComponent('add_groups') + '=' + encodeURIComponent(add_groups.join(','));
-    serializedData += '&' + encodeURIComponent('remove_groups') + '=' + encodeURIComponent(remove_groups.join(','));
-    serializedData += '&user_id=' + user_id;         
-    serializedData += '&ajaxMode=true';     
-    console.log(serializedData);
-	
-	var url = APIPATH + "update_user.php";
 	$.ajax({  
 	  type: "POST",  
 	  url: url,  

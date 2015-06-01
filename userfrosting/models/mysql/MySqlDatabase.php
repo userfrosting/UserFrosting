@@ -160,7 +160,8 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
           (2, 'uri_users', 'always()'),
           (1, 'uri_account_settings', 'always()'),
           (1, 'update_account_setting', 'equals(self.id, user.id)&&in(property,[\"email\",\"locale\",\"password\"])'),
-          (2, 'update_account_setting', 'in(property,[\"email\",\"display_name\",\"locale\",\"enabled\"])');");    
+          (2, 'update_account_setting', 'in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"enabled\"])'),
+          (2, 'view_account_setting', 'in(property,[\"user_name\",\"email\",\"display_name\",\"title\",\"locale\",\"enabled\",\"groups\",\"primary_group_id\"])');");    
     }
     
 }

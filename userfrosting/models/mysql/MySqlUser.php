@@ -19,7 +19,6 @@ namespace UserFrosting;
  * @property int primary_group_id
  * @property string locale
  */
-
 class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     
     protected $_groups;         // An undefined value means that the user's groups have not been loaded yet

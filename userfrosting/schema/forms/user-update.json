@@ -26,9 +26,32 @@
             "raw" : ""
         }
     },
+    "title" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 150,
+                "message" : "ACCOUNT_TITLE_CHAR_LIMIT"
+            }
+        }
+    },
     "locale" : {
         "validators" : {
 
+        }
+    },
+    "primary_group_id" : {
+        "validators" : {
+            "integer" : {
+                "message" : "VALIDATE_INTEGER"
+            }
+        }
+    },    
+    "groups" : {
+        "validators" : {
+            "array" : {
+                "message" : "VALIDATE_ARRAY"
+            }
         }
     },
     "enabled" : {

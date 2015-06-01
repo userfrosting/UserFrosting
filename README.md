@@ -51,6 +51,11 @@ GET  /users/u/1         // View info for user 1
 POST /users             // Create a new user
 POST /users/u/1         // Update info for user 1
 POST /users/u/1/delete  // Delete user 1 (this is not RESTful, but many browsers still don't support DELETE)
+
+GET /forms/users/u/1?mode="view"     // Get a form to view user info for user 1
+GET /forms/users/u/1?mode="update"   // Get a form to update user info for user 1
+GET /forms/users                     // Get a form to create a new user
+
 ```
 
 ### Sessions

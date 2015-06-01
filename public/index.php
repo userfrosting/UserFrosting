@@ -103,6 +103,12 @@
         return $controller->pageUsers();
     });    
 
+    // User info form
+    $app->get('/forms/users/u/:user_id/?', function ($user_id) use ($app) {
+        $controller = new UF\UserController($app);
+        return $controller->formUserEdit($user_id);
+    });  
+    
     // User info page
     $app->get('/users/u/:user_id/?', function ($user_id) use ($app) {
         $controller = new UF\UserController($app);

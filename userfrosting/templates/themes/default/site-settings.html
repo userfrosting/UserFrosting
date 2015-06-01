@@ -27,9 +27,9 @@
                                         {% if (setting.type == 'text') %}
                                             <input type='text' id="input_{{name}}" class="form-control" name="{{plugin_name}}[{{name}}]" value='{{setting.value}}' style="width: 50%;"/>
                                         {% elseif (setting.type == 'select') %}
-                                            <select class='form-control select2' name="{{plugin_name}}[{{name}}]">
+                                            <select id="input_{{name}}" class='form-control select2' name="{{plugin_name}}[{{name}}]">
                                                 {% for option, label in setting.options %}
-                                                <option value="{{option}}" {% if (option == setting.value) %}selected{% endif %} style="width: 50%;">{{label}}</option>
+                                                <option value="{{option}}" {% if (option == setting.value) %}selected{% endif %}>{{label}}</option>
                                                 {% endfor %}
                                             </select>
                                         {% elseif (setting.type == 'toggle') %}

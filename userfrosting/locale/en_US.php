@@ -53,7 +53,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_SPECIFY_CONFIRM_PASSWORD"	=> "Please confirm your new password",
 	"ACCOUNT_NEW_PASSWORD_LENGTH"		=> "New password must be between {{min}} and {{max}} characters in length",	
 	"ACCOUNT_PASSWORD_INVALID"		=> "Current password doesn't match the one we have on record",	
-	"ACCOUNT_DETAILS_UPDATED"		=> "Account details updated",
+	"ACCOUNT_DETAILS_UPDATED"		=> "Account details updated for user '{{user_name}}'",
 	"ACCOUNT_ACTIVATION_MESSAGE"		=> "You will need to activate your account before you can login. Please follow the link below to activate your account. \n\n
 	%m1%activate_user.php?token=%m2%",							
 	"ACCOUNT_CREATION_COMPLETE"		=> "Account for new user '{{user_name}}' has been created.",
@@ -73,8 +73,8 @@ $lang = array_merge($lang,array(
     "ACCOUNT_ENABLE_SUCCESSFUL"     => "Account for user '{{user_name}}' has been successfully enabled.",
     "ACCOUNT_DELETIONS_SUCCESSFUL"		=> "You have successfully deleted {{count}} users",
 	"ACCOUNT_MANUALLY_ACTIVATED"		=> "{{user_name}}'s account has been manually activated",
-	"ACCOUNT_DISPLAYNAME_UPDATED"		=> "Displayname changed to {{display_name}}",
-	"ACCOUNT_TITLE_UPDATED"			=> "{{user_name}}'s title changed to {{title}}",
+	"ACCOUNT_DISPLAYNAME_UPDATED"		=> "{{user_name}}'s display name changed to '{{display_name}}'",
+	"ACCOUNT_TITLE_UPDATED"			=> "{{user_name}}'s title changed to '{{title}}'",
 	"ACCOUNT_GROUP_ADDED"		=> "Added user to group %m1%.",
 	"ACCOUNT_GROUP_REMOVED"		=> "Removed user from group %m1%.",
 	"ACCOUNT_GROUP_NOT_MEMBER"		=> "User is not a member of group %m1%.",
@@ -86,8 +86,9 @@ $lang = array_merge($lang,array(
 
 // Generic validation
 $lang = array_merge($lang, array(
-    "VALIDATE_BOOLEAN" => "The value for '{{self}}' must be either '0' or '1'."
-
+    "VALIDATE_BOOLEAN" => "The value for '{{self}}' must be either '0' or '1'.",
+    "VALIDATE_INTEGER" => "The value for '{{self}}' must be an integer.",
+    "VALIDATE_ARRAY" => "The values for '{{self}}' must be in an array.",
 ));
 
 //Configuration
