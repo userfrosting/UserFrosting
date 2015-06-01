@@ -43,6 +43,12 @@ setReferralPage(getAbsoluteDocumentPath(__FILE__));
 //Log the user out
 if(isUserLoggedIn())
 {
+	if (isset($_SESSION["samlauth"])) {
+	    unset($_SESSION["samlauth"]);
+	    header("Location: " . SITE_ROOT.'samlauth/index.php?slo');
+	    die();
+	}
+
 	$loggedInUser->userLogOut();
 }
 
