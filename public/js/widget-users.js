@@ -216,7 +216,7 @@ function userForm(box_id, user_id) {
 		$('#' + box_id).modal('show');
 		
         // Initialize select2's
-        $('.select2').select2();
+        $('#' + box_id + ' .select2').select2();
         
 		// Initialize bootstrap switches
 		var switches = $('#' + box_id + ' input[name^="groups"]');
@@ -279,7 +279,7 @@ function userForm(box_id, user_id) {
             data: serializedData       
           }).done(function(data, statusText, jqXHR) {
               // Reload the page
-              window.location.reload();         
+              window.location.reload(true);         
           }).fail(function(jqXHR) {
               if (site['debug'] == true) {
                   document.body.innerHTML = jqXHR.responseText;
@@ -358,37 +358,4 @@ function userDisplay(box_id, user_id) {
 		});	
 		
 	});
-}
-
-// Create user with specified data from the dialog
-function createUser(dialog_id) {	
-	var add_groups = [];
-	var group_switches = $('#' + dialog_id + ' input[name="select_groups"]');
-	group_switches.each(function(idx, element) {
-		group_id = $(element).data('id');
-		if ($(element).prop('checked')) {
-			add_groups.push(group_id);
-		}
-	});
-        // Process form
-    var $form = $('#' + dialog_id + ' form');
-        
-    // Serialize and post to the backend script in ajax mode
-    var serializedData = $form.serialize();
-    
-    serializedData += '&' + encodeURIComponent('add_groups') + '=' + encodeURIComponent(add_groups.join(','));
-    serializedData += '&admin=true&skip_activation=true';         
-    serializedData += '&ajaxMode=true';     
-    //console.log(serializedData);
-
-	var url = APIPATH + "create_user.php";
-	$.ajax({  
-	  type: "POST",  
-	  url: url,  
-	  data: serializedData
-	}).done(function(result) {
-		processJSONResult(result);
-		window.location.reload();
-	});
-	return;
 }

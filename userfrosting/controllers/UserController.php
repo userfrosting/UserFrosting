@@ -44,8 +44,42 @@ class UserController extends \UserFrosting\BaseController {
             $this->_app->notFound();
         }
         
-        // Get the user to edit
+        // Get the user to view
         $target_user = UserLoader::fetch($user_id);    
+    
+        // Get a list of all groups
+        $groups = GroupLoader::fetchAll();
+        
+        // Get a list of all locales
+        $locale_list = $this->_app->site->getLocales();
+        
+        // Determine which groups this user is a member of
+        $user_groups = $target_user->getGroups();
+        foreach ($groups as $group_id => $group){
+            $group_list[$group_id] = $group->export();
+            if (isset($user_groups[$group_id]))
+                $group_list[$group_id]['member'] = true;
+            else
+                $group_list[$group_id]['member'] = false;
+        }    
+    
+        // Determine authorized fields
+        $fields = ['display_name', 'email', 'title', 'locale', 'groups', 'primary_group_id'];
+        $show_fields = [];
+        $disabled_fields = [];
+        $hidden_fields = [];
+        foreach ($fields as $field){
+            if ($this->_app->user->checkAccess("view_account_setting", ["property" => $field]))
+                $disabled_fields[] = $field;
+            else
+                $hidden_fields[] = $field;
+        }    
+        
+        // Always disallow editing username
+        $disabled_fields[] = "user_name";
+        
+        // Hide password fields for editing user
+        $hidden_fields[] = "password";    
     
         $this->_app->render('user_info.html', [
             'page' => [
@@ -55,7 +89,21 @@ class UserController extends \UserFrosting\BaseController {
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'schema' =>         $this->_page_schema
             ],
-            "target_user" => $target_user
+            "box_id" => 'view-user',
+            "box_title" => $target_user->user_name,
+            "target_user" => $target_user,
+            "groups" => $group_list,
+            "locales" => $locale_list,
+            "fields" => [
+                "disabled" => $disabled_fields,
+                "hidden" => $hidden_fields
+            ],
+            "buttons" => [
+                "hidden" => [
+                    "submit", "cancel"
+                ]
+            ],
+            "validators" => "{ none: ''}"           
         ]);   
     }
 
@@ -118,7 +166,7 @@ class UserController extends \UserFrosting\BaseController {
                 $show_fields[] = $field;
             else
                 $disabled_fields[] = $field;
-        }
+        }    
         
         // Load validator rules
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/user-create.json");

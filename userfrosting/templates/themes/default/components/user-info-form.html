@@ -131,7 +131,7 @@
         {% if "edit" not in buttons.hidden %}  
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-toggle="modal">
+                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-id="{{target_user.id}}" data-toggle="modal">
                     <i class="fa fa-edit"></i> Edit
                 </button>
             </div>
@@ -141,7 +141,7 @@
         <div class="col-xs-6 col-sm-3">      
             <div class="vert-pad">
                 {% if target_user.active == "0" %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate">
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-id="{{target_user.id}}">
                         <i class="fa fa-bolt"></i> Activate
                     </button>
                 {% endif %}
@@ -152,11 +152,11 @@
         <div class="col-xs-6 col-sm-3">      
             <div class="vert-pad">
                 {% if target_user.enabled == "1" %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable">
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-id="{{target_user.id}}">
                         <i class="fa fa-minus-circle"></i> Disable
                     </button>
                 {% else %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable">
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable" data-id="{{target_user.id}}">
                         <i class="fa fa-plus-circle"></i> Enable
                     </button>
                 {% endif %}
@@ -166,7 +166,9 @@
         {% if "delete" not in buttons.hidden %}
         <div class="col-xs-6 col-sm-3">  
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-name="{{user_name}}" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete</button>
+                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-id="{{target_user.id}}" data-name="{{user_name}}" data-toggle="modal">
+                    <i class="fa fa-trash-o"></i> Delete
+                </button>
             </div>
         </div>
         {% endif %}
