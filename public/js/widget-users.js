@@ -180,15 +180,28 @@ function userForm(box_id, user_id) {
 		$('#' + box_id).remove();
 	}
 	
-	var data = {
+    var data = {
 		box_id: box_id,
 		render: 'modal'
 	};
-	
-	// Generate the form
+    
+    var url = site.uri.public + "/forms/users";  
+    
+    // If we are updating an existing user
+    if (user_id) {
+        data = {
+            box_id: box_id,
+            render: 'modal',
+            mode: "update"
+        };
+        
+        url = site.uri.public + "/forms/users/u/" + user_id;
+    }
+    
+	// Fetch and render the form
 	$.ajax({  
 	  type: "GET",  
-	  url: site.uri.public + "/forms/users/u/" + user_id,  
+	  url: url,
 	  data: data,
 	  cache: false
 	})
@@ -223,10 +236,8 @@ function userForm(box_id, user_id) {
 			var primary_button = $('#' + box_id + ' button.bootstrapradio[name="primary_group_id"][value="' + id + '"]');
 			// If switch is turned on, enable the corresponding button, otherwise turn off and disable it
 			if (data.value) {
-				console.log("enabling");
 				primary_button.bootstrapradio('disabled', false);
 			} else {
-				console.log("disabling");
 				primary_button.bootstrapradio('disabled', true);
 			}	
 		});
@@ -286,24 +297,32 @@ function userForm(box_id, user_id) {
 
 // Display user info in a panel
 function userDisplay(box_id, user_id) {
+	user_id = typeof user_id !== 'undefined' ? user_id : "";
+	
+	// Delete any existing instance of the form with the same name
+	if($('#' + box_id).length ) {
+		$('#' + box_id).remove();
+	}
+	
+	var data = {
+		box_id: box_id,
+		render: 'modal',
+        mode: 'view'
+	};
+	
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: FORMSPATH + "form_user.php",  
-	  data: {
-		box_id: box_id,
-		render_mode: 'panel',
-		user_id: user_id
-	  },
-	  dataType: 'json',
+	  url: site.uri.public + "/forms/users/u/" + user_id,  
+	  data: data,
 	  cache: false
 	})
 	.fail(function(result) {
-		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-		alertWidget('display-alerts');
+        // Display errors on failure
+        $('#userfrosting-alerts').flashAlerts().done(function() {
+        });
 	})
 	.done(function(result) {
-		$('#' + box_id).html(result['data']);
 
 		// Initialize bootstrap switches for user groups
 		var switches = $('#' + box_id + ' input[name="select_groups"]');
@@ -316,26 +335,26 @@ function userDisplay(box_id, user_id) {
 		$(".bootstrapradio").bootstrapradio();
 		
 		// Link buttons
-		$('#' + box_id + ' button[name="btn_edit"]').click(function() { 
-			userForm('user-update-dialog', user_id);
+		$('#' + box_id + ' .js-user-edit').click(function() { 
+			userForm('dialog-user-edit', user_id);
 		});
 
-		$('#' + box_id + ' button[name="btn_activate"]').click(function() {    
-			activateUser(user_id);
+		$('#' + box_id + ' .js-user-activate').click(function() {    
+			updateUserActiveStatus(user_id);
 		});
 		
-		$('#' + box_id + ' button[name="btn_enable"]').click(function () {
-			updateUserEnabledStatus(user_id, true, $('#' + box_id + ' input[name="csrf_token"]' ).val());
+		$('#' + box_id + ' .js-user-enable').click(function () {
+			updateUserEnabledStatus(user_id, "1");
 		});
 		
-		$('#' + box_id + ' button[name="btn_disable"]').click(function () {
-			updateUserEnabledStatus(user_id, false, $('#' + box_id + ' input[name="csrf_token"]' ).val());
+		$('#' + box_id + ' .js-user-disable').click(function () {
+			updateUserEnabledStatus(user_id, "0");
 		});	
 		
-		$('#' + box_id + ' button[name="btn_delete"]').click(function() {
-			var user_name = $(this).data('label');
+		$('#' + box_id + ' .js-user-delete').click(function() {
+			var user_name = $(this).data('name');
 			deleteUserDialog('delete-user-dialog', user_id, user_name);
-			$('#delete-user-dialog').modal('show');
+			$('#dialog-user-delete').modal('show');
 		});	
 		
 	});

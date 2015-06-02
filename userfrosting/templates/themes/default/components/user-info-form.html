@@ -51,7 +51,7 @@
                 <label>Last Sign-in</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input type="text" class="form-control" name="last_sign_in_stamp" autocomplete="off" value="{% if target_user.last_sign_in_stamp %}{{target_user.last_sign_in_stamp | date('M j, Y g:i a')}}{% else %}Brand new!</i>{% endif %}" disabled>
+                    <input type="text" class="form-control" name="last_sign_in_stamp" autocomplete="off" value="{% if target_user.last_sign_in_stamp %}{{target_user.last_sign_in_stamp | date('M j, Y g:i a')}}{% else %}Brand new!{% endif %}" disabled>
                 </div>
             </div>
         </div>
@@ -122,39 +122,58 @@
         {% if "submit" not in buttons.hidden %}
         <div class="col-xs-8 col-sm-4">
             <div class="vert-pad">
-                <button type="submit" class="btn btn-block btn-lg btn-success" data-loading-text="Please wait...">Update user</button>
+                <button type="submit" class="btn btn-block btn-lg btn-success" data-loading-text="Please wait...">
+                    {{submit_button}}
+                </button>
             </div>          
         </div>
         {% endif %}
         {% if "edit" not in buttons.hidden %}  
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-toggle="modal"><i class="fa fa-edit"></i> Edit</button>
+                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-toggle="modal">
+                    <i class="fa fa-edit"></i> Edit
+                </button>
             </div>
         </div>    
         {% endif %}
+        {% if "active" not in buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">      
+            <div class="vert-pad">
+                {% if target_user.active == "0" %}
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate">
+                        <i class="fa fa-bolt"></i> Activate
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
         {% if "enable" not in buttons.hidden %}
-        <div class="col-xs-6 col-sm-3 hideable">      
+        <div class="col-xs-6 col-sm-3">      
             <div class="vert-pad">
                 {% if target_user.enabled == "1" %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable"><i class="fa fa-minus-circle"></i> Disable</button>
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable">
+                        <i class="fa fa-minus-circle"></i> Disable
+                    </button>
                 {% else %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable"><i class="fa fa-plus-circle"></i> Enable</button>
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable">
+                        <i class="fa fa-plus-circle"></i> Enable
+                    </button>
                 {% endif %}
             </div>
         </div>
         {% endif %}
         {% if "delete" not in buttons.hidden %}
-        <div class="col-xs-6 col-sm-3 hideable">  
+        <div class="col-xs-6 col-sm-3">  
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-label="bigshot" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete</button>
+                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-name="{{user_name}}" data-toggle="modal"><i class="fa fa-trash-o"></i> Delete</button>
             </div>
         </div>
         {% endif %}
         {% if "cancel" not in buttons.hidden %}        
         <div class="col-xs-4 col-sm-3 pull-right">
             <div class="vert-pad">
-                <button name="btn_cancel" type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
             </div>
         </div>
         {% endif %}

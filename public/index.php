@@ -103,11 +103,21 @@
         return $controller->pageUsers();
     });    
 
-    // User info form
+    // User info form (update/view)
     $app->get('/forms/users/u/:user_id/?', function ($user_id) use ($app) {
         $controller = new UF\UserController($app);
-        return $controller->formUserEdit($user_id);
+        $get = $app->request->get();        
+        if (isset($get['mode']) && $get['mode'] == "update")
+            return $controller->formUserEdit($user_id);
+        else
+            return $controller->formUserView($user_id);
     });  
+    
+    // User creation form
+    $app->get('/forms/users/?', function () use ($app) {
+        $controller = new UF\UserController($app);
+        return $controller->formUserCreate();
+    });
     
     // User info page
     $app->get('/users/u/:user_id/?', function ($user_id) use ($app) {
@@ -115,6 +125,12 @@
         return $controller->pageUser($user_id);
     });       
 
+    // Create user
+    $app->post('/users/?', function () use ($app) {
+        $controller = new UF\UserController($app);
+        return $controller->createUser();
+    });
+    
     // Update user info
     $app->post('/users/u/:user_id/?', function ($user_id) use ($app) {
         $controller = new UF\UserController($app);
