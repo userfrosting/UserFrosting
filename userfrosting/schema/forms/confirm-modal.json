@@ -1,0 +1,30 @@
+{
+    "box_id" : {
+        "validators" : {
+            "required" : {
+                "message" : "VALIDATE_REQUIRED"
+            }
+        },
+        "sanitizers" : {
+            "raw" : ""
+        }
+    },
+    "box_title" : {
+        "default" : "Confirm Action",
+        "sanitizers" : {
+            "raw" : ""
+        }
+    },
+    "confirm_message" : {
+        "default" : "Are you sure you want to do this?",
+        "sanitizers" : {
+            "raw" : ""
+        }
+    },
+    "confirm_button" : {
+        "default" : "Yes, do it",
+        "sanitizers" : {
+            "raw" : ""
+        }
+    }
+}

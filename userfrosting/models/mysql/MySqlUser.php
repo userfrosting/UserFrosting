@@ -250,6 +250,40 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $this->_id;
     }
     
+    /*** Delete this user from the database, along with any linked groups and authorization rules
+    ***/
+    public function delete(){        
+        // Can only delete an object where `id` is set
+        if (!$this->_id) {
+            return false;
+        }
+        
+        $result = parent::delete();
+        
+        // Get connection
+        $db = static::connection();
+        $link_table = static::getTableGroupUser();
+        $auth_table = static::getTableAuthorizeUser();
+        
+        $sqlVars[":id"] = $this->_id;
+        
+        $query = "
+            DELETE FROM $link_table
+            WHERE user_id = :id";
+            
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+     
+        $query = "
+            DELETE FROM $auth_table
+            WHERE user_id = :id";
+            
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);     
+
+        return $result;
+    }
+    
     // Determine if this user has access to the given $hook under the given $params
     public function checkAccess($hook, $params = []){
         if ($this->isGuest()){   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?

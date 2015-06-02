@@ -63,5 +63,15 @@
                 "message" : "VALIDATE_BOOLEAN" 
             }
         }
+    },
+    "active" : {
+        "validators" : {
+            "member_of" : {
+                "values" : [
+                    "0", "1"
+                ],
+                "message" : "VALIDATE_BOOLEAN" 
+            }
+        }
     }
 }

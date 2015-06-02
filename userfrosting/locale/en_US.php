@@ -71,21 +71,22 @@ $lang = array_merge($lang,array(
     "ACCOUNT_DISABLE_MASTER"     => "You cannot disable the master account!",
     "ACCOUNT_DISABLE_SUCCESSFUL"     => "Account for user '{{user_name}}' has been successfully disabled.",
     "ACCOUNT_ENABLE_SUCCESSFUL"     => "Account for user '{{user_name}}' has been successfully enabled.",
-    "ACCOUNT_DELETIONS_SUCCESSFUL"		=> "You have successfully deleted {{count}} users",
+    "ACCOUNT_DELETION_SUCCESSFUL"		=> "User '{{user_name}}' has been successfully deleted.",
 	"ACCOUNT_MANUALLY_ACTIVATED"		=> "{{user_name}}'s account has been manually activated",
 	"ACCOUNT_DISPLAYNAME_UPDATED"		=> "{{user_name}}'s display name changed to '{{display_name}}'",
 	"ACCOUNT_TITLE_UPDATED"			=> "{{user_name}}'s title changed to '{{title}}'",
-	"ACCOUNT_GROUP_ADDED"		=> "Added user to group %m1%.",
-	"ACCOUNT_GROUP_REMOVED"		=> "Removed user from group %m1%.",
-	"ACCOUNT_GROUP_NOT_MEMBER"		=> "User is not a member of group %m1%.",
-	"ACCOUNT_GROUP_ALREADY_MEMBER"		=> "User is already a member of group %m1%.",
+	"ACCOUNT_GROUP_ADDED"		=> "Added user to group '{{name}}'.",
+	"ACCOUNT_GROUP_REMOVED"		=> "Removed user from group '{{name}}'.",
+	"ACCOUNT_GROUP_NOT_MEMBER"		=> "User is not a member of group'{{name}}'.",
+	"ACCOUNT_GROUP_ALREADY_MEMBER"		=> "User is already a member of group '{{name}}'.",
     "ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
-    "ACCOUNT_PRIMARY_GROUP_SET" => "Successfully set user primary group.",
+    "ACCOUNT_PRIMARY_GROUP_SET" => "Successfully set primary group for '{{user_name}}'.",
     "ACCOUNT_WELCOME" => "Welcome back, {{display_name}}"
 	));
 
 // Generic validation
 $lang = array_merge($lang, array(
+    "VALIDATE_REQUIRED" => "The field '{{self}}' must be specified.",
     "VALIDATE_BOOLEAN" => "The value for '{{self}}' must be either '0' or '1'.",
     "VALIDATE_INTEGER" => "The value for '{{self}}' must be an integer.",
     "VALIDATE_ARRAY" => "The values for '{{self}}' must be in an array.",

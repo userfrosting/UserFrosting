@@ -27,7 +27,7 @@ THE SOFTWARE.
 $(document).ready(function() {                   
     // Link buttons
     $('.js-user-create').click(function() { 
-        userForm('user-create-dialog');
+        userForm('dialog-user-create');
     });
     
     $('.js-user-edit').click(function() {
@@ -39,7 +39,11 @@ $(document).ready(function() {
     $('.js-user-activate').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
-        activateUser(user_id);
+        updateUserActiveStatus(user_id)
+        .always(function(response) {
+            // Reload page after updating user details
+            window.location.reload();
+        });
     });
     
     $('.js-user-enable').click(function () {
@@ -66,8 +70,7 @@ $(document).ready(function() {
         var btn = $(this);
         var user_id = btn.data('id');
         var user_name = btn.data('user_name');
-        deleteUserDialog('user-delete-dialog', user_id, user_name);
-        $('#user-delete-dialog').modal('show');
+        deleteUserDialog('dialog-user-delete', user_id, user_name);
     });	 	
 });
 
@@ -87,6 +90,85 @@ function updateUserEnabledStatus(user_id, enabled) {
 	  url: url,  
 	  data: data	  
     });
+}
+
+// Activate new user account
+function updateUserActiveStatus(user_id) {
+	csrf_token = $("meta[name=csrf_token]").attr("content");
+    var data = {
+		active: "1",
+        csrf_token: csrf_token
+	}
+    
+    var url = site.uri.public + "/users/u/" + user_id;
+
+    return $.ajax({  
+	  type: "POST",  
+	  url: url,  
+	  data: data
+	});
+}
+
+function deleteUserDialog(box_id, user_id, name){
+	// Delete any existing instance of the form with the same name
+	if($('#' + box_id).length ) {
+		$('#' + box_id).remove();
+	}
+	
+    var url = site.uri.public + "/forms/confirm";
+    
+	var data = {
+		box_id: box_id,
+		box_title: "Delete User",
+		confirm_message: "Are you sure you want to delete the user " + name + "?",
+		confirm_button: "Yes, delete user"
+	}
+	
+	// Generate the form
+	$.ajax({  
+	  type: "GET",  
+	  url: url,
+	  data: data
+	})
+	.fail(function(result) {
+        // Display errors on failure
+        $('#userfrosting-alerts').flashAlerts().done(function() {
+        });
+	})
+	.done(function(result) {		
+		// Append the form as a modal dialog to the body
+		$( "body" ).append(result);
+		$('#' + box_id).modal('show');        
+		$('#' + box_id + ' .js-confirm').click(function(){
+            
+            var url = site.uri.public + "/users/u/" + user_id + "/delete";
+            
+            csrf_token = $("meta[name=csrf_token]").attr("content");
+            var data = {
+                user_id: user_id,
+                csrf_token: csrf_token
+            }
+            
+            $.ajax({  
+              type: "POST",  
+              url: url,  
+              data: data
+            }).done(function(result) {
+              // Reload the page
+              window.location.reload();         
+            }).fail(function(jqXHR) {
+                if (site['debug'] == true) {
+                    document.body.innerHTML = jqXHR.responseText;
+                } else {
+                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                }
+                $('#userfrosting-alerts').flashAlerts().done(function() {
+                    // Close the dialog
+                    $('#' + box_id).modal('hide');
+                });              
+            });
+        });
+	});
 }
 
 /* Display a modal form for updating/creating a user */
@@ -158,7 +240,7 @@ function userForm(box_id, user_id) {
               invalid: 'fa fa-times',
               validating: 'fa fa-refresh'
           },
-          fields: {none : ""}
+          fields: validators
         }).on('success.form.fv', function(e) {
           // Prevent double form submission
           e.preventDefault();
@@ -211,39 +293,7 @@ function userDisplay(box_id, user_id) {
 	  data: {
 		box_id: box_id,
 		render_mode: 'panel',
-		user_id: user_id,
-		ajaxMode: "true",
-		fields: {
-			'user_name' : {
-				'display' : 'disabled'
-			},		
-			'display_name' : {
-				'display' : 'disabled'
-			},
-			'email' : {
-				'display' : 'disabled'
-			},
-			'title' : {
-				'display' : 'disabled'
-			},			
-			'last_sign_in_stamp' : {
-				'display': 'disabled',
-				'preprocess' : 'formatSignInDate'
-			},
-			'sign_up_stamp' : {
-				'display': 'disabled',
-				'preprocess' : 'formatSignInDate'
-			},
-			'password' : {
-				'display' : 'hidden'
-			},
-			'passwordc' : {
-				'display' : 'hidden'
-			},
-			'groups' : {
-				'display' : 'disabled'
-			}
-		}
+		user_id: user_id
 	  },
 	  dataType: 'json',
 	  cache: false
@@ -291,48 +341,6 @@ function userDisplay(box_id, user_id) {
 	});
 }
 
-function deleteUserDialog(box_id, user_id, name){
-	// Delete any existing instance of the form with the same name
-	if($('#' + box_id).length ) {
-		$('#' + box_id).remove();
-	}
-	
-	var data = {
-		box_id: box_id,
-		title: "Delete User",
-		message: "Are you sure you want to delete the user " + name + "?",
-		confirm: "Yes, delete user"
-	}
-	
-	// Generate the form
-	$.ajax({  
-	  type: "GET",  
-	  url: FORMSPATH + "form_confirm_delete.php",  
-	  data: data,
-	  dataType: 'json',
-	  cache: false
-	})
-	.fail(function(result) {
-		addAlert("danger", "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.");
-		alertWidget('display-alerts');
-	})
-	.done(function(result) {
-		if (result['errors']) {
-			console.log("error");
-			alertWidget('display-alerts');
-			return;
-		}
-		
-		// Append the form as a modal dialog to the body
-		$( "body" ).append(result['data']);
-		$('#' + box_id).modal('show');
-		
-		$('#' + box_id + ' .btn-group-action .btn-confirm-delete').click(function(){
-			deleteUser(user_id);
-		});	
-	});
-}
-
 // Create user with specified data from the dialog
 function createUser(dialog_id) {	
 	var add_groups = [];
@@ -364,38 +372,4 @@ function createUser(dialog_id) {
 		window.location.reload();
 	});
 	return;
-}
-
-// Activate new user account
-function activateUser(user_id) {
-	var url = APIPATH + "activate_user.php";
-	$.ajax({  
-	  type: "GET",  
-	  url: url,  
-	  data: {
-		user_id: user_id,
-		ajaxMode: 'true'
-	  }
-	}).done(function(result) {
-		processJSONResult(result);
-		location.reload();
-	});
-	return;
-}
-
-
-
-function deleteUser(user_id) {
-	var url = APIPATH + "delete_user.php";
-	$.ajax({  
-	  type: "POST",  
-	  url: url,  
-	  data: {
-		user_id:	user_id,
-		ajaxMode:	"true"
-	  }
-	}).done(function(result) {
-		processJSONResult(result);
-		window.location.reload();
-	});
 }

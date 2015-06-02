@@ -121,7 +121,12 @@
         return $controller->updateUser($user_id);
     });       
     
-        
+    // Delete user
+    $app->post('/users/u/:user_id/delete/?', function ($user_id) use ($app) {
+        $controller = new UF\UserController($app);
+        return $controller->deleteUser($user_id);
+    });
+    
     // Admin tools
     $app->get('/config/settings/?', function () use ($app) {
         $controller = new UF\AdminController($app);
@@ -199,6 +204,35 @@
         echo implode("<br>",$log['messages']);
         echo "</pre>";
     });      
+    
+    // Generic confirmation dialog
+    $app->get('/forms/confirm/?', function () use ($app) {
+        $get = $app->request->get();
+        
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/confirm-modal.json");
+        
+        // Get the alert message stream
+        $ms = $app->alerts;         
+        
+        // Remove csrf_token
+        unset($get['csrf_token']);
+        
+        // Set up Fortress to process the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $get);                    
+    
+        // Sanitize
+        $rf->sanitize();
+    
+        // Validate, and halt on validation errors.
+        if (!$rf->validate()) {
+            $app->halt(400);
+        }           
+        
+        $data = $rf->data();
+        
+        $app->render('components/confirm-modal.html', $data);   
+    }); 
     
     // Alert stream
     $app->get('/alerts/?', function () use ($app) {

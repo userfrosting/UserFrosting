@@ -147,6 +147,33 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         }
         return $this->_id;
     }
+    
+    /*** Delete the object from the database, if it exists
+    ***/
+    public function delete(){
+        // Get connection
+        $db = static::connection();
+        $table = $this->_table;
+        
+        // Can only delete an object where `id` is set
+        if (!$this->_id) {
+            return false;
+        }
+        
+        $sqlVars[":id"] = $this->_id;
+        
+        $query = "
+            DELETE FROM $table
+            WHERE id = :id";
+            
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+        
+        if ($stmt->rowCount())
+            return true;
+        else
+            return false;
+    }
 }
 
 ?>

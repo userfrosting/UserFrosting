@@ -96,6 +96,9 @@ class UserController extends \UserFrosting\BaseController {
         // Hide password fields for editing user
         $hidden_fields[] = "password";
         
+        // Load validator rules
+        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/user-update.json");
+        
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
             "box_title" => "Edit User",
@@ -111,7 +114,8 @@ class UserController extends \UserFrosting\BaseController {
                 "hidden" => [
                     "edit", "enable", "delete", "activate"
                 ]
-            ]
+            ],
+            "validators" => $validators->formValidationRulesJson()
         ]);   
     }
 
@@ -232,6 +236,33 @@ class UserController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
         $target_user->store();        
         
+    }
+    
+    // Delete a user, cleaning up their group memberships and any user-specific authorization rules
+    public function deleteUser($user_id){
+        $post = $this->_app->request->post();
+    
+        // Get the target user
+        $target_user = UserLoader::fetch($user_id);
+    
+        // Get the alert message stream
+        $ms = $this->_app->alerts;
+        
+        // Check authorization
+        if (!$this->_app->user->checkAccess('delete_account', ['user' => $target_user])){
+            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+            $this->_app->halt(403);
+        }
+                
+        // Check that we are not disabling the master account
+        if (($target_user->id == $this->_app->config('user_id_master'))){
+            $ms->addMessageTranslated("danger", "ACCOUNT_DELETE_MASTER");
+            $this->_app->halt(403);
+        }
+
+        $ms->addMessageTranslated("success", "ACCOUNT_DELETION_SUCCESSFUL", ["user_name" => $target_user->user_name]);
+        $target_user->delete();
+        unset($target_user);
     }
     
 }

@@ -29,5 +29,12 @@ class AccessCondition {
     // Check if the specified value $needle is in the values of $haystack
     static function in($needle, $haystack){
         return in_array($needle, $haystack);
-    } 
+    }
+    
+    // Check if the specified user (by user_id) is in a particular group
+    static function in_group($user_id, $group_id){
+        $user = \UserFrosting\UserLoader::fetch($user_id);
+        $groups = $user->getGroups();
+        return isset($groups[$group_id]);
+    }
 }
