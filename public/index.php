@@ -143,6 +143,13 @@
         return $controller->deleteUser($user_id);
     });
     
+    // Group management pages
+    $app->get('/groups/?', function () use ($app) {
+        $controller = new UF\GroupController($app);
+        return $controller->pageGroups();
+    }); 
+    
+    
     // Admin tools
     $app->get('/config/settings/?', function () use ($app) {
         $controller = new UF\AdminController($app);
