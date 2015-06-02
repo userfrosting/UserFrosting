@@ -10,13 +10,12 @@ class ClientSideValidator {
     protected $_locale = "";
 
     // Load schema from a file
-    public function __construct($file, $locale = "en_US") {
+    public function __construct($file) {
         $this->_schema = json_decode(file_get_contents($file),true);
         if ($this->_schema === null) {
             error_log(json_last_error());
             // Throw error
         }
-        $this->_locale = $locale;
     }
 
     

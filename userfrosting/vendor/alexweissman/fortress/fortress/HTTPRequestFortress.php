@@ -17,7 +17,7 @@ class HTTPRequestFortress {
     protected $_data = [];                // Gets set to the POST or GET request data
     protected $_schema;                   // A valid RequestSchema object
     
-    public function __construct($message_stream, $schema = null, $data = [], $locale = "en_US") {
+    public function __construct($message_stream, $schema = null, $data = []) {
         // Set the schema
         $this->setSchema($schema);
     
@@ -29,7 +29,7 @@ class HTTPRequestFortress {
     
         // Construct default sanitizer and validators
         $this->_sanitizer = new DataSanitizer($schema);
-        $this->_validator = new ServerSideValidator($schema, $locale);
+        $this->_validator = new ServerSideValidator($schema);
        
     }
     
