@@ -91,10 +91,12 @@ class ClientSideValidator {
                 $transformedValidatorJson['different'] = $params;
                 break;
             case "member_of":
-                $transformedValidatorJson['regexp'] = "^" . implode("|", $validator['values']) . "$";
+                if (isset($validator['values'])) $params['regexp'] = "^" . implode("|", $validator['values']) . "$";
+                $transformedValidatorJson['regexp'] = $params;
                 break;
             case "not_member_of":
-                $transformedValidatorJson['regexp'] = "^(?!" . implode("|", $validator['values']) . "$).*$";
+                if (isset($validator['values'])) $params['regexp'] = "^(?!" . implode("|", $validator['values']) . "$).*$";
+                $transformedValidatorJson['regexp'] = $params;
                 break;
             default:
                 break;

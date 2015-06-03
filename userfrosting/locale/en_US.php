@@ -9,7 +9,10 @@ $lang = array();
 $lang = array_merge($lang, [
     "REGISTER_WELCOME" => "Registration is fast and simple.",
     "MENU_DASHBOARD" => "Users",
-    "MENU_CONFIGURATION" => "Configuration"
+    "MENU_CONFIGURATION" => "Configuration",
+    "MENU_SITE_SETTINGS" => "Site Settings",
+    "MENU_GROUPS" => "Groups",
+    "HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER"
 ]);
 
 // Installer
@@ -133,41 +136,39 @@ $lang = array_merge($lang,array(
 
 //Miscellaneous
 $lang = array_merge($lang,array(
-    "PASSWORD_HASH_FAILED"  => "Password hashing failed.  Please contact a site administrator.",
-	"NO_DATA"				=> "No data/bad data sent",
-    "CAPTCHA_FAIL"				=> "Failed security question",
-	"CONFIRM"				=> "Confirm",
-	"DENY"					=> "Deny",
-	"SUCCESS"				=> "Success",
-	"ERROR"					=> "Error",
-    "SERVER_ERROR"          => "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.",
-	"NOTHING_TO_UPDATE"			=> "Nothing to update",
-	"SQL_ERROR"				=> "Fatal SQL error",
-	"FEATURE_DISABLED"			=> "This feature is currently disabled",
-	"PAGE_INVALID_ID"              => "The requested page id does not exist",
-	"PAGE_INVALID"              => "The requested page could not be found in the database",    
+    "PASSWORD_HASH_FAILED"          => "Password hashing failed.  Please contact a site administrator.",
+	"NO_DATA"				        => "No data/bad data sent",
+    "CAPTCHA_FAIL"				    => "Failed security question",
+	"CONFIRM"				        => "Confirm",
+	"DENY"					        => "Deny",
+	"SUCCESS"				        => "Success",
+	"ERROR"					        => "Error",
+    "SERVER_ERROR"                  => "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error logs.",
+	"NOTHING_TO_UPDATE"			    => "Nothing to update",
+	"SQL_ERROR"				        => "Fatal SQL error",
+	"FEATURE_DISABLED"			    => "This feature is currently disabled",
+	"PAGE_INVALID_ID"               => "The requested page id does not exist",
+	"PAGE_INVALID"                  => "The requested page could not be found in the database",    
     "PAGE_PRIVATE_TOGGLED"			=> "This page is now %m1%",
 	"PAGE_ACCESS_REMOVED"			=> "Page access removed for %m1% permission level(s)",
-	"PAGE_ACCESS_ADDED"			=> "Page access added for %m1% permission level(s)",
-    "ACCESS_DENIED" => "Hmm, looks like you don't have permission to do that.",
-    "LOGIN_REQUIRED" => "Sorry, you must be logged in to access this resource.",
-    "LOGIN_ALREADY_COMPLETE" => "You are already logged in!",
+	"PAGE_ACCESS_ADDED"			    => "Page access added for %m1% permission level(s)",
+    "ACCESS_DENIED"                 => "Hmm, looks like you don't have permission to do that.",
+    "LOGIN_REQUIRED"                => "Sorry, you must be logged in to access this resource.",
+    "LOGIN_ALREADY_COMPLETE"        => "You are already logged in!",
 	));
 
 //Permissions
 $lang = array_merge($lang,array(
     "GROUP_INVALID_ID"              => "The requested group id does not exist",
-	"PERMISSION_CHAR_LIMIT"			=> "Permission names must be between %m1% and %m2% characters in length",
-	"PERMISSION_NAME_IN_USE"		=> "Permission name %m1% is already in use",
-	"PERMISSION_DELETION_SUCCESSFUL_NAME"		=> "Successfully deleted permission '%m1%'",
-    "PERMISSION_DELETIONS_SUCCESSFUL"	=> "Successfully deleted %m1% permission level(s)",
-	"PERMISSION_CREATION_SUCCESSFUL"	=> "Successfully created the permission level `%m1%`",
-	"GROUP_UPDATE"		=> "Group `%m1%` successfully updated.",
-	"PERMISSION_REMOVE_PAGES"		=> "Successfully removed access to %m1% page(s)",
-	"PERMISSION_ADD_PAGES"			=> "Successfully added access to %m1% page(s)",
+	"GROUP_NAME_CHAR_LIMIT"			=> "Group names must be between {{min}} and {{max}} characters in length",
+	"GROUP_NAME_IN_USE"		        => "Group name '{{name}}' is already in use",
+	"GROUP_DELETION_SUCCESSFUL"		=> "Successfully deleted group '{{name}}'",
+	"GROUP_CREATION_SUCCESSFUL"	    => "Successfully created group '{{name}}'",
+	"GROUP_UPDATE"		            => "Details for group '{{name}}' successfully updated.",
 	"PERMISSION_REMOVE_USERS"		=> "Successfully removed %m1% user(s)",
 	"PERMISSION_ADD_USERS"			=> "Successfully added %m1% user(s)",
-	"CANNOT_DELETE_PERMISSION_GROUP" => "You cannot delete the group '%m1%'",
+	"CANNOT_DELETE_GROUP"           => "The group '{{name}}' cannot be deleted",
+    "GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "The group '{{name}}' cannot be deleted because it is set as the default primary group for new users.  Please first select a different default primary group.",
 	));
 
 //Private Messages

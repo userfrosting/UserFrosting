@@ -30,10 +30,9 @@
         $('#' + box_id + ' .select2').select2();  
     
     	// Initialize bootstrap switches for user groups
-		var switches = $('#' + box_id + ' input[name^="groups"]');
+		var switches = $('#' + box_id + ' .bootstrapswitch');
 		switches.data('on-label', '<i class="fa fa-check"></i>');
 		switches.data('off-label', '<i class="fa fa-times"></i>');
-		switches.bootstrapSwitch();
 		switches.bootstrapSwitch('setSizeClass', 'switch-mini' );
 
 		// Initialize primary group buttons

@@ -56,17 +56,17 @@
                                                 <span class="caret"></span>
                                             </button>            
                                             <ul class="dropdown-menu" role="menu">
-                                                <li class="disabled">
+                                                <li>
                                                     <a href="#" data-id="{{group.id}}" class="js-group-edit" data-target="#dialog-group-edit" data-toggle="modal">
                                                     <i class="fa fa-edit"></i> Edit group
                                                     </a>
                                                 </li>
                                                 <li class="disabled">
                                                     <a href="#" data-id="{{group.id}}">
-                                                    <i class="fa fa-key"></i> Edit authorization rules
+                                                    <i class="fa fa-key"></i> Authorization rules
                                                     </a>
                                                 </li>
-                                                <li class="disabled">
+                                                <li>
                                                 {% if group.can_delete == 1 %}
                                                     <a href="#" data-id="{{group.id}}" class="js-group-delete" data-name="{{group.name}}" data-target="#dialog-group-delete" data-toggle="modal">
                                                     <i class="fa fa-trash-o"></i> Delete group

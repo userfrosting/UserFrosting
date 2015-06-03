@@ -149,6 +149,39 @@
         return $controller->pageGroups();
     }); 
     
+    // Group info form (update/view)
+    $app->get('/forms/groups/g/:group_id/?', function ($group_id) use ($app) {
+        $controller = new UF\GroupController($app);
+        $get = $app->request->get();        
+        if (isset($get['mode']) && $get['mode'] == "update")
+            return $controller->formGroupEdit($group_id);
+        else
+            return $controller->formGroupView($group_id);
+    });
+
+    // Group creation form
+    $app->get('/forms/groups/?', function () use ($app) {
+        $controller = new UF\GroupController($app);
+        return $controller->formGroupCreate();
+    });    
+    
+    // Create group
+    $app->post('/groups/?', function () use ($app) {
+        $controller = new UF\GroupController($app);
+        return $controller->createGroup();
+    });
+    
+    // Update group info
+    $app->post('/groups/g/:group_id/?', function ($group_id) use ($app) {
+        $controller = new UF\GroupController($app);
+        return $controller->updateGroup($group_id);
+    });       
+    
+    // Delete group
+    $app->post('/groups/g/:group_id/delete/?', function ($group_id) use ($app) {
+        $controller = new UF\GroupController($app);
+        return $controller->deleteGroup($group_id);
+    });
     
     // Admin tools
     $app->get('/config/settings/?', function () use ($app) {

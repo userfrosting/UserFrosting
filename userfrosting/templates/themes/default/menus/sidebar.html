@@ -32,12 +32,12 @@
             <ul class="nav nav-second-level">
                 {% if checkAccess('uri_site_settings') %}
                 <li>
-                    <a href="{{site.uri.public}}/config/settings"><i class="fa fa-globe fa-fw"></i> Site Settings</a>
+                    <a href="{{site.uri.public}}/config/settings"><i class="fa fa-globe fa-fw"></i> {{ translate("MENU_SITE_SETTINGS") }}</a>
                 </li>
                 {% endif %}
                 {% if checkAccess('uri_manage_groups') %}
                 <li>
-                    <a href="{{site.uri.public}}/groups"><i class="fa fa-tags fa-fw"></i> Groups</a>
+                    <a href="{{site.uri.public}}/groups"><i class="fa fa-tags fa-fw"></i> {{ translate("MENU_GROUPS") }}</a>
                 </li>
                 {% endif %}
             </ul>

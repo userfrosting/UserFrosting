@@ -1,0 +1,58 @@
+{
+    "name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 150,
+                "message" : "GROUP_NAME_CHAR_LIMIT"
+            }
+        },
+        "sanitizers" : {
+            "raw" : ""
+        }
+    },          
+    "theme" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 100
+            }
+        },
+        "sanitizers" : {
+            "raw" : ""
+        }
+    },
+    "new_user_title" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 200
+            }
+        }
+    },
+    "landing_page" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 200
+            }
+        }
+    },
+    "icon" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 100
+            }
+        }
+    },    
+    "is_default" : {
+        "validators" : {
+            "member_of" : {
+                "values" : [
+                    "0", "1", "2"
+                ]
+            }
+        }
+    }
+}

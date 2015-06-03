@@ -196,6 +196,18 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
         return $results;
     }
+
+    // Get a list of all supported themes
+    public function getThemes(){
+    	$directory = static::$app->config('themes.path');
+        $themes = glob($directory . "/*", GLOB_ONLYDIR);
+        $results = [];
+        foreach ($themes as $theme){
+            $basename = basename($theme);
+            $results[$basename] = $basename;
+        }
+        return $results;
+    }
     
     // Return an array of system and server configuration info
     public function getSystemInfo(){

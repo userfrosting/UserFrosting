@@ -105,7 +105,7 @@
                 <li class="list-group-item">
                     {{group.name}}
                     <span class="pull-right">
-                      <input type="checkbox" name="groups[{{group.id}}]" class="form-control" data-id="{{group.id}}" {% if group.member %}checked{% endif %} {% if 'groups' in fields.disabled %}disabled{% endif %}>
+                      <input type="checkbox" name="groups[{{group.id}}]" class="form-control bootstrapswitch" data-id="{{group.id}}" {% if group.member %}checked{% endif %} {% if 'groups' in fields.disabled %}disabled{% endif %}>
                       {% if 'primary_group_id' not in fields.hidden %} 
                       <button type="button" class="bootstrapradio btn btn-xs" name="primary_group_id" value="{{group.id}}" title="Set as primary group" data-selected="{% if group.id == target_user.primary_group_id %}true{% else %}false{% endif %}" {% if not group.member or 'primary_group_id' in fields.disabled %}disabled{% endif %}>
                         <i class="fa fa-home"></i>

@@ -219,7 +219,7 @@ function userForm(box_id, user_id) {
         $('#' + box_id + ' .select2').select2();
         
 		// Initialize bootstrap switches
-		var switches = $('#' + box_id + ' input[name^="groups"]');
+		var switches = $('#' + box_id + ' .bootstrapswitch');
 		switches.data('on-label', '<i class="fa fa-check"></i>');
 		switches.data('off-label', '<i class="fa fa-times"></i>');
 		switches.bootstrapSwitch();

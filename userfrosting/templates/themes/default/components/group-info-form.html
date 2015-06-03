@@ -1,0 +1,124 @@
+<form name="group" method="post" action="{{form_action}}">
+    <div id="form-alerts">
+    </div>
+    <div class="row">
+        {% if 'name' not in fields.hidden %}
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label>Name</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="Please enter a name for the group" {% if 'name' in fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'new_user_title' not in fields.hidden %}
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label>Title for New Users</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-flag"></i></span>
+                    <input type="text" class="form-control" name="new_user_title" autocomplete="off" value="{{group.new_user_title}}" placeholder="Default title for new primary members" {% if 'new_user_title' in fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'theme' not in fields.hidden %}
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="input_theme">Theme</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-paint-brush"></i></span>
+                    <select id="input_theme" class='form-control select2' name="theme" {% if 'theme' in fields.disabled %}disabled{% endif %}>
+                        {% for option, label in themes %}
+                        <option value="{{option}}" {% if (option == group.theme) %}selected{% endif %}>{{label}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'icon' not in fields.hidden %}        
+        <div class="col-sm-6">
+            <div class="form-group ">
+                <label>Icon</label>
+                <div class="input-group">
+                    <span class="input-group-addon icon-preview"><i class="{{group.icon}}"></i></span>
+                    <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="Group icon for primary members" {% if 'icon' in fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'landing_page' not in fields.hidden %}        
+        <div class="col-sm-6">
+            <div class="form-group ">
+                <label>Landing Page</label>
+                <div class="input-group">
+                    <span class="input-group-addon">/</span>
+                    <input type="text" class="form-control" name="landing_page" autocomplete="off" value="{{group.landing_page}}" placeholder="Landing page for primary members" {% if 'landing_page' in fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'is_default' not in fields.hidden %}
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="input_is_default">Default for new users?</label>
+                <div class='btn-group' data-toggle='buttons'>
+                    <label class='btn btn-primary {% if (group.is_default == '0') %}active{% endif %}' title='Newly registered users will NOT be automatically assigned to this group.'>
+                        <input class='form-control' type='radio' name='is_default' value='0' {% if (group.is_default == '0') %}checked{% endif %}> Neither
+                    </label>                      
+                    <label class='btn btn-primary {% if (group.is_default == '1') %}active{% endif %}' title='Newly registered users will be automatically assigned to this group.'>
+                        <input class='form-control' type='radio' name='is_default' value='1' {% if (group.is_default == '1') %}checked{% endif %}> Default
+                    </label>
+    
+                    <label class='btn btn-primary {% if (group.is_default == '2') %}active{% endif %}' title='Newly registered users will be automatically assigned to this group, and it will be their primary group.'>
+                        <input class='form-control' type='radio' name='is_default' value='2' {% if (group.is_default == '2') %}checked{% endif %}> Default Primary
+                    </label>
+                </div>
+            </div>
+        </div>        
+        {% endif %}        
+    </div><br>
+    <div class="row">
+        {% if "submit" not in buttons.hidden %}
+        <div class="col-xs-8 col-sm-4">
+            <div class="vert-pad">
+                <button type="submit" class="btn btn-block btn-lg btn-success" data-loading-text="Please wait...">
+                    {{submit_button}}
+                </button>
+            </div>          
+        </div>
+        {% endif %}
+        {% if "edit" not in buttons.hidden %}  
+        <div class="col-xs-6 col-sm-3">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-primary js-group-edit" data-id="{{group.id}}" data-toggle="modal">
+                    <i class="fa fa-edit"></i> Edit
+                </button>
+            </div>
+        </div>    
+        {% endif %}
+        {% if "delete" not in buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">  
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-danger js-group-delete" data-id="{{group.id}}" data-name="{{group.name}}" data-toggle="modal">
+                    <i class="fa fa-trash-o"></i> Delete
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "cancel" not in buttons.hidden %}        
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</form>
+<script>
+// Load the validator rules for this form
+var validators = {{validators | raw}};
+</script>
