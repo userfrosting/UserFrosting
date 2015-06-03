@@ -1,0 +1,8 @@
+{
+    "activation_token" : {
+        "validators" : {
+            "required" : {
+            }
+        }
+    }
+}

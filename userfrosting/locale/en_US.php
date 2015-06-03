@@ -56,9 +56,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_SPECIFY_CONFIRM_PASSWORD"	=> "Please confirm your new password",
 	"ACCOUNT_NEW_PASSWORD_LENGTH"		=> "New password must be between {{min}} and {{max}} characters in length",	
 	"ACCOUNT_PASSWORD_INVALID"		=> "Current password doesn't match the one we have on record",	
-	"ACCOUNT_DETAILS_UPDATED"		=> "Account details updated for user '{{user_name}}'",
-	"ACCOUNT_ACTIVATION_MESSAGE"		=> "You will need to activate your account before you can login. Please follow the link below to activate your account. \n\n
-	%m1%activate_user.php?token=%m2%",							
+	"ACCOUNT_DETAILS_UPDATED"		=> "Account details updated for user '{{user_name}}'",						
 	"ACCOUNT_CREATION_COMPLETE"		=> "Account for new user '{{user_name}}' has been created.",
     "ACCOUNT_ACTIVATION_COMPLETE"		=> "You have successfully activated your account. You can now login.",
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "You have successfully registered. You can now login.",
@@ -123,14 +121,14 @@ $lang = array_merge($lang,array(
 	"FORGOTPASS_NEW_PASS_EMAIL"		=> "We have emailed you a new password",
 	"FORGOTPASS_REQUEST_CANNED"		=> "Lost password request cancelled",
 	"FORGOTPASS_REQUEST_EXISTS"		=> "There is already an outstanding lost password request on this account",
-	"FORGOTPASS_REQUEST_SUCCESS"		=> "We have emailed you instructions on how to regain access to your account",
+	"FORGOTPASS_REQUEST_SUCCESS"	=> "We have emailed you instructions on how to regain access to your account",
 	));
 
 //Mail
 $lang = array_merge($lang,array(
-	"MAIL_ERROR"				=> "Fatal error attempting mail, contact your server administrator",
+	"MAIL_ERROR"				    => "Fatal error attempting mail, contact your server administrator",
 	"MAIL_TEMPLATE_BUILD_ERROR"		=> "Error building email template",
-	"MAIL_TEMPLATE_DIRECTORY_ERROR"		=> "Unable to open mail-templates directory. Perhaps try setting the mail directory to %m1%",
+	"MAIL_TEMPLATE_DIRECTORY_ERROR"	=> "Unable to open mail-templates directory. Perhaps try setting the mail directory to %m1%",
 	"MAIL_TEMPLATE_FILE_EMPTY"		=> "Template file is empty... nothing to send",
 	));
 

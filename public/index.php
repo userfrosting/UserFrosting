@@ -31,7 +31,7 @@
             $app->notFound();
         }
         
-        $page_schema = UF\PageSchema::load("user", $app->config('schema.path') . "/pages/pages.json");
+        $page_schema = UF\PageSchema::load("dashboard", $app->config('schema.path') . "/pages/pages.json");
         
         $app->render('dashboard.html', [
             'page' => [
@@ -76,6 +76,7 @@
             case "login":               return $controller->pageLogin();
             case "logout":              return $controller->logout(); 
             case "register":            return $controller->pageRegister();
+            case "activate":            return $controller->activate();            
             case "resend-activation":   return $controller->pageResendActivation();
             case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));
             case "captcha":             return $controller->captcha();

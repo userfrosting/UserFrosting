@@ -334,13 +334,69 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Store new user to database
         $user->store();
-        if ($this->_app->site->require_activation)
-          // Activation required
-          $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
-        else
-          // No activation required
-          $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
+        if ($this->_app->site->require_activation) {
+            // Create and send activation email
+
+            $mail = new \PHPMailer;
+            
+            $mail->From = $this->_app->site->admin_email;
+            $mail->FromName = $this->_app->site->site_title;
+            $mail->addAddress($user->email);     // Add a recipient
+            $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
+            
+            $mail->Subject = $this->_app->site->site_title . " - please activate your account";
+            $mail->Body    = $this->_app->view()->render("common/mail/activate-new.html", [
+                "user" => $user
+            ]);
+            
+            $mail->isHTML(true);                                  // Set email format to HTML
+            
+            if(!$mail->send()) {
+                $ms->addMessageTranslated("danger", "MAIL_ERROR");
+                error_log('Mailer Error: ' . $mail->ErrorInfo);
+                $this->_app->halt(500);
+            }
+
+            // Activation required
+            $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
+        } else
+            // No activation required
+            $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
         
+    }
+    
+    // Allow a newly registered user to activate their account via an email link
+    public function activate(){
+        $data = $this->_app->request->get();
+        
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-activate.json");
+        
+        // Get the alert message stream
+        $ms = $this->_app->alerts; 
+        
+        // Set up Fortress to validate the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        
+        // Validate
+        if (!$rf->validate()) {
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }    
+        
+        // Ok, try to find a user with the specified activation token
+        $user = UserLoader::fetch($data['activation_token'], 'activation_token');
+        
+        if (!$user || $user->active == "1"){
+            $ms->addMessageTranslated("danger", "ACCOUNT_TOKEN_NOT_FOUND");
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }
+        
+        $user->active = "1";
+        $user->store();
+        $ms->addMessageTranslated("success", "ACCOUNT_ACTIVATION_COMPLETE");
+        
+        // Forward to login page
+        $this->_app->redirect($this->_app->urlFor('uri_home'));
     }
     
     public function accountSettings(){

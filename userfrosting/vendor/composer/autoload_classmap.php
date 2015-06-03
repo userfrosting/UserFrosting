@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AccessCondition' => $baseDir . '/auth/AccessCondition.php',
+    'EasyPeasyICS' => $vendorDir . '/phpmailer/phpmailer/extras/EasyPeasyICS.php',
     'Fortress\\ClientSideValidator' => $vendorDir . '/alexweissman/fortress/fortress/ClientSideValidator.php',
     'Fortress\\DataSanitizer' => $vendorDir . '/alexweissman/fortress/fortress/DataSanitizer.php',
     'Fortress\\DataSanitizerInterface' => $vendorDir . '/alexweissman/fortress/fortress/DataSanitizer.php',
@@ -16,7 +17,10 @@ return array(
     'Fortress\\RequestSchema' => $vendorDir . '/alexweissman/fortress/fortress/RequestSchema.php',
     'Fortress\\ServerSideValidator' => $vendorDir . '/alexweissman/fortress/fortress/ServerSideValidator.php',
     'Fortress\\ServerSideValidatorInterface' => $vendorDir . '/alexweissman/fortress/fortress/ServerSideValidator.php',
+    'PHPMailer' => $vendorDir . '/phpmailer/phpmailer/class.phpmailer.php',
+    'POP3' => $vendorDir . '/phpmailer/phpmailer/class.pop3.php',
     'ParserNodeFunctionEvaluator' => $baseDir . '/auth/ParserNodeFunctionEvaluator.php',
+    'SMTP' => $vendorDir . '/phpmailer/phpmailer/class.smtp.php',
     'Slim\\Extras\\Middleware\\CsrfGuard' => $baseDir . '/auth/csrfguard.php',
     'Slim\\Extras\\Middleware\\DatabaseCheck' => $baseDir . '/models/DatabaseCheck.php',
     'UserFrosting\\AccessConditionExpression' => $baseDir . '/auth/AccessConditionExpression.php',
@@ -47,4 +51,6 @@ return array(
     'UserFrosting\\UserController' => $baseDir . '/controllers/UserController.php',
     'UserFrosting\\UserLoaderInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\UserObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
+    'ntlm_sasl_client_class' => $vendorDir . '/phpmailer/phpmailer/extras/ntlm_sasl_client.php',
+    'phpmailerException' => $vendorDir . '/phpmailer/phpmailer/class.phpmailer.php',
 );

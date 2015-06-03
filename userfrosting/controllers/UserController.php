@@ -466,7 +466,10 @@ class UserController extends \UserFrosting\BaseController {
                         $ms->addMessageTranslated("success", "ACCOUNT_ENABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
                     else
                         $ms->addMessageTranslated("success", "ACCOUNT_DISABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
-                }                 
+                }
+                if ($name == "active") {
+                    $ms->addMessageTranslated("success", "ACCOUNT_MANUALLY_ACTIVATED", ["user_name" => $target_user->user_name]);
+                }
             }
         }
         
