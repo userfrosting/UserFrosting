@@ -18,34 +18,56 @@ class UserController extends \UserFrosting\BaseController {
         $this->_page_schema = PageSchema::load("user", $this->_app->config('schema.path') . "/pages/pages.json");
     }
 
-    public function pageUsers(){
-        // Access-controlled page
-        if (!$this->_app->user->checkAccess('uri_users')){
-            $this->_app->notFound();
-        }
+    public function pageUsers($primary_group_name = null){
+        // Optional filtering by primary group
+        if ($primary_group_name){
+            $primary_group = GroupLoader::fetch($primary_group_name, 'name');
+            
+            if (!$primary_group)
+                $this->_app->notFound();
+            
+            // Access-controlled page
+            if (!$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $primary_group->id])){
+                $this->_app->notFound();
+            }
         
-        $users = UserLoader::fetchAll();
+            $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
+            $name = $primary_group->name;
+            $icon = $primary_group->icon;
+
+        } else {
+            // Access-controlled page
+            if (!$this->_app->user->checkAccess('uri_users')){
+                $this->_app->notFound();
+            }
+            
+            $users = UserLoader::fetchAll();
+            $name = "Users";
+            $icon = "fa fa-users";
+        }
         
         $this->_app->render('users.html', [
             'page' => [
                 'author' =>         $this->_app->site->author,
-                'title' =>          "Users",
+                'title' =>          $name,
                 'description' =>    "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'schema' =>         $this->_page_schema
             ],
+            "box_title" => $name,
+            "icon" => $icon,
             "users" => $users
         ]);          
     }
 
     public function pageUser($user_id){
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('uri_users')){
-            $this->_app->notFound();
-        }
-        
         // Get the user to view
         $target_user = UserLoader::fetch($user_id);    
+        
+        // Access-controlled resource
+        if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
+            $this->_app->notFound();
+        }
     
         // Get a list of all groups
         $groups = GroupLoader::fetchAll();
@@ -69,7 +91,7 @@ class UserController extends \UserFrosting\BaseController {
         $disabled_fields = [];
         $hidden_fields = [];
         foreach ($fields as $field){
-            if ($this->_app->user->checkAccess("view_account_setting", ["property" => $field]))
+            if ($this->_app->user->checkAccess("view_account_setting", ["user" => $target_user, "property" => $field]))
                 $disabled_fields[] = $field;
             else
                 $hidden_fields[] = $field;
@@ -162,7 +184,7 @@ class UserController extends \UserFrosting\BaseController {
         $disabled_fields = [];
         $hidden_fields = [];
         foreach ($fields as $field){
-            if ($this->_app->user->checkAccess("update_account_setting", ["property" => $field]))
+            if ($this->_app->user->checkAccess("update_account_setting", ["user" => $target_user, "property" => $field]))
                 $show_fields[] = $field;
             else
                 $disabled_fields[] = $field;
@@ -194,8 +216,11 @@ class UserController extends \UserFrosting\BaseController {
         
     // Display the form for editing an existing user
     public function formUserEdit($user_id){
+        // Get the user to edit
+        $target_user = UserLoader::fetch($user_id);        
+        
         // Access-controlled resource
-        if (!$this->_app->user->checkAccess('uri_users')){
+        if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
             $this->_app->notFound();
         }
         
@@ -205,9 +230,6 @@ class UserController extends \UserFrosting\BaseController {
             $render = $get['render'];
         else
             $render = "modal";
-        
-        // Get the user to edit
-        $target_user = UserLoader::fetch($user_id);
         
         // Get a list of all groups
         $groups = GroupLoader::fetchAll();
@@ -236,9 +258,9 @@ class UserController extends \UserFrosting\BaseController {
         $disabled_fields = [];
         $hidden_fields = [];
         foreach ($fields as $field){
-            if ($this->_app->user->checkAccess("update_account_setting", ["property" => $field]))
+            if ($this->_app->user->checkAccess("update_account_setting", ["user" => $target_user, "property" => $field]))
                 $show_fields[] = $field;
-            else if ($this->_app->user->checkAccess("view_account_setting", ["property" => $field]))
+            else if ($this->_app->user->checkAccess("view_account_setting", ["user" => $target_user, "property" => $field]))
                 $disabled_fields[] = $field;
             else
                 $hidden_fields[] = $field;

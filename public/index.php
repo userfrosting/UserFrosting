@@ -104,6 +104,11 @@
         return $controller->pageUsers();
     });    
 
+    $app->get('/users/:primary_group/?', function ($primary_group) use ($app) {
+        $controller = new UF\UserController($app);
+        return $controller->pageUsers($primary_group);
+    });
+    
     // User info form (update/view)
     $app->get('/forms/users/u/:user_id/?', function ($user_id) use ($app) {
         $controller = new UF\UserController($app);

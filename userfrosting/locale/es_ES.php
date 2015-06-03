@@ -9,7 +9,7 @@ $lang = array();
 // Site Content
 $lang = array_merge($lang, [
     "REGISTER_WELCOME" => "El registro es rápido y sencillo.",
-    "MENU_DASHBOARD" => "Usuarios",
+    "MENU_USERS" => "Usuarios",
     "MENU_CONFIGURATION" => "Configuración",
     "MENU_SITE_SETTINGS" => "Configuración del Sitio",
     "MENU_GROUPS" => "Grupos",
