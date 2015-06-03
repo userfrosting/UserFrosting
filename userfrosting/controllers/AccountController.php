@@ -98,7 +98,7 @@ class AccountController extends \UserFrosting\BaseController {
         
        $this->_app->render('common/forgot-password.html', [
             'page' => [
-                'author' =>         $this->_app->site['author'],
+                'author' =>         $this->_app->site->author,
                 'title' =>          "Reset Password",
                 'description' =>    "Reset your UserFrosting password.",
                 'schema' =>         $this->_page_schema,
@@ -116,7 +116,7 @@ class AccountController extends \UserFrosting\BaseController {
          
         $this->_app->render('common/resend-activation.html', [
             'page' => [
-                'author' =>         $this->_app->site['author'],
+                'author' =>         $this->_app->site->author,
                 'title' =>          "Resend Activation",
                 'description' =>    "Resend the activation email for your new UserFrosting account.",
                 'schema' =>         $this->_page_schema,
@@ -179,14 +179,14 @@ class AccountController extends \UserFrosting\BaseController {
         $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
         
         // If it's an email address, but email login is not enabled, raise an error.
-        if ($isEmail && !$email_login){
+        if ($isEmail && !$this->_app->site->email_login){
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
             $this->_app->halt(403);
         }
         
         // Load user by email address
         if($isEmail){
-            $user = UserLoader::fetch($data['email'], 'email');
+            $user = UserLoader::fetch($data['user_name'], 'email');
             if (!$user){
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);         
