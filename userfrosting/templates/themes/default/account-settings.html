@@ -16,6 +16,10 @@
                         <div class='panel-body'>
                             <form class='form-horizontal' role='form' name='settings' action='{{site.uri.public}}/account/settings' method='post'>
                                 {% include 'common/components/csrf.html' %}
+                                <!-- Prevent browsers from trying to autofill the password field.  See http://stackoverflow.com/a/23234498/2970321 -->
+                                <input type="text" style="display:none">
+                                <input type="password" style="display:none">
+                                
                                 {% if checkAccess('update_account_setting', {('user'): user, ('property'): 'email'}) %}
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Email Address</label>
