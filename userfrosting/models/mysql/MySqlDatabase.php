@@ -151,7 +151,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         // Setup default groups.  TODO: finish Group API so they can be created through objects
         $connection->query("INSERT INTO `uf_group` (`name`, `is_default`, `can_delete`, `theme`, `landing_page`, `new_user_title`, `icon`) VALUES
           ('User', " . GROUP_DEFAULT_PRIMARY . ", 0, 'default', 'dashboard', 'New User', 'fa fa-user'),
-          ('Administrator', " . GROUP_NOT_DEFAULT . ", 0, 'nyx', 'dashboard', 'Hydralisk', 'sc sc-hydralisk');");        
+          ('Administrator', " . GROUP_NOT_DEFAULT . ", 0, 'nyx', 'dashboard', 'Hydralisk', 'fa fa-flag');");        
     
         // Setup default authorizations
         $connection->query("INSERT INTO `uf_authorize_group` (`group_id`, `hook`, `conditions`) VALUES

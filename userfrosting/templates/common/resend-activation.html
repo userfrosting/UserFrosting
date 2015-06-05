@@ -6,39 +6,39 @@
       {% include 'common/components/main-nav.html' %}
       <div class="jumbotron">
         <h1>Account Activation</h1>
-        <p class="lead">Please enter your username and the email address you used to sign up, and an activation email will be resent.</p> 
-		<form class='form-horizontal' role='form' name='resend' action='api/user_resend_activation.php' method='post'>
-		  <div class="row">
-			<div id='display-alerts' class="col-lg-12">
-  
-			</div>
-		  </div>
-		  <div class="form-group">
-			<div class="col-md-offset-3 col-md-6">
-			  <input type="text" class="form-control" placeholder="Username" name = 'user_name' value=''>
-			</div>
-		  </div>
-		  <div class="form-group">
-			<div class="col-md-offset-3 col-md-6">
-			  <input type="email" class="form-control" placeholder="Email" name='email'>
-			</div>
-		  </div>
-		  <div class="form-group">
-			<div class="col-md-12">
-			  <button type="submit" class="btn btn-success submit" value='Resend'>Resend Activation</button>
-			</div>
-		  </div>
+        <p class="lead">Please enter your username and the email address you used to sign up, and your activation email will be resent.</p>
+        {% include 'common/components/alerts.html' %}
+		<form class='form-horizontal' role='form' name='resend_activation' action='{{site.uri.public}}/account/resend-activation' method='post'>
+            {% include 'common/components/csrf.html' %}
+            <div class="form-group">
+                <label for="input_user_name" class="control-label col-sm-4">Username</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>                    
+                        <input id="input_user_name" type="text" class="form-control" placeholder="Username" name="user_name">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input_email" class="control-label col-sm-4">Email</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>                    
+                        <input id="input_email" type="text" class="form-control" placeholder="The email address you used to register" name="email">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success submit" value='Resend'>Resend Activation Email</button>
+            </div>
 		</form>
       </div>	
-      {% include 'common/components/footer.html' %}	
-
     </div> <!-- /container -->
-
+    {% include 'common/components/footer.html' %}
     <script>
     $(document).ready(function() {          
-        alertWidget('display-alerts');
-        // Process form     
-        $("form[name='resend']").formValidation({
+        // Process form 
+        $("form[name='resend_activation']").formValidation({
           framework: 'bootstrap',
           // Feedback icons
           icon: {
@@ -47,25 +47,37 @@
               validating: 'fa fa-refresh'
           },
           fields: {{validators | raw}}
+        }).on('success.form.fv', function(e) {
+          // Prevent double form submission
+          e.preventDefault();
+
+          // Get the form instance
+          var form = $(e.target);
+
+          // Serialize and post to the backend script in ajax mode
+          var serializedData = form.serialize();
+          var url = form.attr('action');
+          $.ajax({  
+            type: "POST",  
+            url: url,  
+            data: serializedData       
+          }).done(function(data, statusText, jqXHR) {
+              // Forward to account home page on success
+              window.location.replace(site.uri.public);
+          }).fail(function(jqXHR) {
+              if ((typeof site !== "undefined") && site['debug'] == true) {
+                  document.body.innerHTML = jqXHR.responseText;
+              } else {
+                  console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                  // Display errors on failure
+                  $('#userfrosting-alerts').flashAlerts().done(function() {
+                      // Re-enable submit button
+                      form.data('formValidation').disableSubmitButtons(false);
+                  });
+              }
+          });
         });
-        $("form[name='resend']").submit(function(e){
-            var form = $(this);
-            var url = APIPATH + 'user_resend_activation.php';
-            // Serialize and post to the backend script in ajax mode
-            var serializedData = form.serialize();
-            serializedData += '&ajaxMode=true';     
-            $.ajax({  
-              type: "POST",  
-              url: url,  
-              data: serializedData
-            }).done(function(result) {
-                var resultJSON = processJSONResult(result);
-                if (resultJSON['errors'] && resultJSON['errors'] > 0){
-                  alertWidget('display-alerts');
-                }
-            });
-        });
-    });
+    });   
     </script>
   </body>
 </html>

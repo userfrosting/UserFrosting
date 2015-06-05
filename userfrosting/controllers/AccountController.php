@@ -589,6 +589,87 @@ class AccountController extends \UserFrosting\BaseController {
         $this->_app->redirect($this->_app->urlFor('uri_home'));
     }
     
+    // Resend the activation email for a new user account
+    public function resendActivation(){
+        $data = $this->_app->request->post();
+        
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
+        
+        // Get the alert message stream
+        $ms = $this->_app->alerts; 
+        
+        // Set up Fortress to validate the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        
+        // Validate
+        if (!$rf->validate()) {
+            $this->_app->halt(400);
+        }    
+        
+        // Check that the username exists
+        if(!UserLoader::exists($data['user_name'], 'user_name')) {
+            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
+            $this->_app->halt(400);
+        }
+        
+        // Load the user, by username
+        $user = UserLoader::fetch($data['user_name'], 'user_name');
+        
+        // Check that the specified email is correct
+        if ($user->email != $data['email']){
+            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
+            $this->_app->halt(400);
+        }
+        
+        // Check if user's account is already active
+        if ($user->active == "1") {
+            $ms->addMessageTranslated("danger", "ACCOUNT_ALREADY_ACTIVE");
+            $this->_app->halt(400);
+        }
+        
+        // Check the time since the last activation request
+        $current_time = new \DateTime("now");
+        $last_request_time = new \DateTime($user->last_activation_request);
+        $time_since_last_request = $current_time->getTimestamp() - $last_request_time->getTimestamp();
+
+        // If an activation request has been sent too recently, they must wait
+        if($time_since_last_request < $this->_app->site->resend_activation_threshold || $time_since_last_request < 0){
+            $ms->addMessageTranslated("danger", "ACCOUNT_LINK_ALREADY_SENT", ["resend_activation_threshold" => $this->_app->site->resend_activation_threshold]);
+            $this->_app->halt(429); // "Too many requests" code (http://tools.ietf.org/html/rfc6585#section-4)
+        }
+        
+        // We're good to go - create a new activation token and send the email
+        $user->activation_token = UserLoader::generateActivationToken();
+        $user->last_activation_request = date("Y-m-d H:i:s");
+        $user->lost_password_timestamp = date("Y-m-d H:i:s");
+        
+        // Email the user
+        $mail = new \PHPMailer;
+        
+        $mail->From = $this->_app->site->admin_email;
+        $mail->FromName = $this->_app->site->site_title;
+        $mail->addAddress($user->email);     // Add a recipient
+        $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
+        
+        $mail->Subject = $this->_app->site->site_title . " - activate your account";
+        $mail->Body    = $this->_app->view()->render("common/mail/resend-activation.html", [
+            "user" => $user,
+            "activation_token" => $user->activation_token
+        ]);
+        
+        $mail->isHTML(true);                                  // Set email format to HTML
+        
+        if(!$mail->send()) {
+            $ms->addMessageTranslated("danger", "MAIL_ERROR");
+            error_log('Mailer Error: ' . $mail->ErrorInfo);
+            $this->_app->halt(500);
+        }
+
+        $user->store();
+        $ms->addMessageTranslated("success", "ACCOUNT_NEW_ACTIVATION_SENT");
+    }
+    
     public function accountSettings(){
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");

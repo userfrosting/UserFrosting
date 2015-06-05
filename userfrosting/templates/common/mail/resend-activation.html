@@ -1,0 +1,11 @@
+<p>Dear {{user.display_name}},
+</p>
+<p>
+We have received a new activation request for your account with {{site.site_title}} ({{site.uri.public}}).  Please follow the link below to activate your account.  If your account is already active, please disregard this message.
+</p>
+<a href="{{site.uri.public}}/account/activate?activation_token={{user.activation_token}}">{{site.uri.public}}/account/activate?activation_token={{user.activation_token}}</a>
+</p>
+<p>
+With regards,<br>
+The {{site.site_title}} Team
+</p>
