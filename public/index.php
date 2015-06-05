@@ -69,6 +69,8 @@
         if (!isset($app->site->install_status) || $app->site->install_status == "pending"){
             $app->redirect($app->urlFor('uri_install'));
         }
+    
+        $get = $app->request->get();
         
         $controller = new UF\AccountController($app);
     
@@ -78,7 +80,11 @@
             case "register":            return $controller->pageRegister();
             case "activate":            return $controller->activate();            
             case "resend-activation":   return $controller->pageResendActivation();
-            case "forgot-password":     return $controller->pageForgotPassword($app->request()->get('token'));
+            case "forgot-password":     return $controller->pageForgotPassword();
+            case "reset-password":      if (isset($get['confirm']) && $get['confirm'] == "true")
+                                            return $controller->pageResetPassword();
+                                        else
+                                            return $controller->denyResetPassword();
             case "captcha":             return $controller->captcha();
             case "settings":            return $controller->pageAccountSettings();
             default:                    return $controller->page404();   
@@ -92,7 +98,8 @@
             case "login":               return $controller->login();     
             case "register":            return $controller->register();
             case "resend-activation":   return $controller->resendActivation();
-            case "forgot-password":     return $controller->forgotPassword($app->request()->get('token'));
+            case "forgot-password":     return $controller->forgotPassword();
+            case "reset-password":      return $controller->resetPassword();            
             case "settings":            return $controller->accountSettings();
             default:                    $app->notFound();
         }

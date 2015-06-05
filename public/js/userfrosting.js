@@ -49,23 +49,27 @@ var pagerOptions = {
 };
 
 // Initialize tablesorters
-$('.tablesorter-bootstrap').tablesorter({
-    debug: false,
-    theme: 'bootstrap',
-    widthFixed: true,
-    widgets: ['filter']
-}).tablesorterPager(pagerOptions);
+if (jQuery().tablesorter){
+    $('.tablesorter-bootstrap').tablesorter({
+        debug: false,
+        theme: 'bootstrap',
+        widthFixed: true,
+        widgets: ['filter']
+    }).tablesorterPager(pagerOptions);
+} else {
+    console.log("The tablesorter plugin has not been added.");
+}
 
 // Initialize bootstrap switches, if enabled
 if (jQuery().bootstrapSwitch){
     $('.bootstrapswitch').bootstrapSwitch();
 } else {
-    console.error("The bootstrap-switch plugin has not been added.");
+    console.log("The bootstrap-switch plugin has not been added.");
 }
 
 // Initialize select2 dropdowns, if enabled
 if (jQuery().select2){
     $('.select2').select2();
 } else {
-    console.error("The select2 plugin has not been added.");
+    console.log("The select2 plugin has not been added.");
 }

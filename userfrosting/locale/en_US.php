@@ -32,6 +32,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_SPECIFY_CAPTCHA"		=> "Please enter the captcha code.",
     "ACCOUNT_SPECIFY_LOCALE"        => "Please specify a valid locale.",
     "ACCOUNT_INVALID_EMAIL"			=> "Invalid email address",
+    "ACCOUNT_INVALID_USERNAME"		=> "Invalid username",    
     "ACCOUNT_INVALID_USER_ID"		=> "The requested user id does not exist.",
 	"ACCOUNT_USER_OR_EMAIL_INVALID"		=> "Username or email address is invalid.",
 	"ACCOUNT_USER_OR_PASS_INVALID"		=> "Username or password is invalid.",
@@ -80,7 +81,6 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_GROUP_REMOVED"		=> "Removed user from group '{{name}}'.",
 	"ACCOUNT_GROUP_NOT_MEMBER"		=> "User is not a member of group'{{name}}'.",
 	"ACCOUNT_GROUP_ALREADY_MEMBER"		=> "User is already a member of group '{{name}}'.",
-    "ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
     "ACCOUNT_PRIMARY_GROUP_SET" => "Successfully set primary group for '{{user_name}}'.",
     "ACCOUNT_WELCOME" => "Welcome back, {{display_name}}"
 	));

@@ -92,7 +92,7 @@ class AccountController extends \UserFrosting\BaseController {
         ]);
     }
 
-    public function pageForgotPassword($token = null){
+    public function pageForgotPassword(){
       
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/forgot-password.json");
         
@@ -105,8 +105,24 @@ class AccountController extends \UserFrosting\BaseController {
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ],
-            'token' =>          $token,
-            'confirm_ajax' =>   $token ? 1 : 0,
+            'validators' => $validators->formValidationRulesJson()
+        ]);
+    }
+
+    public function pageResetPassword(){
+      
+        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/reset-password.json");
+        
+       $this->_app->render('common/reset-password.html', [
+            'page' => [
+                'author' =>         $this->_app->site->author,
+                'title' =>          "Choose a New Password",
+                'description' =>    "Reset your UserFrosting password.",
+                'schema' =>         $this->_page_schema,
+                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
+                'active_page' =>    ""
+            ],
+            'activation_token' => $this->_app->request->get()['activation_token'],
             'validators' => $validators->formValidationRulesJson()
         ]);
     }
@@ -396,6 +412,180 @@ class AccountController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "ACCOUNT_ACTIVATION_COMPLETE");
         
         // Forward to login page
+        $this->_app->redirect($this->_app->urlFor('uri_home'));
+    }
+    
+    // Emails a forgotten password reset link to the specified user
+    public function forgotPassword(){
+        $data = $this->_app->request->post();
+        
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
+        
+        // Get the alert message stream
+        $ms = $this->_app->alerts; 
+        
+        // Set up Fortress to validate the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        
+        // Validate
+        if (!$rf->validate()) {
+            $this->_app->halt(400);
+        }    
+        
+        // Check that the username exists
+        if(!UserLoader::exists($data['user_name'], 'user_name')) {
+            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
+            $this->_app->halt(400);
+        }
+        
+        // Load the user, by username
+        $user = UserLoader::fetch($data['user_name'], 'user_name');
+        
+        // Check that the specified email is correct
+        if ($user->email != $data['email']){
+            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
+            $this->_app->halt(400);
+        }
+        
+        // Check if the user has any outstanding lost password requests
+        if($user->lost_password_request == 1) {
+            $ms->addMessageTranslated("danger", "FORGOTPASS_REQUEST_EXISTS");
+            $this->_app->halt(403);            
+        }
+        
+        // Generate a new activation token.  This will also be used as the password reset token.
+        $user->activation_token = UserLoader::generateActivationToken();
+        $user->last_activation_request = date("Y-m-d H:i:s");
+        $user->lost_password_request = "1";
+        $user->lost_password_timestamp = date("Y-m-d H:i:s");
+        
+        // Email the user asking to confirm this change password request
+        $mail = new \PHPMailer;
+        
+        $mail->From = $this->_app->site->admin_email;
+        $mail->FromName = $this->_app->site->site_title;
+        $mail->addAddress($user->email);     // Add a recipient
+        $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
+        
+        $mail->Subject = $this->_app->site->site_title . " - reset your password";
+        $mail->Body    = $this->_app->view()->render("common/mail/password-reset.html", [
+            "user" => $user,
+            "request_date" => date("Y-m-d H:i:s")
+        ]);
+        
+        $mail->isHTML(true);                                  // Set email format to HTML
+        
+        if(!$mail->send()) {
+            $ms->addMessageTranslated("danger", "MAIL_ERROR");
+            error_log('Mailer Error: ' . $mail->ErrorInfo);
+            $this->_app->halt(500);
+        }
+
+        $user->store();
+        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
+    }
+    
+    // Resets a user's password with a valid activation token
+    public function resetPassword(){
+        $data = $this->_app->request->post();
+        
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
+        
+        // Get the alert message stream
+        $ms = $this->_app->alerts; 
+        
+        // Set up Fortress to validate the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        
+        // Validate
+        if (!$rf->validate()) {
+            $this->_app->halt(400);
+        }
+        
+        // Fetch the user, by looking up the submitted activation token
+        $user = UserLoader::fetch($data['activation_token'], 'activation_token');
+        
+        if (!$user){
+            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
+            $this->_app->halt(400);
+        }
+        
+        // Check that the username matches the activation token
+        if ($user->user_name != trim(strtolower($data['user_name']))){
+            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
+            $this->_app->halt(400);
+        }
+ 
+        // Check that a lost password request is in progress and has not expired
+        if ($user->lost_password_request == 0 || $user->lost_password_timestamp === null){
+            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
+            $this->_app->halt(400);
+        }
+
+        // Check the time to see if the token is still valid based on the timeout value. If not valid make the user restart the password request
+        $current_time = new \DateTime("now");
+        $last_request_time = new \DateTime($user->lost_password_timestamp);
+        $current_token_life = $current_time->getTimestamp() - $last_request_time->getTimestamp();
+
+        if($current_token_life >= $this->_app->site->reset_password_timeout || $current_token_life < 0){
+            // Reset the password flag
+            // TODO: should we do this here, or just when there is a new reset request?
+            $user->lost_password_request = "0";
+            $user->store();
+            $ms->addMessageTranslated("danger", "FORGOTPASS_OLD_TOKEN");
+            $this->_app->halt(400);
+        }
+
+        // Reset the password flag
+        $user->lost_password_request = "0";
+        
+        // Hash the user's password and update
+        $user->password = Authentication::hashPassword($data['password']);
+        
+		if (!$user->password){
+			$ms->addMessageTranslated("danger", "PASSWORD_HASH_FAILED");
+            $this->_app->halt(500);
+		}		
+		
+        // Store the updated info
+        $user->store();
+        $ms->addMessageTranslated("success", "ACCOUNT_PASSWORD_UPDATED");
+    }
+    
+    // Cancel a password reset request (via GET)   
+    public function denyResetPassword(){
+        $data = $this->_app->request->get();
+        
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/deny-password.json");
+        
+        // Get the alert message stream
+        $ms = $this->_app->alerts; 
+        
+        // Set up Fortress to validate the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        
+        // Validate
+        if (!$rf->validate()) {
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }
+        
+        // Fetch the user, by looking up the submitted activation token
+        $user = UserLoader::fetch($data['activation_token'], 'activation_token');
+        
+        if (!$user){
+            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }
+        
+        // Reset the password flag
+        $user->lost_password_request = "0";	
+		
+        // Store the updated info
+        $user->store();
+        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_CANNED");
         $this->_app->redirect($this->_app->urlFor('uri_home'));
     }
     
