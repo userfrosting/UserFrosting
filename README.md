@@ -1,6 +1,46 @@
 
 # UserFrosting
 
+
+## What's new in 0.3.0
+
+If you're coming from a previous version of UserFrosting, you've probably that the flow of the code has changed substantially.  In particular, we now use a [**front controller pattern**](https://en.wikipedia.org/wiki/Front_Controller_pattern), also known as a URL router, which creates a layer of abstraction between the URL that you visit (for example, http://mysite.com/dashboard) and the code that gets run.
+
+If you're new to PHP, you've probably been using the **one-url-one-file** scheme.  This means that, in the document root of the filesystem on your server (for example, `/~alexw/dev/htdocs/`), you create `.php` files that correspond to the URLs that users of your site can visit.  So, you might have a file `/~alexw/dev/htdocs/command-center.php`, and then you visit `http://localhost/command-center.php` to see the output of this script.
+
+But here's the deal: there's no law set in stone that says it *has* to work this way.  When you visit a URL, all you're really doing is placing an HTTP `GET` **request** to a server (e.g., Apache).  The request is basically asking the server to generate the appropriate **response** to that request.  In the case of your typical home setup with Apache and PHP, the default behavior for a request is to look for a PHP script with the same name (`command-center.php`) in some preconfigured document root directory, run it, and send its output back as the response, where it is displayed in the client's browser.
+
+However, it is possible to configure the server to interpret requests differently - this is known as **routing**.  Why would you want to do this?  Because it gives you more flexibility.  Let's say you want your site to have a URL like `http://mysite.com/blog/2015-06-01/1`, which points to the first page of your blog posts from June 1.  Without routing, you'd need to have actual subdirectories on your server's filesystem - `/~alexw/dev/htdocs/blog/2015-06-01/1.php`.
+
+What's wrong with this?  Well, let's say you want the same blog post to also appear at other URLs, for example `http://mysite.com/blog/rants` and `http://mysite.com/blog/favorites/1`.  You'd need to have these subdirectories as well, and you'd have to create actual scripts that output the same content.  This becomes even more problematic if you want dynamically generated URLs, like `http://mysite.com/blog/words-from-a-database`.
+
+On the other hand, with a front controller, you can link URLs to specific pieces of code without needing to create a separate file.
+
+### How does UserFrosting make this happen?
+
+UserFrosting uses the [Slim Framework](http://www.slimframework.com/) to make this work.  Here's how:
+
+1.  When a user visits a URL such as `http://mysite.com/users/u/1`, they are actually seeing a [rewritten URL](https://en.wikipedia.org/wiki/Rewrite_engine).  In reality, every request is sent to `index.php`, with `users/u/1` sent as a request parameter.  In Apache, this is done with an `.htaccess` file (a preconfigured `.htaccess` file is included with UserFrosting).  Other web server technologies may use a different type of configuration file.
+2. In `index.php`, a number of routes are defined, which tell it how to respond based on the request parameter.  Slim provides the framework for handling these routes.  For example:
+
+```
+$app->get('/users/u/1/?', function () use ($app) {
+    echo "Hello I am user number 1";
+});
+```
+
+generates the output for `http://mysite.com/users/u/1`.  `$app` is the Slim application (a global variable), and `get` tells us that we are dealing with a `GET` request (any time you navigate to a URL in your browser, you are submitting a `GET` request).
+
+Another advantage is that routes can have variables in them.  For example:
+
+```
+$app->get('/users/u/:user_id/?', function ($user_id) use ($app) {
+    echo "Hello I am user number $user_id";
+});
+```
+
+Now we can visit any URL, for example `http://mysite.com/users/u/27`, and we will get the corresponding output "Hello I am user number 27."
+
 ## Goals
 
 ### For developers:
