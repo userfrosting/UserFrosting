@@ -16,7 +16,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.18.1';
+    const VERSION = '1.18.2';
 
     protected $charset;
     protected $loader;
@@ -250,7 +250,7 @@ class Twig_Environment
 
         $class = substr($this->getTemplateClass($name), strlen($this->templateClassPrefix));
 
-        return $this->getCache().'/'.substr($class, 0, 2).'/'.substr($class, 2, 2).'/'.substr($class, 4).'.php';
+        return $this->getCache().'/'.$class[0].'/'.$class[1].'/'.$class.'.php';
     }
 
     /**
@@ -351,8 +351,7 @@ class Twig_Environment
      *
      * This method should not be used as a generic way to load templates.
      *
-     * @param string $name  The template name
-     * @param int    $index The index if it is an embedded template
+     * @param string $template The template name
      *
      * @return Twig_Template A template instance representing the given template name
      *
@@ -483,7 +482,7 @@ class Twig_Environment
     /**
      * Sets the Lexer instance.
      *
-     * @param Twig_LexerInterface A Twig_LexerInterface instance
+     * @param Twig_LexerInterface $lexer A Twig_LexerInterface instance
      */
     public function setLexer(Twig_LexerInterface $lexer)
     {
@@ -522,7 +521,7 @@ class Twig_Environment
     /**
      * Sets the Parser instance.
      *
-     * @param Twig_ParserInterface A Twig_ParserInterface instance
+     * @param Twig_ParserInterface $parser A Twig_ParserInterface instance
      */
     public function setParser(Twig_ParserInterface $parser)
     {
@@ -1271,11 +1270,11 @@ class Twig_Environment
             if (false === @mkdir($dir, 0777, true)) {
                 clearstatcache(false, $dir);
                 if (!is_dir($dir)) {
-                    throw new RuntimeException(sprintf("Unable to create the cache directory (%s).", $dir));
+                    throw new RuntimeException(sprintf('Unable to create the cache directory (%s).', $dir));
                 }
             }
         } elseif (!is_writable($dir)) {
-            throw new RuntimeException(sprintf("Unable to write in the cache directory (%s).", $dir));
+            throw new RuntimeException(sprintf('Unable to write in the cache directory (%s).', $dir));
         }
 
         $tmpFile = tempnam($dir, basename($file));
