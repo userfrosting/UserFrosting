@@ -8,6 +8,73 @@ Copyright (c) 2015, free to use in commercial software as per the [license](lice
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/) and the [Twig](http://twig.sensiolabs.org/) templating engine.
 
+## Installation
+
+UserFrosting comes with a built-in installer.  Assuming you have a working web server with PHP and MySQL installed, all you need to do is create a database and tell UserFrosting how to connect in the configuration file.  If you do not have a web server set up, we recommend [XAMPP](https://www.apachefriends.org/index.html).
+
+1. Download the [latest version](https://github.com/alexweissman/UserFrosting/zipball/master) of UserFrosting, unzip/untar it, and place it in your document root.  The two directories that you need to worry about are `public` and `userfrosting`.  On a production server, you may wish to put the contents of `public` directly into the top-level public directory of your web hosting account, and put the `userfrosting` directory at the same level as the public directory.  So for example, if you FTP into your hosting account:
+
+```
+/                 // The root directory of your hosting account
+|-- etc
+|-- logs
+|-- public_html      // Put the contents of 'public' in here
+|   |
+|   |-- css
+|   |-- images
+|   |-- js
+|   |-- .htaccess
+|   |-- index.php
+|
+|-- userfrosting    // Put the contents of 'userfrosting' in here
+|   |-- auth
+|   |-- controllers
+|   |-- locale
+|   |-- models
+|   |-- plugins
+|   |-- schema
+|   |-- templates
+|   |-- vendor
+|   |-- composer.json
+|   |-- composer.lock
+|   |-- config-userfrosting.php
+```
+
+2. Specify your database information in `userfrosting/config-userfrosting.php`.  You will need to set the values of `db_host` (usually `localhost`), `db_name`, `db_user`, `db_pass`, and `db_prefix` (you can leave `db_prefix` as the default value if you wish).  
+
+```
+/********* DEVELOPMENT SETTINGS *********/
+$app->configureMode('dev', function () use ($app) {
+    $app->config([
+        'log.enable' => true,
+        'debug' => false,
+        'base.path'     => __DIR__,            
+        'templates.path' => __DIR__ . '/templates',
+        'themes.path'    =>  __DIR__ . '/templates/themes',
+        'schema.path' =>    __DIR__ . '/schema',
+        'locales.path' =>   __DIR__ . '/locale',
+        'log.path' =>   __DIR__ . '/log',
+        'db'            =>  [
+            'db_host'  => 'localhost',
+            'db_name'  => 'userfrosting',
+            'db_user'  => 'admin',
+            'db_pass'  => 'password',
+            'db_prefix'=> 'uf_'
+        ],
+    ...
+```
+
+If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of `$app->configureMode('dev' ...` it says `$app->configureMode('production' ...`.  You can then easily switch between these two modes on line 13:
+
+```
+    $app = new \Slim\Slim([
+        'view' =>           new \Slim\Views\Twig(),
+        'mode' =>           'dev'   // Set to 'dev' or 'production'
+    ]);
+```
+
+3. Navigate to the public directory (e.g. `http://localhost/userfrosting/public/`).  The installer should automatically come up and ask you to create the master account.  Choose a strong password for the master account if you are deploying production-level code.  The master user will have unrestricted permissions on your UserFrosting site.
+
 ## Screenshots
 
 #### Login page
