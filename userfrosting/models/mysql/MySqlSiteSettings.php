@@ -227,14 +227,21 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     
     // Return the error log
     public function getLog($lines = null){
-        // TODO: check if error logging is enabled
-        $path = ini_get('error_log');
-        if ($lines){
-            $messages = array_reverse(array_slice(file($path), -$lines));
-        } else {
-            $messages = array_reverse(file($path));
+        // Check if error logging is enabled
+        if (!ini_get("error_log")){
+            $path = "Unavailable";
+            $messages = ["You do not seem to have an error log set up.  Please check your php.ini file."];
+        } else if (!ini_get("log_errors")){
+            $path = ini_get('error_log');
+            $messages = ["Error logging appears to be disabled.  Please check your php.ini file."];
+        } else {    
+            $path = ini_get('error_log');
+            if ($lines){
+                $messages = array_reverse(array_slice(file($path), -$lines));
+            } else {
+                $messages = array_reverse(file($path));
+            }
         }
-        
         return [
             "path"      => $path,
             "messages"  => $messages
