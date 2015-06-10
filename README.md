@@ -81,6 +81,16 @@ If you frequently deploy and modify your code, you may wish to set up separate d
 
 Navigate to the public directory (e.g. `http://localhost/userfrosting/public/`).  The installer should automatically come up and ask you to create the master account.  Choose a strong password for the master account if you are deploying production-level code.  The master user will have unrestricted permissions on your UserFrosting site.
 
+### Troubleshooting Installation
+
+If you are having problems during installation, please check the following:
+
+1. Make sure you have the "Rewrite Engine" module installed and enabled if you are using Apache.  Some distributions, like WAMP, may not have this module automatically enabled, and you will need to do so manually (#340).
+
+2. If you are using Apache and getting a 404 error (but not our custom 404 page), make sure you have "AllowOverride All" set in your httpd.conf file.
+
+
+
 ## Screenshots
 
 #### Login page

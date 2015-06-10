@@ -227,6 +227,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     
     // Return the error log
     public function getLog($lines = null){
+        // TODO: check if error logging is enabled
         $path = ini_get('error_log');
         if ($lines){
             $messages = array_reverse(array_slice(file($path), -$lines));

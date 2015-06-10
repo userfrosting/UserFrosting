@@ -78,7 +78,9 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
     public static function install(){
         $connection = static::connection();
         
-        $connection->query("CREATE TABLE IF NOT EXISTS `uf_authorize_group` (
+        $prefix = static::$app->config('db')['db_prefix'];
+        
+        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "authorize_group` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `group_id` int(11) NOT NULL,
             `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the group has access to.',
@@ -86,7 +88,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
           
-        $connection->query("CREATE TABLE IF NOT EXISTS `uf_authorize_user` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "authorize_user` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `user_id` int(11) NOT NULL,
             `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the user has access to.',
@@ -94,7 +96,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
           
-        $connection->query("CREATE TABLE IF NOT EXISTS `uf_configuration` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "configuration` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
             `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
@@ -103,7 +105,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=1 ;");
                    
-        $connection->query("CREATE TABLE IF NOT EXISTS `uf_group` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "group` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(150) NOT NULL,
             `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission is a default setting for new accounts.',
@@ -116,14 +118,14 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
           
           
-        $connection->query("CREATE TABLE IF NOT EXISTS `uf_group_user` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "group_user` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `user_id` int(10) unsigned NOT NULL,
             `group_id` int(10) unsigned NOT NULL,
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Maps users to their group(s)' AUTO_INCREMENT=1 ;");
           
-        $connection->query("CREATE TABLE IF NOT EXISTS `uf_user` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "user` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `user_name` varchar(50) NOT NULL,
             `display_name` varchar(50) NOT NULL,
@@ -149,12 +151,13 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         static::$app->site->store();        
         
         // Setup default groups.  TODO: finish Group API so they can be created through objects
-        $connection->query("INSERT INTO `uf_group` (`name`, `is_default`, `can_delete`, `theme`, `landing_page`, `new_user_title`, `icon`) VALUES
+        $connection->query("INSERT INTO `$prefix" . "group` (`name`, `is_default`, `can_delete`, `theme`, `landing_page`, `new_user_title`, `icon`) VALUES
           ('User', " . GROUP_DEFAULT_PRIMARY . ", 0, 'default', 'dashboard', 'New User', 'fa fa-user'),
-          ('Administrator', " . GROUP_NOT_DEFAULT . ", 0, 'nyx', 'dashboard', 'Hydralisk', 'fa fa-flag');");        
+          ('Administrator', " . GROUP_NOT_DEFAULT . ", 0, 'nyx', 'dashboard', 'Brood Spawn', 'fa fa-flag'),
+          ('Zerglings', " . GROUP_NOT_DEFAULT . ", 1, 'nyx', 'dashboard', 'Tank Fodder', 'sc sc-zergling');");        
     
         // Setup default authorizations
-        $connection->query("INSERT INTO `uf_authorize_group` (`group_id`, `hook`, `conditions`) VALUES
+        $connection->query("INSERT INTO `$prefix" . "authorize_group` (`group_id`, `hook`, `conditions`) VALUES
           (1, 'uri_dashboard', 'always()'),
           (2, 'uri_dashboard', 'always()'),
           (2, 'uri_users', 'always()'),
