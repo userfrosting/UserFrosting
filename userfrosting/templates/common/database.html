@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% include 'common/components/head.html' %}
+  <body>
+    <div class="container text-center">
+        <h1>We can't seem to connect to the database.</h1>
+        <img src="{{site.uri.image}}database.png">
+        <br><br>
+        <p class="lead">Have you tried hacking into the mainframe?  Seriously though, check your PHP error log to figure out what's up.  You probably just need to enter your database credentials in <code>userfrosting/config-userfrosting.php</code>.  If you are sure that your credentials are fine, try simply reloading the page.</p>
+    </div> <!-- /container -->
+    {% include 'common/components/footer.html' %}	
+  </body>
+</html>

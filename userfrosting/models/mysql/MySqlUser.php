@@ -50,6 +50,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
      *
      */
     public function fresh(){
+        // Update table and column info, in case it has changed
+        $this->_table = static::getTableUser();
+        $this->_columns = static::$columns_user;
         $user = new User(parent::fresh(), $this->_id);
         $user->_groups = $this->fetchGroups();
         $user->_primary_group = $this->fetchPrimaryGroup();

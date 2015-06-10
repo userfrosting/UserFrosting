@@ -26,6 +26,19 @@ class BaseController {
             ]
         ]);
     }
+
+    /* Renders the database error page.
+    */
+    public function pageDatabaseError(){
+        $this->_app->render('common/database.html', [
+            'page' => [
+                'author' =>         $this->_app->site->author,
+                'title' =>          "Database Error",
+                'description' =>    "There's something wrong. We can't connect to the database.",
+                'schema' =>         $this->_page_schema
+            ]
+        ]);
+    }
     
     /* Render a JS file containing client-side configuration data (paths, etc)
     */

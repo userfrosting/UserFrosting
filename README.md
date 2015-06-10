@@ -68,7 +68,7 @@ $app->configureMode('dev', function () use ($app) {
     ...
 ```
 
-If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of `$app->configureMode('dev' ...` it says `$app->configureMode('production' ...`.  You can then easily switch between these two modes on line 13:
+If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of `$app->configureMode('dev' ...` it says `$app->configureMode('production' ...`.  You can then easily switch between these two modes on line 21:
 
 ```
     $app = new \Slim\Slim([

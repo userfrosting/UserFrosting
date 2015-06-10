@@ -1,5 +1,5 @@
 <?php
-    require_once "../userfrosting/config-userfrosting.php";
+    require_once "../userfrosting/initialize.php";
 
     use UserFrosting as UF;
    
