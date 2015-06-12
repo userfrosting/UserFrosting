@@ -89,7 +89,11 @@ If you are having problems during installation, please check the following:
 
 2. If you are using Apache and getting a 404 error (but not our custom 404 page), make sure you have "AllowOverride All" set in your httpd.conf file.
 
+### Installing on Other Platforms
 
+Currently, UserFrosting only comes with a configuration file for Apache.  If you are proficient in IIS or other server technologies, and wish to contribute the corresponding configuration file, please open a pull request - we'd really appreciate it!
+
+In the meantime, there is a workaround: you can install [Helicon Ape](http://www.helicontech.com/ape/), which provides support for Apache `.htaccess` and `.htpasswd` configuration files in Microsoft IIS.  Choose "full server download" when prompted by the Helicon Ape installer.
 
 ## Screenshots
 

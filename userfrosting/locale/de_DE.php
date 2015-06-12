@@ -1,153 +1,180 @@
 <?php
 
 /*
-{{name}} - Dymamic markers which are replaced at run time by the relevant index.
+{{name}} - Dynamische Marker, die zur Laufzeit durch den entsprechenden Index ersetzt werden.
 */
 
 $lang = array();
 
-// Installer
-$lang = array_merge($lang,array(
-  "INSTALLER_INCOMPLETE"      => "Solange der Installationsprozess nicht abgeschlossen wurde, kann kein Master-Account angelegt werden.",
-  "MASTER_ACCOUNT_EXISTS"     => "Der Master-Account existiert bereits!",
-  "MASTER_ACCOUNT_NOT_EXISTS" => "Du kannst keinen neuen Account anlegen solange kein Master-Account angelegt wurde!",
-  "CONFIG_TOKEN_MISMATCH"     => "Leider ist dieser Konfigurationstoken nicht korrekt."
-  ));
+// Website-Inhalt
+$lang = array_merge($lang, [
+	"REGISTER_WELCOME" => "Die Registrierung ist schnell und einfach.",
+	"MENU_USERS" => "Benutzer",
+	"MENU_CONFIGURATION" => "Konfiguration",
+	"MENU_SITE_SETTINGS" => "Websiten-Einstellungen",
+	"MENU_GROUPS" => "Gruppen",
+	"HEADER_MESSAGE_ROOT" => "Sie sind als Root-Benutzer angemeldet."
+]);
 
-//Account
+// Installation
 $lang = array_merge($lang,array(
-	"ACCOUNT_SPECIFY_USERNAME" 		=> "Es wurde kein Benutzernamen eingegeben.",
-	"ACCOUNT_SPECIFY_DISPLAY_NAME"  => "Es wurde kein angezeigter Name eingegeben.",
-    "ACCOUNT_SPECIFY_PASSWORD" 		=> "Es wurde kein Passwort eingegeben.",
-	"ACCOUNT_SPECIFY_EMAIL"			=> "Es wurde keine E-Mail Adresse eingegeben.",
-	"ACCOUNT_INVALID_EMAIL"			=> "Die E-Mail Adresse ist nicht gültig.",
-    "ACCOUNT_INVALID_USER_ID"		=> "Der betreffende Benutzer existiert nicht.",
-	"ACCOUNT_USER_OR_EMAIL_INVALID"		=> "Benutzername oder E-Mail Adresse ist ungültig",
-	"ACCOUNT_USER_OR_PASS_INVALID"		=> "Benutzername oder Passwort ist ungültig",
-	"ACCOUNT_ALREADY_ACTIVE"		=> "Dieser Account wurde bereits aktiviert",
-	"ACCOUNT_REGISTRATION_DISABLED" => "Die Registratur neuer Account wurde deaktiviert.",
-    "ACCOUNT_INACTIVE"			=> "Dein Account ist in-aktive geschalten. Schau mal in deinem E-Mail / Spam nach der Aktivierungsanleitung",
-	"ACCOUNT_DISABLED"			=> "Dieser Account wurde deaktiviert. Kontaktiere uns für weitere Informationen.",
-    "ACCOUNT_USER_CHAR_LIMIT"		=> "Der Benutzername muss mindestens {{min}} und darf maximal {{max}} Zeichen lang sein",
-	"ACCOUNT_DISPLAY_CHAR_LIMIT"		=> "Der angezeigter Name muss mindestens {{min}} und darf maximal {{max}} Zeichen lang sein",
-	"ACCOUNT_PASS_CHAR_LIMIT"		=> "Das Passwort muss mindestens {{min}} und darf maximal {{max}} Zeichen lang sein",
-	"ACCOUNT_TITLE_CHAR_LIMIT"		=> "Titel mmüssen mindestens {{min}} und dürfen maximal {{max}} Zeichen lang sein",
-	"ACCOUNT_PASS_MISMATCH"			=> "Die eingegebenen Passwörter stimmen nicht überein",
-	"ACCOUNT_DISPLAY_INVALID_CHARACTERS"	=> "Der angezeigter Name darf nur Alphanumerische Zeichen enthalten (ABCabc123).",
-	"ACCOUNT_USERNAME_IN_USE"		=> "Der Benutzer {{user_name}} wird bereits verwendet",
-	"ACCOUNT_DISPLAYNAME_IN_USE"		=> "Der Anzeigename {{display_name}} wird bereits verwendet",
-	"ACCOUNT_EMAIL_IN_USE"			=> "Die E-Mail Adresse {{email}} wird bereits verwendet",
-	"ACCOUNT_LINK_ALREADY_SENT"		=> "Eine E-Mail zur Aktivierung dieses Accounts wurde bereits in den letzten %m1% Stunde(n) versendet.",
-	"ACCOUNT_NEW_ACTIVATION_SENT"		=> "Es wurde soeben eine E-Mail zur Aktivierung deines Accounts zugesendet. Bitte prüfe deinen Posteingang / Spam.",
-	"ACCOUNT_SPECIFY_NEW_PASSWORD"		=> "Bitte gib ein neues Passwort ein",
-	"ACCOUNT_SPECIFY_CONFIRM_PASSWORD"	=> "Bitte bestätige das neue Passwort.",
-	"ACCOUNT_NEW_PASSWORD_LENGTH"		=> "Das neue Passwort muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-	"ACCOUNT_PASSWORD_INVALID"		=> "Das eingegebene Passwort stimmt nicht mit unseren Aufzeichnungen überein",
-	"ACCOUNT_DETAILS_UPDATED"		=> "Account Details wurden upgedated",
-	"ACCOUNT_ACTIVATION_MESSAGE"		=> "Der Account muss vor dem Login noch aktiviert werden. Die Aktivierung erfolgt über diesen Link: \n\n
-	%m1%activate_user.php?token=%m2%",
-	"ACCOUNT_CREATION_COMPLETE"		=> "Der Account des Benutzers %m1% wurde angelegt.",
-  "ACCOUNT_ACTIVATION_COMPLETE"		=> "Dieser Account wurde aktiviert. Der Login ist jetzt möglich.",
-	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1"	=> "Registrierung erfolgreich abgeschlossen. Der Login ist jetzt möglich.",
-	"ACCOUNT_REGISTRATION_COMPLETE_TYPE2"	=> "Registrierung erfolgreich abgeschlossen. Eine E-Mail zur Aktivierung des Accounts wurde an die angegebene Adresse versendet.",
-	"ACCOUNT_PASSWORD_NOTHING_TO_UPDATE"	=> "Dieses Passwort entspricht dem alten Passwort",
-	"ACCOUNT_PASSWORD_UPDATED"		=> "Passwort geändert",
-	"ACCOUNT_EMAIL_UPDATED"			=> "E-Mail Adresse geändert",
-	"ACCOUNT_TOKEN_NOT_FOUND"		=> "Dieser Token existiert nicht / der Account wurde bereits aktiviert",
-	"ACCOUNT_USER_INVALID_CHARACTERS"	=> "Der Benutzername darf nur alphanummerische Zeichen enthalten (ABCabc123)",
-  "ACCOUNT_DELETE_MASTER"     => "Der Master-Account kann nicht gelöscht werden!",
-  "ACCOUNT_DISABLE_MASTER"     => "Der Master-Account kann nicht deaktiviert werden!",
-  "ACCOUNT_DISABLE_SUCCESSFUL"     => "Der Account wurde erfolgreich deaktiviert.",
-  "ACCOUNT_ENABLE_SUCCESSFUL"     => "Der Account wurde erfolgreich aktiviert.",
-  "ACCOUNT_DELETIONS_SUCCESSFUL"		=> "%m1% Benutzer wurden erfolgreich gelöscht",
-	"ACCOUNT_MANUALLY_ACTIVATED"		=> "%m1%'s Accounts wurden manuell aktiviert",
-	"ACCOUNT_DISPLAYNAME_UPDATED"		=> "Anzeigename geändert auf %m1%",
-	"ACCOUNT_TITLE_UPDATED"			=> "%m1%'s Titel geändert auf %m2%",
-	"ACCOUNT_GROUP_ADDED"		=> "Benutzer zur Gruppe %m1% hinzugefügt.",
-	"ACCOUNT_GROUP_REMOVED"		=> "Benutzer von der Gruppe %m1% entfernt.",
-	"ACCOUNT_GROUP_NOT_MEMBER"		=> "Benutzer ist kein Mitglied der Gruppe %m1%.",
-	"ACCOUNT_GROUP_ALREADY_MEMBER"		=> "Benutzer ist bereits Mitglied der Gruppe %m1%.",
-  "ACCOUNT_INVALID_USERNAME"		=> "Ungültiger Benutzername",
-  "ACCOUNT_PRIMARY_GROUP_SET" => "Die Standard-Gruppe wurde erfolgreich geändert",
-	));
+	"INSTALLER_INCOMPLETE" => "Solange der Installationsprozess nicht abgeschlossen wurde, kann kein Root-Account angelegt werden.",
+	"MASTER_ACCOUNT_EXISTS" => "Der Root-Account existiert bereits!",
+	"MASTER_ACCOUNT_NOT_EXISTS" => "Du kannst kein neuen Account anlegen solange kein Root-Account angelegt wurde!",
+	"CONFIG_TOKEN_MISMATCH" => "Leider ist dieser Konfigurationstoken nicht korrekt."
+));
 
-//Configuration
+// Account
 $lang = array_merge($lang,array(
-	"CONFIG_NAME_CHAR_LIMIT"		=> "Der Name der Seite muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-	"CONFIG_URL_CHAR_LIMIT"			=> "Die URL der Seite muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-	"CONFIG_EMAIL_CHAR_LIMIT"		=> "Die E-Mail Adresse muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-	"CONFIG_TITLE_CHAR_LIMIT"		=> "Die Bezeichnung für neue Benutzer muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-  "CONFIG_ACTIVATION_TRUE_FALSE"		=> "Die E-Mail Aktivierung muss entweder `ein-` oder `aus-` geschalten sein.",
-	"CONFIG_REGISTRATION_TRUE_FALSE"		=> "Die Registrierung neuer Benutzer muss entweder `ein-` oder `aus-` geschalten sein.",
-  "CONFIG_ACTIVATION_RESEND_RANGE"	=> "Aktivierungszeitraum muss zwischen %m1% und %m2% Stunden liegen.",
-	"CONFIG_LANGUAGE_CHAR_LIMIT"		=> "Der Pfad zu den Sprachen-Files muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-	"CONFIG_LANGUAGE_INVALID"		=> "Die Sprachdatei `%m1%` wurde nicht gefunden.",
-	"CONFIG_TEMPLATE_CHAR_LIMIT"		=> "Der Template-Pfad muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-	"CONFIG_TEMPLATE_INVALID"		=> "Das Template `%m1%` wurde nicht gefunden.",
-	"CONFIG_EMAIL_INVALID"			=> "Die eingegebene E-Mail Adresse ist ungültig.",
-	"CONFIG_INVALID_URL_END"		=> "Bitte die Endung / in der URL der Seite angeben.",
-	"CONFIG_UPDATE_SUCCESSFUL"		=> "Die Konfigurationsdatei der Seite wurde upgedated. Die Änderungen treten in Kraft sobald eine neue Seite geladen wurde.",
-	));
+	"ACCOUNT_SPECIFY_USERNAME" => "Bitte geben Sie Ihren Benutzernamen ein.",
+	"ACCOUNT_SPECIFY_DISPLAY_NAME" => "Bitte geben Sie Ihren Anzeigenamen ein.",
+	"ACCOUNT_SPECIFY_PASSWORD" => "Bitte geben Sie ihr Passwort ein.",
+	"ACCOUNT_SPECIFY_EMAIL" => "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+	"ACCOUNT_SPECIFY_CAPTCHA" => "Bitte geben Sie den Captcha-Code ein.",
+	"ACCOUNT_SPECIFY_LOCALE" => "Bitte wählen Sie eine gültige Sprache aus.",
+	"ACCOUNT_INVALID_EMAIL" => "Ungültige E-Mail-Adresse.",
+	"ACCOUNT_INVALID_USERNAME" => "Ungültiger Benutzername.",
+	"ACCOUNT_INVALID_USER_ID" => "Die gewünschte Benutzer-ID ist nicht vorhanden.",
+	"ACCOUNT_USER_OR_EMAIL_INVALID" => "Benutzername oder E-Mail-Adresse ist ungültig.",
+	"ACCOUNT_EMAIL_USER_OR_PASS_INVALID" => "E-Mail-Adresse, Benutzername oder Passwort ist ungültig.",// must be inserted in the code // for login // If email login is enabled.
+	"ACCOUNT_USER_OR_PASS_INVALID" => "Benutzername oder Passwort ist ungültig.",
+	"ACCOUNT_ALREADY_ACTIVE" => "Ihr Account ist bereits aktiviert.",
+	"ACCOUNT_REGISTRATION_DISABLED" => "Die Account-Registrierung wurde deaktiviert.",
+	"ACCOUNT_REGISTRATION_LOGOUT" => "Sie können kein neuen Account registrieren während Sie angemeldet sind. Bitte melden Sie sich erst ab.",
+	"ACCOUNT_INACTIVE" => "Ihr Account ist inaktiv. Überprüfen Sie Ihr E-Mail/Spam-Ordner für die Account-Aktivierungs Anleitung.",
+	"ACCOUNT_DISABLED" => "Dieser Account wurde deaktiviert. Bitte kontaktieren Sie uns für weitere Informationen.",
+	"ACCOUNT_USER_CHAR_LIMIT" => "Ihr Benutzername muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "Ihr Anzeigename muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"ACCOUNT_PASS_CHAR_LIMIT" => "Das Passwort muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"ACCOUNT_EMAIL_CHAR_LIMIT" => "Die E-Mail-Adresse muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"ACCOUNT_TITLE_CHAR_LIMIT" => "Der Titel muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"ACCOUNT_PASS_MISMATCH" => "Das Passwort und das Bestätigungs Passwort müssen übereinstimmen.",
+	"ACCOUNT_DISPLAY_INVALID_CHARACTERS" => "Ihr Anzeigename darf nur Alphanumerische Zeichen enthalten.",
+	"ACCOUNT_USERNAME_IN_USE" => "Der Benutzername {{user_name}} wird bereits verwendet.",
+	"ACCOUNT_DISPLAYNAME_IN_USE" => "Der Anzeigename {{display_name}} wird bereits verwendet.",
+	"ACCOUNT_EMAIL_IN_USE" => "Die E-Mail-Adresse {{email}} wird bereits verwendet.",
+	"ACCOUNT_LINK_ALREADY_SENT" => "Es wurde wurde bereits vor {{resend_activation_threshold}} Sekunde(n) ein Aktivierungslink an die E-Mail-Adresse gesendet. Überprüfen Sie Ihr E-Mail/Spam-Ordner oder versuchen Sie es später noch einmal.",
+	"ACCOUNT_NEW_ACTIVATION_SENT" => "Wir haben Ihnen einen neuen Aktivierungslink gesendet. Überprüfen Sie Ihr E-Mail/Spam-Ordner.",
+	"ACCOUNT_SPECIFY_NEW_PASSWORD" => "Bitte geben Sie Ihr neues Passwort ein.",	
+	"ACCOUNT_SPECIFY_CONFIRM_PASSWORD" => "Bitte bestätigen Sie Ihr neues Passwort.",
+	"ACCOUNT_NEW_PASSWORD_LENGTH" => "Das neue Passwort muss zwischen {{min}} und {{max}} Zeichen lang sein.",	
+	"ACCOUNT_PASSWORD_INVALID" => "Das Passwort stimmt nicht mit dem bei uns gespeichert Passwort überein.",	
+	"ACCOUNT_DETAILS_UPDATED" => "Account-Daten für {{user_name}} aktualisiert.",						
+	"ACCOUNT_CREATION_COMPLETE" => "Account für {{user_name}} wurde erstellt.",
+	"ACCOUNT_ACTIVATION_COMPLETE" => "Sie haben Ihr Account erfolgreich aktiviert. Sie können sich jetzt anmelden.",
+	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1" => "Sie haben sich erfolgreich registriert. Sie können sich jetzt anmelden.",
+	"ACCOUNT_REGISTRATION_COMPLETE_TYPE2" => "Sie haben sich erfolgreich registriert. Sie erhalten in Kürze ein Aktivierungslink. Sie müssen Ihr Account vor der Anmeldung erst aktivieren.",
+	"ACCOUNT_PASSWORD_NOTHING_TO_UPDATE" => "Dieses Passwort entspricht dem alten Passwort.",
+	"ACCOUNT_PASSWORD_CONFIRM_CURRENT" => "Bitte bestätigen Sie Ihr aktuelles Passwort.",
+	"ACCOUNT_SETTINGS_UPDATED" => "Account-Einstellungen aktualisiert.",
+	"ACCOUNT_PASSWORD_UPDATED" => "Account-Passwort aktualisiert.",
+	"ACCOUNT_EMAIL_UPDATED" => "Account-E-Mail aktualisiert.",
+	"ACCOUNT_TOKEN_NOT_FOUND" => "Token existiert nicht / Account ist bereits aktiviert.",
+	"ACCOUNT_USER_INVALID_CHARACTERS" => "Benutzernamen dürfen nur Alphanumerische Zeichen enthalten.",
+	"ACCOUNT_DELETE_MASTER" => "Sie können den Root-Account nicht löschen!",
+	"ACCOUNT_DISABLE_MASTER" => "Sie können den Root-Account nicht deaktivieren!",
+	"ACCOUNT_DISABLE_SUCCESSFUL" => "Account von {{user_name}} wurde erfolgreich deaktiviert.",
+	"ACCOUNT_ENABLE_SUCCESSFUL" => "Account von {{user_name}} wurde erfolgreich aktiviert.",
+	"ACCOUNT_DELETION_SUCCESSFUL" => "Benutzer{{user_name}} wurde erfolgreich gelöscht.",
+	"ACCOUNT_MANUALLY_ACTIVATED" => "{{user_name}}'s Account wurde manuell aktiviert.",
+	"ACCOUNT_DISPLAYNAME_UPDATED" => "{{user_name}}'s Anzeigename geändert zu {{display_name}}",
+	"ACCOUNT_TITLE_UPDATED" => "{{user_name}}'s Titel geändert zu {{title}}",
+	"ACCOUNT_GROUP_ADDED" => "Benutzer zur Gruppe '{{name}}' hinzugefügt.",
+	"ACCOUNT_GROUP_REMOVED" => "Benutzer aus Gruppe '{{name}}' entfernt.",
+	"ACCOUNT_GROUP_NOT_MEMBER" => "Benutzer ist kein Mitglied der Gruppe '{{name}}'",
+	"ACCOUNT_GROUP_ALREADY_MEMBER" => "Benutzer ist bereits Mitglied der Gruppe '{{name}}'",
+	"ACCOUNT_PRIMARY_GROUP_SET" => "Primäre Gruppe für {{user_name}} erfolgreich gesetzt.",
+	"ACCOUNT_WELCOME" => "Willkommen Zurück, {{display_name}}"
+));
 
-//Forgot Password
-$lang = array_merge($lang,array(
-	"FORGOTPASS_INVALID_TOKEN"		=> "Der Aktivierungstoken ist ungültig.",
-  "FORGOTPASS_OLD_TOKEN"          => "Aktivierungstoken ist abgelaufen.",
-  "FORGOTPASS_COULD_NOT_UPDATE"   => "Das Passwort konnte nicht geändert werden.",
-	"FORGOTPASS_NEW_PASS_EMAIL"		=> "Es wurde ein neues Passwort zugesendet.",
-	"FORGOTPASS_REQUEST_CANNED"		=> "Passwort-Wiederherstellung abgebrochen",
-	"FORGOTPASS_REQUEST_EXISTS"		=> "Es läuft bereits eine Passwort-Wiederherstellung für diesen Account.",
-	"FORGOTPASS_REQUEST_SUCCESS"		=> "Es wurde eine E-Mail mit den Anweisungen zur Wiederherstellung des Zugriffs versendet.",
-	));
+// Validierung
+$lang = array_merge($lang, array(
+	"VALIDATE_REQUIRED" => "Das Feld {{self}} muss angegeben werden.",
+	"VALIDATE_BOOLEAN" => "Der Wert für {{self}} muss entweder '0' oder '1' sein.",
+	"VALIDATE_INTEGER" => "Der Wert für {{self}} muss eine ganze Zahl sein.",
+	"VALIDATE_ARRAY" => "Die Werte für {{self}} müssen in einem Array sein."
+));
 
-//Mail
+// Konfiguration
 $lang = array_merge($lang,array(
-	"MAIL_ERROR"				=> "Der Versandt der E-Mail hat nicht funktioniert. Server Administrator kontaktieren.",
-	"MAIL_TEMPLATE_BUILD_ERROR"		=> "Die E-Mail konnte nicht erstellt werden",
-	"MAIL_TEMPLATE_DIRECTORY_ERROR"		=> "Kein Zugriff auf den Mail-Templates Ordner. Versuche den Pfad des Ordners auf %m1% zu ändern",
-	"MAIL_TEMPLATE_FILE_EMPTY"		=> "Die Template Datei ist leer... es gibt nichts zu übermitteln",
-	));
+	"CONFIG_PLUGIN_INVALID" => "Sie versuchen, die Einstellungen für Plugin '{{plugin}}' zu aktualisieren es gibt aber kein Plugin mit diesem Namen.",
+	"CONFIG_SETTING_INVALID" => "Sie versuchen, die Einstellung '{{name}}' für Plugin '{{plugin}}' zu aktualisieren, es ist aber nicht vorhanden.",	
+	"CONFIG_NAME_CHAR_LIMIT" => "Website-Namen müssen zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"CONFIG_URL_CHAR_LIMIT" => "Website-URL muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"CONFIG_EMAIL_CHAR_LIMIT" => "Website E-Mail muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"CONFIG_TITLE_CHAR_LIMIT" => "Neuer Benutzer Titel muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"CONFIG_ACTIVATION_TRUE_FALSE" => "E-Mail-Aktivierung muss entweder '0' oder '1' sein.",
+	"CONFIG_REGISTRATION_TRUE_FALSE" => "Benutzer-Registrierung muss entweder '0' oder '1' sein.",
+	"CONFIG_ACTIVATION_RESEND_RANGE" => "Aktivierungsschwelle muss zwischen {{min}} und {{max}} Stunde(n) sein.",
+	"CONFIG_LANGUAGE_CHAR_LIMIT" => "Sprachen Pfad muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"CONFIG_LANGUAGE_INVALID" => "Es existiert keine Datei für die Sprache '{{name}}'",
+	"CONFIG_TEMPLATE_CHAR_LIMIT" => "Vorlagen Pfad muss zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"CONFIG_TEMPLATE_INVALID" => "Es existiert keine Datei für die Vorlage '{{name}}'",
+	"CONFIG_EMAIL_INVALID" => "Die eingegebene E-Mail ist nicht gültig.",
+	"CONFIG_INVALID_URL_END" => "Bitte fügen Sie die Endung '/' in der URL Ihrer Website.",
+	"CONFIG_UPDATE_SUCCESSFUL" => "Ihre Website-Konfiguration wurde aktualisiert. Möglicherweise müssen Sie eine neue Seite laden damit alle Einstellungen wirksam werden."
+));
 
-//Miscellaneous
+// Passwort Vergessen
 $lang = array_merge($lang,array(
-  "PASSWORD_HASH_FAILED"  => "Password hashing fehlgeschlagen.  Bitte den Administrator der Seite kontaktieren.",
-	"NO_DATA"				=> "Es wurden keine Daten gesendet",
-  "CAPTCHA_FAIL"				=> "Ungültige Sicherheitsfrage",
-	"CONFIRM"				=> "Bestätigt",
-	"DENY"					=> "Verwährt",
-	"SUCCESS"				=> "Success",
-	"ERROR"					=> "Fehler",
-	"NOTHING_TO_UPDATE"			=> "Es wurde kein Inhalt verändert",
-	"SQL_ERROR"				=> "Böser böser SQL Fehler",
-	"FEATURE_DISABLED"			=> "Dieses Feature ist derzeit nicht verfügbar",
-	"PAGE_INVALID_ID"              => "Die angefragte Seite existiert nicht",
-	"PAGE_INVALID"              => "Die angefragte Seite konnte in der Datenbank nicht gefunden werden",
-  "PAGE_PRIVATE_TOGGLED"			=> "Diese Seite ist jetzt %m1%",
-	"PAGE_ACCESS_REMOVED"			=> "Zugriff für %m1% Berechtigungsstufen entzogen",
-	"PAGE_ACCESS_ADDED"			=> "Zugang für %m1% Berechtigungsstufen gewährt",
-  "ACCESS_DENIED" => "Hmm, sieht aus als wären keine ausreichende Berechtigung vorhanden um diesen Inhalt anzuzeigen.",
-  "LOGIN_REQUIRED" => "Um diesen Inhalt sehen zu können wird ein gültiger Login benötigt.",
-	));
+	"FORGOTPASS_INVALID_TOKEN" => "Ihr Aktivierungs-Token ist ungültig.",
+	"FORGOTPASS_OLD_TOKEN" => "Token Vergangenheit Ablaufzeit.",
+	"FORGOTPASS_COULD_NOT_UPDATE" => "Passwort konnte nicht aktualisiert werden.",
+	"FORGOTPASS_NEW_PASS_EMAIL" => "Wir haben Ihnen ein neues Passwort gesendet.",
+	"FORGOTPASS_REQUEST_CANNED" => "Passwort vergessen? Anfrage abgebrochen.",
+	"FORGOTPASS_REQUEST_EXISTS" => "Es existiert bereits eine Passwort vergessen? Anfrage für diesen Account.",
+	"FORGOTPASS_REQUEST_SUCCESS" => "Wir haben Ihnen Anweisungen zu gesendet wie sie wieder Zugriff zu Ihrem Account erlangen."
+));
 
-//Permissions
+// e-Mail
 $lang = array_merge($lang,array(
-  "GROUP_INVALID_ID"              => "Diese GruppenID existiert nicht",
-	"PERMISSION_CHAR_LIMIT"			=> "Der Name der Berechtigung muss mindestens %m1% und darf maximal %m2% Zeichen lang sein",
-	"PERMISSION_NAME_IN_USE"		=> "Berechtigung %m1% wird bereits verwendet",
-	"PERMISSION_DELETION_SUCCESSFUL_NAME"		=> "Berechtigung '%m1%' gelöscht",
-  "PERMISSION_DELETIONS_SUCCESSFUL"	=> "%m1% Berechtigungsstufen gelöscht",
-	"PERMISSION_CREATION_SUCCESSFUL"	=> "Berechtigung `%m1%` erstellt",
-	"GROUP_UPDATE"		=> "Gruppe `%m1%` erfolgreich geändert.",
-	"PERMISSION_REMOVE_PAGES"		=> "Zugang zu %m1% Seiten gesperrt",
-	"PERMISSION_ADD_PAGES"			=> "Zugang zu %m1% Seiten gewährt",
-	"PERMISSION_REMOVE_USERS"		=> "%m1% Benutzer erfolgreich gelöscht",
-	"PERMISSION_ADD_USERS"			=> "%m1% Benutzer erfolgreich hinzugefügt",
-	"CANNOT_DELETE_PERMISSION_GROUP" => "Die Gruppe '%m1%' kann nicht gelöscht werden",
-	));
+	"MAIL_ERROR" => "Fataler Fehler beim E-Mail Versuch. Bitte kontaktieren Sie einen Administrator der Website.",
+	"MAIL_TEMPLATE_BUILD_ERROR" => "Fehler beim Bauen der E-Mail-Vorlage.",
+	"MAIL_TEMPLATE_DIRECTORY_ERROR" => "E-Mail-Vorlagen Verzeichnis kann nicht geöffnet werden. Vielleicht versuchen Sie, E-Mail-Vorlagen Verzeichnis '{{name}}'",
+	"MAIL_TEMPLATE_FILE_EMPTY" => "Vorlagendatei ist leer... nichts zu senden."
+));
 
-//Private Messages
+// Verschiedenes
 $lang = array_merge($lang,array(
-  "PM_RECEIVER_DELETION_SUCCESSFUL"   => "Nachricht gelöscht",
+	"PASSWORD_HASH_FAILED" => "Passwort-Hashing gescheitert. Bitte kontaktieren Sie einen Administrator der Website.",
+	"NO_DATA" => "Keine Daten/schlechte Daten gesendet",
+	"CAPTCHA_FAIL" => "Fehler bei der Sicherheitsfrage",
+	"CONFIRM" => "Bestätigen",
+	"DENY" => "Verweigern",
+	"SUCCESS" => "Erfolgreich",
+	"ERROR" => "Fehler",
+	"SERVER_ERROR" => "Hoppla, sieht aus als hätte der Server möglicherweise gepatzt. Wenn Sie ein Administrator sind, überprüfen Sie bitte die PHP-Fehlerprotokolle.",
+	"NOTHING_TO_UPDATE" => "Nichts zu aktualisieren.",
+	"SQL_ERROR" => "Schwerer SQL-Fehler.",
+	"FEATURE_DISABLED" => "Diese Funktion ist derzeit deaktiviert.",
+	"PAGE_INVALID_ID" => "Die angeforderte Seiten ID existiert nicht.",
+	"PAGE_INVALID" => "Die angeforderte Seite konnte in der Datenbank nicht gefunden werden.",	
+	"PAGE_PRIVATE_TOGGLED" => "Diese Seite ist jetzt '{{name}}'",
+	"PAGE_ACCESS_REMOVED" => "Seiten Zugang entfernt für '{{name}}' Berechtigungsstufe(n)",
+	"PAGE_ACCESS_ADDED" => "Seite Zugang hinzugefügt für '{{name}}' Berechtigungsstufe(n)",
+	"ACCESS_DENIED" => "Hmm, sieht aus als hätten Sie keine Berechtigung, das zu tun.",
+	"LOGIN_REQUIRED" => "Sorry, Sie müssen angemeldet sein. Um auf diese Ressource zugreifen zu können.",
+	"LOGIN_ALREADY_COMPLETE" => "Sie sind bereits angemeldet!"
+));
+
+// Berechtigungen
+$lang = array_merge($lang,array(
+	"GROUP_INVALID_ID" => "Die angeforderte Gruppen-ID ist nicht vorhanden",
+	"GROUP_NAME_CHAR_LIMIT" => "Gruppennamen müssen zwischen {{min}} und {{max}} Zeichen lang sein.",
+	"GROUP_NAME_IN_USE" => "Gruppenname '{{name}}' wird bereits verwendet",
+	"GROUP_DELETION_SUCCESSFUL" => "Gruppe '{{name}}' Erfolgreich gelöscht.",
+	"GROUP_CREATION_SUCCESSFUL" => "Gruppe '{{name}}' Erfolgreich erstellt.",
+	"GROUP_UPDATE" => "Daten für die Gruppe '{{name}}' erfolgreich aktualisiert.",
+	"PERMISSION_REMOVE_USERS" => "'{{name}}' Benutzer erfolgreich entfernt.",
+	"PERMISSION_ADD_USERS" => "'{{name}}' Benutzer erfolgreich hinzugefügt.",
+	"CANNOT_DELETE_GROUP" => "Die Gruppe '{{name}}' kann nicht gelöscht werden.",
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Die Gruppe '{{name}}' kann nicht gelöscht werden, da sie als Standard-Primärgruppe für neue Benutzer festgelegt ist. Bitte wählen Sie zuerst eine andere Standardprimärgruppe aus."
+));
+
+// Private Nachrichten
+$lang = array_merge($lang,array(
+	"PM_RECEIVER_DELETION_SUCCESSFUL" => "Nachricht gelöscht"
 ));
 
 return $lang;
+?>
