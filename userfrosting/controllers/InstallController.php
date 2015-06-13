@@ -52,8 +52,7 @@ class InstallController extends \UserFrosting\BaseController {
                     'author' =>         $this->_app->site->author,
                     'title' =>          "Installation Error",
                     'description' =>    "Installation page for UserFrosting",
-                    'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                    'schema' =>         PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json")
+                    'alerts' =>         $this->_app->alerts->getAndClearMessages()
                 ],
                 "messages" => $messages
             ]);
@@ -91,8 +90,7 @@ class InstallController extends \UserFrosting\BaseController {
                     'author' =>         $this->_app->site->author,
                     'title' =>          "Installation",
                     'description' =>    "Installation page for UserFrosting",
-                    'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                    'schema' =>         PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json")
+                    'alerts' =>         $this->_app->alerts->getAndClearMessages()
                 ],
                 "messages" => $messages
             ]);        
@@ -117,8 +115,7 @@ class InstallController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Installation | Register Master Account",
                 'description' =>    "Set up the master account for your installation of UserFrosting",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'schema' =>         PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json")
+                'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             'validators' => $validators->formValidationRulesJson(),
             'table_config' => Database::getTableConfiguration()

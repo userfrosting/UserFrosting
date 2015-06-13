@@ -13,9 +13,6 @@ class GroupController extends \UserFrosting\BaseController {
 
     public function __construct($app){
         $this->_app = $app;
-        
-        // Load account pages schema.  You may override this in individual pages.
-        $this->_page_schema = PageSchema::load("group", $this->_app->config('schema.path') . "/pages/pages.json");
     }
     
     public function pageGroups(){
@@ -31,8 +28,7 @@ class GroupController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Groups",
                 'description' =>    "Group management, authorization rules, add/remove groups, etc.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'schema' =>         $this->_page_schema
+                'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             "groups" => $groups
         ]);          

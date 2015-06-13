@@ -13,9 +13,6 @@ class UserController extends \UserFrosting\BaseController {
 
     public function __construct($app){
         $this->_app = $app;
-        
-        // Load account pages schema.  You may override this in individual pages.
-        $this->_page_schema = PageSchema::load("user", $this->_app->config('schema.path') . "/pages/pages.json");
     }
 
     public function pageUsers($primary_group_name = null){
@@ -51,8 +48,7 @@ class UserController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          $name,
                 'description' =>    "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'schema' =>         $this->_page_schema
+                'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             "box_title" => $name,
             "icon" => $icon,
@@ -108,8 +104,7 @@ class UserController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Users | " . $target_user->user_name,
                 'description' =>    "User information page for " . $target_user->user_name,
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'schema' =>         $this->_page_schema
+                'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             "box_id" => 'view-user',
             "box_title" => $target_user->user_name,

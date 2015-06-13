@@ -38,7 +38,9 @@
                 'db_prefix'=> 'uf_'
             ],
             'user_id_guest'  => 0,
-            'user_id_master' => 1
+            'user_id_master' => 1,
+            'css.minify' => false,
+            'js.minify' => false
         ]);
     });    
 
@@ -61,7 +63,9 @@
                 'db_prefix'=> 'uf_'
             ],
             'user_id_guest'  => 0,
-            'user_id_master' => 1
+            'user_id_master' => 1,
+            'css.minify' => false,
+            'js.minify' => false
         ]);
     });
        

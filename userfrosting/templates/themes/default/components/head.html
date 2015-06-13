@@ -10,8 +10,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{site.uri.favicon}}" />
     
-    {% for item in page.schema.css %}
-      <link rel="stylesheet" href="{{site.uri.css}}{{item}}" type="text/css" >
+    <!-- Page stylesheets -->
+    {% for item in includeCSS(page_group|default("common")) %}
+      <link rel="stylesheet" href="{{item}}" type="text/css" >
     {% endfor %}
     
     <!-- Theme stylesheet -->
@@ -22,5 +23,11 @@
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->    
+    <![endif]-->
+    
+    <!-- Header javascript (not recommended) -->
+    {% for item in includeJSTop(page_group|default("common")) %}
+      <script src="{{item}}" ></script>
+    {% endfor %}    
+    
 </head>

@@ -13,9 +13,6 @@ class AccountController extends \UserFrosting\BaseController {
 
     public function __construct($app){
         $this->_app = $app;
-    
-        // Load a page schema.  You may override this in individual pages.
-        $this->_page_schema = PageSchema::load("loggedout", $this->_app->config('schema.path') . "/pages/pages.json");
     }
 
     public function pageHome(){
@@ -24,7 +21,6 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "A secure, modern user management system based on UserCake, jQuery, and Bootstrap.",
                 'description' =>    "Main landing page for public access to this website.",
-                'schema' =>         $this->_page_schema,
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ]
@@ -44,7 +40,6 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Login",
                 'description' =>    "Login to your UserFrosting account.",
-                'schema' =>         $this->_page_schema,
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(),     // Starting to violate the Law of Demeter here...
                 'active_page' =>    "account/login",
             ],
@@ -83,7 +78,6 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $settings->author,
                 'title' =>          "Register",
                 'description' =>    "Register for a new UserFrosting account.",
-                'schema' =>         $this->_page_schema,
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    "account/register"                
             ],
@@ -101,7 +95,6 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Reset Password",
                 'description' =>    "Reset your UserFrosting password.",
-                'schema' =>         $this->_page_schema,
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ],
@@ -118,7 +111,6 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Choose a New Password",
                 'description' =>    "Reset your UserFrosting password.",
-                'schema' =>         $this->_page_schema,
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ],
@@ -135,7 +127,6 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Resend Activation",
                 'description' =>    "Resend the activation email for your new UserFrosting account.",
-                'schema' =>         $this->_page_schema,
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ],
@@ -156,8 +147,7 @@ class AccountController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Account Settings",
                 'description' =>    "Update your account settings, including email, display name, and password.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'schema' =>         PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json")
+                'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             "locales" => $this->_app->site->getLocales(),
             "validators" => $validators->formValidationRulesJson()

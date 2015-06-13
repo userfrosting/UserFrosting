@@ -13,9 +13,6 @@ class AdminController extends \UserFrosting\BaseController {
 
     public function __construct($app){
         $this->_app = $app;
-        
-        // Load account pages schema.  You may override this in individual pages.
-        $this->_page_schema = PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json");
     }
 
     public function pageSiteSettings(){
@@ -32,9 +29,7 @@ class AdminController extends \UserFrosting\BaseController {
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Site Settings",
                 'description' =>    "Global settings for the site, including registration and activation settings, site title, admin emails, and default languages.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'schema' =>         PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json"),
-                'active_page' =>    ""
+                'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             'settings' => $this->_app->site->getRegisteredSettings(),
             'info'     => $this->_app->site->getSystemInfo(),

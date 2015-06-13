@@ -31,15 +31,12 @@
             $app->notFound();
         }
         
-        $page_schema = UF\PageSchema::load("dashboard", $app->config('schema.path') . "/pages/pages.json");
-        
         $app->render('dashboard.html', [
             'page' => [
                 'author' =>         $app->site->author,
                 'title' =>          "Dashboard",
                 'description' =>    "Your user dashboard.",
-                'alerts' =>         $app->alerts->getAndClearMessages(), 
-                'schema' =>         $page_schema
+                'alerts' =>         $app->alerts->getAndClearMessages()
             ]
         ]);          
     });
@@ -50,15 +47,12 @@
             $app->notFound();
         }
         
-        $page_schema = UF\PageSchema::load("starcraft", $app->config('schema.path') . "/pages/pages.json");
-        
         $app->render('zerg.html', [
             'page' => [
                 'author' =>         $app->site->author,
                 'title' =>          "Zerg",
                 'description' =>    "Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.",
-                'alerts' =>         $app->alerts->getAndClearMessages(), 
-                'schema' =>         $page_schema
+                'alerts' =>         $app->alerts->getAndClearMessages()
             ]
         ]); 
     });    

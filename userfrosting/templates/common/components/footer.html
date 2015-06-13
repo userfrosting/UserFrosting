@@ -6,6 +6,6 @@
   </div>
 </footer>
 <script src="{{site.uri.js}}config.js" ></script>
-{% for item in page.schema.js %}
-  <script src="{{site.uri.js}}{{item}}" ></script>
+{% for item in includeJSBottom(page_group|default("common")) %}
+  <script src="{{item}}" ></script>
 {% endfor %}

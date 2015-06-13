@@ -136,7 +136,7 @@ function fatal_handler() {
 
 /**** Templating Engine Setup ****/
 
-/* Also, import UserFrosting variables as global Twig variables */    
+/* Import UserFrosting variables as global Twig variables */    
 $twig = $app->view()->getEnvironment();   
 $twig->addGlobal("site", $app->site);
 
@@ -152,6 +152,9 @@ $loader->addPath($app->config('themes.path') . "/" . $app->user->getTheme());
 // THEN in default.
 $loader->addPath($app->config('themes.path') . "/default");
 
+// Create the page schema object
+$app->schema = new \UserFrosting\PageSchema($app->site->uri['css'], $app->site->uri['js']);
+
 // Add Twig function for checking permissions during dynamic menu rendering
 $function_check_access = new Twig_SimpleFunction('checkAccess', function ($hook, $params = []) use ($app) {
     return $app->user->checkAccess($hook, $params);
@@ -165,6 +168,95 @@ $function_translate = new Twig_SimpleFunction('translate', function ($hook, $par
 });
 
 $twig->addFunction($function_translate);
+
+// Add Twig functions for including CSS and JS scripts from schema
+$function_include_css = new Twig_SimpleFunction('includeCSS', function ($group_name = "common") use ($app) {
+    // Hook for core and plugins to register includes
+    $app->applyHook("includes.css.register");
+    
+    // Return array of CSS includes
+    return $app->schema->getCSSIncludes($group_name, $app->config('css.minify'));
+});
+
+$twig->addFunction($function_include_css);
+
+$function_include_bottom_js = new Twig_SimpleFunction('includeJSBottom', function ($group_name = "common") use ($app) {
+    // Hook for core and plugins to register includes
+    $app->applyHook("includes.js.register");
+    
+    // Return array of JS includes
+    return $app->schema->getJSBottomIncludes($group_name, $app->config('js.minify'));
+});
+
+$twig->addFunction($function_include_bottom_js);
+
+$function_include_top_js = new Twig_SimpleFunction('includeJSTop', function ($group_name = "common") use ($app) {
+    // Hook for core and plugins to register includes
+    $app->applyHook("includes.js.register");
+    
+    // Return array of JS includes
+    return $app->schema->getJSTopIncludes($group_name, $app->config('js.minify'));
+});
+
+$twig->addFunction($function_include_top_js);
+
+// Register CSS and JS includes for the pages
+$app->hook('includes.css.register', function () use ($app){
+    // Register common CSS files
+    $app->schema->registerCSS("common", "font-awesome-4.3.0.css");
+    $app->schema->registerCSS("common", "font-starcraft.css");
+    $app->schema->registerCSS("common", "bootstrap-3.3.2.css");
+    $app->schema->registerCSS("common", "lib/metisMenu.css");
+    $app->schema->registerCSS("common", "bootstrap-custom.css");
+    $app->schema->registerCSS("common", "bootstrap-switch.css");
+    $app->schema->registerCSS("common", "formValidation/formValidation.css");           
+    $app->schema->registerCSS("common", "tablesorter/theme.bootstrap.css");
+    $app->schema->registerCSS("common", "tablesorter/jquery.tablesorter.pager.css");
+    $app->schema->registerCSS("common", "select2/select2.css");
+    $app->schema->registerCSS("common", "select2/select2-bootstrap.css");
+    $app->schema->registerCSS("common", "bootstrapradio.css");
+    
+    // Dashboard CSS
+    $app->schema->registerCSS("dashboard", "timeline.css");
+    $app->schema->registerCSS("dashboard", "lib/morris.css");
+    $app->schema->registerCSS("dashboard", "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css");    
+    
+    // Logged-out CSS
+    $app->schema->registerCSS("loggedout", "jumbotron-narrow.css");
+    
+}, 1);
+
+$app->hook('includes.js.register', function () use ($app){
+    // Register common JS files
+    $app->schema->registerJS("common", "jquery-1.11.2.js");
+    $app->schema->registerJS("common", "bootstrap-3.3.2.js");
+    $app->schema->registerJS("common", "sb-admin-2.js");
+    $app->schema->registerJS("common", "lib/metisMenu.js");
+    $app->schema->registerJS("common", "formValidation/formValidation.js");
+    $app->schema->registerJS("common", "formValidation/bootstrap.js");
+    $app->schema->registerJS("common", "date.min.js");
+    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.min.js");
+    $app->schema->registerJS("common", "tablesorter/tables.js");
+    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.pager.min.js");
+    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.widgets.min.js");
+    $app->schema->registerJS("common", "select2/select2.min.js");
+    $app->schema->registerJS("common", "bootstrapradio.js");
+    $app->schema->registerJS("common", "bootstrap-switch.js");
+    $app->schema->registerJS("common", "userfrosting.js");
+    
+    // Dashboard JS
+    $app->schema->registerJS("dashboard", "lib/raphael.js");
+    $app->schema->registerJS("dashboard", "lib/morris.js");
+    $app->schema->registerJS("dashboard", "morris-data.js");
+    $app->schema->registerJS("dashboard", "http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0");    
+    
+    // Users JS
+    $app->schema->registerJS("user", "widget-users.js");
+    
+    // Groups JS
+    $app->schema->registerJS("group", "widget-groups.js");
+    
+}, 1);  
 
 if ($db_error){
     // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out

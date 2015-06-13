@@ -5,13 +5,9 @@ namespace UserFrosting;
 class BaseController {
 
     protected $_app =         null; // The framework app to use (default Slim)
-    protected $_page_schema = null; // The page schema
 
     public function __construct($app){
         $this->_app = $app;
-    
-        // Load a page schema.  You may override this in individual pages.
-        $this->_page_schema = PageSchema::load("default", $this->_app->config('schema.path') . "/pages/pages.json");
     }
     
     /* Renders the 404 error page.
@@ -21,8 +17,7 @@ class BaseController {
             'page' => [
                 'author' =>         $this->_app->site->author,
                 'title' =>          "404 Error",
-                'description' =>    "We couldn't deliver.  We're sorry.",
-                'schema' =>         $this->_page_schema
+                'description' =>    "We couldn't deliver.  We're sorry."
             ]
         ]);
     }
@@ -34,8 +29,7 @@ class BaseController {
             'page' => [
                 'author' =>         $this->_app->site->author,
                 'title' =>          "Database Error",
-                'description' =>    "There's something wrong. We can't connect to the database.",
-                'schema' =>         $this->_page_schema
+                'description' =>    "There's something wrong. We can't connect to the database."
             ]
         ]);
     }
