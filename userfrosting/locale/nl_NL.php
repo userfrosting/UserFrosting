@@ -26,7 +26,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_ALREADY_ACTIVE" => "Je account is al geactiveerd",
 	"ACCOUNT_REGISTRATION_DISABLED" => "Het registreren van nieuwe accounts is op dit moment uitgeschakeld.",
 	"ACCOUNT_INACTIVE" => "Je account is niet actief. Controleer je email / spam map voor de activatie instructies.",
-	"ACCOUNT_DISABLED" => "Deze account is gedeactiveerd.Neem contact met ons op voor meer informatie.",
+	"ACCOUNT_DISABLED" => "Deze account is gedeactiveerd. Neem contact met ons op voor meer informatie.",
 	"ACCOUNT_USER_CHAR_LIMIT" => "Je gebruikersnaam moet tussen de {{min}} en {{max}} tekens bevatten.",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "Je weergegeven naam moet tussen de {{min}} en {{max}} tekens bevatten.",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "Je wachtwoord moet tussen de {{min}} en {{max}} tekens bevatten.",
@@ -44,7 +44,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PASSWORD_INVALID" => "Het wachtwoord komt niet overeen met het wachtwoord dat bij ons bekend staat.",
 	"ACCOUNT_DETAILS_UPDATED" => "Account details zijn bijgewerkt.",
 	"ACCOUNT_ACTIVATION_MESSAGE" => "Je moet je account activeren voordat je kan inloggen. Volg de onderstaande link om je account te activeren. \n\n
-%m1%activate_user.php?token=%m2%",
+	%m1%activate_user.php?token=%m2%",
 	"ACCOUNT_CREATION_COMPLETE" => "Account voor nieuwe gebruiker %m1% is met succes aangemaakt.",
 	"ACCOUNT_ACTIVATION_COMPLETE" => "Je hebt met succes je account geactiveerd. Je kan nu inloggen.",
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1" => "Je hebt met succes je account geregistreerd. Je kan nu inloggen.",
@@ -110,7 +110,7 @@ $lang = array_merge($lang,array(
 
 // Miscellaneous
 $lang = array_merge($lang,array(
-	"PASSWORD_HASH_FAILED" => "Wachtwoord hashing mislukt.Neem contact op met de website administrator.",
+	"PASSWORD_HASH_FAILED" => "Wachtwoord hashing mislukt. Neem contact op met de website administrator.",
 	"NO_DATA" => "Geen of ongeldige data verzonden.",
 	"CAPTCHA_FAIL" => "Beveiligingsvraag mislukt.",
 	"CONFIRM" => "Bevestig",
