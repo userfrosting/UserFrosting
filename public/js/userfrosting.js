@@ -4,7 +4,7 @@
      
         var field = $(this);
         console.log("Displaying alerts");
-        var url = site.uri.public + "/alerts";
+        var url = site['uri']['public'] + "/alerts";
         return $.getJSON( url, {})
         .then(function( data ) {        // Pass the deferral back
             // Display alerts

@@ -61,7 +61,7 @@ function groupForm(box_id, group_id) {
 		render: 'modal'
 	};
     
-    var url = site.uri.public + "/forms/groups";  
+    var url = site['uri']['public'] + "/forms/groups";  
     
     // If we are updating an existing group
     if (group_id) {
@@ -71,7 +71,7 @@ function groupForm(box_id, group_id) {
             mode: "update"
         };
         
-        url = site.uri.public + "/forms/groups/g/" + group_id;
+        url = site['uri']['public'] + "/forms/groups/g/" + group_id;
     }
     
 	// Fetch and render the form
@@ -161,7 +161,7 @@ function deleteGroupDialog(box_id, group_id, name){
 		$('#' + box_id).remove();
 	}
 	
-    var url = site.uri.public + "/forms/confirm";
+    var url = site['uri']['public'] + "/forms/confirm";
     
 	var data = {
 		box_id: box_id,
@@ -187,7 +187,7 @@ function deleteGroupDialog(box_id, group_id, name){
 		$('#' + box_id).modal('show');        
 		$('#' + box_id + ' .js-confirm').click(function(){
             
-            var url = site.uri.public + "/groups/g/" + group_id + "/delete";
+            var url = site['uri']['public'] + "/groups/g/" + group_id + "/delete";
             
             csrf_token = $("meta[name=csrf_token]").attr("content");
             var data = {

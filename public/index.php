@@ -201,6 +201,18 @@
         return $controller->siteSettings();        
     });
     
+    // Build the minified, concatenated CSS and JS
+    $app->get('/config/build', function() use ($app){
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_minify')){
+            $app->notFound();
+        }
+        
+        $app->schema->build();
+        $app->alerts->addMessageTranslated("success", "MINIFICATION_SUCCESS");
+        $app->redirect($app->urlFor('uri_settings'));
+    });    
+    
     // Installation pages
     $app->get('/install/?', function () use ($app) {
         $controller = new UF\InstallController($app);

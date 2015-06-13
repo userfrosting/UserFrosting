@@ -19,8 +19,11 @@
         'mode' =>           'dev'   // Set to 'dev' or 'production'
     ]);
     
+    // Get public path.  Is this guaranteed to work in all environments?
+    $public_path = $_SERVER['DOCUMENT_ROOT'] . $app->environment()['SCRIPT_NAME'];
+    
     /********* DEVELOPMENT SETTINGS *********/
-    $app->configureMode('dev', function () use ($app) {
+    $app->configureMode('dev', function () use ($app, $public_path) {
         $app->config([
             'log.enable' => true,
             'debug' => false,
@@ -30,6 +33,9 @@
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'log.path' =>   __DIR__ . '/log',
+            'public.path' => $public_path,
+            'js.path' => $public_path . "/js",
+            'css.path' => $public_path . "/css",
             'db'            =>  [
                 'db_host'  => 'localhost',
                 'db_name'  => 'userfrosting',
@@ -38,14 +44,12 @@
                 'db_prefix'=> 'uf_'
             ],
             'user_id_guest'  => 0,
-            'user_id_master' => 1,
-            'css.minify' => false,
-            'js.minify' => false
+            'user_id_master' => 1
         ]);
     });    
 
     /********* PRODUCTION SETTINGS *********/    
-    $app->configureMode('production', function () use ($app) {
+    $app->configureMode('production', function () use ($app, $public_path) {
         $app->config([
             'log.enable' => true,
             'debug' => false,
@@ -55,6 +59,9 @@
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'log.path' =>   __DIR__ . '/log',
+            'public.path' => $public_path,
+            'js.path' => $public_path . "/js",
+            'css.path' => $public_path . "/css",            
             'db'            =>  [
                 'db_host'  => 'localhost',
                 'db_name'  => 'userfrosting',
@@ -63,9 +70,7 @@
                 'db_prefix'=> 'uf_'
             ],
             'user_id_guest'  => 0,
-            'user_id_master' => 1,
-            'css.minify' => false,
-            'js.minify' => false
+            'user_id_master' => 1
         ]);
     });
        
