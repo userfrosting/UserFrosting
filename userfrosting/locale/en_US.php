@@ -39,9 +39,9 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USER_OR_PASS_INVALID" => "Username or password is invalid.",
 	"ACCOUNT_ALREADY_ACTIVE" => "Your account is already activated.",
 	"ACCOUNT_REGISTRATION_DISABLED" => "We're sorry, account registration has been disabled.",
-	"ACCOUNT_REGISTRATION_LOGOUT" => "I'm sorry, you cannot register for an account while logged in.Please log out first.",
+	"ACCOUNT_REGISTRATION_LOGOUT" => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
 	"ACCOUNT_INACTIVE" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
-	"ACCOUNT_DISABLED" => "This account has been disabled.Please contact us for more information.",
+	"ACCOUNT_DISABLED" => "This account has been disabled. Please contact us for more information.",
 	"ACCOUNT_USER_CHAR_LIMIT" => "Your username must be between {{min}} and {{max}} characters in length.",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "Your display name must be between {{min}} and {{max}} characters in length.",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "Your password must be between {{min}} and {{max}} characters in length.",
@@ -52,7 +52,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USERNAME_IN_USE" => "Username '{{user_name}}' is already in use",
 	"ACCOUNT_DISPLAYNAME_IN_USE" => "Display name '{{display_name}}' is already in use",
 	"ACCOUNT_EMAIL_IN_USE" => "Email '{{email}}' is already in use",
-	"ACCOUNT_LINK_ALREADY_SENT" => "An activation email has already been sent to this email address in the last {{resend_activation_threshold}} second(s).Please try again later.",
+	"ACCOUNT_LINK_ALREADY_SENT" => "An activation email has already been sent to this email address in the last {{resend_activation_threshold}} second(s). Please try again later.",
 	"ACCOUNT_NEW_ACTIVATION_SENT" => "We have emailed you a new activation link, please check your email",
 	"ACCOUNT_SPECIFY_NEW_PASSWORD" => "Please enter your new password",
 	"ACCOUNT_SPECIFY_CONFIRM_PASSWORD" => "Please confirm your new password",
@@ -135,14 +135,14 @@ $lang = array_merge($lang,array(
 
 // Miscellaneous
 $lang = array_merge($lang,array(
-	"PASSWORD_HASH_FAILED" => "Password hashing failed.Please contact a site administrator.",
+	"PASSWORD_HASH_FAILED" => "Password hashing failed. Please contact a site administrator.",
 	"NO_DATA" => "No data/bad data sent",
 	"CAPTCHA_FAIL" => "Failed security question",
 	"CONFIRM" => "Confirm",
 	"DENY" => "Deny",
 	"SUCCESS" => "Success",
 	"ERROR" => "Error",
-	"SERVER_ERROR" => "Oops, looks like our server might have goofed.If you're an admin, please check the PHP error logs.",
+	"SERVER_ERROR" => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP error logs.",
 	"NOTHING_TO_UPDATE" => "Nothing to update",
 	"SQL_ERROR" => "Fatal SQL error",
 	"FEATURE_DISABLED" => "This feature is currently disabled",
@@ -167,7 +167,7 @@ $lang = array_merge($lang,array(
 	"PERMISSION_REMOVE_USERS" => "Successfully removed %m1% user(s)",
 	"PERMISSION_ADD_USERS" => "Successfully added %m1% user(s)",
 	"CANNOT_DELETE_GROUP" => "The group '{{name}}' cannot be deleted",
-	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "The group '{{name}}' cannot be deleted because it is set as the default primary group for new users.Please first select a different default primary group."
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "The group '{{name}}' cannot be deleted because it is set as the default primary group for new users. Please first select a different default primary group."
 ));
 
 // Private Messages
