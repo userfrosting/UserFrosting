@@ -171,29 +171,20 @@ $twig->addFunction($function_translate);
 
 // Add Twig functions for including CSS and JS scripts from schema
 $function_include_css = new Twig_SimpleFunction('includeCSS', function ($group_name = "common") use ($app) {
-    // Hook for core and plugins to register includes
-    $app->applyHook("includes.css.register");
-    
     // Return array of CSS includes
     return $app->schema->getCSSIncludes($group_name, $app->config('css.minify'));
 });
 
 $twig->addFunction($function_include_css);
 
-$function_include_bottom_js = new Twig_SimpleFunction('includeJSBottom', function ($group_name = "common") use ($app) {
-    // Hook for core and plugins to register includes
-    $app->applyHook("includes.js.register");
-    
+$function_include_bottom_js = new Twig_SimpleFunction('includeJSBottom', function ($group_name = "common") use ($app) {    
     // Return array of JS includes
     return $app->schema->getJSBottomIncludes($group_name, $app->config('js.minify'));
 });
 
 $twig->addFunction($function_include_bottom_js);
 
-$function_include_top_js = new Twig_SimpleFunction('includeJSTop', function ($group_name = "common") use ($app) {
-    // Hook for core and plugins to register includes
-    $app->applyHook("includes.js.register");
-    
+$function_include_top_js = new Twig_SimpleFunction('includeJSTop', function ($group_name = "common") use ($app) {    
     // Return array of JS includes
     return $app->schema->getJSTopIncludes($group_name, $app->config('js.minify'));
 });
@@ -273,3 +264,11 @@ $view->parserOptions = array(
     'cache' => dirname(__FILE__) . '/cache'
 );
 */
+
+// TODO: this is where any plugin initialization scripts should be run
+
+
+
+// Hook for core and plugins to register includes
+$app->applyHook("includes.css.register");
+$app->applyHook("includes.js.register");
