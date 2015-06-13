@@ -59,7 +59,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_ACTIVATION_COMPLETE" => "Ha activado su cuenta. Ahora puede iniciar la sesión.",
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1" => "Usted se ha registrado con éxito. Ahora puede iniciar la sesión.",
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE2" => "Usted se ha registrado con éxito. En breve recibirá un correo electrónico de activación. 
-Usted debe activar su cuenta antes de iniciar sesión",
+	Usted debe activar su cuenta antes de iniciar sesión",
 	"ACCOUNT_PASSWORD_NOTHING_TO_UPDATE" => "No se puede actualizar con la misma contraseña",
 	"ACCOUNT_PASSWORD_UPDATED" => "Contraseña de la cuenta de actualización",
 	"ACCOUNT_EMAIL_UPDATED" => "Cuenta de correo electrónico de actualización",
@@ -144,7 +144,7 @@ $lang = array_merge($lang,array(
 	"PERMISSION_CREATION_SUCCESSFUL" => "creado con éxito el nivel de permisos de`%m1%`",
 	"GROUP_UPDATE" => "Grupo `%m1%` actualizado correctamente.",
 	"PERMISSION_REMOVE_PAGES" => "acceso eliminado con éxito a %m1%página (s)",
-	"PERMISSION_ADD_PAGES" => "acceso añadidocon éxito a %m1% página (s)",
+	"PERMISSION_ADD_PAGES" => "acceso añadido con éxito a %m1% página (s)",
 	"PERMISSION_REMOVE_USERS" => "eliminado con éxito %m1% usuario (s)",
 	"PERMISSION_ADD_USERS" => "%m1% exitosamente añadido(s)",
 	"CANNOT_DELETE_PERMISSION_GROUP" => "No se puede eliminar el grupo '%m1%'"
