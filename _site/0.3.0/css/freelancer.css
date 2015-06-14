@@ -237,7 +237,7 @@ section.success a.active {
     height: 20px;
     margin-top: -12px;
     text-align: center;
-    font-size: 20px;
+    font-size: 25px;
     color: #fff;
 }
 
@@ -265,17 +265,16 @@ section.success a.active {
     border: solid 2px #272323;
     font-size: 20px;
     color: #272323;
-    background: 0 0;
+    background: #f3f2e4;
     transition: all .3s ease-in-out;
-}
+    font-weight: bold;
+    text-align: left;
+    }
 
-.btn-outline:hover,
-.btn-outline:focus,
-.btn-outline:active,
-.btn-outline.active {
-    border: solid 2px #fff;
-    color: #F7E2E5;
+.btn-outline:hover {
+    border: solid 2px #5f5e5e;
     background: #fff;
+    font-weight: bold;
 }
 
 .floating-label-form-group {

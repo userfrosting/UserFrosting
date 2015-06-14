@@ -1,0 +1,33 @@
+/*!Userfrosting.css
+ */
+
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+  color: #f3f2e4;
+}
+
+
+.btn-modal {
+    margin-top: 15px;
+    border: solid 2px #272323;
+    font-size: 20px;
+    color: #272323;
+    background: 0 0;
+    transition: all .3s ease-in-out;
+}
+
+.btn-modal:hover,
+.btn-modal:focus,
+.btn-modal:active,
+.btn-modal.active {
+    border: solid 2px #fff;
+    color: #000000;
+    background: #fff;
+}
+
+.modal h2 {
+    text-transform: none;
+}
+.btn i:hover {
+    color:#f7e2e5;
+}
