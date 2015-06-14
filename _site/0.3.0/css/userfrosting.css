@@ -31,3 +31,31 @@
 .btn i:hover {
     color:#f7e2e5;
 }
+
+.palette-button {
+    height: 300px;
+    margin: 0px 0px 30px;
+    text-align: center;
+    
+}
+
+.palette-button a:hover, .palette-button a:active, .palette-button a:focus {
+    outline: 0px none;
+    text-decoration: none;
+    color: #272323;
+    background-color: #f3c8ce;
+}
+
+.palette-link {
+    display: block;
+    position: relative;
+    margin: 0px auto;
+    height: 300px;
+    background-color: #f7e2e5;
+    color: #272323;
+    font-size: 30px;
+}
+
+.palette-link .palette-text {
+    padding-top: 70px;
+}

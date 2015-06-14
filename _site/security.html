@@ -87,7 +87,7 @@
 
 
     <div class="container">
-      <h1 id="security-features">Security Features</h1>
+      <h1 id="toc_0">Security Features</h1>
 
 <div class="header-menu">
   <nav class="navbar navbar-default" role="navigation">
@@ -117,7 +117,7 @@
 
 <p>UserFrosting is designed to address the most common security issues with websites that handle sensitive user data:</p>
 
-<h2 id="a-name-ssl-i-class-fa-fa-lock-ssl-https-compatibility"><a name="ssl"></a><i class='fa fa-lock'></i> SSL/HTTPS compatibility</h2>
+<h2 id="toc_1"><a name="ssl"></a><i class='fa fa-lock'></i> SSL/HTTPS compatibility</h2>
 
 <p>Unsecured (&quot;ssl&quot;) websites exchange data between the user and the server in plain text.  If the connection between the user and server is not secure, this data can be intercepted, and possibly even altered and/or rerouted.  And, even if the sensitive data itself is encrypted, the user&#39;s session on the website can be stolen and impersonated unless ALL communication between the user and server is handled over SSL (&quot;https&quot; websites).  If you walk into any coffee shop with an unsecured wireless network, and launch a simple program such as <a href="http://codebutler.com/firesheep/">Firesheep</a>, you will see how huge of a problem this is, and why <a href="http://www.wired.com/2014/04/https/">Google and other companies are pushing for <em>everyone</em> to use SSL</a>.</p>
 
@@ -125,7 +125,7 @@
 
 <p>For <strong>local testing purposes only</strong> you may create a self-signed certificate.  For instructions on how to do this for XAMPP/Apache in OSX, see <a href="http://shahpunyerblog.blogspot.com/2007/10/create-self-signed-ssl-certificate-in.html">this blog post</a>.</p>
 
-<h2 id="a-name-passwords-i-class-fa-fa-key-strong-password-hashing"><a name="passwords"></a><i class='fa fa-key'></i> Strong password hashing</h2>
+<h2 id="toc_2"><a name="passwords"></a><i class='fa fa-key'></i> Strong password hashing</h2>
 
 <p>UserFrosting uses the <code>password_hash</code> and <code>password_verify</code> functions to hash and validate passwords (new in PHP v5.5.0).  <code>password_hash</code> uses the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a salt to user passwords, protecting against dictionary attacks.</p>
 
@@ -133,19 +133,19 @@
 
 <p>UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with SHA1.  User accounts that have been hashed with SHA1 will automatically be updated to the new encryption standard when the user successfully logs in.</p>
 
-<h2 id="a-name-csrf-i-class-fa-fa-bomb-protection-against-cross-site-request-forgery-csrf"><a name="csrf"></a><i class='fa fa-bomb'></i> Protection against cross-site request forgery (CSRF)</h2>
+<h2 id="toc_3"><a name="csrf"></a><i class='fa fa-bomb'></i> Protection against cross-site request forgery (CSRF)</h2>
 
 <p>CSRF is an attack that relies on a user unwittingly submitting malicious data from another source while logged in to their account.  The malicious data can be embedded in an image, link, or other javascript content, on another website or in an email.  Because the user has a valid session with a website, the external content is accepted and processed.  Thus, attackers can easily change passwords or delete a user&#39;s account with this attack.</p>
 
 <p>To guard against this, UserFrosting provides the <code>csrf_token</code> function (courtesy of @r3wt).  By generating a new, random CSRF token for users when they log in, inserting it into legitimate forms as a hidden field, and then having the backend form processing links check for this token before taking any action, CSRF attacks can be thwarted.</p>
 
-<h2 id="a-name-xss-i-class-fa-fa-bomb-protection-against-cross-site-scripting-xss"><a name="xss"></a><i class='fa fa-bomb'></i> Protection against cross-site scripting (XSS)</h2>
+<h2 id="toc_4"><a name="xss"></a><i class='fa fa-bomb'></i> Protection against cross-site scripting (XSS)</h2>
 
 <p>XSS is another variety of attack that tricks a user, but instead of tricking the user into submitting malicious data (CSRF), it tricks the user into running malicious scripts.  This vulnerability usually appears when you allow arbitrary content (including javascript and HTML tags) to be processed and then regurgitated back to other users.  Thus, an attacker on a forum could create a new &quot;post&quot; that contains javascript commands.  When anyone else on the site goes to view that post, the javascript commands are executed.  Those commands could easily be instructions to transmit the user&#39;s session data to a remote server, where attackers can use it to impersonate the user.</p>
 
 <p>UserFrosting guards against this by sanitizing user input before storing or otherwise acting upon it.  Please let us know if you find a place where input is not properly sanitized.</p>
 
-<h2 id="a-name-sql-inject-i-class-fa-fa-bomb-protection-against-sql-injection"><a name="sql-inject"></a><i class='fa fa-bomb'></i> Protection against SQL injection</h2>
+<h2 id="toc_5"><a name="sql-inject"></a><i class='fa fa-bomb'></i> Protection against SQL injection</h2>
 
 <p>Whereas XSS tricks the <em>user</em> into executing malicious code, SQL injection tricks the <em>server</em> into executing malicious code; in this case, SQL statements.  Thus, sites vulnerable to SQL injection can end up executing code that, for example, deletes a table or database.</p>
 

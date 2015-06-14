@@ -87,7 +87,7 @@
 
 
     <div class="container">
-      <h1 id="components">Components</h1>
+      <h1 id="toc_0">Components</h1>
 
 <div class="header-menu">
   <nav class="navbar navbar-default" role="navigation">
@@ -114,7 +114,7 @@
   </nav>
 </div>
 
-<h2 id="a-name-users-i-class-fa-fa-user-users"><a name="users"></a><i class='fa fa-user'></i> Users</h2>
+<h2 id="toc_1"><a name="users"></a><i class='fa fa-user'></i> Users</h2>
 
 <p><img class="img-right" src="images/components-user.png"></p>
 
@@ -130,7 +130,7 @@
 
 <p>There is one special account, called the <strong>root account</strong>.  The root account is the first account created during the installation process (see &quot;Installation&quot;).  It is defined as the account with <code>user_id</code> of <code>1</code>, although this can be changed in <code>models/config.php</code>.  The root account cannot be deleted, and is automatically granted permission for every action and page (see <a href="features.html#authorization">Authorization</a>).</p>
 
-<h2 id="a-name-groups-i-class-fa-fa-users-groups"><a name="groups"></a><i class='fa fa-users'></i> Groups</h2>
+<h2 id="toc_2"><a name="groups"></a><i class='fa fa-users'></i> Groups</h2>
 
 <p><img class="img-left" src="images/components-groups.png"></p>
 
@@ -140,7 +140,7 @@
 
 <p>Groups can be authorized to perform certain actions or access certain pages.  Users automatically gain all the permissions associated with all groups to which they belong.  UserFrosting uses a default-deny authorization scheme, which means that users can only be denied access to an action or page by being omitted from groups that have that access.  For more information, see the <a href="components.html#authorization">Authorization</a> section.</p>
 
-<h2 id="a-name-pages-i-class-fa-fa-files-o-account-pages"><a name="pages"></a><i class='fa fa-files-o'></i> Account Pages</h2>
+<h2 id="toc_3"><a name="pages"></a><i class='fa fa-files-o'></i> Account Pages</h2>
 
 <p><strong>Account pages</strong> make up the navigable content of your site.  Each page is implemented as a <code>.php</code> file, and can contain PHP, HTML, and Javascript.  We recommend that you separate your visible content (HTML) from the PHP as much as possible as a best practice.  This can be done by using Javascript/AJAX to mediate interaction between your account pages and a set of backend <strong>api pages</strong>.  For more information on this, see the section <a href="features.html#api">Backend API</a>.</p>
 
@@ -153,7 +153,7 @@
 <li><code>groups.php</code>: The page where administrators can manage groups.  Allows admins to create, edit, and delete groups, set default and default primary groups.</li>
 <li><code>header.php</code>: Not a navigable page.  Renders the appropriate menu bars for users, usually loaded from other pages via jQuery, for example:</li>
 </ul>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$(&#39;.navbar&#39;).load(&#39;header.php&#39;, function() {
+<div class="highlight"><pre><code class="text language-text" data-lang="text">$(&#39;.navbar&#39;).load(&#39;header.php&#39;, function() {
     $(&#39;.navitem-dashboard&#39;).addClass(&#39;active&#39;);
 });
 </code></pre></div>
@@ -169,10 +169,10 @@
 
 <p>These are located in the <code>account</code> subdirectory.  You can manually add additional subdirectories in <code>models/config.php</code> by adding the path to the <code>$page_include_paths</code> array.</p>
 
-<h2 id="a-name-actions-i-class-fa-fa-lock-secure-actions"><a name="actions"></a><i class='fa fa-lock'></i> Secure Actions</h2>
+<h2 id="toc_4"><a name="actions"></a><i class='fa fa-lock'></i> Secure Actions</h2>
 
 <p>Like UserCake, the first version of UserFrosting was only able to control access at the page level.  Each group either had or didn&#39;t have access to a particular page.  When I started implementing the tutor management system for <a href="http://bloomingtontutors.com">my company</a>, I quickly realized that I needed to be able to allow different users access to different resources on the same page.  Furthermore, I realized that I needed a user&#39;s authorization to depend on certain contexts.  For example, I wanted to allow tutors to edit a student&#39;s details, but only if they had been assigned to that student.  Of course, this could be implemented with something like:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">if (hasStudent($loggedInUser-&gt;user_id, $student_id)){
+<div class="highlight"><pre><code class="text language-text" data-lang="text">if (hasStudent($loggedInUser-&gt;user_id, $student_id)){
   updateUser($student_id, ...);
 }
 </code></pre></div>
