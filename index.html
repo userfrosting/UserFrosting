@@ -1,94 +1,411 @@
 ---
-layout: default
-title: "UserFrosting: A secure, modern user management system based on UserCake, jQuery, and Bootstrap"
+layout: new
+title: "UserFrosting | Modern user management for PHP"
 ---
 
-<div class="header-box">
-  <div class="alert alert-warning"><i class="fa fa-newspaper-o"></i> The documentation you see here is for UserFrosting 0.2.2.  We recently released UserFrosting 0.3.0, which brings us up to date with modern programming paradigms.  We will be working on documentation for 0.3.0 over the next several weeks.  In the mean time, check out a preview of the new website <a href="{{site.url}}/0.3.0">here</a>.</div>
+<!-- Header -->
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <img class="img-responsive" src="img/cupcake.svg" width=400 alt="">
+                <div class="intro-text" style="margin-top: 50px">
+                    <h1>Modern user management for PHP.</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row row-buttons">   
+            <div class="col-sm-4">       
+                <a class="btn btn-outline btn-lg btn-block" href="https://github.com/alexweissman/UserFrosting/zipball/master"><i class="fa fa-download"></i> DOWNLOAD</a>
+            </div>
+            <div class="col-sm-4" >
+                <a class="btn btn-outline btn-lg btn-block" href="http://uf-demo.alexanderweissman.com/" target="_blank"><i class="fa fa-user"></i> &nbsp;&nbsp;&nbsp;DEMO&nbsp;&nbsp;&nbsp;</a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-outline btn-lg btn-block" href="https://github.com/alexweissman/UserFrosting" class="btn btn-outline btn-lg btn-block">&nbsp;<i class="fa fa-github-alt"></i> &nbsp;GITHUB&nbsp;&nbsp;</a>
+            </div>
+        </div> 
+    </div>
+</header>
 
-  <nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      </div>
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="#welcome">Welcome</a></li>
-          <li><a href="#requirements">Requirements</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#installation">Installation</a></li>
-          <li><a href="#technologies">Technologies</a></li>
-        </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>     
-  <div class='text-center'>
-    <h1 id="welcome">Welcome to UserFrosting!<br>
-    <small>A secure, modern user management system based on UserCake, jQuery, and Bootstrap.</small></h1>
-    <p><img src='images/userfrosting.png'></p>
-  </div>
-  <p class='lead'>
-  Chances are you've come here because you have a great idea for a user-oriented website, and you need a way to manage user accounts for your service/forum/orbital laser cannon without reinventing the wheel.  <strong>UserFrosting delivers.</strong>
-  </p>
-  <p>
-  You may have even started to code and write content for your project.  But whether it's a private forum for your WoW guild, an employee management system for your small business, or the next big social network, we're guessing that you probably want to get started on implementing your awesome new idea as quickly as possible.  You most certainly <strong>do not</strong> want to spend your time writing code to manage user authentication and authorization.
-  </p>
-  <p>
-There are, of course, frameworks that can do user management, but you don't want to spend your valuable time learning the ins and outs of a particular framework, only to discover that it's not really what you need.  You might also have some existing code and content that you don't want to have to rewrite to fit the framework's way of doing things.  UserFrosting is meant for developers who want to take advantage of a pre-designed user management system, but write their own code in native PHP.
-  </p>
-  <p>
-Whatever the case may be, you probably want something that is ready to go straight out of the box, without forcing you to start from `Hello World`.  UserFrosting delivers this and more.  With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less - all you need is a web server running PHP 5.4 or greater, and a SQL database.
-  </p>
-</div>
-<h2 id="requirements">Requirements</h2>
-  <p class="lead">UserFrosting is designed to have as few dependencies as possible.  All you need to run UserFrosting is a web server of your choice, along with the following components:</p>
-  <ul>
-    <li>PHP version <b>5.4</b> or higher.  This is because of a security flaw in password-related algorithms in older versions of PHP, and because we have started to use the short-array syntax that is only available starting in version 5.4.</li>
-    <li>MySQL server version 4.1.3, with PDO database connections enabled.</li>
-  </ul>
-</h2>
-<h2 id="features">Features</h2>
-<div class='row'>
-  <div class='col-md-6'>
-    <h3><i class='fa fa-user'></i> User Accounts</h3>
-    <p class='lead'>Let users register an account with your site.  We've provided everything you need for users to register, log in, manage their account, recover lost passwords, and more.</p>
-  </div>
-  <div class='col-md-6'>
-    <h3><i class='fa fa-users'></i> Groups</h3>
-    <p class='lead'>Create user groups, configure fine-grained user and group authorization rules, and set landing pages for when users log in.</p>
-  </div>
-</div>
-<div class='row'>
-  <div class='col-md-6'>
-    <img class="img-responsive" src='images/demo-register.png'>
-  </div>
-  <div class='col-md-6'>      
-    <img class="img-responsive" src='images/demo-groups.png'>
-  </div>
-</div>
-<h3><i class='fa fa-wrench'></i> Admin Management Tools</h3>
-<p class='lead'>Manage users and groups on your website with an intuitive administrative interface.  Manually create user accounts.</p>
-<img  class="img-responsive" src='images/demo-users.png'>      
+<!-- About Section -->
+<section class="success" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>About</h2>
+                <hr class="star-light">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5 col-lg-offset-1" style="text-align: right">
+                <p>Chances are you're here because you have a great idea for a user-oriented website. Whether it's a private forum for your WoW guild, an employee management system for your small business, or the next big social network, we're guessing you want to get started on your awesome new idea as quickly as possible. You most certainly do not want to spend your time writing code to manage user authentication and authorization. <br><br> Userfrosting delivers. </p>
+            </div>
+            <div class="col-lg-5">
+                <p>With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less.  All you need is a web server running PHP 5.4 or greater, and a SQL database. <br><br>UserFrosting is meant for developers who want to take advantage of a pre-designed user management system, but write their own code in native PHP.<br><br> Get started on your project, without starting from 'Hello World".</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-<h2 id="installation">Installation</h2>
-<p class="lead">UserFrosting comes with an automated installer that will set up your database and configuration files and create the root account.  All you need to do is place the files in your home directory, go to <code>http://yoursite/install</code>, follow the steps and UserFrosting will do the rest.  When you're done, simply delete the <code>install</code> directory.</p>
+<!-- Features Grid Section -->
+<section id="features">
+    <div class="container portfolio">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Features</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <h3>Application Features</h3>
+        <div class="row">
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            User login <br>and account registration
+                        </div>
+                    </div>
+                    <img src="img/portfolio/login-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Personal dashboards
+                        </div>
+                    </div>
+                    <img src="img/portfolio/dash-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            User account settings
+                        </div>
+                    </div>
+                    <img src="img/portfolio/accountsetting-small.png" class="img-responsive" alt="">
+                </a>
+            </div>            
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            View and edit users
+                        </div>
+                    </div>
+                    <img src="img/portfolio/user-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Create groups
+                        </div>
+                    </div>
+                    <img src="img/portfolio/newgroup-small.png" class="img-responsive" alt="">
+                </a>
+            </div>            
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Manage site settings
+                        </div>
+                    </div>
+                    <img src="img/portfolio/setting-small.png" class="img-responsive" alt="">
+                </a>
+            </div>            
+        </div>
+        <h3>Developer Features</h3>
+        <div class="main-feature">
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-puzzle-piece"></i>
+                    <h4>Templating</h4>
+                    <p>Consistent, easy-to-use templating with <a href="http://twig.sensiolabs.org/">Twig</a>.</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-random"></i>
+                    <h4>Routing</h4>
+                    <p>Powerful routing and request/response abstractions with <a href="http://www.slimframework.com/">Slim</a> to decouple web pages from PHP files.</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-database"></i>
+                    <h4>Data Modeling</h4>
+                    <p>UserFrosting 0.3.0 boasts a rich object-oriented data model that can easily be modified and extended.</p>
+                </div>          
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-shield"></i>
+                    <h4><a href="https://github.com/alexweissman/fortress">Fortress</a></h4>
+                    <p>A unified interface for data validation and sanitization.  Specify rules for client- and server-side validation in a single JSON schema!</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-wrench"></i>
+                    <h4>Admin Tools</h4>
+                    <p>Built-in capabilities for automated CSS/JS minification, viewing site logs, and more.</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-plug"></i>
+                    <h4>Plugins and Theming</h4>
+                    <p>A full-featured plugin and theming system to easily create and share custom styles, layouts, and functionality.</p>
+                </div>        
+            </div>
+        </div>
+    </div>
+</section>
 
-<h2 id="technologies">Technologies</h2>
-<p class="lead">The frontend uses the following technologies (included in the project):</p>
-<ul>
-  <li>jQuery v1.10.2</li>
-  <li>Bootstrap v3.1.1</li>
-  <li> <a href="http://fontawesome.io">Font Awesome</a></li>
-  <li> <a href="http://handlebarsjs.com/">Handlebars templating</a></li>
-  <li> <a href="http://tablesorter.com">Tablesorter 2.0</a></li>
-  <li> <a href="https://github.com/twitter/typeahead.js">Typeahead addon for Bootstrap</a></li>
-  <li> <a href="http://www.datejs.com">DateJS</a> </li>
-  <li> <a href="http://bootstrap-switch.org">Bootstrap Switch</a> </li>
-</ul>
+<!-- Contact Section -->
+<section id="get-started" class="">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Getting Started</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/installation" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-check-square-o"></i><br>
+                        Requirements and Installation
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/components" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-cubes"></i><br>
+                        Components
+                    </div>
+                </a> 
+            </div>              
+            <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/tutorials" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-mortar-board"></i><br>
+                        Tutorials
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/glossary" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-book"></i><br>
+                        Glossary
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/security" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-lock"></i><br>
+                        Security
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/api" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-code"></i><br>
+                        API
+                    </div>
+                </a> 
+            </div>            
+        </div>
+    </div>
+</section>    
+    
+<!-- Contact Section -->
+<section id="support" class="">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Support</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3 style="text-transform: none; text-align: center;">
+                    Have a contribution, question, or need help? Go to our <a href="https://github.com/alexweissman/UserFrosting">Github</a> page. You can send a message, make a comment, or implement a new feature.  We look forward to it. 
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="text-center">
+    <div class="footer-above">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col col-md-4">
+                    <h3><a href="http://cliparts.co">ClipArts</a>Cupcake Graphic by Jay Reed</h3>
+                </div>
+                <div class="footer-col col-md-4">
+                     <h3>Copyright &copy; Userfrosting 2015</h3>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>About Freelancer</h3>
+                    <p>Freelancer is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-below">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll visible-xs visible-sm">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
+
+<!-- Portfolio Modals -->
+<div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Login and register accounts</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/login.png" class="img-responsive img-centered" alt="">
+                            <p>If enabled, users can register for new accounts automatically.  Enable/disable CAPTCHA to create an account.  You can also require that users activate their accounts via an emailed activation link.  Users can reset their passwords by authenticating via an emailed password reset link.</p>
+                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+            </div>            
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <h2>Dashboard</h2>
+                        <hr class="star-primary">
+                        <img src="img/portfolio/dash.png" class="img-responsive img-centered" alt="">
+                        <p>A placeholder for giving users access to various features and functions on your site.  UserFrosting comes with Morris charts and the Tablesorter dynamic tables plugin preinstalled.</p>
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Account settings</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/accountsetting.png" class="img-responsive img-centered" alt="">
+                            <p>Allow users to change their display name, locale & language, password, and more.  Easily control which fields users can view/edit via authorization hooks.</p>
+                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <h2>View, edit, sort, and create users</h2>
+                        <hr class="star-primary">
+                        <img src="img/portfolio/user.png" class="img-responsive img-centered" alt="">
+                        <p>Users description.</p>
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <h2>Create groups and hierarchies</h2>
+                        <hr class="star-primary">
+                        <img src="img/portfolio/groups.png" class="img-responsive img-centered" alt="">
+                        <p>Groups description.</p>
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Site settings</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
+                            <p>Simple interface for the root user (and other administrators, if desired) to change the site title and administrative email, configure user registration and activation settings, and change sitewide default settings.  Displays server configuration information and provides access to the PHP error log.</p>
+                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="{{ site.description }}">
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' |  prepend: site.url }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{site.url}}/img/cupcake.ico?v=2">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{site.url}}/0.2.2/css/main.css">
+    
+   <!-- Bootstrap core CSS -->
+    <link href="{{site.url}}/0.2.2/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{site.url}}/0.2.2/bootstrap/css/bootstrap-custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-37689257-2', 'www.userfrosting.com');
+        ga('send', 'pageview');
+      
+    </script>
+</head>
