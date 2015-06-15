@@ -63,14 +63,34 @@ title: "UserFrosting | Modern user management for PHP"
                 <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
                     <div class="caption">
                         <div class="caption-content">
-                            Create groups
+                            User login <br>and account registration
                         </div>
                     </div>
-                    <img src="img/portfolio/newgroup-small.png" class="img-responsive" alt="">
+                    <img src="img/portfolio/login-small.png" class="img-responsive" alt="">
                 </a>
             </div>
             <div class="col-sm-4 portfolio-item">
                 <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Personal dashboards
+                        </div>
+                    </div>
+                    <img src="img/portfolio/dash-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            User account settings
+                        </div>
+                    </div>
+                    <img src="img/portfolio/accountsetting-small.png" class="img-responsive" alt="">
+                </a>
+            </div>            
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
                     <div class="caption">
                         <div class="caption-content">
                             View and edit users
@@ -80,7 +100,17 @@ title: "UserFrosting | Modern user management for PHP"
                 </a>
             </div>
             <div class="col-sm-4 portfolio-item">
-                <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
+                <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Create groups
+                        </div>
+                    </div>
+                    <img src="img/portfolio/newgroup-small.png" class="img-responsive" alt="">
+                </a>
+            </div>            
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
                     <div class="caption">
                         <div class="caption-content">
                             Manage site settings
@@ -88,37 +118,7 @@ title: "UserFrosting | Modern user management for PHP"
                     </div>
                     <img src="img/portfolio/setting-small.png" class="img-responsive" alt="">
                 </a>
-            </div>
-            <div class="col-sm-4 portfolio-item">
-                <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
-                    <div class="caption">
-                        <div class="caption-content">
-                            Update account settings
-                        </div>
-                    </div>
-                    <img src="img/portfolio/accountsetting-small.png" class="img-responsive" alt="">
-                </a>
-            </div>
-            <div class="col-sm-4 portfolio-item">
-                <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
-                    <div class="caption">
-                        <div class="caption-content">
-                            Users login <br>and create accounts
-                        </div>
-                    </div>
-                    <img src="img/portfolio/login-small.png" class="img-responsive" alt="">
-                </a>
-            </div>
-            <div class="col-sm-4 portfolio-item">
-                <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
-                    <div class="caption">
-                        <div class="caption-content">
-                            Personal dashboards
-                        </div>
-                    </div>
-                    <img src="img/portfolio/dash-small.png" class="img-responsive" alt="">
-                </a>
-            </div>
+            </div>            
         </div>
         <h3>Developer Features</h3>
         <div class="main-feature">
@@ -181,6 +181,14 @@ title: "UserFrosting | Modern user management for PHP"
             <div class="col-sm-4 palette-button">
                 <a href="#" class="palette-link">
                     <div class="palette-text">
+                        <i class="fa fa-4x fa-cubes"></i><br>
+                        Components
+                    </div>
+                </a> 
+            </div>              
+            <div class="col-sm-4 palette-button">
+                <a href="#" class="palette-link">
+                    <div class="palette-text">
                         <i class="fa fa-4x fa-mortar-board"></i><br>
                         Tutorials
                     </div>
@@ -190,7 +198,23 @@ title: "UserFrosting | Modern user management for PHP"
                 <a href="#" class="palette-link">
                     <div class="palette-text">
                         <i class="fa fa-4x fa-book"></i><br>
-                        Documentation
+                        Glossary
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="#" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-lock"></i><br>
+                        Security
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="#" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-code"></i><br>
+                        API
                     </div>
                 </a> 
             </div>            
@@ -264,17 +288,63 @@ title: "UserFrosting | Modern user management for PHP"
         <div class="container">
             <div class="row">
                     <div class="modal-body">
-                        <h2>Create groups and heirarchies</h2>
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Login and register accounts</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/login.png" class="img-responsive img-centered" alt="">
+                            <p>If enabled, users can register for new accounts automatically.  Enable/disable CAPTCHA to create an account.  You can also require that users activate their accounts via an emailed activation link.  Users can reset their passwords by authenticating via an emailed password reset link.</p>
+                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+            </div>            
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <h2>Dashboard</h2>
                         <hr class="star-primary">
-                        <img src="img/portfolio/groups.png" class="img-responsive img-centered" alt="">
-                        <p>Groups description.</p>
+                        <img src="img/portfolio/dash.png" class="img-responsive img-centered" alt="">
+                        <p>A placeholder for giving users access to various features and functions on your site.  UserFrosting comes with Morris charts and the Tablesorter dynamic tables plugin preinstalled.</p>
                         <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                     </div>
             </div>
         </div>
     </div>
 </div>
-<div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Account settings</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/accountsetting.png" class="img-responsive img-centered" alt="">
+                            <p>Allow users to change their display name, locale & language, password, and more.  Easily control which fields users can view/edit via authorization hooks.</p>
+                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-content">
         <div class="close-modal" data-dismiss="modal">
             <div class="lr">
@@ -295,52 +365,6 @@ title: "UserFrosting | Modern user management for PHP"
         </div>
     </div>
 </div>
-<div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-content">
-        <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-                <div class="rl">
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                    <div class="modal-body">
-                        <div class="col-lg-10 col-lg-offset-1">
-                            <h2>Site settings</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
-                            <p>Site settings description.</p>
-                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-content">
-        <div class="close-modal" data-dismiss="modal">
-            <div class="lr">
-                <div class="rl">
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                    <div class="modal-body">
-                        <div class="col-lg-10 col-lg-offset-1">
-                            <h2>Account settings</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/accountsetting.png" class="img-responsive img-centered" alt="">
-                            <p>Account settings description.</p>
-                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-content">
         <div class="close-modal" data-dismiss="modal">
@@ -352,13 +376,11 @@ title: "UserFrosting | Modern user management for PHP"
         <div class="container">
             <div class="row">
                     <div class="modal-body">
-                        <div class="col-lg-10 col-lg-offset-1">
-                            <h2>Login and create accounts</h2>
-                            <hr class="star-primary">
-                            <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
-                            <p>Login description.</p>
-                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        </div>
+                        <h2>Create groups and hierarchies</h2>
+                        <hr class="star-primary">
+                        <img src="img/portfolio/groups.png" class="img-responsive img-centered" alt="">
+                        <p>Groups description.</p>
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                     </div>
             </div>
         </div>
@@ -375,14 +397,15 @@ title: "UserFrosting | Modern user management for PHP"
         <div class="container">
             <div class="row">
                     <div class="modal-body">
-                        <h2>Dashboard</h2>
-                        <hr class="star-primary">
-                        <img src="img/portfolio/dash.png" class="img-responsive img-centered" alt="">
-                        <p>dashboard description.</p>
-                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Site settings</h2>
+                            <hr class="star-primary">
+                            <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
+                            <p>Simple interface for the root user (and other administrators, if desired) to change the site title and administrative email, configure user registration and activation settings, and change sitewide default settings.  Displays server configuration information and provides access to the PHP error log.</p>
+                            <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        </div>
                     </div>
             </div>
         </div>
     </div>
 </div>
-

@@ -1,0 +1,149 @@
+/*!Userfrosting.css
+ */
+
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+  color: #f3f2e4;
+}
+
+.breadcrumb {
+    background-color: #fcfcfc;
+}
+
+.row-buttons {
+    margin-top: 30px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.btn-modal {
+    margin-top: 15px;
+    border: solid 2px #272323;
+    font-size: 20px;
+    color: #272323;
+    background: 0 0;
+    transition: all .3s ease-in-out;
+}
+
+.btn-modal:hover,
+.btn-modal:focus,
+.btn-modal:active,
+.btn-modal.active {
+    border: solid 2px #fff;
+    color: #000000;
+    background: #fff;
+}
+
+.modal h2 {
+    text-transform: none;
+}
+.btn i:hover {
+    color:#f7e2e5;
+}
+
+.palette-button {
+    height: 300px;
+    margin: 0px 0px 30px;
+    text-align: center;
+    
+}
+
+.palette-button a:hover, .palette-button a:active, .palette-button a:focus {
+    outline: 0px none;
+    text-decoration: none;
+    color: #272323;
+    background-color: #f3c8ce;
+}
+
+.palette-link {
+    display: block;
+    position: relative;
+    margin: 0px auto;
+    height: 300px;
+    background-color: #f7e2e5;
+    color: #272323;
+    font-size: 30px;
+}
+
+.palette-link .palette-text {
+    padding-top: 70px;
+}
+
+header.breadcrumb-header {
+    color: #272323;
+    background: #fff;
+}
+
+header.breadcrumb-header .container {
+    text-align: left;
+    padding-top: 100px;
+    padding-bottom: 0px;
+}
+
+section.content-page {
+    padding: 50px 0px;
+}
+
+section.content-page ul {
+	margin: 2em; 
+}
+
+section.content-page ul li {
+	padding-left: 1em; 
+	margin-bottom: .5em;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+section.content-page ul li small {
+    font-weight: normal;
+    font-size: 18px;
+    color: #4d4d4d;
+}
+
+.main-feature {
+    text-align: center;
+}
+
+.main-feature h2 {
+  font-size: 40px;
+  margin-bottom: 30px;
+}
+.main-feature .col-sm-4 {
+  margin-bottom: 40px;
+}
+.main-feature i {
+  background: #272323;
+  border-radius: 30px;
+  color: #f3f9f9;
+  font-size: 60px;
+  line-height: 120px;
+  height: 120px;
+  width: 120px;
+}
+.main-feature h4 {
+  font-size: 30px;
+  text-transform: uppercase;
+}
+.main-feature p {
+  margin: 0 auto;
+  width: 75%;
+  font-size: 18px;
+}
+.main-feature.btn {
+  background: #3498db;
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+.main-feature .btn:hover {
+  color: #fff;
+}
+
+code {
+    color: #000;
+    background-color: #eeeeee;
+}
