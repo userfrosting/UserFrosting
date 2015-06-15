@@ -6,6 +6,17 @@
   color: #f3f2e4;
 }
 
+.breadcrumb {
+    background-color: #fcfcfc;
+}
+
+.row-buttons {
+    margin-top: 30px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
 
 .btn-modal {
     margin-top: 15px;
@@ -58,4 +69,81 @@
 
 .palette-link .palette-text {
     padding-top: 70px;
+}
+
+header.breadcrumb-header {
+    color: #272323;
+    background: #fff;
+}
+
+header.breadcrumb-header .container {
+    text-align: left;
+    padding-top: 100px;
+    padding-bottom: 0px;
+}
+
+section.content-page {
+    padding: 50px 0px;
+}
+
+section.content-page ul {
+	margin: 2em; 
+}
+
+section.content-page ul li {
+	padding-left: 1em; 
+	margin-bottom: .5em;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+section.content-page ul li small {
+    font-weight: normal;
+    font-size: 18px;
+    color: #4d4d4d;
+}
+
+.main-feature {
+    text-align: center;
+}
+
+.main-feature h2 {
+  font-size: 40px;
+  margin-bottom: 30px;
+}
+.main-feature .col-sm-4 {
+  margin-bottom: 40px;
+}
+.main-feature i {
+  background: #272323;
+  border-radius: 30px;
+  color: #f3f9f9;
+  font-size: 60px;
+  line-height: 120px;
+  height: 120px;
+  width: 120px;
+}
+.main-feature h4 {
+  font-size: 30px;
+  text-transform: uppercase;
+}
+.main-feature p {
+  margin: 0 auto;
+  width: 75%;
+  font-size: 18px;
+}
+.main-feature.btn {
+  background: #3498db;
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+.main-feature .btn:hover {
+  color: #fff;
+}
+
+code {
+    color: #000;
+    background-color: #eeeeee;
 }

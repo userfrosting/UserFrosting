@@ -4,7 +4,7 @@
     <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="{{ site.description }}">
-    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' |  prepend: site.url }}">
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
     
     <!-- Custom CSS -->
@@ -15,9 +15,6 @@
     <link href="bootstrap/css/bootstrap-custom.css" rel="stylesheet">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-    <link rel="canonical" href="http://www.userfrosting.com">
-
-    <title>UserFrosting: A secure, modern user management system based on UserCake, jQuery, and Bootstrap</title>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

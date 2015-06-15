@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Alex Weissman">
+
+    <link rel="shortcut icon" type="image/x-icon" href="http://localhost:4000/0.3.0/img/cupcake.ico">
+    <link rel="canonical" href="http://localhost:4000/0.3.0/installation/">
+    
+    <title>UserFrosting | Installing UserFrosting</title>
+    
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="http://localhost:4000/0.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="http://localhost:4000/0.3.0/css/userfrosting.css" rel="stylesheet">
+    <link href="http://localhost:4000/0.3.0/css/freelancer.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-37689257-2', 'www.userfrosting.com');
+        ga('send', 'pageview');
+      
+    </script>
+</head>
+
+    <body id="page-top" class="index">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://localhost:4000/0.3.0/">UserFrosting</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/0.3.0/#about">About</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/0.3.0/#features">Features</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/0.3.0/#get-started">Get Started</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/0.3.0/#support">Support</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+    <header class="breadcrumb-header">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="http://localhost:4000/0.3.0/">Home</a></li>
+            <li class="active">Requirements and Installation</li>
+        </ol>
+    </div>
+</header>
+
+<section id="requirements" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Requirements</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>
+                    UserFrosting is designed to have as few dependencies as possible. All you need to run UserFrosting is a web server of your choice, along with the following components:
+                </p>
+                <ul>
+                    <li>PHP version 5.4 or higher. <small>This is because of a security flaw in password-related algorithms in older versions of PHP, and because we have started to use the short-array syntax that is only available starting in version 5.4.</small></li>
+                    <li>MySQL server version 4.1.3, <small>with PDO database connections enabled.</small></li>
+                </ul>
+                <p>
+                    We also highly recommend that you install <a href="http://getcomposer.org">Composer</a>, the de facto standard for dependency management in PHP.  Composer will also autoload any new classes you add.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="installation" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Installation</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>
+                    UserFrosting comes with a built-in installer.  Assuming you have a working web server with PHP and MySQL installed, all you need to do is create a database and tell UserFrosting how to connect in the configuration file.  If you do not have a web server set up, we recommend <a href="https://www.apachefriends.org/index.html">XAMPP</a>.
+                </p>
+
+                <h3>Step 1: Download UserFrosting</h3>
+                <p>
+                Download the <a href="https://github.com/alexweissman/UserFrosting/zipball/master">latest version</a> of UserFrosting, unzip/untar it, and place it in your document root.  The two directories that you need to worry about are <code>public</code> and <code>userfrosting</code>.
+                </p>
+                <p>On a production server, you may wish to put the contents of <code>public</code> directly into the top-level public directory of your web hosting account, and put the <code>userfrosting</code> directory at the same level as the public directory.  So for example, if you FTP into your hosting account:
+                </p>
+<pre>
+/                 // The root directory of your hosting account
+|-- etc
+|-- logs
+|-- public_html      // Put the contents of 'public' in here
+|   |
+|   |-- css
+|   |-- images
+|   |-- js
+|   |-- .htaccess
+|   |-- index.php
+|
+|-- userfrosting    // Put the contents of 'userfrosting' in here
+|   |-- auth
+|   |-- controllers
+|   |-- locale
+|   |-- models
+|   |-- plugins
+|   |-- schema
+|   |-- templates
+|   |-- vendor
+|   |-- composer.json
+|   |-- composer.lock
+|   |-- config-userfrosting.php
+</pre>
+                <h3>Step 2: Specify Database</h3>
+                <p>
+                    Specify your database information in <code>userfrosting/config-userfrosting.php</code>.  You will need to set the values of <code>db_host</code> (usually <code>localhost</code>), <code>db_name</code>, <code>db_user</code>, <code>db_pass</code>, and <code>db_prefix</code> (you can leave <code>db_prefix</code> as the default value if you wish).  
+                </p>
+<pre>
+/********* DEVELOPMENT SETTINGS *********/
+$app->configureMode('dev', function () use ($app) {
+    $app->config([
+        'log.enable' => true,
+        'debug' => false,
+        'base.path'     => __DIR__,            
+        'templates.path' => __DIR__ . '/templates',
+        'themes.path'    =>  __DIR__ . '/templates/themes',
+        'schema.path' =>    __DIR__ . '/schema',
+        'locales.path' =>   __DIR__ . '/locale',
+        'log.path' =>   __DIR__ . '/log',
+        'db'            =>  [
+            'db_host'  => 'localhost',
+            'db_name'  => 'userfrosting',
+            'db_user'  => 'admin',
+            'db_pass'  => 'password',
+            'db_prefix'=> 'uf_'
+        ],
+    ...
+</pre>
+                <p>
+                If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of <code>$app->configureMode('dev' ...</code> it says <code>$app->configureMode('production' ...</code>.  You can then easily switch between these two modes on line 21:
+                </p>
+
+<pre>
+    $app = new \Slim\Slim([
+        'view' =>           new \Slim\Views\Twig(),
+        'mode' =>           'dev'   // Set to 'dev' or 'production'
+    ]);
+</pre>
+                
+                <h3>Step 3: Create Master Account</h3>
+                
+                <p>
+                    Navigate to the public directory (e.g. <code>http://localhost/userfrosting/public/</code>).  The installer should automatically come up and ask you to create the master account.  Choose a strong password for the master account if you are deploying production-level code.  The master user will have unrestricted permissions on your UserFrosting site.
+                </p>
+
+                <h3><i class="fa fa-life-saver"></i> Troubleshooting Installation</h3>
+                <p>
+                    If you are having problems during installation, please check the following:
+                </p>
+                <p>
+                <ol>
+                    <li>Make sure you have the "Rewrite Engine" module installed and enabled if you are using Apache.  Some distributions, like WAMP, may not have this module automatically enabled, and you will need to do so manually (#340).</li>
+                    <li>If you are using Apache and getting a 404 error (but not our custom 404 page), make sure you have "AllowOverride All" set in your <code>httpd.conf</code> file</li>
+                </ol>
+                </p>
+
+                <h3><i class="fa fa-life-saver"></i> Installing on Other Platforms</h3>
+                
+                <p>
+                    Currently, UserFrosting only comes with a configuration file for Apache.  If you are proficient in IIS or other server technologies, and wish to contribute the corresponding configuration file, please open a pull request - we'd really appreciate it!
+                </p>
+                
+                <p>
+                    In the meantime, there is a workaround: you can install [Helicon Ape](http://www.helicontech.com/ape/), which provides support for Apache <code>.htaccess</code> and <code>.htpasswd</code> configuration files in Microsoft IIS.  Choose "full server download" when prompted by the Helicon Ape installer.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+      
+
+    
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- jQuery -->
+    <script src="http://localhost:4000/0.3.0/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="http://localhost:4000/0.3.0/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="http://localhost:4000/0.3.0/js/classie.js"></script>
+    <script src="http://localhost:4000/0.3.0/js/cbpAnimatedHeader.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="http://localhost:4000/0.3.0/js/jqBootstrapValidation.js"></script>
+    <script src="http://localhost:4000/0.3.0/js/contact_me.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="http://localhost:4000/0.3.0/js/freelancer.js"></script>
+    </body>
+</html>

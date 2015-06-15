@@ -1,450 +1,388 @@
-<!DOCTYPE html>
-<html lang="en">
+---
+layout: new
+title: "UserFrosting | Modern user management for PHP"
+---
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <link rel="shortcut icon" type="image/x-icon" href="img/cupcake.ico">
-    
-    <title>UserFrosting | A modern user management system built in PHP.</title>
-
-    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/userfrosting.css" rel="stylesheet">
-    <link href="css/freelancer.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
-
-<body id="page-top" class="index">
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#page-top">UserFrosting</a>
+<!-- Header -->
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <img class="img-responsive" src="img/cupcake.svg" width=400 alt="">
+                <div class="intro-text" style="margin-top: 50px">
+                    <h1>Modern user management for PHP.</h1>
+                </div>
             </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#about">About</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#features">Features</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#get-started">Get Started</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#contact">Contact</a>
-                    </li>
-                    
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
-    </nav>
+        <div class="row row-buttons">   
+            <div class="col-sm-4">       
+                <a class="btn btn-outline btn-lg btn-block" href="https://github.com/alexweissman/UserFrosting/zipball/master"><i class="fa fa-download"></i> DOWNLOAD</a>
+            </div>
+            <div class="col-sm-4" >
+                <a class="btn btn-outline btn-lg btn-block" href="http://uf-demo.alexanderweissman.com/" target="_blank"><i class="fa fa-user"></i> &nbsp;&nbsp;&nbsp;DEMO&nbsp;&nbsp;&nbsp;</a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-outline btn-lg btn-block" href="https://github.com/alexweissman/UserFrosting" class="btn btn-outline btn-lg btn-block">&nbsp;<i class="fa fa-github-alt"></i> &nbsp;GITHUB&nbsp;&nbsp;</a>
+            </div>
+        </div> 
+    </div>
+</header>
 
-    <!-- Header -->
-    <header>
+<!-- About Section -->
+<section class="success" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>About</h2>
+                <hr class="star-light">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5 col-lg-offset-1" style="text-align: right">
+                <p>Chances are you're here because you have a great idea for a user-oriented website. Whether it's a private forum for your WoW guild, an employee management system for your small business, or the next big social network, we're guessing you want to get started on your awesome new idea as quickly as possible. You most certainly do not want to spend your time writing code to manage user authentication and authorization. <br><br> Userfrosting delivers. </p>
+            </div>
+            <div class="col-lg-5">
+                <p>With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less.  All you need is a web server running PHP 5.4 or greater, and a SQL database. <br><br>UserFrosting is meant for developers who want to take advantage of a pre-designed user management system, but write their own code in native PHP.<br><br> Get started on your project, without starting from 'Hello World".</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid Section -->
+<section id="features">
+    <div class="container portfolio">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Features</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <h3>Application Features</h3>
+        <div class="row">
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Create groups
+                        </div>
+                    </div>
+                    <img src="img/portfolio/newgroup-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            View and edit users
+                        </div>
+                    </div>
+                    <img src="img/portfolio/user-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Manage site settings
+                        </div>
+                    </div>
+                    <img src="img/portfolio/setting-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Update account settings
+                        </div>
+                    </div>
+                    <img src="img/portfolio/accountsetting-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Users login <br>and create accounts
+                        </div>
+                    </div>
+                    <img src="img/portfolio/login-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+            <div class="col-sm-4 portfolio-item">
+                <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
+                    <div class="caption">
+                        <div class="caption-content">
+                            Personal dashboards
+                        </div>
+                    </div>
+                    <img src="img/portfolio/dash-small.png" class="img-responsive" alt="">
+                </a>
+            </div>
+        </div>
+        <h3>Developer Features</h3>
+        <div class="main-feature">
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-puzzle-piece"></i>
+                    <h4>Templating</h4>
+                    <p>Consistent, easy-to-use templating with <a href="http://twig.sensiolabs.org/">Twig</a>.</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-random"></i>
+                    <h4>Routing</h4>
+                    <p>Powerful routing and request/response abstractions with <a href="http://www.slimframework.com/">Slim</a> to decouple web pages from PHP files.</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-database"></i>
+                    <h4>Data Modeling</h4>
+                    <p>UserFrosting 0.3.0 boasts a rich object-oriented data model that can easily be modified and extended.</p>
+                </div>          
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-shield"></i>
+                    <h4><a href="https://github.com/alexweissman/fortress">Fortress</a></h4>
+                    <p>A unified interface for data validation and sanitization.  Specify rules for client- and server-side validation in a single JSON schema!</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-wrench"></i>
+                    <h4>Admin Tools</h4>
+                    <p>Built-in capabilities for automated CSS/JS minification, viewing site logs, and more.</p>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-plug"></i>
+                    <h4>Plugins and Theming</h4>
+                    <p>A full-featured plugin and theming system to easily create and share custom styles, layouts, and functionality.</p>
+                </div>        
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="get-started" class="">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Getting Started</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/0.3.0/installation" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-check-square-o"></i><br>
+                        Requirements and Installation
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="#" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-mortar-board"></i><br>
+                        Tutorials
+                    </div>
+                </a> 
+            </div>
+            <div class="col-sm-4 palette-button">
+                <a href="#" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-book"></i><br>
+                        Documentation
+                    </div>
+                </a> 
+            </div>            
+        </div>
+    </div>
+</section>    
+    
+<!-- Contact Section -->
+<section id="support" class="">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Support</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3 style="text-transform: none; text-align: center;">
+                    Have a contribution, question, or need help? Go to our <a href="https://github.com/alexweissman/UserFrosting">Github</a> page. You can send a message, make a comment, or implement a new feature.  We look forward to it. 
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="text-center">
+    <div class="footer-above">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col col-md-4">
+                    <h3><a href="http://cliparts.co">ClipArts</a>Cupcake Graphic by Jay Reed</h3>
+                </div>
+                <div class="footer-col col-md-4">
+                     <h3>Copyright &copy; Userfrosting 2015</h3>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>About Freelancer</h3>
+                    <p>Freelancer is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-below">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <img class="img-responsive" src="img/cupcake.svg" width=400 alt="">
-                    <div class="intro-text" style="margin-top: 50px">
-                        <span class="name"></span>
-                        <h1>Modern user management for PHP.</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="margin-top: 30px">   
-                <div class="col-lg-2 col-lg-offset-3">       
-                    <button type="button" class="btn btn-outline btn-lg"><i class="fa fa-download"></i> DOWNLOAD</button>
-                </div>
-                <div class="col-lg-2" >
-                    <a href="http://uf-demo.alexanderweissman.com/" target="_blank">
-                        <button type="button" class="btn btn-outline btn-lg" style="margin-left: 20px"><i class="fa fa-user"></i> &nbsp;&nbsp;&nbsp;DEMO&nbsp;&nbsp;&nbsp;</button>
-                    </a>
-                </div>
-                <div class="col-lg-2">
-                    <a href="https://github.com/alexweissman/UserFrosting"
-                        <button type="button" class="btn btn-outline btn-lg">&nbsp;<i class="fa fa-arrow-right"></i> &nbsp;GITHUB&nbsp;&nbsp;</button>
-                    </a>
-                </div>
-            </div> 
-        </div>
-    </header>
-
-    <!-- About Section -->
-    <section class="success" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>About</h2>
-                    <hr class="star-light">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-5 col-lg-offset-1" style="text-align: right">
-                    <p>Chances are you're here because you have a great idea for a user-oriented website. Whether it's a private forum for your WoW guild, an employee management system for your small business, or the next big social network, we're guessing you want to get started on your awesome new idea as quickly as possible. You most certainly do not want to spend your time writing code to manage user authentication and authorization. <br><br> Userfrosting delivers. </p>
-                </div>
-                <div class="col-lg-5">
-                    <p>With some basic configuration and an easy-to-use installer, you'll be ready to create and manage user accounts in 5 minutes or less.  All you need is a web server running PHP 5.4 or greater, and a SQL database. <br><br>UserFrosting is meant for developers who want to take advantage of a pre-designed user management system, but write their own code in native PHP.<br><br> Get started on your project, without starting from 'Hello World".</p>
+                   
                 </div>
             </div>
         </div>
-    </section>
-
-<!-- Portfolio Grid Section -->
-    <section id="portfolio">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Features</h2>
-                    <hr class="star-primary">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal1" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                Create groups
-                            </div>
-                        </div>
-                        <img src="img/portfolio/newgroup-small.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal2" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                View and edit users
-                            </div>
-                        </div>
-                        <img src="img/portfolio/user-small.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal3" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                Manage site settings
-                            </div>
-                        </div>
-                        <img src="img/portfolio/setting-small.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal4" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                Update account settings
-                            </div>
-                        </div>
-                        <img src="img/portfolio/accountsetting-small.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal5" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                Users login <br>and create accounts
-                            </div>
-                        </div>
-                        <img src="img/portfolio/login-small.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-                <div class="col-sm-4 portfolio-item">
-                    <a href="#portfolioModal6" class="portfolio-link" data-toggle="modal">
-                        <div class="caption">
-                            <div class="caption-content">
-                                Personal dashboards
-                            </div>
-                        </div>
-                        <img src="img/portfolio/dash-small.png" class="img-responsive" alt="">
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="get-started" class="">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Getting Started</h2>
-                    <hr class="star-primary">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-4 palette-button">
-                    <a href="#" class="palette-link">
-                        <div class="palette-text">
-                            <i class="fa fa-4x fa-check-square-o"></i><br>
-                            Requirements and Installation
-                        </div>
-                    </a> 
-                </div>
-                <div class="col-sm-4 palette-button">
-                    <a href="#" class="palette-link">
-                        <div class="palette-text">
-                            <i class="fa fa-4x fa-mortar-board"></i><br>
-                            Tutorials
-                        </div>
-                    </a> 
-                </div>
-                <div class="col-sm-4 palette-button">
-                    <a href="#" class="palette-link">
-                        <div class="palette-text">
-                            <i class="fa fa-4x fa-book"></i><br>
-                            Documentation
-                        </div>
-                    </a> 
-                </div>            
-            </div>
-        </div>
-    </section>    
-        
-    <!-- Contact Section -->
-    <section id="contact" class="">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>We're on Github</h2>
-                    <hr class="star-primary">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <h3 style="text-transform: none; text-align: center;">
-                        Have a contribution, question, or need help? Go to our <a href="https://github.com/alexweissman/UserFrosting">Github</a> page. You can send a message, make a comment, or implement a new feature.  We look forward to it. 
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="text-center">
-        <div class="footer-above">
-            <div class="container">
-                <div class="row">
-                    <div class="footer-col col-md-4">
-                        <h3><a href="http://cliparts.co">ClipArts</a>Cupcake Graphic by Jay Reed</h3>
-                    </div>
-                    <div class="footer-col col-md-4">
-                         <h3>Copyright &copy; Userfrosting 2015</h3>
-                    </div>
-                    <div class="footer-col col-md-4">
-                        <h3>About Freelancer</h3>
-                        <p>Freelancer is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="footer-below">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                       
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
-    <div class="scroll-top page-scroll visible-xs visible-sm">
-        <a class="btn btn-primary" href="#page-top">
-            <i class="fa fa-chevron-up"></i>
-        </a>
     </div>
+</footer>
 
-    <!-- Portfolio Modals -->
-    <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll visible-xs visible-sm">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
+
+<!-- Portfolio Modals -->
+<div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
                 </div>
             </div>
-            <div class="container">
-                <div class="row">
-                        <div class="modal-body">
-                            <h2>Create groups and heirarchies</h2>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <h2>Create groups and heirarchies</h2>
+                        <hr class="star-primary">
+                        <img src="img/portfolio/groups.png" class="img-responsive img-centered" alt="">
+                        <p>Groups description.</p>
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <h2>View, edit, sort, and create users</h2>
+                        <hr class="star-primary">
+                        <img src="img/portfolio/user.png" class="img-responsive img-centered" alt="">
+                        <p>Users description.</p>
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Site settings</h2>
                             <hr class="star-primary">
-                            <img src="img/portfolio/groups.png" class="img-responsive img-centered" alt="">
-                            <p>Groups description.</p>
+                            <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
+                            <p>Site settings description.</p>
                             <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         </div>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
                 </div>
             </div>
-            <div class="container">
-                <div class="row">
-                        <div class="modal-body">
-                            <h2>View, edit, sort, and create users</h2>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Account settings</h2>
                             <hr class="star-primary">
-                            <img src="img/portfolio/user.png" class="img-responsive img-centered" alt="">
-                            <p>Users description.</p>
+                            <img src="img/portfolio/accountsetting.png" class="img-responsive img-centered" alt="">
+                            <p>Account settings description.</p>
                             <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         </div>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                        <div class="modal-body">
-                            <div class="col-lg-10 col-lg-offset-1">
-                                <h2>Site settings</h2>
-                                <hr class="star-primary">
-                                <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
-                                <p>Site settings description.</p>
-                                <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                            </div>
-                        </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
                 </div>
             </div>
         </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                        <div class="modal-body">
-                            <div class="col-lg-10 col-lg-offset-1">
-                                <h2>Account settings</h2>
-                                <hr class="star-primary">
-                                <img src="img/portfolio/accountsetting.png" class="img-responsive img-centered" alt="">
-                                <p>Account settings description.</p>
-                                <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                            </div>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                        <div class="modal-body">
-                            <div class="col-lg-10 col-lg-offset-1">
-                                <h2>Login and create accounts</h2>
-                                <hr class="star-primary">
-                                <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
-                                <p>Login description.</p>
-                                <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                            </div>
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
-            <div class="close-modal" data-dismiss="modal">
-                <div class="lr">
-                    <div class="rl">
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row">
-                        <div class="modal-body">
-                            <h2>Dashboard</h2>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <div class="col-lg-10 col-lg-offset-1">
+                            <h2>Login and create accounts</h2>
                             <hr class="star-primary">
-                            <img src="img/portfolio/dash.png" class="img-responsive img-centered" alt="">
-                            <p>dashboard description.</p>
+                            <img src="img/portfolio/setting.png" class="img-responsive img-centered" alt="">
+                            <p>Login description.</p>
                             <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         </div>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
+</div>
+<div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                    <div class="modal-body">
+                        <h2>Dashboard</h2>
+                        <hr class="star-primary">
+                        <img src="img/portfolio/dash.png" class="img-responsive img-centered" alt="">
+                        <p>dashboard description.</p>
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <script src="js/classie.js"></script>
-    <script src="js/cbpAnimatedHeader.js"></script>
-
-    <!-- Contact Form JavaScript -->
-    <script src="js/jqBootstrapValidation.js"></script>
-    <script src="js/contact_me.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="js/freelancer.js"></script>
-
-</body>
-
-</html>
