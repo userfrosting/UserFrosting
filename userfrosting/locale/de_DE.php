@@ -113,12 +113,13 @@ $lang = array_merge($lang,array(
 	"CONFIG_TEMPLATE_INVALID" => "Es existiert keine Datei für die Vorlage '{{name}}'",
 	"CONFIG_EMAIL_INVALID" => "Die eingegebene E-Mail-Adresse ist nicht gültig.",
 	"CONFIG_INVALID_URL_END" => "Bitte fügen Sie die Endung '/' in der URL Ihrer Website.",
-	"CONFIG_UPDATE_SUCCESSFUL" => "Ihre Website-Konfiguration wurde aktualisiert. Möglicherweise müssen Sie eine neue Seite laden damit alle Einstellungen wirksam werden."
+	"CONFIG_UPDATE_SUCCESSFUL" => "Ihre Website-Konfiguration wurde aktualisiert. Möglicherweise müssen Sie eine neue Seite laden damit alle Einstellungen wirksam werden.",
+	"MINIFICATION_SUCCESS" => "CSS und JS Dateien für alle Seitengruppen erfolgreich minimiert und zusammengeführt."
 ));
 
 // Passwort Vergessen
 $lang = array_merge($lang,array(
-	"FORGOTPASS_INVALID_TOKEN" => "Ihr Aktivierungs-Token ist ungültig.",
+	"FORGOTPASS_INVALID_TOKEN" => "Ungültiger Aktivierungs-Token",
 	"FORGOTPASS_OLD_TOKEN" => "Aktivierungs-Token ist abgelaufen.",
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Passwort konnte nicht aktualisiert werden.",
 	"FORGOTPASS_NEW_PASS_EMAIL" => "Wir haben Ihnen ein neues Passwort gesendet.",
