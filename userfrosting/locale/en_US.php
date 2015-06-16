@@ -111,7 +111,8 @@ $lang = array_merge($lang,array(
 	"CONFIG_TEMPLATE_INVALID" => "There is no file for the template key `%m1%`",
 	"CONFIG_EMAIL_INVALID" => "The email you have entered is not valid",
 	"CONFIG_INVALID_URL_END" => "Please include the ending / in your site's URL",
-	"CONFIG_UPDATE_SUCCESSFUL" => "Your site's configuration has been updated. You may need to load a new page for all the settings to take effect"
+	"CONFIG_UPDATE_SUCCESSFUL" => "Your site's configuration has been updated. You may need to load a new page for all the settings to take effect",
+	"MINIFICATION_SUCCESS" => "Successfully minified and concatenated CSS and JS for all page groups."
 ));
 
 // Forgot Password
