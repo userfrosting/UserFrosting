@@ -82,8 +82,18 @@ header.breadcrumb-header .container {
     padding-bottom: 0px;
 }
 
+header.breadcrumb-header ul {
+    margin: 0px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+header.breadcrumb-header ul li {
+	margin-bottom: .5em;
+}
+
 section.content-page {
-    padding: 50px 0px;
+    padding: 100px 0px 0px 0px;
 }
 
 section.content-page h1 {
@@ -100,6 +110,10 @@ section.content-page ul {
 	margin: 2em; 
 }
 
+section.content-page ol {
+	margin: 2em; 
+}
+
 section.content-page ul li {
 	padding-left: 1em; 
 	margin-bottom: .5em;
@@ -108,6 +122,19 @@ section.content-page ul li {
 }
 
 section.content-page ul li small {
+    font-weight: normal;
+    font-size: 18px;
+    color: #4d4d4d;
+}
+
+section.content-page ol li {
+	padding-left: 1em; 
+	margin-bottom: .5em;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+section.content-page ol li small {
     font-weight: normal;
     font-size: 18px;
     color: #4d4d4d;
