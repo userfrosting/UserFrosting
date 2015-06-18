@@ -130,10 +130,10 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         $group_table = static::getTableGroup();
         
         $query = "
-            SELECT $group_table.*
-            FROM $link_table, $group_table
-            WHERE $link_table.user_id = :id
-            AND $link_table.group_id = $group_table.id";
+            SELECT `$group_table`.*
+            FROM `$link_table`, `$group_table`
+            WHERE `$link_table`.user_id = :id
+            AND `$link_table`.group_id = `$group_table`.id";
         
         $stmt = $db->prepare($query);
         
@@ -176,9 +176,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         $group_table = static::getTableGroup();
         
         $query = "
-            SELECT $group_table.*
-            FROM $group_table
-            WHERE $group_table.id = :primary_group_id LIMIT 1";
+            SELECT `$group_table`.*
+            FROM `$group_table`
+            WHERE `$group_table`.id = :primary_group_id LIMIT 1";
         
         $stmt = $db->prepare($query);
         
@@ -216,7 +216,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         // Add any groups in object that are not in DB yet
         $db = static::connection();
         $query = "
-            INSERT INTO $link_table (user_id, group_id)
+            INSERT INTO `$link_table` (user_id, group_id)
             VALUES (:user_id, :group_id);";
         foreach ($this->_groups as $group_id => $group){
             $stmt = $db->prepare($query);          
@@ -233,7 +233,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         if ($db_groups){
             $db = static::connection();
             $query = "
-                DELETE FROM $link_table
+                DELETE FROM `$link_table`
                 WHERE group_id = :group_id
                 AND user_id = :user_id LIMIT 1";
             
@@ -271,14 +271,14 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         $sqlVars[":id"] = $this->_id;
         
         $query = "
-            DELETE FROM $link_table
+            DELETE FROM `$link_table`
             WHERE user_id = :id";
             
         $stmt = $db->prepare($query);
         $stmt->execute($sqlVars);
      
         $query = "
-            DELETE FROM $auth_table
+            DELETE FROM `$auth_table`
             WHERE user_id = :id";
             
         $stmt = $db->prepare($query);

@@ -33,7 +33,7 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
         if ($name != "id" && !in_array($name, static::$_columns))
             throw new \Exception("The column '$name' does not exist in the table '$table'.");
         
-        $query = "SELECT * FROM $table WHERE $name = :value LIMIT 1";
+        $query = "SELECT * FROM `$table` WHERE `$name` = :value LIMIT 1";
         
         $stmt = $db->prepare($query);
         
@@ -63,9 +63,9 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
         
         $sqlVars = [];
         
-        $query = "SELECT * FROM $table";
+        $query = "SELECT * FROM `$table`";
         if ($name) {
-            $query .= " WHERE $name = :value";
+            $query .= " WHERE `$name` = :value";
             $sqlVars[':value'] = $value;
         }
         

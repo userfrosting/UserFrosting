@@ -21,7 +21,7 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
             $db = static::connection();
             
             $query = "
-                UPDATE {$this->_table} 
+                UPDATE `{$this->_table}`
                 SET is_default = " . GROUP_DEFAULT .
                 " WHERE is_default = " . GROUP_DEFAULT_PRIMARY .
                 ";";
@@ -55,14 +55,14 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
         $sqlVars[":id"] = $this->_id;
         
         $query = "
-            DELETE FROM $link_table
+            DELETE FROM `$link_table`
             WHERE group_id = :id";
             
         $stmt = $db->prepare($query);
         $stmt->execute($sqlVars);
      
         $query = "
-            DELETE FROM $auth_table
+            DELETE FROM `$auth_table`
             WHERE group_id = :id";
             
         $stmt = $db->prepare($query);
@@ -74,7 +74,7 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
         $user_table = static::getTableUser();
         
         $query = "
-            UPDATE $user_table 
+            UPDATE `$user_table` 
             SET primary_group_id = :primary_group_id
             WHERE primary_group_id = :current_id;";
         

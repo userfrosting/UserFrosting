@@ -83,7 +83,7 @@ function updateUserEnabledStatus(user_id, enabled) {
 		csrf_token: csrf_token
 	};
 	
-	var url = site.uri.public + "/users/u/" + user_id;
+	var url = site['uri']['public'] + "/users/u/" + user_id;
 	
     return $.ajax({  
 	  type: "POST",  
@@ -100,7 +100,7 @@ function updateUserActiveStatus(user_id) {
         csrf_token: csrf_token
 	}
     
-    var url = site.uri.public + "/users/u/" + user_id;
+    var url = site['uri']['public'] + "/users/u/" + user_id;
 
     return $.ajax({  
 	  type: "POST",  
@@ -115,7 +115,7 @@ function deleteUserDialog(box_id, user_id, name){
 		$('#' + box_id).remove();
 	}
 	
-    var url = site.uri.public + "/forms/confirm";
+    var url = site['uri']['public'] + "/forms/confirm";
     
 	var data = {
 		box_id: box_id,
@@ -141,7 +141,7 @@ function deleteUserDialog(box_id, user_id, name){
 		$('#' + box_id).modal('show');        
 		$('#' + box_id + ' .js-confirm').click(function(){
             
-            var url = site.uri.public + "/users/u/" + user_id + "/delete";
+            var url = site['uri']['public'] + "/users/u/" + user_id + "/delete";
             
             csrf_token = $("meta[name=csrf_token]").attr("content");
             var data = {
@@ -185,7 +185,7 @@ function userForm(box_id, user_id) {
 		render: 'modal'
 	};
     
-    var url = site.uri.public + "/forms/users";  
+    var url = site['uri']['public'] + "/forms/users";  
     
     // If we are updating an existing user
     if (user_id) {
@@ -195,7 +195,7 @@ function userForm(box_id, user_id) {
             mode: "update"
         };
         
-        url = site.uri.public + "/forms/users/u/" + user_id;
+        url = site['uri']['public'] + "/forms/users/u/" + user_id;
     }
     
 	// Fetch and render the form
@@ -313,7 +313,7 @@ function userDisplay(box_id, user_id) {
 	// Generate the form
 	$.ajax({  
 	  type: "GET",  
-	  url: site.uri.public + "/forms/users/u/" + user_id,  
+	  url: site['uri']['public'] + "/forms/users/u/" + user_id,  
 	  data: data,
 	  cache: false
 	})

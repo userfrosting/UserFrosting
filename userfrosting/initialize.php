@@ -69,6 +69,8 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'resend_activation_threshold', "Resend Activation Email Cooloff (s)");
     $app->site->register('userfrosting', 'reset_password_timeout', "Password Recovery Timeout (s)");
+    $app->site->register('userfrosting', 'minify_css', "Minify CSS", "toggle", [0 => "Off", 1 => "On"]);
+    $app->site->register('userfrosting', 'minify_js', "Minify JS", "toggle", [0 => "Off", 1 => "On"]);
 }, 1);       
 
 /**** Session and User Setup ****/
@@ -112,6 +114,7 @@ $app->alerts = $_SESSION['userfrosting']['alerts'];
 $app->error(function (\Exception $e) use ($app) {
     $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
     error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+     error_log($e->getTraceAsString());
 });
 
 // Also handle fatal errors
@@ -153,7 +156,7 @@ $loader->addPath($app->config('themes.path') . "/" . $app->user->getTheme());
 $loader->addPath($app->config('themes.path') . "/default");
 
 // Create the page schema object
-$app->schema = new \UserFrosting\PageSchema($app->site->uri['css'], $app->site->uri['js']);
+$app->schema = new \UserFrosting\PageSchema($app->site->uri['css'], $app->config('css.path') , $app->site->uri['js'], $app->config('js.path') );
 
 // Add Twig function for checking permissions during dynamic menu rendering
 $function_check_access = new Twig_SimpleFunction('checkAccess', function ($hook, $params = []) use ($app) {
@@ -172,21 +175,21 @@ $twig->addFunction($function_translate);
 // Add Twig functions for including CSS and JS scripts from schema
 $function_include_css = new Twig_SimpleFunction('includeCSS', function ($group_name = "common") use ($app) {
     // Return array of CSS includes
-    return $app->schema->getCSSIncludes($group_name, $app->config('css.minify'));
+    return $app->schema->getCSSIncludes($group_name, $app->site->minify_css);
 });
 
 $twig->addFunction($function_include_css);
 
 $function_include_bottom_js = new Twig_SimpleFunction('includeJSBottom', function ($group_name = "common") use ($app) {    
     // Return array of JS includes
-    return $app->schema->getJSBottomIncludes($group_name, $app->config('js.minify'));
+    return $app->schema->getJSBottomIncludes($group_name, $app->site->minify_js);
 });
 
 $twig->addFunction($function_include_bottom_js);
 
 $function_include_top_js = new Twig_SimpleFunction('includeJSTop', function ($group_name = "common") use ($app) {    
     // Return array of JS includes
-    return $app->schema->getJSTopIncludes($group_name, $app->config('js.minify'));
+    return $app->schema->getJSTopIncludes($group_name, $app->site->minify_js);
 });
 
 $twig->addFunction($function_include_top_js);
@@ -249,14 +252,6 @@ $app->hook('includes.js.register', function () use ($app){
     
 }, 1);  
 
-if ($db_error){
-    // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
-    session_destroy();
-    $controller = new \UserFrosting\BaseController($app);
-    $controller->pageDatabaseError();
-    exit;
-}
-
 /* TODO: enable Twig caching?
 $view = $app->view();
 $view->parserOptions = array(
@@ -272,3 +267,11 @@ $view->parserOptions = array(
 // Hook for core and plugins to register includes
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
+
+if ($db_error){
+    // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
+    session_destroy();
+    $controller = new \UserFrosting\BaseController($app);
+    $controller->pageDatabaseError();
+    exit;
+}

@@ -34,7 +34,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
                     'require_activation' => '1', 
                     'resend_activation_threshold' => '0', 
                     'reset_password_timeout' => '10800', 
-                    'default_locale' => 'en_US', 
+                    'default_locale' => 'en_US',
+                    'minify_css' => '0',
+                    'minify_js' => '0',
                     'version' => '0.3.0', 
                     'author' => 'Alex Weissman'
                 ]
@@ -49,7 +51,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
                     "require_activation" => "Specify whether email activation is required for newly registered accounts.  Accounts created on the admin side never need to be activated.", 
                     "resend_activation_threshold" => "The time, in seconds, that a user must wait before requesting that the activation email be resent.", 
                     "reset_password_timeout" => "The time, in seconds, before a user's password reminder email expires.", 
-                    "default_locale" => "The default language for newly registered users.", 
+                    "default_locale" => "The default language for newly registered users.",
+                    "minify_css" => "Specify whether to use concatenated, minified CSS (production) or raw CSS includes (dev).",
+                    "minify_js" => "Specify whether to use concatenated, minified JS (production) or raw JS includes (dev).",
                     "version" => "The current version of UserFrosting.", 
                     "author" => "The author of the site.  Will be used in the site's author meta tag."
                 ]
@@ -63,7 +67,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         
         $table = $this->_table;
         
-        $stmt = $db->query("SELECT * FROM $table");
+        $stmt = $db->query("SELECT * FROM `$table`");
                   
         $results = [];
         $results['settings'] = [];
@@ -256,11 +260,11 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         $db = static::connection();
         $table = $this->_table;
         
-        $stmt_insert = $db->prepare("INSERT INTO $table
+        $stmt_insert = $db->prepare("INSERT INTO `$table`
             (plugin, name, value, description)
             VALUES (:plugin, :name, :value, :description);");
         
-        $stmt_update = $db->prepare("UPDATE $table SET
+        $stmt_update = $db->prepare("UPDATE `$table` SET
             value = :value,
             description = :description 
             WHERE plugin = :plugin and name = :name;");
