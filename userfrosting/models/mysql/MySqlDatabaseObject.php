@@ -67,7 +67,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
             
             $table = $this->_table;
             
-            $query = "SELECT * FROM $table WHERE id = :id LIMIT 1";
+            $query = "SELECT * FROM `$table` WHERE id = :id LIMIT 1";
             
             $stmt = $db->prepare($query);
             
@@ -104,9 +104,9 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
             $set_terms = [];
             $sqlVars = [];
             foreach ($this->_properties as $name => $value){
-                $column_list[] = $name;
+                $column_list[] = "`$name`";
                 $value_list[] = ":$name";                
-                $set_terms[] = "$name = :$name" . "_2";
+                $set_terms[] = "`$name` = :$name" . "_2";
                 $sqlVars[":$name"] = $value;
                 $sqlVars[":$name" . "_2"] = $value;
             }
@@ -118,7 +118,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
             $value_clause = implode(",", $value_list);
             
             $query = "
-                INSERT INTO $table
+                INSERT INTO `$table`
                 ( id, $column_clause )
                 VALUES ( :id, $value_clause )
                 ON DUPLICATE KEY UPDATE $set_clause";
@@ -128,7 +128,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         } else {
             $sqlVars = [];
             foreach ($this->_properties as $name => $value){
-                $column_list[] = $name;
+                $column_list[] = "`$name`";
                 $value_list[] = ":$name";
                 $sqlVars[":$name"] = $value;
             }
@@ -137,7 +137,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
             $value_clause = implode(",", $value_list);
             
             $query = "
-                INSERT INTO $table
+                INSERT INTO `$table`
                 ( $column_clause )
                 VALUES ( $value_clause );";
         
@@ -163,7 +163,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         $sqlVars[":id"] = $this->_id;
         
         $query = "
-            DELETE FROM $table
+            DELETE FROM `$table`
             WHERE id = :id";
             
         $stmt = $db->prepare($query);

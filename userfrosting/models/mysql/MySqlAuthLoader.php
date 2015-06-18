@@ -10,7 +10,7 @@ class MySqlAuthLoader extends MySqlDatabase {
         $db = static::connection();
         $table = static::getTableAuthorizeUser();
         
-        $query = "SELECT * FROM $table WHERE user_id = :user_id AND hook = :hook LIMIT 1";
+        $query = "SELECT * FROM `$table` WHERE user_id = :user_id AND hook = :hook LIMIT 1";
         
         $stmt = $db->prepare($query);
         
@@ -32,7 +32,7 @@ class MySqlAuthLoader extends MySqlDatabase {
         $db = self::connection();
         $table = static::getTableAuthorizeGroup();
         
-        $query = "SELECT * FROM $table WHERE group_id = :group_id AND hook = :hook LIMIT 1";
+        $query = "SELECT * FROM `$table` WHERE group_id = :group_id AND hook = :hook LIMIT 1";
         
         $stmt = $db->prepare($query);
         
