@@ -67,7 +67,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         
         $table = $this->_table;
         
-        $stmt = $db->query("SELECT * FROM $table");
+        $stmt = $db->query("SELECT * FROM `$table`");
                   
         $results = [];
         $results['settings'] = [];
@@ -260,11 +260,11 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         $db = static::connection();
         $table = $this->_table;
         
-        $stmt_insert = $db->prepare("INSERT INTO $table
+        $stmt_insert = $db->prepare("INSERT INTO `$table`
             (plugin, name, value, description)
             VALUES (:plugin, :name, :value, :description);");
         
-        $stmt_update = $db->prepare("UPDATE $table SET
+        $stmt_update = $db->prepare("UPDATE `$table` SET
             value = :value,
             description = :description 
             WHERE plugin = :plugin and name = :name;");

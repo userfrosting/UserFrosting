@@ -252,14 +252,6 @@ $app->hook('includes.js.register', function () use ($app){
     
 }, 1);  
 
-if ($db_error){
-    // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
-    session_destroy();
-    $controller = new \UserFrosting\BaseController($app);
-    $controller->pageDatabaseError();
-    exit;
-}
-
 /* TODO: enable Twig caching?
 $view = $app->view();
 $view->parserOptions = array(
@@ -275,3 +267,11 @@ $view->parserOptions = array(
 // Hook for core and plugins to register includes
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
+
+if ($db_error){
+    // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
+    session_destroy();
+    $controller = new \UserFrosting\BaseController($app);
+    $controller->pageDatabaseError();
+    exit;
+}

@@ -64,7 +64,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         
         foreach ($test_list as $table){
             try {
-                $stmt = $connection->prepare("SELECT 1 FROM $table LIMIT 1;");
+                $stmt = $connection->prepare("SELECT 1 FROM `$table` LIMIT 1;");
             } catch (\PDOException $e){
                 continue;
             }
