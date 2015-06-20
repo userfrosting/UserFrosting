@@ -242,7 +242,7 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("dashboard", "lib/raphael.js");
     $app->schema->registerJS("dashboard", "lib/morris.js");
     $app->schema->registerJS("dashboard", "morris-data.js");
-    $app->schema->registerJS("dashboard", "http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0");    
+//    $app->schema->registerJS("dashboard", "http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0");    
     
     // Users JS
     $app->schema->registerJS("user", "widget-users.js");
@@ -262,11 +262,31 @@ $view->parserOptions = array(
 
 // TODO: this is where any plugin initialization scripts should be run
 
+//$loader->addPath($app->config('plugins.path'));
 
+
+$app->hook('plugins.register', function () use ($app){
+// pickup plugin files
+    $var_plugins = $app->site->getPlugins();
+//print_r($var_plugins);
+//echo("Line 272 plugins");
+    foreach($var_plugins as $var_plugin)
+    {
+//echo(get_include_path() ."<br>".$app->config('plugins.path')."/".$var_plugin."/config-plugin.php");        
+        require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
+        $var_plugininit = "\\$var_plugin\\$var_plugin::init();";
+//echo $var_plugininit       ;
+        $$var_plugininit;
+        
+    }
+});
 
 // Hook for core and plugins to register includes
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
+
+$app->applyHook("plugins.register");
+\datatable\datatable::echobr("Line 289 loaded datatable");
 
 if ($db_error){
     // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out

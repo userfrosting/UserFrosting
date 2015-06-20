@@ -213,6 +213,17 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return $results;
     }
     
+    // Get a list of all plugins
+    public function getPlugins(){
+    	$directory = static::$app->config('plugins.path');
+        $themes = glob($directory . "/*", GLOB_ONLYDIR);
+        $results = [];
+        foreach ($themes as $theme){
+            $basename = basename($theme);
+            $results[$basename] = $basename;
+        }
+        return $results;
+    }
     // Return an array of system and server configuration info
     public function getSystemInfo(){
         $results = [];
