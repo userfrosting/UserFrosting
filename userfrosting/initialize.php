@@ -262,7 +262,7 @@ $view->parserOptions = array(
 
 // TODO: this is where any plugin initialization scripts should be run
 
-//$loader->addPath($app->config('plugins.path'));
+$loader->addPath($app->config('plugins.path'));
 
 
 $app->hook('plugins.register', function () use ($app){
