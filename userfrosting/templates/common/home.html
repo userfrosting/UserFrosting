@@ -7,8 +7,16 @@
         {% include 'common/components/main-nav.html' %}
       <div class="jumbotron">
         <h1>Welcome to UserFrosting!</h1>
+        <h2>Hello {{oauth.firstName}} {{oauth.lastName}}</h2>
+        <img src="{{oauth.imageUrl}}">
         <p class="lead">A secure, modern user management system based on the Slim Framework and the Twig templating engine.</p>
         {% include 'common/components/alerts.html' %}
+        <div class="row">
+              <div class="col-md-12">
+                  <a href="/linkedin.php" >Login with LinkedIn</a>
+              </div>
+            </div>
+        
         <div class="row">
             <div class="col-sm-12">
               <a href="{{site.uri.public}}/account/login" class="btn btn-success" role="button" value="Login">Login</a>

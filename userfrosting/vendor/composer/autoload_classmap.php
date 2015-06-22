@@ -46,6 +46,7 @@ return array(
     'UserFrosting\\MySqlUserLoader' => $baseDir . '/models/mysql/MySqlUserLoader.php',
     'UserFrosting\\ObjectLoaderInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\PageSchema' => $baseDir . '/models/PageSchema.php',
+    'UserFrosting\\Plugins' => $baseDir . '/models/Plugins.php',
     'UserFrosting\\SiteSettingsInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\UFDatabase' => $baseDir . '/models/UFDatabase.php',
     'UserFrosting\\UserController' => $baseDir . '/controllers/UserController.php',

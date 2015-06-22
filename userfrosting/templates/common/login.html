@@ -9,6 +9,12 @@
         <h1>Welcome to UserFrosting!</h1>
         <p class="lead">Please sign in.</p>
         {% include 'common/components/alerts.html' %}
+            <div class="row">
+              <div class="col-md-12">
+                  <a href="/account/login?oauthlogin=linkedin" class="btn btn-success" >Login using LinkedIn</a>
+              </div>
+            </div>
+        
         <form name="login" method="post" action="{{site.uri.public}}/account/login" class="form-horizontal">
             {% include 'common/components/csrf.html' %}
             <div class="row">
@@ -22,6 +28,8 @@
                     <input type="password" class="form-control " name="password" autocomplete="off" value="" placeholder="Password"   >
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-md-12">
                 <button type="submit" class="btn btn-success"  data-loading-text="Please wait..." >
                     Login

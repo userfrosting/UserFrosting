@@ -18,7 +18,8 @@
         "slim/views": "*",
         "nikic/php-parser": "*",
         "alexweissman/fortress" : "dev-master",
-        "phpmailer/phpmailer": "5.2.10"
+        "phpmailer/phpmailer": "5.2.10",
+        "league/oauth2-client" :"*"  
     },
     "autoload": {
         "classmap" : [

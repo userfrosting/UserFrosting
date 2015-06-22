@@ -26,7 +26,6 @@ THE SOFTWARE.
 */
 
 require_once("config-userfrosting.php");
-
 use \Slim\Extras\Middleware\CsrfGuard;
 
 // CSRF Middleware
@@ -286,7 +285,7 @@ $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
 
 $app->applyHook("plugins.register");
-\datatable\datatable::echobr("Line 289 loaded datatable");
+//\datatable\datatable::echobr("Line 289 loaded datatable");
 
 if ($db_error){
     // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out

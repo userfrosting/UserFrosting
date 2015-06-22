@@ -15,15 +15,127 @@ class AccountController extends \UserFrosting\BaseController {
         $this->_app = $app;
     }
 
-    public function pageHome(){
+    public function oauthLogin($par_provider,$par_url='') {
+        $userDetails=false;
+
+        if($par_url=='')
+        {
+            $par_url=$this->_app->site->uri['public'];
+        }
+        switch(strtoupper($par_provider))
+        {
+            case "LINKEDIN":
+//            'redirectUri' => 'http://sniperecruit.localhost?oauthlogin=linkedin',
+        $provider = new \League\OAuth2\Client\Provider\LinkedIn([
+            'clientId' => '<CLIENT ID>',
+            'clientSecret' => '<SECRET>',
+            'medhod' => 'CURL',
+            'redirectUri' => $par_url.'?oauthlogin=linkedin',
+            'scopes' => ['r_basicprofile', 'r_emailaddress'],
+        ]);
+        }
+//$book = \R::dispense("book");
+//$book->author = "Santa Claus";
+//$book->title = "Secrets of Christmas";
+//$id = \R::store( $book );
+
+        if (!isset($_GET['code'])) {
+
+            // If we don't have an authorization code then get one
+            $authUrl = $provider->getAuthorizationUrl();
+            $_SESSION['oauth2state'] = $provider->state;
+            header('Location: ' . $authUrl);
+            exit;
+
+// Check given state against previously stored one to mitigate CSRF attack
+        } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+
+            unset($_SESSION['oauth2state']);
+            exit('Invalid state');
+        } else {
+
+            // Try to get an access token (using the authorization code grant)
+            $token = $provider->getAccessToken('authorization_code', [
+                'code' => $_GET['code']
+            ]);
+
+            // Optional: Now you have a token you can look up a users profile data
+            try {
+
+                // We got an access token, let's now get the user's details
+                $userDetails = $provider->getUserDetails($token);
+
+                // Use these details to create a new profile
+//        printf('Hello %s!', $userDetails->lastName.", ".$userDetails->firstName);
+//print_r($userDetails);
+            } catch (Exception $e) {
+
+                // Failed to get user details
+                exit('Oh dear...');
+            }
+
+            // Use this to interact with an API on the users behalf
+//            echo "Line 70" . $token->accessToken;
+            $_SESSION['oauth_token']=$token;
+            // Use this to get a new access token if the old one expires
+//            echo "Line 73" . $token->refreshToken;
+
+// Database insert here 
+// To be completed this code below is for Readbean            
+            
+            // Unix timestamp of when the token will expire, and need refreshing
+//            echo "Line 76" . $token->expires;
+//            $userDetails->token=$token;
+            
+//            $var_ufuser  = $this->_app->_R->find( 'ufuseroauth', ' uid ="'.$userDetails->uid.'"');
+//            if(count($var_ufuser)==0)
+//            {
+//                $var_ufuser = $this->_app->_R->dispense("ufuseroauth");
+//                $var_ufuser->uid = $userDetails->uid;
+//                $var_ufuser->email = $userDetails->email;
+//                $var_ufuser->first_name = $userDetails->firstName;
+//                $var_ufuser->last_name = $userDetails->lastName;
+//                $var_ufuser->picture_url = $userDetails->imageUrl;
+//                $var_ufuser->oauth_details = serialize($userDetails);
+//                $id = $this->_app->_R->store( $var_ufuser );
+//        if (!$this->_app->user->isGuest()) {
+////print_r($this->_app->user);  
+//echo("Line 96 user id is ".$app->user->id);
+//        }                
+//            }
+//            else
+//            {
+//print_r($this->_app->user);            
+//echo("<br>Line 96 user id is ".$app->user->id);
+//                
+//            }
+            
+        }
+            return $userDetails;
+    }
+
+    public function pageHome() {
+        $userDetails=false;
+        if(isset($_GET['oauthlogin']))
+        {
+            $userDetails = $this->oauthLogin($_GET['oauthlogin']);
+//print_r($userDetails);            
+        }
+//print_r($userDetails); 
+//$book = $this->_app->_R->dispense("book");
+//$book->author = "Santa Claus";
+//$book->title = "Secrets of Christmas";
+//$id = $this->_app->_R->store( $book );
+
         $this->_app->render('common/home.html', [
             'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "A secure, modern user management system based on UserCake, jQuery, and Bootstrap.",
-                'description' =>    "Main landing page for public access to this website.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ]
+                'author' => $this->_app->site->author,
+                'title' => "A secure, modern user management system based on UserCake, jQuery, and Bootstrap.",
+                'description' => "Main landing page for public access to this website.",
+                'alerts' => $this->_app->alerts->getAndClearMessages(),
+                'active_page' => ""
+            ],
+            'oauth' => $userDetails
         ]);
     }
     
@@ -34,6 +146,14 @@ class AccountController extends \UserFrosting\BaseController {
         }        
         
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/login.json");
+//print_r($_GET) ;       
+//print_r($_REQUEST) ;       
+        if(isset($_GET['oauthlogin']))
+        {
+            
+//echo($this->_app->urlFor('uri_home')." Line 150 <br>");            
+            $userDetails = $this->oauthLogin($_GET['oauthlogin'],$this->_app->site->uri['public']);
+        }
         
         $this->_app->render('common/login.html', [
             'page' => [
@@ -139,6 +259,11 @@ class AccountController extends \UserFrosting\BaseController {
         if (!$this->_app->user->checkAccess('uri_account_settings')){
             $this->_app->notFound();
         }
+        $userDetails = false;
+        if(isset($_GET['oauthlogin']))
+        {
+            $userDetails = $this->oauthLogin($_GET['oauthlogin'],'http://sniperecruit.localhost/account/settings');
+        }
         
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/account-settings.json");
         
@@ -150,7 +275,8 @@ class AccountController extends \UserFrosting\BaseController {
                 'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             "locales" => $this->_app->site->getLocales(),
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $validators->formValidationRulesJson(),
+            'oauth'=>$userDetails
         ]);          
     }    
     
