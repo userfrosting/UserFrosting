@@ -219,7 +219,9 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Here is my password.  May I please assume the identify of this user now?
-        if ($user->login($data['password']))  {
+        if ($user->verifyPassword($data['password']))  {
+            $user->login();
+            // Create the session
             $_SESSION["userfrosting"]["user"] = $user;
             $this->_app->user = $_SESSION["userfrosting"]["user"];
             $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());

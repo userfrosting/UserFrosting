@@ -20,7 +20,7 @@ interface UserObjectInterface {
     public function getPrimaryGroup();
     public function checkAccess($hook, $params);
     public function verifyPassword($password);
-    public function login($password);
+    public function login();
 }
 
 interface UserLoaderInterface {

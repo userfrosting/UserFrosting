@@ -350,11 +350,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         }    
     }
     
-    public function login($password){
-        // Check the password
-        if (!$this->verifyPassword($password))
-            return false;
-    
+    public function login(){    
         //Update last sign in
         $this->last_sign_in_stamp = date("Y-m-d H:i:s");
         
@@ -370,6 +366,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             }
         }
         
+        // Store changes
         $this->store();
         
         return $this;
