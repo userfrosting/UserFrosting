@@ -115,9 +115,10 @@ $app->alerts = $_SESSION['userfrosting']['alerts'];
 // Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
 // A Slim application uses its built-in error handler if its debug setting is true; otherwise, it uses the custom error handler.
 $app->error(function (\Exception $e) use ($app) {
-    $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+    if ($app->alerts && is_object($app->alerts))
+        $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
     error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-     error_log($e->getTraceAsString());
+    error_log($e->getTraceAsString());
 });
 
 // Also handle fatal errors
@@ -129,14 +130,15 @@ function fatal_handler() {
   
     // Handle fatal errors
     if( $error !== NULL && $error['type'] == E_ERROR) {
-      $errno   = $error["type"];
-      $errfile = $error["file"];
-      $errline = $error["line"];
-      $errstr  = $error["message"];
-      // Inform the client of a fatal error
-      $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
-      error_log("Error ($errno) in $errfile on line $errline: $errstr");
-      header("HTTP/1.1 500 Internal Server Error");
+        $errno   = $error["type"];
+        $errfile = $error["file"];
+        $errline = $error["line"];
+        $errstr  = $error["message"];
+        // Inform the client of a fatal error
+        if ($app->alerts && is_object($app->alerts))
+            $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+        error_log("Fatal error ($errno) in $errfile on line $errline: $errstr");
+        header("HTTP/1.1 500 Internal Server Error");
     }
 }
 

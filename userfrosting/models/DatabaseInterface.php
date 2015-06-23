@@ -91,7 +91,7 @@ interface GroupObjectInterface {
  * @package UserFrosting
  * @author Alex Weissman
  * @link http://alexanderweissman.com
- 
+ *
  * @property string user_name
  * @property string display_name
  * @property string email
