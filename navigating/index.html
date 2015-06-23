@@ -279,8 +279,60 @@ $this-&gt;_app-&gt;render(&#39;users.html&#39;, [
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h2>Creating content with Twig</h2>
+                <h2 id="toc_5">Creating Content with Twig</h2>
                 
+                <h3 id="toc_6">Template Files and Dynamic Content</h3>
+                
+                <p>If you&#39;re unfamiliar with the MVC paradigm, you may be used to seeing PHP code that looks like this:</p>
+                
+                <pre><code>
+                echo &quot;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Username&lt;/th&gt;&lt;th&gt;Email&lt;/th&gt;&lt;/tr&gt;&quot;;
+                
+                $stmt = $db-&gt;prepare(&quot;SELECT * FROM users);
+                $stmt-&gt;execute($sqlVars);
+                
+                while ($r = $stmt-&gt;fetch(PDO::FETCH_ASSOC)) {
+                    echo &quot;&lt;tr&gt;&lt;td&gt;$r[&#39;user_name&#39;]&lt;/td&gt;&lt;td&gt;$r[&#39;email&#39;]&lt;/td&gt;&lt;/tr&gt;&quot;;
+                }
+                
+                echo &quot;&lt;/table&gt;&quot;;
+                </code></pre>
+                
+                <p>We have the code that loads user data from the database all mixed into the code that actually displays the page.  This is commonly referred to as &quot;spaghetti code&quot; - the code twists and turns without any perceivable stucture.  This works for smaller projects, but can create a maintainability nightmare as your project grows.</p>
+                
+                <p>The solution?  MVC.</p>
+                
+                <p>The fundamental principle behind MVC (model-view-controller) architecture is <strong>separation of concerns</strong>.  The idea is to have one layer of code (the <strong>model</strong>) responsible for your data model (interacting with the database, performing various manipulations, etc), and another layer (the <strong>view</strong>) for generating the content that clients use to interact with your application.</p>
+                
+                <p>The <strong>controller</strong> basically does everything else, mediating the interactions between the model and the view.</p>
+                
+                <p>So, how do we implement this separation?  Well for the view, we use a system of <strong>templates</strong>.  Templates basically look like traditional static HTML documents, but they contain <strong>placeholders</strong> and <strong>tags</strong> that allow the controller to inject dynamic content.  Our templating engine, <a href="http://twig.sensiolabs.org/">Twig</a>, takes the data provided by the controller and uses it to render a specified template.  This is done via the <code>$this-&gt;_app-&gt;render</code> method.</p>
+                
+                <p>UserFrosting stores all template files in <code>userfrosting/templates</code>.  So, any time you want to change the content of your website, this is where you need to look.  You will see two directories:</p>
+                
+                <pre><code>
+                /                 
+                |-- templates
+                |   |
+                |   |-- common
+                |   |-- themes</code></pre>
+                
+                <p>The templates in <code>common</code> are used for generating unthemed content, which consists mainly of the pages that guest users can see.  You will see <code>.html</code> files that correspond to the various guest pages: <code>login</code>, <code>register</code>, etc.  You will also see a <code>components</code> subdirectory, which contains common blocks that are included in template files via Twig&#39;s  <code>include</code> tag.</p>
+                
+                <p>The <code>mail</code> directory contains templates for emails that are automatically sent to your users, such as activation and password reset links.</p>
+                
+                <h3>Themable Content</h3>
+                
+                <p>The <code>themes</code> directory, on the other hand, contains <strong>themable</strong> content, which can vary depending on who is logged in.  UserFrosting ships with three default themes: <code>default</code>, <code>nyx</code>, and <code>root</code>.  These themes (and any new ones you create) can be associated with primary groups, and users will be assigned the theme for their primary group when they log in.</p>
+                
+                <p>So for example, if you assign the theme <code>nyx</code> to the group <code>Hydralisks</code>, then any user whose primary group is <code>Hydralisks</code> will load the <code>nyx</code> theme when they log in.  The exceptions are for the root user, who is always given the <code>root</code> theme, and guest users, who always get the <code>default</code> theme.</p>
+                
+                <p>When UserFrosting wants to render a particular template, it first looks for the template file in the user&#39;s assigned theme.  If it can&#39;t find the file there, it then looks in the <code>default</code> theme.</p>
+                
+                <p>This means that if you want some content to be available to all users, you should put your template into the <code>default</code> theme.  You can then customize it for different themes by overriding the file in other theme directories.</p>
+                
+                <p>Every theme also has a theme stylesheet, located in <code>&lt;theme-directory&gt;/css/theme.css</code>.  This stylesheet will be automatically loaded for every page.</p>
+
             </div>
         </div>
     </div>
