@@ -33,7 +33,8 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }        
         
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/login.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);
         
         $this->_app->render('common/login.html', [
             'page' => [
@@ -62,8 +63,9 @@ class AccountController extends \UserFrosting\BaseController {
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
             $this->_app->redirect($this->_app->urlFor('uri_install'));
         }
-        
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/register.json");
+
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);                
 
         $settings = $this->_app->site;
         
@@ -88,7 +90,8 @@ class AccountController extends \UserFrosting\BaseController {
 
     public function pageForgotPassword(){
       
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/forgot-password.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator); 
         
        $this->_app->render('common/forgot-password.html', [
             'page' => [
@@ -104,7 +107,8 @@ class AccountController extends \UserFrosting\BaseController {
 
     public function pageResetPassword(){
       
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/reset-password.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
         
        $this->_app->render('common/reset-password.html', [
             'page' => [
@@ -120,8 +124,10 @@ class AccountController extends \UserFrosting\BaseController {
     }
     
     public function pageResendActivation(){
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/resend-activation.json");
-         
+    
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
+                 
         $this->_app->render('common/resend-activation.html', [
             'page' => [
                 'author' =>         $this->_app->site->author,
@@ -140,7 +146,8 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->notFound();
         }
         
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/account-settings.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
         
         $this->_app->render('account-settings.html', [
             'page' => [

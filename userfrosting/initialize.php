@@ -71,7 +71,7 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'reset_password_timeout', "Password Recovery Timeout (s)");
     $app->site->register('userfrosting', 'minify_css', "Minify CSS", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'minify_js', "Minify JS", "toggle", [0 => "Off", 1 => "On"]);
-}, 1);       
+}, 1);
 
 /**** Session and User Setup ****/
     
@@ -95,15 +95,18 @@ if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting
     $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
 }   
    
-/**** Message Stream Setup ****/
+/**** Translation setup ****/
+$app->translator = new \Fortress\MessageTranslator();
 
 /* Set the translation path and default language path. */
-\Fortress\MessageTranslator::setTranslationTable($app->config("locales.path") . "/" . $app->user->locale . ".php");
-\Fortress\MessageTranslator::setDefaultTable($app->config("locales.path") . "/en_US.php");
+$app->translator->setTranslationTable($app->config("locales.path") . "/" . $app->user->locale . ".php");
+$app->translator->setDefaultTable($app->config("locales.path") . "/en_US.php");   
+   
+/**** Message Stream Setup ****/
 
 /* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
 if (!isset($_SESSION['userfrosting']['alerts']))
-    $_SESSION['userfrosting']['alerts'] = new \Fortress\MessageStream();
+    $_SESSION['userfrosting']['alerts'] = new \Fortress\MessageStream($app->translator);
 
 $app->alerts = $_SESSION['userfrosting']['alerts'];
 
@@ -167,7 +170,7 @@ $twig->addFunction($function_check_access);
 
 // Add Twig function for translating message hooks
 $function_translate = new Twig_SimpleFunction('translate', function ($hook, $params = []) use ($app) {
-    return \Fortress\MessageTranslator::translate($hook, $params);
+    return $app->translator->translate($hook, $params);
 });
 
 $twig->addFunction($function_translate);

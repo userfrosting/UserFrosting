@@ -12,9 +12,9 @@
     session_cache_limiter(false);
     session_name("UserFrosting");
     session_start();     
-     
+    
     /* Instantiate the Slim application */
-    $app = new \Slim\Slim([
+    $app = new \UserFrosting\UserFrosting([
         'view' =>           new \Slim\Views\Twig(),
         'mode' =>           'dev'   // Set to 'dev' or 'production'
     ]);

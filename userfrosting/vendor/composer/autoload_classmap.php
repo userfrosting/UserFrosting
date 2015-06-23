@@ -49,6 +49,7 @@ return array(
     'UserFrosting\\SiteSettingsInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\UFDatabase' => $baseDir . '/models/UFDatabase.php',
     'UserFrosting\\UserController' => $baseDir . '/controllers/UserController.php',
+    'UserFrosting\\UserFrosting' => $baseDir . '/controllers/UserFrosting.php',
     'UserFrosting\\UserLoaderInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\UserObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
     'ntlm_sasl_client_class' => $vendorDir . '/phpmailer/phpmailer/extras/ntlm_sasl_client.php',

@@ -9,33 +9,68 @@ interface ServerSideValidatorInterface {
     public function errors();    
 }
 
-/* Loads validation rules from a schema and validates a target array of data.
-*/
+/**
+ * ServerSideValidator Class
+ *
+ * Loads validation rules from a schema and validates a target array of data.
+ *
+ * @package Fortress
+ * @author Alex Weissman
+ * @link http://alexanderweissman.com
+ */
 class ServerSideValidator extends \Valitron\Validator implements ServerSideValidatorInterface {
 
-    protected $_schema;         // A valid RequestSchema object
+    /**
+     * @var RequestSchema
+     */  
+    protected $_schema;
+
+    /**
+     * @var MessageTranslatorInterface
+     */     
+    protected $_translator;
     
-    public function __construct($schema) {        
+    /** Create a new server-side validator.
+     *
+     * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
+     * @param MessageTranslator $translator A MessageTranslator to be used to translate message ids found in the schema.
+     */    
+    public function __construct($schema, $translator) {        
         // Set schema
         $this->setSchema($schema);
-        // TODO: use locale to determine Valitron language
+        
+        // Set translator
+        $this->_translator = $translator;
+        // TODO: use locale of translator to determine Valitron language?
         
         // Construct the parent with an empty data array.
         parent::__construct([]);
     }
     
-    /* Set the schema for this validator, as a valid RequestSchema object. */
+    /**
+     * Set the schema for this validator, as a valid RequestSchema object.
+     *
+     * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
+     */
     public function setSchema($schema){
         $this->_schema = $schema;
     }
     
-    /* Validate the specified data against the schema rules. */
+    /**
+     * Validate the specified data against the schema rules.
+     *
+     * @param array $data An array of data, mapping field names to field values.
+     * @return boolean True if the data was successfully validated, false otherwise.
+     */
     public function validate($data = []){
         $this->_fields = $data;         // Setting the parent class Validator's field data.
         $this->generateSchemaRules();   // Build Validator rules from the schema.
         return parent::validate();      // Validate!
     }
     
+    /**
+     * Add a rule to the validator, along with a specified error message if that rule is failed by the data.
+     */
     private function ruleWithMessage($rule, $message_set) {
         // Weird way to adapt with Valitron's funky interface
         $params = array_merge([$rule], array_slice(func_get_args(), 2));
@@ -47,7 +82,10 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
         $this->message($message_set);
     }
     
-    /* Generate and add rules from the schema */
+    /**
+     *
+     * Generate and add rules from the schema
+     */
     private function generateSchemaRules(){
         foreach ($this->_schema->getSchema() as $field_name => $field){
             if (!isset($field['validators']))
@@ -56,7 +94,7 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
             foreach ($validators as $validator_name => $validator){
                 if (isset($validator['message'])){
                     $params = array_merge(["self" => $field_name], $validator);
-                    $message_set = MessageTranslator::translate($validator['message'], $params);
+                    $message_set = $this->_translator->translate($validator['message'], $params);
                 }else
                     $message_set = null;
                 // Required validator

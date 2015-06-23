@@ -6,13 +6,17 @@ require_once("fortress/config-fortress.php");
 /******** Do this in a project-wide config file ********/
 // Start the session
 session_start();
+
+// Create a message translator
+$translator = new Fortress\MessageTranslator();
+// Set the translation paths
+$translator->setTranslationTable("fortress/locale/es_ES.php");
+$translator->setDefaultTable("fortress/locale/en_US.php");
+
 // Set the message stream
 if (!isset($_SESSION['Fortress']['alerts']))
-    $_SESSION['Fortress']['alerts'] = new Fortress\MessageStream();
+    $_SESSION['Fortress']['alerts'] = new Fortress\MessageStream($translator);
 $ms = $_SESSION['Fortress']['alerts'];
-
-// Set the translation path
-Fortress\MessageTranslator::setTranslationTable("fortress/locale/en_US.php");
 
 /*******************************************************/
 
@@ -24,10 +28,10 @@ echo "</pre>";
 $ms->resetMessageStream();
 
 // Load the request schema
-$requestSchema = new Fortress\RequestSchema("fortress/schema/forms/register.json");
+$schema = new Fortress\RequestSchema("fortress/schema/forms/register.json");
 
 // POST request
-$rf = new Fortress\HTTPRequestFortress($ms, $requestSchema, $_GET);
+$rf = new Fortress\HTTPRequestFortress($ms, $schema, $_GET);
 // Remove csrf_token from the request data, if specified
 $rf->removeFields(['csrf_token']);
 
@@ -45,7 +49,7 @@ if (!$rf->validate()) {
 }
 
 // Test client validators
-$clientVal = new Fortress\ClientSideValidator("fortress/schema/forms/register.json");
+$clientVal = new Fortress\ClientSideValidator($schema, $translator);
 echo "<h2>Client-side validation schema (JSON)</h2>";
 echo "<pre>";
 print_r($clientVal->formValidationRulesJson());
@@ -59,6 +63,4 @@ if (!yourFunctionHere($data)){
 }
 
 // If we've made it this far, success!
-
-
 ?>

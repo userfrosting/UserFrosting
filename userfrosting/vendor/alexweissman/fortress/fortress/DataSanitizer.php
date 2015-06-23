@@ -7,11 +7,32 @@ interface DataSanitizerInterface {
     public function sanitize($data, $on_unexpected_var);
 }
 
-/* Perform sanitization and transformation on a set of data fields, as specified by a RequestSchema. */    
-class DataSanitizer implements DataSanitizerInterface {
-    protected $_schema;     // A valid RequestSchema object
-    protected $_purifier;   // A valid HTMLPurifier object
+/**
+ * DataSanitizer Class
+ *
+ * Perform sanitization and transformation on a set of data fields, as specified by a RequestSchema.
+ *
+ * @package Fortress
+ * @author Alex Weissman
+ * @link http://alexanderweissman.com
+ */
+ class DataSanitizer implements DataSanitizerInterface {
     
+    /**
+     * @var RequestSchema
+     */        
+    protected $_schema;
+    
+    /**
+     * @var HTMLPurifier
+     */       
+    protected $_purifier;
+    
+    /**
+     * Create a new data sanitizer.
+     *
+     * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
+     */      
     public function __construct($schema){
         // Create purifier
         $this->_purifier = new \HTMLPurifier();
@@ -20,15 +41,27 @@ class DataSanitizer implements DataSanitizerInterface {
         $this->setSchema($schema);
     }
     
-    /* Set the schema for this sanitizer, as a valid RequestSchema object. */
+    /**
+     * Set the schema for this sanitizer, as a valid RequestSchema object.
+     *
+     * @param RequestSchema $schema A RequestSchema object, containing the validation and sanitization rules.
+     */
     public function setSchema($schema){
         $this->_schema = $schema;
     }
     
-    /* Perform transformations, in the following order:
+    /**
+     * Sanitize each field in the specified data array, applying transformations in the following order:
      * 1. Escape/purge/purify HTML entities
      * 2. Set any default values for unspecified fields.
      * 3. Perform any other specified transformations.
+     *
+     * @param array $data The array of data to be sanitized.
+     * @param string $on_unexpected_var[optional] Determines what to do when a field is encountered that is not in the schema.  Set to one of:
+     * "allow": Treat the field as any other, applying the "purge" sanitization filter.
+     * "error": Raise an exception.
+     * "skip" (default): Quietly ignore the field.  It will not be part of the sanitized data array.
+     * @return array The array of sanitized data, mapping field names => values.
      */
     public function sanitize($data, $on_unexpected_var = "skip") {
         $schemaFields = $this->_schema->getSchema();
@@ -60,13 +93,19 @@ class DataSanitizer implements DataSanitizerInterface {
         return $sanitizedData;
     }
     
-    // Sanitize a raw field value.  If $schemaRequired is set to true, it will also require that the field exists in the schema.
-    public function sanitizeField($name, $rawValue){
+    /**
+     * Sanitize a raw field value.
+     *
+     * @param string $name The name of the field to sanitize, as specified in the schema.
+     * @param string $value The value to be sanitized.
+     * @return string The sanitized value.
+     */
+    public function sanitizeField($name, $value){
         $schemaFields = $this->_schema->getSchema();
 
         $fieldParameters = $schemaFields[$name];
         
-        $sanitizedValue = $rawValue;
+        $sanitizedValue = $value;
         // Field exists in schema, so validate accordingly
         if (!isset($fieldParameters['sanitizers']) || empty($fieldParameters['sanitizers'])) {
             return $this->purgeHtmlCharacters($sanitizedValue);
@@ -88,7 +127,7 @@ class DataSanitizer implements DataSanitizerInterface {
         }
     }
 
-    /* Autodetect if a field is an array or scalar, and filter appropriately. */
+    /** Autodetect if a field is an array or scalar, and filter appropriately. */
     private function escapeHtmlCharacters($value){
             if (is_array($value))
             return filter_var_array($value, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -96,7 +135,7 @@ class DataSanitizer implements DataSanitizerInterface {
             return filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
     }
     
-    /* Autodetect if a field is an array or scalar, and filter appropriately. */
+    /** Autodetect if a field is an array or scalar, and filter appropriately. */
     private function purgeHtmlCharacters($value){
             if (is_array($value))
             return filter_var_array($value, FILTER_SANITIZE_STRING);

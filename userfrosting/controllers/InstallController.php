@@ -108,7 +108,8 @@ class InstallController extends \UserFrosting\BaseController {
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
         
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/register.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);   
         
         $this->_app->render('common/install/install-master.html', [
             'page' => [

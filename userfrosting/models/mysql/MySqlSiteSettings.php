@@ -2,6 +2,15 @@
 
 namespace UserFrosting;
 
+/**
+ * MySqlSiteSettings Class
+ *
+ * A site settings database object for MySQL databases.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://alexanderweissman.com
+ */
 class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
 
     protected $_environment;            // An array of UF environment variables.  Should be read-only.
@@ -11,7 +20,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     
     protected $_table;
 
-    // Construct the site settings object, loading values from the database
+    /** Construct the site settings object, loading values from the database */
     public function __construct() {
         $this->_table = static::getTableConfiguration();
         
@@ -61,7 +70,6 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
-    // Fetch the settings from the database
     public function fetchSettings(){
         $db = static::connection();
         
@@ -131,7 +139,12 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
 
-    // Create/update a setting value.  If it exists, update, otherwise, create.  If updating, then a value or description set to null tells it to remain the same.  If creating, a value or description of null sets the field to an empty string.
+    /**
+     * Create/update a setting value.  If it exists, update, otherwise, create.  If updating, then a value or description set to null tells it to remain the same.  If creating, a value or description of null sets the field to an empty string.
+     *
+     * @param string $plugin The name of the plugin to associate this setting with.
+     * @param string $name The name of the setting.
+     */
     public function set($plugin, $name, $value = null, $description = null){
         if (!isset($this->_settings[$plugin])){
             $this->_settings[$plugin] = [];

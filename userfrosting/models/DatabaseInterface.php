@@ -49,15 +49,32 @@ interface DatabaseInterface {
     public static function getInfo();
 }
 
+/**
+ * SiteSettingsInterface Interface
+ *
+ * A interface for site settings database object classes.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://alexanderweissman.com
+ */
 interface SiteSettingsInterface {
+    
+    /**
+     * Fetch the settings from the database.
+     *
+     * @return array An array of site settings, containing the name and description for each setting.
+     */
+    public function fetchSettings();
+
     public function __isset($name);
     public function __set($name, $value);
     public function __get($name);
-    public function fetchSettings();
     public function set($plugin, $name, $value = null, $description = null);
     public function register($plugin, $name, $label, $type = "text", $options = []);
     public function getRegisteredSettings();
     public function getLocales();
+    public function getThemes();
     public function getSystemInfo();
     public function getLog($lines = null);
     public function store();

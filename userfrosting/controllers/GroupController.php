@@ -82,7 +82,8 @@ class GroupController extends \UserFrosting\BaseController {
         }
         
         // Load validator rules
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/group-create.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -144,7 +145,8 @@ class GroupController extends \UserFrosting\BaseController {
         }
         
         // Load validator rules
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/group-update.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-update.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);          
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],

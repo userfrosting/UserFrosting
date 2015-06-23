@@ -2,28 +2,61 @@
 
 namespace Fortress;
 
-/* Loads a validation schema, and generates client-side rules compatible with the FormValidation JS plugin. */
-
+/**
+ * ClientSideValidator Class
+ *
+ * Loads validation rules from a schema and generates client-side rules compatible with the [FormValidation](http://formvalidation.io) JS plugin.
+ *
+ * @package Fortress
+ * @author Alex Weissman
+ * @link http://alexanderweissman.com
+ */
 class ClientSideValidator {
 
-    protected $_schema = [];
-    protected $_locale = "";
+    /**
+     * @var RequestSchema
+     */
+    protected $_schema;
 
-    // Load schema from a file
-    public function __construct($file) {
-        $this->_schema = json_decode(file_get_contents($file),true);
-        if ($this->_schema === null) {
-            error_log(json_last_error());
-            // Throw error
-        }
+    /**
+     * @var MessageTranslator
+     */    
+    protected $_translator; 
+
+    /**
+     * Create a new client-side validator.
+     *
+     * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
+     * @param MessageTranslator $translator A MessageTranslator to be used to translate message ids found in the schema.
+     */  
+    public function __construct($schema, $translator) {        
+        // Set schema
+        $this->setSchema($schema);
+        
+        // Set translator
+        $this->_translator = $translator;
     }
-
     
-    /* Generate FormValidation compatible rules from the schema */
+    /**
+     * Set the schema for this validator, as a valid RequestSchema object.
+     *
+     * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
+     */
+    public function setSchema($schema){
+        $this->_schema = $schema;
+    }
+    
+    /**
+     * Generate FormValidation compatible rules from the specified RequestSchema, as a JSON document.  
+     * See [this](http://formvalidation.io/getting-started/#calling-plugin) as an example of what this function will generate.
+     * 
+     * @param boolean $encode Specify whether to return a PHP array, or a JSON-encoded string.
+     * @return string|array Returns either the array of rules, or a JSON-encoded representation of that array.
+     */
     public function formValidationRulesJson($encode = true){
         $client_rules = [];
         $implicit_rules = [];
-        foreach ($this->_schema as $field_name => $field){
+        foreach ($this->_schema->getSchema() as $field_name => $field){
             $client_rules[$field_name] = [];
             $client_rules[$field_name]['validators'] = [];
             if (isset($field['validators'])){
@@ -38,77 +71,18 @@ class ClientSideValidator {
         else
             return $client_rules;
     }
-    
-    private function transformValidator($validator_name, $validator){
-        $params = [];
-        // Message
-        if (isset($validator['message'])){
-            if (isset($validator['message'])){
-                $params["message"] = MessageTranslator::translate($validator['message'], $validator);
-            }
-        }        
-        $transformedValidatorJson = [];        
-        switch ($validator_name){
-            // Required validator
-            case "required":
-                $transformedValidatorJson['notEmpty'] = $params;
-                break;
-            case "length":
-                if (isset($validator['min'])) $params['min'] = $validator['min'];
-                if (isset($validator['max'])) $params['max'] = $validator['max'];
-                $transformedValidatorJson['stringLength'] = $params;
-                break;
-            case "integer":
-                $transformedValidatorJson['integer'] = $params;
-                break;
-            case "numeric":
-                $transformedValidatorJson['numeric'] = $params;
-                break;
-            case "range":
-                if (isset($validator['min'])) $params['min'] = $validator['min'];
-                if (isset($validator['max'])) $params['max'] = $validator['max'];
-                if (isset($validator['min']) && isset($validator['max']))
-                    $transformedValidatorJson['between'] = $params;
-                else if (isset($validator['min']))
-                    $transformedValidatorJson['greaterThan'] = $params;
-                else if (isset($validator['max']))
-                    $transformedValidatorJson['lessThan'] = $params;
-                break;
-            case "array":
-                if (isset($validator['min'])) $params['min'] = $validator['min'];
-                if (isset($validator['max'])) $params['max'] = $validator['max'];                
-                $transformedValidatorJson['choice'] = $params;
-                break;
-            case "email":
-                $transformedValidatorJson['emailAddress'] = $params;
-                break;
-            case "matches":
-                if (isset($validator['field'])) $params['field'] = $validator['field'];   
-                $transformedValidatorJson['identical'] = $params;
-                break;
-            case "not_matches":
-                if (isset($validator['field'])) $params['field'] = $validator['field'];   
-                $transformedValidatorJson['different'] = $params;
-                break;
-            case "member_of":
-                if (isset($validator['values'])) $params['regexp'] = "^" . implode("|", $validator['values']) . "$";
-                $transformedValidatorJson['regexp'] = $params;
-                break;
-            case "not_member_of":
-                if (isset($validator['values'])) $params['regexp'] = "^(?!" . implode("|", $validator['values']) . "$).*$";
-                $transformedValidatorJson['regexp'] = $params;
-                break;
-            default:
-                break;
-        }
-        return $transformedValidatorJson;
-        
-    }
    
-    public function clientRules(){
+    /**
+     * Generate FormValidation compatible rules from the specified RequestSchema, as HTML5 `data-*` attributes.  
+     * See [Setting validator options via HTML attributes](http://formvalidation.io/examples/attribute/) as an example of what this function will generate.
+     * 
+     * @return array Returns an array of rules, mapping field names -> string of data-* attributes, separated by spaces.
+     * Example: `data-fv-notempty data-fv-notempty-message="The gender is required"`.
+     */   
+    public function formValidationRulesHtml5(){
         $client_rules = array();
         $implicit_rules = array();
-        foreach ($this->_schema as $field_name => $field){
+        foreach ($this->_schema->getSchema() as $field_name => $field){
             $field_rules = "";
             $validators = $field['validators'];
             foreach ($validators as $validator_name => $validator){
@@ -192,6 +166,72 @@ class ClientSideValidator {
         
         return $client_rules;    
     }
+    
+    private function transformValidator($validator_name, $validator){
+        $params = [];
+        // Message
+        if (isset($validator['message'])){
+            if (isset($validator['message'])){
+                $params["message"] = $this->_translator->translate($validator['message'], $validator);
+            }
+        }        
+        $transformedValidatorJson = [];        
+        switch ($validator_name){
+            // Required validator
+            case "required":
+                $transformedValidatorJson['notEmpty'] = $params;
+                break;
+            case "length":
+                if (isset($validator['min'])) $params['min'] = $validator['min'];
+                if (isset($validator['max'])) $params['max'] = $validator['max'];
+                $transformedValidatorJson['stringLength'] = $params;
+                break;
+            case "integer":
+                $transformedValidatorJson['integer'] = $params;
+                break;
+            case "numeric":
+                $transformedValidatorJson['numeric'] = $params;
+                break;
+            case "range":
+                if (isset($validator['min'])) $params['min'] = $validator['min'];
+                if (isset($validator['max'])) $params['max'] = $validator['max'];
+                if (isset($validator['min']) && isset($validator['max']))
+                    $transformedValidatorJson['between'] = $params;
+                else if (isset($validator['min']))
+                    $transformedValidatorJson['greaterThan'] = $params;
+                else if (isset($validator['max']))
+                    $transformedValidatorJson['lessThan'] = $params;
+                break;
+            case "array":
+                if (isset($validator['min'])) $params['min'] = $validator['min'];
+                if (isset($validator['max'])) $params['max'] = $validator['max'];                
+                $transformedValidatorJson['choice'] = $params;
+                break;
+            case "email":
+                $transformedValidatorJson['emailAddress'] = $params;
+                break;
+            case "matches":
+                if (isset($validator['field'])) $params['field'] = $validator['field'];   
+                $transformedValidatorJson['identical'] = $params;
+                break;
+            case "not_matches":
+                if (isset($validator['field'])) $params['field'] = $validator['field'];   
+                $transformedValidatorJson['different'] = $params;
+                break;
+            case "member_of":
+                if (isset($validator['values'])) $params['regexp'] = "^" . implode("|", $validator['values']) . "$";
+                $transformedValidatorJson['regexp'] = $params;
+                break;
+            case "not_member_of":
+                if (isset($validator['values'])) $params['regexp'] = "^(?!" . implode("|", $validator['values']) . "$).*$";
+                $transformedValidatorJson['regexp'] = $params;
+                break;
+            default:
+                break;
+        }
+        return $transformedValidatorJson;
+        
+    }    
     
     public function html5Attributes($validator, $prefix){
         $attr = "$prefix=true ";

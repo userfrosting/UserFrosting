@@ -186,7 +186,8 @@ class UserController extends \UserFrosting\BaseController {
         }    
         
         // Load validator rules
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/user-create.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-create.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -268,7 +269,8 @@ class UserController extends \UserFrosting\BaseController {
         $hidden_fields[] = "password";
         
         // Load validator rules
-        $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/user-update.json");
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
+        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
