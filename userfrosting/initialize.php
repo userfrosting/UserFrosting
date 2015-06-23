@@ -93,29 +93,30 @@ if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting
 // Otherwise, create a dummy "guest" user
 } else {
     $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
-}   
-   
+}
+
+/**** Message Stream Setup ****/
+
+/* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
+if (!isset($_SESSION['userfrosting']['alerts']))
+    $_SESSION['userfrosting']['alerts'] = new \Fortress\MessageStream();
+
+$app->alerts = $_SESSION['userfrosting']['alerts'];
+
 /**** Translation setup ****/
 $app->translator = new \Fortress\MessageTranslator();
 
 /* Set the translation path and default language path. */
 $app->translator->setTranslationTable($app->config("locales.path") . "/" . $app->user->locale . ".php");
-$app->translator->setDefaultTable($app->config("locales.path") . "/en_US.php");   
-   
-/**** Message Stream Setup ****/
-
-/* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
-if (!isset($_SESSION['userfrosting']['alerts']))
-    $_SESSION['userfrosting']['alerts'] = new \Fortress\MessageStream($app->translator);
-
-$app->alerts = $_SESSION['userfrosting']['alerts'];
+$app->translator->setDefaultTable($app->config("locales.path") . "/en_US.php");
+\Fortress\MessageStream::setTranslator($app->translator);
 
 /**** Error Handling Setup ****/
 
 // Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
 // A Slim application uses its built-in error handler if its debug setting is true; otherwise, it uses the custom error handler.
 $app->error(function (\Exception $e) use ($app) {
-    if ($app->alerts && is_object($app->alerts))
+    if ($app->alerts && is_object($app->alerts) && $app->translator)
         $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
     error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
     error_log($e->getTraceAsString());
@@ -135,7 +136,7 @@ function fatal_handler() {
         $errline = $error["line"];
         $errstr  = $error["message"];
         // Inform the client of a fatal error
-        if ($app->alerts && is_object($app->alerts))
+        if ($app->alerts && is_object($app->alerts) && $app->translator)
             $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
         error_log("Fatal error ($errno) in $errfile on line $errline: $errstr");
         header("HTTP/1.1 500 Internal Server Error");

@@ -21,36 +21,25 @@ class MessageStream {
     /**
      * @var MessageTranslator
      */    
-    protected $_message_translator;
+    protected static $_message_translator = null;
 
     /** Create a new message stream.
      *
-     * @param MessageTranslator $message_translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
-     * If not specified, one will be automatically created.
      */
-    public function __construct($message_translator = null){
-        if ($message_translator){
-            $this->_message_translator = $message_translator;
-        } else {
-            $this->_message_translator = new MessageTranslator();
-        }
+    public function __construct(){
+
     }
 
     /**
-     * Set the path(s) to the file(s) containing the translation table(s) to be used.  A translation table is an associative array of message ids => translated messages.
+     * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
-     * @param string $path The full path to the regular translation file.
-     * @param string $path_default The path to a backup translation file, when a message id cannot be found in the regular translation table.
+     * @param MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
      * @return MessageStream this MessageStream object. 
      */    
-    public function setTranslationTable($path, $path_default = null){
-        $this->_message_translator->setTranslationTable($path);
-        if ($path_default){
-            $this->_message_translator->setDefaultTable($path_default);
-        }
-        return $this;
+    public static function setTranslator($translator){
+        static::$_message_translator = $translator;
     }
-     
+    
     /**
      * Adds a raw text message to the session message stream.
      *
@@ -76,7 +65,10 @@ class MessageStream {
      * @return MessageStream this MessageStream object.
      */
     public function addMessageTranslated($type, $message_id, $placeholders = []){
-        $message = $this->_message_translator->translate($message_id, $placeholders);
+        if (!static::$_message_translator){
+            throw new \Exception("No translator has been set!  Please call MessageStream::setTranslator first.");
+        }
+        $message = static::$_message_translator->translate($message_id, $placeholders);
         return $this->addMessage($type, $message);
     }    
     
@@ -95,7 +87,10 @@ class MessageStream {
      * @return MessageTranslator The translator for this message stream.
      */
     public function translator(){
-        return $this->_message_translator;
+        if (!static::$_message_translator){
+            throw new \Exception("No translator has been set!  Please call MessageStream::setTranslator first.");
+        }    
+        return static::$_message_translator;
     }
     
     /**

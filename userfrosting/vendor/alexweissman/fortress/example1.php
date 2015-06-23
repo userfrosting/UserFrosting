@@ -7,16 +7,18 @@ require_once("fortress/config-fortress.php");
 // Start the session
 session_start();
 
+// Set the message stream
+if (!isset($_SESSION['Fortress']['alerts']))
+    $_SESSION['Fortress']['alerts'] = new Fortress\MessageStream();
+$ms = $_SESSION['Fortress']['alerts'];
+
 // Create a message translator
 $translator = new Fortress\MessageTranslator();
 // Set the translation paths
 $translator->setTranslationTable("fortress/locale/es_ES.php");
 $translator->setDefaultTable("fortress/locale/en_US.php");
-
-// Set the message stream
-if (!isset($_SESSION['Fortress']['alerts']))
-    $_SESSION['Fortress']['alerts'] = new Fortress\MessageStream($translator);
-$ms = $_SESSION['Fortress']['alerts'];
+// Set translator for message streams
+\Fortress\MessageStream::setTranslator($translator);
 
 /*******************************************************/
 
