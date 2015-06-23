@@ -2,23 +2,6 @@
 
 namespace UserFrosting;
 
-/**
- * @property string user_name
- * @property string display_name
- * @property string email
- * @property string password
- * @property string title
- * @property int activation_token
- * @property datetime last_activation_request
- * @property int lost_password_request
- * @property datetime lost_password_timestamp
- * @property int active
- * @property datetime sign_up_stamp
- * @property datetime last_sign_in_stamp
- * @property int enabled
- * @property int primary_group_id
- * @property string locale
- */
 class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     
     protected $_groups;         // An undefined value means that the user's groups have not been loaded yet

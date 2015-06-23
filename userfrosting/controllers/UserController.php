@@ -267,7 +267,7 @@ class UserController extends \UserFrosting\BaseController {
         
         // Hide password fields for editing user
         $hidden_fields[] = "password";
-        
+                
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           

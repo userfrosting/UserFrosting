@@ -139,12 +139,6 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
 
-    /**
-     * Create/update a setting value.  If it exists, update, otherwise, create.  If updating, then a value or description set to null tells it to remain the same.  If creating, a value or description of null sets the field to an empty string.
-     *
-     * @param string $plugin The name of the plugin to associate this setting with.
-     * @param string $name The name of the setting.
-     */
     public function set($plugin, $name, $value = null, $description = null){
         if (!isset($this->_settings[$plugin])){
             $this->_settings[$plugin] = [];

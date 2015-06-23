@@ -266,7 +266,6 @@ $view->parserOptions = array(
 // TODO: this is where any plugin initialization scripts should be run
 
 
-
 // Hook for core and plugins to register includes
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
