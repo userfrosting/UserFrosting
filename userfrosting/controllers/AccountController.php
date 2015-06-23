@@ -27,9 +27,8 @@ class AccountController extends \UserFrosting\BaseController {
             case "LINKEDIN":
 //            'redirectUri' => 'http://sniperecruit.localhost?oauthlogin=linkedin',
         $provider = new \League\OAuth2\Client\Provider\LinkedIn([
-            'clientId' => '<CLIENT ID>',
-            'clientSecret' => '<SECRET>',
-            'medhod' => 'CURL',
+            'clientId' => '78vtzpuzyf3njc',
+            'clientSecret' => 'iNb4AGkxFSSClO1j',
             'redirectUri' => $par_url.'?oauthlogin=linkedin',
             'scopes' => ['r_basicprofile', 'r_emailaddress'],
         ]);
@@ -38,8 +37,8 @@ class AccountController extends \UserFrosting\BaseController {
 //$book->author = "Santa Claus";
 //$book->title = "Secrets of Christmas";
 //$id = \R::store( $book );
-
-        if (!isset($_GET['code'])) {
+        $var_getarr = $this->_app->request->get();
+        if (!isset($var_getarr['code'])) {
 
             // If we don't have an authorization code then get one
             $authUrl = $provider->getAuthorizationUrl();
@@ -48,7 +47,7 @@ class AccountController extends \UserFrosting\BaseController {
             exit;
 
 // Check given state against previously stored one to mitigate CSRF attack
-        } elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+        } elseif (empty($var_getarr['state']) || ($var_getarr['state'] !== $_SESSION['oauth2state'])) {
 
             unset($_SESSION['oauth2state']);
             exit('Invalid state');
@@ -56,7 +55,7 @@ class AccountController extends \UserFrosting\BaseController {
 
             // Try to get an access token (using the authorization code grant)
             $token = $provider->getAccessToken('authorization_code', [
-                'code' => $_GET['code']
+                'code' => $var_getarr['code']
             ]);
 
             // Optional: Now you have a token you can look up a users profile data
@@ -116,16 +115,14 @@ class AccountController extends \UserFrosting\BaseController {
 
     public function pageHome() {
         $userDetails=false;
-        if(isset($_GET['oauthlogin']))
+        $var_getarr = $this->_app->request->get();
+        
+        if(isset($var_getarr['oauthlogin']))
         {
-            $userDetails = $this->oauthLogin($_GET['oauthlogin']);
+            $userDetails = $this->oauthLogin($var_getarr['oauthlogin']);
 //print_r($userDetails);            
         }
 //print_r($userDetails); 
-//$book = $this->_app->_R->dispense("book");
-//$book->author = "Santa Claus";
-//$book->title = "Secrets of Christmas";
-//$id = $this->_app->_R->store( $book );
 
         $this->_app->render('common/home.html', [
             'page' => [
@@ -147,12 +144,14 @@ class AccountController extends \UserFrosting\BaseController {
         
         $validators = new \Fortress\ClientSideValidator($this->_app->config('schema.path') . "/forms/login.json");
 //print_r($_GET) ;       
-//print_r($_REQUEST) ;       
-        if(isset($_GET['oauthlogin']))
+//print_r($_REQUEST) ;
+        $var_getarr = $this->_app->request->get();
+        
+        if(isset($var_getarr['oauthlogin']))
         {
             
 //echo($this->_app->urlFor('uri_home')." Line 150 <br>");            
-            $userDetails = $this->oauthLogin($_GET['oauthlogin'],$this->_app->site->uri['public']);
+            $userDetails = $this->oauthLogin($var_getarr['oauthlogin'],$this->_app->site->uri['public']);
         }
         
         $this->_app->render('common/login.html', [

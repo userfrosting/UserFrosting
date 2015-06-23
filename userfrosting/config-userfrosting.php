@@ -26,10 +26,11 @@
     $app->configureMode('dev', function () use ($app, $public_path) {
         $app->config([
             'log.enable' => true,
-            'debug' => false,
+            'debug' => true,
             'base.path'     => __DIR__,            
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
+            'plugins.path'    =>  __DIR__ . '/plugins',
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'log.path' =>   __DIR__ . '/log',
@@ -38,9 +39,9 @@
             'css.path' => $public_path . "/css",
             'db'            =>  [
                 'db_host'  => 'localhost',
-                'db_name'  => 'userfrosting',
-                'db_user'  => 'admin',
-                'db_pass'  => 'password',
+                'db_name'  => 'git_userfrosting',
+                'db_user'  => 'root',
+                'db_pass'  => '',
                 'db_prefix'=> 'uf_'
             ],
             'user_id_guest'  => 0,
@@ -56,6 +57,7 @@
             'base.path'     => __DIR__,
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
+            'plugins.path'    =>  __DIR__ . '/plugins',
             'schema.path' =>    __DIR__ . '/schema',
             'locales.path' =>   __DIR__ . '/locale',
             'log.path' =>   __DIR__ . '/log',
