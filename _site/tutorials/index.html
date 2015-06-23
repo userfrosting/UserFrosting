@@ -99,7 +99,218 @@
     </div>
 </header>
 
-Coming soon!
+<section id="new-page" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 id="toc_0">Creating a New Page</h1>
+                
+                <p>One of the simplest tasks in extending UserFrosting is to create a new page.  If you&#39;re a beginner, you&#39;re probably used to creating a single <code>.php</code> file which contains the content of your page (e.g. <code>barracks.php</code>), that you then view by navigating to <code>http://mysite.com/barracks.php</code>.</p>
+                
+                <p>UserFrosting on the other hand uses the <strong>front controller pattern</strong>, which gives you more flexibility and decouples the URLs for your pages from the actual code that generates their content.  This means that the code for generating a page is no longer contained to a single file.  For more information about how this works, please see <a href="http://localhost:4000/navigating/#slim">Front Controllers and the Slim Microframework</a>.</p>
+                
+                <p>For this tutorial, we will create a simple page that lists all of the <strong>groups</strong> to which the current user belongs.</p>
+                
+                <p>Let&#39;s start by creating the main route in <code>public/index.php</code>.  You will see many blocks of code that look like this:</p>
+                
+                <pre><code>
+                $app-&gt;get(&#39;/dashboard/?&#39;, function () use ($app) {    
+                   // Access-controlled page
+                   if (!$app-&gt;user-&gt;checkAccess(&#39;uri_dashboard&#39;)){
+                       $app-&gt;notFound();
+                   }
+                   
+                   $app-&gt;render(&#39;dashboard.html&#39;, [
+                       &#39;page&#39; =&gt; [
+                           &#39;author&#39; =&gt;         $app-&gt;site-&gt;author,
+                           &#39;title&#39; =&gt;          &quot;Dashboard&quot;,
+                           &#39;description&#39; =&gt;    &quot;Your user dashboard.&quot;,
+                           &#39;alerts&#39; =&gt;         $app-&gt;alerts-&gt;getAndClearMessages()
+                       ]
+                   ]);          
+                });</code></pre>
+                
+                <p>These are <strong>routes</strong>, which <a href="www.slimframework.com">Slim</a> uses to decide what to do when a visitor to your site goes to a particular URL.  This route handles the <code>/dashboard</code> URL.</p>
+                
+                <p>Let&#39;s create a route for our new page, right below this block of code.  Let&#39;s call the URL <code>account/groups</code>.  Why did I pick this name?  Well, it&#39;s neat, and it explains precisely what it is that we&#39;re trying to access - a list of <em>groups</em> for my <em>account</em>.  We can create a simple route like this:</p>
+                
+                <pre><code>
+                $app-&gt;get(&#39;/account/groups/?&#39;, function () use ($app) {   
+                    echo &quot;For Aiur!&quot;;
+                });</code></pre>
+                
+                <p><code>$app-&gt;get</code> tells us that we&#39;re creating a <code>GET</code> route, because when anyone navigates to a web page in their browser, they are really issuing a <code>GET</code> request to the web server.  Then we specify the URL we would like to route. The <code>?</code> at the end of the route means that the trailing <code>/</code> is optional.  </p>
+                
+                <p><code>function () use ($app)</code> defines a <code>callback</code>, which is basically a function that we can pass into another function as a parameter.  This callback will contain all the code that should be executed when someone navigates to this URL.</p>
+                
+                <p>So, let&#39;s visit our new route:</p>
+                
+                <p><img class="img-responsive" src="http://localhost:4000/img/tutorials/new-page-1.png" alt="UserFrosting - creating a new page - 1"></p>
+                
+                <p>Alright, but not very impressive.  All we did was <code>echo</code> a single line, which hopefully you already know how to do.  Let&#39;s try to make this into a UserFrosting page!</p>
+                
+                <p>To do this, we need to create a <a href="http://localhost:4000/navigating/#twig">template</a>.  Templates are stored in <code>userfrosting/templates/</code>.  Since we&#39;re creating a page for authenticated users, we&#39;ll make this a themed page.  This will apply the logged-in user&#39;s theme to the style and layout of this page.  In <code>userfrosting/templates/themes/default/</code>, create a new HTML file called <code>account-groups.html</code>.  Add the following HTML:</p>
+                
+                <pre><code>
+                
+                &lt;!DOCTYPE html&gt;
+                &lt;html lang=&quot;en&quot;&gt;
+                {% include &#39;components/head.html&#39; %}
+                  
+                &lt;body&gt;
+                    &lt;div id=&quot;wrapper&quot;&gt;
+                        {% include &#39;components/nav-account.html&#39; %}
+                        &lt;div id=&quot;page-wrapper&quot;&gt;
+                            {% include &#39;components/alerts.html&#39; %}
+                            
+                            &lt;h1&gt;The user&#39;s ID is {{user.id}}.&lt;/h1&gt;
+                            
+                            {% include &#39;components/footer.html&#39; %}    
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+                
+                </code></pre>
+                
+                <p>This is a basic, (nearly) empty user account page.  We&#39;ve included <code>components/head.html</code>, which contains the <code>&lt;head&gt;</code> tag and various CSS includes, <code>components/nav-account.html</code>, which renders the top and side navigation bars, and <code>components/footer.html</code>, which contains a footer message and various Javascript includes.  <code>components/alerts.html</code> will display any messages that have been placed in the <strong>message stream</strong>.</p>
+                
+                <p>The line </p>
+                
+                <p><code>&lt;h1&gt;The user&#39;s ID is .&lt;/h1&gt;</code></p>
+                
+                <p>is our first bit of actual content.  <code></code> is a <a href="http://twig.sensiolabs.org/doc/templates.html">Twig variable</a>.  For convenience, UserFrosting automatically loads the current user into the Twig variable <code>user</code>.  So, you can always access any property of the current user from Twig by using <code></code>.</p>
+                
+                <p>Going back to our route in <code>index.php</code>, let&#39;s make UserFrosting render our new template!</p>
+                
+                <p>Change your new route to look like this:</p>
+                
+                <pre><code>
+                $app-&gt;get(&#39;/account/groups/?&#39;, function () use ($app) {   
+                   $app-&gt;render(&#39;account-groups.html&#39;, [
+                       &#39;page&#39; =&gt; [
+                           &#39;author&#39; =&gt;         $app-&gt;site-&gt;author,
+                           &#39;title&#39; =&gt;          &quot;Account Groups&quot;,
+                           &#39;description&#39; =&gt;    &quot;A list of the groups to which you belong.&quot;,
+                           &#39;alerts&#39; =&gt;         $app-&gt;alerts-&gt;getAndClearMessages()
+                       ]
+                   ]);  
+                });</code></pre>
+                
+                <p>This is telling UserFrosting to tell Twig to look in <code>userfrosting/templates/themes/default/</code> for a template called <code>account-groups.html</code>, and render it with the specified author, title, page description, and any messages that have been placed into the message stream.</p>
+                
+                <p>If you&#39;re logged in, it should look like this:</p>
+                
+                <p><img class="img-responsive" src="http://localhost:4000/img/tutorials/new-page-2.png" alt="UserFrosting - creating a new page - 2"></p>
+                
+                <p>Ok, now let&#39;s see if we can pull the group names for the user and print them nicely.  Change your template file to look like this:</p>
+                
+                <pre><code>
+                
+                &lt;!DOCTYPE html&gt;
+                &lt;html lang=&quot;en&quot;&gt;
+                {% include &#39;components/head.html&#39; %}
+                  
+                &lt;body&gt;
+                    &lt;div id=&quot;wrapper&quot;&gt;
+                        {% include &#39;components/nav-account.html&#39; %}
+                        &lt;div id=&quot;page-wrapper&quot;&gt;
+                            {% include &#39;components/alerts.html&#39; %}
+                            
+                            &lt;h1&gt;User Groups&lt;/h1&gt;
+                            &lt;ul class=&quot;list-group&quot;&gt;
+                            {% for group in groups %}
+                                &lt;li class=&quot;list-group-item&quot;&gt;
+                                      &lt;i class=&quot;{{group.icon}} fa-fw&quot;&gt;&lt;/i&gt; {{group.name}}
+                                &lt;/li&gt;
+                            {% endfor %}
+                            &lt;/ul&gt;
+                            &lt;br&gt;
+                            {% include &#39;components/footer.html&#39; %}    
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+                
+                </code></pre>
+                
+                <p>The <code>{% for ... %}</code> tag is Twig&#39;s syntax for a <code>for</code> loop, which you close with a <code>{% endfor %}</code> tag.  <code>groups</code> is a Twig variable, which we now need to define in our route.  So now, change your route to:</p>
+                
+                <pre><code>
+                $app-&gt;get(&#39;/account/groups/?&#39;, function () use ($app) {   
+                   $app-&gt;render(&#39;account-groups.html&#39;, [
+                       &#39;page&#39; =&gt; [
+                           &#39;author&#39; =&gt;         $app-&gt;site-&gt;author,
+                           &#39;title&#39; =&gt;          &quot;Account Groups&quot;,
+                           &#39;description&#39; =&gt;    &quot;A list of the groups to which you belong.&quot;,
+                           &#39;alerts&#39; =&gt;         $app-&gt;alerts-&gt;getAndClearMessages()
+                       ],
+                       &#39;groups&#39; =&gt; $app-&gt;user-&gt;getGroups()
+                   ]);  
+                });</code></pre>
+                
+                <p>That extra line <code>$app-&gt;user-&gt;getGroups()</code> loads a list of all the groups (as <code>Group</code> objects) that the currently logged in user (<code>$app-&gt;user</code>) belongs to, and passes them into the Twig variable <code>groups</code>.  </p>
+                
+                <p>Great, now your page should look like this:</p>
+                
+                <p><img class="img-responsive" src="http://localhost:4000/img/tutorials/new-page-3.png" alt="UserFrosting - creating a new page - 3"></p>
+                
+                <p>Alright, one last thing.  We need to control who can access this page!  As it stands, this is a <strong>publicly accessible page</strong>.  We can control access to the page through an <strong>authorization hook</strong>, like so:</p>
+                
+                <pre><code>
+                $app-&gt;get(&#39;/account/groups/?&#39;, function () use ($app) {   
+                   // Access-controlled page
+                   if (!$app-&gt;user-&gt;checkAccess(&#39;uri_account-groups&#39;)){
+                       $app-&gt;notFound();
+                   }   
+                   
+                   $app-&gt;render(&#39;account-groups.html&#39;, [
+                       &#39;page&#39; =&gt; [
+                           &#39;author&#39; =&gt;         $app-&gt;site-&gt;author,
+                           &#39;title&#39; =&gt;          &quot;Account Groups&quot;,
+                           &#39;description&#39; =&gt;    &quot;A list of the groups to which you belong.&quot;,
+                           &#39;alerts&#39; =&gt;         $app-&gt;alerts-&gt;getAndClearMessages()
+                       ],
+                       &#39;groups&#39; =&gt; $app-&gt;user-&gt;getGroups()
+                   ]);  
+                });</code></pre>
+                
+                <p>The function <code>$app-&gt;user-&gt;checkAccess</code> checks whether or not the current user has access to the authorization hook <code>uri_account-groups</code>, and returns a 404 error if they don&#39;t.  </p>
+                
+                <p>To define the hook, and specify which users and groups have access to it, we need to add it to our database.  Specifically, we need to modify either <code>uf_authorize_group</code> or <code>uf_authorize_user</code>.  </p>
+                
+                <p>Let&#39;s suppose we want to allow access to this page for an entire group.  Then we go into <code>uf_authorize_group</code> (for example, through phpMyAdmin), and insert a record:</p>
+                
+                <table class="table">
+                <thead>
+                <tr>
+                <th>id</th>
+                <th>group_id</th>
+                <th>hook</th>
+                <th>conditions</th>
+                </tr>
+                </thead>
+                
+                <tbody>
+                <tr>
+                <td>x</td>
+                <td>1</td>
+                <td>uri_account-groups</td>
+                <td>always()</td>
+                </tr>
+                </tbody>
+                </table>
+                
+                <p><code>group_id</code> is the group that we are authorizing access for, for example, the <code>Users</code> group.  <code>uri_account-groups</code> is the hook that we are defining, and <code>conditions</code> lets us use an expression to limit the conditions under which members of this group have access.  To always allow access for this group, simply use the condition <code>always()</code>.</p>
+                
+                <p>Cool!  Now anyone who is a member of group 1, that is the <code>Users</code> group, will be able to access your new page.  Anyone who isn&#39;t a member, including unauthenticated users, will be shown a 404 error page.</p>
+                
+                <p>I hope this was helpful!</p>
+            </div>
+        </div>
+    </div>
+</section>            
+
       
 
     
