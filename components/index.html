@@ -10,20 +10,299 @@ title: "UserFrosting | Components"
             <li><a href="{{site.url}}/#get-started">Getting Started</a></li>            
             <li class="active">Components</li>
         </ol>
-    </div>
-</header>
-
-<section id="components" class="content-page">
-    <div class="users">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h1>Users</h1>
+                <h1>Components of UserFrosting</h1>
                 <hr class="star-primary">
             </div>
         </div>
         <div class="row">
             <div class="col-lg-12">
+                <ul class="list-unstyled">
+                    <li><a href="#users">Users</a></li>
+                    <li><a href="#groups">Groups</a></li>
+                    <li><a href="#url-structure">URL Structure and REST</a></li>
+                    <li><a href="#sessions">Sessions</a></li>
+                    <li><a href="#authentication">Authentication</a></li>
+                    <li><a href="#authorization">Authorization Hooks and Access Control</a></li>
+                    <li><a href="#theming">Theming</a></li>
+                    <li><a href="#messages">The Message Stream</a></li>
+                    <li><a href="#i18n">Message IDs and Internationalization</a></li>
+                    <li><a href="#validation">Input validation</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section id="users" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 id="toc_0">Users</h2>
                 
+                <p>UserFrosting is a system that centers around <strong>user</strong> accounts and user management.  It currently supports the following features:</p>
+                
+                <h3 id="toc_1">For all users</h3>
+                
+                <ul>
+                <li>User account registration</li>
+                <li>User account login</li>
+                <li>Account activation via email links</li>
+                <li>Self-serve account password reset</li>
+                <li>User account settings</li>
+                <li>Individual user language and locale (i18n) support</li>
+                </ul>
+                
+                <h3 id="toc_2">For admins</h3>
+                
+                <ul>
+                <li>Special <code>root</code> master account with unlimited privileges</li>
+                <li>Control privileges for users and groups</li>
+                <li>Sortable, searchable table of user info</li>
+                <li>See when users last logged in</li>
+                <li>Create and delete users</li>
+                <li>Edit user details</li>
+                <li>Temporarily enable/disable user accounts</li>
+                <li>Enable/disable account registration</li>
+                <li>Manually activate accounts</li>
+                <li>Assign users to different groups</li>
+                <li>Control timeout for password reset requests, activation requests</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="groups" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">                
+                <h2 id="toc_3">Groups</h2>
+                
+                <p>A user can belong to one or more <strong>groups</strong>, which determines which resources on your site they can access.</p>
+                
+                <p>Users can also be assigned a primary group, which is used to determine their theme and other aspects of their experience.</p>
+                
+                <ul>
+                <li>Sortable, searchable table of group info</li>
+                <li>Create and delete groups</li>
+                <li>Edit group details</li>
+                <li>Set theme, landing page, and icons for primary groups</li>
+                <li>Automatically add newly registered users to default groups</li>
+                <li>Associate authorization rules with groups</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="url-structure" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_4">URL Structure and REST</h2>
+                
+                <p>UserFrosting uses a (nearly) RESTful URL naming scheme.  REST means that URLs are designed to refer to specific resources, which can be retrieved (via a <code>GET</code> request) or modified (via a <code>POST</code> request).  UserFrosting does not use the <code>PUT</code> or <code>DELETE</code> HTTP methods, as these are not widely supported by browsers.</p>
+                
+                <p>Example URLs:</p>
+                
+                <pre><code>
+                GET  /users             // List users
+                GET  /users/u/1         // View info for user 1
+                POST /users             // Create a new user
+                POST /users/u/1         // Update info for user 1
+                POST /users/u/1/delete  // Delete user 1 (this is not RESTful, but many browsers still don&#39;t support DELETE)
+                
+                GET /forms/users/u/1?mode=&quot;view&quot;     // Get a form to view user info for user 1
+                GET /forms/users/u/1?mode=&quot;update&quot;   // Get a form to update user info for user 1
+                GET /forms/users                     // Get a form to create a new user
+                </code></pre>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="sessions" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_5">Sessions</h2>
+                
+                <p>UserFrosting keeps everything that it needs for a user session in the <code>$_SESSION[&quot;userfrosting&quot;]</code> key.  This includes the following:</p>
+                
+                <ul>
+                <li><code>$_SESSION[&quot;userfrosting&quot;][&quot;user&quot;]</code>: <small>A <code>User</code> object for the currently logged-in user.  Can also be accessed via <code>$app-&gt;user</code>.</small></li>
+                <li><code>$_SESSION[&quot;userfrosting&quot;][&quot;alerts&quot;]</code>: <small>A <code>MessageStream</code> object, that stores persistent messages.  Can also be accessed via <code>$app-&gt;alerts</code>.</small></li>
+                <li><code>$_SESSION[&quot;userfrosting&quot;][&quot;captcha&quot;]</code>: <small>The most recently generated captcha code, used to verify new account registration.</small></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="authentication" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_6">Authentication</h2>
+                
+                <p>UserFrosting 0.3.0 uses the same robust authentication system, with Blowfish password hashing.  Password resets are done via a short-term expiring token.</p>
+                
+                <p>Any visitor to your site who is not logged in is considered a &quot;guest user&quot;.  This means that there is no longer any need to do a separate check to see if a user is logged in - the controller can simply check if a user is authorized.</p>
+                
+                <p>By default, the guest user is not authorized to do anything.</p>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="authorization" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_7">Authorization Hooks and Access Control</h2>
+                
+                <p>UserFrosting controls access via <strong>authorization hooks</strong>, which represent a &quot;checkpoint&quot; in the codebase to determine whether or not a user is allowed to view or manipulate the model in some way.  Hooks are represented by a unique name.</p>
+                
+                <p>The developer can then call the function <code>checkAccess</code> on a given hook at any place in the code where she wants to control access.  Think of them as the guards of the castle that is your website.  Hooks can be used to control access to entire pages (by calling them at the beginning of a route), or to control specific components and behaviors of your application.</p>
+                
+                <p>For example, suppose we want to control whether or not someone is allowed to update a message on a message board.  Let&#39;s call our hook <code>update_message</code>.  Suppose we are processing a POST request that contains the updated contents of the message.  For the sake of example, we&#39;ve just hardcoded the request data as <code>$post</code> (in reality, you&#39;d probably get it from <code>$app-&gt;request-&gt;post()</code>, then do some validation, etc).</p>
+                
+                <pre><code>
+                $post = [
+                    &quot;id&quot;        =&gt; 42,
+                    &quot;title&quot;     =&gt; &quot;Authorization control in UserFrosting&quot;,
+                    &quot;content&quot;   =&gt; &quot;Everything you ever wanted to know!&quot;
+                ];
+                
+                if ($app-&gt;user-&gt;checkAccess(&quot;update_message&quot;, [&quot;message&quot; =&gt; $post])){
+                    $message = MessageBoard::fetchMessage($post[&quot;id&quot;]);
+                    $message-&gt;update($post);
+                } else {
+                    $ms-&gt;addMessage(&quot;danger&quot;, &quot;The user does not have permission to update this post!&quot;);
+                    $app-&gt;halt(403);
+                }</code></pre>
+                
+                <p>So, where exactly do we decide who is authorized on the <code>update_message</code> hook?  In the database, of course!</p>
+                
+                <p>We use two tables, <code>uf_authorize_user</code> and <code>uf_authorize_group</code>, which we will collectively refer to as the <strong>access control list (ACL)</strong>.  Note that our concept of &quot;access control list&quot; is far more sophisticated than the traditional meaning.  UserFrosting&#39;s ACL not only handles roles (which we call groups), making it more like RBAC, but it also allows for context-sensitive access control via a set of <strong>conditions</strong>.  </p>
+                
+                <p>Thus, UF provides for extremely powerful, fine-grained access control.  Rules like &quot;allow users in group &#39;Tutor&#39; to schedule sessions for students, but only if they are assigned to that student&quot; can be defined with a single entry in the <code>uf_authorize_group</code> table.  <strong>As far as we know, UserFrosting is the only system that allows for fully programmatic, role- and context- based access control for users.</strong></p>
+                
+                <p>The tables <code>uf_authorize_user</code> and <code>uf_authorize_group</code> will associate a user/group with hooks that they are authorized for, along with a set of conditions that must be satisfied.</p>
+                
+                <table class="table">
+                <thead>
+                <tr>
+                <th>id</th>
+                <th>group_id</th>
+                <th>hook</th>
+                <th>conditions</th>
+                </tr>
+                </thead>
+                
+                <tbody>
+                <tr>
+                <td><code>1</code></td>
+                <td><code>1</code></td>
+                <td><code>update_user</code></td>
+                <td><code>equals(self.id,user.id)&amp;&amp;subset(user, [&quot;display_name&quot;, &quot;email&quot;])</code></td>
+                </tr>
+                <tr>
+                <td><code>2</code></td>
+                <td><code>1</code></td>
+                <td><code>update_message</code></td>
+                <td><code>hasMessage(self.id,message.id)&amp;&amp;subset(message, [&quot;id&quot;, &quot;title&quot;, &quot;content&quot;, &quot;subject&quot;])</code></td>
+                </tr>
+                </tbody>
+                </table>
+                
+                <p>When <code>checkAccess(&quot;update_user&quot;, $params)</code> is called, the authorization module performs the following steps:</p>
+                
+                <ol>
+                <li>Find an entry for the hook (e.g., <code>update_user</code>) <small>in the access control tables that either match the currently logged-in user directly, or one of the logged-in user&#39;s groups.</small></li>
+                <li>If the entry exists, check whether the conditions are satisfied <small>(conditions can be joined together with the logical operators <code>&amp;&amp;</code> and <code>||</code>.)</small>
+                
+                <ul>
+                <li>A condition is checked by passing in the contents of <code>$params</code> to the <code>AccessCondition</code> function of the same name.</li>
+                <li>All <code>AccessCondition</code> functions also have access to the special <code>self</code> scope, <small>which contains the information for the currently logged-in user, and the <code>route</code> scope, which contains the parameters of the current request route.</small></li>
+                <li>In this example, <code>equals</code> is an <code>AccessCondition</code> function that returns true if the two parameters are equal, and false otherwise.  <small>In this case, we are checking to see if the currently logged-in user&#39;s (<code>self</code>) <code>id</code> matches the <code>id</code> of the user they are trying to update.  In other words, this checks that the user is only attempting to modify their own information.</small></li>
+                </ul></li>
+                <li>If the conditions are met <small>(such that the boolean string evaluates to <code>true</code>), then access is granted.</small></li>
+                <li>If the entry does not exist, or the conditions were not met, <small>then access is denied.</small></li>
+                <li>There can only be one entry in the access control tables per group/hook pair or user/hook pair. </li>
+                </ol>
+                
+                <h3 id="toc_8">Preset URI hooks:</h3>
+                
+                <ul>
+                <li>uri_home</li>
+                <li>uri_dashboard</li>
+                <li>uri_zerg</li>
+                <li>uri_users</li>
+                <li>uri_groups</li>                
+                <li>uri_site_settings</li>
+                <li>uri_slim_info</li>
+                <li>uri_php_info</li>
+                <li>uri_error_log</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="theming" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_9">Theming</h2>
+                
+                <p>Themes allow custom css and layouts for different groups and users.  Twig templates, in essence, already support this via an elegant system of template directories.</p>
+                
+                <p>Our theming system consists of a separate folder for each theme, which contains one or more HTML template files and a theme stylesheet, <code>css/theme.css</code>.  This stylesheet is imported into the public folder via a special route.  The default theme is <code>default</code>, and other themes work by overriding this content.  UF will by default look in the <code>default</code> theme for template files if if cannot find them in the current theme.</p>
+                
+                <p>If you want to completely change the <em>content</em> of a page for a particular group, you should make a completely new page and then set permissions appropriately.  If you just want to change the <em>layout and style</em> of a page, then you should use a theme to override an existing page.</p>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="messages" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_10">The Message Stream</h2>
+                
+                <p>Session alerts can be retrieved on the client side through the <code>/alerts</code> route.  Messages are sent back to the client in this manner, rather than directly through the HTTP response body, because in some cases we will want to persist messages across one or more requests.  </p>
+                
+                <p>For example, after an AJAX request, you may want to refresh the page <strong>and then</strong> display the alerts.  If the messages were directly part of the HTTP response from the AJAX request, they would be lost after the page refresh.</p>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="i18n" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_11">Message IDs and Internationalization (i18n)</h2>
+                
+                <p>Internationalization is handled essentially the same way that it was in UserCake - through an array that maps message ids to messages in a particular language.  In UserFrosting, this is handled through the static class <code>\Fortess\MessageTranslator</code>.  </p>
+                
+                <p>UserFrosting uses named placeholders with the double-handlebar notation <code>{{user_name}}</code> instead of UserCake&#39;s old <code>%m1%</code> syntax.  Translation is performed using the static <code>translate</code> function:
+                <code>MessageTranslator::translate(&quot;MESSAGE_ID&quot;, [ &quot;placeholder1&quot; =&gt; &quot;value1&quot;, &quot;placeholder2&quot; =&gt; &quot;value2&quot;)]);</code></p>
+                
+                <p>So if <code>MESSAGE_ID</code> is defined as &quot;This is the message, which references {{placeholder1}} and {{placeholder2}}.&quot;, the output will be:
+                &quot;This is the message, which references value1 and value2.&quot;</p>
+                
+                <p>Messages can be automatically translated and pushed to the message stream using <code>MessageStream</code>&#39;s <code>addMessageTranslated</code> function:
+                <code>$ms-&gt;addMessageTranslated(&quot;info&quot;, &quot;MESSAGE_ID&quot;, [ &quot;placeholder1&quot; =&gt; &quot;value1&quot;, &quot;placeholder2&quot; =&gt; &quot;value2&quot;)]);</code></p>
+            </div>
+        </div>
+    </div>
+</section>                
+<section id="validation" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_12">Input Validation</h2>
+                
+                <p>UserFrosting uses the <a href="https://github.com/alexweissman/fortress">Fortress</a> project to provide a schema-based system for sanitizing and validating user data.  This schema consists of a simple JSON file, with rules for how each user-submitted field should be processed.  </p>
+                
+                <p>The <code>HTTPRequestFortress</code> class handles backend sanitization and validation, while the <code>ClientSideValidator</code> class generates client-side validation rules compatible with the <a href="http://formvalidation.io">FormValidation</a> Javascript plugin.</p>
             </div>
         </div>
     </div>
