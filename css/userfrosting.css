@@ -180,6 +180,18 @@ section.content-page ol li small {
   color: #fff;
 }
 
+.navbar-default .navbar-nav > li > a.nav-highlight {
+  color: #000;
+  background-color: #f3c8ce;
+  border-radius: 5px;
+}
+
+.navbar-default .navbar-nav > li > a.nav-highlight:hover {
+  color: #f3f2e4;
+  background-color: #f3c8ce;
+  border-radius: 5px;
+}
+
 code {
     color: #000;
     background-color: #eeeeee;
