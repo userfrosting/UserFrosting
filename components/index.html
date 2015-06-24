@@ -29,6 +29,7 @@ title: "UserFrosting | Components"
                     <li><a href="#messages">The Message Stream</a></li>
                     <li><a href="#i18n">Message IDs and Internationalization</a></li>
                     <li><a href="#validation">Input validation</a></li>
+                    <li><a href="#plugins">Plugins</a></li>
                 </ul>
             </div>
         </div>
@@ -303,6 +304,17 @@ title: "UserFrosting | Components"
                 <p>UserFrosting uses the <a href="https://github.com/alexweissman/fortress">Fortress</a> project to provide a schema-based system for sanitizing and validating user data.  This schema consists of a simple JSON file, with rules for how each user-submitted field should be processed.  </p>
                 
                 <p>The <code>HTTPRequestFortress</code> class handles backend sanitization and validation, while the <code>ClientSideValidator</code> class generates client-side validation rules compatible with the <a href="http://formvalidation.io">FormValidation</a> Javascript plugin.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="plugins" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">               
+                <h2 id="toc_12">Plugins</h2>
+                
+                <p>We are currently in the process of developing a plugin system, to make it easy for developers to extend UserFrosting via modular components.</p>
             </div>
         </div>
     </div>
