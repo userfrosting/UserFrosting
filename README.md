@@ -1,14 +1,14 @@
 # UserFrosting v0.3.0
 
+http://www.userfrosting.com
+
 [![Join the chat at https://gitter.im/alexweissman/UserFrosting](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexweissman/UserFrosting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Click here to lend your support to: UserFrosting: A secure, modern user management system for PHP and make a donation at pledgie.com !](https://pledgie.com/campaigns/29583.png?skin_name=chrome)](https://pledgie.com/campaigns/29583)
 
-http://www.userfrosting.com
-
 ## By [Alex Weissman](http://alexanderweissman.com)
 
-Copyright (c) 2015, free to use in personal and commercial software as per the [license](licenses/UserFrosting.md)
+Copyright (c) 2015, free to use in personal and commercial software as per the [license](licenses/UserFrosting.md).
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/) and the [Twig](http://twig.sensiolabs.org/) templating engine.
 
