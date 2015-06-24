@@ -77,6 +77,8 @@ title: "UserFrosting | Tutorials"
                 
                 <p>Alright, but not very impressive.  All we did was <code>echo</code> a single line, which hopefully you already know how to do.  Let&#39;s try to make this into a UserFrosting page!</p>
                 
+                <h3 id="toc_1">Headers, Footers, and Navbars (oh my!)</h3>
+                
                 <p>To do this, we need to create a <a href="{{site.url}}/navigating/#twig">template</a>.  Templates are stored in <code>userfrosting/templates/</code>.  Since we&#39;re creating a page for authenticated users, we&#39;ll make this a themed page.  This will apply the logged-in user&#39;s theme to the style and layout of this page.  In <code>userfrosting/templates/themes/default/</code>, create a new HTML file called <code>account-groups.html</code>.  Add the following HTML:</p>
                 
                 <pre><code>
@@ -183,6 +185,8 @@ title: "UserFrosting | Tutorials"
                 
                 <p><img class="img-responsive" src="{{site.url}}/img/tutorials/new-page-3.png" alt="UserFrosting - creating a new page - 3"></p>
                 
+                <h3 id="toc_2">Access Control</h3>
+                
                 <p>Alright, one last thing.  We need to control who can access this page!  As it stands, this is a <strong>publicly accessible page</strong>.  We can control access to the page through an <strong>authorization hook</strong>, like so:</p>
                 
                 <pre><code>
@@ -233,7 +237,39 @@ title: "UserFrosting | Tutorials"
                 
                 <p>Cool!  Now anyone who is a member of group 1, that is the <code>Users</code> group, will be able to access your new page.  Anyone who isn&#39;t a member, including unauthenticated users, will be shown a 404 error page.</p>
                 
-                <p>I hope this was helpful!</p>
+                <h3 id="toc_3">Linking to Your Page in the Navbar</h3>
+                
+                <p>What&#39;s that, you want your page to show up in the sidebar?  Well, ok.  </p>
+                
+                <p>Head on over to  <code>userfrosting/templates/themes/default/menus/sidebar.html</code>.  You&#39;ll see some links like:</p>
+                
+                <pre><code>
+                {% raw %}
+                {% if checkAccess(&#39;uri_users&#39;) %}
+                &lt;li&gt;
+                  &lt;a href=&quot;{{site.uri.public}}/users&quot;&gt;&lt;i class=&quot;fa fa-users fa-fw&quot;&gt;&lt;/i&gt; {{ translate(&quot;MENU_USERS&quot;) }}&lt;/a&gt;
+                &lt;/li&gt;
+                {% endif %}
+                {% endraw %}
+                </code></pre>
+                
+                <p>The <code>checkAccess</code> function in Twig works just like <code>$app-&gt;user-&gt;checkAccess</code>.  This will let you display a menu item only when the user has access to that page.</p>
+                
+                <p><code>{{site.uri.public}}</code> is the root URL of your site, which UserFrosting automatically detects and loads into the global <code>site</code> variable.</p>
+                
+                <p>The <code>translate</code> function allows for multilanguage support.  If you want to have different versions of the text for this menu item depending on the user&#39;s locale, you can define a <strong>message id</strong> in the various language files in <code>userfrosting/locales</code>, and <code>translate</code> will select the appropriate message for the current user&#39;s locale.  If you don&#39;t care about multilanguage support, you can simply put the text here that you&#39;d like the menu item to appear as:</p>
+                
+                <pre><code>
+                {% raw %}
+                {% if checkAccess(&#39;uri_account-groups&#39;) %}
+                &lt;li&gt;
+                  &lt;a href=&quot;{{site.uri.public}}/account/groups&quot;&gt;&lt;i class=&quot;fa fa-tags fa-fw&quot;&gt;&lt;/i&gt; My Groups&lt;/a&gt;
+                &lt;/li&gt;
+                {% endif %}
+                {% endraw %}
+                </code></pre>
+                
+                <p>And that&#39;s it!  I hope this was helpful!</p>
             </div>
         </div>
     </div>
