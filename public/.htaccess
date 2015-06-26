@@ -12,6 +12,14 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^ %1 [L,R=301]
 
+# Dynamically rewrite base directory (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
+RewriteCond $0#%{REQUEST_URI} ^([^#]*)#(.*)\1$
+RewriteRule ^.*$ - [E=BASE:%2]
+
+# Forward any requested URLs that specifically contain index.php (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
+RewriteCond %{THE_REQUEST} /index\.php [NC]
+RewriteRule ^index\.php(?:/(.*))?$ %{ENV:BASE}$1 [L,R=301,NC,NE]
+
 # Send the URI to index.php (Slim routing)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]
