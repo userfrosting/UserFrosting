@@ -196,9 +196,9 @@
                 
                 <p>The line </p>
                 
-                <p><code>&lt;h1&gt;The user&#39;s ID is .&lt;/h1&gt;</code></p>
+                <p><code>&lt;h1&gt;The user&#39;s ID is {{user.id}}.&lt;/h1&gt;</code></p>
                 
-                <p>is our first bit of actual content.  <code></code> is a <a href="http://twig.sensiolabs.org/doc/templates.html">Twig variable</a>.  For convenience, UserFrosting automatically loads the current user into the Twig variable <code>user</code>.  So, you can always access any property of the current user from Twig by using <code></code>.</p>
+                <p>is our first bit of actual content.  <code>{{user.id}}</code> is a <a href="http://twig.sensiolabs.org/doc/templates.html">Twig variable</a>.  For convenience, UserFrosting automatically loads the current user into the Twig variable <code>user</code>.  So, you can always access any property of the current user from Twig by using <code>{{user.*}}</code>.</p>
                 
                 <p>Going back to our route in <code>index.php</code>, let&#39;s make UserFrosting render our new template!</p>
                 
