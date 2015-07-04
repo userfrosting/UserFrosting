@@ -84,8 +84,16 @@
                       <div class="panel-heading">{{site.site_title}} - Terms and Conditions</div>
                       <div class="panel-body">
                         {{site.site_terms}}
-                    <div class="alert alert-info" role="alert"><small><u>By typing in the Captcha below I accept the following terms and conditions of {{site.site_title}}
-                            </u></small></div>
+                    <div class="alert alert-info" role="alert">
+    <div class="input-group">
+        <input type="checkbox" aria-label="...">
+            <small>
+            <u>By typing in the Captcha below I accept the following terms and conditions of {{site.site_title}}
+            </u>
+            </small>
+    </div><!-- /input-group -->
+                        
+                    </div>
                       </div>
                     </div>                    
                     {% endif %}
