@@ -6,6 +6,16 @@
 
 $lang = array();
 
+// Site Content
+$lang = array_merge($lang, [
+	"REGISTER_WELCOME" => "La registrazione è semplice e veloce",
+	"MENU_USERS" => "Utenti",
+	"MENU_CONFIGURATION" => "Configurazione",
+	"MENU_SITE_SETTINGS" => "Configurazione Sito",
+	"MENU_GROUPS" => "Gruppi",
+	"HEADER_MESSAGE_ROOT" => "LOGGATO COME ROOT"
+]);
+
 // Installazione
 $lang = array_merge($lang,array(
 	"INSTALLER_INCOMPLETE" => "Non puoi creare l'account root finchè l'installazione non è conclusa!",
@@ -17,19 +27,25 @@ $lang = array_merge($lang,array(
 // Account
 $lang = array_merge($lang,array(
 	"ACCOUNT_SPECIFY_USERNAME" => "Inserisci il tuo username",
+	"ACCOUNT_SPECIFY_DISPLAY_NAME" => "Inserire il nome visualizzato",
 	"ACCOUNT_SPECIFY_PASSWORD" => "Inserisci la tua password",
 	"ACCOUNT_SPECIFY_EMAIL" => "Inserisci il tuo indirizzo E-mail",
+	"ACCOUNT_SPECIFY_CAPTCHA" => "Inserire il captcha",
+	"ACCOUNT_SPECIFY_LOCALE" => "Specificare una località valida.",
 	"ACCOUNT_INVALID_EMAIL" => "Indirizzo mail non valido",
+	"ACCOUNT_INVALID_USERNAME" => "Username non valido",
 	"ACCOUNT_INVALID_USER_ID" => "User ID richiesto non è valido",
 	"ACCOUNT_USER_OR_EMAIL_INVALID" => "L'indirizzo mail o il nome utente non sono validi",
 	"ACCOUNT_USER_OR_PASS_INVALID" => "Il nome utente o la password non sono validi",
 	"ACCOUNT_ALREADY_ACTIVE" => "Il tuo account è già attivato",
 	"ACCOUNT_REGISTRATION_DISABLED" => "La registrazione di nuovi account è stata bloccata",
+	"ACCOUNT_REGISTRATION_LOGOUT" => "Non è possibile registrare un account mentre si è loggati",
 	"ACCOUNT_INACTIVE" => "Il tuo account non è stato attivato. Controlla nella tua mail ( anche nella cartella dello spam ) per riceve le instruzioni per attivare il tuo account",
 	"ACCOUNT_DISABLED" => "Questo account è stato disattivato, contattaci per maggiori informazioni",
 	"ACCOUNT_USER_CHAR_LIMIT" => "Il tuo username deve essere tra i {{min}} e i {{max}} caratteri",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "Il tuo nome visualizzato deve essere tra i {{min}} e i {{max}} caratteri",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "La tua password deve essere tra i {{min}} e i {{max}} caratteri",
+	"ACCOUNT_EMAIL_CHAR_LIMIT" => "L'email deve essere di almeno {{min}} e massimo {{max}} caratteri.",
 	"ACCOUNT_TITLE_CHAR_LIMIT" => "Il titolo utente deve essere tra i {{min}} e i {{max}} caratteri",
 	"ACCOUNT_PASS_MISMATCH" => "I due campi devono combaciare",
 	"ACCOUNT_DISPLAY_INVALID_CHARACTERS" => "Il nome visualizzato può contenere solo caratteri alfanumerici",
@@ -48,6 +64,8 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE1" => "Sei stato registrato con successo ora puoi eseguire il login",
 	"ACCOUNT_REGISTRATION_COMPLETE_TYPE2" => "Sei stato registrato con successo. Riceverai presto una mail per l'attivazione. Devi attivare il tuo account prima di eseguire il login.",
 	"ACCOUNT_PASSWORD_NOTHING_TO_UPDATE" => "Non puoi aggiornare con la stessa password",
+	"ACCOUNT_PASSWORD_CONFIRM_CURRENT" => "Conferma la password attuale",
+	"ACCOUNT_SETTINGS_UPDATED" => "Impostazioni account aggiornate",
 	"ACCOUNT_PASSWORD_UPDATED" => "Password aggiornata",
 	"ACCOUNT_EMAIL_UPDATED" => "Email aggiornata",
 	"ACCOUNT_TOKEN_NOT_FOUND" => "Il token non esiste / l'account è già stato attivato",
@@ -64,12 +82,22 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_GROUP_REMOVED" => "Utente rimosso dal gruppo '{{name}}'.",
 	"ACCOUNT_GROUP_NOT_MEMBER" => "L'utente non è membro del gruppo '{{name}}'.",
 	"ACCOUNT_GROUP_ALREADY_MEMBER" => "L'utente è già membro del gruppo '{{name}}'.",
-	"ACCOUNT_INVALID_USERNAME" => "Nome utente non valido",
-	"ACCOUNT_PRIMARY_GROUP_SET" => "Configurato il gruppo primario con successo."
+	"ACCOUNT_PRIMARY_GROUP_SET" => "Gruppo primario impostato con successo per '{{user_name}}'.",
+	"ACCOUNT_WELCOME" => "Bentornato, {{display_name}}"
+));
+
+// Generic validation
+$lang = array_merge($lang, array(
+	"VALIDATE_REQUIRED" => "Il campo '{{self}}' deve essere specificato.",
+	"VALIDATE_BOOLEAN" => "Il valore per '{{self}}' deve essere '0' o '1'.",
+	"VALIDATE_INTEGER" => "Il valore per '{{self}}' deve essere un intero.",
+	"VALIDATE_ARRAY" => "I valori per '{{self}}' devono essere in un vettore."
 ));
 
 // Configurazione
 $lang = array_merge($lang,array(
+	"CONFIG_PLUGIN_INVALID" => "Stai provando ad aggiornare le impostazioni per il plugin '{{plugin}}', ma non c'è nessun plugin con quel nome.",
+	"CONFIG_SETTING_INVALID" => "Stai provando ad aggionare la configurazione '{{name}}' per il plugin '{{plugin}}', ma non esiste.",
 	"CONFIG_NAME_CHAR_LIMIT" => "Nome del sito deve essere compreso tra {{min}} e tra {{max}} caratteri",
 	"CONFIG_URL_CHAR_LIMIT" => "URL del sito deve essere compreso tra {{min}} e tra {{max}} caratteri",
 	"CONFIG_EMAIL_CHAR_LIMIT" => "Email del sito deve essere compreso tra {{min}} e tra {{max}} caratteri",
@@ -78,7 +106,8 @@ $lang = array_merge($lang,array(
 	"CONFIG_REGISTRATION_TRUE_FALSE" => "Registrazione utente deve essere 'vero' o 'falso'",
 	"CONFIG_ACTIVATION_RESEND_RANGE" => "Soglia di attivazione deve essere compresa tra {{min}} e tra {{max}} ore",
 	"CONFIG_EMAIL_INVALID" => "L'email che hai inserito non è valida",
-	"CONFIG_UPDATE_SUCCESSFUL" => "La configurazione del tuo sito è stata aggiornata. Potrebbe essere necessario caricare una nuova pagina per tutte le impostazioni abbiano effetto"
+	"CONFIG_UPDATE_SUCCESSFUL" => "La configurazione del tuo sito è stata aggiornata. Potrebbe essere necessario caricare una nuova pagina per tutte le impostazioni abbiano effetto",
+	"MINIFICATION_SUCCESS" => "Minificazione e concatenazione di CSS e JS eseguita con successo"
 ));
 
 // Recupero password
@@ -106,10 +135,13 @@ $lang = array_merge($lang,array(
 	"DENY" => "Nega",
 	"SUCCESS" => "Successo",
 	"ERROR" => "Errore",
+	"SERVER_ERROR" => "Sembra esserci un errore nel server. Se sei un admin controlla gli errori di PHP",
 	"NOTHING_TO_UPDATE" => "Niente da aggiornare",
 	"SQL_ERROR" => "Errore SQL fatale",
 	"FEATURE_DISABLED" => "Funzione attualmente disattivata",
-	"ACCESS_DENIED" => "Sembra tu non abbiamo il permesso di fare questo."
+	"ACCESS_DENIED" => "Sembra tu non abbiamo il permesso di fare questo.",
+	"LOGIN_REQUIRED" => "Devi essere loggato per accedere a questa risorsa",
+	"LOGIN_ALREADY_COMPLETE" => "Sei già loggato!"
 ));
 
 // Permessi
@@ -120,7 +152,8 @@ $lang = array_merge($lang,array(
 	"GROUP_DELETION_SUCCESSFUL" => "Eliminato il gruppo '{{name}}'",
 	"GROUP_CREATION_SUCCESSFUL" => "Creato con successo il livello di gruppo `{{name}}`",
 	"GROUP_UPDATE" => "Gruppo `{{name}}` aggiornato.",
-	"CANNOT_DELETE_GROUP" => "Mom puoi eliminare il gruppo '{{name}}'"
+	"CANNOT_DELETE_GROUP" => "Mom puoi eliminare il gruppo '{{name}}'",
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Il gruppo '{{name}}' perchè è configurato come gruppo primario per i nuovi utenti. Per favore seleziona prima un nuovo gruppo primario per i nuovi utenti."
 ));
 
 return $lang;
