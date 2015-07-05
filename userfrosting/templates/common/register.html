@@ -79,6 +79,24 @@
             {% if site.enable_captcha %}
             <div class="row">
                 <div class="col-sm-12">
+                    {% if site.show_terms_with_captcha %}
+                    <div class="panel panel-default">
+                      <div class="panel-heading">{{site.site_title}} - Terms and Conditions</div>
+                      <div class="panel-body">
+                        {{site.site_terms}}
+                    <div class="alert alert-info" role="alert">
+    <div class="input-group">
+        <input type="checkbox" aria-label="...">
+            <small>
+            <u>By typing in the Captcha below I accept the following terms and conditions of {{site.site_title}}
+            </u>
+            </small>
+    </div><!-- /input-group -->
+                        
+                    </div>
+                      </div>
+                    </div>                    
+                    {% endif %}
                     <div class="form-group">
                         <label class="control-label col-sm-4">Confirm captcha code</label>
                         <div class="col-sm-4">

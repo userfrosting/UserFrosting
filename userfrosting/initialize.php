@@ -65,6 +65,20 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
     $app->site->register('userfrosting', 'can_register', "Public Registration", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'enable_captcha', "Registration Captcha", "toggle", [0 => "Off", 1 => "On"]);
+    $app->site->register('userfrosting', 'show_terms_with_captcha', "Show Terms with Captcha", "toggle", [0 => "Off", 1 => "On"]);
+    $app->site->register('userfrosting', 'site_terms', "These are the terms and conditions for this site.
+1. Condition #1
+2. Condition #2
+.....
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's 
+standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled 
+it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic 
+typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of 
+Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
+like Aldus PageMaker including versions of Lorem Ipsum.
+
+By typing in the captcha i acknowledge that I have read and accepted these terms and conditions");
+    
     $app->site->register('userfrosting', 'require_activation', "Require Account Activation", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'resend_activation_threshold', "Resend Activation Email Cooloff (s)");
@@ -268,10 +282,27 @@ $view->parserOptions = array(
 
 // TODO: this is where any plugin initialization scripts should be run
 
+$loader->addPath($app->config('plugins.path'));
+
+
+$app->hook('plugins.register', function () use ($app){
+// pickup plugin files
+    $var_plugins = $app->site->getPlugins();
+//print_r($var_plugins);
+//echo("Line 272 plugins");
+    foreach($var_plugins as $var_plugin)
+    {
+//echo(get_include_path() ."<br>".$app->config('plugins.path')."/".$var_plugin."/config-plugin.php");        
+        require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
+        
+    }
+});
 
 // Hook for core and plugins to register includes
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
+
+$app->applyHook("plugins.register");
 
 if ($db_error){
     // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
