@@ -194,11 +194,13 @@ interface UserObjectInterface {
  * @link http://alexanderweissman.com
  *
  * @property string site_title The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.
+ * @property string site_location The nation or state in which legal jurisdiction for this site falls.
  * @property string admin_email The administrative email for the site.  Automated emails, such as activation emails and password reset links, will come from this address.
  * @property int email_login 0|1 Specify whether users can login via email address or username instead of just username.
  * @property int can_register 0|1 Specify whether public registration of new accounts is enabled.
  * Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.
  * @property int enable_captcha 0|1 Specify whether new users must complete a captcha code when registering for an account.
+ * @property int show_terms_on_register 0|1 Specify whether or not to show terms and conditions when registering.
  * @property int require_activation 0|1 Specify whether email activation is required for newly registered accounts.  Accounts created on the admin side never need to be activated.
  * @property int resend_activation_threshold The time, in seconds, that a user must wait before requesting that the activation email be resent.
  * @property int reset_password_timeout The time, in seconds, before a user's password reminder email expires.
@@ -211,16 +213,46 @@ interface UserObjectInterface {
 interface SiteSettingsInterface {
     
     /**
+     * Determine whether or not all settings defined in this object are present in the database.
+     *
+     * @return boolean true if the table exists and all keys (core userfrosting and plugins) are defined in the table, false otherwise.
+     */
+    public function isConsistent();
+    
+    /**
      * Fetch the settings from the database.
      *
      * @return array An array of site settings, containing the name and description for each setting.
      */
     public function fetchSettings();
-
-    public function __isset($name);
-    public function __set($name, $value);
-    public function __get($name);
     
+    /**
+     * Magic isset to determine if a particular setting is defined in the environment or core userfrosting settings.
+     * This does not check plugin settings or descriptions.
+     *
+     * @param string $name The name of the setting.
+     * @return boolean true if $name is defined, false otherwise.
+     */
+    public function __isset($name);
+    
+    /**
+     * Magic setter to set the value of a core userfrosting setting.
+     * This does not allow you to set the setting description.  To do that, you must use `set`.
+     *
+     * @param string $name The name of the setting.
+     * @param string $value The value to assign the setting.
+     */
+    public function __set($name, $value);
+    
+    /**
+     * Magic getter to get the value of an environment or core userfrosting setting.  This does not get plugin settings.  For that, you must use `get`.
+     * This will first check if an environment setting of the specified $name exists and return it.  If not, it will then check if a DB setting of that name exists.
+     *
+     * @param string $name The name of the setting.
+     * @return string the value of the setting.
+     * @throws Exception The value does not exist in the environment or core settings.
+     */
+    public function __get($name);
 
     /**
      * Create/update a setting value.  If it exists, update, otherwise, create.  If updating, then a value or description set to null tells it to remain the same.  If creating, a value or description of null sets the field to an empty string.
@@ -229,11 +261,92 @@ interface SiteSettingsInterface {
      * @param string $name The name of the setting.
      */    
     public function set($plugin, $name, $value = null, $description = null);
+
+    /**
+     * Get a persistent setting value for a particular plugin.  Throws an exception if the plugin or value does not exist.
+     *
+     * @param string $name The name of the setting.
+     * @param string $plugin The plugin scope of this setting.  Defaults to "userfrosting".
+     * @throws Exception The value does not exist for this plugin.     
+     */  
+    public function get($name, $plugin = "userfrosting");
+    
+    /**
+     * Get the description persistent setting value for a particular plugin.  Throws an exception if the plugin or description does not exist.
+     *
+     * @param string $name The name of the setting.
+     * @param string $plugin The plugin scope of this setting.  Defaults to "userfrosting".
+     * @throws Exception The description does not exist for this value of the specified plugin.     
+     */      
+    public function getDescription($name, $plugin = "userfrosting");
+
+    /**
+     * Get a site environment (non-persistent) variable.  Throws an exception if the variable does not exist.
+     *
+     * @param string $name The name of the site environment variable.
+     * @throws Exception The specified environment variable does not exist. 
+     */    
+    public function getEnvironment($name);
+    
+    /**
+     * Register a setting to appear on the site settings page.
+     *
+     * @param string $plugin The name of the plugin that this setting is associated with.
+     * @param string $name The name of the site setting.
+     * @param string $label The label to display next to the site setting field.
+     * @param string $type "text"|"readonly"|"toggle"|"select" The type of field - plain text, readonly, toggle switch, or dropdown select.
+     * @param array $options If this field is a switch or dropdown, an associative array of values => labels to be presented.  Switches should have values "0" and "1".
+     * @throws Exception The specified plugin or site setting does not exist.
+     */
     public function register($plugin, $name, $label, $type = "text", $options = []);
+    
+    /**
+     * Get an array of site settings that have been registered for display on the site settings page.
+     *
+     * The result is a multidimensional array indexed first by plugin name, then by setting name.  Each setting name will then have an array containing values for "value", "label", "type", "options", and "description".
+     * For example, $settings['userfrosting']['site_title']['value'] = "UserFrosting".
+     * @return array The array of site settings.
+     */   
     public function getRegisteredSettings();
+    
+    /**
+     * Get an array of available locales for UserFrosting by scanning the path specified in $app->config('locales.path').
+     *
+     * @return array An array containing the names of all available locales (e.g. "en_EN", "es_ES", etc.)
+     */  
     public function getLocales();
+    
+    /**
+     * Get an array of available themes for UserFrosting by scanning the path specified in $app->config('themes.path').
+     *
+     * @return array An array containing the names of all available themes (e.g. "default", "root", etc.)
+     */      
     public function getThemes();
+    
+    /**
+     * Get an array of installed plugins by scanning the path specified in $app->config('plugins.path').
+     *
+     * @return array An array containing the names of all available themes (e.g. "oauth", "datatables", etc.)
+     */      
+    public function getPlugins();
+    
+    /**
+     * Get an array of system information for UserFrosting.
+     *
+     * @return array An array containing a list of information, such as software version, application path, etc.
+     */       
     public function getSystemInfo();
+    
+    /**
+     * Get the PHP error log as an array of lines.
+     *
+     * @param int $lines the number of lines to display.  Set to `null` to display all lines.
+     * @return array An array containing 'path', which is the path of the PHP error log, and 'messages', which is an array of error messages sorted with the newest messages first.
+     */ 
     public function getLog($lines = null);
+    
+    /**
+     * Store the site settings from this object to the database, inserting new records when necessary and updating existing records otherwise.
+     */ 
     public function store();
 }

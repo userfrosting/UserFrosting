@@ -7,17 +7,32 @@ namespace UserFrosting;
  *
  * A site settings database object for MySQL databases.
  *
- * @package UserFrosting
- * @author Alex Weissman
- * @link http://alexanderweissman.com
  */
 class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
 
-    protected $_environment;            // An array of UF environment variables.  Should be read-only.
-    protected $_settings;               // A list of plugins => arrays of settings for that plugin.  The core plugin is "userfrosting".
-    protected $_descriptions;
-    protected $_settings_registered;    // A list of settings that have been registered to appear in the site settings interface.
+    /**
+     * @var array An array of UF environment variables.  Should be read-only.
+     */
+    protected $_environment;
+
+    /**
+     * @var array A list of plugin names => arrays of settings for that plugin.  The core plugin is "userfrosting".
+     */    
+    protected $_settings;
     
+    /**
+     * @var array A list of plugin names => arrays of descriptions for that plugin.  The core plugin is "userfrosting".
+     */ 
+    protected $_descriptions;
+    
+    /**
+     * @var array A list of settings that have been registered to appear in the site settings interface.
+     */ 
+    protected $_settings_registered;
+    
+    /**
+     * @var string The name of the table, including prefix, that contains the persistent site settings.
+     */ 
     protected $_table;
 
     /** Construct the site settings object, loading values from the database */
@@ -53,7 +68,6 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
-    // Determine if any setting appears in the object but not the DB.
     public function isConsistent(){
         $connection = static::connection();
         $prefix = static::$app->config('db')['db_prefix'];
@@ -78,7 +92,6 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return true;
     }
     
-    // Retrieve all site settings from the DB.  
     public function fetchSettings(){
         $db = static::connection();
         
@@ -105,9 +118,11 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return $results;
     }
     
+    /**
+     * Initialize the environment (non-persistent) variables for the app.  This includes things like the public root URL, css URLs, etc.
+     *
+     */    
     private function initEnvironment(){
-        /***** Site Environment Setup *****/
-        
         // Auto-detect the public root URI
         $environment = static::$app->environment();
         
@@ -132,12 +147,10 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
             return false;
     }
     
-    // Set the value of a core UF setting
     public function __set($name, $value){
         return $this->set('userfrosting', $name, $value);   
     }
 
-    // Get a core UF setting
     public function __get($name){
         if (isset($this->_environment[$name])){
             return $this->_environment[$name];
@@ -148,6 +161,30 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
 
+    public function get($name, $plugin = "userfrosting"){
+        if (isset($this->_settings[$plugin]) && isset($this->_settings[$plugin][$name])){
+            return $this->_settings[$plugin][$name];
+        } else {
+            throw new \Exception("The value '$name' does not exist in the settings for plugin '$plugin'.");
+        }
+    }
+    
+    public function getDescription($name, $plugin = "userfrosting"){
+        if (isset($this->_settings[$plugin]) && isset($this->_descriptions[$plugin][$name])){
+            return $this->_descriptions[$plugin][$name];
+        } else {
+            throw new \Exception("The value '$name' does not exist in the setting descriptions for plugin '$plugin'.");
+        }
+    }
+    
+    public function getEnvironment($name){
+        if (isset($this->_environment[$name])){
+            return $this->_environment[$name];
+        } else {
+            throw new \Exception("The value '$name' does not exist in the settings environment.");
+        }
+    }
+    
     public function set($plugin, $name, $value = null, $description = null){
         if (!isset($this->_settings[$plugin])){
             $this->_settings[$plugin] = [];
@@ -167,7 +204,6 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
-    // Register a setting to appear in the site settings interface
     public function register($plugin, $name, $label, $type = "text", $options = []){
         // Get the array of settings & descriptions
         if (isset($this->_settings[$plugin])){
@@ -279,7 +315,6 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         ];
     }
     
-    // Update site settings in database
     public function store(){
         // Get current values as stored in DB
         $db_settings = $this->fetchSettings();
