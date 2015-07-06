@@ -56,7 +56,6 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         $test_list = [
             static::getTableAuthorizeGroup(),
             static::getTableAuthorizeUser(),
-            static::getTableConfiguration(),
             static::getTableGroup(),
             static::getTableGroupUser(),
             static::getTableUser()
@@ -95,16 +94,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             `conditions` text NOT NULL COMMENT 'The conditions under which the user has access to this action.',
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
-          
-        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "configuration` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
-            `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
-            `value` longtext NOT NULL COMMENT 'The current value of the setting.',
-            `description` text NOT NULL COMMENT 'A brief description of this setting.',
-            PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=1 ;");
-                   
+              
         $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "group` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(150) NOT NULL,

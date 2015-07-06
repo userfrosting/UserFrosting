@@ -54,31 +54,66 @@ defined("GROUP_DEFAULT_PRIMARY") or define("GROUP_DEFAULT_PRIMARY", 2);
 \UserFrosting\GroupLoader::init();
 \UserFrosting\UserLoader::init();
 
-/* Load UserFrosting site settings */    
-$app->site = new \UserFrosting\SiteSettings();
+/* Load UserFrosting site settings */
 
+// Default settings
+$setting_values = [
+    'userfrosting' => [
+        'site_title' => 'UserFrosting', 
+        'admin_email' => 'admin@userfrosting.com', 
+        'email_login' => '1', 
+        'can_register' => '1', 
+        'enable_captcha' => '1',
+        'require_activation' => '1', 
+        'resend_activation_threshold' => '0', 
+        'reset_password_timeout' => '10800', 
+        'default_locale' => 'en_US',
+        'minify_css' => '0',
+        'minify_js' => '0',
+        'version' => '0.3.0', 
+        'author' => 'Alex Weissman',
+        'show_terms_on_register' => '1',
+        'site_location' => 'The State of Indiana'
+    ]
+];
+$setting_descriptions = [
+    'userfrosting' => [
+        "site_title" => "The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.", 
+        "admin_email" => "The administrative email for the site.  Automated emails, such as activation emails and password reset links, will come from this address.", 
+        "email_login" => "Specify whether users can login via email address or username instead of just username.", 
+        "can_register" => "Specify whether public registration of new accounts is enabled.  Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.", 
+        "enable_captcha" => "Specify whether new users must complete a captcha code when registering for an account.",
+        "require_activation" => "Specify whether email activation is required for newly registered accounts.  Accounts created on the admin side never need to be activated.", 
+        "resend_activation_threshold" => "The time, in seconds, that a user must wait before requesting that the activation email be resent.", 
+        "reset_password_timeout" => "The time, in seconds, before a user's password reminder email expires.", 
+        "default_locale" => "The default language for newly registered users.",
+        "minify_css" => "Specify whether to use concatenated, minified CSS (production) or raw CSS includes (dev).",
+        "minify_js" => "Specify whether to use concatenated, minified JS (production) or raw JS includes (dev).",
+        "version" => "The current version of UserFrosting.", 
+        "author" => "The author of the site.  Will be used in the site's author meta tag.",
+        "show_terms_on_register" => "Specify whether or not to show terms and conditions when registering.",
+        "site_location" => "The nation or state in which legal jurisdiction for this site falls."
+    ]
+];
+
+$app->site = new \UserFrosting\SiteSettings($setting_values, $setting_descriptions);
+
+// Store to DB if not consistent
+if (!$app->site->isConsistent()){
+    $app->site->store();
+}
+
+/** Register site settings with site settings config page */
 $app->hook('settings.register', function () use ($app){
     // Register core site settings
     $app->site->register('userfrosting', 'site_title', "Site Title");
+    $app->site->register('userfrosting', 'site_location', "Site Location");    
     $app->site->register('userfrosting', 'author', "Site Author");
     $app->site->register('userfrosting', 'admin_email', "Account Management Email");
     $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
     $app->site->register('userfrosting', 'can_register', "Public Registration", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'enable_captcha', "Registration Captcha", "toggle", [0 => "Off", 1 => "On"]);
-    $app->site->register('userfrosting', 'show_terms_with_captcha', "Show Terms with Captcha", "toggle", [0 => "Off", 1 => "On"]);
-    $app->site->register('userfrosting', 'site_terms', "These are the terms and conditions for this site.
-1. Condition #1
-2. Condition #2
-.....
-Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's 
-standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled 
-it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic 
-typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of 
-Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-like Aldus PageMaker including versions of Lorem Ipsum.
-
-By typing in the captcha i acknowledge that I have read and accepted these terms and conditions");
-    
+    $app->site->register('userfrosting', 'show_terms_on_register', "Show TOS", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'require_activation', "Require Account Activation", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'resend_activation_threshold', "Resend Activation Email Cooloff (s)");
@@ -220,6 +255,8 @@ $app->hook('includes.css.register', function () use ($app){
     $app->schema->registerCSS("common", "font-awesome-4.3.0.css");
     $app->schema->registerCSS("common", "font-starcraft.css");
     $app->schema->registerCSS("common", "bootstrap-3.3.2.css");
+    $app->schema->registerCSS("common", "bootstrap-modal-bs3patch.css");   // Must be included BEFORE bootstrap-modal.css
+    $app->schema->registerCSS("common", "bootstrap-modal.css");
     $app->schema->registerCSS("common", "lib/metisMenu.css");
     $app->schema->registerCSS("common", "bootstrap-custom.css");
     $app->schema->registerCSS("common", "bootstrap-switch.css");
@@ -244,6 +281,8 @@ $app->hook('includes.js.register', function () use ($app){
     // Register common JS files
     $app->schema->registerJS("common", "jquery-1.11.2.js");
     $app->schema->registerJS("common", "bootstrap-3.3.2.js");
+    $app->schema->registerJS("common", "bootstrap-modal.js");
+    $app->schema->registerJS("common", "bootstrap-modalmanager.js");    
     $app->schema->registerJS("common", "sb-admin-2.js");
     $app->schema->registerJS("common", "lib/metisMenu.js");
     $app->schema->registerJS("common", "formValidation/formValidation.js");
@@ -280,21 +319,12 @@ $view->parserOptions = array(
 );
 */
 
-// TODO: this is where any plugin initialization scripts should be run
-
-$loader->addPath($app->config('plugins.path'));
-
-
+/** Plugins */
 $app->hook('plugins.register', function () use ($app){
-// pickup plugin files
+    // Run initialization scripts for plugins
     $var_plugins = $app->site->getPlugins();
-//print_r($var_plugins);
-//echo("Line 272 plugins");
-    foreach($var_plugins as $var_plugin)
-    {
-//echo(get_include_path() ."<br>".$app->config('plugins.path')."/".$var_plugin."/config-plugin.php");        
+    foreach($var_plugins as $var_plugin) {     
         require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
-        
     }
 });
 
@@ -302,6 +332,7 @@ $app->hook('plugins.register', function () use ($app){
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
 
+// Register plugins
 $app->applyHook("plugins.register");
 
 if ($db_error){

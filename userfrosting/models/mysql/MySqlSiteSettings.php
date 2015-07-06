@@ -21,55 +21,64 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     protected $_table;
 
     /** Construct the site settings object, loading values from the database */
-    public function __construct() {
+    public function __construct($settings = [], $descriptions = []) {
         $this->_table = static::getTableConfiguration();
         
         // Initialize UF environment
-        $this->initEnvironment();        
+        $this->initEnvironment();
         
+        // Set default settings first
+        $this->_settings = $settings;
+        $this->_descriptions = $descriptions;
+        
+        // Now, try to load settings from database if possible
         try {
             $results = $this->fetchSettings();
-            $this->_settings = $results['settings'];
-            $this->_descriptions = $results['descriptions'];
+            // Merge, replacing default settings with DB settings as necessary.
+            $this->_settings = array_replace_recursive($this->_settings , $results['settings']);
+            $this->_descriptions = array_replace_recursive($this->_descriptions, $results['descriptions']);
         } catch (\PDOException $e){
-            // Use default values if cannot connect to DB
-            $this->_settings = [
-                'userfrosting' => [
-                    'site_title' => 'UserFrosting', 
-                    'admin_email' => 'admin@userfrosting.com', 
-                    'email_login' => '1', 
-                    'can_register' => '1', 
-                    'enable_captcha' => '1',
-                    'require_activation' => '1', 
-                    'resend_activation_threshold' => '0', 
-                    'reset_password_timeout' => '10800', 
-                    'default_locale' => 'en_US',
-                    'minify_css' => '0',
-                    'minify_js' => '0',
-                    'version' => '0.3.0', 
-                    'author' => 'Alex Weissman'
-                ]
-            ];
-            $this->_descriptions = [
-                'userfrosting' => [
-                    "site_title" => "The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.", 
-                    "admin_email" => "The administrative email for the site.  Automated emails, such as activation emails and password reset links, will come from this address.", 
-                    "email_login" => "Specify whether users can login via email address or username instead of just username.", 
-                    "can_register" => "Specify whether public registration of new accounts is enabled.  Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.", 
-                    "enable_captcha" => "Specify whether new users must complete a captcha code when registering for an account.",
-                    "require_activation" => "Specify whether email activation is required for newly registered accounts.  Accounts created on the admin side never need to be activated.", 
-                    "resend_activation_threshold" => "The time, in seconds, that a user must wait before requesting that the activation email be resent.", 
-                    "reset_password_timeout" => "The time, in seconds, before a user's password reminder email expires.", 
-                    "default_locale" => "The default language for newly registered users.",
-                    "minify_css" => "Specify whether to use concatenated, minified CSS (production) or raw CSS includes (dev).",
-                    "minify_js" => "Specify whether to use concatenated, minified JS (production) or raw JS includes (dev).",
-                    "version" => "The current version of UserFrosting.", 
-                    "author" => "The author of the site.  Will be used in the site's author meta tag."
-                ]
-            ];
+            $connection = static::connection();
+            $prefix = static::$app->config('db')['db_prefix'];
+            
+            // If the database connection is fine, but the table doesn't exist, create it!
+            $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "configuration` (
+                `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+                `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
+                `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
+                `value` longtext NOT NULL COMMENT 'The current value of the setting.',
+                `description` text NOT NULL COMMENT 'A brief description of this setting.',
+                PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=1 ;");
         }
     }
     
+    // Determine if any setting appears in the object but not the DB.
+    public function isConsistent(){
+        $connection = static::connection();
+        $prefix = static::$app->config('db')['db_prefix'];
+        
+        $table_exists = $connection->query("SHOW TABLES LIKE '$prefix" . "configuration'")->rowCount() > 0;
+        
+        if (!$table_exists){
+            return false;
+        }
+
+        $db_data = $this->fetchSettings()['settings'];
+        foreach ($this->_settings as $plugin => $setting){
+            if (!isset($db_data[$plugin])){
+                return false;
+            }
+            foreach ($setting as $name => $value){
+                if (!isset($db_data[$plugin][$name])){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    // Retrieve all site settings from the DB.  
     public function fetchSettings(){
         $db = static::connection();
         
@@ -89,9 +98,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
                 $results['settings'][$plugin] = [];
                 $results['descriptions'][$plugin] = [];
             }
-            
+                        
             $results['settings'][$plugin][$name] = $value;
-            $results['descriptions'][$plugin][$name] = $description;
+            $results['descriptions'][$plugin][$name] = $description;          
         }
         return $results;
     }
