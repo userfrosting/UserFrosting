@@ -16,6 +16,15 @@ p.small {
     font-size: 16px;
 }
 
+p.footer-p {
+    text-align: left;
+    font-size: 14px;
+}
+
+p.footer-lg {
+    font-size: 28px;
+}
+
 a,
 a:hover,
 a:focus,
