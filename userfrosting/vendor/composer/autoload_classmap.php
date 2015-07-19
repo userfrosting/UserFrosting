@@ -31,6 +31,8 @@ return array(
     'UserFrosting\\BaseController' => $baseDir . '/controllers/BaseController.php',
     'UserFrosting\\DatabaseInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\DatabaseObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
+    'UserFrosting\\DatabaseTable' => $baseDir . '/models/DatabaseTable.php',
+    'UserFrosting\\DatabaseTableInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\GroupController' => $baseDir . '/controllers/GroupController.php',
     'UserFrosting\\GroupLoaderInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\GroupObjectInterface' => $baseDir . '/models/DatabaseInterface.php',

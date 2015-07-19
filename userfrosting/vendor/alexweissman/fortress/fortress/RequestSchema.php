@@ -39,4 +39,60 @@ class RequestSchema {
     public function getSchema(){
         return $this->_schema;
     }
+
+    /**
+     * Set the default value for a specified field.  
+     *
+     * If the specified field does not exist in the schema, add it.  If a default already exists for this field, replace it with the value specified here.
+     * @param string $field The name of the field (e.g., "user_name")
+     * @param string $value The new default value for this field.
+     * @return RequestSchema This schema object.
+     */
+    public function setDefault($field, $value){
+        if (!isset($this->_schema[$field]))
+            $this->_schema[$field] = [];
+        $this->_schema[$field]['default'] = $value;
+        
+        return $this;
+    }
+        
+    /**
+     * Adds a new validator for a specified field.  
+     *
+     * If the specified field does not exist in the schema, add it.  If a validator with the specified name already exists for the field,
+     * replace it with the parameters specified here.
+     * @param string $field The name of the field for this validator (e.g., "user_name")
+     * @param string $validator_name A validator rule, as specified in https://github.com/alexweissman/wdvss (e.g. "length")
+     * @param array $parameters An array of parameters, hashed as parameter_name => parameter value (e.g. [ "min" => 50 ])
+     * @return RequestSchema This schema object.
+     */
+    public function addValidator($field, $validator_name, $parameters = []){
+        if (!isset($this->_schema[$field]))
+            $this->_schema[$field] = [];
+        if (!isset($this->_schema[$field]['validators']))
+            $this->_schema[$field]['validators'] = [];
+        $this->_schema[$field]['validators'][$validator_name] = $parameters;
+        
+        return $this;
+    }
+
+    /**
+     * Adds a new sanitizer for a specified field.  
+     *
+     * If the specified field does not exist in the schema, add it.  If a sanitizer with the specified name already exists for the field,
+     * replace it with the parameters specified here.
+     * @param string $field The name of the field for this sanitizer (e.g., "user_name")
+     * @param string $sanitizer_name A sanitizer rule, as specified in https://github.com/alexweissman/wdvss (e.g. "purge")
+     * @param array $parameters An array of parameters, hashed as parameter_name => parameter value
+     * @return RequestSchema This schema object.
+     */
+    public function addSanitizer($field, $sanitizer_name, $parameters = []){
+        if (!isset($this->_schema[$field]))
+            $this->_schema[$field] = [];
+        if (!isset($this->_schema[$field]['sanitizers']))
+            $this->_schema[$field]['sanitizers'] = [];
+        $this->_schema[$field]['sanitizers'][$sanitizer_name] = $parameters;
+        
+        return $this;
+    }    
 }

@@ -32,6 +32,22 @@ $ms->resetMessageStream();
 // Load the request schema
 $schema = new Fortress\RequestSchema("fortress/schema/forms/register.json");
 
+$schema->addValidator("puppies", "required");
+
+$schema->addSanitizer("puppies", "purge");
+
+$schema->addValidator("minions", "range", [
+    "min" => 0,
+    "max" => 20,
+    "message" => "Not enough minions"
+]);
+
+$schema->addValidator("email", "length", [
+    "min" => 1,
+    "max" => 100,
+    "message" => "ACCOUNT_EMAIL_CHAR_LIMIT"
+]);
+
 // POST request
 $rf = new Fortress\HTTPRequestFortress($ms, $schema, $_GET);
 // Remove csrf_token from the request data, if specified

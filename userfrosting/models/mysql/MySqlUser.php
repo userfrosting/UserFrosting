@@ -8,8 +8,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     protected $_primary_group;  // The primary group for the user.  TODO: simply fetch it from the _groups array?
     
     public function __construct($properties, $id = null) {
-        $this->_table = static::getTableUser();
-        $this->_columns = static::$columns_user;
+        $this->_table = static::getTable('user');
+    
         // Set default locale, if not specified
         if (!isset($properties['locale']))
             $properties['locale'] = static::$app->site->default_locale;       
@@ -34,8 +34,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
      */
     public function fresh(){
         // Update table and column info, in case it has changed
-        $this->_table = static::getTableUser();
-        $this->_columns = static::$columns_user;
+        $this->_table = static::$tables['user'];
         $user = new User(parent::fresh(), $this->_id);
         $user->_groups = $this->fetchGroups();
         $user->_primary_group = $this->fetchPrimaryGroup();
@@ -109,8 +108,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     private function fetchGroups(){
         $db = static::connection();
 
-        $link_table = static::getTableGroupUser();
-        $group_table = static::getTableGroup();
+        $link_table = static::$tables['group_user']->name;
+        $group_table = static::$tables['group']->name;
         
         $query = "
             SELECT `$group_table`.*
@@ -156,7 +155,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             throw new \Exception("This user does not appear to have a primary group id set.");
         }
         $db = static::connection();
-        $group_table = static::getTableGroup();
+        $group_table = static::$tables['group']->name;
         
         $query = "
             SELECT `$group_table`.*
@@ -194,7 +193,7 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         // Get the User's groups as stored in the DB
         $db_groups = $this->fetchGroups();
 
-        $link_table = static::getTableGroupUser();
+        $link_table = static::$tables['group_user']->name;
 
         // Add any groups in object that are not in DB yet
         $db = static::connection();
@@ -248,8 +247,8 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         
         // Get connection
         $db = static::connection();
-        $link_table = static::getTableGroupUser();
-        $auth_table = static::getTableAuthorizeUser();
+        $link_table = static::$tables['group_user']->name;
+        $auth_table = static::$tables['authorize_user']->name;
         
         $sqlVars[":id"] = $this->_id;
         
@@ -356,5 +355,3 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     }
     
 }
-
-?>
