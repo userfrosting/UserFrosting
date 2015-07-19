@@ -4,27 +4,25 @@ namespace UserFrosting;
 
 abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObjectInterface {
     
-    protected $_columns;     // A list of the allowed columns for this type of DB object. Must be set in the child concrete class.  DO NOT USE `id` as a column!
-    protected $_table;       // The name of the table whose rows this class represents. Must be set in the child concrete class.
+    /**
+     * @var DatabaseTable The table for this database object.  Must be specified by child class.
+     */
+    protected $_table;
     
     protected $_id;          // The id of this object.  Table must have an `id` column.
     protected $_properties;  // A mapping of the columns in the table that this object can access, to their values.
     
-    public function __construct($properties, $id = null) {
+    public function __construct($properties, $id = null) {       
         // Set all valid properties
         foreach ($properties as $column => $value){
-            if ($column != "id" && in_array($column, $this->_columns))
+            if ($column != "id" && in_array($column, $this->_table->columns))
                 $this->_properties[$column] = $value;
         }
     
         // Set id
         $this->_id = $id;        
     }
-    
-    public function columns(){
-        return $this->_columns;
-    }
-    
+       
     public function table(){
         return $this->_table;
     }
@@ -39,20 +37,20 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
     public function __get($name){
         if ($name == "id")
             return $this->_id;
-        else if (in_array($name, $this->_columns))
+        else if (in_array($name, $this->_table->columns))
             return $this->_properties[$name];
         else {
-            $table = $this->_table;
+            $table = $this->_table->name;
             throw new \Exception("The column '$name' does not exist in the table '$table'.");
         }
     }
 
     // This function only allows whitelisted column names!  This is VERY IMPORTANT, otherwise the database will be open to SQL injection attacks.
     public function __set($name, $value){
-        if (in_array($name, $this->_columns))
+        if (in_array($name, $this->_table->columns))
             return $this->_properties[$name] = $value;
         else {
-            $table = $this->_table;
+            $table = $this->_table->name;
             throw new \Exception("The column '$name' does not exist in the table '$table'.");
         }
     }
@@ -65,7 +63,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         if (isset($this->_id)){
             $db = static::connection();
             
-            $table = $this->_table;
+            $table = $this->_table->name;
             
             $query = "SELECT * FROM `$table` WHERE id = :id LIMIT 1";
             
@@ -97,7 +95,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
     public function store() {
         // Get connection
         $db = static::connection();
-        $table = $this->_table;
+        $table = $this->_table->name;
         
         // If `id` is set, then try to update an existing object before creating a new one.
         if ($this->_id) {
@@ -153,7 +151,7 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
     public function delete(){
         // Get connection
         $db = static::connection();
-        $table = $this->_table;
+        $table = $this->_table->name;
         
         // Can only delete an object where `id` is set
         if (!$this->_id) {

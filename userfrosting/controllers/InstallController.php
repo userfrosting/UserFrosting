@@ -119,7 +119,7 @@ class InstallController extends \UserFrosting\BaseController {
                 'alerts' =>         $this->_app->alerts->getAndClearMessages()
             ],
             'validators' => $validators->formValidationRulesJson(),
-            'table_config' => Database::getTableConfiguration()
+            'table_config' => Database::getTable('configuration')->name
         ]);    
     }
 

@@ -50,9 +50,52 @@ defined("GROUP_DEFAULT_PRIMARY") or define("GROUP_DEFAULT_PRIMARY", 2);
 
 // Pass Slim app to database
 \UserFrosting\Database::$app = $app;
+
+// Initialize database properties
+$table_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "user", [
+    "user_name",
+    "display_name",
+    "password",
+    "email",
+    "activation_token",
+    "last_activation_request",
+    "lost_password_request",
+    "lost_password_timestamp",
+    "active",
+    "title",
+    "sign_up_stamp",
+    "last_sign_in_stamp",
+    "enabled",
+    "primary_group_id",
+    "locale"
+]);
+
+$table_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "group", [
+    "name",
+    "is_default",
+    "can_delete",
+    "theme",
+    "landing_page",
+    "new_user_title",
+    "icon"
+]);
+
+$table_group_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "group_user");
+$table_configuration = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "configuration");
+$table_authorize_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_user");
+$table_authorize_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_group");    
+
+\UserFrosting\Database::setTable("user", $table_user);
+\UserFrosting\Database::setTable("group", $table_group);    
+\UserFrosting\Database::setTable("group_user", $table_group_user);
+\UserFrosting\Database::setTable("configuration", $table_configuration);
+\UserFrosting\Database::setTable("authorize_user", $table_authorize_user);
+\UserFrosting\Database::setTable("authorize_group", $table_authorize_group);  
+    
 // Initialize static loader classes
-\UserFrosting\GroupLoader::init();
-\UserFrosting\UserLoader::init();
+\UserFrosting\UserLoader::init($table_user);
+\UserFrosting\GroupLoader::init($table_group);
+
 
 /* Load UserFrosting site settings */
 
@@ -123,26 +166,7 @@ $app->hook('settings.register', function () use ($app){
 }, 1);
 
 /**** Session and User Setup ****/
-    
-$db_error = false;
-
-// Set user, if one is logged in
-if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {       
-    // Test database connection
-    try {
-        // Refresh the user.  If they don't exist any more, then an exception will be thrown.
-        $_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
-        $app->user = $_SESSION["userfrosting"]["user"];
-    } catch (\PDOException $e) {
-        error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
-        error_log($e->getTraceAsString());
-        $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
-        $db_error = true;
-    }
-// Otherwise, create a dummy "guest" user
-} else {
-    $app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
-}
+$db_error = $app->setupUser();    
 
 /**** Message Stream Setup ****/
 

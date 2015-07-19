@@ -8,7 +8,7 @@ class MySqlAuthLoader extends MySqlDatabase {
    
     public static function fetchUserAuthHook($user_id, $hook){
         $db = static::connection();
-        $table = static::getTableAuthorizeUser();
+        $table = static::getTable('authorize_user')->name;
         
         $query = "SELECT * FROM `$table` WHERE user_id = :user_id AND hook = :hook LIMIT 1";
         
@@ -30,7 +30,7 @@ class MySqlAuthLoader extends MySqlDatabase {
 
     public static function fetchGroupAuthHook($group_id, $hook){
         $db = self::connection();
-        $table = static::getTableAuthorizeGroup();
+        $table = static::getTable('authorize_group')->name;
         
         $query = "SELECT * FROM `$table` WHERE group_id = :group_id AND hook = :hook LIMIT 1";
         

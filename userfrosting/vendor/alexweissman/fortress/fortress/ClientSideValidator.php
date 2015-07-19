@@ -67,7 +67,7 @@ class ClientSideValidator {
             }
         }
         if ($encode)
-            return json_encode($client_rules, JSON_PRETTY_PRINT);
+            return json_encode($client_rules, JSON_PRETTY_PRINT|JSON_FORCE_OBJECT);
         else
             return $client_rules;
     }
