@@ -54,11 +54,11 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         $results = [];
         
         $test_list = [
-            static::getTableAuthorizeGroup(),
-            static::getTableAuthorizeUser(),
-            static::getTableGroup(),
-            static::getTableGroupUser(),
-            static::getTableUser()
+            static::getTable('user')->name,
+            static::getTable('group')->name,
+            static::getTable('group_user')->name,
+            static::getTable('authorize_user')->name,
+            static::getTable('authorize_group')->name
         ];
         
         foreach ($test_list as $table){

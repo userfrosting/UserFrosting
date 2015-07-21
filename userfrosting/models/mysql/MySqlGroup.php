@@ -5,8 +5,7 @@ namespace UserFrosting;
 class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
 
     public function __construct($properties, $id = null) {
-        $this->_table = static::getTableGroup();
-        $this->_columns = static::$columns_group;
+        $this->_table = static::getTable('group');
         parent::__construct($properties, $id);
     }
     
@@ -49,8 +48,8 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
         
         // Get connection
         $db = static::connection();
-        $link_table = static::getTableGroupUser();
-        $auth_table = static::getTableAuthorizeGroup();
+        $link_table = static::getTable('group_user')->name;
+        $auth_table = static::getTable('authorize_group')->name;
         
         $sqlVars[":id"] = $this->_id;
         
@@ -71,7 +70,7 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
         // Reassign any primary users to the current default primary group
         $default_primary_group = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, 'is_default');
         
-        $user_table = static::getTableUser();
+        $user_table = static::getTable('user')->name;
         
         $query = "
             UPDATE `$user_table` 

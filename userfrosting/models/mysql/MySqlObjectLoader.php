@@ -7,6 +7,17 @@ namespace UserFrosting;
 
 abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderInterface {
     
+    protected static $_table;       // The table whose rows this class represents. Must be set in the child concrete class.   
+    
+    /**
+     * Set table and columns for this class.  Kinda hacky but I don't see any other way to do it.
+     *
+     * @param DatabaseTable $table The table information object.
+     */
+    public static function init($table){
+        static::$_table = $table;
+    }    
+    
     /* Determine if an object exists based on the value of a given column.  Returns true if a match is found, false otherwise.
      * @param value $value The value to find.
      * @param string $name The name of the column to match (defaults to id)
@@ -27,10 +38,10 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
     public static function fetch($value, $name = "id"){
         $db = static::connection();
         
-        $table = static::$_table;
+        $table = static::$_table->name;
         
         // Check that the column name exists in the table schema.
-        if ($name != "id" && !in_array($name, static::$_columns))
+        if ($name != "id" && !in_array($name, static::$_table->columns))
             throw new \Exception("The column '$name' does not exist in the table '$table'.");
         
         $query = "SELECT * FROM `$table` WHERE `$name` = :value LIMIT 1";
@@ -55,10 +66,10 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
     public static function fetchAll($value = null, $name = null){
         $db = static::connection();
         
-        $table = static::$_table;
+        $table = static::$_table->name;
         
         // Check that the column name, if specified, exists in the table schema.
-        if ($name && !in_array($name, static::$_columns))
+        if ($name && !in_array($name, static::$_table->columns))
             throw new \Exception("The column '$name' does not exist in the table '$table'.");
         
         $sqlVars = [];

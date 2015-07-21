@@ -21,6 +21,10 @@ interface DatabaseInterface {
     public static function testConnection();
 }
 
+interface DatabaseTableInterface {
+    
+}
+
 /**
  * ObjectLoaderInterface Interface
  *
@@ -31,6 +35,14 @@ interface DatabaseInterface {
  * @link http://alexanderweissman.com
  */
 interface ObjectLoaderInterface {
+    
+    /**
+     * Set table and columns for this class.  Kinda hacky but I don't see any other way to do it.
+     *
+     * @param DatabaseTable $table The table information object.
+     */    
+    public static function init($table);
+    
     /**
      * Determine whether or not a record exists in the table for the given value.
      *
@@ -60,7 +72,6 @@ interface ObjectLoaderInterface {
 }
 
 interface DatabaseObjectInterface {
-    public function columns();
     public function table();
     public function __isset($name);
     public function __get($name);
@@ -71,12 +82,12 @@ interface DatabaseObjectInterface {
 }
 
 interface UserLoaderInterface {
-    public static function init();
+
     public static function generateActivationToken($gen = null);
 }
 
 interface GroupLoaderInterface {
-    public static function init();
+
 }
 
 interface GroupObjectInterface {

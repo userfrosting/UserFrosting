@@ -2,67 +2,51 @@
 
 namespace UserFrosting;
 
-// Represents the UserFrosting database.  Used for initializing connections for queries.  Set $params to the connection variables you'd like to use.
+/**
+ * UFDatabase Class
+ *
+ * Represents the UserFrosting database configuration.
+ * This class acts as a "registry" of sorts, allowing all data model classes to access information about your database,
+ * such as table names and whitelisted columns.  Each table in your model shall be represented by a DatabaseTable object.
+ *
+ */
 abstract class UFDatabase {
 
-    public static $app;         // The Slim app, containing configuration info
-
-    protected static $table_user = "user";       
-    protected static $table_group = "group";
-    protected static $table_group_user = "group_user";
-    protected static $table_configuration = "configuration";
-    protected static $table_authorize_user = "authorize_user";
-    protected static $table_authorize_group = "authorize_group";    
+    /**
+     * @var Slim The Slim app, containing configuration info
+     */
+    public static $app;
     
-    protected static $columns_user = [
-            "user_name",
-            "display_name",
-            "password",
-            "email",
-            "activation_token",
-            "last_activation_request",
-            "lost_password_request",
-            "lost_password_timestamp",
-            "active",
-            "title",
-            "sign_up_stamp",
-            "last_sign_in_stamp",
-            "enabled",
-            "primary_group_id",
-            "locale"
-        ];
-
-    protected static $columns_group = [
-            "name",
-            "is_default",
-            "can_delete",
-            "theme",
-            "landing_page",
-            "new_user_title",
-            "icon"
-        ];
+    /**
+     * @var array[DatabaseTable] An array of DatabaseTable objects representing the configuration of the database tables.
+     */
+    protected static $tables;
     
-    public static function getTableUser(){
-        return static::$app->config('db')['db_prefix'] . static::$table_user;
-    }
-
-    public static function getTableGroup(){
-        return static::$app->config('db')['db_prefix'] . static::$table_group;
-    }
-
-    public static function getTableGroupUser(){
-        return static::$app->config('db')['db_prefix'] . static::$table_group_user;
+    public static function getTable($id){
+        if (isset(static::$tables[$id]))
+            return static::$tables[$id];
+        else
+            throw new \Exception("There is no table with id '$id'.");
     }
     
-    public static function getTableConfiguration(){
-        return static::$app->config('db')['db_prefix'] . static::$table_configuration;
+    public static function setTable($id, $table){
+        static::$tables[$id] = $table;
     }
-
-    public static function getTableAuthorizeUser(){
-        return static::$app->config('db')['db_prefix'] . static::$table_authorize_user;
+    
+    public static function setTableName($id, $name){
+        if (isset(static::$tables[$id])) {
+            $columns = array_slice(func_get_args(), 1);
+            call_user_func_array(static::$tables[$id], $columns);
+        } else
+            throw new \Exception("There is no table with id '$id'.");
     }
-
-    public static function getTableAuthorizeGroup(){
-        return static::$app->config('db')['db_prefix'] . static::$table_authorize_group;
+    
+    public static function addTableColumns($id){
+        if (isset(static::$tables[$id])) {
+            $columns = array_slice(func_get_args(), 1);
+            call_user_func_array([static::$tables[$id], "addColumns"], $columns);
+        } else
+            throw new \Exception("There is no table with id '$id'.");
     }
+    
 }

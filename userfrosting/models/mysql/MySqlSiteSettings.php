@@ -37,7 +37,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
 
     /** Construct the site settings object, loading values from the database */
     public function __construct($settings = [], $descriptions = []) {
-        $this->_table = static::getTableConfiguration();
+        $this->_table = static::getTable('configuration');
         
         // Initialize UF environment
         $this->initEnvironment();
@@ -95,7 +95,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     public function fetchSettings(){
         $db = static::connection();
         
-        $table = $this->_table;
+        $table = $this->_table->name;
         
         $stmt = $db->query("SELECT * FROM `$table`");
                   
@@ -127,7 +127,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         $environment = static::$app->environment();
         
         // TODO: can we trust this?  should we revert to storing this in the DB?
-        $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] . $environment['SCRIPT_NAME'];
+        // TODO: make this configurable in the app config
+        $serverport = (($_SERVER['SERVER_PORT'] == 443) or ($_SERVER['SERVER_PORT'] == 80)) ? '' : ':'.$_SERVER['SERVER_PORT']; 
+        $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] .$serverport. $environment['SCRIPT_NAME'];
         
         $this->_environment = [
             'uri' => [
@@ -320,7 +322,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         $db_settings = $this->fetchSettings();
         
         $db = static::connection();
-        $table = $this->_table;
+        $table = $this->_table->name;
         
         $stmt_insert = $db->prepare("INSERT INTO `$table`
             (plugin, name, value, description)

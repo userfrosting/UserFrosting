@@ -3,9 +3,10 @@
 namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
+use PhpParser\Node\FunctionLike;
 use PhpParser\Error;
 
-class ClassMethod extends Node\Stmt
+class ClassMethod extends Node\Stmt implements FunctionLike
 {
     /** @var int Type */
     public $type;
@@ -15,7 +16,7 @@ class ClassMethod extends Node\Stmt
     public $name;
     /** @var Node\Param[] Parameters */
     public $params;
-    /** @var null|string|Node\Name[] Return type */
+    /** @var null|string|Node\Name Return type */
     public $returnType;
     /** @var Node[] Statements */
     public $stmts;
@@ -57,8 +58,25 @@ class ClassMethod extends Node\Stmt
         return array('type', 'byRef', 'name', 'params', 'returnType', 'stmts');
     }
 
+    public function returnsByRef() {
+        return $this->byRef;
+    }
+
+    public function getParams() {
+        return $this->params;
+    }
+
+    public function getReturnType() {
+        return $this->returnType;
+    }
+
+    public function getStmts() {
+        return $this->stmts;
+    }
+
     public function isPublic() {
-        return ($this->type & Class_::MODIFIER_PUBLIC) !== 0 || $this->type === 0;
+        return ($this->type & Class_::MODIFIER_PUBLIC) !== 0
+            || ($this->type & Class_::VISIBILITY_MODIFER_MASK) === 0;
     }
 
     public function isProtected() {
