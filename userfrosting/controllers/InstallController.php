@@ -38,7 +38,7 @@ class InstallController extends \UserFrosting\BaseController {
             ]; 
         } 
         
-        $tables = Database::getTables();
+        $tables = Database::getCreatedTables();
         if (count($tables) > 0){
             $messages[] = [
                 "title" => "One or more tables already exist.",

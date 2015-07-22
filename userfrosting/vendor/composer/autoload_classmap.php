@@ -21,7 +21,7 @@ return array(
     'POP3' => $vendorDir . '/phpmailer/phpmailer/class.pop3.php',
     'ParserNodeFunctionEvaluator' => $baseDir . '/auth/ParserNodeFunctionEvaluator.php',
     'SMTP' => $vendorDir . '/phpmailer/phpmailer/class.smtp.php',
-    'Slim\\Extras\\Middleware\\CsrfGuard' => $baseDir . '/auth/CsrfGuard.php',
+    'Slim\\Extras\\Middleware\\CsrfGuard' => $baseDir . '/middleware/CsrfGuard.php',
     'Slim\\Extras\\Middleware\\DatabaseCheck' => $baseDir . '/models/DatabaseCheck.php',
     'UserFrosting\\AccessConditionExpression' => $baseDir . '/auth/AccessConditionExpression.php',
     'UserFrosting\\AccountController' => $baseDir . '/controllers/AccountController.php',
@@ -54,6 +54,7 @@ return array(
     'UserFrosting\\UserFrosting' => $baseDir . '/controllers/UserFrosting.php',
     'UserFrosting\\UserLoaderInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\UserObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
+    'UserFrosting\\UserSession' => $baseDir . '/middleware/UserSession.php',
     'ntlm_sasl_client_class' => $vendorDir . '/phpmailer/phpmailer/extras/ntlm_sasl_client.php',
     'phpmailerException' => $vendorDir . '/phpmailer/phpmailer/class.phpmailer.php',
 );
