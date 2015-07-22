@@ -43,9 +43,9 @@
             'css.path' => $public_path . "/css",
             'db'            =>  [
                 'db_host'  => 'localhost',
-                'db_name'  => 'dbslim',
-                'db_user'  => 'userfrosting',
-                'db_pass'  => 'XCUvP2z7peePCnQ2',
+                'db_name'  => 'userfrosting',
+                'db_user'  => 'admin',
+                'db_pass'  => 'password',
                 'db_prefix'=> 'uf_'
             ],
             'uri' => [
