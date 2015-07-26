@@ -27,6 +27,13 @@ class UserSession extends \Slim\Middleware {
             $storage->setConnection(Database::connection());
             $this->app->remember_me = new \Birke\Rememberme\Authenticator($storage);
             
+            // Change cookie path
+            $cookie = $this->app->remember_me->getCookie();
+            $cookie->setPath("/");
+            $this->app->remember_me->setCookie($cookie);             
+               
+            error_log("Current cookies: " . print_r($_COOKIE, true));
+            
             // Determine if we are already logged in (user exists in the session variable)
             if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {       
                 // User is still logged in - refresh the user.  If they don't exist any more, then an exception will be thrown.
@@ -37,11 +44,8 @@ class UserSession extends \Slim\Middleware {
                 // Check, if the Rememberme cookie exists and is still valid.
                 // If not, we log out the current session
                 if(!empty($_COOKIE[$this->app->remember_me->getCookieName()]) && !$this->app->remember_me->cookieIsValid()) {
-                    //error_log("Session expired. logging out...");
-                    // Change cookie path
-                    $cookie = $this->_app->remember_me->getCookie();
-                    $cookie->setPath("/");
-                    $this->_app->remember_me->setCookie($cookie);                    
+                    error_log("Session expired. logging out...");
+                   
                     $this->app->remember_me->clearCookie();
                     throw new AuthExpiredException();
                 }
@@ -50,15 +54,7 @@ class UserSession extends \Slim\Middleware {
                 // If we can present the correct tokens from the cookie, log the user in
                 // Get the user id
                 $name = $this->app->remember_me->getCookieName();
-                error_log("Cookie is called $name");
-                
-                error_log("Trying to log in via cookie: " . print_r($_COOKIE, true));
-                $user_id = $this->app->remember_me->login();
-                
-                // Change cookie path
-                $cookie = $this->app->remember_me->getCookie();
-                $cookie->setPath("/");
-                $this->app->remember_me->setCookie($cookie);
+                $user_id = $this->app->remember_me->login();               
                 
                 if($user_id) {
                     error_log("Logging in via remember me for $user_id");

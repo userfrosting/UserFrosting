@@ -296,13 +296,13 @@ class AccountController extends \UserFrosting\BaseController {
             $user->login();
             session_regenerate_id();
             // If the user wants to be remembered, create Rememberme cookie
+            // Change cookie path
+            $cookie = $this->_app->remember_me->getCookie();
+            $cookie->setPath("/");
+            $this->_app->remember_me->setCookie($cookie);
             if(!empty($data['rememberme'])) {
                 //error_log("Creating user cookie for " . $user->id);
                 $this->_app->remember_me->createCookie($user->id);
-                // Change cookie path
-                $cookie = $this->_app->remember_me->getCookie();
-                $cookie->setPath("/");
-                $this->_app->remember_me->setCookie($cookie);
             } else {
                 $this->_app->remember_me->clearCookie();
             }            
@@ -331,11 +331,16 @@ class AccountController extends \UserFrosting\BaseController {
             $storage = new \Birke\Rememberme\Storage\PDO($this->_app->remember_me_table);
             $storage->setConnection(Database::connection());
             $storage->cleanAllTriplets($this->_app->user->id);
-        } else {       
-            $this->_app->remember_me->clearCookie($this->_app->user->id);
-        }
+        }        
+        // Change cookie path
+        $cookie = $this->_app->remember_me->getCookie();
+        $cookie->setPath("/");
+        $this->_app->remember_me->setCookie($cookie); 
+
+        if ($this->_app->remember_me->clearCookie())
+            error_log("Cleared cookie");
+            
         session_regenerate_id(true);
-        error_log("destroying session");
         session_destroy();        
         $this->_app->redirect($this->_app->site->uri['public']);
     }
