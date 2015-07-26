@@ -294,6 +294,18 @@ class AccountController extends \UserFrosting\BaseController {
         // Here is my password.  May I please assume the identify of this user now?
         if ($user->verifyPassword($data['password']))  {
             $user->login();
+            session_regenerate_id();
+            // If the user wants to be remembered, create Rememberme cookie
+            if(!empty($data['rememberme'])) {
+                //error_log("Creating user cookie for " . $user->id);
+                $this->_app->remember_me->createCookie($user->id);
+                // Change cookie path
+                $cookie = $this->_app->remember_me->getCookie();
+                $cookie->setPath("/");
+                $this->_app->remember_me->setCookie($cookie);
+            } else {
+                $this->_app->remember_me->clearCookie();
+            }            
             // Create the session
             $_SESSION["userfrosting"]["user"] = $user;
             $this->_app->user = $_SESSION["userfrosting"]["user"];
@@ -313,8 +325,18 @@ class AccountController extends \UserFrosting\BaseController {
      * This route is "public access".
      * Request type: POST     
      */      
-    public function logout(){
-        session_destroy();
+    public function logout($complete = false){
+        error_log("Logging the user out...");
+        if ($complete){
+            $storage = new \Birke\Rememberme\Storage\PDO($this->_app->remember_me_table);
+            $storage->setConnection(Database::connection());
+            $storage->cleanAllTriplets($this->_app->user->id);
+        } else {       
+            $this->_app->remember_me->clearCookie($this->_app->user->id);
+        }
+        session_regenerate_id(true);
+        error_log("destroying session");
+        session_destroy();        
         $this->_app->redirect($this->_app->site->uri['public']);
     }
 
