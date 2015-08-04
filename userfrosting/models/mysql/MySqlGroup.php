@@ -20,7 +20,7 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
             $db = static::connection();
             
             $query = "
-                UPDATE `{$this->_table}`
+                UPDATE `{$this->_table->name}`
                 SET is_default = " . GROUP_DEFAULT .
                 " WHERE is_default = " . GROUP_DEFAULT_PRIMARY .
                 ";";
