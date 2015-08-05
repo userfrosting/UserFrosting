@@ -22,7 +22,7 @@ class UserSession extends \Slim\Middleware {
     public function setup(){       
         // Test database connection
         try {          
-            error_log("Setting up user session");
+            //error_log("Setting up user session");
             $storage = new \Birke\Rememberme\Storage\PDO($this->app->remember_me_table);
             $storage->setConnection(Database::connection());
             $this->app->remember_me = new \Birke\Rememberme\Authenticator($storage);
@@ -32,7 +32,7 @@ class UserSession extends \Slim\Middleware {
             $cookie->setPath("/");
             $this->app->remember_me->setCookie($cookie);             
                
-            error_log("Current cookies: " . print_r($_COOKIE, true));
+            //error_log("Current cookies: " . print_r($_COOKIE, true));
             
             // Determine if we are already logged in (user exists in the session variable)
             if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {       
@@ -44,7 +44,7 @@ class UserSession extends \Slim\Middleware {
                 // Check, if the Rememberme cookie exists and is still valid.
                 // If not, we log out the current session
                 if(!empty($_COOKIE[$this->app->remember_me->getCookieName()]) && !$this->app->remember_me->cookieIsValid()) {
-                    error_log("Session expired. logging out...");
+                    //error_log("Session expired. logging out...");
                    
                     $this->app->remember_me->clearCookie();
                     throw new AuthExpiredException();
@@ -57,7 +57,7 @@ class UserSession extends \Slim\Middleware {
                 $user_id = $this->app->remember_me->login();               
                 
                 if($user_id) {
-                    error_log("Logging in via remember me for $user_id");
+                    //error_log("Logging in via remember me for $user_id");
                     // Load the user
                     $_SESSION["userfrosting"]["user"] = \UserFrosting\UserLoader::fetch($user_id);
                     $this->app->user = $_SESSION["userfrosting"]["user"];
@@ -65,7 +65,7 @@ class UserSession extends \Slim\Middleware {
                     // the fact that the user was logged in via RememberMe (instead of login form)
                     $_SESSION['remembered_by_cookie'] = true;
                 } else {
-                    error_log("Cookie not found in db");
+                    //error_log("Cookie not found in db");
                     // If $rememberMe returned false, check if the token was invalid
                     if($this->app->remember_me->loginTokenWasInvalid()) {
                         //error_log("Cookie was stolen!");
