@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "91ce3f61cc2e9417bbf6c0b65b241437",
+    "hash": "070f56ebeceda820b11ec247b1a05c15",
     "packages": [
         {
             "name": "alexweissman/fortress",
@@ -48,48 +48,6 @@
                 "php validation"
             ],
             "time": "2015-07-09 19:20:22"
-        },
-        {
-            "name": "birke/rememberme",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/gbirke/rememberme.git",
-                "reference": "6e7fe6a396eb48ecd812fdd54ffc5579cb29e67e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/gbirke/rememberme/zipball/6e7fe6a396eb48ecd812fdd54ffc5579cb29e67e",
-                "reference": "6e7fe6a396eb48ecd812fdd54ffc5579cb29e67e",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Birke\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Gabriel Birke",
-                    "email": "gb@birke-software.de"
-                }
-            ],
-            "description": "Secure \"Remember Me\" functionality",
-            "homepage": "https://github.com/gbirke/rememberme",
-            "keywords": [
-                "cookie",
-                "remember",
-                "security"
-            ],
-            "time": "2015-05-18 12:07:45"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -442,8 +400,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "alexweissman/fortress": 20,
-        "birke/rememberme": 20
+        "alexweissman/fortress": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

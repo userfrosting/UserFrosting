@@ -54,10 +54,10 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
             $this->_descriptions = array_replace_recursive($this->_descriptions, $results['descriptions']);
         } catch (\PDOException $e){
             $connection = static::connection();
-            $table = static::getTable('configuration')->name;
+            $prefix = static::$app->config('db')['db_prefix'];
             
             // If the database connection is fine, but the table doesn't exist, create it!
-            $connection->query("CREATE TABLE IF NOT EXISTS `$table` (
+            $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "configuration` (
                 `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
                 `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
                 `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
@@ -123,8 +123,22 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
      *
      */    
     private function initEnvironment(){
+        // Auto-detect the public root URI
+        $environment = static::$app->environment();
+        
+        // TODO: can we trust this?  should we revert to storing this in the DB?
+        // TODO: make this configurable in the app config
+        $serverport = (($_SERVER['SERVER_PORT'] == 443) or ($_SERVER['SERVER_PORT'] == 80)) ? '' : ':'.$_SERVER['SERVER_PORT']; 
+        $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] .$serverport. $environment['SCRIPT_NAME'];
+        
         $this->_environment = [
-            'uri' => static::$app->config('uri')
+            'uri' => [
+                'public' =>    $uri_public_root,
+                'js' =>        $uri_public_root . "/js/",
+                'css' =>       $uri_public_root . "/css/",        
+                'favicon' =>   $uri_public_root . "/css/favicon.ico",
+                'image' =>     $uri_public_root . "/images/"
+            ]
         ];
     }
     

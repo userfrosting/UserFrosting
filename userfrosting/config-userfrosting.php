@@ -10,7 +10,8 @@
      
     // Use native PHP sessions
     session_cache_limiter(false);
-    session_name("UserFrosting");  
+    session_name("UserFrosting");
+    session_start();     
     
     /* Instantiate the Slim application */
     $app = new \UserFrosting\UserFrosting([
@@ -20,17 +21,12 @@
     
     // Get public path.  Is this guaranteed to work in all environments?
     $public_path = $_SERVER['DOCUMENT_ROOT'] . $app->environment()['SCRIPT_NAME'];
-       
-    // Construct public URL (e.g. "http://www.userfrosting.com/admin").  Feel free to hardcode this if you feel safer.
-    $environment = $app->environment();    
-    $serverport = (($environment['SERVER_PORT'] == 443) or ($environment['SERVER_PORT'] == 80)) ? '' : ':' . $environment['SERVER_PORT']; 
-    $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] . $serverport . $environment['SCRIPT_NAME'];
     
     /********* DEVELOPMENT SETTINGS *********/
-    $app->configureMode('dev', function () use ($app, $public_path, $uri_public_root) {
+    $app->configureMode('dev', function () use ($app, $public_path) {
         $app->config([
             'log.enable' => true,
-            'debug' => true,
+            'debug' => false,
             'base.path'     => __DIR__,            
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
@@ -43,25 +39,18 @@
             'css.path' => $public_path . "/css",
             'db'            =>  [
                 'db_host'  => 'localhost',
-                'db_name'  => 'dbslim',
-                'db_user'  => 'userfrosting',
-                'db_pass'  => 'XCUvP2z7peePCnQ2',
+                'db_name'  => 'userfrosting',
+                'db_user'  => 'admin',
+                'db_pass'  => 'password',
                 'db_prefix'=> 'uf_'
-            ],
-            'uri' => [
-                'public' =>    $uri_public_root,
-                'js' =>        $uri_public_root . "/js/",
-                'css' =>       $uri_public_root . "/css/",        
-                'favicon' =>   $uri_public_root . "/css/favicon.ico",
-                'image' =>     $uri_public_root . "/images/"
             ],
             'user_id_guest'  => 0,
             'user_id_master' => 1
         ]);
     });    
-    
+
     /********* PRODUCTION SETTINGS *********/    
-    $app->configureMode('production', function () use ($app, $public_path, $uri_public_root) {
+    $app->configureMode('production', function () use ($app, $public_path) {
         $app->config([
             'log.enable' => true,
             'debug' => false,
@@ -82,13 +71,6 @@
                 'db_pass'  => 'password',
                 'db_prefix'=> 'uf_'
             ],
-            'uri' => [
-                'public' =>    $uri_public_root,
-                'js' =>        $uri_public_root . "/js/",
-                'css' =>       $uri_public_root . "/css/",        
-                'favicon' =>   $uri_public_root . "/css/favicon.ico",
-                'image' =>     $uri_public_root . "/images/"
-            ],            
             'user_id_guest'  => 0,
             'user_id_master' => 1
         ]);

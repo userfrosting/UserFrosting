@@ -32,9 +32,6 @@ use \Slim\Extras\Middleware\CsrfGuard;
 // CSRF Middleware
 $app->add(new CsrfGuard());
 
-/**** Session and User Setup ****/
-$app->add(new UserFrosting\UserSession());
-
 /**** Database Setup ****/
 
 // Specify which database model you want to use
@@ -99,15 +96,6 @@ $table_authorize_group = new \UserFrosting\DatabaseTable($app->config('db')['db_
 \UserFrosting\UserLoader::init($table_user);
 \UserFrosting\GroupLoader::init($table_group);
 
-// Info for RememberMe table
-$app->remember_me_table = [
-    'tableName' => $app->config('db')['db_prefix'] . "user_rememberme",
-    'credentialColumn' => 'user_id',
-    'tokenColumn' => 'token',
-    'persistentTokenColumn' => 'persistent_token',
-    'expiresColumn' => 'expires'
-];
-
 
 /* Load UserFrosting site settings */
 
@@ -158,12 +146,6 @@ if (!$app->site->isConsistent()){
     $app->site->store();
 }
 
-// Create the page schema object
-$app->schema = new \UserFrosting\PageSchema($app->site->uri['css'], $app->config('css.path') , $app->site->uri['js'], $app->config('js.path') );
-
-// Create a guest user, which lets us proceed until we can try to authenticate the user
-$app->user = new \UserFrosting\User([], $app->config('user_id_guest'));
-
 /** Register site settings with site settings config page */
 $app->hook('settings.register', function () use ($app){
     // Register core site settings
@@ -182,6 +164,114 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'minify_css', "Minify CSS", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'minify_js', "Minify JS", "toggle", [0 => "Off", 1 => "On"]);
 }, 1);
+
+/**** Session and User Setup ****/
+$db_error = $app->setupUser();    
+
+/**** Message Stream Setup ****/
+
+/* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
+if (!isset($_SESSION['userfrosting']['alerts']))
+    $_SESSION['userfrosting']['alerts'] = new \Fortress\MessageStream();
+
+$app->alerts = $_SESSION['userfrosting']['alerts'];
+
+/**** Translation setup ****/
+$app->translator = new \Fortress\MessageTranslator();
+
+/* Set the translation path and default language path. */
+$app->translator->setTranslationTable($app->config("locales.path") . "/" . $app->user->locale . ".php");
+$app->translator->setDefaultTable($app->config("locales.path") . "/en_US.php");
+\Fortress\MessageStream::setTranslator($app->translator);
+
+/**** Error Handling Setup ****/
+
+// Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
+// A Slim application uses its built-in error handler if its debug setting is true; otherwise, it uses the custom error handler.
+$app->error(function (\Exception $e) use ($app) {
+    if ($app->alerts && is_object($app->alerts) && $app->translator)
+        $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+    error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+    error_log($e->getTraceAsString());
+});
+
+// Also handle fatal errors
+register_shutdown_function( "fatal_handler" );
+
+function fatal_handler() {
+    global $app;
+    $error = error_get_last();
+  
+    // Handle fatal errors
+    if( $error !== NULL && $error['type'] == E_ERROR) {
+        $errno   = $error["type"];
+        $errfile = $error["file"];
+        $errline = $error["line"];
+        $errstr  = $error["message"];
+        // Inform the client of a fatal error
+        if ($app->alerts && is_object($app->alerts) && $app->translator)
+            $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+        error_log("Fatal error ($errno) in $errfile on line $errline: $errstr");
+        header("HTTP/1.1 500 Internal Server Error");
+    }
+}
+
+/**** Templating Engine Setup ****/
+
+/* Import UserFrosting variables as global Twig variables */    
+$twig = $app->view()->getEnvironment();   
+$twig->addGlobal("site", $app->site);
+
+// If a user is logged in, add the user object as a global Twig variable
+if ($app->user)
+    $twig->addGlobal("user", $app->user);
+
+// Load default account theme and current account theme
+// Thanks to https://diarmuid.ie/blog/post/multiple-twig-template-folders-with-slim-framework
+$loader = $twig->getLoader();
+// First look in user's theme...
+$loader->addPath($app->config('themes.path') . "/" . $app->user->getTheme());
+// THEN in default.
+$loader->addPath($app->config('themes.path') . "/default");
+
+// Create the page schema object
+$app->schema = new \UserFrosting\PageSchema($app->site->uri['css'], $app->config('css.path') , $app->site->uri['js'], $app->config('js.path') );
+
+// Add Twig function for checking permissions during dynamic menu rendering
+$function_check_access = new Twig_SimpleFunction('checkAccess', function ($hook, $params = []) use ($app) {
+    return $app->user->checkAccess($hook, $params);
+});
+
+$twig->addFunction($function_check_access);    
+
+// Add Twig function for translating message hooks
+$function_translate = new Twig_SimpleFunction('translate', function ($hook, $params = []) use ($app) {
+    return $app->translator->translate($hook, $params);
+});
+
+$twig->addFunction($function_translate);
+
+// Add Twig functions for including CSS and JS scripts from schema
+$function_include_css = new Twig_SimpleFunction('includeCSS', function ($group_name = "common") use ($app) {
+    // Return array of CSS includes
+    return $app->schema->getCSSIncludes($group_name, $app->site->minify_css);
+});
+
+$twig->addFunction($function_include_css);
+
+$function_include_bottom_js = new Twig_SimpleFunction('includeJSBottom', function ($group_name = "common") use ($app) {    
+    // Return array of JS includes
+    return $app->schema->getJSBottomIncludes($group_name, $app->site->minify_js);
+});
+
+$twig->addFunction($function_include_bottom_js);
+
+$function_include_top_js = new Twig_SimpleFunction('includeJSTop', function ($group_name = "common") use ($app) {    
+    // Return array of JS includes
+    return $app->schema->getJSTopIncludes($group_name, $app->site->minify_js);
+});
+
+$twig->addFunction($function_include_top_js);
 
 // Register CSS and JS includes for the pages
 $app->hook('includes.css.register', function () use ($app){
@@ -245,6 +335,14 @@ $app->hook('includes.js.register', function () use ($app){
     
 }, 1);  
 
+/* TODO: enable Twig caching?
+$view = $app->view();
+$view->parserOptions = array(
+    'debug' => true,
+    'cache' => dirname(__FILE__) . '/cache'
+);
+*/
+
 /** Plugins */
 $app->hook('plugins.register', function () use ($app){
     // Run initialization scripts for plugins
@@ -260,3 +358,11 @@ $app->applyHook("includes.js.register");
 
 // Register plugins
 $app->applyHook("plugins.register");
+
+if ($db_error){
+    // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
+    session_destroy();
+    $controller = new \UserFrosting\BaseController($app);
+    $controller->pageDatabaseError();
+    exit;
+}

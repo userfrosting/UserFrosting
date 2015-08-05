@@ -16,7 +16,7 @@ namespace UserFrosting;
 interface DatabaseInterface {
     public static function connection();
     public static function getInfo();
-    public static function getCreatedTables();
+    public static function getTables();
     public static function install();
     public static function testConnection();
 }
