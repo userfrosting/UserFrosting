@@ -188,9 +188,18 @@ section.tutorial {
     padding: 30px 0px;
 }
 
+section.tutorial li{
+    font-size: 18px;
+}
+
 section.tutorial h2 {
     font-size: 24px;
     margin: 8px 0px;
+}
+
+section.tutorial h3 {
+    font-size: 20px;
+    padding-bottom: 0px;
 }
 
 hr.star-light,
