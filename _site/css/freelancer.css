@@ -184,6 +184,15 @@ section.beta {
     background: #FFF;
 }
 
+section.tutorial {
+    padding: 30px 0px;
+}
+
+section.tutorial h2 {
+    font-size: 24px;
+    margin: 8px 0px;
+}
+
 hr.star-light,
 hr.star-primary {
     margin: 25px auto 30px;
