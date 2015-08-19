@@ -513,3 +513,8 @@ footer .footer-below {
     display: none;
     opacity: 0;
 }
+
+.portfolio-modal li{
+    font-size: 18px;
+    margin-bottom: 5px;
+}

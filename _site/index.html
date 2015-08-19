@@ -334,17 +334,45 @@
     
 <!-- Help Section -->
 <section id="help" class="alpha">
-    <div class="container">
+    <div class="container help-topics">
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2>Get Help with UserFrosting</h2>
                 <hr class="star-primary">
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <h3 style="text-transform: none; text-align: center;">
-                    Have a contribution, question, or need help? Go to our <a href="https://github.com/alexweissman/UserFrosting">Github</a> page. You can send a message, make a comment, or implement a new feature.  We look forward to it. 
+        <div class="main-feature">
+            <div class="row">
+                <div class="col-sm-6">
+                    <a href="#help-modal-question" class="portfolio-link" data-toggle="modal">
+                        <i class="fa fa-question"></i>
+                        <h4>Using UserFrosting</h4>
+                    </a>
+                    <p>I need help using UserFrosting for my project.</p>
+                </div>
+                <div class="col-sm-6">
+                    <a href="#help-modal-bug" class="portfolio-link" data-toggle="modal">
+                        <i class="fa fa-bug"></i>
+                        <h4>Bug Reporting</h4>
+                    </a>
+                    <p>I think I found a bug in the code.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <a href="#help-modal-request" class="portfolio-link" data-toggle="modal">
+                        <i class="fa fa-lightbulb-o"></i>
+                        <h4>Feature Requests</h4>
+                    </a>
+                    <p>I have a suggestion for how UserFrosting could be improved.</p>
+                </div>
+                <div class="col-sm-6">
+                    <a href="#help-modal-contribute" class="portfolio-link" data-toggle="modal">
+                        <i class="fa fa-puzzle-piece"></i>
+                        <h4>Contributing</h4>
+                    </a>
+                    <p>I want to help!</p>
+                </div>                 
             </div>
         </div>
     </div>
@@ -480,6 +508,132 @@
                         </div>
                     </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="help-modal-question" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="modal-body">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2>Building Your Website with UserFrosting</h2>
+                        <hr class="star-primary">
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-1 text-left">
+                        <p>If you're just getting started with UserFrosting and the code looks completely different from anything you've ever seen before, we recommend that you start with <a href="http://localhost:4000/navigating/">Navigating UserFrosting</a>.  This will explain the components and practices that UserFrosting uses to do its magic.</p>
+                        <p>If you're having trouble with installation, please see our <a href="http://localhost:4000/installation">installation guide</a>.</p>
+                        <p>If you feel comfortable with the basic concepts, and were able to install UserFrosting successfully, you can dive into the code with our <a href="http://localhost:4000/tutorials">tutorials</a>.</p>
+                        <p>If you've <strong>already done all of this</strong> and need more help, please join us in <a href="https://gitter.im/alexweissman/UserFrosting">chat</a>.  We'll do our best to help you out.</p>
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Ok, got it!</button>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="help-modal-bug" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="modal-body">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2>Bug Reporting</h2>
+                        <hr class="star-primary">
+                    </div>                
+                    <div class="col-lg-10 col-lg-offset-1 text-left">
+                        <p>So, you think you found a bug?  Well, please let us know!</p>
+                        <p><strong>But first</strong>, please make sure it is a problem with <i>UserFrosting</i>, and not a problem with the way your server is configured.  If you're getting a <a href="https://github.com/alexweissman/UserFrosting/issues/351">white screen of death</a> when you try to install, there is a good chance that your server is not configured properly.</p>
+                        <p>We recommend that you install a local development server on your computer, rather than <a href="https://pbs.twimg.com/media/BxfENwpIYAAcHqQ.png" rel="nofollow">testing your code directly on the production server.</a>  This means you can test your code directly on your own computer, making development faster and without the risk of exposing sensitive information to the public.  We recommend installing <a href="https://www.apachefriends.org">XAMPP</a> if you don't already have a local server set up.</p>
+                        <p>Please also make sure you check the <a href="http://localhost:4000/installation">installation requirements</a>.  <strong>Notably, UserFrosting requires PHP 5.4 or higher to work!</strong></p>
+                        <p>If you know all of this already, and you're pretty sure the problem is in our code, please <a href="https://github.com/alexweissman/UserFrosting/issues">open up an issue</a>.  Try to provide as much information as possible, including what you were doing when the problem occurred, what type of server you are running on (Apache, IIS, nginx, etc), and any errors in your PHP error log and/or browser console.</p>
+
+                        <h3>Tips for reporting issues</h3>
+                        <ul>
+                          <li>Remember that courtesy and proper grammar go a long way. Please take the time to craft a <strong>precise, polite issue</strong>. We will do our best to help, but remember that this is an open source project - none of us are getting paid a salary to develop this project, or act as your personal support hotline ;-)</li>
+                          <li>Carefully search the <a href="https://github.com/alexweissman/UserFrosting/issues?utf8=%E2%9C%93&q=is%3Aissue">existing issues</a>, both opened and closed.  Your question may have already been asked and answered before!</li>
+                          <li>Report any error messages you get. There are two main places where you may find error messages:
+                            <ul>
+                              <li>Backend (PHP-related) errors: in your PHP error log. This is usually a file called <code>php_error_log</code> or something like that. In XAMPP, the default location of this file is <code>XAMPP/xamppfiles/logs/</code>. For other web hosting platforms, please consult the documentation or do a quick Google search (i.e. "where is the php error log in _____"). Some web hosts may provide a special interface for accessing the php error log, through ssh, cpanel, etc. Please ask them directly for help with this.
+                              </li>
+                              <li>Frontend (Javascript-related) errors: in your browser's Javascript console. This can be accessed from "Tools->Web Developer" menu in Firefox, or "More tools->Javascript Console" in Chrome. For help with other browsers, please Google "where is the javascript console in ____".
+                              </li>
+                            </ul>
+                          <li>If you find a problem in any of the tutorials, let us know on the Issues page. Also, please feel free to contribute to the wiki pages if you have something relevant and useful to add.</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Ok, got it!</button>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="help-modal-request" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="modal-body">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2>Feature Requests</h2>
+                        <hr class="star-primary">
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-1 text-left">
+                        <p>Needless to say, we get tons of feature requests. If you'd like to make a suggestion, you must first search the <a href="https://github.com/alexweissman/UserFrosting/issues?utf8=%E2%9C%93&q=is%3Aissue">existing issues</a>, both opened and closed.  Your question may have already been asked and answered before!</p>
+                        <p>If your suggestion doesn't appear to have been made before, you may <a href="https://github.com/alexweissman/UserFrosting/issues/new">open a new issue</a>.  Please note that we have a massive "todo" list for UserFrosting, so it may take us a long time to get to your suggestion.  If you'd like, you may volunteer to contribute code, or even consider <a href="http://localhost:4000/components/#plugins">writing a plugin</a>.</p>
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Ok, got it!</button>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+<div class="portfolio-modal modal fade" id="help-modal-contribute" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="modal-body">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2>Contributing to UserFrosting</h2>
+                        <hr class="star-primary">
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-1 text-left">
+                        <p>Yes, we'd love your help!  Join us in <a href="https://gitter.im/alexweissman/UserFrosting">chat</a> and we can talk about how you can become a contributor.</p>
+                    </div>
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                        <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Ok, got it!</button>
+                    </div>
+                </div>
+            </div>            
         </div>
     </div>
 </div>
