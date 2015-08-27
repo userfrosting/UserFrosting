@@ -1,7 +1,18 @@
 <?php
 
+/**
+ * de_DE
+ *
+ * German message token translations.  
+ *
+ * @package UserFrosting
+ * @link http://www.userfrosting.com/components/#i18n 
+ * @author Andreas (@rocketworm)
+ * @author @X-Anonymous-Y
+ */
+
 /*
-{{name}} - Dynamische Marker, die zur Laufzeit durch den entsprechenden Index ersetzt werden.
+ {{name}} - Dynamische Marker, die zur Laufzeit durch den entsprechenden Index ersetzt werden.
 */
 
 $lang = array();

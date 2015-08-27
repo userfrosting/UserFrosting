@@ -3,11 +3,16 @@
 /**
  * pt_BR
  *
- * Brazilian Portugese message token translations
+ * Brazilian Portuguese message token translations
  *
- * @author Edu Salgado
- *
+ * @package UserFrosting
+ * @link http://www.userfrosting.com/components/#i18n 
+ * @author Edu Salgado (@riotbr)
  */
+
+/*
+{{name}} - Dymamic markers which are replaced at run time by the relevant index.
+*/
 
 $lang = array();
 

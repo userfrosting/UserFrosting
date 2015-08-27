@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * th_TH
+ *
+ * Thai message token translations
+ *
+ * @package UserFrosting
+ * @link http://www.userfrosting.com/components/#i18n 
+ * @author @popiazaza
+ */
+
 /*
 {{name}} - Dymamic markers which are replaced at run time by the relevant index.
 */

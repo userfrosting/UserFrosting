@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * it_IT
+ *
+ * Italian message token translations
+ *
+ * @package UserFrosting
+ * @link http://www.userfrosting.com/components/#i18n 
+ * @author Pietro Marangon (@Pe46dro)
+ */
+
 /*
 {{name}} - Dymamic markers which are replaced at run time by the relevant index.
 */
