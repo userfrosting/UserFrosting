@@ -365,8 +365,13 @@ class UserController extends \UserFrosting\BaseController {
             $data['primary_group_id'] = $primaryGroup->id;
         }
         
+        // Set groups to default groups if not specified or not authorized to set groups
         if (!isset($data['groups']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "groups"])) {
-            $data['groups'] = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+            $default_groups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+            $data['groups'] = [];
+            foreach ($default_groups as $group_id => $group){
+                $data['groups'][$group_id] = "1";
+            }
         }
         
         // Hash password
@@ -375,10 +380,13 @@ class UserController extends \UserFrosting\BaseController {
         // Create the user
         $user = new User($data);
 
-        // Add user to groups, including default primary group
+        // Add user to groups, including selected primary group
         $user->addGroup($data['primary_group_id']);
-        foreach ($data['groups'] as $group_id => $group)
-            $user->addGroup($group_id);    
+        foreach ($data['groups'] as $group_id => $is_member) {
+            if ($is_member == "1"){      
+                $user->addGroup($group_id);    
+            }
+        }
         
         // Store new user to database
         $user->store();        
