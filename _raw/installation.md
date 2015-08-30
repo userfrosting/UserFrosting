@@ -33,4 +33,6 @@ is not enabled. For this reason you need to enable it.
 
 To read further on this, you can visit this site: [http://seventhsoulmountain.blogspot.com/2014/02/wordpress-permalink-ubuntu-problem-solutions.html](http://seventhsoulmountain.blogspot.com/2014/02/wordpress-permalink-ubuntu-problem-solutions.html)
 
+** Slim treating POST as GET request **
+https://github.com/slimphp/Slim/issues/1220
 
