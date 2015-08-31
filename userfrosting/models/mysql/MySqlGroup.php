@@ -11,7 +11,27 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
     
     // Return a collection of Users which belong to this group.
     public function getUsers(){
-        // TODO
+        //Get connected and load the group_user table
+        $db = static::connection();
+        $link_table = static::getTable('group_user')->name;
+
+        $sqlVars[":id"] = $this->_id;
+
+        $query = "
+            SELECT user_id FROM `$link_table`
+            WHERE group_id = :id";
+
+        $stmt = $db->prepare($query);
+        $stmt->execute($sqlVars);
+
+        //Get the array of users in this group
+        $users_array = array();
+        while($user_id = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $user = UserLoader::fetch($user_id['user_id']);
+            $users_array[] = $user;
+        }
+
+        return $users_array;
     }
     
     public function store(){        
