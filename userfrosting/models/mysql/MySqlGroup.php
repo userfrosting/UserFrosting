@@ -25,7 +25,7 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
         $stmt->execute($sqlVars);
 
         //Get the array of users in this group
-        $users_array = array();
+        $users_array= [];
         while($user_id = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $user = UserLoader::fetch($user_id['user_id']);
             $users_array[] = $user;
