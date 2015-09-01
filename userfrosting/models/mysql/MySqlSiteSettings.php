@@ -303,12 +303,17 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         } else if (!ini_get("log_errors")){
             $path = ini_get('error_log');
             $messages = ["Error logging appears to be disabled.  Please check your php.ini file."];
-        } else {    
+        } else {
             $path = ini_get('error_log');
-            if ($lines){
-                $messages = array_reverse(array_slice(file($path), -$lines));
+            @$file = file($path);
+            if (!$file) {
+                $messages = ["No error log found."];
             } else {
-                $messages = array_reverse(file($path));
+                if ($lines){
+                    $messages = array_reverse(array_slice($file, -$lines));
+                } else {
+                    $messages = array_reverse($file);
+                }
             }
         }
         return [
