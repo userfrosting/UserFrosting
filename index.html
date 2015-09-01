@@ -200,6 +200,14 @@ title: "UserFrosting | Modern, open source user management for PHP"
                 </a> 
             </div>
             <div class="col-sm-4 palette-button">
+                <a href="{{site.url}}/troubleshooting" class="palette-link">
+                    <div class="palette-text">
+                        <i class="fa fa-4x fa-life-saver"></i><br>
+                        Troubleshooting
+                    </div>
+                </a> 
+            </div>  
+            <div class="col-sm-4 palette-button">
                 <a href="{{site.url}}/navigating" class="palette-link">
                     <div class="palette-text">
                         <i class="fa fa-4x fa-compass"></i><br>
@@ -230,15 +238,7 @@ title: "UserFrosting | Modern, open source user management for PHP"
                         Security
                     </div>
                 </a> 
-            </div>
-            <div class="col-sm-4 palette-button">
-                <a href="#" class="palette-link">
-                    <div class="palette-text">
-                        <i class="fa fa-4x fa-code"></i><br>
-                        API (Coming soon!)
-                    </div>
-                </a> 
-            </div>            
+            </div>          
         </div>
     </div>
 </section>    
@@ -439,7 +439,7 @@ title: "UserFrosting | Modern, open source user management for PHP"
                     </div>
                     <div class="col-lg-10 col-lg-offset-1 text-left">
                         <p>If you're just getting started with UserFrosting and the code looks completely different from anything you've ever seen before, we recommend that you start with <a href="{{site.url}}/navigating/">Navigating UserFrosting</a>.  This will explain the components and practices that UserFrosting uses to do its magic.</p>
-                        <p>If you're having trouble with installation, please see our <a href="{{site.url}}/installation">installation guide</a>.</p>
+                        <p>If you're having trouble with installation, please see our <a href="{{site.url}}/troubleshooting">troubleshooting guide</a>.</p>
                         <p>If you feel comfortable with the basic concepts, and were able to install UserFrosting successfully, you can dive into the code with our <a href="{{site.url}}/tutorials">tutorials</a>.</p>
                         <p>If you've <strong>already done all of this</strong> and need more help, please join us in <a href="https://gitter.im/alexweissman/UserFrosting">chat</a>.  We'll do our best to help you out.</p>
                     </div>
@@ -468,7 +468,7 @@ title: "UserFrosting | Modern, open source user management for PHP"
                     </div>                
                     <div class="col-lg-10 col-lg-offset-1 text-left">
                         <p>So, you think you found a bug?  Well, please let us know!</p>
-                        <p><strong>But first</strong>, please make sure it is a problem with <i>UserFrosting</i>, and not a problem with the way your server is configured.  If you're getting a <a href="https://github.com/alexweissman/UserFrosting/issues/351">white screen of death</a> when you try to install, there is a good chance that your server is not configured properly.</p>
+                        <p><strong>But first</strong>, please make sure it is a problem with <i>UserFrosting</i>, and not a problem with the way your server is configured.  If you're getting a "white screen of death" when you try to install, there is a good chance that your server is not configured properly.  See the <a href="{{site.url}}/troubleshooting">troubleshooting guide</a> for help.</p>
                         <p>We recommend that you install a local development server on your computer, rather than <a href="https://pbs.twimg.com/media/BxfENwpIYAAcHqQ.png" rel="nofollow">testing your code directly on the production server.</a>  This means you can test your code directly on your own computer, making development faster and without the risk of exposing sensitive information to the public.  We recommend installing <a href="https://www.apachefriends.org">XAMPP</a> if you don't already have a local server set up.</p>
                         <p>Please also make sure you check the <a href="{{site.url}}/installation">installation requirements</a>.  <strong>Notably, UserFrosting requires PHP 5.4 or higher to work!</strong></p>
                         <p>If you know all of this already, and you're pretty sure the problem is in our code, please <a href="https://github.com/alexweissman/UserFrosting/issues">open up an issue</a>.  Try to provide as much information as possible, including what you were doing when the problem occurred, what type of server you are running on (Apache, IIS, nginx, etc), and any errors in your PHP error log and/or browser console.</p>

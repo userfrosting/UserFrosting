@@ -215,53 +215,9 @@ $app->configureMode('dev', function () use ($app) {
 
                 <h3><i class="fa fa-life-saver"></i> Troubleshooting Installation</h3>
                 <p>
-                    If you are having problems during installation, please check the following:
-                </p>
-                <p>
-                Make sure you have the "Rewrite Engine" module installed and enabled if you are using Apache.  Some distributions, like WAMP, may not have this module automatically enabled, and you will need to do so manually (#340).
-                </p>
-                <p>
-                To do this, please take the following steps (from <a href="http://stackoverflow.com/questions/869092/how-to-enable-mod-rewrite-for-apache-2-2/21658877#21658877">http://stackoverflow.com/questions/869092/how-to-enable-mod-rewrite-for-apache-2-2/21658877#21658877</a>:
-                <h4>Problem 1</h4>
-                
-                <p>Firstly, it may be a problem with your apache not having the mod_rewrite.c module installed or enabled. </p>
-                
-                <p>For this reason, you would have to  enable it as follows</p>
-                
-                <ol>
-                    <li><small>Open up your console and type into it: <code>sudo a2enmod rewrite</code></small></li>
-                    <li><small>Restart your apache server: <code>service apache2 restart</code></small></li>
-                </ol>
-                
-                <h4>Problem 2</h4>
-                
-                <ol>
-                    <li><small>You may also, in addition to the above, if it does not work, have to change the override rule from the apache conf file (either apache2.conf, http.conf , or 000-default file).</small></li>
-                    <li><small>Locate &quot;Directory /var/www/&quot;</small></li>
-                    <li><small>Change the &quot;Override None&quot; to &quot;Override All&quot;</small></li>
-                </ol>
-                
-                <h4>Problem 3</h4>
-                
-                <p>If you get an error stating rewrite module is not found, then probably your userdir module 
-                is not enabled. For this reason you need to enable it. </p>
-                
-                <ol>
-                    <li><small>Type this into the console: <code>sudo a2enmod userdir</code></small></li>
-                    <li><small>Then try enabling the rewrite module if still not enabled (as mentioned above).</small></li>
-                </ol>
-                
-                <p>To read further on this, you can visit this site: <a href="http://seventhsoulmountain.blogspot.com/2014/02/wordpress-permalink-ubuntu-problem-solutions.html">http://seventhsoulmountain.blogspot.com/2014/02/wordpress-permalink-ubuntu-problem-solutions.html</a></p>
-                
-                <h3><i class="fa fa-life-saver"></i> Installing on Other Platforms</h3>
-                
-                <p>
-                    Currently, UserFrosting only comes with a configuration file for Apache.  If you are proficient in IIS or other server technologies, and wish to contribute the corresponding configuration file, please open a pull request - we'd really appreciate it!
+                    If you are having problems during installation, please see the <a href="http://localhost:4000/troubleshooting">troubleshooting guide</a>.
                 </p>
                 
-                <p>
-                    In the meantime, there is a workaround: you can install <a href="http://www.helicontech.com/ape/">Helicon Ape</a>, which provides support for Apache <code>.htaccess</code> and <code>.htpasswd</code> configuration files in Microsoft IIS.  Choose "full server download" when prompted by the Helicon Ape installer.
-                </p>
             </div>
         </div>
     </div>
