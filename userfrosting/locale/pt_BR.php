@@ -117,7 +117,7 @@ $lang = array_merge($lang,array(
     "CONFIG_ACTIVATION_RESEND_RANGE" => "O limite de ativação precisa estar entre {{min}} e {{max}} horas",
     "CONFIG_EMAIL_INVALID" => "O e-mail informado não é válido",
     "CONFIG_UPDATE_SUCCESSFUL" => "A configuração do seu site foi atualizada. Pode ser necessário carregar uma nova página para que todas as definições tenham efeito",
-    "MINIFICATION_SUCCESS" => "CSS e JS minifocados e concatenados com sucesso para todos grupos de páginas."
+    "MINIFICATION_SUCCESS" => "CSS e JS minificados e concatenados com sucesso para todos grupos de páginas."
 ));
 
 // Forgot Password
