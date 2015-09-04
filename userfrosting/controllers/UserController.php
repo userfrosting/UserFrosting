@@ -2,19 +2,36 @@
 
 namespace UserFrosting;
 
-/*******
-
-/users/*
-
-*******/
-
-// Handles user-related activities
+/**
+ * UserController Class
+ *
+ * Controller class for /users/* URLs.  Handles user-related activities, including listing users, CRUD for users, etc.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/navigating/#structure
+ */
 class UserController extends \UserFrosting\BaseController {
 
+    /**
+     * Create a new UserController object.
+     *
+     * @param UserFrosting $app The main UserFrosting app.
+     */
     public function __construct($app){
         $this->_app = $app;
     }
 
+    /**
+     * Renders the user listing page.
+     *
+     * This page renders a table of users, with dropdown menus for admin actions for each user.
+     * Actions typically include: edit user details, activate user, enable/disable user, delete user.
+     * This page requires authentication.
+     * Request type: GET
+     * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
+     * @todo implement interface to modify user-assigned authorization hooks and permissions
+     */        
     public function pageUsers($primary_group_name = null){
         // Optional filtering by primary group
         if ($primary_group_name){
@@ -55,7 +72,17 @@ class UserController extends \UserFrosting\BaseController {
             "users" => $users
         ]);          
     }
-
+    
+    /**
+     * Renders a page displaying a user's information, in read-only mode.
+     *
+     * This checks that the currently logged-in user has permission to view the requested user's info.
+     * It checks each field individually, showing only those that you have permission to view.
+     * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
+     * This page requires authentication.
+     * Request type: GET
+     * @param string $user_id The id of the user to view.
+     */  
     public function pageUser($user_id){
         // Get the user to view
         $target_user = UserLoader::fetch($user_id);    
@@ -124,7 +151,16 @@ class UserController extends \UserFrosting\BaseController {
         ]);   
     }
 
-   // Display the form for creating a new user
+    /**
+     * Renders the form for creating a new user.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`.
+     * If the currently logged-in user has permission to modify user group membership, then the group toggles will be displayed.
+     * Otherwise, the user will be added to the default groups automatically.
+     * This page requires authentication.
+     * Request type: GET
+     */  
     public function formUserCreate(){
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('create_account')){
@@ -210,7 +246,18 @@ class UserController extends \UserFrosting\BaseController {
         ]);   
     }  
         
-    // Display the form for editing an existing user
+    /**
+     * Renders the form for editing an existing user.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`.
+     * For each field, we will first check if the currently logged-in user has permission to update the field.  If so,
+     * the field will be rendered as editable.  If not, we will check if they have permission to view the field.  If so,
+     * it will be displayed but disabled.  If they have neither permission, the field will be hidden.
+     * This page requires authentication.
+     * Request type: GET
+     * @param int $user_id the id of the user to edit.
+     */    
     public function formUserEdit($user_id){
         // Get the user to edit
         $target_user = UserLoader::fetch($user_id);        
@@ -293,12 +340,19 @@ class UserController extends \UserFrosting\BaseController {
         ]);   
     }    
 
-    // Create new user
+    /** 
+     * Processes the request to create a new user (from the admin controls).
+     * 
+     * Processes the request from the user creation form, checking that:
+     * 1. The username and email are not already in use;
+     * 2. The logged-in user has the necessary permissions to update the posted field(s);
+     * 3. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST
+     * @see formUserCreate
+     */
     public function createUser(){
         $post = $this->_app->request->post();
-        
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
         
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-create.json");
@@ -395,13 +449,21 @@ class UserController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
     }
     
-    
-    // Update user details, enabled/disabled status, activation status, 
+    /** 
+     * Processes the request to update an existing user's details, including enabled/disabled status and activation status.
+     * 
+     * Processes the request from the user update form, checking that:
+     * 1. The target user's new email address, if specified, is not already in use;
+     * 2. The logged-in user has the necessary permissions to update the posted field(s);
+     * 3. We're not trying to disable the master account;
+     * 4. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST
+     * @param int $user_id the id of the user to edit.     
+     * @see formUserEdit
+     */      
     public function updateUser($user_id){
         $post = $this->_app->request->post();
-        
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
         
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
@@ -505,7 +567,17 @@ class UserController extends \UserFrosting\BaseController {
         
     }
     
-    // Delete a user, cleaning up their group memberships and any user-specific authorization rules
+    /** 
+     * Processes the request to delete an existing user.
+     * 
+     * Deletes the specified user, removing associations with any groups and any user-specific authorization rules.
+     * Before doing so, checks that:
+     * 1. You are not trying to delete the master account;
+     * 2. You have permission to delete user user accounts.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @param int $user_id the id of the user to delete.     
+     */       
     public function deleteUser($user_id){
         $post = $this->_app->request->post();
     
@@ -533,4 +605,3 @@ class UserController extends \UserFrosting\BaseController {
     }
     
 }
-?>

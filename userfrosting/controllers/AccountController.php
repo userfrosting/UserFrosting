@@ -2,31 +2,49 @@
 
 namespace UserFrosting;
 
-/*******
-
-/account/*
-
-*******/
-
-// Handles account-related activities, including login, registration, password recovery, and account settings
+/**
+ * AccountController Class
+ *
+ * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/navigating/#structure
+ */
 class AccountController extends \UserFrosting\BaseController {
 
+    /**
+     * Create a new AccountController object.
+     *
+     * @param UserFrosting $app The main UserFrosting app.
+     */
     public function __construct($app){
         $this->_app = $app;
     }
 
+    /**
+     * Renders the default home page for UserFrosting.
+     *
+     * By default, this is the page that non-authenticated users will first see when they navigate to your website's root.
+     * Request type: GET
+     */
     public function pageHome(){
         $this->_app->render('common/home.html', [
             'page' => [
                 'author' =>         $this->_app->site->author,
-                'title' =>          "A secure, modern user management system based on UserCake, jQuery, and Bootstrap.",
+                'title' =>          "A secure, modern user management system for PHP.",
                 'description' =>    "Main landing page for public access to this website.",
                 'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
                 'active_page' =>    ""
             ]
-        ]);
+        ]);  
     }
     
+    /**
+     * Renders the login page for UserFrosting.
+     * By definition, this is a "public page" (does not require authentication).
+     * Request type: GET     
+     */    
     public function pageLogin(){
         // Forward to home page if user is already logged in
         if (!$this->_app->user->isGuest()){
@@ -48,6 +66,13 @@ class AccountController extends \UserFrosting\BaseController {
         ]);
     }
 
+    /**
+     * Attempts to render the account registration page for UserFrosting.
+     *
+     * This allows new (non-authenticated) users to create a new account for themselves on your website.
+     * Request type: GET
+     * @param bool $can_register Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page. 
+     */       
     public function pageRegister($can_register = false){
         // Get the alert message stream
         $ms = $this->_app->alerts;
@@ -69,7 +94,7 @@ class AccountController extends \UserFrosting\BaseController {
 
         $settings = $this->_app->site;
         
-        // If registration is disabled, send them back to the home page with an error message
+        // If registration is disabled, send them back to the login page with an error message
         if (!$settings->can_register){
             $this->_app->alerts->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
             $this->_app->redirect('login');
@@ -88,6 +113,13 @@ class AccountController extends \UserFrosting\BaseController {
         ]);
     }
 
+    /**
+     * Render the "lost password" page.  
+     *
+     * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
+     * By default, this is a "public page" (does not require authentication).
+     * Request type: GET
+     */      
     public function pageForgotPassword(){
       
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
@@ -105,6 +137,13 @@ class AccountController extends \UserFrosting\BaseController {
         ]);
     }
 
+    /**
+     * Render the "reset password" page.  
+     *
+     * This is the actual page that is linked to in the "forgot password" email.
+     * By default, this is a "public page" (does not require authentication).     
+     * Request type: GET
+     */     
     public function pageResetPassword(){
       
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
@@ -123,6 +162,13 @@ class AccountController extends \UserFrosting\BaseController {
         ]);
     }
     
+    /**
+     * Render the "resend account activation link" page.  
+     *
+     * This is a form that allows users who lost their account activation link to have the link resent to their email address.
+     * By default, this is a "public page" (does not require authentication).
+     * Request type: GET     
+     */        
     public function pageResendActivation(){
     
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
@@ -140,6 +186,14 @@ class AccountController extends \UserFrosting\BaseController {
         ]);
     }
     
+    /**
+     * Account settings page.
+     *
+     * Provides a form for users to modify various properties of their account, such as display name, email, locale, etc.
+     * Any fields that the user does not have permission to modify will be automatically disabled.
+     * This page requires authentication.
+     * Request type: GET     
+     */        
     public function pageAccountSettings(){
         // Access-controlled page
         if (!$this->_app->user->checkAccess('uri_account_settings')){
@@ -161,6 +215,18 @@ class AccountController extends \UserFrosting\BaseController {
         ]);          
     }    
     
+    /**
+     * Processes an account login request.
+     *
+     * Processes the request from the form on the login page, checking that:
+     * 1. The user is not already logged in.
+     * 2. Email login is enabled, if an email address was used.
+     * 3. The user account exists.
+     * 4. The user account is enabled and active.
+     * 5. The user entered a valid username/email and password.
+     * This route, by definition, is "public access".
+     * Request type: POST     
+     */        
     public function login(){
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
@@ -240,11 +306,33 @@ class AccountController extends \UserFrosting\BaseController {
         
     }
     
+    /**
+     * Processes an account logout request.
+     *
+     * Logs the current user out.
+     * This route is "public access".
+     * Request type: POST     
+     */      
     public function logout(){
         session_destroy();
         $this->_app->redirect($this->_app->site->uri['public']);
     }
 
+    /**
+     * Processes an new account registration request.
+     *
+     * Processes the request from the form on the registration page, checking that:
+     * 1. The honeypot was not modified;
+     * 2. The master account has already been created (during installation);
+     * 3. Account registration is enabled;
+     * 4. The user is not already logged in;
+     * 5. Valid information was entered;
+     * 6. The captcha, if enabled, is correct;
+     * 7. The username and email are not already taken.
+     * Automatically sends an activation link upon success, if account activation is enabled.
+     * This route is "public access".
+     * Request type: POST     
+     */      
     public function register(){
         // POST: user_name, display_name, email, title, password, passwordc, captcha, spiderbro, csrf_token
         $post = $this->_app->request->post();
@@ -380,7 +468,15 @@ class AccountController extends \UserFrosting\BaseController {
         
     }
     
-    // Allow a newly registered user to activate their account via an email link
+    /**
+     * Processes an new account activation request.
+     *
+     * Processes the request from the account activation link that was emailed to the user, checking that:
+     * 1. The token provided matches a user in the database;
+     * 2. The user account is not already active;
+     * This route is "public access".
+     * Request type: GET     
+     */          
     public function activate(){
         $data = $this->_app->request->get();
         
@@ -414,7 +510,17 @@ class AccountController extends \UserFrosting\BaseController {
         $this->_app->redirect($this->_app->urlFor('uri_home'));
     }
     
-    // Emails a forgotten password reset link to the specified user
+    /**
+     * Processes a request to email a forgotten password reset link to the user.
+     *
+     * Processes the request from the form on the "forgot password" page, checking that:
+     * 1. The provided username exists;
+     * 2. The provided email address matches the username;
+     * 3. The user doesn't already have an outstanding password reset request;
+     * 4. The submitted data is valid.
+     * This route is "public access".
+     * Request type: POST     
+     */         
     public function forgotPassword(){
         $data = $this->_app->request->post();
         
@@ -485,7 +591,18 @@ class AccountController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
     }
     
-    // Resets a user's password with a valid activation token
+    /**
+     * Processes a request to reset a user's password.
+     *
+     * Processes the request from the password reset form, which should have the reset token embedded in it, checking that:
+     * 1. The provided activation token is associated with an existing user account;
+     * 2. The provided username matches the activation token;
+     * 3. The user has a lost password request in progress;
+     * 4. The token has not expired;
+     * 5. The submitted data (new password) is valid.
+     * This route is "public access".
+     * Request type: POST     
+     */       
     public function resetPassword(){
         $data = $this->_app->request->post();
         
@@ -553,7 +670,14 @@ class AccountController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "ACCOUNT_PASSWORD_UPDATED");
     }
     
-    // Cancel a password reset request (via GET)   
+    /**
+     * Processes a request to cancel a password reset request.
+     *
+     * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
+     * Processes the request from the password reset link, checking that:
+     * 1. The provided activation token is associated with an existing user account.
+     * Request type: GET     
+     */      
     public function denyResetPassword(){
         $data = $this->_app->request->get();
         
@@ -588,7 +712,18 @@ class AccountController extends \UserFrosting\BaseController {
         $this->_app->redirect($this->_app->urlFor('uri_home'));
     }
     
-    // Resend the activation email for a new user account
+    /**
+     * Processes a request to resend the activation email for a new user account.
+     *
+     * Processes the request from the resend activation email form, checking that:
+     * 1. The provided username is associated with an existing user account;
+     * 2. The provided email matches the user account;
+     * 3. The user account is not already active;
+     * 4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
+     * 5. The submitted data is valid.
+     * This route is "public access".
+     * Request type: POST     
+     */         
     public function resendActivation(){
         $data = $this->_app->request->post();
         
@@ -669,6 +804,16 @@ class AccountController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "ACCOUNT_NEW_ACTIVATION_SENT");
     }
     
+    /**
+     * Processes a request to update a user's account information.
+     *
+     * Processes the request from the user account settings form, checking that:
+     * 1. The user correctly input their current password;
+     * 2. They have the necessary permissions to update the posted field(s);
+     * 3. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST     
+     */         
     public function accountSettings(){
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
@@ -775,10 +920,13 @@ class AccountController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "ACCOUNT_SETTINGS_UPDATED");
     }    
     
+    /**
+     * Generates a new captcha.
+     *
+     * Wrapper for UserFrosting::generateCaptcha()
+     * Request type: GET     
+     */        
     public function captcha(){
         echo $this->generateCaptcha();
-    }
-    
-        }
-    
-?>
+    }    
+}

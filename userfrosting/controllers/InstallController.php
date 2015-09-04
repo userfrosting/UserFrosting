@@ -2,9 +2,30 @@
 
 namespace UserFrosting;
 
-// Handles installation-related activities
+/**
+ * InstallController Class
+ *
+ * Controller class for /install/* URLs.  Handles activities for installing UserFrosting.  Not needed after installation is complete.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/navigating/#structure
+ */
 class InstallController extends \UserFrosting\BaseController {
 
+    /**
+     * Renders the initial page that comes up when you first install UserFrosting.
+     *
+     * This page performs the following steps:
+     * 1. Check that the current version of PHP is adequate.
+     * 2. Check that PDO is installed and enabled.
+     * 3. Check that we can connect to the database, as configured in `config-userfrosting.php`.
+     * 4. Check that the database tables have not already been created.
+     * 5. If all of these checks are passed, set up the initial tables by calling `Database::install()`.
+     * This page is "public access".
+     * Request type: GET
+     * @see MySqlDatabase::install()
+     */    
     public function pageSetupDB(){
         $messages = [];
         // 1. Check PHP version
@@ -30,7 +51,6 @@ class InstallController extends \UserFrosting\BaseController {
         }
         
         // 3. Check database connection
-        
         if (!Database::testConnection()){
             $messages[] = [
                 "title" => "We couldn't connect to your database.",
@@ -97,6 +117,16 @@ class InstallController extends \UserFrosting\BaseController {
         }
     }
     
+    /**
+     * Renders the page for creating the master account.
+     *
+     * This page performs the following steps:
+     * 1. Check that the master account doesn't already exist.  If it does, redirect to the home page.
+     * 2. This page features a "configuration token" as a security feature, to prevent malicious agents from intercepting
+     * an in-progress installation and setting themselves as the master account.  This requires the developer to look
+     * in the configuration table of the database.
+     * Request type: GET
+     */
     public function pageSetupMasterAccount(){
         
         // Get the alert message stream
@@ -123,6 +153,17 @@ class InstallController extends \UserFrosting\BaseController {
         ]);    
     }
 
+    /**
+     * Processes a request to create the master account.
+     *
+     * Processes the request from the master account creation form, checking that:
+     * 1. The honeypot has not been changed;
+     * 2. The master account does not already exist;
+     * 3. The correct configuration token was submitted;
+     * 3. The submitted data is valid.
+     * This route is "public access" (until the master account has been created, that is)
+     * Request type: POST     
+     */        
     public function setupMasterAccount(){
         $post = $this->_app->request->post();
         
@@ -207,5 +248,3 @@ class InstallController extends \UserFrosting\BaseController {
     }
     
 }
-
-?>

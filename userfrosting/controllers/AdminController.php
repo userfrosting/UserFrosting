@@ -2,19 +2,34 @@
 
 namespace UserFrosting;
 
-/*******
-
-/config/*
-
-*******/
-
-// Handles admin-related activities, including site settings, user management, etc
+/**
+ * AccountController Class
+ *
+ * Controller class for /config/* URLs.  Handles admin-related activities, including site settings, etc
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/navigating/#structure
+ */
 class AdminController extends \UserFrosting\BaseController {
 
+    /**
+     * Create a new AdminController object.
+     *
+     * @param UserFrosting $app The main UserFrosting app.
+     */
     public function __construct($app){
         $this->_app = $app;
     }
 
+    /**
+     * Renders the site settings page.
+     *
+     * This page provides an interface for modifying site settings, especially those handled by the SiteSettings class.
+     * It also shows some basic configuration information for the site, along with a nicely formatted readout of the PHP error log.
+     * This page requires authentication (and should generally be limited to the root user).
+     * Request type: GET
+     */
     public function pageSiteSettings(){
         // Access-controlled page
         if (!$this->_app->user->checkAccess('uri_site_settings')){
@@ -37,6 +52,15 @@ class AdminController extends \UserFrosting\BaseController {
         ]);    
     }
     
+    /**
+     * Processes a request to update the site settings.
+     *
+     * Processes the request from the site settings form, checking that:
+     * 1. The setting name has been registered with the SiteSettings object.
+     * This route requires authentication.
+     * Request type: POST
+     * @todo validate setting syntax
+     */       
     public function siteSettings(){
         // Get the alert message stream
         $ms = $this->_app->alerts;
@@ -85,4 +109,3 @@ class AdminController extends \UserFrosting\BaseController {
     }
     
 }
-?>

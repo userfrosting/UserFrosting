@@ -3,7 +3,11 @@
 namespace UserFrosting;
 
 /**
+ * The UserFrosting application class, which extends the basic Slim application.  
  *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/
  * @property \Fortress\MessageTranslator $translator
  * @property \Fortress\MessageStream $alerts
  * @property \UserFrosting\SiteSettingsInterface $site
@@ -13,7 +17,7 @@ namespace UserFrosting;
 class UserFrosting extends \Slim\Slim {
 
     /**
-     * Sets up the current user, either as a logged in user or a guest user.
+     * Sets up the current user session, either as a logged in user or a guest user.
      */
     public function setupUser(){
         $db_error = false;
