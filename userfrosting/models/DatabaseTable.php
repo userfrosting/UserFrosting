@@ -8,6 +8,9 @@ namespace UserFrosting;
  * A data class representing a database table.  Specifies the table name and whitelisted columns.
  * @property string $name the name of the database table.
  * @property array $columns an array containing the names of the columns in this database (not including the `id` column).
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  */
 class DatabaseTable implements DatabaseTableInterface {
     

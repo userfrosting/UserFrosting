@@ -12,6 +12,8 @@ namespace UserFrosting;
  * and `css/min` directories.
  * The minification tool should be re-run any time a CSS/JS include is added or removed, including those from plugin installation.
  * @todo Replace this whole thing with Bower/Grunt.
+ * @package UserFrosting
+ * @author Alex Weissman
  */ 
 class PageSchema {
 

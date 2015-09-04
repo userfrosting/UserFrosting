@@ -1,24 +1,49 @@
 <?php
 
-/*******************
-
-DO NOT CHANGE!  This is a core UserFrosting file, and should not need to be changed by developers.
-
-********************/
-
 namespace UserFrosting;
 
 use PhpParser\Node;
 
-// Models the evaluation of an authorization condition expression, which is built as a boolean expression composed of AccessCondition method calls.
+/**
+ * AccessConditionExpression class
+ *
+ * This class models the evaluation of an authorization condition expression, as associated with authorization hooks.
+ * A condition is built as a boolean expression composed of AccessCondition method calls.
+ * DO NOT CHANGE!  This is a core UserFrosting file, and should not need to be changed by developers.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/components/#authorization
+ */
 class AccessConditionExpression {
 
-    protected $_app;        // The framework app to use (default Slim)
+    /**
+     * @var UserFrosting The UserFrosting framework application to inject into this evaluator.
+     */
+    protected $_app;
+    /**
+     * @var \PhpParser\Parser The PhpParser object to use (initialized in the ctor)
+     */
     protected $_parser;
+    /**
+     * @var \PhpParser\NodeTraverser The NodeTraverser object to use (initialized in the ctor)
+     */    
     protected $_traverser;
+    /**
+     * @var \PhpParser\PrettyPrinter\Standard The PrettyPrinter object to use (initialized in the ctor)
+     */ 
     protected $_prettyPrinter;
+    /**
+     * @var bool Set to true if you want debugging information printed to the error log.
+     */ 
     protected $_debug;
 
+    /**
+     * Create a new AccessConditionExpression object.
+     *
+     * @param UserFrosting $app The main UserFrosting app.
+     * @param bool $debug Set to true if you want debugging information printed to the error log.
+     */    
     public function __construct($app, $debug = false){
         $this->_parser        = new \PhpParser\Parser(new \PhpParser\Lexer\Emulative);
         $this->_traverser     = new \PhpParser\NodeTraverser;
@@ -26,8 +51,16 @@ class AccessConditionExpression {
         $this->_debug = $debug;
         $this->_app = $app;
     }
-
-    // Evaluates a condition expression, based on the given parameters.  Returns true if the condition is passed for the given parameters, otherwise returns false.
+ 
+    /**
+     * Evaluates a condition expression, based on the given parameters.
+     *
+     * There are two special parameters, `self` and `route`, which are arrays of the current user's data and the current route data, respectively.
+     * These get included automatically, and do not need to be passed in.
+     * @param string $condition a boolean expression composed of calls to AccessCondition functions.
+     * @param array[mixed] $params the parameters to be used when evaluating the expression.
+     * @return bool true if the condition is passed for the given parameters, otherwise returns false.
+     */      
     public function evaluateCondition($condition, $params){
         // Set the reserved `self` and `route` parameters.
         // This replaces any values of `self` or `route` specified in the arguments, thus preventing them from being overridden in malicious user input.
@@ -53,7 +86,6 @@ class AccessConditionExpression {
         }
         
         try {
-            
             // parse
             $stmts = $this->_parser->parse($code);    
             

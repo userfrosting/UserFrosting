@@ -9,6 +9,8 @@ namespace UserFrosting;
  * This class acts as a "registry" of sorts, allowing all data model classes to access information about your database,
  * such as table names and whitelisted columns.  Each table in your model shall be represented by a DatabaseTable object.
  *
+ * @package UserFrosting
+ * @author Alex Weissman
  * @see MySqlDatabase
  */
 abstract class UFDatabase {
