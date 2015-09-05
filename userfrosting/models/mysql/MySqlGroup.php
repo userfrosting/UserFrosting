@@ -2,18 +2,31 @@
 
 namespace UserFrosting;
 
+/**
+ * @see DatabaseInterface
+ */ 
 class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
 
+    /**
+     * Create a new MySqlGroup object.
+     *
+     * @see MySqlDatabaseObject
+     */
     public function __construct($properties, $id = null) {
         $this->_table = static::getTable('group');
         parent::__construct($properties, $id);
     }
     
-    // Return a collection of Users which belong to this group.
+    /**
+     * @see DatabaseInterface
+     */ 
     public function getUsers(){
         // TODO
     }
     
+    /**
+     * @see DatabaseInterface
+     */ 
     public function store(){        
         // If this is being set as the default primary group, then any other group must be demoted to default group
         if ($this->is_default == GROUP_DEFAULT_PRIMARY){
@@ -36,8 +49,11 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
         return $this->_id;
     }
     
-    /*** Delete this group from the database, along with any linked user and authorization rules
-    ***/
+    /**
+     * Delete this group from the database, along with any linked user and authorization rules
+     *
+     * @see DatabaseInterface
+     */
     public function delete(){        
         // Can only delete an object where `id` is set
         if (!$this->_id) {
@@ -90,5 +106,3 @@ class MySqlGroup extends MySqlDatabaseObject implements GroupObjectInterface {
         return $result;
     }
 }
-
-?>

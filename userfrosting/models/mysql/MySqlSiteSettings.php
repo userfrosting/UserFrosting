@@ -7,6 +7,7 @@ namespace UserFrosting;
  *
  * A site settings database object for MySQL databases.
  *
+ * @see DatabaseInterface
  */
 class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
 
@@ -35,7 +36,12 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
      */ 
     protected $_table;
 
-    /** Construct the site settings object, loading values from the database */
+    /**
+     * Construct the site settings object, loading values from the database.
+     *
+     * @param array $settings the default settings to use, if they can't be retrieved from the DB.
+     * @param array $descriptions the default descriptions to use, if they can't be retrieved from the DB.
+     */
     public function __construct($settings = [], $descriptions = []) {
         $this->_table = static::getTable('configuration');
         
@@ -68,6 +74,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function isConsistent(){
         $connection = static::connection();
         $prefix = static::$app->config('db')['db_prefix'];
@@ -92,6 +101,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return true;
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function fetchSettings(){
         $db = static::connection();
         
@@ -142,6 +154,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         ];
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function __isset($name) {
         if (isset($this->_environment[$name]) || isset($this->_settings['userfrosting'][$name]))
             return true;
@@ -149,10 +164,16 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
             return false;
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function __set($name, $value){
         return $this->set('userfrosting', $name, $value);   
     }
 
+    /**
+     * @see DatabaseInterface
+     */
     public function __get($name){
         if (isset($this->_environment[$name])){
             return $this->_environment[$name];
@@ -163,6 +184,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
 
+    /**
+     * @see DatabaseInterface
+     */
     public function get($name, $plugin = "userfrosting"){
         if (isset($this->_settings[$plugin]) && isset($this->_settings[$plugin][$name])){
             return $this->_settings[$plugin][$name];
@@ -171,6 +195,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function getDescription($name, $plugin = "userfrosting"){
         if (isset($this->_settings[$plugin]) && isset($this->_descriptions[$plugin][$name])){
             return $this->_descriptions[$plugin][$name];
@@ -179,6 +206,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function getEnvironment($name){
         if (isset($this->_environment[$name])){
             return $this->_environment[$name];
@@ -187,6 +217,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function set($plugin, $name, $value = null, $description = null){
         if (!isset($this->_settings[$plugin])){
             $this->_settings[$plugin] = [];
@@ -206,6 +239,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function register($plugin, $name, $label, $type = "text", $options = []){
         // Get the array of settings & descriptions
         if (isset($this->_settings[$plugin])){
@@ -214,7 +250,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         } else {
             throw new \Exception("The plugin '$plugin' does not have any site settings.  Be sure to add them first by calling set().");
         }
-
+        
         if (!isset($settings[$name])){
             throw new \Exception("The plugin '$plugin' does not have a value for '$name'.  Please add it first by calling set().");
         }
@@ -234,6 +270,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         $this->_settings_registered[$plugin][$name]['description'] = $descriptions[$name];
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function getRegisteredSettings(){
         foreach ($this->_settings_registered as $plugin => $setting){
             foreach ($setting as $name => $params){
@@ -243,7 +282,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return $this->_settings_registered;
     }
     
-    // Get a list of all supported locales
+    /**
+     * @see DatabaseInterface
+     */
     public function getLocales(){
     	$directory = static::$app->config('locales.path');
         $languages = glob($directory . "/*.php");
@@ -255,7 +296,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return $results;
     }
 
-    // Get a list of all supported themes
+    /**
+     * @see DatabaseInterface
+     */
     public function getThemes(){
     	$directory = static::$app->config('themes.path');
         $themes = glob($directory . "/*", GLOB_ONLYDIR);
@@ -267,7 +310,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return $results;
     }
     
-    // Get a list of all plugins
+    /**
+     * @see DatabaseInterface
+     */
     public function getPlugins(){
     	$directory = static::$app->config('plugins.path');
         $themes = glob($directory . "/*", GLOB_ONLYDIR);
@@ -278,7 +323,10 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         }
         return $results;
     }
-    // Return an array of system and server configuration info
+    
+    /**
+     * @see DatabaseInterface
+     */
     public function getSystemInfo(){
         $results = [];
         $results['UserFrosting Version'] = $this->version;
@@ -294,7 +342,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         return $results;
     }
     
-    // Return the error log
+    /**
+     * @see DatabaseInterface
+     */
     public function getLog($lines = null){
         // Check if error logging is enabled
         if (!ini_get("error_log")){
@@ -322,6 +372,9 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         ];
     }
     
+    /**
+     * @see DatabaseInterface
+     */
     public function store(){
         // Get current values as stored in DB
         $db_settings = $this->fetchSettings();

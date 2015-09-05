@@ -2,7 +2,12 @@
 
 namespace UserFrosting;
 
-/** These define the interfaces for the database object interface.  Any other implementations you write for the model MUST implement these interfaces. */
+/**
+ * DatabaseInterface.php
+ *
+ * These define the interfaces for the database object interface.
+ * Any other implementations you write for the model MUST implement these interfaces.
+ */
 
 /**
  * DatabaseInterface Interface
@@ -14,15 +19,70 @@ namespace UserFrosting;
  * @link http://alexanderweissman.com
  */
 interface DatabaseInterface {
+
+    /**
+     * Creates a fresh connection to the database.
+     */
     public static function connection();
-    public static function getInfo();
-    public static function getTables();
-    public static function install();
+    
+    /**
+     * Test whether a DB connection can be established.
+     *
+     * @return bool true if the connection can be established, false otherwise.
+     */
     public static function testConnection();
+    
+    /**
+     * Get an array of key-value pairs containing basic information about this database.
+     *
+     * The site settings module expects the following key-value pairs:
+     * db_type, db_version, db_name, table_prefix
+     * @return array[string] the properties of this database.
+     */
+    public static function getInfo();
+
+    /**
+     * Get an array of the names of tables that exist in the database.
+     *
+     * Looks for tables with the following handles: user, group, group_user, authorize_group, authorize_user
+     * @return array[string] the names of the UF tables that actually exist.
+     */    
+    public static function getTables();
+    
+    /**
+     * Set up the initial tables for the database.
+     *
+     * Creates all tables, and loads the configuration table with the default config data.  Also, sets install_status to `pending`.
+     */   
+    public static function install();
 }
 
-interface DatabaseTableInterface {
-    
+/**
+ * A static class is responsible for retrieving user and group authorization object(s) from the database, etc.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/components/#authorization
+ */
+interface AuthLoaderInterface {
+
+    /**
+     * Fetch all authorization rules associated directly with a specified User from the database for a given hook.
+     *
+     * @param int $user_id the id of the user.
+     * @param string $hook the authorization hook to match.
+     * @return array An array of rows from the user authorization table.
+     */
+    public static function fetchUserAuthHook($user_id, $hook);
+
+    /**
+     * Fetch all authorization rules associated with a specified Group from the database for a given hook.
+     *
+     * @param int $group_id the id of the group.
+     * @param string $hook the authorization hook to match.
+     * @return array An array of rows from the group authorization table.
+     */   
+    public static function fetchGroupAuthHook($group_id, $hook);
 }
 
 /**
@@ -32,7 +92,7 @@ interface DatabaseTableInterface {
  *
  * @package UserFrosting
  * @author Alex Weissman
- * @link http://alexanderweissman.com
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  */
 interface ObjectLoaderInterface {
     
@@ -71,26 +131,144 @@ interface ObjectLoaderInterface {
     public static function fetchAll($value = null, $name = null);
 }
 
+/**
+ * DatabaseObjectInterface Interface
+ *
+ * Represents a generic database object (User, Group, Spaceship, etc) represented by a particular row in a table.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
+ * @todo expand fetch functions to support arbitrary filtering, perhaps allowing for with() type clauses that support arbitary SQL
+ */
 interface DatabaseObjectInterface {
+    
+    /**
+     * Get the DatabaseTable object that was assigned in the constructor of the concrete child class.
+     *
+     * @return DatabaseTable
+     */
     public function table();
+      
+    /**
+     * Determine if the property for this object exists.
+     *
+     * Properties of a DatabaseObject include the id and the column names as defined in the associated DatabaseTable.
+     * Other properties may also be defined by the specific child classes.
+     * @param string the name of the property to check.
+     * @return bool true if the property is defined, false otherwise.
+     */
     public function __isset($name);
+    
+    /**
+     * Get a property for this object.
+     *
+     * Properties of a DatabaseObject include the id and the column names as defined in the associated DatabaseTable.
+     * Other properties may also be defined by the specific child classes.
+     * @param string the name of the property to retrieve.
+     * @throws Exception the property does not exist for this object.
+     * @return string the associated property.
+     */
     public function __get($name);
+    
+    /**
+     * Set a property for this object.
+     *
+     * Checks that the property, as defined in the DatabaseTable columns, is permitted.
+     * This implements whitelisting, protecting the database against SQL injection attacks.
+     * Other properties may also be defined by the specific child classes.
+     * @param string the name of the property to set.
+     * @param string the value to set the property to.
+     * @throws Exception the property does not exist for this object.
+     * @return string the associated property.
+     */
     public function __set($name, $value);  
+    
+    /**
+     * Refresh the object from the DB.
+     *
+     * @todo Should this just update the internal contents of this object, rather than create a new one?
+     */
     public function fresh();
+    
+    /**
+     * Get the properties of this object as an associative array.
+     *
+     * @return array
+     */  
     public function export();
+    
+    /**
+     * Store the object in the DB, creating a new row if one doesn't already exist.
+     *
+     * @return int the id of this object.
+     */ 
     public function store();
+    
+    /**
+     * Delete the object from the database, if it exists.
+     *
+     * @return bool true if the deletion was successful, false otherwise.
+     */
+    public function delete();    
 }
 
+/**
+ * UserLoaderInterface Interface
+ *
+ * Represents a static class for loading User object(s) from the database, checking for existence, etc.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
+ */
 interface UserLoaderInterface {
 
+    /**
+     * Generate an activation token for a user.
+     *
+     * This generates a token to use for activating a new account, resetting a lost password, etc.
+     * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
+     * @return string
+     */
     public static function generateActivationToken($gen = null);
 }
 
+/**
+ * GroupLoaderInterface Interface
+ *
+ * Represents a static class for loading Group object(s) from the database, checking for existence, etc.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
+ */
 interface GroupLoaderInterface {
 
 }
 
+/**
+ * GroupObjectInterface Interface
+ *
+ * Represents a group object as stored in the database.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
+ *
+ * @property string name
+ * @property string theme
+ * @property string landing_page
+ * @property string new_user_title
+ * @property string icon
+ * @property bool is_default
+ * @property bool can_delete
+ */
 interface GroupObjectInterface {
+    /**
+     * Lazily load a collection of Users which belong to this group.
+     * @todo implement this!
+     */
     public function getUsers();
 }
 
@@ -101,7 +279,7 @@ interface GroupObjectInterface {
  *
  * @package UserFrosting
  * @author Alex Weissman
- * @link http://alexanderweissman.com
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
  * @property string user_name
  * @property string display_name
@@ -122,7 +300,7 @@ interface GroupObjectInterface {
 interface UserObjectInterface {
     
     /**
-     * Determine whether or not this User object is a guest user or an authenticated user.
+     * Determine whether or not this User object is a guest user (id set to `user_id_guest`) or an authenticated user.
      *
      * @return boolean True if the user is a guest, false otherwise.
      */    
@@ -172,6 +350,7 @@ interface UserObjectInterface {
     /**
      * Checks whether or not this user has access for a particular authorization hook.
      *
+     * Determine if this user has access to the given $hook under the given $params.
      * @param string $hook The authorization hook to check for access.
      * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.

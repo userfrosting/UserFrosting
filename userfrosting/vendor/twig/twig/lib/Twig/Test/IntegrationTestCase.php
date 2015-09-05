@@ -10,7 +10,7 @@
  */
 
 /**
- * Integration test helper
+ * Integration test helper.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Karma Dordrak <drak@zikula.org>
@@ -28,7 +28,16 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
         $this->doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs);
     }
 
-    public function getTests()
+    /**
+     * @dataProvider getLegacyTests
+     * @group legacy
+     */
+    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs)
+    {
+        $this->testIntegration($file, $message, $condition, $templates, $exception, $outputs);
+    }
+
+    public function getTests($name, $legacyTests = false)
     {
         $fixturesDir = realpath($this->getFixturesDir());
         $tests = array();
@@ -38,10 +47,13 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
                 continue;
             }
 
+            if ($legacyTests xor false !== strpos($file->getRealpath(), '.legacy.test')) {
+                continue;
+            }
+
             $test = file_get_contents($file->getRealpath());
 
-            if (preg_match('/
-                    --TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)\s*(?:--DATA--\s*(.*))?\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
+            if (preg_match('/--TEST--\s*(.*?)\s*(?:--CONDITION--\s*(.*))?\s*((?:--TEMPLATE(?:\(.*?\))?--(?:.*?))+)\s*(?:--DATA--\s*(.*))?\s*--EXCEPTION--\s*(.*)/sx', $test, $match)) {
                 $message = $match[1];
                 $condition = $match[2];
                 $templates = $this->parseTemplates($match[3]);
@@ -60,7 +72,17 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $tests[] = array(str_replace($fixturesDir.'/', '', $file), $message, $condition, $templates, $exception, $outputs);
         }
 
+        if (!$tests) {
+            // add a dummy test to avoid a PHPUnit message
+            return array(array('not', '-', '', array(), '', array()));
+        }
+
         return $tests;
+    }
+
+    public function getLegacyTests()
+    {
+        return $this->getTests('testLegacyIntegration', true);
     }
 
     protected function doIntegrationTest($file, $message, $condition, $templates, $exception, $outputs)
@@ -74,7 +96,7 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
 
         $loader = new Twig_Loader_Array($templates);
 
-        foreach ($outputs as $match) {
+        foreach ($outputs as $i => $match) {
             $config = array_merge(array(
                 'cache' => false,
                 'strict_variables' => true,
@@ -83,6 +105,14 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             $twig->addGlobal('global', 'global');
             foreach ($this->getExtensions() as $extension) {
                 $twig->addExtension($extension);
+            }
+
+            // avoid using the same PHP class name for different cases
+            // only for PHP 5.2+
+            if (PHP_VERSION_ID >= 50300) {
+                $p = new ReflectionProperty($twig, 'templateClassPrefix');
+                $p->setAccessible(true);
+                $p->setValue($twig, '__TwigTemplate_'.hash('sha256', uniqid(mt_rand(), true), false).'_');
             }
 
             try {
@@ -122,14 +152,14 @@ abstract class Twig_Test_IntegrationTestCase extends PHPUnit_Framework_TestCase
             }
 
             if (false !== $exception) {
-                list($class, ) = explode(':', $exception);
+                list($class) = explode(':', $exception);
                 $this->assertThat(null, new PHPUnit_Framework_Constraint_Exception($class));
             }
 
             $expected = trim($match[3], "\n ");
 
             if ($expected != $output) {
-                echo 'Compiled template that failed:';
+                printf("Compiled templates that failed on case %d:\n", $i + 1);
 
                 foreach (array_keys($templates) as $name) {
                     echo "Template: $name\n";

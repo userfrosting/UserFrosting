@@ -2,11 +2,25 @@
 
 namespace UserFrosting;
 
+/**
+ * @see DatabaseInterface
+ */ 
 class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     
-    protected $_groups;         // An undefined value means that the user's groups have not been loaded yet
-    protected $_primary_group;  // The primary group for the user.  TODO: simply fetch it from the _groups array?
+    /**
+     * @var Group[] An array of groups to which this user belongs. An undefined value means that the user's groups have not been loaded yet.
+     */
+    protected $_groups;
+    /**
+     * @var Group The primary group for the user.  TODO: simply fetch it from the _groups array?
+     */
+    protected $_primary_group;  
     
+    /**
+     * Create a new MySqlGroup object.
+     *
+     * @see MySqlDatabaseObject
+     */
     public function __construct($properties, $id = null) {
         $this->_table = static::getTable('user');
     
@@ -16,7 +30,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         parent::__construct($properties, $id);
     }
     
-    // Determine whether this User is a guest (id set to user_id_guest) or a live, logged-in user
+    /**
+     * @see DatabaseInterface
+     */ 
     public function isGuest(){
         if (!isset($this->_id) || $this->_id === static::$app->config('user_id_guest'))
             return true;
@@ -24,13 +40,17 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return false;
     }
     
-    /* Determine if this user is currently logged in. */
+    /**
+     * @see DatabaseInterface
+     */ 
     public static function isLoggedIn(){
         // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
     }
     
-    /* Refresh the User and their associated Groups from the DB.
+    /**
+     * Refresh the User and their associated Groups from the DB.
      *
+     * @see DatabaseInterface
      */
     public function fresh(){
         // Update table and column info, in case it has changed
@@ -41,7 +61,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $user;
     }
     
-    // Must be implemented for compatibility with Twig
+    /**
+     * @see DatabaseInterface
+     */ 
     public function __isset($name) {
         if ($name == "primary_group" || $name == "theme" || $name == "icon" || $name == "landing_page")
             return isset($this->_primary_group);
@@ -49,7 +71,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return parent::__isset($name);
     }
     
-    // Getter
+    /**
+     * @see DatabaseInterface
+     */ 
     public function __get($name){
         if ($name == "primary_group")
             return $this->getPrimaryGroup();
@@ -63,7 +87,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return parent::__get($name);
     }
     
-    // Get a list of groups to which this user belongs, lazily loading them if not already set
+    /**
+     * @see DatabaseInterface
+     */ 
     public function getGroups(){
         if (!isset($this->_groups))
             $this->_groups = $this->fetchGroups();
@@ -71,7 +97,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $this->_groups;
     }
 
-    // Add this user to a specified group.  Won't be stored in DB until store() is called.
+    /**
+     * @see DatabaseInterface
+     */ 
     public function addGroup($group_id){
         // First, load current groups for user
         $this->getGroups();
@@ -89,7 +117,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $this;        
     }
     
-    // Remove this user from a specified group.  Won't be stored in DB until store() is called.
+    /**
+     * @see DatabaseInterface
+     */ 
     public function removeGroup($group_id){
         // First, load current groups for user
         $this->getGroups();
@@ -104,10 +134,14 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
     
     }
        
-    // Fetch an array of Groups that this User belongs to from the database
+    /**
+     * Fetch an array of Groups that this User belongs to from the database
+     *
+     * @return Group[] An array of Group objects, indexed by the group id.
+     */
     private function fetchGroups(){
         $db = static::connection();
-
+        
         $link_table = static::$tables['group_user']->name;
         $group_table = static::$tables['group']->name;
         
@@ -132,7 +166,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $results;        
     }
 
-    // Get the theme for this user, based on their primary group.  Guest/undefined user returns the default theme.  Master user returns the root theme.  Lazy load.
+    /**
+     * @see DatabaseInterface
+     */ 
     public function getTheme(){
         if (!isset($this->_id) || $this->_id == static::$app->config('user_id_guest'))
             return "default";
@@ -142,7 +178,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return $this->getPrimaryGroup()->theme;
     }
     
-    // Get the primary group to which this user belongs.  Lazy load into object.
+    /**
+     * @see DatabaseInterface
+     */ 
     public function getPrimaryGroup(){
         if (!isset($this->_primary_group))
             $this->_primary_group = $this->fetchPrimaryGroup();
@@ -150,6 +188,11 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $this->_primary_group;
     }
     
+    /**
+     * Fetch the primary group that this User belongs to from the database
+     *
+     * @return Group|false
+     */
     private function fetchPrimaryGroup() {
         if (!isset($this->primary_group_id)){
             throw new \Exception("This user does not appear to have a primary group id set.");
@@ -176,6 +219,12 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
             return false;        
     }
  
+    /**
+     * Store the User to the database, along with any group associations, updating as necessary.
+     *
+     * @param bool $force_create set to true if you want to force UF to set a new sign_up_stamp, activation_token, and last_activation_request, even if this object has already been assigned an id.
+     * @see DatabaseInterface
+     */
     public function store($force_create = false){
         // Initialize timestamps for new Users.  Should this be done here, or somewhere else?
         if (!isset($this->_id) || $force_create){
@@ -192,9 +241,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         
         // Get the User's groups as stored in the DB
         $db_groups = $this->fetchGroups();
-
+        
         $link_table = static::$tables['group_user']->name;
-
+        
         // Add any groups in object that are not in DB yet
         $db = static::connection();
         $query = "
@@ -235,8 +284,11 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $this->_id;
     }
     
-    /*** Delete this user from the database, along with any linked groups and authorization rules
-    ***/
+    /**
+     * Delete this user from the database, along with any linked groups and authorization rules
+     *
+     * @see DatabaseInterface
+     */
     public function delete(){        
         // Can only delete an object where `id` is set
         if (!$this->_id) {
@@ -269,7 +321,10 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $result;
     }
     
-    // Determine if this user has access to the given $hook under the given $params
+    
+    /**
+     * @see DatabaseInterface
+     */ 
     public function checkAccess($hook, $params = []){
         if ($this->isGuest()){   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?
             return false;
@@ -306,7 +361,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         return $pass;
     }
  
-    // Check that the specified password (unhashed) matches this user's password (hashed).
+    /**
+     * @see DatabaseInterface
+     */ 
     public function verifyPassword($password){
         if (Authentication::getPasswordHashType($this->password) == "sha1"){
             $salt = substr($this->password, 0, 25);		// Extract the salt from the hash
@@ -332,6 +389,9 @@ class MySqlUser extends MySqlDatabaseObject implements UserObjectInterface {
         }    
     }
     
+    /**
+     * @see DatabaseInterface
+     */ 
     public function login(){    
         //Update last sign in
         $this->last_sign_in_stamp = date("Y-m-d H:i:s");

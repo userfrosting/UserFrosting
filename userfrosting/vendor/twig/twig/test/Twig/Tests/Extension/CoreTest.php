@@ -16,9 +16,9 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunction($value, $expectedInArray)
     {
-        $env = new Twig_Environment();
+        $env = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 100; ++$i) {
             $this->assertTrue(in_array(twig_random($env, $value), $expectedInArray, true)); // assertContains() would not consider the type
         }
     }
@@ -26,31 +26,31 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     public function getRandomFunctionTestData()
     {
         return array(
-            array( // array
+            array(// array
                 array('apple', 'orange', 'citrus'),
                 array('apple', 'orange', 'citrus'),
             ),
-            array( // Traversable
+            array(// Traversable
                 new ArrayObject(array('apple', 'orange', 'citrus')),
                 array('apple', 'orange', 'citrus'),
             ),
-            array( // unicode string
+            array(// unicode string
                 'Ä€é',
                 array('Ä', '€', 'é'),
             ),
-            array( // numeric but string
+            array(// numeric but string
                 '123',
                 array('1', '2', '3'),
             ),
-            array( // integer
+            array(// integer
                 5,
                 range(0, 5, 1),
             ),
-            array( // float
+            array(// float
                 5.9,
                 range(0, 5, 1),
             ),
-            array( // negative
+            array(// negative
                 -2,
                 array(0, -1, -2),
             ),
@@ -61,19 +61,19 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
     {
         $max = mt_getrandmax();
 
-        for ($i = 0; $i < 100; $i++) {
-            $val = twig_random(new Twig_Environment());
+        for ($i = 0; $i < 100; ++$i) {
+            $val = twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')));
             $this->assertTrue(is_int($val) && $val >= 0 && $val <= $max);
         }
     }
 
     public function testRandomFunctionReturnsAsIs()
     {
-        $this->assertSame('', twig_random(new Twig_Environment(), ''));
-        $this->assertSame('', twig_random(new Twig_Environment(null, array('charset' => null)), ''));
+        $this->assertSame('', twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')), ''));
+        $this->assertSame('', twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface'), array('charset' => null)), ''));
 
         $instance = new stdClass();
-        $this->assertSame($instance, twig_random(new Twig_Environment(), $instance));
+        $this->assertSame($instance, twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')), $instance));
     }
 
     /**
@@ -81,7 +81,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testRandomFunctionOfEmptyArrayThrowsException()
     {
-        twig_random(new Twig_Environment(), array());
+        twig_random(new Twig_Environment($this->getMock('Twig_LoaderInterface')), array());
     }
 
     public function testRandomFunctionOnNonUTF8String()
@@ -90,11 +90,11 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('needs iconv or mbstring');
         }
 
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->setCharset('ISO-8859-1');
 
         $text = twig_convert_encoding('Äé', 'ISO-8859-1', 'UTF-8');
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 30; ++$i) {
             $rand = twig_random($twig, $text);
             $this->assertTrue(in_array(twig_convert_encoding($rand, 'UTF-8', 'ISO-8859-1'), array('Ä', 'é'), true));
         }
@@ -106,7 +106,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
             $this->markTestSkipped('needs iconv or mbstring');
         }
 
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->setCharset('ISO-8859-1');
 
         $input = twig_convert_encoding('Äé', 'ISO-8859-1', 'UTF-8');
@@ -117,7 +117,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testCustomEscaper()
     {
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->getExtension('core')->setEscaper('foo', 'foo_escaper_for_test');
 
         $this->assertEquals('fooUTF-8', twig_escape_filter($twig, 'foo', 'foo'));
@@ -128,12 +128,12 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
      */
     public function testUnknownCustomEscaper()
     {
-        twig_escape_filter(new Twig_Environment(), 'foo', 'bar');
+        twig_escape_filter(new Twig_Environment($this->getMock('Twig_LoaderInterface')), 'foo', 'bar');
     }
 
     public function testTwigFirst()
     {
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $this->assertEquals('a', twig_first($twig, 'abc'));
         $this->assertEquals(1, twig_first($twig, array(1, 2, 3)));
         $this->assertSame('', twig_first($twig, null));
@@ -142,7 +142,7 @@ class Twig_Tests_Extension_CoreTest extends PHPUnit_Framework_TestCase
 
     public function testTwigLast()
     {
-        $twig = new Twig_Environment();
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $this->assertEquals('c', twig_last($twig, 'abc'));
         $this->assertEquals(3, twig_last($twig, array(1, 2, 3)));
         $this->assertSame('', twig_last($twig, null));

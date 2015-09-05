@@ -2,31 +2,51 @@
 
 namespace UserFrosting;
 
+/**
+ * @see DatabaseInterface
+ */
 abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObjectInterface {
     
     /**
      * @var DatabaseTable The table for this database object.  Must be specified by child class.
      */
     protected $_table;
+    /**
+     * @var int The id of this object as specified for the `id` column in the database.
+     */    
+    protected $_id;
+    /**
+     * @var array A mapping of the columns in the table that this object can access, to their values.
+     */ 
+    protected $_properties;
     
-    protected $_id;          // The id of this object.  Table must have an `id` column.
-    protected $_properties;  // A mapping of the columns in the table that this object can access, to their values.
-    
+    /**
+     * Create a new MySqlDatabaseObject object.
+     *
+     * This is an abstract class, so this constructor can only be called indirectly in child constructors.
+     * @param array $properties a mapping of column names->values for this object corresponding to the DB table.
+     * @param int $id optional the id of this object, if it already exists in the database.
+     */
     public function __construct($properties, $id = null) {       
         // Set all valid properties
         foreach ($properties as $column => $value){
             if ($column != "id" && in_array($column, $this->_table->columns))
                 $this->_properties[$column] = $value;
-        }
-    
+        }  
         // Set id
         $this->_id = $id;        
     }
-       
+
+    /**
+     * @see DatabaseInterface
+     */ 
     public function table(){
         return $this->_table;
     }
     
+    /**
+     * @see DatabaseInterface
+     */ 
     public function __isset($name) {
         if ($name == "id" || isset($this->_properties[$name]))
             return true;
@@ -34,6 +54,9 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
             return false;
     }
     
+    /**
+     * @see DatabaseInterface
+     */ 
     public function __get($name){
         if ($name == "id")
             return $this->_id;
@@ -45,7 +68,9 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         }
     }
 
-    // This function only allows whitelisted column names!  This is VERY IMPORTANT, otherwise the database will be open to SQL injection attacks.
+    /**
+     * @see DatabaseInterface
+     */ 
     public function __set($name, $value){
         if (in_array($name, $this->_table->columns))
             return $this->_properties[$name] = $value;
@@ -55,10 +80,9 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         }
     }
     
-    /* Refresh the object from the DB.
-     *
-     */
-    // TODO: Should this just update the internal contents of this object, rather than create a new one?
+    /**
+     * @see DatabaseInterface
+     */ 
     public function fresh(){
         if (isset($this->_id)){
             $db = static::connection();
@@ -82,16 +106,16 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         throw new \Exception("Could not refresh this object!  Either it does not exist in the database, or is in an invalid state.");
     }
       
-    /* Get the properties of this object as an associative array.
-     *
-     */  
+    /**
+     * @see DatabaseInterface
+     */ 
     public function export(){
         return array_merge(["id" => $this->_id], $this->_properties);
     }
     
-    /* Store the object in the DB, creating a new record if one doesn't already exist.
-     *
-     */    
+    /**
+     * @see DatabaseInterface
+     */ 
     public function store() {
         // Get connection
         $db = static::connection();
@@ -146,8 +170,9 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
         return $this->_id;
     }
     
-    /*** Delete the object from the database, if it exists
-    ***/
+    /**
+     * @see DatabaseInterface
+     */ 
     public function delete(){
         // Get connection
         $db = static::connection();
@@ -173,5 +198,3 @@ abstract class MySqlDatabaseObject extends MySqlDatabase implements DatabaseObje
             return false;
     }
 }
-
-?>

@@ -2,10 +2,20 @@
 
 namespace UserFrosting;
 
-// Represents the UserFrosting database.  Used for initializing connections for queries.  Set $params to the connection variables you'd like to use.
+/**
+ * Represents the UserFrosting database.
+ *
+ * Serves as the base class from which all other classes for a particular database type derive.
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/ 
+ */
 abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
    
-    // Call this to get a fresh connection to the database.
+    /**
+     * @see DatabaseInterface
+     * @return \PDO a fresh database connection.
+     */
 	public static function connection(){
         $db_host = static::$app->config('db')['db_host'];
         $db_name = static::$app->config('db')['db_name'];
@@ -16,7 +26,9 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         return $db;    
     }
     
-    // Test whether a DB connection can be established
+    /**
+     * @see DatabaseInterface
+     */
     public static function testConnection(){
         try {
             static::connection();
@@ -26,7 +38,9 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         return true;
     }
     
-    // Get information about this database as key->value pairs
+    /**
+     * @see DatabaseInterface
+     */
     public static function getInfo(){
         $connection = static::connection();
         $results = [];
@@ -45,7 +59,9 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         return $results;
     }
     
-    // Return a list of UF tables that actually exist
+    /**
+     * @see DatabaseInterface
+     */
     public static function getTables(){
         if (!static::testConnection())
             return [];
@@ -73,7 +89,9 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         return $results;
     }
     
-    // Creates the tables for UserFrosting
+    /**
+     * @see DatabaseInterface
+     */
     public static function install(){
         $connection = static::connection();
         

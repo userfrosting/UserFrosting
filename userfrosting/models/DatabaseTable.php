@@ -12,7 +12,7 @@ namespace UserFrosting;
  * @author Alex Weissman
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  */
-class DatabaseTable implements DatabaseTableInterface {
+class DatabaseTable {
     
     /**
      * @var string The name of the table.

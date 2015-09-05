@@ -14,6 +14,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException        LogicException
      * @expectedExceptionMessage You must set a loader first.
+     * @group legacy
      */
     public function testRenderNoLoader()
     {
@@ -25,12 +26,12 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     {
         $loader = new Twig_Loader_Array(array(
             'html' => '{{ foo }} {{ foo }}',
-            'js'   => '{{ bar }} {{ bar }}',
+            'js' => '{{ bar }} {{ bar }}',
         ));
 
         $twig = new Twig_Environment($loader, array(
-            'debug'      => true,
-            'cache'      => false,
+            'debug' => true,
+            'cache' => false,
             'autoescape' => array($this, 'escapingStrategyCallback'),
         ));
 
@@ -182,6 +183,9 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Twig_Tests_EnvironmentTest_NodeVisitor', get_class($visitors[2]));
     }
 
+    /**
+     * @group legacy
+     */
     public function testRemoveExtension()
     {
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));

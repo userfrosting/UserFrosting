@@ -2,12 +2,15 @@
 
 namespace UserFrosting;
 
-/* This class is responsible for retrieving generic object(s) from the database, checking for existence, etc. */
-// TODO: expand fetch functions to support arbitrary filtering, perhaps allowing for with() type clauses that support arbitary SQL
-
+/**
+ * @see DatabaseInterface
+ */
 abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderInterface {
     
-    protected static $_table;       // The table whose rows this class represents. Must be set in the child concrete class.   
+    /**
+     * @var The table whose rows this class represents. Must be set in the child concrete class.
+     */
+    protected static $_table; 
     
     /**
      * Set table and columns for this class.  Kinda hacky but I don't see any other way to do it.
@@ -18,11 +21,13 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
         static::$_table = $table;
     }    
     
-    /* Determine if an object exists based on the value of a given column.  Returns true if a match is found, false otherwise.
+    /**
+     * Determine if an object exists based on the value of a given column.
+     *
      * @param value $value The value to find.
      * @param string $name The name of the column to match (defaults to id)
-     * @return bool
-    */
+     * @return bool true if a match is found, false otherwise.
+     */
     public static function exists($value, $name = "id"){
         if (static::fetch($value, $name))
             return true;
@@ -30,11 +35,14 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
             return false;
     }
    
-    /* Fetch a result set from the table based on the value of a given column.  For non-unique columns, it will return the first entry found.  Returns false if no match is found.
+    /**
+     * Fetch a result set from the table based on the value of a given column.
+     *
+     * For non-unique columns, it will return the first entry found.  Returns false if no match is found.
      * @param value $value The value to find.
      * @param string $name The name of the column to match (defaults to id)
      * @return array result set
-    */
+     */
     public static function fetch($value, $name = "id"){
         $db = static::connection();
         
@@ -58,7 +66,9 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
         return $results;
     }
     
-    /* Fetch all matching records from the table based on the value of a given column.  Returns empty array if no match is found.
+    /**
+     * Fetch all matching records from the table based on the value of a given column.  Returns empty array if no match is found.
+     *
      * @param value $value The value to find. (defaults to null, which means return all records in the table)
      * @param string $name The name of the column to match (defaults to null)
      * @return array result set
@@ -95,5 +105,3 @@ abstract class MySqlObjectLoader extends MySqlDatabase implements ObjectLoaderIn
         return $results;
     }
 }
-
-?>

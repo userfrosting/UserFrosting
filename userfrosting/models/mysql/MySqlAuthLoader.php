@@ -2,10 +2,14 @@
 
 namespace UserFrosting;
 
-/* This class is responsible for retrieving user and group authorization object(s) from the database, etc. */
-
-class MySqlAuthLoader extends MySqlDatabase {
+/**
+ * @see DatabaseInterface
+ */
+class MySqlAuthLoader extends MySqlDatabase implements AuthLoaderInterface {
    
+    /**
+     * @see DatabaseInterface
+     */   
     public static function fetchUserAuthHook($user_id, $hook){
         $db = static::connection();
         $table = static::getTable('authorize_user')->name;
@@ -28,6 +32,9 @@ class MySqlAuthLoader extends MySqlDatabase {
             return [];
     }
 
+    /**
+     * @see DatabaseInterface
+     */
     public static function fetchGroupAuthHook($group_id, $hook){
         $db = self::connection();
         $table = static::getTable('authorize_group')->name;
@@ -50,5 +57,3 @@ class MySqlAuthLoader extends MySqlDatabase {
             return [];
     }
 }
-
-?>
