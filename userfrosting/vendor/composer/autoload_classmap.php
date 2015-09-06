@@ -30,6 +30,7 @@ return array(
     'UserFrosting\\AuthorizationException' => $baseDir . '/auth/AuthorizationException.php',
     'UserFrosting\\BaseController' => $baseDir . '/controllers/BaseController.php',
     'UserFrosting\\DatabaseInterface' => $baseDir . '/models/DatabaseInterface.php',
+    'UserFrosting\\DatabaseInvalidException' => $baseDir . '/models/DatabaseInvalidException.php',
     'UserFrosting\\DatabaseObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\DatabaseTable' => $baseDir . '/models/DatabaseTable.php',
     'UserFrosting\\GroupController' => $baseDir . '/controllers/GroupController.php',

@@ -139,6 +139,7 @@ $setting_descriptions = [
     ]
 ];
 
+// Load site settings
 $app->site = new \UserFrosting\SiteSettings($setting_values, $setting_descriptions);
 
 // Store to DB if not consistent
@@ -188,7 +189,7 @@ $app->translator->setDefaultTable($app->config("locales.path") . "/en_US.php");
 
 // Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
 // A Slim application uses its built-in error handler if its debug setting is true; otherwise, it uses the custom error handler.
-$app->error(function (\Exception $e) use ($app) {
+$app->error(function (\Exception $e) use ($app) {    
     if ($app->alerts && is_object($app->alerts) && $app->translator)
         $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
     error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());

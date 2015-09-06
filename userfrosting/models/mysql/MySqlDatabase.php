@@ -20,10 +20,15 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         $db_host = static::$app->config('db')['db_host'];
         $db_name = static::$app->config('db')['db_name'];
     
-        $db = new \PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", static::$app->config('db')['db_user'], static::$app->config('db')['db_pass']);
-        $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
-        $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);       // Let this function throw a PDO exception if it cannot connect.
-        return $db;    
+        try {
+            $db = new \PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", static::$app->config('db')['db_user'], static::$app->config('db')['db_pass']);
+            $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
+            $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);       // Let this function throw a PDO exception if it cannot connect.
+            return $db;
+        } catch (\PDOException $e){
+            echo "We can't seem to connect to the database!  Please check your database credentials in config-userfrosting.php.";
+            //throw new DatabaseInvalidException($e->getMessage(), $e->getStatus(), $e->getPrevious());
+        }
     }
     
     /**
