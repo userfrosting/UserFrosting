@@ -1,29 +1,39 @@
 # Enable this line to temporarily disable the Apache rewrite cache.
 #Header set Cache-Control "max-age=0, private, no-store, no-cache, must-revalidate"
 
-RewriteEngine On
+# Tell PHP that we are using Apache
+SetEnv SERVER_TYPE Apache
 
-# www. to non-www.
-RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+<IfModule mod_rewrite.c>
 
-# Remove trailing slash from any non-directory path (canonicalization)
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} (.+)/$
-RewriteRule ^ %1 [L,R=301]
+    # Tell PHP that the mod_rewrite module is ENABLED.
+    SetEnv HTTP_MOD_REWRITE On
 
-# Dynamically rewrite base directory (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
-RewriteCond $0#%{REQUEST_URI} ^([^#]*)#(.*)\1$
-RewriteRule ^.*$ - [E=BASE:%2]
+    RewriteEngine On
+    
+    # Forward all www. to non-www.  Remove this rule if you want both available.
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+    
+    # Remove trailing slash from any non-directory path (canonicalization)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+    
+    # Dynamically rewrite base directory (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
+    RewriteCond $0#%{REQUEST_URI} ^([^#]*)#(.*)\1$
+    RewriteRule ^.*$ - [E=BASE:%2]
+    
+    # Forward any requested URLs that specifically contain index.php (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
+    RewriteCond %{THE_REQUEST} /index\.php [NC]
+    RewriteRule ^index\.php(?:/(.*))?$ %{ENV:BASE}$1 [L,R=301,NC,NE]
+    
+    # Send the URI to index.php (Slim routing)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [QSA,L]
 
-# Forward any requested URLs that specifically contain index.php (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
-RewriteCond %{THE_REQUEST} /index\.php [NC]
-RewriteRule ^index\.php(?:/(.*))?$ %{ENV:BASE}$1 [L,R=301,NC,NE]
-
-# Send the URI to index.php (Slim routing)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.php [QSA,L]
-
+</IfModule>
+    
 # Deny access to any php.ini files
 <Files php.ini>
 	Order allow,deny
