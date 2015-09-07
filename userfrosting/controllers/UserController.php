@@ -603,5 +603,4 @@ class UserController extends \UserFrosting\BaseController {
         $target_user->delete();
         unset($target_user);
     }
-    
 }

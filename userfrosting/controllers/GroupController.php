@@ -416,5 +416,5 @@ class GroupController extends \UserFrosting\BaseController {
         $group->delete();       // TODO: implement Group function
         unset($group);
     }
-        
+    
 }

@@ -197,7 +197,7 @@
         $controller = new UF\GroupController($app);
         return $controller->updateGroup($group_id);
     });       
-    
+
     // Delete group
     $app->post('/groups/g/:group_id/delete/?', function ($group_id) use ($app) {
         $controller = new UF\GroupController($app);
