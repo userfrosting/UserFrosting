@@ -79,7 +79,8 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             static::getTable('group')->name,
             static::getTable('group_user')->name,
             static::getTable('authorize_user')->name,
-            static::getTable('authorize_group')->name
+            static::getTable('authorize_group')->name,
+            static::$app->remember_me_table['tableName']
         ];
         
         foreach ($test_list as $table){
@@ -100,9 +101,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
     public static function install(){
         $connection = static::connection();
         
-        $prefix = static::$app->config('db')['db_prefix'];
-        
-        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "authorize_group` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `" . static::getTable('authorize_group')->name . "` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `group_id` int(11) NOT NULL,
             `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the group has access to.',
@@ -110,7 +109,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
           
-        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "authorize_user` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `" . static::getTable('authorize_user')->name . "` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `user_id` int(11) NOT NULL,
             `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the user has access to.',
@@ -118,7 +117,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
               
-        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "group` (
+                $connection->query("CREATE TABLE IF NOT EXISTS `" . static::getTable('group')->name . "` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `name` varchar(150) NOT NULL,
             `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission is a default setting for new accounts.',
@@ -131,14 +130,14 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
           
           
-        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "group_user` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `" . static::getTable('group_user')->name . "` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `user_id` int(10) unsigned NOT NULL,
             `group_id` int(10) unsigned NOT NULL,
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Maps users to their group(s)' AUTO_INCREMENT=1 ;");
           
-        $connection->query("CREATE TABLE IF NOT EXISTS `$prefix" . "user` (
+        $connection->query("CREATE TABLE IF NOT EXISTS `" . static::getTable('user')->name . "` (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `user_name` varchar(50) NOT NULL,
             `display_name` varchar(50) NOT NULL,
@@ -157,20 +156,27 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             `locale` varchar(10) NOT NULL DEFAULT 'en_US' COMMENT 'The language and locale to use for this user.',
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
-
-        // Setup default configuration settings
+        
+        $connection->query("CREATE TABLE IF NOT EXISTS `" . static::$app->remember_me_table['tableName'] . "` (
+            `user_id` int(11) NOT NULL,
+            `token` varchar(40) NOT NULL,
+            `persistent_token` varchar(40) NOT NULL,
+            `expires` datetime NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"); 
+        
+        // Setup initial configuration settings        
         static::$app->site->install_status = "pending";
         static::$app->site->root_account_config_token = md5(uniqid(mt_rand(), false));
         static::$app->site->store();        
         
         // Setup default groups.  TODO: finish Group API so they can be created through objects
-        $connection->query("INSERT INTO `$prefix" . "group` (`name`, `is_default`, `can_delete`, `theme`, `landing_page`, `new_user_title`, `icon`) VALUES
+        $connection->query("INSERT INTO `" . static::getTable('group')->name . "` (`name`, `is_default`, `can_delete`, `theme`, `landing_page`, `new_user_title`, `icon`) VALUES
           ('User', " . GROUP_DEFAULT_PRIMARY . ", 0, 'default', 'dashboard', 'New User', 'fa fa-user'),
           ('Administrator', " . GROUP_NOT_DEFAULT . ", 0, 'nyx', 'dashboard', 'Brood Spawn', 'fa fa-flag'),
           ('Zerglings', " . GROUP_NOT_DEFAULT . ", 1, 'nyx', 'dashboard', 'Tank Fodder', 'sc sc-zergling');");        
     
         // Setup default authorizations
-        $connection->query("INSERT INTO `$prefix" . "authorize_group` (`group_id`, `hook`, `conditions`) VALUES
+        $connection->query("INSERT INTO `" . static::getTable('authorize_group')->name . "` (`group_id`, `hook`, `conditions`) VALUES
           (1, 'uri_dashboard', 'always()'),
           (2, 'uri_dashboard', 'always()'),
           (2, 'uri_users', 'always()'),

@@ -20,7 +20,7 @@ class MySqlGroupLoader extends MySqlObjectLoader implements GroupLoaderInterface
      * @return bool true if a match is found, false otherwise.
      */
     public static function exists($value, $name = "id"){
-        return parent::fetch($value, $name);
+        return parent::exists($value, $name);
     }
    
     /**

@@ -84,7 +84,7 @@
     
         switch ($action) {
             case "login":               return $controller->pageLogin();
-            case "logout":              return $controller->logout(); 
+            case "logout":              return $controller->logout(true); 
             case "register":            return $controller->pageRegister();
             case "activate":            return $controller->activate();            
             case "resend-activation":   return $controller->pageResendActivation();

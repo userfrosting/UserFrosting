@@ -216,6 +216,23 @@ class AccountController extends \UserFrosting\BaseController {
     }    
     
     /**
+     * Account compromised page.
+     *
+     * Warns the user that their account may have been compromised due to a stolen "remember me" cookie.
+     * This page is "public access".
+     * Request type: GET     
+     */   
+    public function pageAccountCompromised(){
+        $this->_app->render('common/compromised.html', [
+            'page' => [
+                'author' =>         $this->_app->site->author,
+                'title' =>          "Your account may have been compromised",
+                'description' =>    "Your account may have been compromised.  You have been logged out for your safety."
+            ]
+        ]);
+    }      
+    
+    /**
      * Processes an account login request.
      *
      * Processes the request from the form on the login page, checking that:
@@ -957,5 +974,5 @@ class AccountController extends \UserFrosting\BaseController {
      */        
     public function captcha(){
         echo $this->generateCaptcha();
-    }    
+    }  
 }
