@@ -79,9 +79,10 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
      */
     public function isConsistent(){
         $connection = static::connection();
-        $prefix = static::$app->config('db')['db_prefix'];
         
-        $table_exists = $connection->query("SHOW TABLES LIKE '$prefix" . "configuration'")->rowCount() > 0;
+        $table = static::getTable('configuration')->name;
+        
+        $table_exists = $connection->query("SHOW TABLES LIKE `$table`")->rowCount() > 0;
         
         if (!$table_exists){
             return false;
