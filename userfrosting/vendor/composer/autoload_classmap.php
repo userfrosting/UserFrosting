@@ -54,6 +54,7 @@ return array(
     'UserFrosting\\UserFrosting' => $baseDir . '/controllers/UserFrosting.php',
     'UserFrosting\\UserLoaderInterface' => $baseDir . '/models/DatabaseInterface.php',
     'UserFrosting\\UserObjectInterface' => $baseDir . '/models/DatabaseInterface.php',
+    'UserFrosting\\UserSession' => $baseDir . '/middleware/usersession/UserSession.php',
     'ntlm_sasl_client_class' => $vendorDir . '/phpmailer/phpmailer/extras/ntlm_sasl_client.php',
     'phpmailerException' => $vendorDir . '/phpmailer/phpmailer/class.phpmailer.php',
 );

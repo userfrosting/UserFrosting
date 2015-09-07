@@ -47,7 +47,7 @@ interface DatabaseInterface {
      * Looks for tables with the following handles: user, group, group_user, authorize_group, authorize_user
      * @return array[string] the names of the UF tables that actually exist.
      */    
-    public static function getTables();
+    public static function getCreatedTables();
     
     /**
      * Set up the initial tables for the database.

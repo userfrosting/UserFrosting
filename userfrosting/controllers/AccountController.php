@@ -309,6 +309,8 @@ class AccountController extends \UserFrosting\BaseController {
             // Create the session
             $_SESSION["userfrosting"]["user"] = $user;
             $this->_app->user = $_SESSION["userfrosting"]["user"];
+            // Setup logged in user environment
+            $this->_app->setupAuthenticatedEnvironment();            
             $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
         } else {
             //Again, we know the password is at fault here, but lets not give away the combination in case of someone bruteforcing

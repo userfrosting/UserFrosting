@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bf239abe3c3311ddda51de62511aad0e",
+    "hash": "5dcaae11203c83e3bf53d7afe14d7616",
     "packages": [
         {
             "name": "alexweissman/fortress",

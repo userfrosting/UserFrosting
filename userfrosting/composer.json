@@ -23,7 +23,7 @@
     },
     "autoload": {
         "classmap" : [
-            "auth", "controllers", "models", "plugins"
+            "auth", "controllers", "middleware", "models", "plugins"
         ]
     }
 }

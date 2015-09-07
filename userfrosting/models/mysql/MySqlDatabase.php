@@ -67,7 +67,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
     /**
      * @see DatabaseInterface
      */
-    public static function getTables(){
+    public static function getCreatedTables(){
         if (!static::testConnection())
             return [];
         
