@@ -1,6 +1,6 @@
 <?php
     require_once 'vendor/autoload.php';
-    require_once 'auth/password.php';
+    require_once 'models/auth/password.php';
    
     // Set your timezone here
     date_default_timezone_set('America/New_York');
