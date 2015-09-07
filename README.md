@@ -1,4 +1,4 @@
-# UserFrosting v0.3.0
+# UserFrosting v0.3.1 (development)
 
 http://www.userfrosting.com
 
@@ -52,6 +52,11 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 - Build on existing, widely used server- and client-side components
 - Clean, consistent, and well-documented code
 
+## What's new in 0.3.1
+
+### Improved initialization routine as middleware
+
+### "Remember Me" - see https://github.com/gbirke/rememberme
 
 ## What's new in 0.3.0
 
