@@ -152,11 +152,6 @@ $setting_descriptions = [
 
 $app->site = new \UserFrosting\SiteSettings($setting_values, $setting_descriptions);
 
-// Store to DB if not consistent
-if (!$app->site->isConsistent()){
-    $app->site->store();
-}
-
 // Create the page schema object
 $app->schema = new \UserFrosting\PageSchema($app->site->uri['css'], $app->config('css.path') , $app->site->uri['js'], $app->config('js.path') );
 
@@ -263,3 +258,5 @@ $app->applyHook("includes.js.register");
 
 // Register plugins
 $app->applyHook("plugins.register");
+
+error_log("End of initialize.php");

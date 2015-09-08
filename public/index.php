@@ -19,11 +19,23 @@
             exit;
         }
     
+        // Check that we can connect to the DB.  Again, you can remove this if you know what you're doing.
+        if (!UF\Database::testConnection()){
+            // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
+            session_destroy();
+            // TODO: log out from remember me as well.
+            $controller = new UF\AccountController($app);
+            return $controller->pageDatabaseError();
+        }
+    
         // Forward to installation if not complete
+        // TODO: Is there any way to detect that installation was complete, but the DB is malfunctioning?
         if (!isset($app->site->install_status) || $app->site->install_status == "pending"){
             $app->redirect($app->urlFor('uri_install'));
-        }        
+        }
+        
         // Forward to the user's landing page (if logged in), otherwise take them to the home page
+        // This is probably where you, the developer, would start making changes if you need to change the default behavior.
         if ($app->user->isGuest()){
             $controller = new UF\AccountController($app);
             $controller->pageHome();

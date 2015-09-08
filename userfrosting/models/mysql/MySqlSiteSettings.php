@@ -39,6 +39,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
     /**
      * Construct the site settings object, loading values from the database.
      *
+     * Fall back to default settings, if the configuration table cannot be loaded for one reason or another.
      * @param array $settings the default settings to use, if they can't be retrieved from the DB.
      * @param array $descriptions the default descriptions to use, if they can't be retrieved from the DB.
      */
@@ -56,21 +57,15 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         try {
             $results = $this->fetchSettings();
             // Merge, replacing default settings with DB settings as necessary.
-            $this->_settings = array_replace_recursive($this->_settings , $results['settings']);
+            $this->_settings = array_replace_recursive($this->_settings, $results['settings']);
             $this->_descriptions = array_replace_recursive($this->_descriptions, $results['descriptions']);
-        } catch (\PDOException $e){
-            $connection = static::connection();
-            $table = static::getTable('configuration')->name;
             
-            // If the database connection is fine, but the table doesn't exist, create it!
-            $connection->query("CREATE TABLE IF NOT EXISTS `$table` (
-                `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-                `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
-                `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
-                `value` longtext NOT NULL COMMENT 'The current value of the setting.',
-                `description` text NOT NULL COMMENT 'A brief description of this setting.',
-                PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=1 ;");
+            // If there are settings in this object that are not present in the database, go ahead and store them to the DB.
+            if (!$this->isConsistent()){
+                $this->store();
+            }            
+        } catch (\PDOException $e){
+            error_log("The configuration table could not be loaded.  Falling back to default configuration settings.");
         }
     }
     
@@ -82,7 +77,7 @@ class MySqlSiteSettings extends MySqlDatabase implements SiteSettingsInterface {
         
         $table = static::getTable('configuration')->name;
         
-        $table_exists = $connection->query("SHOW TABLES LIKE `$table`")->rowCount() > 0;
+        $table_exists = $connection->query("SHOW TABLES LIKE '$table'")->rowCount() > 0;
         
         if (!$table_exists){
             return false;

@@ -73,7 +73,7 @@ class UserFrosting extends \Slim\Slim {
                 return $controller->pageAccountCompromised();
             }
             
-            if ($e instanceof DatabaseInvalidException) {
+            if ($e instanceof \PDOException) {
                 // Log this error
                 error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
                 error_log($e->getTraceAsString());

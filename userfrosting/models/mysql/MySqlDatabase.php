@@ -20,15 +20,10 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         $db_host = static::$app->config('db')['db_host'];
         $db_name = static::$app->config('db')['db_name'];
     
-        try {
-            $db = new \PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", static::$app->config('db')['db_user'], static::$app->config('db')['db_pass']);
-            $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
-            $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);       // Let this function throw a PDO exception if it cannot connect.
-            return $db;
-        } catch (\PDOException $e){
-            echo "We can't seem to connect to the database!  Please check your database credentials in config-userfrosting.php.";
-            //throw new DatabaseInvalidException($e->getMessage(), $e->getStatus(), $e->getPrevious());
-        }
+        $db = new \PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", static::$app->config('db')['db_user'], static::$app->config('db')['db_pass']);
+        $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
+        $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);       // Let this function throw a PDO exception if it cannot connect.
+        return $db;
     }
     
     /**
@@ -38,6 +33,8 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
         try {
             static::connection();
         } catch (\PDOException $e){
+            error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
+            error_log($e->getTraceAsString());
             return false;
         }
         return true;
@@ -101,6 +98,15 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
     public static function install(){
         $connection = static::connection();
         
+        $connection->query("CREATE TABLE IF NOT EXISTS `" . static::getTable('configuration')->name . "` (
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
+            `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
+            `value` longtext NOT NULL COMMENT 'The current value of the setting.',
+            `description` text NOT NULL COMMENT 'A brief description of this setting.',
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=1 ;");
+            
         $connection->query("CREATE TABLE IF NOT EXISTS `" . static::getTable('authorize_group')->name . "` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `group_id` int(11) NOT NULL,

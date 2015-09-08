@@ -20,8 +20,7 @@ class UserSession extends \Slim\Middleware {
     }
     
     public function setup(){       
-        // Test database connection
-        try {          
+        try {
             error_log("Setting up user session");
             $storage = new \Birke\Rememberme\Storage\PDO($this->app->remember_me_table);
             $storage->setConnection(Database::connection());
@@ -41,6 +40,7 @@ class UserSession extends \Slim\Middleware {
                 $this->app->user = $_SESSION["userfrosting"]["user"];                
                 
                 //error_log("Current user id is " . $_SESSION["userfrosting"]["user"]->id);
+                
                 // Check, if the Rememberme cookie exists and is still valid.
                 // If not, we log out the current session
                 if(!empty($_COOKIE[$this->app->remember_me->getCookieName()]) && !$this->app->remember_me->cookieIsValid()) {
@@ -78,8 +78,10 @@ class UserSession extends \Slim\Middleware {
             }
             // Now we have an authenticated user, setup their environment
             $this->app->setupAuthenticatedEnvironment();
-        } catch (\PDOException $e) {
-            throw new DatabaseInvalidException($e->getMessage(), $e->getCode(), $e);
-        }        
+        } catch (\PDOException $e){
+            // If we can't connect to the DB, then we can't create an authenticated user.  That's ok if we're in installation mode.
+            error_log("Unable to authenticate user, falling back to guest user.");
+            error_log($e->getTraceAsString());
+        }
     }
 }
