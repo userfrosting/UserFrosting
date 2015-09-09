@@ -1,5 +1,11 @@
 <?php
-    require_once "../userfrosting/initialize.php";
+    // This if-block just checks that the path for initialize.php is correct.  Remove this once you know what you're doing.
+    if (!file_exists("../userfrosting/initialize.php")){
+        echo "<h2>We can't seem to find our way to initialize.php!  Please check the require_once statement at the top of index.php, and make sure it contains the correct path to initialize.php.</h2><br>";
+    }
+
+    // This is the path to initialize.php, your site's gateway to the rest of the UF codebase!  Make sure that it is correct!
+    require_once("../userfrosting/initialize.php");
 
     use UserFrosting as UF;
    
