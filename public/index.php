@@ -7,7 +7,7 @@
     $app->get('/', function () use ($app) {
         // This if-block detects if mod_rewrite is enabled.
         // This is just an anti-noob device, remove it if you know how to read the docs and/or breathe through your nose.
-        if ($_SERVER['SERVER_TYPE'] && ($_SERVER['SERVER_TYPE'] == "Apache") && !isset($_SERVER['HTTP_MOD_REWRITE'])) {
+        if (isset($_SERVER['SERVER_TYPE']) && ($_SERVER['SERVER_TYPE'] == "Apache") && !isset($_SERVER['HTTP_MOD_REWRITE'])) {
             $app->render('common/bad-config.html', [
                 'page' => [
                     'author' =>         $app->site->author,
