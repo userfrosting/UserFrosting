@@ -258,5 +258,3 @@ $app->applyHook("includes.js.register");
 
 // Register plugins
 $app->applyHook("plugins.register");
-
-error_log("End of initialize.php");
