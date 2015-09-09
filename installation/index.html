@@ -82,6 +82,8 @@ title: "UserFrosting | Installing UserFrosting"
 |   |-- composer.lock
 |   |-- config-userfrosting.php
 </pre>
+                <p>Once you have organized the codebase as you see fit, make sure that the <code>require</code> path for <code>initialize.php</code> is correctly set at the top of <code>public/index.php</code>.  Otherwise, UF will not be able to find the rest of the code!
+                </p>
                 <h3>Step 2: Specify Database</h3>
                 <p>
                     Specify your database information in <code>userfrosting/config-userfrosting.php</code>.  You will need to set the values of <code>db_host</code> (usually <code>localhost</code>), <code>db_name</code>, <code>db_user</code>, <code>db_pass</code>, and <code>db_prefix</code> (you can leave <code>db_prefix</code> as the default value if you wish).  
