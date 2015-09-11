@@ -1,26 +1,16 @@
-# [Start Bootstrap](http://startbootstrap.com/) - [Freelancer](http://startbootstrap.com/template-overviews/freelancer/)
+# Userfrosting Website
 
-[Freelancer](http://startbootstrap.com/template-overviews/freelancer/) is a one page freelancer portfolio theme for [Bootstrap](http://getbootstrap.com/) created by [Start Bootstrap](http://startbootstrap.com/). This theme features several content sections, a responsive portfolio grid with hover effects, full page portfolio item modals, and a working PHP contact form.
+## Hosting
 
-## Getting Started
+The website for Userfrosting is run on [Github Pages](https://pages.github.com/), which means that it is built on [Jekyll](http://jekyllrb.com/).
 
-To use this theme, choose one of the following options to get started:
-* Download the latest release on Start Bootstrap
-* Fork this repository on GitHub
+To run the website code yourself:
 
-## Bugs and Issues
+1. Make sure you have Jekyll installed.
+2. Run `jekyll serve --config _config.yml,_config-dev.yml --watch`
 
-Have a bug or an issue with this theme? [Open a new issue](https://github.com/IronSummitMedia/startbootstrap-freelancer/issues) here on GitHub or leave a comment on the [template overview page at Start Bootstrap](http://startbootstrap.com/template-overviews/freelancer/).
+## Website Template
 
-## Creator
+The UserFrosting website is a heavily modified version of [Freelancer](http://startbootstrap.com/template-overviews/freelancer/), by [Start Bootstrap](http://startbootstrap.com/).
 
-Start Bootstrap was created by and is maintained by **David Miller**, Managing Parter at [Iron Summit Media Strategies](http://www.ironsummitmedia.com/).
-
-* https://twitter.com/davidmillerskt
-* https://github.com/davidtmiller
-
-Start Bootstrap is based on the [Bootstrap](http://getbootstrap.com/) framework created by [Mark Otto](https://twitter.com/mdo) and [Jacob Thorton](https://twitter.com/fat).
-
-## Copyright and License
-
-Copyright 2013-2015 Iron Summit Media Strategies, LLC. Code released under the [Apache 2.0](https://github.com/IronSummitMedia/startbootstrap-freelancer/blob/gh-pages/LICENSE) license.
+Credit for design and layout modifications go to [Sarah Baghdadi](http://pages.iu.edu/~sbaghdad/) and [Alexander Weissman](http://alexanderweissman.com).

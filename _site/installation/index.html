@@ -99,52 +99,141 @@
             <li><a href="http://localhost:4000/#get-started">Getting Started</a></li>
             <li class="active">Requirements and Installation</li>
         </ol>
-    </div>
-</header>
-
-<section id="requirements" class="content-page">
-    <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h1>Requirements</h1>
+                <h1>Requirements and Installation</h1>
                 <hr class="star-primary">
             </div>
         </div>
+        <p>
+
         <div class="row">
             <div class="col-lg-12">
+                <p><strong><a href="#server-requirements">Server requirements</strong></a></p>
+                <p><strong><a href="#install-userfrosting">Installing UserFrosting</strong></a></p>
+            </div>
+        </div>        
+    </div>
+</header>
+
+<section id="server-requirements" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Server Requirements</h1>
                 <p>
-                    UserFrosting is designed to have as few dependencies as possible. All you need to run UserFrosting is a web server of your choice, along with the following components:
+                    UserFrosting makes a few assumptions about what you've got going on under the hood.  We're working hard to ensure interoperability with as many different server and operating system technologies as possible.  But, please realize that there are hundreds of possible web server technologies out there, with millions of different default configurations.  We cannot possibly test them all, and we ask that you be patient if something goes wrong when you're first getting started.  Check the <a href="http://localhost:4000/troubleshooting/">troubleshooting guide</a> first, then <a href="https://github.com/alexweissman/UserFrosting/blob/master/CONTRIBUTING.md">submit a detailed bug report</a> with specific information about your server configuration and the error.
+                </p>
+                <p><strong>
+                    The "gold standard" environment for successfully running UserFrosting is on Mac OSX with <a href="https://www.apachefriends.org/index.html">XAMPP</a> installed.
+                </strong>
+                </p>
+                <p>
+                    However in general, UserFrosting should behave nicely if you have:
                 </p>
                 <ul>
-                    <li>PHP version 5.4 or higher. <small>This is because of a security flaw in password-related algorithms in older versions of PHP, and because we have started to use the short-array syntax that is only available starting in version 5.4.</small></li>
+                    <li>An Apache server with the <code>mod_rewrite</code> module <a href="http://localhost:4000/troubleshooting/#blank-page">installed and enabled</a>.
+                    <li>PHP version 5.4 or higher.</li>
                     <li>MySQL server version 4.1.3, <small>with PDO database connections enabled.</small></li>
                 </ul>
+                <p>Other things to consider:</p>
+                <h3>Local Development Environment</h3>
                 <p>
-                    We also highly recommend that you install <a href="http://getcomposer.org">Composer</a>, the de facto standard for dependency management in PHP.  Composer will also autoload any new classes you add.
+                    Think about this for a second: how do you test your code as you are writing it?
+                </p>
+                <p>
+                    If your answer is, "I write it in (insert name of text editor here), upload it to my hosting account, and then view the page," then you deserve to <strong>have your face smeared with honey and buried neck-deep next to an anthill.</strong>  Haha, just kidding.  But seriously, your life will be so much better if you <a href="http://daraskolnick.com/developer-tip-tuesday-always-develop-locally/">always develop and test your code locally</a> before you upload it to your hosting server.
+                </p>
+                <p>It takes about 5 minutes to install and configure a full-stack development server (Apache+PHP+MySQL) on your computer, and it will make your life so much better.  You won't have to worry about accidentally exposing sensitive information (passwords, accounts, etc) on the public web, and you won't have to spend time uploading your files each time you want to test a new line of code.  I prefer <a href="https://www.apachefriends.org/index.html">XAMPP</a>.
+                </p>       
+                <h3>URL Rewriting</h3>
+                <p>
+                    UserFrosting relies on URL rewriting, which allows us to have URLs <code>that/look/like/this</code> instead of <code>looking/like_this.php</code>.  In Apache, this is handled by the <code>mod_rewrite</code> module.  Unfortunately, even today in 2015, there are still many web servers that do not have this module enabled or properly configured.  If UserFrosting isn't working with your GoDaddy or Jimbo's Ostrich Farm and Web Hosting shared hosting account, chances are that the problem can be tracked down to an issue with URL rewriting.
+                </p>
+                
+                <h3>nginx</h3>
+                <p>
+                    We do not yet "officially" support nginx, but we hope to soon.  In the mean time, you can try the <a href="http://docs.slimframework.com/routing/rewrite/">suggested nginx configuration file for Slim</a> (which UserFrosting is built on).
+                </p>
+                
+                <h3>Other Development Tools</h3>
+                <h4>Composer</h4>
+                <p>
+                    When you're ready to start adding your own code to UserFrosting, you'll need to install <a href="http://getcomposer.org">Composer</a>, the de facto standard for dependency management in PHP.  Composer makes it easy to include other PHP libraries in your code, and is responsible for autoloading all of the files in UserFrosting (which is why you don't see a ton of nasty <code>require_once</code> statements everywhere).  Install it once, use it for everything.
+                </p>
+                <h4>A Good Text Editor</h4>
+                <p>
+                    I use KomodoEdit.  Use whatever you want, just please spend time finding a text editor that works well for <strong>you</strong>.  Don't just use whatever happens to be the default editor that came installed on your computer.
+                </p>
+                <h4>Willingness to Learn</h4>
+                <p>
+                    Ok, I get it, you don't want to be a professional PHP developer.  You just want your thing to work.  Fine.  But there is are reasons why professional PHP developers do what they do, reasons that are in the best interest of hobbyists and pros alike.  If you plan on using PHP to build a web application that is secure and maintainable, please, for the love of God, take an hour to browse through <a href="http://www.phptherightway.com/">PHP The Right Way</a>.
+                </p>
+                <h4>Stimulant(s) of Your Choice</h4>
+                <p>
+                    I'm a coffee guy, but some people prefer tea, yerba mate, or crack cocaine.  Just don't smoke tobacco, ok?
                 </p>
             </div>
         </div>
     </div>
 </section>
-<section id="installation" class="content-page">
+<section id="install-userfrosting" class="content-page">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 text-center">
-                <h1>Installation</h1>
-                <hr class="star-primary">
-            </div>
-        </div>
-        <div class="row">
             <div class="col-lg-12">
+                <h2>Installation</h2>
                 <p>               
-                    UserFrosting comes with a built-in installer.  Assuming you have a working web server with PHP and MySQL installed, all you need to do is create a database and tell UserFrosting how to connect in the configuration file.  If you do not have a web server set up, we recommend <a href="https://www.apachefriends.org/index.html">XAMPP</a>.
+                    UserFrosting comes with a built-in installer, which sets up the initial data tables and master account.  One thing the installer <strong>cannot do</strong> is configure your server for you.  So, you will need to follow these steps:
+                </p>
+                <h3>Step 1: If you're using Apache</h3>
+                <h3>Step 1a: Check that mod_rewrite is installed and enabled</h3>
+                <p>
+                    Open your console (command line) and run <code>sudo a2enmod rewrite</code>  This command stands for "Apache 2 enable module".
+                </p>
+                <p>
+                    If you get an error stating rewrite module is not found, then your <code>userdir</code> module is probably not enabled. To enable it, run <code>sudo a2enmod userdir</code>, then try again to enable <code>rewrite</code>.
+                </p>
+                <h3>Step 1b: Configure AllowOverride All</h3>
+                <p>Find your main Apache configuration file.</p>
+                <ul>
+                    <li> In Ubuntu, this is usually located at <code>/etc/apache2/apache2.conf</code>.</li>
+                    <li> In Debian/Raspbian, this will be your <code>000-default.conf</code> file.</li>
+                    <li> In most other systems, this is your <code>httpd.conf</code> file.</li>
+                </ul>
+                    
+                <p>Find the block that looks like:
+                <pre>
+&lt;Directory /blah/blah/blah/&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+&lt;/Directory&gt;
+                </pre>
+                </p>
+                <p>
+                Change <code>AllowOverride None</code> to <code>AllowOverride All</code>.
+                </p>
+                <p>
+                    <strong>In Debian/Raspian</strong>, you may also need to add this to your <code>000-default.conf</code> file:
+                    <pre>
+RewriteEngine On
+RewriteRule ^/index.html$ /index.php [L]
+                    </pre>
+                </p>
+                
+                <h3>Step 1c: Restart Apache</h3>
+                <p>Run <code>service apache2 restart</code>.</p>
+                
+                <p>
+                    
+                    Assuming you have a working web server with PHP and MySQL installed, all you need to do is create a database and tell UserFrosting how to connect in the configuration file.  If you do not have a web server set up, we recommend <a href="https://www.apachefriends.org/index.html">XAMPP</a>.
                 </p>
 
-                <h3>Step 1: Download UserFrosting</h3>
+                <h3>Step 2: Download UserFrosting</h3>
                 <p>
                 Download the <a href="https://github.com/alexweissman/UserFrosting/zipball/master">latest version</a> of UserFrosting, unzip/untar it, and place it in your document root.  The two directories that you need to worry about are <code>public</code> and <code>userfrosting</code>.
                 </p>
-                <p>On a production server, you may wish to put the contents of <code>public</code> directly into the top-level public directory of your web hosting account, and put the <code>userfrosting</code> directory at the same level as the public directory.  So for example, if you FTP into your hosting account:
+                <p>On a production server, you may wish to put the contents of <code>public</code> directly into the top-level public directory of your web hosting account, and put the <code>userfrosting</code> directory at the same level as the public directory.  For example, if you FTP into your hosting account:
                 </p>
 <pre>
 /                 // The root directory of your hosting account
@@ -170,10 +259,17 @@
 |   |-- composer.json
 |   |-- composer.lock
 |   |-- config-userfrosting.php
+|   |-- initialize.php
 </pre>
-                <h3>Step 2: Specify Database</h3>
                 <p>
-                    Specify your database information in <code>userfrosting/config-userfrosting.php</code>.  You will need to set the values of <code>db_host</code> (usually <code>localhost</code>), <code>db_name</code>, <code>db_user</code>, <code>db_pass</code>, and <code>db_prefix</code> (you can leave <code>db_prefix</code> as the default value if you wish).  
+                Make sure that you copy the <code>.htaccess</code> file as well!  In OSX, files that begin with <code>.</code> are hidden by default, so you need to make them visible!
+                </p>
+                <h3>Step 3: Set the Path to initialize.php</h3>
+                <p>Once you have organized the codebase as you see fit, make sure that the <code>require_once</code> path for <code>initialize.php</code> is correctly set at the top of <code>public/index.php</code>.  Otherwise, UF will not be able to find the rest of the code!
+                </p>
+                <h3>Step 4: Create and Specify Database</h3>
+                <p>
+                    You need to create a database for UserFrosting to work properly.  You can do this in phpMyAdmin, cPanel, or whichever tool you prefer/have access to.  Specify your database information in <code>userfrosting/config-userfrosting.php</code>.  You will need to set the values of <code>db_host</code> (usually <code>localhost</code>), <code>db_name</code>, <code>db_user</code>, <code>db_pass</code>, and <code>db_prefix</code> (you can leave <code>db_prefix</code> as the default value if you wish).  
                 </p>
 <pre>
 /********* DEVELOPMENT SETTINGS *********/
@@ -197,7 +293,7 @@ $app->configureMode('dev', function () use ($app) {
     ...
 </pre>
                 <p>
-                If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of <code>$app->configureMode('dev' ...</code> it says <code>$app->configureMode('production' ...</code>.  You can then easily switch between these two modes on line 21:
+                If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of <code>$app->configureMode('dev' ...</code> it says <code>$app->configureMode('production' ...</code>.  You can then easily switch between these two modes on line 19:
                 </p>
 
 <pre>
@@ -207,12 +303,17 @@ $app->configureMode('dev', function () use ($app) {
     ]);
 </pre>
                 
-                <h3>Step 3: Create Master Account</h3>
+                <h3>Step 5: Create Master Account</h3>
                 
                 <p>
-                    Navigate to the public directory (e.g. <code>http://localhost/userfrosting/public/</code>).  The installer should automatically come up and ask you to create the master account.  Choose a strong password for the master account if you are deploying production-level code.  The master user will have unrestricted permissions on your UserFrosting site.
+                    Navigate to the public directory (e.g. <code>http://localhost/userfrosting/public/</code>).  The installer should automatically create the database tables.  If everything works correctly, you should see this screen:
                 </p>
-
+                <p>
+                <img src="http://localhost:4000/img/tutorials/install.png">
+                </p>
+                <p>After you press "Create Master Account", UserFrosting will ask you to create the master account.  The configuration token is a hash located in the <code>uf_configuration</code> table, under the value for <code>config_token</code>.  This is to prevent someone else from registering the master account if you stop in the middle of an installation on a live server (which you should never do anyway!)  Choose a strong password for the master account if you are deploying production-level code.  The master user will have unrestricted permissions on your UserFrosting site.
+                </p>
+                <p>Go ahead and login as the master account and you should be taken to the Site Settings page, where you can set some basic configuration parameters.</p>
                 <h3><i class="fa fa-life-saver"></i> Troubleshooting Installation</h3>
                 <p>
                     If you are having problems during installation, please see the <a href="http://localhost:4000/troubleshooting">troubleshooting guide</a>.
