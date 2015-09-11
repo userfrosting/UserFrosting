@@ -105,6 +105,15 @@ class InstallController extends \UserFrosting\BaseController {
                 ]; 
             }            
             
+            // Check for GD library (required for Captcha)
+            if (!(extension_loaded('gd') && function_exists('gd_info'))) {
+                $messages[] = [
+                    "title" => "<i class='fa fa-warning'></i> GD library not installed",
+                    "message" => "We could not confirm that the <code>GD</code> library is installed and enabled.  GD is an image processing library that UserFrosting uses to generate captcha codes for user account registration.  If you don't need captcha, you can disable it in Site Settings and ignore this message.", 
+                    "class" => "warning"
+                ];
+            }
+            
             $this->_app->render('common/install/install-ready.html', [
                 'page' => [
                     'author' =>         $this->_app->site->author,
