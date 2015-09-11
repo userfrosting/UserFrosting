@@ -213,13 +213,6 @@
                 <p>
                 Change <code>AllowOverride None</code> to <code>AllowOverride All</code>.
                 </p>
-                <p>
-                    <strong>In Debian/Raspian</strong>, you may also need to add this to your <code>000-default.conf</code> file:
-                    <pre>
-RewriteEngine On
-RewriteRule ^/index.html$ /index.php [L]
-                    </pre>
-                </p>
                 
                 <h3>Step 1c: Restart Apache</h3>
                 <p>Run <code>service apache2 restart</code>.</p>
