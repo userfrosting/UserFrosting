@@ -128,11 +128,6 @@ title: "UserFrosting | Installing UserFrosting"
                 <h3>Step 1c: Restart Apache</h3>
                 <p>Run <code>service apache2 restart</code>.</p>
                 
-                <p>
-                    
-                    Assuming you have a working web server with PHP and MySQL installed, all you need to do is create a database and tell UserFrosting how to connect in the configuration file.  If you do not have a web server set up, we recommend <a href="https://www.apachefriends.org/index.html">XAMPP</a>.
-                </p>
-
                 <h3>Step 2: Download UserFrosting</h3>
                 <p>
                 Download the <a href="https://github.com/alexweissman/UserFrosting/zipball/master">latest version</a> of UserFrosting, unzip/untar it, and place it in your document root.  The two directories that you need to worry about are <code>public</code> and <code>userfrosting</code>.
@@ -165,9 +160,25 @@ title: "UserFrosting | Installing UserFrosting"
 |   |-- config-userfrosting.php
 |   |-- initialize.php
 </pre>
+                <h3>Step 2b (Apache users only): The .htaccess file</h3>
                 <p>
-                Make sure that you copy the <code>.htaccess</code> file as well!  In OSX, files that begin with <code>.</code> are hidden by default, so you need to make them visible!
+                Apache uses the <code>.htaccess</code> file in <code>public/</code> to correctly interpret the URLs that make up your site.  When you copy the UserFrosting files, make sure that you copy the <code>.htaccess</code> file as well!  In OSX, files that begin with <code>.</code> are hidden by default, so you need to make them visible!
                 </p>
+                <p>
+                You should also check that the permissions for <code>.htaccess</code> are set to <code>644</code>.
+                </p>
+                <p><i class="fa fa-apple"></i> In OSX and BSD:</p>
+                <p>
+                <code>stat -f "%OLp" public/.htaccess</code>
+                </p>
+                <p><i class="fa fa-linux"></i> In Linux:</p>
+                <p>
+                <code>stat --format '%a' public/.htaccess</code>
+                </p>
+                <p>
+                If the permissions are not already set to <code>644</code>, then you need to run <code>sudo chmod 644 public/.htaccess</code>.
+                </p>
+                
                 <h3>Step 3: Set the Path to initialize.php</h3>
                 <p>Once you have organized the codebase as you see fit, make sure that the <code>require_once</code> path for <code>initialize.php</code> is correctly set at the top of <code>public/index.php</code>.  Otherwise, UF will not be able to find the rest of the code!
                 </p>
