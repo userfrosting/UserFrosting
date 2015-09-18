@@ -98,31 +98,31 @@ class UserFrosting extends \Slim\Slim {
      * Set Twig global variables for the current user, either as a logged in user or a guest user.
      */
     public function setupTwigUserVariables(){
-        error_log("Setting Twig user variables");
+        //error_log("Setting Twig user variables");
         $twig = $this->view()->getEnvironment();  
         
         // If a user is logged in, add the user object as a global Twig variable
         if ($this->user)
             $twig->addGlobal("user", $this->user);
         
-        // Load default account theme and current account theme
-        // Thanks to https://diarmuid.ie/blog/post/multiple-twig-template-folders-with-slim-framework
+        // Set path to user's theme, prioritizing over any other themes.
         $loader = $twig->getLoader();
-        // First look in user's theme...
-        $loader->addPath($this->config('themes.path') . "/" . $this->user->getTheme());
-        // THEN in default.
-        $loader->addPath($this->config('themes.path') . "/default");    
+        $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());           
     }
     
     /**
      * Sets up the Twig environment and custom functions
      */
     public function setupTwig(){
-        error_log("Setting up twig environment");
+        //error_log("Setting up twig environment");
         /* Import UserFrosting variables as global Twig variables */    
         $twig = $this->view()->getEnvironment();   
         $twig->addGlobal("site", $this->site);
-            
+        
+        // Set path to default theme, overwriting any other paths that have been added at this point.
+        $loader = $twig->getLoader();
+        $loader->setPaths($this->config('themes.path') . "/" . $this->site->default_theme); 
+        
         // Add Twig function for checking permissions during dynamic menu rendering
         $function_check_access = new \Twig_SimpleFunction('checkAccess', function ($hook, $params = []) {
             return $this->user->checkAccess($hook, $params);
@@ -136,6 +136,16 @@ class UserFrosting extends \Slim\Slim {
         });
         
         $twig->addFunction($function_translate);
+
+        // Add Twig function for fetching alerts
+        $function_alerts = new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
+            if ($clear)
+                return $this->alerts->getAndClearMessages();
+            else
+                return $this->alerts->messages();
+        });
+        
+        $twig->addFunction($function_alerts);
         
         // Add Twig functions for including CSS and JS scripts from schema
         $function_include_css = new \Twig_SimpleFunction('includeCSS', function ($group_name = "common") {

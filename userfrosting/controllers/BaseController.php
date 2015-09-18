@@ -35,13 +35,7 @@ class BaseController {
      * Request type: GET
      */
     public function page404(){
-        $this->_app->render('common/404.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "404 Error",
-                'description' =>    "We couldn't deliver.  We're sorry."
-            ]
-        ]);
+        $this->_app->render('errors/404.twig');
     }
 
     /**
@@ -52,13 +46,7 @@ class BaseController {
      * Request type: GET
      */    
     public function pageDatabaseError(){
-        $this->_app->render('common/database.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Database Error",
-                'description' =>    "There's something wrong. We can't connect to the database."
-            ]
-        ]);
+        $this->_app->render('errors/database.twig');
     }
     
     /**

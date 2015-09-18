@@ -14,14 +14,7 @@
         // This if-block detects if mod_rewrite is enabled.
         // This is just an anti-noob device, remove it if you know how to read the docs and/or breathe through your nose.
         if (isset($_SERVER['SERVER_TYPE']) && ($_SERVER['SERVER_TYPE'] == "Apache") && !isset($_SERVER['HTTP_MOD_REWRITE'])) {
-            $app->render('common/bad-config.html', [
-                'page' => [
-                    'author' =>         $app->site->author,
-                    'title' =>          "Server Misconfiguration",
-                    'description' =>    "Your server doesn't seem to be properly configured for UserFrosting.",
-                    'alerts' =>         $app->alerts->getAndClearMessages()
-                ]
-            ]);
+            $app->render('errors/bad-config.twig');
             exit;
         }
     
@@ -63,14 +56,7 @@
             $app->notFound();
         }
         
-        $app->render('dashboard.html', [
-            'page' => [
-                'author' =>         $app->site->author,
-                'title' =>          "Dashboard",
-                'description' =>    "Your user dashboard.",
-                'alerts' =>         $app->alerts->getAndClearMessages()
-            ]
-        ]);          
+        $app->render('dashboard.twig', []);          
     });
     
     $app->get('/zerg/?', function () use ($app) {    
@@ -79,14 +65,7 @@
             $app->notFound();
         }
         
-        $app->render('zerg.html', [
-            'page' => [
-                'author' =>         $app->site->author,
-                'title' =>          "Zerg",
-                'description' =>    "Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.",
-                'alerts' =>         $app->alerts->getAndClearMessages()
-            ]
-        ]); 
+        $app->render('users/zerg.twig'); 
     });    
        
     // Account management pages
@@ -338,7 +317,7 @@
         
         $data = $rf->data();
         
-        $app->render('components/confirm-modal.html', $data);   
+        $app->render('components/common/confirm-modal.twig', $data);   
     }); 
     
     // Alert stream

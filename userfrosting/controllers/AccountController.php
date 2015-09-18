@@ -29,15 +29,7 @@ class AccountController extends \UserFrosting\BaseController {
      * Request type: GET
      */
     public function pageHome(){
-        $this->_app->render('common/home.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "A secure, modern user management system for PHP.",
-                'description' =>    "Main landing page for public access to this website.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ]
-        ]);  
+        $this->_app->render('home.twig');  
     }
     
     /**
@@ -54,14 +46,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);
         
-        $this->_app->render('common/login.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Login",
-                'description' =>    "Login to your UserFrosting account.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(),     // Starting to violate the Law of Demeter here...
-                'active_page' =>    "account/login",
-            ],
+        $this->_app->render('account/login.twig', [
             'validators' => $validators->formValidationRulesJson()
         ]);
     }
@@ -100,14 +85,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->redirect('login');
         }
     
-        $this->_app->render('common/register.html', [
-            'page' => [
-                'author' =>         $settings->author,
-                'title' =>          "Register",
-                'description' =>    "Register for a new UserFrosting account.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    "account/register"                
-            ],
+        $this->_app->render('account/register.twig', [
             'captcha_image' =>  $this->generateCaptcha(),
             'validators' => $validators->formValidationRulesJson()
         ]);
@@ -125,14 +103,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator); 
         
-       $this->_app->render('common/forgot-password.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Reset Password",
-                'description' =>    "Reset your UserFrosting password.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ],
+       $this->_app->render('account/forgot-password.twig', [
             'validators' => $validators->formValidationRulesJson()
         ]);
     }
@@ -149,14 +120,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
         
-       $this->_app->render('common/reset-password.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Choose a New Password",
-                'description' =>    "Reset your UserFrosting password.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ],
+        $this->_app->render('account/reset-password.twig', [
             'activation_token' => $this->_app->request->get()['activation_token'],
             'validators' => $validators->formValidationRulesJson()
         ]);
@@ -174,14 +138,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
                  
-        $this->_app->render('common/resend-activation.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Resend Activation",
-                'description' =>    "Resend the activation email for your new UserFrosting account.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ],
+        $this->_app->render('account/resend-activation.twig', [
             'validators' => $validators->formValidationRulesJson()
         ]);
     }
@@ -203,13 +160,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
         
-        $this->_app->render('account-settings.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Account Settings",
-                'description' =>    "Update your account settings, including email, display name, and password.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('account/account-settings.twig', [
             "locales" => $this->_app->site->getLocales(),
             "validators" => $validators->formValidationRulesJson()
         ]);          
@@ -223,13 +174,7 @@ class AccountController extends \UserFrosting\BaseController {
      * Request type: GET     
      */   
     public function pageAccountCompromised(){
-        $this->_app->render('common/compromised.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Your account may have been compromised",
-                'description' =>    "Your account may have been compromised.  You have been logged out for your safety."
-            ]
-        ]);
+        $this->_app->render('errors/compromised.twig');
     }      
     
     /**
@@ -494,7 +439,7 @@ class AccountController extends \UserFrosting\BaseController {
             $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
             
             $mail->Subject = $this->_app->site->site_title . " - please activate your account";
-            $mail->Body    = $this->_app->view()->render("common/mail/activate-new.html", [
+            $mail->Body    = $this->_app->view()->render("common/mail/activate-new.twig", [
                 "user" => $user
             ]);
             
@@ -620,7 +565,7 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
         $mail->Subject = $this->_app->site->site_title . " - reset your password";
-        $mail->Body    = $this->_app->view()->render("common/mail/password-reset.html", [
+        $mail->Body    = $this->_app->view()->render("common/mail/password-reset.twig", [
             "user" => $user,
             "request_date" => date("Y-m-d H:i:s")
         ]);
@@ -833,7 +778,7 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
         $mail->Subject = $this->_app->site->site_title . " - activate your account";
-        $mail->Body    = $this->_app->view()->render("common/mail/resend-activation.html", [
+        $mail->Body    = $this->_app->view()->render("common/mail/resend-activation.twig", [
             "user" => $user,
             "activation_token" => $user->activation_token
         ]);

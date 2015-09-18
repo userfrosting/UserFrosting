@@ -67,13 +67,7 @@ class InstallController extends \UserFrosting\BaseController {
         }
         
         if (count($messages) > 0){
-            $this->_app->render('common/install/install-errors.html', [
-                'page' => [
-                    'author' =>         $this->_app->site->author,
-                    'title' =>          "Installation Error",
-                    'description' =>    "Installation page for UserFrosting",
-                    'alerts' =>         $this->_app->alerts->getAndClearMessages()
-                ],
+            $this->_app->render('install/install-errors.twig', [
                 "messages" => $messages
             ]);
         } else {
@@ -114,13 +108,7 @@ class InstallController extends \UserFrosting\BaseController {
                 ];
             }
             
-            $this->_app->render('common/install/install-ready.html', [
-                'page' => [
-                    'author' =>         $this->_app->site->author,
-                    'title' =>          "Installation",
-                    'description' =>    "Installation page for UserFrosting",
-                    'alerts' =>         $this->_app->alerts->getAndClearMessages()
-                ],
+            $this->_app->render('install/install-ready.twig', [
                 "messages" => $messages
             ]);        
         }
@@ -150,13 +138,7 @@ class InstallController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);   
         
-        $this->_app->render('common/install/install-master.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Installation | Register Master Account",
-                'description' =>    "Set up the master account for your installation of UserFrosting",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('install/install-master.twig', [
             'validators' => $validators->formValidationRulesJson(),
             'table_config' => Database::getTable('configuration')->name
         ]);    

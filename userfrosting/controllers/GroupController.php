@@ -38,13 +38,7 @@ class GroupController extends \UserFrosting\BaseController {
         
         $groups = GroupLoader::fetchAll();
         
-        $this->_app->render('groups.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Groups",
-                'description' =>    "Group management, authorization rules, add/remove groups, etc.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('groups/groups.twig', [
             "groups" => $groups
         ]);          
     }    
@@ -88,9 +82,9 @@ class GroupController extends \UserFrosting\BaseController {
         $group = new Group($data);                
         
         if ($render == "modal")
-            $template = "components/group-info-modal.html";
+            $template = "components/common/group-info-modal.twig";
         else
-            $template = "components/group-info-panel.html";
+            $template = "components/common/group-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default', 'icon'];
@@ -157,9 +151,9 @@ class GroupController extends \UserFrosting\BaseController {
         $theme_list = $this->_app->site->getThemes();
         
         if ($render == "modal")
-            $template = "components/group-info-modal.html";
+            $template = "components/common/group-info-modal.twig";
         else
-            $template = "components/group-info-panel.html";
+            $template = "components/common/group-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default'];

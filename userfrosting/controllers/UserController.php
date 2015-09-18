@@ -60,13 +60,7 @@ class UserController extends \UserFrosting\BaseController {
             $icon = "fa fa-users";
         }
         
-        $this->_app->render('users.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          $name,
-                'description' =>    "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('users/users.twig', [
             "box_title" => $name,
             "icon" => $icon,
             "users" => $users
@@ -126,13 +120,7 @@ class UserController extends \UserFrosting\BaseController {
         // Hide password fields for editing user
         $hidden_fields[] = "password";    
     
-        $this->_app->render('user_info.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Users | " . $target_user->user_name,
-                'description' =>    "User information page for " . $target_user->user_name,
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('users/user-info.twig', [
             "box_id" => 'view-user',
             "box_title" => $target_user->user_name,
             "target_user" => $target_user,
@@ -205,9 +193,9 @@ class UserController extends \UserFrosting\BaseController {
         $target_user = new User($data);        
         
         if ($render == "modal")
-            $template = "components/user-info-modal.html";
+            $template = "components/common/user-info-modal.twig";
         else
-            $template = "components/user-info-panel.html";
+            $template = "components/common/user-info-panel.twig";
         
         // Determine authorized fields for those that have default values.  Don't hide any fields
         $fields = ['title', 'locale', 'groups', 'primary_group_id'];
@@ -291,9 +279,9 @@ class UserController extends \UserFrosting\BaseController {
         }
         
         if ($render == "modal")
-            $template = "components/user-info-modal.html";
+            $template = "components/common/user-info-modal.twig";
         else
-            $template = "components/user-info-panel.html";
+            $template = "components/common/user-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['display_name', 'email', 'title', 'password', 'locale', 'groups', 'primary_group_id'];
@@ -598,7 +586,7 @@ class UserController extends \UserFrosting\BaseController {
             $ms->addMessageTranslated("danger", "ACCOUNT_DELETE_MASTER");
             $this->_app->halt(403);
         }
-
+        
         $ms->addMessageTranslated("success", "ACCOUNT_DELETION_SUCCESSFUL", ["user_name" => $target_user->user_name]);
         $target_user->delete();
         unset($target_user);

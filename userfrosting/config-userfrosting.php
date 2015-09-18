@@ -34,7 +34,7 @@
             'log.enable' => true,
             'debug' => false,
             'base.path'     => __DIR__,            
-            'templates.path' => __DIR__ . '/templates',
+            'templates.path' => __DIR__ . '/templates',     // This will be overridden anyway by the default theme.
             'themes.path'    =>  __DIR__ . '/templates/themes',
             'plugins.path' => __DIR__ . '/plugins',
             'schema.path' =>    __DIR__ . '/schema',

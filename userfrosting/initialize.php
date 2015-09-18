@@ -29,7 +29,9 @@ require_once("config-userfrosting.php");
 
 use \Slim\Extras\Middleware\CsrfGuard;
 
-// CSRF Middleware
+/*===== Middleware.  Middleware gets run when $app->run is called, i.e. AFTER the code in initialize.php ====*/
+
+/**** CSRF Middleware ****/
 $app->add(new CsrfGuard());
 
 /**** Session and User Setup ****/
@@ -122,6 +124,7 @@ $setting_values = [
         'resend_activation_threshold' => '0', 
         'reset_password_timeout' => '10800', 
         'default_locale' => 'en_US',
+        'default_theme' => 'default',
         'minify_css' => '0',
         'minify_js' => '0',
         'version' => '0.3.0', 
@@ -141,6 +144,7 @@ $setting_descriptions = [
         "resend_activation_threshold" => "The time, in seconds, that a user must wait before requesting that the activation email be resent.", 
         "reset_password_timeout" => "The time, in seconds, before a user's password reminder email expires.", 
         "default_locale" => "The default language for newly registered users.",
+        "default_theme" => "The default template theme to use for unauthenticated users.",
         "minify_css" => "Specify whether to use concatenated, minified CSS (production) or raw CSS includes (dev).",
         "minify_js" => "Specify whether to use concatenated, minified JS (production) or raw JS includes (dev).",
         "version" => "The current version of UserFrosting.", 
@@ -150,6 +154,7 @@ $setting_descriptions = [
     ]
 ];
 
+// Create the site settings object.  If the database cannot be accessed or has not yet been set up, use the default settings.
 $app->site = new \UserFrosting\SiteSettings($setting_values, $setting_descriptions);
 
 // Create the page schema object
@@ -169,6 +174,7 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'author', "Site Author");
     $app->site->register('userfrosting', 'admin_email', "Account Management Email");
     $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
+    $app->site->register('userfrosting', 'default_theme', "Default Site Theme", "select", $app->site->getThemes());
     $app->site->register('userfrosting', 'can_register', "Public Registration", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'enable_captcha', "Registration Captcha", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'show_terms_on_register', "Show TOS", "toggle", [0 => "Off", 1 => "On"]);
