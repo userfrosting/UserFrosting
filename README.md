@@ -47,14 +47,6 @@ $users = User::all();                    // If you want an Eloquent Collection o
 $users = User::all()->getDictionary();   // If you want an array of User objects (indexed by id)
 ```
 
-## What's new in 0.3.1
-
-### Improved initialization routine as middleware
-
-### "Remember Me" - see https://github.com/gbirke/rememberme
-
-### User session stored via user_id, rather than the entire User object
-
 ## What's new in 0.3.0
 
 ### Autoloading with Composer
@@ -85,6 +77,7 @@ http://www.userfrosting.com/components/#plugins
 
 - URL Routing and micro-framework: [Slim](http://www.slimframework.com/)
 - Templating: [Twig](http://twig.sensiolabs.org/)
+- Data Model: [Eloquent](http://laravel.com/docs/5.1/eloquent#introduction)
 
 ## Why UserFrosting?
 
