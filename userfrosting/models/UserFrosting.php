@@ -38,6 +38,7 @@ class UserFrosting extends \Slim\Slim {
     }
     
     public function setupMessageStream(){
+        error_log("Setting up message stream");
         /**** Message Stream Setup ****/
         
         /* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
@@ -48,6 +49,7 @@ class UserFrosting extends \Slim\Slim {
     }
     
     public function setupTranslator($locale){
+        error_log("Setting up translator");
         /**** Translation setup ****/
         $this->translator = new \Fortress\MessageTranslator();
         
@@ -98,7 +100,7 @@ class UserFrosting extends \Slim\Slim {
      * Set Twig global variables for the current user, either as a logged in user or a guest user.
      */
     public function setupTwigUserVariables(){
-        //error_log("Setting Twig user variables");
+        error_log("Setting Twig user variables");
         $twig = $this->view()->getEnvironment();  
         
         // If a user is logged in, add the user object as a global Twig variable

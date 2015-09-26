@@ -23,7 +23,7 @@ class UserSession extends \Slim\Middleware {
         try {
             error_log("Setting up user session");
             $storage = new \Birke\Rememberme\Storage\PDO($this->app->remember_me_table);
-            $storage->setConnection(Database::connection());
+            $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
             $this->app->remember_me = new \Birke\Rememberme\Authenticator($storage);
             
             // Change cookie path
@@ -34,12 +34,12 @@ class UserSession extends \Slim\Middleware {
             error_log("Current cookies: " . print_r($_COOKIE, true));
             
             // Determine if we are already logged in (user exists in the session variable)
-            if(isset($_SESSION["userfrosting"]["user"]) && is_object($_SESSION["userfrosting"]["user"])) {       
-                // User is still logged in - refresh the user.  If they don't exist any more, then an exception will be thrown.
-                $_SESSION["userfrosting"]["user"] = $_SESSION["userfrosting"]["user"]->fresh();
-                $this->app->user = $_SESSION["userfrosting"]["user"];                
+            if(isset($_SESSION["userfrosting"]["user_id"]) && ($_SESSION["userfrosting"]["user_id"] != null)) {       
                 
-                //error_log("Current user id is " . $_SESSION["userfrosting"]["user"]->id);
+                // User is still logged in - refresh the user.  If they don't exist any more, then an exception will be thrown.
+                $this->app->user = User::find($_SESSION["userfrosting"]["user_id"]);                
+                
+                error_log("Current user id is " . $this->app->user->id);
                 
                 // Check, if the Rememberme cookie exists and is still valid.
                 // If not, we log out the current session
@@ -59,8 +59,9 @@ class UserSession extends \Slim\Middleware {
                 if($user_id) {
                     error_log("Logging in via remember me for $user_id");
                     // Load the user
-                    $_SESSION["userfrosting"]["user"] = \UserFrosting\UserLoader::fetch($user_id);
-                    $this->app->user = $_SESSION["userfrosting"]["user"];
+                    $this->app->user = \UserFrosting\UserLoader::fetch($user_id);
+                    // Update in session
+                    $_SESSION["userfrosting"]["user_id"] = $user_id;
                     // There is a chance that an attacker has stolen the login token, so we store
                     // the fact that the user was logged in via RememberMe (instead of login form)
                     $_SESSION['remembered_by_cookie'] = true;
@@ -78,6 +79,7 @@ class UserSession extends \Slim\Middleware {
             }
             // Now we have an authenticated user, setup their environment
             $this->app->setupAuthenticatedEnvironment();
+            error_log("Done seting up authenticated environment.");
         } catch (\PDOException $e){
             // If we can't connect to the DB, then we can't create an authenticated user.  That's ok if we're in installation mode.
             error_log("Unable to authenticate user, falling back to guest user.");

@@ -36,7 +36,7 @@ class GroupController extends \UserFrosting\BaseController {
             $this->_app->notFound();
         }
         
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::queryBuilder()->get();
         
         $this->_app->render('groups/groups.twig', [
             "groups" => $groups

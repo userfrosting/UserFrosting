@@ -16,6 +16,7 @@
         "twig/twig" : "~1.0",
         "slim/slim" : "2.*",
         "slim/views" : "*",
+        "illuminate/database" : "5.0.33",
         "nikic/php-parser" : "*",
         "alexweissman/fortress" : "dev-master",
         "phpmailer/phpmailer" : "5.2.10",

@@ -39,22 +39,40 @@ $app->add(new UserFrosting\UserSession());
 
 /**** Database Setup ****/
 
-// Specify which database model you want to use
-class_alias("UserFrosting\MySqlDatabase",       "UserFrosting\Database");
-class_alias("UserFrosting\MySqlUser",           "UserFrosting\User");
-class_alias("UserFrosting\MySqlUserLoader",     "UserFrosting\UserLoader");
-class_alias("UserFrosting\MySqlAuthLoader",     "UserFrosting\AuthLoader");
-class_alias("UserFrosting\MySqlGroup",          "UserFrosting\Group");
-class_alias("UserFrosting\MySqlGroupLoader",    "UserFrosting\GroupLoader");
-class_alias("UserFrosting\MySqlSiteSettings",   "UserFrosting\SiteSettings");
+// Eloquent Query Builder
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+$capsule = new Capsule;
+
+$dbx = $app->config('db');
+
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => $dbx['db_host'],
+    'database'  => $dbx['db_name'],
+    'username'  => $dbx['db_user'],
+    'password'  => $dbx['db_pass'],
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => ''
+]);
+
+// Register as global connection
+$capsule->setAsGlobal();
+
+// Start Eloquent
+$capsule->bootEloquent();
+
+error_log("Eloquent started.");
 
 // Set enumerative values
 defined("GROUP_NOT_DEFAULT") or define("GROUP_NOT_DEFAULT", 0);    
 defined("GROUP_DEFAULT") or define("GROUP_DEFAULT", 1);
 defined("GROUP_DEFAULT_PRIMARY") or define("GROUP_DEFAULT_PRIMARY", 2);
 
-// Pass Slim app to database
+// Pass Slim app to database and core data model
 \UserFrosting\Database::$app = $app;
+\UserFrosting\UFModel::$app = $app;
 
 // Initialize database properties
 $table_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "user", [
@@ -90,16 +108,12 @@ $table_configuration = new \UserFrosting\DatabaseTable($app->config('db')['db_pr
 $table_authorize_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_user");
 $table_authorize_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_group");    
 
-\UserFrosting\Database::setTable("user", $table_user);
-\UserFrosting\Database::setTable("group", $table_group);    
-\UserFrosting\Database::setTable("group_user", $table_group_user);
-\UserFrosting\Database::setTable("configuration", $table_configuration);
-\UserFrosting\Database::setTable("authorize_user", $table_authorize_user);
-\UserFrosting\Database::setTable("authorize_group", $table_authorize_group);  
-    
-// Initialize static loader classes
-\UserFrosting\UserLoader::init($table_user);
-\UserFrosting\GroupLoader::init($table_group);
+\UserFrosting\Database::setSchemaTable("user", $table_user);
+\UserFrosting\Database::setSchemaTable("group", $table_group);    
+\UserFrosting\Database::setSchemaTable("group_user", $table_group_user);
+\UserFrosting\Database::setSchemaTable("configuration", $table_configuration);
+\UserFrosting\Database::setSchemaTable("authorize_user", $table_authorize_user);
+\UserFrosting\Database::setSchemaTable("authorize_group", $table_authorize_group);  
 
 // Info for RememberMe table
 $app->remember_me_table = [

@@ -145,7 +145,7 @@
                 // Forward to login page on success
                 window.location.replace(site.uri.public + "/account/login");
             }).fail(function(jqXHR) {
-                if (site['debug'] == true) {
+                if (site['debug'] == true && jqXHR.status == "500") {
                     document.body.innerHTML = jqXHR.responseText;
                 } else {
                     console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );

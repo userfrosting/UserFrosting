@@ -61,6 +61,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array $context
      *
      * @return Twig_TemplateInterface|false The parent template or false if there is no parent
+     *
+     * @internal
      */
     public function getParent(array $context)
     {
@@ -111,6 +113,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string $name    The block name to display from the parent
      * @param array  $context The context
      * @param array  $blocks  The current set of blocks
+     *
+     * @internal
      */
     public function displayParentBlock($name, array $context, array $blocks = array())
     {
@@ -135,6 +139,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array  $context   The context
      * @param array  $blocks    The current set of blocks
      * @param bool   $useBlocks Whether to use the current set of blocks
+     *
+     * @internal
      */
     public function displayBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
@@ -191,6 +197,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param array  $blocks  The current set of blocks
      *
      * @return string The rendered block
+     *
+     * @internal
      */
     public function renderParentBlock($name, array $context, array $blocks = array())
     {
@@ -212,6 +220,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param bool   $useBlocks Whether to use the current set of blocks
      *
      * @return string The rendered block
+     *
+     * @internal
      */
     public function renderBlock($name, array $context, array $blocks = array(), $useBlocks = true)
     {
@@ -237,6 +247,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @param string $name The block name
      *
      * @return bool true if the block exists, false otherwise
+     *
+     * @internal
      */
     public function hasBlock($name)
     {
@@ -252,6 +264,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @return array An array of block names
      *
      * @see hasBlock
+     *
+     * @internal
      */
     public function getBlockNames()
     {
@@ -298,10 +312,39 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @return array An array of blocks
      *
      * @see hasBlock
+     *
+     * @internal
      */
     public function getBlocks()
     {
         return $this->blocks;
+    }
+
+    /**
+     * Returns the template source code.
+     *
+     * @return string|null The template source code or null if it is not available
+     */
+    public function getSource()
+    {
+        $reflector = new ReflectionClass($this);
+        $file = $reflector->getFileName();
+
+        if (!file_exists($file)) {
+            return;
+        }
+
+        $source = file($file, FILE_IGNORE_NEW_LINES);
+        array_splice($source, 0, $reflector->getEndLine());
+
+        $i = 0;
+        while (isset($source[$i]) && '/* */' === substr_replace($source[$i], '', 3, -2)) {
+            $source[$i] = str_replace('*//* ', '*/', substr($source[$i], 3, -2));
+            ++$i;
+        }
+        array_splice($source, $i);
+
+        return implode("\n", $source);
     }
 
     /**
@@ -380,6 +423,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
      * @return mixed The content of the context variable
      *
      * @throws Twig_Error_Runtime if the variable does not exist and Twig is running in strict mode
+     *
+     * @internal
      */
     final protected function getContext($context, $item, $ignoreStrictCheck = false)
     {

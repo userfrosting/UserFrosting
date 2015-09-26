@@ -55,7 +55,8 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
             
-            $users = UserLoader::fetchAll();
+            //$users = UserLoader::fetchAll();
+            $users = User::queryBuilder()->get();
             $name = "Users";
             $icon = "fa fa-users";
         }
@@ -81,6 +82,10 @@ class UserController extends \UserFrosting\BaseController {
         // Get the user to view
         $target_user = UserLoader::fetch($user_id);    
         
+        // If the user no longer exists, forward to main user page
+        if (!$target_user)
+            $this->_app->redirect("/users/");
+        
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
             $this->_app->notFound();
@@ -93,10 +98,11 @@ class UserController extends \UserFrosting\BaseController {
         $locale_list = $this->_app->site->getLocales();
         
         // Determine which groups this user is a member of
-        $user_groups = $target_user->getGroups();
-        foreach ($groups as $group_id => $group){
+        $user_groups = $target_user->getGroupIds();
+        foreach ($groups as $group){
+            $group_id = $group->id;
             $group_list[$group_id] = $group->export();
-            if (isset($user_groups[$group_id]))
+            if (in_array($group_id, $user_groups))
                 $group_list[$group_id]['member'] = true;
             else
                 $group_list[$group_id]['member'] = false;
@@ -163,16 +169,16 @@ class UserController extends \UserFrosting\BaseController {
             $render = "modal";
         
         // Get a list of all groups
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::all()->getDictionary();
         
         // Get a list of all locales
         $locale_list = $this->_app->site->getLocales();
         
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primary_group = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        $primary_group = Group::where("is_default", GROUP_DEFAULT_PRIMARY)->first();
         
         // Get the default groups
-        $default_groups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+        $default_groups = Group::all()->where("is_default", GROUP_DEFAULT)->getDictionary();
         
         // Set default groups, including default primary group
         foreach ($groups as $group_id => $group){

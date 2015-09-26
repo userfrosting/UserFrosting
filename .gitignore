@@ -1,3 +1,4 @@
 *.komodoproject
 .DS_Store
 _meta/*
+public/test/*

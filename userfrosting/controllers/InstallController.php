@@ -30,6 +30,7 @@ class InstallController extends \UserFrosting\BaseController {
         $messages = [];
         // 1. Check PHP version
         
+        error_log("Checking php version");
         // PHP_VERSION_ID is available as of PHP 5.2.7, if our version is lower than that, then emulate it
         if (!defined('PHP_VERSION_ID')) {
             $version = explode('.', PHP_VERSION);
@@ -50,6 +51,7 @@ class InstallController extends \UserFrosting\BaseController {
             ];    
         }
         
+        error_log("Checking db connection");
         // 3. Check database connection
         if (!Database::testConnection()){
             $messages[] = [
@@ -58,6 +60,7 @@ class InstallController extends \UserFrosting\BaseController {
             ]; 
         } 
         
+        error_log("Checking any current tables");
         $tables = Database::getCreatedTables();
         if (count($tables) > 0){
             $messages[] = [
@@ -65,12 +68,13 @@ class InstallController extends \UserFrosting\BaseController {
                 "message" => "The following tables already exist in the database: <strong>" . implode(", ", $tables) . "</strong>.  Do you already have another installation of UserFrosting in this database?  Please either create a new database (recommended), or change the table prefix in <code>config-userfrosting.php</code> if you cannot create a new database."
             ]; 
         }
-        
+        error_log("Done with checks");
         if (count($messages) > 0){
             $this->_app->render('install/install-errors.twig', [
                 "messages" => $messages
             ]);
         } else {
+        error_log("Installing");
             // Create tables
             Database::install();
             
@@ -140,7 +144,7 @@ class InstallController extends \UserFrosting\BaseController {
         
         $this->_app->render('install/install-master.twig', [
             'validators' => $validators->formValidationRulesJson(),
-            'table_config' => Database::getTable('configuration')->name
+            'table_config' => Database::getSchemaTable('configuration')->name
         ]);    
     }
 

@@ -268,9 +268,12 @@ class AccountController extends \UserFrosting\BaseController {
             } else {
                 $this->_app->remember_me->clearCookie();
             }            
-            // Create the session
-            $_SESSION["userfrosting"]["user"] = $user;
-            $this->_app->user = $_SESSION["userfrosting"]["user"];
+            // Assume identity
+            $this->_app->user = $user;
+            
+            // Store user id in session
+            $_SESSION["userfrosting"]["user_id"] = $user->id;
+            
             // Setup logged in user environment
             $this->_app->setupAuthenticatedEnvironment();            
             $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
@@ -293,7 +296,7 @@ class AccountController extends \UserFrosting\BaseController {
         error_log("Logging the user out...");
         if ($complete){
             $storage = new \Birke\Rememberme\Storage\PDO($this->_app->remember_me_table);
-            $storage->setConnection(Database::connection());
+            $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
             $storage->cleanAllTriplets($this->_app->user->id);
         }        
         // Change cookie path
@@ -551,7 +554,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Generate a new activation token.  This will also be used as the password reset token.
-        $user->activation_token = UserLoader::generateActivationToken();
+        $user->activation_token = User::generateActivationToken();
         $user->last_activation_request = date("Y-m-d H:i:s");
         $user->lost_password_request = "1";
         $user->lost_password_timestamp = date("Y-m-d H:i:s");
@@ -765,7 +768,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // We're good to go - create a new activation token and send the email
-        $user->activation_token = UserLoader::generateActivationToken();
+        $user->activation_token = User::generateActivationToken();
         $user->last_activation_request = date("Y-m-d H:i:s");
         $user->lost_password_timestamp = date("Y-m-d H:i:s");
         
