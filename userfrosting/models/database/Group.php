@@ -34,8 +34,11 @@ class Group extends UFModel {
     public function save(){
         // If this is being set as the default primary group, then any other group must be demoted to default group
         if ($this->is_default == GROUP_DEFAULT_PRIMARY){
-            static::where('is_default', GROUP_DEFAULT_PRIMARY)
-                ->update(['is_default' => GROUP_DEFAULT]);
+            $current_default_primary = static::where('is_default', GROUP_DEFAULT_PRIMARY);
+            // Exclude this object, if it exists in DB
+            if ($this->id)
+                $current_default_primary = $current_default_primary->where('id', '!=', $this->id);
+            $current_default_primary->update(['is_default' => GROUP_DEFAULT]);
         }
         
         return parent::save();

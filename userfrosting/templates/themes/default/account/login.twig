@@ -50,53 +50,18 @@
 {% endblock %}
  
 {% block page_scripts %}
-<script>
-    $(document).ready(function() {            
-      // Process form 
-      $("form[name='login']").formValidation({
-        framework: 'bootstrap',
-        // Feedback icons
-        icon: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
-        fields: {{validators | raw}}
-      }).on('success.form.fv', function(e) {
-        // Prevent double form submission
-        e.preventDefault();
-
-        // Get the form instance
-        var form = $(e.target);
-
-        // Serialize and post to the backend script in ajax mode
-        var serializedData = form.serialize();
-        
-        // Append page CSRF token
-        var csrf_token = $("meta[name=csrf_token]").attr("content");
-        serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);
-        
-        var url = form.attr('action');
-        $.ajax({  
-          type: "POST",  
-          url: url,  
-          data: serializedData       
-        }).done(function(data, statusText, jqXHR) {
-            // Forward to account home page on success
-            window.location.replace(site.uri.public);
-        }).fail(function(jqXHR) {
-            if ((typeof site !== "undefined") && site['debug'] == true) {
-                document.body.innerHTML = jqXHR.responseText;
-            } else {
-                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-                // Display errors on failure
-                $('#userfrosting-alerts').flashAlerts().done(function() {
-                    // Re-enable submit button
-                    form.data('formValidation').disableSubmitButtons(false);
-                });
-            }
-        });
-      });
-    });        
-</script>
+    <script>
+        $(document).ready(function() {           
+            // Process form 
+            ufFormSubmit(
+                $("form[name='login']"),
+                {{ validators | raw }},
+                $("#userfrosting-alerts"),
+                function(data, statusText, jqXHR) {
+                    // Forward to home page on success
+                    window.location.replace(site['uri']['public']);
+                }
+            );
+        });          
+    </script>
 {% endblock %}

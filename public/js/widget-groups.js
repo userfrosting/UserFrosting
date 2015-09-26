@@ -103,55 +103,15 @@ function groupForm(box_id, group_id) {
         });
         
 		// Link submission buttons
-        $("form[name='group']").formValidation({
-          framework: 'bootstrap',
-          // Feedback icons
-          icon: {
-              valid: 'fa fa-check',
-              invalid: 'fa fa-times',
-              validating: 'fa fa-refresh'
-          },
-          fields: validators
-        }).on('success.form.fv', function(e) {
-          // Prevent double form submission
-          e.preventDefault();
-    
-          // Get the form instance
-          var form = $(e.target);
-    
-          // Serialize and post to the backend script in ajax mode
-          var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
-          // Get non-disabled, unchecked checkbox values, set them to 0
-          form.find('input[type=checkbox]:enabled').each(function() {
-              if ($(this).is(':checked'))
-                  serializedData += "&" + encodeURIComponent(this.name) + "=1";
-              else
-                  serializedData += "&" + encodeURIComponent(this.name) + "=0";
-          });
-          // Append page CSRF token
-          var csrf_token = $("meta[name=csrf_token]").attr("content");
-          serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);
-          
-          var url = form.attr('action');
-          return $.ajax({  
-            type: "POST",  
-            url: url,  
-            data: serializedData       
-          }).done(function(data, statusText, jqXHR) {
-              // Reload the page
-              window.location.reload(true);         
-          }).fail(function(jqXHR) {
-              if (site['debug'] == true) {
-                  document.body.innerHTML = jqXHR.responseText;
-              } else {
-                  console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-              }
-              $('#form-alerts').flashAlerts().done(function() {
-                  // Re-enable submit button
-                  form.data('formValidation').disableSubmitButtons(false);
-              });              
-          });
-        }); 	
+        ufFormSubmit(
+            $("form[name='group']"),
+            validators,
+            $("#form-alerts"),
+            function(data, statusText, jqXHR) {
+                // Reload the page on success
+                window.location.reload(true);   
+            }
+        );          	
 	});
 }
 
@@ -186,7 +146,6 @@ function deleteGroupDialog(box_id, group_id, name){
 		$( "body" ).append(result);
 		$('#' + box_id).modal('show');        
 		$('#' + box_id + ' .js-confirm').click(function(){
-            
             var url = site['uri']['public'] + "/groups/g/" + group_id + "/delete";
             
             csrf_token = $("meta[name=csrf_token]").attr("content");

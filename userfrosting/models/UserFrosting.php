@@ -31,14 +31,14 @@ class UserFrosting extends \Slim\Slim {
      * Sets up the environment for the current logged-in user, along with translation and error-handlers
      */    
     public function setupAuthenticatedEnvironment(){
-        error_log("Setting up authenticated user environment");
+        //error_log("Setting up authenticated user environment");
         $this->setupMessageStream();
         $this->setupTranslator($this->user->locale);
         $this->setupTwigUserVariables();
     }
     
     public function setupMessageStream(){
-        error_log("Setting up message stream");
+        //error_log("Setting up message stream");
         /**** Message Stream Setup ****/
         
         /* Set up persistent message stream for alerts.  Do not use Slim's, it sucks. */
@@ -49,7 +49,7 @@ class UserFrosting extends \Slim\Slim {
     }
     
     public function setupTranslator($locale){
-        error_log("Setting up translator");
+        //error_log("Setting up translator");
         /**** Translation setup ****/
         $this->translator = new \Fortress\MessageTranslator();
         
@@ -63,7 +63,7 @@ class UserFrosting extends \Slim\Slim {
         /**** Error Handling Setup ****/
         // Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
         // A Slim application uses its built-in error handler if its debug setting is true; otherwise, it uses the custom error handler.
-        error_log("Registering error handler");
+        //error_log("Registering error handler");
         $this->error(function (\Exception $e) {
             if ($e instanceof AuthExpiredException) {
                 $controller = new AccountController($this);
@@ -100,7 +100,7 @@ class UserFrosting extends \Slim\Slim {
      * Set Twig global variables for the current user, either as a logged in user or a guest user.
      */
     public function setupTwigUserVariables(){
-        error_log("Setting Twig user variables");
+        //error_log("Setting Twig user variables");
         $twig = $this->view()->getEnvironment();  
         
         // If a user is logged in, add the user object as a global Twig variable

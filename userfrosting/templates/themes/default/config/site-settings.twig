@@ -100,87 +100,45 @@
     </div>
 {% endblock %}
 {% block page_scripts %}
-<script>
-    $(document).ready(function() {                   
-        var timer;
-        
-        // Autosave text fields
-        $("form[name='settings'] input[type=text]").keyup(function () {
-            clearTimeout(timer); // Clear the timer so we don't end up with dupes.
-            $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
-            timer = setTimeout(function() { // assign timer a new timeout 
-                $("form[name='settings']").submit();
-            }, 700);
-        });
-        
-        // Autosave switches and selects
-        $("form[name='settings'] input[type=checkbox]").on("change", function () {
-            $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
-            $("form[name='settings']").submit();
-        });
-        
-        $("form[name='settings'] select").on("change", function () {
-            $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
-            $("form[name='settings']").submit();
-        });
-        
-              
-      // Process form 
-      $("form[name='settings']").formValidation({
-        framework: 'bootstrap',
-        // Feedback icons
-        icon: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
-        fields: { none: "none"}
-      }).on('success.form.fv', function(e) {
-        // Prevent double form submission
-        e.preventDefault();
-
-        // Get the form instance
-        var form = $(e.target);
-
-        // Serialize and post to the backend script in ajax mode
-        var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
-        // Get unchecked checkbox values, set them to 0
-        form.find('input[type=checkbox]').each(function() {
-            if ($(this).is(':checked'))
-                serializedData += "&" + encodeURIComponent(this.name) + "=1";
-            else
-                serializedData += "&" + encodeURIComponent(this.name) + "=0";
-        });
-        
-        // Append page CSRF token
-        var csrf_token = $("meta[name=csrf_token]").attr("content");
-        serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);
-        
-        var url = form.attr('action');
-        return $.ajax({  
-          type: "POST",  
-          url: url,  
-          data: serializedData       
-        }).done(function(data, statusText, jqXHR) {
-            $('#userfrosting-alerts').flashAlerts().done(function() {
-                $("#settings-alerts").html("<div class='alert alert-success'>All settings have been saved</div>");
+    <script>
+        $(document).ready(function() {                   
+            var timer;
+            
+            // Autosave text fields
+            $("form[name='settings'] input[type=text]").keyup(function () {
+                clearTimeout(timer); // Clear the timer so we don't end up with dupes.
+                $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
+                timer = setTimeout(function() { // assign timer a new timeout 
+                    $("form[name='settings']").submit();
+                }, 700);
             });
-        }).fail(function(jqXHR) {
-            if (site['debug'] == true) {
-                document.body.innerHTML = jqXHR.responseText;
-            } else {
-                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-                // Display errors on failure
-                $('#userfrosting-alerts').flashAlerts().done(function() {
+            
+            // Autosave switches and selects
+            $("form[name='settings'] input[type=checkbox]").on("change", function () {
+                $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
+                $("form[name='settings']").submit();
+            });
+            
+            $("form[name='settings'] select").on("change", function () {
+                $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
+                $("form[name='settings']").submit();
+            });
+            
+            // Process form 
+            ufFormSubmit(
+                $("form[name='settings']"),
+                { "" : "" },
+                $("#userfrosting-alerts"),
+                function(data, statusText, jqXHR) {
+                    // Display messages on success
+                    $('#userfrosting-alerts').flashAlerts().done(function() {
+                        $("#settings-alerts").html("<div class='alert alert-success'>All settings have been saved</div>");
+                    });
+                },
+                function() {
                     $("#settings-alerts").html("<div class='alert alert-danger'>Could not save settings.</div>");
-                });
-            }
+                }
+            );     
         });
-      });
-
-    });
-    /*
-     * end site settings form submit
-     */
-</script>
+    </script>
 {% endblock %}

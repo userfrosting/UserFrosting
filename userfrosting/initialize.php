@@ -243,7 +243,7 @@ $app->hook('includes.js.register', function () use ($app){
 
 /** Plugins */
 $app->hook('plugins.register', function () use ($app){
-    error_log("Registering plugins");
+    //error_log("Registering plugins");
     // Run initialization scripts for plugins
     $var_plugins = $app->site->getPlugins();
     foreach($var_plugins as $var_plugin) {     

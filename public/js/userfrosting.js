@@ -32,6 +32,63 @@
     };
 }( jQuery ));
 
+
+function ufFormSubmit(formElement, validators, msgElement, successCallback, msgCallback) {
+    formElement.formValidation({
+        framework: 'bootstrap',
+        // Feedback icons
+        icon: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields: validators
+    }).on('success.form.fv', function(e) {
+        // Prevent double form submission
+        e.preventDefault();
+
+        // Get the form instance
+        var form = $(e.target);
+        
+        // Serialize and post to the backend script in ajax mode
+        var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
+        // Get unchecked checkbox values, set them to 0
+        form.find('input[type=checkbox]').each(function() {
+            if ($(this).is(':checked'))
+                serializedData += "&" + encodeURIComponent(this.name) + "=1";
+            else
+                serializedData += "&" + encodeURIComponent(this.name) + "=0";
+        });        
+        
+        // Append page CSRF token
+        var csrf_token = $("meta[name=csrf_token]").attr("content");
+        serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);            
+        
+        var url = form.attr('action');
+        $.ajax({  
+          type: "POST",  
+          url: url,  
+          data: serializedData       
+        })
+        .done(successCallback)
+        .fail(function(jqXHR) {
+            if ((typeof site !== "undefined") && site['debug'] == true && jqXHR.status == "500") {
+                document.body.innerHTML = jqXHR.responseText;
+            } else {
+                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                // Display errors on failure
+                msgElement.flashAlerts().done(function() {
+                    // Re-enable submit button
+                    form.data('formValidation').disableSubmitButtons(false);
+                    // Do any additional callbacks here after displaying messages
+                    if (typeof msgCallback !== "undefined")
+                        msgCallback();
+                });
+            }
+        });
+    });
+}
+
 // define tablesorter pager options
 var pagerOptions = {
   // target the pager markup - see the HTML block below

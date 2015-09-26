@@ -87,66 +87,15 @@
     </div>
 {% endblock %}
 {% block page_scripts %}
-<script>
-    $(document).ready(function() { 
-      // Process form 
-      $("form[name='settings']").formValidation({
-        framework: 'bootstrap',
-        // Feedback icons
-        icon: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
-        fields: {{ validators | raw }}
-      }).on('success.form.fv', function(e) {
-        // Prevent double form submission
-        e.preventDefault();
-
-        // Get the form instance
-        var form = $(e.target);
-
-        // Serialize and post to the backend script in ajax mode
-        var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
-        // Get unchecked checkbox values, set them to 0
-        form.find('input[type=checkbox]').each(function() {
-            if ($(this).is(':checked'))
-                serializedData += "&" + encodeURIComponent(this.name) + "=1";
-            else
-                serializedData += "&" + encodeURIComponent(this.name) + "=0";
+    <script>
+        $(document).ready(function() {           
+            // Process form 
+            ufFormSubmit($("form[name='settings']"), {{ validators | raw }}, $("#userfrosting-alerts"),
+                function(data, statusText, jqXHR) {
+                    // Reload the page
+                    window.location.reload();
+                }
+            );
         });
-        
-        // Append page CSRF token
-        var csrf_token = $("meta[name=csrf_token]").attr("content");
-        serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);
-        
-        var url = form.attr('action');
-        return $.ajax({  
-          type: "POST",  
-          url: url,  
-          data: serializedData       
-        }).done(function(data, statusText, jqXHR) {
-            // Reload the page
-            window.location.reload();
-        }).fail(function(jqXHR) {
-            if (site['debug'] == true) {
-                document.body.innerHTML = jqXHR.responseText;
-            } else {
-                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-            }
-        }).always(function(data, statusText, jqXHR){
-            // Display messages
-            $('#userfrosting-alerts').flashAlerts().done(function() {
-                // Re-enable submit button
-                form.data('formValidation').disableSubmitButtons(false);
-            });
-        
-        });
-      });
-
-    });
-    /*
-     * end site settings form submit
-     */
-</script>
+    </script>
 {% endblock %}

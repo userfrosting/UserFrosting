@@ -112,51 +112,16 @@
 {% block page_scripts %}
     <script>
         $(document).ready(function() {           
-         // Process form 
-          $("form[name='register']").formValidation({
-            framework: 'bootstrap',
-            // Feedback icons
-            icon: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            },
-            fields: {{ validators | raw }}
-          }).on('success.form.fv', function(e) {
-            // Prevent double form submission
-            e.preventDefault();
-
-            // Get the form instance
-            var form = $(e.target);
-
-            // Serialize and post to the backend script in ajax mode
-            var serializedData = form.serialize();
-            
-            // Append page CSRF token
-            var csrf_token = $("meta[name=csrf_token]").attr("content");
-            serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);            
-            
-            var url = form.attr('action');
-            $.ajax({  
-              type: "POST",  
-              url: url,  
-              data: serializedData       
-            }).done(function(data, statusText, jqXHR) {
-                // Forward to login page on success
-                window.location.replace(site.uri.public + "/account/login");
-            }).fail(function(jqXHR) {
-                if (site['debug'] == true && jqXHR.status == "500") {
-                    document.body.innerHTML = jqXHR.responseText;
-                } else {
-                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-                    // Display errors on failure
-                    $('#userfrosting-alerts').flashAlerts().done(function() {
-                        // Re-enable submit button
-                        form.data('formValidation').disableSubmitButtons(false);
-                    });
+            // Process form 
+            ufFormSubmit(
+                $("form[name='register']"),
+                {{ validators | raw }},
+                $("#userfrosting-alerts"),
+                function(data, statusText, jqXHR) {
+                    // Forward to login page on success
+                    window.location.replace(site['uri']['public'] + "/account/login");
                 }
-            });
-          });
+            );
         });     
     </script>
 {% endblock %}
