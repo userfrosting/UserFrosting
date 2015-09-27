@@ -51,6 +51,12 @@ abstract class UFModel extends Model {
         return Capsule::table($table);
     }    
     
+    // For excluding certain columns in a query
+    public function scopeExclude($query, $value = []) {
+        $columns = array_merge(['id'], Database::getSchemaTable(static::$_table_id)->columns);
+        return $query->select( array_diff( $columns,(array) $value) );
+    }
+    
     /**
      * Calls save(), then returns the id of the new record in the database.
      *

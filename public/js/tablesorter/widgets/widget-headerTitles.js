@@ -1,18 +1,18 @@
-/*! tablesorter headerTitles widget - updated 3/5/2014 (core v2.15.6)
+/*! Widget: headerTitles - updated 3/5/2014 (v2.15.6) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery: false */
 ;(function($){
-"use strict";
-var ts = $.tablesorter;
+	'use strict';
+	var ts = $.tablesorter;
 
 	ts.addWidget({
 		id: 'headerTitles',
 		options: {
 			// use aria-label text
-			// e.g. "First Name: Ascending sort applied, activate to apply a descending sort"
+			// e.g. 'First Name: Ascending sort applied, activate to apply a descending sort'
 			headerTitle_useAria  : false,
 			// add tooltip class
 			headerTitle_tooltip  : '',

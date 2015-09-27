@@ -9,7 +9,8 @@
 .tablesorter-bootstrap thead td,
 .tablesorter-bootstrap tfoot th,
 .tablesorter-bootstrap tfoot td {
-	font: bold 14px/20px Arial, Sans-serif;
+	font: 14px/20px Arial, Sans-serif;
+	font-weight: bold;
 	padding: 4px;
 	margin: 0 0 18px;
 	background-color: #eee;
@@ -25,7 +26,7 @@
 }
 
 /* bootstrap uses <i> for icons */
-.tablesorter-bootstrap .tablesorter-header i {
+.tablesorter-bootstrap .tablesorter-header i.tablesorter-icon {
 	font-size: 11px;
 	position: absolute;
 	right: 2px;
@@ -53,6 +54,7 @@
 .tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ tr.tablesorter-hasChildRow.odd ~ .tablesorter-childRow.odd > td {
 	background-color: #f9f9f9;
 }
+.tablesorter-bootstrap > tbody > tr.hover > td,
 .tablesorter-bootstrap > tbody > tr.odd:hover > td,
 .tablesorter-bootstrap > tbody > tr.even:hover > td,
 .tablesorter-bootstrap > tbody > tr.tablesorter-hasChildRow.odd:hover ~ .tablesorter-childRow.odd > td,
@@ -73,13 +75,14 @@
 
 /* caption */
 .caption {
-	background: #fff;
+	background-color: #fff;
 }
 
 /* filter widget */
-.tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter {
+.tablesorter-bootstrap .tablesorter-filter-row input.tablesorter-filter,
+.tablesorter-bootstrap .tablesorter-filter-row select.tablesorter-filter {
 	width: 98%;
-	margin: 0 auto;
+	margin: 0;
 	padding: 4px 6px;
 	color: #333;
 	-webkit-box-sizing: border-box;
@@ -100,8 +103,11 @@
 	box-sizing: border-box;
 	transition: height 0.1s ease;
 }
+.tablesorter-bootstrap .tablesorter-filter-row {
+	background-color: #efefef;
+}
 .tablesorter-bootstrap .tablesorter-filter-row td {
-	background: #efefef;
+	background-color: #efefef;
 	line-height: normal;
 	text-align: center;
 	padding: 4px 6px;
@@ -117,7 +123,7 @@
 	margin: 0;
 	line-height: 0;
 }
-.tablesorter-bootstrap .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-bootstrap .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;

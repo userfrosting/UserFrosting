@@ -25,6 +25,7 @@ return array(
     'UserFrosting\\AccessConditionExpression' => $baseDir . '/models/auth/AccessConditionExpression.php',
     'UserFrosting\\AccountController' => $baseDir . '/controllers/AccountController.php',
     'UserFrosting\\AdminController' => $baseDir . '/controllers/AdminController.php',
+    'UserFrosting\\ApiController' => $baseDir . '/controllers/ApiController.php',
     'UserFrosting\\AuthCompromisedException' => $baseDir . '/middleware/usersession/Exception.php',
     'UserFrosting\\AuthExpiredException' => $baseDir . '/middleware/usersession/Exception.php',
     'UserFrosting\\AuthLoaderInterface' => $baseDir . '/models/database/DatabaseInterface.php',

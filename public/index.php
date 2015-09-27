@@ -259,6 +259,12 @@
         }   
     });
     
+    // API
+    $app->get('/api/users/?', function () use ($app) {
+        $controller = new UF\ApiController($app);
+        $controller->listUsers();
+    });
+    
     // Slim info page
     $app->get('/sliminfo/?', function () use ($app) {
         // Access-controlled page

@@ -217,14 +217,15 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("common", "lib/metisMenu.js");
     $app->schema->registerJS("common", "formValidation/formValidation.js");
     $app->schema->registerJS("common", "formValidation/bootstrap.js");
-    $app->schema->registerJS("common", "date.min.js");
-    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.min.js");
+    $app->schema->registerJS("common", "moment.js");
+    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.js");
     $app->schema->registerJS("common", "tablesorter/tables.js");
-    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.pager.min.js");
-    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.widgets.min.js");
+    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.pager.js");
+    $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.widgets.js");
     $app->schema->registerJS("common", "select2/select2.min.js");
     $app->schema->registerJS("common", "bootstrapradio.js");
     $app->schema->registerJS("common", "bootstrap-switch.js");
+    $app->schema->registerJS("common", "handlebars-v1.2.0.js");    
     $app->schema->registerJS("common", "userfrosting.js");
     
     // Dashboard JS

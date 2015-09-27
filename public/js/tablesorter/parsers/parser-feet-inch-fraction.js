@@ -1,25 +1,25 @@
-/*! Distance parser
+/*! Parser: distance *//*
 * This parser will parser numbers like 5'10" (5 foot 10 inches)
 * and 31½ into sortable values.
 * Demo: http://jsfiddle.net/Mottie/abkNM/154/
 */
 /*global jQuery: false */
 ;(function($){
-	"use strict";
+	'use strict';
 
 	var ts = $.tablesorter;
 	ts.symbolRegex = /[\u215b\u215c\u215d\u215e\u00bc\u00bd\u00be]/g;
 	ts.processFractions = function(n, table) {
 		if (n) {
 			var t, p = 0;
-			n = $.trim(n.replace(/\"/,''));
-			// look for a space in the first part of the number: "10 3/4" and save the "10"
+			n = $.trim(n.replace(/\"/, ''));
+			// look for a space in the first part of the number: '10 3/4' and save the '10'
 			if (/\s/.test(n)) {
 				p = ts.formatFloat(n.split(' ')[0], table);
 				// remove stuff to the left of the space
 				n = $.trim(n.substring(n.indexOf(' '), n.length));
 			}
-			// look for a "/" to calculate fractions
+			// look for a '/' to calculate fractions
 			if (/\//g.test(n)) {
 				t = n.split('/');
 				// turn 3/4 into .75; make sure we don't divide by zero
@@ -52,10 +52,10 @@
 			if (s === '') { return ''; }
 			// look for feet symbol = '
 			// very generic test to catch 1.1', 1 1/2' and 1½'
-			var d = (/^\s*\S*(\s+\S+)?\s*\'/.test(s)) ? s.split("'") : [0,s],
+			var d = (/^\s*\S*(\s+\S+)?\s*\'/.test(s)) ? s.split(/\'/) : [ 0, s ],
 			f = ts.processFractions(d[0], table), // feet
 			i = ts.processFractions(d[1], table); // inches
-			return (/[\'\"]/).test(s) ? parseFloat(f) + (parseFloat(i)/12 || 0) : parseFloat(f) + parseFloat(i);
+			return (/[\'\"]/).test(s) ? parseFloat(f) + (parseFloat(i) / 12 || 0) : parseFloat(f) + parseFloat(i);
 		},
 		type: 'numeric'
 	});
