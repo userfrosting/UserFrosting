@@ -75,7 +75,14 @@ class ApiController extends \UserFrosting\BaseController {
                 
         // Apply filters    
         foreach ($filters as $name => $value){
-            $userQuery = $userQuery->where($name, 'LIKE', "%$value%");
+            // For date filters, search for weekday, month, or year
+            if (in_array($name, ['last_sign_in_stamp', 'sign_up_stamp'])){
+                $userQuery = $userQuery->whereRaw("DATE_FORMAT($name,'%W') LIKE ?", ["$value%"])
+                                ->orWhereRaw("DATE_FORMAT($name,'%M') LIKE ?", ["$value%"])
+                                ->orWhereRaw("DATE_FORMAT($name,'%Y') LIKE ?", ["$value%"]);
+            } else {
+                $userQuery = $userQuery->where($name, 'LIKE', "%$value%");
+            }
         }
         
         // Count filtered total
@@ -89,10 +96,13 @@ class ApiController extends \UserFrosting\BaseController {
         
         $result = [
             "count" => $total,
-            "rows" => $userQuery->get(),
+            "rows" => $userQuery->get()->toArray(),
             "count_filtered" => $total_filtered
         ];
         
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        $this->_app->response->headers->set('Content-Type', 'application/json; charset=utf-8');
         echo json_encode($result);
     }
 }
