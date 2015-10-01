@@ -150,6 +150,7 @@
                 // Saves the current pager page size and number (requires storage widget)
                 savePages: false,
                 ajaxUrl: site['uri']['public'] + "/api/users?",
+                // Generate the URL for the AJAX request, with the relevant parameters
                 customAjaxUrl: function(table, url) {
                     // need to dynamically update page size
                     // since adding 'rows : size' in ajaxObject.data doesn't
@@ -183,15 +184,12 @@
                 },
                 ajaxObject: {
                     data: {
-                        // rows   : size, // this doesn't work because size can't be updated dynamically
-                        //'page'    : page      
+                        // rows   : size, // this doesn't work because size can't be updated dynamically 
                     }
                 },
                 ajaxProcessing: function (data) {
                     var $table = $(this);
-                    
                     if (data) {
-                       
                         //console.log(data);
                         var col, row, txt,
                             // make # column show correct value

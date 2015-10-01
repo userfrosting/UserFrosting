@@ -357,7 +357,7 @@ class SiteSettings extends UFModel {
      *
      * @todo use Eloquent to make these queries database-agnostic
      */ 
-    public function save(){
+    public function save(array $options = []){
         // Get current values as stored in DB
         $db_settings = $this->fetchSettings();
         

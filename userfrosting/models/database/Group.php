@@ -31,7 +31,7 @@ class Group extends UFModel {
         return $this->belongsToMany('UserFrosting\User', $link_table);
     }
     
-    public function save(){
+    public function save(array $options = []){
         // If this is being set as the default primary group, then any other group must be demoted to default group
         if ($this->is_default == GROUP_DEFAULT_PRIMARY){
             $current_default_primary = static::where('is_default', GROUP_DEFAULT_PRIMARY);
@@ -41,7 +41,7 @@ class Group extends UFModel {
             $current_default_primary->update(['is_default' => GROUP_DEFAULT]);
         }
         
-        return parent::save();
+        return parent::save($options);
     }
     
     /**

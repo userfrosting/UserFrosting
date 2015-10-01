@@ -3,16 +3,12 @@
 namespace UserFrosting;
 
 /**
- * Keep this for backwards compatibility, but gradually deprecate?  With Eloquent, we can perform these queries and more directly.
- * @see DatabaseInterface
+ * Provides an interface for fetching Group objects.  This can now be done directly through the Group::find() method.
+ *
+ * @deprecated deprecated since version 0.3.1
  */
 class GroupLoader {
 
-    /**
-     * @var DatabaseTable The table whose rows this class represents. Must be set in the child concrete class.
-     */
-    protected static $_table; 
-        
     /**
      * Determine if a group exists based on the value of a given column.
      *

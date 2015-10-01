@@ -56,9 +56,9 @@ class User extends UFModel {
      *
      * @see http://stackoverflow.com/a/27748794/2970321
      */
-    public function fresh(){
+    public function fresh(array $options = []){
         // TODO: Update table and column info, in case it has changed?
-        $user = parent::fresh();
+        $user = parent::fresh($options);
         $user->getGroupIds();
         $user->_primary_group = $user->fetchPrimaryGroup();      
         return $user;
@@ -234,7 +234,7 @@ class User extends UFModel {
      * @param bool $force_create set to true if you want to force UF to set a new sign_up_stamp, activation_token, and last_activation_request, even if this object has already been assigned an id.
      * @see DatabaseInterface
      */
-    public function save($force_create = false){
+    public function save(array $options = [], $force_create = false){
         // Initialize timestamps for new Users.  Should this be done here, or somewhere else?
         if (!isset($this->id) || $force_create){
             $this->sign_up_stamp = date("Y-m-d H:i:s");
@@ -243,7 +243,7 @@ class User extends UFModel {
         }    
         
         // Update the user record itself
-        $result = parent::save();
+        $result = parent::save($options);
         
         // Synchronize model's group relations with database
         $this->syncCachedGroups();

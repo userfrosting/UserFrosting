@@ -3,14 +3,11 @@
 namespace UserFrosting;
 
 /**
- * @see DatabaseInterface
+ * Provides an interface for fetching User objects.  This can now be done directly through the User::find() method.
+ *
+ * @deprecated deprecated since version 0.3.1
  */
 class UserLoader { 
-
-    /**
-     * @var DatabaseTable the table whose rows this class represents. Must be set in the child concrete class.   
-     */
-    protected static $_table;
     
     /**
      * Determine if a user exists based on the value of a given column.
