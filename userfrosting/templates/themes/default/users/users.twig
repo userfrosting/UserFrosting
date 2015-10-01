@@ -134,11 +134,10 @@
         {% include 'components/common/js-snippets/user-table-columns.twig' %}
         
         <script>
-            {% if paginate_server_side %}
-                var paginate_server_side = true;
-            {% else %}
-                var paginate_server_side = false;
-            {% endif %}
+            // These options get set by Twig when the page is rendered
+            var paginate_server_side = {{ paginate_server_side | default("false") }};
+            var primary_group = "{{ primary_group_name | default(null) }}";
+            
             $(document).ready(function() {           
                 // Set up server-side pagination
                 // See http://jsfiddle.net/Mottie/uwZc2/
@@ -234,6 +233,11 @@
                                 }
                             }
                             table.config.pager.ajaxObject.data.filters = filters;
+                            
+                            // Limit to a particular primary group
+                            if (primary_group) {
+                                table.config.pager.ajaxObject.data.primary_group = primary_group;
+                            }
                             return url;
                         },
                         ajaxObject: {

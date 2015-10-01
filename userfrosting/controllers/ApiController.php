@@ -34,6 +34,15 @@ class ApiController extends \UserFrosting\BaseController {
     public function listUsers($page = 0, $size = 10, $primary_group_name = null){
         $get = $this->_app->request->get();
                 
+        $size = isset($get['size']) ? $get['size'] : 10;
+        $page = isset($get['page']) ? $get['page'] : 0;
+        $sort_field = isset($get['sort_field']) ? $get['sort_field'] : "user_name";
+        $sort_order = isset($get['sort_order']) ? $get['sort_order'] : "asc";
+        $filters = isset($get['filters']) ? $get['filters'] : [];
+        $primary_group_name = isset($get['primary_group']) ? $get['primary_group'] : null;
+        
+        $offset = $size*$page;                
+                
         // Optional filtering by primary group
         if ($primary_group_name){
             $primary_group = Group::where('name', $primary_group_name)->first();
@@ -57,14 +66,6 @@ class ApiController extends \UserFrosting\BaseController {
             
             $userQuery = new User;
         }
-        
-        $size = isset($get['size']) ? $get['size'] : 10;
-        $page = isset($get['page']) ? $get['page'] : 0;
-        $sort_field = isset($get['sort_field']) ? $get['sort_field'] : "user_name";
-        $sort_order = isset($get['sort_order']) ? $get['sort_order'] : "asc";
-        $filters = isset($get['filters']) ? $get['filters'] : [];
-        
-        $offset = $size*$page;
         
         // Count unpaginated total
         $total = $userQuery->count();
