@@ -30,9 +30,10 @@ class UserController extends \UserFrosting\BaseController {
      * This page requires authentication.
      * Request type: GET
      * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
+     * @param bool $paginate_server_side optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.
      * @todo implement interface to modify user-assigned authorization hooks and permissions
      */        
-    public function pageUsers($primary_group_name = null){
+    public function pageUsers($primary_group_name = null, $paginate_server_side = true){
         // Optional filtering by primary group
         if ($primary_group_name){
             $primary_group = GroupLoader::fetch($primary_group_name, 'name');
@@ -45,7 +46,8 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
         
-            $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
+            if (!$paginate_server_side)
+                $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
             $name = $primary_group->name;
             $icon = $primary_group->icon;
 
@@ -56,7 +58,8 @@ class UserController extends \UserFrosting\BaseController {
             }
             
             //$users = UserLoader::fetchAll();
-            $users = User::queryBuilder()->get();
+            if (!$paginate_server_side)
+                $users = User::queryBuilder()->get();
             $name = "Users";
             $icon = "fa fa-users";
         }
@@ -64,7 +67,9 @@ class UserController extends \UserFrosting\BaseController {
         $this->_app->render('users/users.twig', [
             "box_title" => $name,
             "icon" => $icon,
-            "users" => $users
+            "primary_group_name" => $primary_group_name,
+            "paginate_server_side" => $paginate_server_side,
+            "users" => isset($users) ? $users : []
         ]);          
     }
     

@@ -31,7 +31,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!--
+                    {# If we are not using server-side pagination, then just render all results immediately #}
+                    {% if not paginate_server_side %}
                         {% for user in users %}
                         <tr>
                             <td data-text="{{user.user_name}}">
@@ -108,7 +109,7 @@
                             </td>
                         </tr>
                         {% endfor %}
-                        -->
+                    {% endif %}
                     </tbody>
                 </table>
                 {% include 'components/common/table-tablesorter-default.twig' %}
@@ -129,147 +130,169 @@
     </div>
 {% endblock %}
 {% block page_scripts %}
-    <!-- Include JS snippets -->
-    {% include 'components/common/js-snippets/user-table-columns.twig' %}
-    
-    <script>
-        $(document).ready(function() {           
-            // Set up server-side pagination
-            // See http://jsfiddle.net/Mottie/uwZc2/
-            // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
-            $('#table-users').tablesorter({
-                debug: false,
-                theme: 'bootstrap',
-                widthFixed: true,
-                widgets: ['filter']
-            }).tablesorterPager({
+        <!-- Include JS snippets -->
+        {% include 'components/common/js-snippets/user-table-columns.twig' %}
+        
+        <script>
+            {% if paginate_server_side %}
+                var paginate_server_side = true;
+            {% else %}
+                var paginate_server_side = false;
+            {% endif %}
+            $(document).ready(function() {           
+                // Set up server-side pagination
+                // See http://jsfiddle.net/Mottie/uwZc2/
+                // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
                 
-                // target the pager markup - see the HTML block below
-                container: $(".pager"),
+                var pager_options = {                    
+                    // target the pager markup - see the HTML block below
+                    container: $(".pager"),
+                    
+                    // Saves the current pager page size and number (requires storage widget)
+                    savePages: false,
+                    
+                    output: '{startRow} to {endRow} of {filteredRows} ({totalRows})',
+              
+                    // apply disabled classname (cssDisabled option) to the pager arrows when the rows
+                    // are at either extreme is visible; default is true
+                    updateArrows: true,
+              
+                    // starting page of the pager (zero based index)
+                    page: 0,
+              
+                    // Number of visible rows - default is 10
+                    size: 10, 
+                    
+                    // Saves tablesorter paging to custom key if defined.
+                    // Key parameter name used by the $.tablesorter.storage function.
+                    // Useful if you have multiple tables defined
+                    storageKey: 'tablesorter-pager',
+              
+                    // Reset pager to this page after filtering; set to desired page number (zero-based index),
+                    // or false to not change page at filter start
+                    pageReset: 0,
+              
+                    // if true, the table will remain the same height no matter how many records are displayed.
+                    // The space is made up by an empty table row set to a height to compensate; default is false
+                    fixedHeight: false,
+              
+                    // remove rows from the table to speed up the sort of large tables.
+                    // setting this to false, only hides the non-visible rows; needed if you plan to
+                    // add/remove rows with the pager enabled.
+                    removeRows: false,
+              
+                    // If true, child rows will be counted towards the pager set size
+                    countChildRows: false,
+              
+                    // css class names of pager arrows
+                    cssNext        : '.next',  // next page arrow
+                    cssPrev        : '.prev',  // previous page arrow
+                    cssFirst       : '.first', // go to first page arrow
+                    cssLast        : '.last',  // go to last page arrow
+                    cssGoto        : '.gotoPage', // page select dropdown - select dropdown that set the "page" option
+              
+                    cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
+                    cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
+              
+                    // class added to arrows when at the extremes; see the "updateArrows" option
+                    // (i.e. prev/first arrows are "disabled" when on the first page)
+                    cssDisabled    : 'disabled', // Note there is no period "." in front of this class name
+                    cssErrorRow    : 'tablesorter-errorRow' // error information row
+                };
                 
-                // Saves the current pager page size and number (requires storage widget)
-                savePages: false,
-                ajaxUrl: site['uri']['public'] + "/api/users?",
-                // Generate the URL for the AJAX request, with the relevant parameters
-                customAjaxUrl: function(table, url) {
-                    // need to dynamically update page size
-                    // since adding 'rows : size' in ajaxObject.data doesn't
-                    // dynamically update the size
-                    table.config.pager.ajaxObject.data.size = table.config.pager.size;
-                    table.config.pager.ajaxObject.data.page = table.config.pager.page;
-                    
-                    var sortColumns = {
-                        "0" : "user_name",
-                        "1" : "sign_up_stamp",
-                        "2" : "last_sign_in_stamp",
-                        "3" : "enabled"
-                    };
-                    
-                    var sortOrders = {
-                        "0" : "asc",
-                        "1" : "desc"
-                    };
-                    
-                    table.config.pager.ajaxObject.data.sort_field = sortColumns[table.config.sortList[0][0]];
-                    table.config.pager.ajaxObject.data.sort_order = sortOrders[table.config.sortList[0][1]];
-                    var filterList = $.tablesorter.getFilters(table);
-                    var filters = {};
-                    for (i = 0; i < filterList.length; i++){
-                        if (filterList[i]) {
-                            filters[sortColumns[i]] = filterList[i];
-                        }
-                    }
-                    table.config.pager.ajaxObject.data.filters = filters;
-                    return url;
-                },
-                ajaxObject: {
-                    data: {
-                        // rows   : size, // this doesn't work because size can't be updated dynamically 
-                    }
-                },
-                ajaxProcessing: function (data) {
-                    var $table = $(this);
-                    if (data) {
-                        //console.log(data);
-                        var col, row, txt,
-                            // make # column show correct value
-                            index = $('#table-users')[0].config.pager.page,
-                            json = {},
-                            rows = '';
-                        size = data['rows'].length;
-                        // Render table cells via Handlebars
-                        var template_0 = Handlebars.compile($("#user-table-column-info").html());
-                        var template_1 = Handlebars.compile($("#user-table-column-registered-since").html());
-                        var template_2 = Handlebars.compile($("#user-table-column-last-sign-in").html());
-                        var template_3 = Handlebars.compile($("#user-table-column-actions").html());
-                        for (row = 0; row < size; row++){
-                            rows += '<tr>';
-                            var cell_data = {
-                                "user" : data['rows'][ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
-                                "site" : site
+                // Options for dynamically loading table data, if we are using server-side pagination
+                if (paginate_server_side) {
+                    var ajax_pager_options = {
+                        ajaxUrl: site['uri']['public'] + "/api/users?",
+                        // Generate the URL for the AJAX request, with the relevant parameters
+                        customAjaxUrl: function(table, url) {
+                            // need to dynamically update page size
+                            // since adding 'rows : size' in ajaxObject.data doesn't
+                            // dynamically update the size
+                            table.config.pager.ajaxObject.data.size = table.config.pager.size;
+                            table.config.pager.ajaxObject.data.page = table.config.pager.page;
+                            
+                            var sortColumns = {
+                                "0" : "user_name",
+                                "1" : "sign_up_stamp",
+                                "2" : "last_sign_in_stamp",
+                                "3" : "enabled"
                             };
-                            rows += template_0(cell_data);
-                            rows += template_1(cell_data);
-                            rows += template_2(cell_data);
-                            rows += template_3(cell_data);
-                            rows += '</tr>';
-                        }
-                        json.total = data['count'];  // Get total rows without pagination
-                        json.filteredRows = data['count_filtered']; // no filtering
-                        json.rows = $(rows);
-                        return json;
-                    }
-                },
-                output: '{startRow} to {endRow} of {filteredRows} ({totalRows})',
-          
-                // apply disabled classname (cssDisabled option) to the pager arrows when the rows
-                // are at either extreme is visible; default is true
-                updateArrows: true,
-          
-                // starting page of the pager (zero based index)
-                page: 0,
-          
-                // Number of visible rows - default is 10
-                size: 10, 
+                            
+                            var sortOrders = {
+                                "0" : "asc",
+                                "1" : "desc"
+                            };
+                            
+                            table.config.pager.ajaxObject.data.sort_field = sortColumns[table.config.sortList[0][0]];
+                            table.config.pager.ajaxObject.data.sort_order = sortOrders[table.config.sortList[0][1]];
+                            var filterList = $.tablesorter.getFilters(table);
+                            var filters = {};
+                            for (i = 0; i < filterList.length; i++){
+                                if (filterList[i]) {
+                                    filters[sortColumns[i]] = filterList[i];
+                                }
+                            }
+                            table.config.pager.ajaxObject.data.filters = filters;
+                            return url;
+                        },
+                        ajaxObject: {
+                            data: {
+                                // rows   : size, // this doesn't work because size can't be updated dynamically 
+                            }
+                        },
+                        ajaxProcessing: function (data) {
+                            var $table = $(this);
+                            if (data) {
+                                //console.log(data);
+                                var col, row, txt,
+                                    // make # column show correct value
+                                    index = $('#table-users')[0].config.pager.page,
+                                    json = {},
+                                    rows = '';
+                                size = data['rows'].length;
+                                // Render table cells via Handlebars
+                                var template_0 = Handlebars.compile($("#user-table-column-info").html());
+                                var template_1 = Handlebars.compile($("#user-table-column-registered-since").html());
+                                var template_2 = Handlebars.compile($("#user-table-column-last-sign-in").html());
+                                var template_3 = Handlebars.compile($("#user-table-column-actions").html());
+                                for (row = 0; row < size; row++){
+                                    rows += '<tr>';
+                                    var cell_data = {
+                                        "user" : data['rows'][ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
+                                        "site" : site
+                                    };
+                                    rows += template_0(cell_data);
+                                    rows += template_1(cell_data);
+                                    rows += template_2(cell_data);
+                                    rows += template_3(cell_data);
+                                    rows += '</tr>';
+                                }
+                                json.total = data['count'];  // Get total rows without pagination
+                                json.filteredRows = data['count_filtered']; // no filtering
+                                json.rows = $(rows);
+                                return json;
+                            }
+                        }                
+                    };
+                    $.extend(pager_options, ajax_pager_options);
+                }
                 
-                // Saves tablesorter paging to custom key if defined.
-                // Key parameter name used by the $.tablesorter.storage function.
-                // Useful if you have multiple tables defined
-                storageKey: 'tablesorter-pager',
-          
-                // Reset pager to this page after filtering; set to desired page number (zero-based index),
-                // or false to not change page at filter start
-                pageReset: 0,
-          
-                // if true, the table will remain the same height no matter how many records are displayed.
-                // The space is made up by an empty table row set to a height to compensate; default is false
-                fixedHeight: false,
-          
-                // remove rows from the table to speed up the sort of large tables.
-                // setting this to false, only hides the non-visible rows; needed if you plan to
-                // add/remove rows with the pager enabled.
-                removeRows: false,
-          
-                // If true, child rows will be counted towards the pager set size
-                countChildRows: false,
-          
-                // css class names of pager arrows
-                cssNext        : '.next',  // next page arrow
-                cssPrev        : '.prev',  // previous page arrow
-                cssFirst       : '.first', // go to first page arrow
-                cssLast        : '.last',  // go to last page arrow
-                cssGoto        : '.gotoPage', // page select dropdown - select dropdown that set the "page" option
-          
-                cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
-                cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
-          
-                // class added to arrows when at the extremes; see the "updateArrows" option
-                // (i.e. prev/first arrows are "disabled" when on the first page)
-                cssDisabled    : 'disabled', // Note there is no period "." in front of this class name
-                cssErrorRow    : 'tablesorter-errorRow' // error information row
-          
+                $('#table-users').tablesorter({
+                    debug: false,
+                    theme: 'bootstrap',
+                    widthFixed: true,
+                    widgets: ['filter']
+                })
+                .tablesorterPager(pager_options)
+                .bind('pagerComplete', function(e, table) {
+                    // Link buttons
+                    if (paginate_server_side) {
+                        bindUserTableButtons($('#table-users'));
+                    }
+                });
             });
-        });    
-    </script>
+        </script>
+    
 {% endblock %}
 

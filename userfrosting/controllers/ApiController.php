@@ -32,6 +32,8 @@ class ApiController extends \UserFrosting\BaseController {
      * @todo implement interface to modify user-assigned authorization hooks and permissions
      */        
     public function listUsers($page = 0, $size = 10, $primary_group_name = null){
+        $get = $this->_app->request->get();
+                
         // Optional filtering by primary group
         if ($primary_group_name){
             $primary_group = Group::where('name', $primary_group_name)->first();
@@ -55,8 +57,6 @@ class ApiController extends \UserFrosting\BaseController {
             
             $userQuery = new User;
         }
-        
-        $get = $this->_app->request->get();
         
         $size = isset($get['size']) ? $get['size'] : 10;
         $page = isset($get['page']) ? $get['page'] : 0;

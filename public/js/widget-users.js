@@ -25,18 +25,22 @@ THE SOFTWARE.
 */
 
 $(document).ready(function() {                   
+    bindUserTableButtons($("body"));
+});
+
+function bindUserTableButtons(table) {
     // Link buttons
-    $('.js-user-create').click(function() { 
+    $(table).find('.js-user-create').click(function() { 
         userForm('dialog-user-create');
     });
     
-    $('.js-user-edit').click(function() {
+    $(table).find('.js-user-edit').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
         userForm('dialog-user-edit', user_id);
     });
 
-    $('.js-user-activate').click(function() {
+    $(table).find('.js-user-activate').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
         updateUserActiveStatus(user_id)
@@ -46,7 +50,7 @@ $(document).ready(function() {
         });
     });
     
-    $('.js-user-enable').click(function () {
+    $(table).find('.js-user-enable').click(function () {
         var btn = $(this);
         var user_id = btn.data('id');
         updateUserEnabledStatus(user_id, "1")
@@ -56,7 +60,7 @@ $(document).ready(function() {
         });
     });
     
-    $('.js-user-disable').click(function () {
+    $(table).find('.js-user-disable').click(function () {
         var btn = $(this);
         var user_id = btn.data('id');
         updateUserEnabledStatus(user_id, "0")
@@ -66,13 +70,13 @@ $(document).ready(function() {
         });
     });	
     
-    $('.js-user-delete').click(function() {
+    $(table).find('.js-user-delete').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
         var user_name = btn.data('user_name');
         deleteUserDialog('dialog-user-delete', user_id, user_name);
-    });	 	
-});
+    });	 	        
+}
 
 // Enable/disable the specified user
 function updateUserEnabledStatus(user_id, enabled) {
