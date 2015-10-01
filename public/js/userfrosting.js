@@ -66,12 +66,17 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
             validating: 'fa fa-refresh'
         },
         fields: validators
-    }).on('success.form.fv', function(e) {
+    }).on('success.form.fv', function(e) {       
         // Prevent double form submission
         e.preventDefault();
-
+        
         // Get the form instance
         var form = $(e.target);
+        
+        // Set "loading" text
+        var submit_button = form.find("button[type=submit]");
+        var button_text = submit_button.text();
+        submit_button.html("<i class='fa fa-spinner fa-spin'></i>");        
         
         // Serialize and post to the backend script in ajax mode
         var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
@@ -108,6 +113,9 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
                         msgCallback();
                 });
             }
+        }).always(function () {
+            // Restore button text
+            submit_button.html(button_text);
         });
     });
 }
