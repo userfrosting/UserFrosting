@@ -45,7 +45,7 @@ class AdminController extends \UserFrosting\BaseController {
             'error_log'=> $this->_app->site->getLog(50)
         ]);    
     }
-    
+        
     /**
      * Processes a request to update the site settings.
      *

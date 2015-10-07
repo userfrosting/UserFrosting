@@ -239,7 +239,9 @@ $app->hook('includes.js.register', function () use ($app){
     
     // Groups JS
     $app->schema->registerJS("group", "widget-groups.js");
-    
+
+    // Auth JS
+    $app->schema->registerJS("auth", "widget-auth.js");    
 }, 1);  
 
 /** Plugins */

@@ -1,9 +1,6 @@
 (function( $ ) {
     $.fn.flashAlerts = function() {
-        //var deferred = $.Deferred();
-     
         var field = $(this);
-        console.log("Displaying alerts");
         var url = site['uri']['public'] + "/alerts";
         return $.getJSON( url, {})
         .then(function( data ) {        // Pass the deferral back
@@ -26,17 +23,16 @@
             $("html, body").animate({ scrollTop: 0 }, "fast");		// Scroll back to top of page
             
             return data;
-            //deferred.resolve();
         });
-        //return deferred.promise();
     };
 }( jQuery ));
 
 
-//  format an ISO date using Moment.js
-//  http://momentjs.com/
-//  moment syntax example: moment(Date("2011-07-18T15:50:52")).format("MMMM YYYY")
-//  usage: {{dateFormat creation_date format="MMMM YYYY"}}
+/**  format an ISO date using Moment.js
+ *  http://momentjs.com/
+ *  moment syntax example: moment(Date("2011-07-18T15:50:52")).format("MMMM YYYY")
+ *  usage: {{dateFormat creation_date format="MMMM YYYY"}}
+ */
 Handlebars.registerHelper('dateFormat', function(context, block) {
   if (window.moment) {
     var f = block.hash.format || "MMM Do, YYYY";
@@ -66,16 +62,20 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
             validating: 'fa fa-refresh'
         },
         fields: validators
-    }).on('success.form.fv', function(e) {       
+    }).on('success.form.fv', function(e) { 
+    //formElement.on('submit', function (e){
         // Prevent double form submission
         e.preventDefault();
         
         // Get the form instance
         var form = $(e.target);
+        // Get the formvalidation instance
+        var fv   = form.data('formValidation');
         
-        // Set "loading" text
-        var submit_button = form.find("button[type=submit]");
-        var button_text = submit_button.text();
+        // Set "loading" text.  Must get the button via FormValidation, otherwise it gets confused.
+        // I think this is because FV alters the button element in some way.
+        var submit_button = fv.getSubmitButton();
+        var submit_button_text = submit_button.html();
         submit_button.html("<i class='fa fa-spinner fa-spin'></i>");        
         
         // Serialize and post to the backend script in ajax mode
@@ -115,7 +115,7 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
             }
         }).always(function () {
             // Restore button text
-            submit_button.html(button_text);
+            submit_button.html(submit_button_text);
         });
     });
 }

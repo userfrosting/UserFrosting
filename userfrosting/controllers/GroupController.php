@@ -43,6 +43,24 @@ class GroupController extends \UserFrosting\BaseController {
         ]);          
     }    
 
+    public function pageGroupAuthorization($group_id) {
+        // Access-controlled page
+        if (!$this->_app->user->checkAccess('uri_authorization_settings')){
+            $this->_app->notFound();
+        }
+        
+        $group = Group::find($group_id);
+        
+        // Load all auth rules
+        $rules = GroupAuth::where('group_id', $group_id)->get();
+        
+        $this->_app->render('config/authorization.twig', [
+            "group" => $group,
+            "rules" => $rules
+        ]);
+        
+    }
+    
     /**
      * Renders the form for creating a new group.
      *

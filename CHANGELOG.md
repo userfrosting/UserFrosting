@@ -13,3 +13,4 @@
 - Implement server-side pagination
 - Upgrade to Tablesorter v2.23.4
 - Switch from DateJS to momentjs
+- Implement basic interface for modifying group authorization rules

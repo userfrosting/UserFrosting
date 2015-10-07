@@ -27,6 +27,7 @@ return array(
     'UserFrosting\\AdminController' => $baseDir . '/controllers/AdminController.php',
     'UserFrosting\\ApiController' => $baseDir . '/controllers/ApiController.php',
     'UserFrosting\\AuthCompromisedException' => $baseDir . '/middleware/usersession/Exception.php',
+    'UserFrosting\\AuthController' => $baseDir . '/controllers/AuthController.php',
     'UserFrosting\\AuthExpiredException' => $baseDir . '/middleware/usersession/Exception.php',
     'UserFrosting\\AuthLoaderInterface' => $baseDir . '/models/database/DatabaseInterface.php',
     'UserFrosting\\Authentication' => $baseDir . '/models/auth/Authentication.php',

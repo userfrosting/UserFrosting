@@ -1,5 +1,5 @@
 /**
- * @file This file contains functions and bindings for the UserFrosting group management pages.
+ * @file This file contains functions and bindings for the UserFrosting authorization rule management pages.
  *
  * @author Alex Weissman
  * @license MIT
@@ -7,57 +7,59 @@
  
 $(document).ready(function() {                   
     // Link buttons
- 	bindGroupTableButtons($("body"));
+ 	bindAuthTableButtons($("body"));
 });
 
-function bindGroupTableButtons(table) {
-    $(table).find('.js-group-create').click(function() { 
-        groupForm('dialog-group-create');
+function bindAuthTableButtons(table) {
+    $(table).find('.js-auth-create').click(function() {
+        var btn = $(this);
+        var id = btn.data('id');    
+        authForm('dialog-auth-create', {
+            "owner_id": id
+        });
     });
     
-    $(table).find('.js-group-edit').click(function() {
+    $(table).find('.js-auth-edit').click(function() {
         var btn = $(this);
-        var group_id = btn.data('id');
-        groupForm('dialog-group-edit', group_id);
+        var id = btn.data('id');
+        authForm('dialog-auth-edit', {
+            "auth_id": id
+        });
     });
     
-    $(table).find('.js-group-delete').click(function() {
+    $(table).find('.js-auth-delete').click(function() {
         var btn = $(this);
-        var group_id = btn.data('id');
-        var name = btn.data('name');
-        deleteGroupDialog('dialog-group-delete', group_id, name);
+        var id = btn.data('id');
+        var hook = btn.data('hook');
+        var owner = btn.data('owner');
+        deleteAuthDialog('dialog-auth-delete', id, owner, hook);
     });
 }
 
 /**
- * Display a modal form for updating/creating a group.
+ * Display a modal form for updating/creating an auth rule.
  *
- * @todo This function is highly redundant with userForm.  Can we refactor?
  */
-function groupForm(box_id, group_id) {	
-	group_id = typeof group_id !== 'undefined' ? group_id : "";
-	
+function authForm(box_id, options) {		
 	// Delete any existing instance of the form with the same name
 	if($('#' + box_id).length ) {
 		$('#' + box_id).remove();
 	}
-	
-    var data = {
-		box_id: box_id,
-		render: 'modal'
-	};
     
-    var url = site['uri']['public'] + "/forms/groups";  
-    
-    // If we are updating an existing group
-    if (group_id) {
-        data = {
+    // If we are updating an existing auth rule
+    if (options['auth_id']) {
+        var data = {
             box_id: box_id,
-            render: 'modal',
             mode: "update"
         };
         
-        url = site['uri']['public'] + "/forms/groups/g/" + group_id;
+        var url = site['uri']['public'] + "/forms/groups/auth/a/" + options['auth_id'];
+    } else {
+        var data = {
+            box_id: box_id
+        };
+        
+        var url = site['uri']['public'] + "/forms/groups/g/" + options['owner_id'] + "/auth";  
     }
     
 	// Fetch and render the form
@@ -77,20 +79,11 @@ function groupForm(box_id, group_id) {
 		$( "body" ).append(result);
 		$('#' + box_id).modal('show');
 		
-        // Initialize select2's
-        $('#' + box_id + ' .select2').select2();
-        
-		// Initialize is_default
-        $('#' + box_id + ' input[name=is_default]:checked').addClass('active');
-        
-        // Set icon when changed
-        $('#' + box_id + ' input[name=icon]').on('change', function(){
-            $(this).prev(".icon-preview").find("i").removeClass().addClass($(this).val());
-        });
+        // Initialize typeahead
         
 		// Link submission buttons
         ufFormSubmit(
-            $("form[name='group']"),
+            $("form[name='auth']"),
             validators,
             $("#form-alerts"),
             function(data, statusText, jqXHR) {
@@ -101,7 +94,7 @@ function groupForm(box_id, group_id) {
 	});
 }
 
-function deleteGroupDialog(box_id, group_id, name){
+function deleteAuthDialog(box_id, rule_id, owner, hook){
 	// Delete any existing instance of the form with the same name
 	if($('#' + box_id).length ) {
 		$('#' + box_id).remove();
@@ -111,9 +104,9 @@ function deleteGroupDialog(box_id, group_id, name){
     
 	var data = {
 		box_id: box_id,
-		box_title: "Delete Group",
-		confirm_message: "Are you sure you want to delete the group " + name + "?",
-		confirm_button: "Yes, delete group"
+		box_title: "Delete Group Auth Rule",
+		confirm_message: "Are you sure you want to delete the rule for hook '" + hook + "' for group '" + owner + "'?",
+		confirm_button: "Yes, delete rule"
 	}
 	
 	// Generate the form
@@ -132,11 +125,10 @@ function deleteGroupDialog(box_id, group_id, name){
 		$( "body" ).append(result);
 		$('#' + box_id).modal('show');        
 		$('#' + box_id + ' .js-confirm').click(function(){
-            var url = site['uri']['public'] + "/groups/g/" + group_id + "/delete";
+            var url = site['uri']['public'] + "/auth/a/" + rule_id + "/delete";
             
             csrf_token = $("meta[name=csrf_token]").attr("content");
             var data = {
-                group_id: group_id,
                 csrf_token: csrf_token
             }
             

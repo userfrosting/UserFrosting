@@ -21,3 +21,7 @@
 label.label-switch {
     margin-top: 5px;
 }
+
+form textarea {
+  resize: vertical; /* user can resize vertically, but width is fixed */
+}
