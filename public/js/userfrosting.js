@@ -72,12 +72,13 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
         // Get the formvalidation instance
         var fv   = form.data('formValidation');
         
-        // Set "loading" text.  Must get the button via FormValidation, otherwise it gets confused.
+        // Set "loading" text for submit button, if it exists.  Must get the button via FormValidation, otherwise it gets confused.
         // I think this is because FV alters the button element in some way.
         var submit_button = fv.getSubmitButton();
-        var submit_button_text = submit_button.html();
-        submit_button.html("<i class='fa fa-spinner fa-spin'></i>");        
-        
+        if (submit_button) {
+            var submit_button_text = submit_button.html();
+            submit_button.html("<i class='fa fa-spinner fa-spin'></i>"); 
+        }
         // Serialize and post to the backend script in ajax mode
         var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
         // Get unchecked checkbox values, set them to 0
@@ -115,7 +116,8 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
             }
         }).always(function () {
             // Restore button text
-            submit_button.html(submit_button_text);
+            if (submit_button)
+                submit_button.html(submit_button_text);
         });
     });
 }
