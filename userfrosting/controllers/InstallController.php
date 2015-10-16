@@ -30,6 +30,7 @@ class InstallController extends \UserFrosting\BaseController {
         $messages = [];
         // 1. Check PHP version
         
+        error_log("Checking php version");
         // PHP_VERSION_ID is available as of PHP 5.2.7, if our version is lower than that, then emulate it
         if (!defined('PHP_VERSION_ID')) {
             $version = explode('.', PHP_VERSION);
@@ -50,6 +51,7 @@ class InstallController extends \UserFrosting\BaseController {
             ];    
         }
         
+        error_log("Checking db connection");
         // 3. Check database connection
         if (!Database::testConnection()){
             $messages[] = [
@@ -58,25 +60,21 @@ class InstallController extends \UserFrosting\BaseController {
             ]; 
         } 
         
-        $tables = Database::getTables();
+        error_log("Checking any current tables");
+        $tables = Database::getCreatedTables();
         if (count($tables) > 0){
             $messages[] = [
                 "title" => "One or more tables already exist.",
                 "message" => "The following tables already exist in the database: <strong>" . implode(", ", $tables) . "</strong>.  Do you already have another installation of UserFrosting in this database?  Please either create a new database (recommended), or change the table prefix in <code>config-userfrosting.php</code> if you cannot create a new database."
             ]; 
         }
-        
+        error_log("Done with checks");
         if (count($messages) > 0){
-            $this->_app->render('common/install/install-errors.html', [
-                'page' => [
-                    'author' =>         $this->_app->site->author,
-                    'title' =>          "Installation Error",
-                    'description' =>    "Installation page for UserFrosting",
-                    'alerts' =>         $this->_app->alerts->getAndClearMessages()
-                ],
+            $this->_app->render('install/install-errors.twig', [
                 "messages" => $messages
             ]);
         } else {
+        error_log("Installing");
             // Create tables
             Database::install();
             
@@ -114,13 +112,7 @@ class InstallController extends \UserFrosting\BaseController {
                 ];
             }
             
-            $this->_app->render('common/install/install-ready.html', [
-                'page' => [
-                    'author' =>         $this->_app->site->author,
-                    'title' =>          "Installation",
-                    'description' =>    "Installation page for UserFrosting",
-                    'alerts' =>         $this->_app->alerts->getAndClearMessages()
-                ],
+            $this->_app->render('install/install-ready.twig', [
                 "messages" => $messages
             ]);        
         }
@@ -150,15 +142,9 @@ class InstallController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);   
         
-        $this->_app->render('common/install/install-master.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Installation | Register Master Account",
-                'description' =>    "Set up the master account for your installation of UserFrosting",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('install/install-master.twig', [
             'validators' => $validators->formValidationRulesJson(),
-            'table_config' => Database::getTable('configuration')->name
+            'table_config' => Database::getSchemaTable('configuration')->name
         ]);    
     }
 

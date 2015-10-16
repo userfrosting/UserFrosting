@@ -158,12 +158,17 @@ $lang = array_merge($lang,array(
 $lang = array_merge($lang,array(
 	"GROUP_INVALID_ID" => "The requested group id does not exist",
 	"GROUP_NAME_CHAR_LIMIT" => "Group names must be between {{min}} and {{max}} characters in length",
+    "AUTH_HOOK_CHAR_LIMIT" => "Authorization hook names must be between {{min}} and {{max}} characters in length",
 	"GROUP_NAME_IN_USE" => "Group name '{{name}}' is already in use",
 	"GROUP_DELETION_SUCCESSFUL" => "Successfully deleted group '{{name}}'",
 	"GROUP_CREATION_SUCCESSFUL" => "Successfully created group '{{name}}'",
 	"GROUP_UPDATE" => "Details for group '{{name}}' successfully updated.",
 	"CANNOT_DELETE_GROUP" => "The group '{{name}}' cannot be deleted",
-	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "The group '{{name}}' cannot be deleted because it is set as the default primary group for new users. Please first select a different default primary group."
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "The group '{{name}}' cannot be deleted because it is set as the default primary group for new users. Please first select a different default primary group.",
+    "GROUP_AUTH_EXISTS" => "The group '{{name}}' already has a rule defined for hook '{{hook}}'.",
+    "GROUP_AUTH_CREATION_SUCCESSFUL" => "A rule for '{{hook}}' has been successfully created for group '{{name}}'.",
+    "GROUP_AUTH_UPDATE_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully updated.",
+    "GROUP_AUTH_DELETION_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully deleted."
 ));
 
 return $lang;

@@ -30,9 +30,10 @@ class UserController extends \UserFrosting\BaseController {
      * This page requires authentication.
      * Request type: GET
      * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
+     * @param bool $paginate_server_side optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.
      * @todo implement interface to modify user-assigned authorization hooks and permissions
      */        
-    public function pageUsers($primary_group_name = null){
+    public function pageUsers($primary_group_name = null, $paginate_server_side = true){
         // Optional filtering by primary group
         if ($primary_group_name){
             $primary_group = GroupLoader::fetch($primary_group_name, 'name');
@@ -45,7 +46,8 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
         
-            $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
+            if (!$paginate_server_side)
+                $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
             $name = $primary_group->name;
             $icon = $primary_group->icon;
 
@@ -55,21 +57,19 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
             
-            $users = UserLoader::fetchAll();
+            //$users = UserLoader::fetchAll();
+            if (!$paginate_server_side)
+                $users = User::queryBuilder()->get();
             $name = "Users";
             $icon = "fa fa-users";
         }
         
-        $this->_app->render('users.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          $name,
-                'description' =>    "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('users/users.twig', [
             "box_title" => $name,
             "icon" => $icon,
-            "users" => $users
+            "primary_group_name" => $primary_group_name,
+            "paginate_server_side" => $paginate_server_side,
+            "users" => isset($users) ? $users : []
         ]);          
     }
     
@@ -87,6 +87,10 @@ class UserController extends \UserFrosting\BaseController {
         // Get the user to view
         $target_user = UserLoader::fetch($user_id);    
         
+        // If the user no longer exists, forward to main user page
+        if (!$target_user)
+            $this->_app->redirect("/users/");
+        
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
             $this->_app->notFound();
@@ -99,10 +103,11 @@ class UserController extends \UserFrosting\BaseController {
         $locale_list = $this->_app->site->getLocales();
         
         // Determine which groups this user is a member of
-        $user_groups = $target_user->getGroups();
-        foreach ($groups as $group_id => $group){
+        $user_groups = $target_user->getGroupIds();
+        foreach ($groups as $group){
+            $group_id = $group->id;
             $group_list[$group_id] = $group->export();
-            if (isset($user_groups[$group_id]))
+            if (in_array($group_id, $user_groups))
                 $group_list[$group_id]['member'] = true;
             else
                 $group_list[$group_id]['member'] = false;
@@ -126,13 +131,7 @@ class UserController extends \UserFrosting\BaseController {
         // Hide password fields for editing user
         $hidden_fields[] = "password";    
     
-        $this->_app->render('user_info.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Users | " . $target_user->user_name,
-                'description' =>    "User information page for " . $target_user->user_name,
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('users/user-info.twig', [
             "box_id" => 'view-user',
             "box_title" => $target_user->user_name,
             "target_user" => $target_user,
@@ -175,16 +174,16 @@ class UserController extends \UserFrosting\BaseController {
             $render = "modal";
         
         // Get a list of all groups
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::all()->getDictionary();
         
         // Get a list of all locales
         $locale_list = $this->_app->site->getLocales();
         
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primary_group = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        $primary_group = Group::where("is_default", GROUP_DEFAULT_PRIMARY)->first();
         
         // Get the default groups
-        $default_groups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+        $default_groups = Group::all()->where("is_default", GROUP_DEFAULT)->getDictionary();
         
         // Set default groups, including default primary group
         foreach ($groups as $group_id => $group){
@@ -205,9 +204,9 @@ class UserController extends \UserFrosting\BaseController {
         $target_user = new User($data);        
         
         if ($render == "modal")
-            $template = "components/user-info-modal.html";
+            $template = "components/common/user-info-modal.twig";
         else
-            $template = "components/user-info-panel.html";
+            $template = "components/common/user-info-panel.twig";
         
         // Determine authorized fields for those that have default values.  Don't hide any fields
         $fields = ['title', 'locale', 'groups', 'primary_group_id'];
@@ -291,9 +290,9 @@ class UserController extends \UserFrosting\BaseController {
         }
         
         if ($render == "modal")
-            $template = "components/user-info-modal.html";
+            $template = "components/common/user-info-modal.twig";
         else
-            $template = "components/user-info-panel.html";
+            $template = "components/common/user-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['display_name', 'email', 'title', 'password', 'locale', 'groups', 'primary_group_id'];
@@ -598,10 +597,9 @@ class UserController extends \UserFrosting\BaseController {
             $ms->addMessageTranslated("danger", "ACCOUNT_DELETE_MASTER");
             $this->_app->halt(403);
         }
-
+        
         $ms->addMessageTranslated("success", "ACCOUNT_DELETION_SUCCESSFUL", ["user_name" => $target_user->user_name]);
         $target_user->delete();
         unset($target_user);
     }
-    
 }

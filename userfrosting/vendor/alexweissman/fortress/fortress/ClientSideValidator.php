@@ -62,7 +62,7 @@ class ClientSideValidator {
             if (isset($field['validators'])){
                 $validators = $field['validators'];
                 foreach ($validators as $validator_name => $validator){
-                    $client_rules[$field_name]['validators'] = array_merge($client_rules[$field_name]['validators'], $this->transformValidator($validator_name, $validator));
+                    $client_rules[$field_name]['validators'] = array_merge($client_rules[$field_name]['validators'], $this->transformValidator($field_name, $validator_name, $validator));
                 }
             }
         }
@@ -167,14 +167,13 @@ class ClientSideValidator {
         return $client_rules;    
     }
     
-    private function transformValidator($validator_name, $validator){
+    private function transformValidator($field_name, $validator_name, $validator){
         $params = [];
         // Message
-        if (isset($validator['message'])){
             if (isset($validator['message'])){
+                $validator = array_merge(["self" => $field_name], $validator);
                 $params["message"] = $this->_translator->translate($validator['message'], $validator);
-            }
-        }        
+            }      
         $transformedValidatorJson = [];        
         switch ($validator_name){
             // Required validator

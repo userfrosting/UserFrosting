@@ -29,15 +29,7 @@ class AccountController extends \UserFrosting\BaseController {
      * Request type: GET
      */
     public function pageHome(){
-        $this->_app->render('common/home.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "A secure, modern user management system for PHP.",
-                'description' =>    "Main landing page for public access to this website.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ]
-        ]);  
+        $this->_app->render('home.twig');  
     }
     
     /**
@@ -54,14 +46,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);
         
-        $this->_app->render('common/login.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Login",
-                'description' =>    "Login to your UserFrosting account.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(),     // Starting to violate the Law of Demeter here...
-                'active_page' =>    "account/login",
-            ],
+        $this->_app->render('account/login.twig', [
             'validators' => $validators->formValidationRulesJson()
         ]);
     }
@@ -100,14 +85,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->redirect('login');
         }
     
-        $this->_app->render('common/register.html', [
-            'page' => [
-                'author' =>         $settings->author,
-                'title' =>          "Register",
-                'description' =>    "Register for a new UserFrosting account.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    "account/register"                
-            ],
+        $this->_app->render('account/register.twig', [
             'captcha_image' =>  $this->generateCaptcha(),
             'validators' => $validators->formValidationRulesJson()
         ]);
@@ -125,14 +103,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator); 
         
-       $this->_app->render('common/forgot-password.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Reset Password",
-                'description' =>    "Reset your UserFrosting password.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ],
+       $this->_app->render('account/forgot-password.twig', [
             'validators' => $validators->formValidationRulesJson()
         ]);
     }
@@ -149,14 +120,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
         
-       $this->_app->render('common/reset-password.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Choose a New Password",
-                'description' =>    "Reset your UserFrosting password.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ],
+        $this->_app->render('account/reset-password.twig', [
             'activation_token' => $this->_app->request->get()['activation_token'],
             'validators' => $validators->formValidationRulesJson()
         ]);
@@ -174,14 +138,7 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
                  
-        $this->_app->render('common/resend-activation.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Resend Activation",
-                'description' =>    "Resend the activation email for your new UserFrosting account.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages(), 
-                'active_page' =>    ""
-            ],
+        $this->_app->render('account/resend-activation.twig', [
             'validators' => $validators->formValidationRulesJson()
         ]);
     }
@@ -203,17 +160,22 @@ class AccountController extends \UserFrosting\BaseController {
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
         $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
         
-        $this->_app->render('account-settings.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Account Settings",
-                'description' =>    "Update your account settings, including email, display name, and password.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('account/account-settings.twig', [
             "locales" => $this->_app->site->getLocales(),
             "validators" => $validators->formValidationRulesJson()
         ]);          
     }    
+    
+    /**
+     * Account compromised page.
+     *
+     * Warns the user that their account may have been compromised due to a stolen "remember me" cookie.
+     * This page is "public access".
+     * Request type: GET     
+     */   
+    public function pageAccountCompromised(){
+        $this->_app->render('errors/compromised.twig');
+    }      
     
     /**
      * Processes an account login request.
@@ -294,9 +256,26 @@ class AccountController extends \UserFrosting\BaseController {
         // Here is my password.  May I please assume the identify of this user now?
         if ($user->verifyPassword($data['password']))  {
             $user->login();
-            // Create the session
-            $_SESSION["userfrosting"]["user"] = $user;
-            $this->_app->user = $_SESSION["userfrosting"]["user"];
+            session_regenerate_id();
+            // If the user wants to be remembered, create Rememberme cookie
+            // Change cookie path
+            $cookie = $this->_app->remember_me->getCookie();
+            $cookie->setPath("/");
+            $this->_app->remember_me->setCookie($cookie);
+            if(!empty($data['rememberme'])) {
+                //error_log("Creating user cookie for " . $user->id);
+                $this->_app->remember_me->createCookie($user->id);
+            } else {
+                $this->_app->remember_me->clearCookie();
+            }            
+            // Assume identity
+            $this->_app->user = $user;
+            
+            // Store user id in session
+            $_SESSION["userfrosting"]["user_id"] = $user->id;
+            
+            // Setup logged in user environment
+            $this->_app->setupAuthenticatedEnvironment();            
             $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
         } else {
             //Again, we know the password is at fault here, but lets not give away the combination in case of someone bruteforcing
@@ -313,8 +292,23 @@ class AccountController extends \UserFrosting\BaseController {
      * This route is "public access".
      * Request type: POST     
      */      
-    public function logout(){
-        session_destroy();
+    public function logout($complete = false){
+        error_log("Logging the user out...");
+        if ($complete){
+            $storage = new \Birke\Rememberme\Storage\PDO($this->_app->remember_me_table);
+            $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
+            $storage->cleanAllTriplets($this->_app->user->id);
+        }        
+        // Change cookie path
+        $cookie = $this->_app->remember_me->getCookie();
+        $cookie->setPath("/");
+        $this->_app->remember_me->setCookie($cookie); 
+
+        if ($this->_app->remember_me->clearCookie())
+            error_log("Cleared cookie");
+            
+        session_regenerate_id(true);
+        session_destroy();        
         $this->_app->redirect($this->_app->site->uri['public']);
     }
 
@@ -448,7 +442,7 @@ class AccountController extends \UserFrosting\BaseController {
             $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
             
             $mail->Subject = $this->_app->site->site_title . " - please activate your account";
-            $mail->Body    = $this->_app->view()->render("common/mail/activate-new.html", [
+            $mail->Body    = $this->_app->view()->render("common/mail/activate-new.twig", [
                 "user" => $user
             ]);
             
@@ -560,7 +554,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Generate a new activation token.  This will also be used as the password reset token.
-        $user->activation_token = UserLoader::generateActivationToken();
+        $user->activation_token = User::generateActivationToken();
         $user->last_activation_request = date("Y-m-d H:i:s");
         $user->lost_password_request = "1";
         $user->lost_password_timestamp = date("Y-m-d H:i:s");
@@ -574,7 +568,7 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
         $mail->Subject = $this->_app->site->site_title . " - reset your password";
-        $mail->Body    = $this->_app->view()->render("common/mail/password-reset.html", [
+        $mail->Body    = $this->_app->view()->render("common/mail/password-reset.twig", [
             "user" => $user,
             "request_date" => date("Y-m-d H:i:s")
         ]);
@@ -774,7 +768,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // We're good to go - create a new activation token and send the email
-        $user->activation_token = UserLoader::generateActivationToken();
+        $user->activation_token = User::generateActivationToken();
         $user->last_activation_request = date("Y-m-d H:i:s");
         $user->lost_password_timestamp = date("Y-m-d H:i:s");
         
@@ -787,7 +781,7 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
         $mail->Subject = $this->_app->site->site_title . " - activate your account";
-        $mail->Body    = $this->_app->view()->render("common/mail/resend-activation.html", [
+        $mail->Body    = $this->_app->view()->render("common/mail/resend-activation.twig", [
             "user" => $user,
             "activation_token" => $user->activation_token
         ]);
@@ -928,5 +922,5 @@ class AccountController extends \UserFrosting\BaseController {
      */        
     public function captcha(){
         echo $this->generateCaptcha();
-    }    
+    }  
 }

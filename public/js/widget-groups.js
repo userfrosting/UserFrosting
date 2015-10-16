@@ -1,53 +1,39 @@
-/*
-
-UserFrosting
-By Alex Weissman
-
-UserFrosting is 100% free and open-source.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
-
+/**
+ * @file This file contains functions and bindings for the UserFrosting group management pages.
+ *
+ * @author Alex Weissman
+ * @license MIT
+ */
+ 
 $(document).ready(function() {                   
     // Link buttons
-    $('.js-group-create').click(function() { 
+ 	bindGroupTableButtons($("body"));
+});
+
+function bindGroupTableButtons(table) {
+    $(table).find('.js-group-create').click(function() { 
         groupForm('dialog-group-create');
     });
     
-    $('.js-group-edit').click(function() {
+    $(table).find('.js-group-edit').click(function() {
         var btn = $(this);
         var group_id = btn.data('id');
         groupForm('dialog-group-edit', group_id);
     });
     
-    $('.js-group-delete').click(function() {
+    $(table).find('.js-group-delete').click(function() {
         var btn = $(this);
         var group_id = btn.data('id');
         var name = btn.data('name');
         deleteGroupDialog('dialog-group-delete', group_id, name);
-    });	 	
-});
+    });
+}
 
-
-
-/* Display a modal form for updating/creating a group */
-// TODO: This function is highly redundant with userForm.  Can we refactor?
+/**
+ * Display a modal form for updating/creating a group.
+ *
+ * @todo This function is highly redundant with userForm.  Can we refactor?
+ */
 function groupForm(box_id, group_id) {	
 	group_id = typeof group_id !== 'undefined' ? group_id : "";
 	
@@ -103,55 +89,15 @@ function groupForm(box_id, group_id) {
         });
         
 		// Link submission buttons
-        $("form[name='group']").formValidation({
-          framework: 'bootstrap',
-          // Feedback icons
-          icon: {
-              valid: 'fa fa-check',
-              invalid: 'fa fa-times',
-              validating: 'fa fa-refresh'
-          },
-          fields: validators
-        }).on('success.form.fv', function(e) {
-          // Prevent double form submission
-          e.preventDefault();
-    
-          // Get the form instance
-          var form = $(e.target);
-    
-          // Serialize and post to the backend script in ajax mode
-          var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
-          // Get non-disabled, unchecked checkbox values, set them to 0
-          form.find('input[type=checkbox]:enabled').each(function() {
-              if ($(this).is(':checked'))
-                  serializedData += "&" + encodeURIComponent(this.name) + "=1";
-              else
-                  serializedData += "&" + encodeURIComponent(this.name) + "=0";
-          });
-          // Append page CSRF token
-          var csrf_token = $("meta[name=csrf_token]").attr("content");
-          serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);
-          
-          var url = form.attr('action');
-          return $.ajax({  
-            type: "POST",  
-            url: url,  
-            data: serializedData       
-          }).done(function(data, statusText, jqXHR) {
-              // Reload the page
-              window.location.reload(true);         
-          }).fail(function(jqXHR) {
-              if (site['debug'] == true) {
-                  document.body.innerHTML = jqXHR.responseText;
-              } else {
-                  console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-              }
-              $('#form-alerts').flashAlerts().done(function() {
-                  // Re-enable submit button
-                  form.data('formValidation').disableSubmitButtons(false);
-              });              
-          });
-        }); 	
+        ufFormSubmit(
+            $("form[name='group']"),
+            validators,
+            $("#form-alerts"),
+            function(data, statusText, jqXHR) {
+                // Reload the page on success
+                window.location.reload(true);   
+            }
+        );          	
 	});
 }
 
@@ -186,7 +132,6 @@ function deleteGroupDialog(box_id, group_id, name){
 		$( "body" ).append(result);
 		$('#' + box_id).modal('show');        
 		$('#' + box_id + ' .js-confirm').click(function(){
-            
             var url = site['uri']['public'] + "/groups/g/" + group_id + "/delete";
             
             csrf_token = $("meta[name=csrf_token]").attr("content");
