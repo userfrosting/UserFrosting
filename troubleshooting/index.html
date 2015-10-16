@@ -154,7 +154,7 @@ title: "UserFrosting | Troubleshooting"
                 <p>
                     The problem here is that <code>mod_rewrite</code> is incorrectly pointing to the directory itself (<code>WebProject</code>) rather than the alias name (<code>project</code>).
                 </p>                    
-                
+                <p>
                 To correct this, you’ll need to figure out the proper <code>RewriteBase</code> to use based on your alias and the 404 error.  Add a line in <code>/public/.htaccess</code> after <code>"RewriteEngine On"</code>:
                 </p>
                 <p>
