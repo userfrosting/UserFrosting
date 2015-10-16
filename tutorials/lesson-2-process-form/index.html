@@ -147,7 +147,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         
         <p>Thus, <code>GET</code>ting that resource gives us an HTML page containing a form that we can fill out to interact with that service.  <code>POST</code>ing to that resource, on the other hand, actually invokes the service with the parameters specified by the filled-out form.</p>
         
-        <p>Ok, enough about REST.  Let&#39;s invoke our controller method <code>pageGroupTitles</code> in our <code>GET</code> route:</p>
+        <p>Ok, enough about REST.  Let's go back to <code>index.php</code>, and invoke our controller method <code>pageGroupTitles</code> in our <code>GET</code> route:</p>
         
         <pre><code>
         {% raw %}
@@ -383,6 +383,8 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         
         <p>The other nice thing about using AJAX is that, before the form is actually submitted, we can validate the contents of the fields with a Javascript plugin.  This <strong>does not mean</strong> that we don&#39;t have to validate the data in the <code>POST</code> route as well - it simply makes things a little easier on the client by telling them immediately if their input contains an error.  This way, they don&#39;t have to wait for the round trip to the server and back.</p>
         
+        <p><strong>To have the form submitted via AJAX, add this block of Javascript code immediately before your closing <code>&lt;/body&gt;</code> tag in the page template:</strong></p>
+        
         <pre><code>
         {% raw %}
         &lt;script&gt;
@@ -453,7 +455,6 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         
         <p><code>.always</code> is called regardless of whether the request was successful or not.  We always want to display any messages from the message stream, using UserFrosting&#39;s <code>flashAlerts()</code> jQuery plugin.  This will take care of displaying both success and error messages.</p>
         
-        <p><strong>Add this block of Javascript code immediately before your closing <code>&lt;/body&gt;</code> tag in the page template.</strong></p>
         
         <h3 id="toc_6">Client-side Validation</h3>
         
