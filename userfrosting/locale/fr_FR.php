@@ -155,7 +155,7 @@ $lang = array_merge($lang,array(
 		"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Le groupe '{{name}}' ne peut pas être supprimé car il correspond au groupe par défaut des nouveaux utilisateurs.",
 	"GROUP_AUTH_EXISTS" => "Le groupe '{{name}}' a déjà une règle configurée pour le hook '{{hook}}'.",
     "GROUP_AUTH_CREATION_SUCCESSFUL" => "La règle du hook '{{hook}}' a été créée pour le groupe '{{name}}'.",
-    "GROUP_AUTH_UPDATE_SUCCESSFUL" => "La règle autorisation l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été mise à jour avec succès.",
-    "GROUP_AUTH_DELETION_SUCCESSFUL" => "La règle autorisation l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été supprimée avec succès."
+    "GROUP_AUTH_UPDATE_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été mise à jour avec succès.",
+    "GROUP_AUTH_DELETION_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été supprimée avec succès."
 ));
 return $lang;
