@@ -26,7 +26,7 @@ abstract class MySqlDatabase extends UFDatabase implements DatabaseInterface {
             $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);       // Let this function throw a PDO exception if it cannot connect.
             return $db;
         } catch (\PDOException $e){
-            echo "We can't seem to connect to the database!  Please check your database credentials in config-userfrosting.php.";
+            die("We can't seem to connect to the database!  Please check your database credentials in config-userfrosting.php.");
             //throw new DatabaseInvalidException($e->getMessage(), $e->getStatus(), $e->getPrevious());
         }
     }
