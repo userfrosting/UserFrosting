@@ -39,7 +39,7 @@ class AuthController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/auth-create.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);  
         
         // Get the group for which we are creating this new rule
         $group = Group::find($id);        
@@ -50,7 +50,7 @@ class AuthController extends \UserFrosting\BaseController {
             "subtext" => "This rule will apply to any user who is a member of group '{$group->name}'.",
             "submit_button" => "Create rule",
             "form_action" => $this->_app->site->uri['public'] . "/groups/g/$id/auth",
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }            
     
@@ -78,7 +78,7 @@ class AuthController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/auth-update.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);          
+        $this->_app->jsValidator->setSchema($schema);     
         
         $this->_app->render("components/common/auth-info-form.twig", [
             "box_id" => $get['box_id'],
@@ -91,7 +91,7 @@ class AuthController extends \UserFrosting\BaseController {
                 "hidden" => []
             ],            
             "rule" => $rule,
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }
     

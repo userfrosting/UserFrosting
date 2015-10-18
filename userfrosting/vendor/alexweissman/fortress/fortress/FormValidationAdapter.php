@@ -3,7 +3,7 @@
 namespace Fortress;
 
 /**
- * ClientSideValidator Class
+ * FormValidationAdapter Class
  *
  * Loads validation rules from a schema and generates client-side rules compatible with the [FormValidation](http://formvalidation.io) JS plugin.
  *
@@ -11,41 +11,16 @@ namespace Fortress;
  * @author Alex Weissman
  * @link http://alexanderweissman.com
  */
-class ClientSideValidator {
+class FormValidationAdapter extends ClientSideValidationAdapter {
 
-    /**
-     * @var RequestSchema
-     */
-    protected $_schema;
-
-    /**
-     * @var MessageTranslator
-     */    
-    protected $_translator; 
-
-    /**
-     * Create a new client-side validator.
-     *
-     * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
-     * @param MessageTranslator $translator A MessageTranslator to be used to translate message ids found in the schema.
-     */  
-    public function __construct($schema, $translator) {        
-        // Set schema
-        $this->setSchema($schema);
-        
-        // Set translator
-        $this->_translator = $translator;
+    public function rules($format = "json", $string_encode = true) {
+        if ($format == "html5") {
+            return $this->formValidationRulesHtml5();
+        } else {
+            return $this->formValidationRulesJson($string_encode);
+        }
     }
-    
-    /**
-     * Set the schema for this validator, as a valid RequestSchema object.
-     *
-     * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
-     */
-    public function setSchema($schema){
-        $this->_schema = $schema;
-    }
-    
+
     /**
      * Generate FormValidation compatible rules from the specified RequestSchema, as a JSON document.  
      * See [this](http://formvalidation.io/getting-started/#calling-plugin) as an example of what this function will generate.
@@ -246,8 +221,3 @@ class ClientSideValidator {
         return $attr;
     }
 }
-
-
-
-
-

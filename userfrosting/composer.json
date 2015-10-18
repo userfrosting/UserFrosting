@@ -18,7 +18,7 @@
         "slim/views" : "*",
         "illuminate/database" : "5.0.33",
         "nikic/php-parser" : "*",
-        "alexweissman/fortress" : "dev-master",
+        "alexweissman/fortress" : "0.2.0.x-dev",
         "phpmailer/phpmailer" : "5.2.10",
         "birke/rememberme" : "dev-master"
     },

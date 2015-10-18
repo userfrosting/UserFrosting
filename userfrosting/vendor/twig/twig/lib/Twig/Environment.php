@@ -16,7 +16,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.22.2';
+    const VERSION = '1.22.3';
 
     protected $charset;
     protected $loader;
@@ -48,6 +48,7 @@ class Twig_Environment
     private $originalCache;
     private $bcWriteCacheFile = false;
     private $bcGetCacheFilename = false;
+    private $lastModifiedExtension = 0;
 
     /**
      * Constructor.
@@ -263,6 +264,10 @@ class Twig_Environment
         } elseif (false === $cache) {
             $this->originalCache = $cache;
             $this->cache = new Twig_Cache_Null();
+        } elseif (null === $cache) {
+            @trigger_error('Using "null" as the cache strategy is deprecated and will be removed in Twig 2.0.', E_USER_DEPRECATED);
+            $this->originalCache = false;
+            $this->cache = new Twig_Cache_Null();
         } elseif ($cache instanceof Twig_CacheInterface) {
             $this->originalCache = $this->cache = $cache;
         } else {
@@ -291,14 +296,22 @@ class Twig_Environment
     /**
      * Gets the template class associated with the given string.
      *
-     * @param string $name  The name for which to calculate the template class name
-     * @param int    $index The index if it is an embedded template
+     * The generated template class is based on the following parameters:
+     *
+     *  * The cache key for the given template;
+     *  * The currently enabled extensions;
+     *  * Whether the Twig C extension is available or not.
+     *
+     * @param string   $name  The name for which to calculate the template class name
+     * @param int|null $index The index if it is an embedded template
      *
      * @return string The template class name
      */
     public function getTemplateClass($name, $index = null)
     {
-        $key = $this->getLoader()->getCacheKey($name).'__'.implode('__', array_keys($this->extensions));
+        $key = $this->getLoader()->getCacheKey($name);
+        $key .= json_encode(array_keys($this->extensions));
+        $key .= function_exists('twig_template_get_attributes');
 
         return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '_'.$index);
     }
@@ -446,14 +459,7 @@ class Twig_Environment
      */
     public function isTemplateFresh($name, $time)
     {
-        foreach ($this->extensions as $extension) {
-            $r = new ReflectionObject($extension);
-            if (filemtime($r->getFileName()) > $time) {
-                return false;
-            }
-        }
-
-        return $this->getLoader()->isFresh($name, $time);
+        return $this->lastModifiedExtension <= $time && $this->getLoader()->isFresh($name, $time);
     }
 
     /**
@@ -757,6 +763,11 @@ class Twig_Environment
     {
         if ($this->extensionInitialized) {
             throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
+        }
+
+        $r = new ReflectionObject($extension);
+        if (($extensionTime = filemtime($r->getFileName())) > $this->lastModifiedExtension) {
+            $this->lastModifiedExtension = $extensionTime;
         }
 
         $this->extensions[$extension->getName()] = $extension;

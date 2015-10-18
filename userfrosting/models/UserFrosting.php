@@ -22,8 +22,7 @@ class UserFrosting extends \Slim\Slim {
     public function setupGuestEnvironment(){
         //error_log("Current user id is guest");
         $this->user = new User([], $this->config('user_id_guest')); 
-        $this->setupMessageStream();
-        $this->setupTranslator($this->site->default_locale);
+        $this->setupServices($this->site->default_locale);
         $this->setupErrorHandling();
     }
         
@@ -32,12 +31,11 @@ class UserFrosting extends \Slim\Slim {
      */    
     public function setupAuthenticatedEnvironment(){
         //error_log("Setting up authenticated user environment");
-        $this->setupMessageStream();
-        $this->setupTranslator($this->user->locale);
+        $this->setupServices($this->user->locale);
         $this->setupTwigUserVariables();
     }
     
-    public function setupMessageStream(){
+    public function setupServices($locale){
         //error_log("Setting up message stream");
         /**** Message Stream Setup ****/
         
@@ -46,17 +44,17 @@ class UserFrosting extends \Slim\Slim {
             $_SESSION['userfrosting']['alerts'] = new \Fortress\MessageStream();
         
         $this->alerts = $_SESSION['userfrosting']['alerts'];
-    }
-    
-    public function setupTranslator($locale){
-        //error_log("Setting up translator");
+        
         /**** Translation setup ****/
         $this->translator = new \Fortress\MessageTranslator();
         
         /* Set the translation path and default language path. */
         $this->translator->setTranslationTable($this->config("locales.path") . "/" . $locale . ".php");
         $this->translator->setDefaultTable($this->config("locales.path") . "/en_US.php");
-        \Fortress\MessageStream::setTranslator($this->translator);   
+        \Fortress\MessageStream::setTranslator($this->translator);
+        
+        // Once we have the translator, we can set up the client-side validation adapter too
+        $this->jsValidator = new \Fortress\FormValidationAdapter($this->translator);        
     }
     
     public function setupErrorHandling(){

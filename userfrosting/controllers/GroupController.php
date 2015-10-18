@@ -117,7 +117,7 @@ class GroupController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);   
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -135,7 +135,7 @@ class GroupController extends \UserFrosting\BaseController {
                     "edit", "delete"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }            
     
@@ -189,7 +189,7 @@ class GroupController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-update.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);          
+        $this->_app->jsValidator->setSchema($schema);  
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -207,7 +207,7 @@ class GroupController extends \UserFrosting\BaseController {
                     "edit", "delete"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }
     

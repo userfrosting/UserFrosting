@@ -182,6 +182,12 @@ class UserController extends \UserFrosting\BaseController {
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
         $primary_group = Group::where("is_default", GROUP_DEFAULT_PRIMARY)->first();
         
+        // If there is no default primary group, there is a problem.  Show an error message for now.
+        if (!$primary_group){
+            $this->_app->alerts->addMessageTranslated("danger", "GROUP_DEFAULT_PRIMARY_NOT_DEFINED");
+            $this->_app->halt(500);
+        }
+        
         // Get the default groups
         $default_groups = Group::all()->where("is_default", GROUP_DEFAULT)->getDictionary();
         
@@ -222,7 +228,7 @@ class UserController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-create.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);        
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -241,7 +247,7 @@ class UserController extends \UserFrosting\BaseController {
                     "edit", "enable", "delete", "activate"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }  
         
@@ -316,7 +322,7 @@ class UserController extends \UserFrosting\BaseController {
                 
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);  
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -335,7 +341,7 @@ class UserController extends \UserFrosting\BaseController {
                     "edit", "enable", "delete", "activate"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }    
 

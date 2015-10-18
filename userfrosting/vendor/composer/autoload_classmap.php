@@ -8,9 +8,10 @@ $baseDir = dirname($vendorDir);
 return array(
     'AccessCondition' => $baseDir . '/models/auth/AccessCondition.php',
     'EasyPeasyICS' => $vendorDir . '/phpmailer/phpmailer/extras/EasyPeasyICS.php',
-    'Fortress\\ClientSideValidator' => $vendorDir . '/alexweissman/fortress/fortress/ClientSideValidator.php',
+    'Fortress\\ClientSideValidationAdapter' => $vendorDir . '/alexweissman/fortress/fortress/adapters/ClientSideValidationAdapter.php',
     'Fortress\\DataSanitizer' => $vendorDir . '/alexweissman/fortress/fortress/DataSanitizer.php',
     'Fortress\\DataSanitizerInterface' => $vendorDir . '/alexweissman/fortress/fortress/DataSanitizer.php',
+    'Fortress\\FormValidationAdapter' => $vendorDir . '/alexweissman/fortress/fortress/FormValidationAdapter.php',
     'Fortress\\HTTPRequestFortress' => $vendorDir . '/alexweissman/fortress/fortress/HTTPRequestFortress.php',
     'Fortress\\MessageStream' => $vendorDir . '/alexweissman/fortress/fortress/MessageStream.php',
     'Fortress\\MessageTranslator' => $vendorDir . '/alexweissman/fortress/fortress/MessageTranslator.php',

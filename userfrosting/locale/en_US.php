@@ -49,6 +49,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USER_OR_PASS_INVALID" => "Username or password is invalid.",
 	"ACCOUNT_ALREADY_ACTIVE" => "Your account is already activated.",
 	"ACCOUNT_REGISTRATION_DISABLED" => "We're sorry, account registration has been disabled.",
+    "ACCOUNT_REGISTRATION_BROKEN" => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
 	"ACCOUNT_REGISTRATION_LOGOUT" => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
 	"ACCOUNT_INACTIVE" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
 	"ACCOUNT_DISABLED" => "This account has been disabled. Please contact us for more information.",
@@ -168,7 +169,8 @@ $lang = array_merge($lang,array(
     "GROUP_AUTH_EXISTS" => "The group '{{name}}' already has a rule defined for hook '{{hook}}'.",
     "GROUP_AUTH_CREATION_SUCCESSFUL" => "A rule for '{{hook}}' has been successfully created for group '{{name}}'.",
     "GROUP_AUTH_UPDATE_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully updated.",
-    "GROUP_AUTH_DELETION_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully deleted."
+    "GROUP_AUTH_DELETION_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully deleted.",
+    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "You cannot create a new user because there is no default primary group defined.  Please check your group settings."
 ));
 
 return $lang;

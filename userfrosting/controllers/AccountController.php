@@ -44,10 +44,10 @@ class AccountController extends \UserFrosting\BaseController {
         }        
         
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);
+        $this->_app->jsValidator->setSchema($schema);
         
         $this->_app->render('account/login.twig', [
-            'validators' => $validators->formValidationRulesJson()
+            'validators' => $this->_app->jsValidator->rules()
         ]);
     }
 
@@ -75,7 +75,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
 
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);                
+        $this->_app->jsValidator->setSchema($schema);       
 
         $settings = $this->_app->site;
         
@@ -87,7 +87,7 @@ class AccountController extends \UserFrosting\BaseController {
     
         $this->_app->render('account/register.twig', [
             'captcha_image' =>  $this->generateCaptcha(),
-            'validators' => $validators->formValidationRulesJson()
+            'validators' => $this->_app->jsValidator->rules()
         ]);
     }
 
@@ -101,10 +101,10 @@ class AccountController extends \UserFrosting\BaseController {
     public function pageForgotPassword(){
       
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator); 
+        $this->_app->jsValidator->setSchema($schema);  
         
-       $this->_app->render('account/forgot-password.twig', [
-            'validators' => $validators->formValidationRulesJson()
+        $this->_app->render('account/forgot-password.twig', [
+            'validators' => $this->_app->jsValidator->rules()
         ]);
     }
 
@@ -118,11 +118,11 @@ class AccountController extends \UserFrosting\BaseController {
     public function pageResetPassword(){
       
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
+        $this->_app->jsValidator->setSchema($schema);          
         
         $this->_app->render('account/reset-password.twig', [
             'activation_token' => $this->_app->request->get()['activation_token'],
-            'validators' => $validators->formValidationRulesJson()
+            'validators' => $this->_app->jsValidator->rules()
         ]);
     }
     
@@ -136,10 +136,10 @@ class AccountController extends \UserFrosting\BaseController {
     public function pageResendActivation(){
     
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
+        $this->_app->jsValidator->setSchema($schema);         
                  
         $this->_app->render('account/resend-activation.twig', [
-            'validators' => $validators->formValidationRulesJson()
+            'validators' => $this->_app->jsValidator->rules()
         ]);
     }
     
@@ -158,11 +158,11 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);         
+        $this->_app->jsValidator->setSchema($schema);         
         
         $this->_app->render('account/account-settings.twig', [
             "locales" => $this->_app->site->getLocales(),
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);          
     }    
     
@@ -414,6 +414,14 @@ class AccountController extends \UserFrosting\BaseController {
     
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
         $primaryGroup = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        
+        // Check that a default primary group is actually set
+        if (!$primaryGroup){
+            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_BROKEN");
+            error_log("Account registration is not working because a default primary group has not been set.");
+            $this->_app->halt(500);
+        }
+        
         $data['primary_group_id'] = $primaryGroup->id;
         // Set default title for new users
         $data['title'] = $primaryGroup->new_user_title;

@@ -140,10 +140,10 @@ class InstallController extends \UserFrosting\BaseController {
         }
         
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);   
+        $this->_app->jsValidator->setSchema($schema);  
         
         $this->_app->render('install/install-master.twig', [
-            'validators' => $validators->formValidationRulesJson(),
+            'validators' => $this->_app->jsValidator->rules(),
             'table_config' => Database::getSchemaTable('configuration')->name
         ]);    
     }
