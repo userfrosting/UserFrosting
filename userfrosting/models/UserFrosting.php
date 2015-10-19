@@ -54,7 +54,7 @@ class UserFrosting extends \Slim\Slim {
         \Fortress\MessageStream::setTranslator($this->translator);
         
         // Once we have the translator, we can set up the client-side validation adapter too
-        $this->jsValidator = new \Fortress\FormValidationAdapter($this->translator);        
+        $this->jsValidator = new \Fortress\JqueryValidationAdapter($this->translator);        
     }
     
     public function setupErrorHandling(){

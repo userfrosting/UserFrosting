@@ -13,6 +13,7 @@ return array(
     'Fortress\\DataSanitizerInterface' => $vendorDir . '/alexweissman/fortress/fortress/DataSanitizer.php',
     'Fortress\\FormValidationAdapter' => $vendorDir . '/alexweissman/fortress/fortress/FormValidationAdapter.php',
     'Fortress\\HTTPRequestFortress' => $vendorDir . '/alexweissman/fortress/fortress/HTTPRequestFortress.php',
+    'Fortress\\JqueryValidationAdapter' => $vendorDir . '/alexweissman/fortress/fortress/JqueryValidationAdapter.php',
     'Fortress\\MessageStream' => $vendorDir . '/alexweissman/fortress/fortress/MessageStream.php',
     'Fortress\\MessageTranslator' => $vendorDir . '/alexweissman/fortress/fortress/MessageTranslator.php',
     'Fortress\\RequestSchema' => $vendorDir . '/alexweissman/fortress/fortress/RequestSchema.php',

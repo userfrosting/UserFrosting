@@ -215,8 +215,8 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("common", "bootstrap-modalmanager.js");    
     $app->schema->registerJS("common", "sb-admin-2.js");
     $app->schema->registerJS("common", "lib/metisMenu.js");
-    $app->schema->registerJS("common", "formValidation/formValidation.js");
-    $app->schema->registerJS("common", "formValidation/bootstrap.js");
+    $app->schema->registerJS("common", "jqueryValidation/jquery.validate.js");
+    $app->schema->registerJS("common", "jqueryValidation/additional-methods.js");
     $app->schema->registerJS("common", "moment.js");
     $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.js");
     $app->schema->registerJS("common", "tablesorter/tables.js");

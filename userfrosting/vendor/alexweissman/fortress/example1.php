@@ -67,7 +67,7 @@ if (!$rf->validate()) {
 }
 
 // Test client validators
-$clientVal = new Fortress\FormValidationAdapter($translator);
+$clientVal = new Fortress\JqueryValidationAdapter($translator);
 $clientVal->setSchema($schema);
 echo "<h2>Client-side validation schema (JSON)</h2>";
 echo "<pre>";
