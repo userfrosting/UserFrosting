@@ -190,7 +190,6 @@ $app->hook('includes.css.register', function () use ($app){
     $app->schema->registerCSS("common", "lib/metisMenu.css");
     $app->schema->registerCSS("common", "bootstrap-custom.css");
     $app->schema->registerCSS("common", "bootstrap-switch.css");
-    $app->schema->registerCSS("common", "formValidation/formValidation.css");           
     $app->schema->registerCSS("common", "tablesorter/theme.bootstrap.css");
     $app->schema->registerCSS("common", "tablesorter/jquery.tablesorter.pager.css");
     $app->schema->registerCSS("common", "select2/select2.css");

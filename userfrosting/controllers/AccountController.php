@@ -450,7 +450,7 @@ class AccountController extends \UserFrosting\BaseController {
             $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
             
             $mail->Subject = $this->_app->site->site_title . " - please activate your account";
-            $mail->Body    = $this->_app->view()->render("common/mail/activate-new.twig", [
+            $mail->Body    = $this->_app->view()->render("mail/activate-new.twig", [
                 "user" => $user
             ]);
             
@@ -576,7 +576,7 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
         $mail->Subject = $this->_app->site->site_title . " - reset your password";
-        $mail->Body    = $this->_app->view()->render("common/mail/password-reset.twig", [
+        $mail->Body    = $this->_app->view()->render("mail/password-reset.twig", [
             "user" => $user,
             "request_date" => date("Y-m-d H:i:s")
         ]);
@@ -789,7 +789,7 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
         $mail->Subject = $this->_app->site->site_title . " - activate your account";
-        $mail->Body    = $this->_app->view()->render("common/mail/resend-activation.twig", [
+        $mail->Body    = $this->_app->view()->render("mail/resend-activation.twig", [
             "user" => $user,
             "activation_token" => $user->activation_token
         ]);
