@@ -21,9 +21,9 @@
 </script>
 
 <script id="user-table-column-last-sign-in" type="text/x-handlebars-template">
-    {{#if user.last_sign_in_stamp }}
-    <td data-num="{{dateFormat user.last_sign_in_stamp format='x'}}">
-        {{dateFormat user.last_sign_in_stamp format="dddd"}}<br>{{dateFormat user.last_sign_in_stamp format="MMM Do, YYYY h:mm a"}}
+    {{#if user.last_sign_in_time }}
+    <td data-num="{{dateFormat user.last_sign_in_time format='x'}}">
+        {{dateFormat user.last_sign_in_time format="dddd"}}<br>{{dateFormat user.last_sign_in_time format="MMM Do, YYYY h:mm a"}}
     </td>
     {{ else }}
     <td data-num="0">
@@ -35,13 +35,13 @@
 <script id="user-table-column-actions" type="text/x-handlebars-template">
     <td>
         <div class="btn-group">
-            {{#ifCond user.enabled 0 }}
+            {{#ifCond user.flag_enabled 0 }}
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Disabled
                     <span class="caret"></span>
                 </button>
             {{ else }}
-                {{#ifCond user.active 0 }}
+                {{#ifCond user.flag_verified 0 }}
                     <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                         Unactivated
                         <span class="caret"></span>
@@ -54,7 +54,7 @@
                 {{/ifCond }}
             {{/ifCond }}
             <ul class="dropdown-menu" role="menu">
-                {{#ifCond user.active 0 }}
+                {{#ifCond user.flag_verified 0 }}
                 <li>
                     <a href="#" data-id="{{user.id}}" class="js-user-activate">
                     <i class="fa fa-bolt"></i> Activate user
@@ -67,7 +67,7 @@
                     </a>
                 </li>
                 <li>
-                {{#ifCond user.enabled 1 }}
+                {{#ifCond user.flag_enabled 1 }}
                     <a href="#" data-id="{{user.id}}" class="js-user-disable">
                     <i class="fa fa-minus-circle"></i> Disable user
                     </a>

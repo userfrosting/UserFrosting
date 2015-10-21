@@ -78,7 +78,11 @@ class User extends UFModel {
      * @see DatabaseInterface
      */ 
     public function __get($name){
-        if ($name == "primary_group")
+        if ($name == "last_sign_in_event")
+            return $this->lastSignInEvent();
+        else if ($name == "last_sign_in_time")
+            return $this->lastSignInEvent()->occurred_at;
+        else if ($name == "primary_group")
             return $this->getPrimaryGroup();
         else if ($name == "theme")
             return $this->getPrimaryGroup()->theme;
@@ -88,6 +92,24 @@ class User extends UFModel {
             return $this->getPrimaryGroup()->landing_page;
         else
             return parent::__get($name);
+    }
+    
+    /**
+     * Get all events for this user.
+     */    
+    public function events(){
+        return $this->hasMany('UserFrosting\UserEvent');
+    }
+    
+    /**
+     * Get the most recent sign-in event for this user.
+     */    
+    public function lastSignInEvent() {
+        return $this->events()->where('event_type', 'sign_in')->max('occurred_at');
+    }    
+    
+    public function scopeLastSignInTimes(){
+        return $this->where('event_type', 'sign_in')->orderBy('occurred_at', 'desc')->limit(1)->select('user_id', 'occurred_at');
     }
     
     /**
@@ -231,14 +253,14 @@ class User extends UFModel {
     /**
      * Store the User to the database, along with any group associations, updating as necessary.
      *
-     * @param bool $force_create set to true if you want to force UF to set a new sign_up_stamp, activation_token, and last_activation_request, even if this object has already been assigned an id.
+     * @param bool $force_create set to true if you want to force UF to set a new sign_up_stamp, secret_token, and last_activation_request, even if this object has already been assigned an id.
      * @see DatabaseInterface
      */
     public function save(array $options = [], $force_create = false){
         // Initialize timestamps for new Users.  Should this be done here, or somewhere else?
         if (!isset($this->id) || $force_create){
             $this->sign_up_stamp = date("Y-m-d H:i:s");
-            $this->activation_token = User::generateActivationToken();
+            $this->secret_token = User::generateActivationToken();
             $this->last_activation_request = date("Y-m-d H:i:s");
         }    
         
@@ -342,8 +364,14 @@ class User extends UFModel {
      * @see DatabaseInterface
      */ 
     public function login(){    
-        //Update last sign in
-        $this->last_sign_in_stamp = date("Y-m-d H:i:s");
+        // Add a sign in event (time is automatically set by database)
+        $event = new UserEvent([
+            "user_id"     => $this->id,
+            "event_type"  => "sign_in",
+            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
+        ]);
+        
+        $event->save();
         
         // Update password if we had encountered an outdated hash
         if (Authentication::getPasswordHashType($this->password) != "modern"){
@@ -369,7 +397,7 @@ class User extends UFModel {
     public static function generateActivationToken($gen = null) {
         do {
             $gen = md5(uniqid(mt_rand(), false));
-        } while(User::where('activation_token', $gen)->first());
+        } while(User::where('secret_token', $gen)->first());
         return $gen;
     }    
     

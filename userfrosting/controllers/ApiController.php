@@ -70,14 +70,21 @@ class ApiController extends \UserFrosting\BaseController {
         // Count unpaginated total
         $total = $userQuery->count();
         
+        // Left join to get signup, signin dates
+        $userQuery = $userQuery->with( ['events' => function ($query) {
+            $query->lastSignInEvents();
+        }]);
+        
+        //select("uf_user.*", "MAX(uf_user_event.occurred_at) as last_sign_in_time")->
+        
         // Exclude fields
         $userQuery = $userQuery
-                ->exclude(['password', 'activation_token', 'last_activation_request', 'lost_password_request', 'lost_password_timestamp']);
+                ->exclude(['password', 'secret_token', 'last_activation_request', 'lost_password_request', 'lost_password_timestamp']);
                 
         // Apply filters    
         foreach ($filters as $name => $value){
             // For date filters, search for weekday, month, or year
-            if (in_array($name, ['last_sign_in_stamp', 'sign_up_stamp'])){
+            if (in_array($name, ['last_sign_in_time', 'sign_up_stamp'])){
                 $userQuery = $userQuery->whereRaw("DATE_FORMAT($name,'%W') LIKE ?", ["$value%"])
                                 ->orWhereRaw("DATE_FORMAT($name,'%M') LIKE ?", ["$value%"])
                                 ->orWhereRaw("DATE_FORMAT($name,'%Y') LIKE ?", ["$value%"]);
@@ -95,6 +102,7 @@ class ApiController extends \UserFrosting\BaseController {
                 ->take($size)
                 ->orderBy($sort_field, $sort_order);
         
+        //select('uf_user.*', 'uf_user_event.occurred_at as last_sign_in_time')->
         $result = [
             "count" => $total,
             "rows" => $userQuery->get()->toArray(),
@@ -104,6 +112,6 @@ class ApiController extends \UserFrosting\BaseController {
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
         $this->_app->response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        echo json_encode($result);
+        echo json_encode($result, JSON_PRETTY_PRINT);
     }
 }

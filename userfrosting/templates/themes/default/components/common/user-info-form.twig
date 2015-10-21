@@ -51,7 +51,7 @@
                 <label>Last Sign-in</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input type="text" class="form-control" name="last_sign_in_stamp" autocomplete="off" value="{% if target_user.last_sign_in_stamp %}{{target_user.last_sign_in_stamp | date('M j, Y g:i a')}}{% else %}Brand new!{% endif %}" disabled>
+                    <input type="text" class="form-control" name="last_sign_in_time" autocomplete="off" value="{% if target_user.last_sign_in_time %}{{target_user.last_sign_in_time | date('M j, Y g:i a')}}{% else %}Brand new!{% endif %}" disabled>
                 </div>
             </div>
         </div>
@@ -140,7 +140,7 @@
         {% if "activate" not in buttons.hidden %}
         <div class="col-xs-6 col-sm-3">      
             <div class="vert-pad">
-                {% if target_user.active == "0" %}
+                {% if target_user.flag_verified == "0" %}
                     <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-id="{{target_user.id}}">
                         <i class="fa fa-bolt"></i> Activate
                     </button>
@@ -151,7 +151,7 @@
         {% if "enable" not in buttons.hidden %}
         <div class="col-xs-6 col-sm-3">      
             <div class="vert-pad">
-                {% if target_user.enabled == "1" %}
+                {% if target_user.flag_enabled == "1" %}
                     <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-id="{{target_user.id}}">
                         <i class="fa fa-minus-circle"></i> Disable
                     </button>

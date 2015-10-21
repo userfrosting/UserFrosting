@@ -57,19 +57,24 @@ defined("GROUP_DEFAULT_PRIMARY") or define("GROUP_DEFAULT_PRIMARY", 2);
 $table_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "user", [
     "user_name",
     "display_name",
-    "password",
     "email",
-    "activation_token",
-    "last_activation_request",
-    "lost_password_request",
-    "lost_password_timestamp",
-    "active",
     "title",
-    "sign_up_stamp",
-    "last_sign_in_stamp",
-    "enabled",
-    "primary_group_id",
-    "locale"
+    "locale",
+    "primary_group_id",       
+    "secret_token",
+    "flag_verified",
+    "flag_enabled",
+    "flag_password_reset",
+    "created_at",
+    "updated_at",
+    "password"
+]);
+
+$table_user_event = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "user_event", [
+    "user_id",
+    "event_type",
+    "occurred_at",
+    "description"
 ]);
 
 $table_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "group", [
@@ -88,6 +93,7 @@ $table_authorize_user = new \UserFrosting\DatabaseTable($app->config('db')['db_p
 $table_authorize_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_group");    
 
 \UserFrosting\Database::setSchemaTable("user", $table_user);
+\UserFrosting\Database::setSchemaTable("user_event", $table_user_event);
 \UserFrosting\Database::setSchemaTable("group", $table_group);    
 \UserFrosting\Database::setSchemaTable("group_user", $table_group_user);
 \UserFrosting\Database::setSchemaTable("configuration", $table_configuration);
@@ -102,6 +108,12 @@ $app->remember_me_table = [
     'persistentTokenColumn' => 'persistent_token',
     'expiresColumn' => 'expires'
 ];
+
+/* Event Types
+    "last_activation_request",
+    "lost_password_request",
+    "lost_password_timestamp",
+*/
 
 /* Load UserFrosting site settings */
 

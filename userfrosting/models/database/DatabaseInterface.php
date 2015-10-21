@@ -286,13 +286,13 @@ interface GroupObjectInterface {
  * @property string email
  * @property string password
  * @property string title
- * @property int activation_token
+ * @property int secret_token
  * @property datetime last_activation_request
  * @property int lost_password_request
  * @property datetime lost_password_timestamp
  * @property int active
  * @property datetime sign_up_stamp
- * @property datetime last_sign_in_stamp
+ * @property datetime last_sign_in_time
  * @property int enabled
  * @property int primary_group_id
  * @property string locale

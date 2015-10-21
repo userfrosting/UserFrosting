@@ -55,6 +55,7 @@ return array(
     'UserFrosting\\User' => $baseDir . '/models/database/User.php',
     'UserFrosting\\UserAuth' => $baseDir . '/models/database/UserAuth.php',
     'UserFrosting\\UserController' => $baseDir . '/controllers/UserController.php',
+    'UserFrosting\\UserEvent' => $baseDir . '/models/database/UserEvent.php',
     'UserFrosting\\UserFrosting' => $baseDir . '/models/UserFrosting.php',
     'UserFrosting\\UserLoader' => $baseDir . '/models/database/UserLoader.php',
     'UserFrosting\\UserLoaderInterface' => $baseDir . '/models/database/DatabaseInterface.php',

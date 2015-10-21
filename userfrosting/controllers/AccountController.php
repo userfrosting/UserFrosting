@@ -121,7 +121,7 @@ class AccountController extends \UserFrosting\BaseController {
         $this->_app->jsValidator->setSchema($schema);          
         
         $this->_app->render('account/reset-password.twig', [
-            'activation_token' => $this->_app->request->get()['activation_token'],
+            'secret_token' => $this->_app->request->get()['secret_token'],
             'validators' => $this->_app->jsValidator->rules()
         ]);
     }
@@ -242,13 +242,13 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Check that the user's account is enabled
-        if ($user->enabled == 0){
+        if ($user->flag_enabled == 0){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLED");
             $this->_app->halt(403);
         }        
         
         // Check that the user's account is activated
-        if ($user->active == 0) {
+        if ($user->flag_verified == 0) {
             $ms->addMessageTranslated("danger", "ACCOUNT_INACTIVE");
             $this->_app->halt(403);
         }
@@ -501,14 +501,14 @@ class AccountController extends \UserFrosting\BaseController {
         }    
         
         // Ok, try to find a user with the specified activation token
-        $user = UserLoader::fetch($data['activation_token'], 'activation_token');
+        $user = UserLoader::fetch($data['secret_token'], 'secret_token');
         
-        if (!$user || $user->active == "1"){
+        if (!$user || $user->flag_verified == "1"){
             $ms->addMessageTranslated("danger", "ACCOUNT_TOKEN_NOT_FOUND");
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
         
-        $user->active = "1";
+        $user->flag_verified = "1";
         $user->store();
         $ms->addMessageTranslated("success", "ACCOUNT_ACTIVATION_COMPLETE");
         
@@ -566,7 +566,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Generate a new activation token.  This will also be used as the password reset token.
-        $user->activation_token = User::generateActivationToken();
+        $user->secret_token = User::generateActivationToken();
         $user->last_activation_request = date("Y-m-d H:i:s");
         $user->lost_password_request = "1";
         $user->lost_password_timestamp = date("Y-m-d H:i:s");
@@ -631,7 +631,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Fetch the user, by looking up the submitted activation token
-        $user = UserLoader::fetch($data['activation_token'], 'activation_token');
+        $user = UserLoader::fetch($data['secret_token'], 'secret_token');
         
         if (!$user){
             $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
@@ -706,7 +706,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Fetch the user, by looking up the submitted activation token
-        $user = UserLoader::fetch($data['activation_token'], 'activation_token');
+        $user = UserLoader::fetch($data['secret_token'], 'secret_token');
         
         if (!$user){
             $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
@@ -767,7 +767,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Check if user's account is already active
-        if ($user->active == "1") {
+        if ($user->flag_verified == "1") {
             $ms->addMessageTranslated("danger", "ACCOUNT_ALREADY_ACTIVE");
             $this->_app->halt(400);
         }
@@ -784,7 +784,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // We're good to go - create a new activation token and send the email
-        $user->activation_token = User::generateActivationToken();
+        $user->secret_token = User::generateActivationToken();
         $user->last_activation_request = date("Y-m-d H:i:s");
         $user->lost_password_timestamp = date("Y-m-d H:i:s");
         
@@ -800,7 +800,7 @@ class AccountController extends \UserFrosting\BaseController {
         $template = $twig->loadTemplate("mail/resend-activation.twig");
         $params = [
             "user" => $user,
-            "activation_token" => $user->activation_token
+            "secret_token" => $user->secret_token
         ];
         
         $mail->Subject = $template->renderBlock('subject', $params);
