@@ -1,3 +1,8 @@
+{% block subject %}
+    {{site.site_title}} - activate your account
+{% endblock %}
+
+{% block body %}
 <p>Dear {{user.display_name}},
 </p>
 <p>
@@ -9,3 +14,4 @@ We have received a new activation request for your account with {{site.site_titl
 With regards,<br>
 The {{site.site_title}} Team
 </p>
+{% endblock %}

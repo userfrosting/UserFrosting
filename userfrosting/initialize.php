@@ -244,18 +244,13 @@ $app->hook('includes.js.register', function () use ($app){
 }, 1);  
 
 /** Plugins */
-$app->hook('plugins.register', function () use ($app){
-    //error_log("Registering plugins");
-    // Run initialization scripts for plugins
-    $var_plugins = $app->site->getPlugins();
-    foreach($var_plugins as $var_plugin) {     
-        require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
-    }
-});
+//error_log("Registering plugins");
+// Run initialization scripts for plugins
+$var_plugins = $app->site->getPlugins();
+foreach($var_plugins as $var_plugin) {     
+    require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
+}
 
 // Hook for core and plugins to register includes
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
-
-// Register plugins
-$app->applyHook("plugins.register");

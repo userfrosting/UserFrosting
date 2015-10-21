@@ -449,10 +449,14 @@ class AccountController extends \UserFrosting\BaseController {
             $mail->addAddress($user->email);     // Add a recipient
             $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
             
-            $mail->Subject = $this->_app->site->site_title . " - please activate your account";
-            $mail->Body    = $this->_app->view()->render("mail/activate-new.twig", [
+            $twig = $this->_app->view()->getEnvironment();
+            $template = $twig->loadTemplate("mail/activate-new.twig");
+            $params = [
                 "user" => $user
-            ]);
+            ];
+            
+            $mail->Subject = $template->renderBlock('subject', $params);
+            $mail->Body    = $template->renderBlock('body', $params);
             
             $mail->isHTML(true);                                  // Set email format to HTML
             
@@ -575,11 +579,15 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addAddress($user->email);     // Add a recipient
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
-        $mail->Subject = $this->_app->site->site_title . " - reset your password";
-        $mail->Body    = $this->_app->view()->render("mail/password-reset.twig", [
+        $twig = $this->_app->view()->getEnvironment();
+        $template = $twig->loadTemplate("mail/password-reset.twig");
+        $params = [
             "user" => $user,
             "request_date" => date("Y-m-d H:i:s")
-        ]);
+        ];
+        
+        $mail->Subject = $template->renderBlock('subject', $params);
+        $mail->Body    = $template->renderBlock('body', $params);
         
         $mail->isHTML(true);                                  // Set email format to HTML
         
@@ -788,11 +796,15 @@ class AccountController extends \UserFrosting\BaseController {
         $mail->addAddress($user->email);     // Add a recipient
         $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
         
-        $mail->Subject = $this->_app->site->site_title . " - activate your account";
-        $mail->Body    = $this->_app->view()->render("mail/resend-activation.twig", [
+        $twig = $this->_app->view()->getEnvironment();
+        $template = $twig->loadTemplate("mail/resend-activation.twig");
+        $params = [
             "user" => $user,
             "activation_token" => $user->activation_token
-        ]);
+        ];
+        
+        $mail->Subject = $template->renderBlock('subject', $params);
+        $mail->Body    = $template->renderBlock('body', $params);
         
         $mail->isHTML(true);                                  // Set email format to HTML
         

@@ -1,3 +1,8 @@
+{% block subject %}
+    Welcome to {{site.site_title}} - please activate your account
+{% endblock %}
+
+{% block body %}
 <p>Dear {{user.display_name}},
 </p>
 <p>
@@ -13,3 +18,4 @@ You will need to activate your account before you can login. Please follow the l
 With regards,<br>
 The {{site.site_title}} Team
 </p>
+{% endblock %}
