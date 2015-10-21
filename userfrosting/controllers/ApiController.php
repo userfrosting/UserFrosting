@@ -72,7 +72,7 @@ class ApiController extends \UserFrosting\BaseController {
         
         // Left join to get signup, signin dates
         $userQuery = $userQuery->with( ['events' => function ($query) {
-            $query->lastSignInEvents();
+            $query->lastSignInTimes();
         }]);
         
         //select("uf_user.*", "MAX(uf_user_event.occurred_at) as last_sign_in_time")->

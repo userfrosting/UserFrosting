@@ -108,10 +108,6 @@ class User extends UFModel {
         return $this->events()->where('event_type', 'sign_in')->max('occurred_at');
     }    
     
-    public function scopeLastSignInTimes(){
-        return $this->where('event_type', 'sign_in')->orderBy('occurred_at', 'desc')->limit(1)->select('user_id', 'occurred_at');
-    }
-    
     /**
      * Implements the many-to-many relationship between this User and their Groups.
      *
