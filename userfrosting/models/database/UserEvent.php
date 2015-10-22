@@ -29,10 +29,9 @@ class UserEvent extends UFModel {
         
     }
 
-    public function scopeMostRecentEventSignIn($query){
-        //return $query->where('event_type', 'sign_in')->orderBy('occurred_at', 'desc')->limit(1)->select('user_id', 'occurred_at');
-        return $query->select('user_id', Capsule::raw('MAX(occurred_at) as last_sign_in_time'))
-        ->where('event_type', 'sign_in')
+    public function scopeMostRecentEvent($query, $type){
+        return $query->select('user_id', Capsule::raw('MAX(occurred_at) as last_event_time'))
+        ->where('event_type', $type)
         ->groupBy('user_id');
     }
         

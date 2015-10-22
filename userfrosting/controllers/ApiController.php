@@ -23,7 +23,7 @@ class ApiController extends \UserFrosting\BaseController {
     public function __construct($app){
         $this->_app = $app;
     }
-
+    
     /**
      * Returns a list of Users
      *
@@ -76,59 +76,44 @@ class ApiController extends \UserFrosting\BaseController {
         $userQuery = $userQuery
                 ->exclude(['password', 'secret_token']);
         
+        Capsule::connection()->enableQueryLog();
+        
+        
         // Get unfiltered, unsorted, unpaginated collection
         $user_collection = $userQuery->get();
         
-        // Merge in recent event times
-        // Get recent sign-in events
-        $signInQuery = UserEvent::mostRecentEventSignIn();
-        $sign_in_events = $signInQuery->get();
-        
-        $sign_in_times = [];
-        // extract sign-in times
-        foreach($sign_in_events as $event){
-            $sign_in_times[$event['user_id']] = $event['last_sign_in_time'];
-        }        
-        
-        foreach ($user_collection as $user){
-            if (isset($sign_in_times[$user->id]))
-                $user->last_sign_in_time = $sign_in_times[$user->id];
-             else
-                $user->last_sign_in_time = "0";
-        }
+        // Load recent events for all users and merge into the collection
+        $user_collection = $user_collection->loadRecentEvents('sign_in');
         
         // Apply filters        
         foreach ($filters as $name => $value){
-            $user_collection = $user_collection->filter(function ($item) use ($name, $value){
-                // For date filters, search for weekday, month, or year
-                if ($name == 'last_sign_in_time') {
-                    $stamp = strtotime($item['last_sign_in_time']);
-                    $last_sign_in_time = (($stamp != 0) ? date("l F j, Y g:i a", $stamp) : "Brand New!");
-                    error_log($last_sign_in_time);
-                    return (stripos($last_sign_in_time, $value) !== false);
-                } else {
-                    return (stripos($item->{$name}, $value) !== false);
-                }            
-            });
+            // For date filters, search for weekday, month, or year
+            if ($name == 'last_sign_in_time') {
+                $user_collection = $user_collection->filterRecentEventTime('sign_in', $value);
+            } else {
+                $user_collection = $user_collection->filterTextField($name, $value);
+            }
         }
         
         // Count filtered results
         $total_filtered = count($user_collection);
         
         // Paginate and sort
-        
         if ($sort_order == "desc")
             $user_collection = $user_collection->sortByDesc($sort_field);
         else        
             $user_collection = $user_collection->sortBy($sort_field);
                     
         $user_collection = $user_collection->slice($offset, $size);     
-        
+                
         $result = [
             "count" => $total,
             "rows" => $user_collection->values()->toArray(),
             "count_filtered" => $total_filtered
         ];
+        
+        $query = Capsule::getQueryLog();
+        //print_r($query);        
         
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).

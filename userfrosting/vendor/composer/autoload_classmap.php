@@ -54,6 +54,7 @@ return array(
     'UserFrosting\\UFModel' => $baseDir . '/models/database/UFModel.php',
     'UserFrosting\\User' => $baseDir . '/models/database/User.php',
     'UserFrosting\\UserAuth' => $baseDir . '/models/database/UserAuth.php',
+    'UserFrosting\\UserCollection' => $baseDir . '/models/collections/UserCollection.php',
     'UserFrosting\\UserController' => $baseDir . '/controllers/UserController.php',
     'UserFrosting\\UserEvent' => $baseDir . '/models/database/UserEvent.php',
     'UserFrosting\\UserFrosting' => $baseDir . '/models/UserFrosting.php',

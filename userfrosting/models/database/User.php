@@ -94,13 +94,17 @@ class User extends UFModel {
             return parent::__get($name);
     }
     
+    public function newCollection(array $models = Array()) {
+	    return new UserCollection($models);
+    }
+    
     /**
      * Get all events for this user.
      */    
     public function events(){
         return $this->hasMany('UserFrosting\UserEvent');
     }
-    
+        
     /**
      * Get the most recent sign-in event for this user.
      */    
