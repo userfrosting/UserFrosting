@@ -81,7 +81,7 @@ class User extends UFModel {
         if ($name == "last_sign_in_event")
             return $this->lastSignInEvent();
         else if ($name == "last_sign_in_time")
-            return $this->lastSignInEvent()->occurred_at;
+            return $this->lastSignInTime();
         else if ($name == "primary_group")
             return $this->getPrimaryGroup();
         else if ($name == "theme")
@@ -105,9 +105,16 @@ class User extends UFModel {
      * Get the most recent sign-in event for this user.
      */    
     public function lastSignInEvent() {
+        return $this->events()->where('event_type', 'sign_in')->orderBy('occurred_at', 'desc')->first();
+    }    
+
+    /**
+     * Get the most recent sign-in time for this user.
+     */    
+    public function lastSignInTime() {
         return $this->events()->where('event_type', 'sign_in')->max('occurred_at');
     }    
-    
+        
     /**
      * Implements the many-to-many relationship between this User and their Groups.
      *

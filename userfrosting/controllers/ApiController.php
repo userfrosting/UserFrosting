@@ -2,6 +2,8 @@
 
 namespace UserFrosting;
 
+use \Illuminate\Database\Capsule\Manager as Capsule;
+
 /**
  * ApiController Class
  *
@@ -69,43 +71,62 @@ class ApiController extends \UserFrosting\BaseController {
         
         // Count unpaginated total
         $total = $userQuery->count();
-        
-        // Left join to get signup, signin dates
-        $userQuery = $userQuery->with( ['events' => function ($query) {
-            $query->lastSignInTimes();
-        }]);
-        
-        //select("uf_user.*", "MAX(uf_user_event.occurred_at) as last_sign_in_time")->
-        
+            
         // Exclude fields
         $userQuery = $userQuery
-                ->exclude(['password', 'secret_token', 'last_activation_request', 'lost_password_request', 'lost_password_timestamp']);
-                
-        // Apply filters    
-        foreach ($filters as $name => $value){
-            // For date filters, search for weekday, month, or year
-            if (in_array($name, ['last_sign_in_time', 'sign_up_stamp'])){
-                $userQuery = $userQuery->whereRaw("DATE_FORMAT($name,'%W') LIKE ?", ["$value%"])
-                                ->orWhereRaw("DATE_FORMAT($name,'%M') LIKE ?", ["$value%"])
-                                ->orWhereRaw("DATE_FORMAT($name,'%Y') LIKE ?", ["$value%"]);
-            } else {
-                $userQuery = $userQuery->where($name, 'LIKE', "%$value%");
-            }
+                ->exclude(['password', 'secret_token']);
+        
+        // Get unfiltered, unsorted, unpaginated collection
+        $user_collection = $userQuery->get();
+        
+        // Merge in recent event times
+        // Get recent sign-in events
+        $signInQuery = UserEvent::mostRecentEventSignIn();
+        $sign_in_events = $signInQuery->get();
+        
+        $sign_in_times = [];
+        // extract sign-in times
+        foreach($sign_in_events as $event){
+            $sign_in_times[$event['user_id']] = $event['last_sign_in_time'];
+        }        
+        
+        foreach ($user_collection as $user){
+            if (isset($sign_in_times[$user->id]))
+                $user->last_sign_in_time = $sign_in_times[$user->id];
+             else
+                $user->last_sign_in_time = "0";
         }
         
-        // Count filtered total
-        $total_filtered = $userQuery->count();
+        // Apply filters        
+        foreach ($filters as $name => $value){
+            $user_collection = $user_collection->filter(function ($item) use ($name, $value){
+                // For date filters, search for weekday, month, or year
+                if ($name == 'last_sign_in_time') {
+                    $stamp = strtotime($item['last_sign_in_time']);
+                    $last_sign_in_time = (($stamp != 0) ? date("l F j, Y g:i a", $stamp) : "Brand New!");
+                    error_log($last_sign_in_time);
+                    return (stripos($last_sign_in_time, $value) !== false);
+                } else {
+                    return (stripos($item->{$name}, $value) !== false);
+                }            
+            });
+        }
+        
+        // Count filtered results
+        $total_filtered = count($user_collection);
         
         // Paginate and sort
-        $userQuery = $userQuery
-                ->skip($offset)
-                ->take($size)
-                ->orderBy($sort_field, $sort_order);
         
-        //select('uf_user.*', 'uf_user_event.occurred_at as last_sign_in_time')->
+        if ($sort_order == "desc")
+            $user_collection = $user_collection->sortByDesc($sort_field);
+        else        
+            $user_collection = $user_collection->sortBy($sort_field);
+                    
+        $user_collection = $user_collection->slice($offset, $size);     
+        
         $result = [
             "count" => $total,
-            "rows" => $userQuery->get()->toArray(),
+            "rows" => $user_collection->values()->toArray(),
             "count_filtered" => $total_filtered
         ];
         
