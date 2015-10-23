@@ -3,8 +3,14 @@
 namespace UserFrosting;
 
 /**
+ * UserLoaderInterface Interface
+ *
  * Provides an interface for fetching User objects.  This can now be done directly through the User::find() method.
  *
+ * Represents a static class for loading User object(s) from the database, checking for existence, etc.
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  * @deprecated deprecated since version 0.3.1
  */
 class UserLoader { 

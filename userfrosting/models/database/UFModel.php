@@ -13,7 +13,6 @@ use \Illuminate\Database\Capsule\Manager as Capsule;
  *
  * @package UserFrosting
  * @author Alex Weissman
- * @see MySqlDatabase
  */
 abstract class UFModel extends Model {
     
@@ -43,7 +42,9 @@ abstract class UFModel extends Model {
         parent::__construct($properties);
     }
     
-    // For raw array fetching.  Must be static, otherwise PHP gets confused about where to find the table_id.
+    /**
+     * For raw array fetching.  Must be static, otherwise PHP gets confused about where to find the table_id.
+     */
     public static function queryBuilder(){
         // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
         Capsule::connection()->setFetchMode(\PDO::FETCH_ASSOC);
@@ -51,16 +52,19 @@ abstract class UFModel extends Model {
         return Capsule::table($table);
     }    
     
-    // For excluding certain columns in a query
+    /**
+     * For excluding certain columns in a query.
+     */
     public function scopeExclude($query, $value = []) {
         $columns = array_merge(['id'], Database::getSchemaTable(static::$_table_id)->columns);
         return $query->select( array_diff( $columns,(array) $value) );
     }
     
     /**
-     * Calls save(), then returns the id of the new record in the database.
+     * Store the object in the DB, creating a new row if one doesn't already exist.
      *
-     * @see DatabaseInterface
+     * Calls save(), then returns the id of the new record in the database.
+     * @return int the id of this object.
      */ 
     public function store(){        
         $this->save();
@@ -69,6 +73,11 @@ abstract class UFModel extends Model {
         return $this->id;        
     }
     
+    /**
+     * Get the properties of this object as an associative array.  Alias for toArray().
+     *
+     * @return array
+     */      
     public function export(){
         return $this->toArray();
     } 

@@ -87,10 +87,6 @@ class ApiController extends \UserFrosting\BaseController {
         $last_sign_in_times = $user_collection->getRecentEvents('sign_in');
         $last_sign_up_times = $user_collection->getRecentEvents('sign_up', 'sign_up_time');
         
-        print_r($last_sign_in_times);
-        print_r(UserEvent::mostRecentEventsByType('sign_in')->get()->toArray());
-        print_r(UserEvent::mostRecentEvents('sign_in')->get()->toArray());
-        
         // Apply filters        
         foreach ($filters as $name => $value){
             // For date filters, search for weekday, month, or year

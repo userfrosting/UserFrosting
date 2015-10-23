@@ -9,7 +9,6 @@ use \Illuminate\Database\Capsule\Manager as Capsule;
  *
  * Represents a single user event at a specified point in time.
  *
- * @see DatabaseInterface
  */
 class UserEvent extends UFModel {    
     /**

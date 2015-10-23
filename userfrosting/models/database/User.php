@@ -5,8 +5,29 @@ namespace UserFrosting;
 use \Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * @see DatabaseInterface
- */ 
+ * User Class
+ *
+ * Represents a User object as stored in the database.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
+ *
+ * @property int id
+ * @property string user_name
+ * @property string display_name
+ * @property string email
+ * @property string title
+ * @property string locale
+ * @property int primary_group_id
+ * @property int secret_token
+ * @property int flag_verified
+ * @property int flag_enabled
+ * @property int flag_password_reset
+ * @property timestamp created_at
+ * @property timestamp updated_at
+ * @property string password
+ */
 class User extends UFModel {
     
     /**
@@ -23,6 +44,11 @@ class User extends UFModel {
     protected $_primary_group;  
     
     /**
+     * @var bool Enable timestamps for Users.
+     */ 
+    public $timestamps = true;    
+    
+    /**
      * Create a new User object.
      *
      */
@@ -35,7 +61,9 @@ class User extends UFModel {
     }
     
     /**
-     * @see DatabaseInterface
+     * Determine whether or not this User object is a guest user (id set to `user_id_guest`) or an authenticated user.
+     *
+     * @return boolean True if the user is a guest, false otherwise.
      */ 
     public function isGuest(){
         if (!isset($this->id) || $this->id === static::$app->config('user_id_guest'))
@@ -45,7 +73,7 @@ class User extends UFModel {
     }
     
     /**
-     * @see DatabaseInterface
+     * @todo
      */ 
     public static function isLoggedIn(){
         // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
@@ -65,7 +93,10 @@ class User extends UFModel {
     }
     
     /**
-     * @see DatabaseInterface
+     * Determine if the property for this object exists.
+     *
+     * @param string $name the name of the property to check.
+     * @return bool true if the property is defined, false otherwise.
      */ 
     public function __isset($name) {
         if ($name == "primary_group" || $name == "theme" || $name == "icon" || $name == "landing_page")
@@ -74,9 +105,14 @@ class User extends UFModel {
             return parent::__isset($name);
     }
     
+    
     /**
-     * @see DatabaseInterface
-     */ 
+     * Get a property for this object.
+     *
+     * @param string $name the name of the property to retrieve.
+     * @throws Exception the property does not exist for this object.
+     * @return string the associated property.
+     */
     public function __get($name){
         if ($name == "last_sign_in_event")
             return $this->lastSignInEvent();
@@ -94,6 +130,9 @@ class User extends UFModel {
             return parent::__get($name);
     }
     
+    /**
+     * Extends Eloquent's Collection models.
+     */
     public function newCollection(array $models = Array()) {
 	    return new UserCollection($models);
     }
@@ -129,12 +168,13 @@ class User extends UFModel {
         ->where('event_type', 'sign_in')
         ->max('occurred_at');
     }    
-        
+     
     /**
-     * Implements the many-to-many relationship between this User and their Groups.
+     * Get an array containing all groups to which this user belongs.
      *
-     * @return Collection An Eloquent collection of Group objects.
-     */     
+     * 
+     * @return Group[] An array of Group objects, indexed by the group id.
+     */       
     public function groups(){
         // First, sync any cached groups
         $this->syncCachedGroups();
@@ -159,6 +199,7 @@ class User extends UFModel {
     /**
      * Get the groups to which this User currently belongs, as currently represented in this object.
      *
+     * This method caches the data after the first time loading from the database.  To force a refresh, use the `fresh` method.
      * @return array[Group] An array of Group objects, indexed by group_id, to which this User belongs.
      */
     public function getGroups(){
@@ -197,8 +238,12 @@ class User extends UFModel {
     
     /**
      * Add a group_id to the list of _groups to which this User belongs, checking that the Group exists and the User isn't already a member.
-     * This method does NOT modify the database.
-     */ 
+     *     
+     * This method does NOT modify the database.  Call `store` to persist to database. 
+     * @param int $group_id The id of the group to add the user to.
+     * @throws Exception The specified group does not exist.
+     * @return User this User object.
+     */  
     public function addGroup($group_id){
         $this->getGroupIds();
         
@@ -218,8 +263,11 @@ class User extends UFModel {
     
     /**
      * Remove a group_id from the list of _groups to which this User belongs, checking that the User is already a member.
-     * This method does NOT modify the database.     
-     */ 
+     *
+     * This method does NOT modify the database. Call `store` to persist to database.
+     * @param int $group_id The id of the group to remove the user from.
+     * @return User this User object.
+     */   
     public function removeGroup($group_id){
         // Fetch from database, if not set
         $this->getGroupIds();
@@ -234,7 +282,10 @@ class User extends UFModel {
     }
 
     /**
-     * @see DatabaseInterface
+     * Get the theme for this user.
+     *
+     * The theme for the root user is always 'root'.  The theme for guest users is 'default'.  Any other users will have their themes determined by their primary group.
+     * @return string The theme for this user.
      */ 
     public function getTheme(){
         if (!isset($this->id) || $this->id == static::$app->config('user_id_guest'))
@@ -246,8 +297,11 @@ class User extends UFModel {
     }
     
     /**
-     * @see DatabaseInterface
-     */ 
+     * Get this user's primary group.
+     *
+     * This method caches the data after the first time loading from the database.  To force a refresh, use the `fresh` method.
+     * @return Group the Group object representing the user's primary group.
+     */  
     public function getPrimaryGroup(){
         if (!isset($this->_primary_group)) {
             $this->_primary_group = $this->fetchPrimaryGroup();
@@ -272,7 +326,6 @@ class User extends UFModel {
      * Store the User to the database, along with any group associations, updating as necessary.
      *
      * @param bool $force_create set to true if you want to force UF to set a new sign_up_time, secret_token, and last_activation_request, even if this object has already been assigned an id.
-     * @see DatabaseInterface
      */
     public function save(array $options = [], $force_create = false){
         // Initialize timestamps for new Users.  Should this be done here, or somewhere else?
@@ -294,7 +347,7 @@ class User extends UFModel {
     /**
      * Delete this user from the database, along with any linked groups and authorization rules
      *
-     * @see DatabaseInterface
+     * @return bool true if the deletion was successful, false otherwise.
      */
     public function delete(){        
         // Remove all group associations
@@ -310,9 +363,14 @@ class User extends UFModel {
         return $result;
     }
     
-    
     /**
-     * @see DatabaseInterface
+     * Checks whether or not this user has access for a particular authorization hook.
+     *
+     * Determine if this user has access to the given $hook under the given $params.
+     * @param string $hook The authorization hook to check for access.
+     * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
+     * when determining whether or not this user has access.
+     * @return boolean True if the user has access, false otherwise.
      */ 
     public function checkAccess($hook, $params = []){
         if ($this->isGuest()){   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?
@@ -351,8 +409,11 @@ class User extends UFModel {
     }
  
     /**
-     * @see DatabaseInterface
-     */ 
+     * Verify a plaintext password against the user's hashed password.
+     *
+     * @param string $password The plaintext password to verify.
+     * @return boolean True if the password matches, false otherwise.
+     */   
     public function verifyPassword($password){
         if (Authentication::getPasswordHashType($this->password) == "sha1"){
             $salt = substr($this->password, 0, 25);		// Extract the salt from the hash
@@ -379,8 +440,10 @@ class User extends UFModel {
     }
     
     /**
-     * @see DatabaseInterface
-     */ 
+     * Log this user in.  This basically updates the user's sign-in time, and updates any old password hashes.
+     *
+     * You assign this user's id to $_SESSION["userfrosting"]["user"] after calling login, so that it will persist in the session.
+     */
     public function login(){    
         // Add a sign in event (time is automatically set by database)
         $event = new UserEvent([
@@ -410,7 +473,11 @@ class User extends UFModel {
     }
     
     /**
-     * @see DatabaseInterface
+     * Generate an activation token for a user.
+     *
+     * This generates a token to use for activating a new account, resetting a lost password, etc.
+     * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
+     * @return string
      */
     public static function generateActivationToken($gen = null) {
         do {

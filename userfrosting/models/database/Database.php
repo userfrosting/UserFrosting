@@ -81,7 +81,9 @@ abstract class Database {
     }    
     
     /**
-     * @see DatabaseInterface
+     * Test whether a DB connection can be established.
+     *
+     * @return bool true if the connection can be established, false otherwise.
      */
     public static function testConnection(){
         try {
@@ -95,7 +97,11 @@ abstract class Database {
     }
     
     /**
-     * @see DatabaseInterface
+     * Get an array of key-value pairs containing basic information about this database.
+     *
+     * The site settings module expects the following key-value pairs:
+     * db_type, db_version, db_name, table_prefix
+     * @return array[string] the properties of this database.
      */
     public static function getInfo(){
         $pdo = Capsule::connection()->getPdo();
@@ -116,8 +122,11 @@ abstract class Database {
     }
     
     /**
-     * @see DatabaseInterface
-     */
+     * Get an array of the names of tables that exist in the database.
+     *
+     * Looks for tables with the following handles: user, group, group_user, authorize_group, authorize_user
+     * @return array[string] the names of the UF tables that actually exist.
+     */ 
     public static function getCreatedTables(){
         if (!static::testConnection())
             return [];
@@ -127,6 +136,7 @@ abstract class Database {
         
         $test_list = [
             static::getSchemaTable('user')->name,
+            static::getSchemaTable('user_event')->name,
             static::getSchemaTable('group')->name,
             static::getSchemaTable('group_user')->name,
             static::getSchemaTable('authorize_user')->name,
@@ -147,8 +157,10 @@ abstract class Database {
     }
     
     /**
-     * @see DatabaseInterface
-     */
+     * Set up the initial tables for the database.
+     *
+     * Creates all tables, and loads the configuration table with the default config data.  Also, sets install_status to `pending`.
+     */   
     public static function install(){
         $connection = Capsule::connection();
         
@@ -201,19 +213,26 @@ abstract class Database {
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `user_name` varchar(50) NOT NULL,
             `display_name` varchar(50) NOT NULL,
-            `password` varchar(255) NOT NULL,
             `email` varchar(150) NOT NULL,
-            `secret_token` varchar(225) NOT NULL,
-            `last_activation_request` datetime NOT NULL,
-            `lost_password_request` tinyint(1) NOT NULL DEFAULT '0',
-            `lost_password_timestamp` datetime DEFAULT NULL,
-            `active` tinyint(1) NOT NULL DEFAULT '1',
             `title` varchar(150) NOT NULL,
-            `sign_up_time` datetime NOT NULL,
-            `last_sign_in_time` datetime DEFAULT NULL,
-            `enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Specifies if the account is enabled.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.',
-            `primary_group_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Specifies the primary group for the user.',
             `locale` varchar(10) NOT NULL DEFAULT 'en_US' COMMENT 'The language and locale to use for this user.',
+            `primary_group_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'The id of this user''s primary group.',
+            `secret_token` varchar(32) NOT NULL COMMENT 'The current one-time use token for various user activities confirmed via email.',
+            `flag_verified` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user has verified their account via email, ''0'' otherwise.',
+            `flag_enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user''s account is currently enabled, ''0'' otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.',
+            `flag_password_reset` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Set to ''1'' if the user has an outstanding password reset request, ''0'' otherwise.',
+            `created_at` timestamp NULL DEFAULT NULL,
+            `updated_at` timestamp NULL DEFAULT NULL,
+            `password` varchar(255) NOT NULL,
+            PRIMARY KEY (`id`)
+          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
+        
+        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('user_event')->name . "` ( 
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) NOT NULL,
+            `event_type` varchar(255) NOT NULL COMMENT 'An identifier used to track the type of event.',
+            `occurred_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `description` text NOT NULL,
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
         
@@ -222,7 +241,7 @@ abstract class Database {
             `token` varchar(40) NOT NULL,
             `persistent_token` varchar(40) NOT NULL,
             `expires` datetime NOT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"); 
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"); 
         
         // Setup initial configuration settings        
         static::$app->site->install_status = "pending";
@@ -242,8 +261,8 @@ abstract class Database {
           (2, 'uri_users', 'always()'),
           (1, 'uri_account_settings', 'always()'),
           (1, 'update_account_setting', 'equals(self.id, user.id)&&in(property,[\"email\",\"locale\",\"password\"])'),
-          (2, 'update_account_setting', 'in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"enabled\"])'),
-          (2, 'view_account_setting', 'in(property,[\"user_name\",\"email\",\"display_name\",\"title\",\"locale\",\"enabled\",\"groups\",\"primary_group_id\"])'),
+          (2, 'update_account_setting', 'in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"flag_enabled\"])'),
+          (2, 'view_account_setting', 'in(property,[\"user_name\",\"email\",\"display_name\",\"title\",\"locale\",\"flag_enabled\",\"groups\",\"primary_group_id\"])'),
           (2, 'delete_account', '!in_group(user.id,2)'),
           (2, 'create_account', 'always()');");    
     }

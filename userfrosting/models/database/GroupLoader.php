@@ -3,8 +3,14 @@
 namespace UserFrosting;
 
 /**
+ * GroupLoaderInterface Interface
+ *
  * Provides an interface for fetching Group objects.  This can now be done directly through the Group::find() method.
  *
+ * Represents a static class for loading Group object(s) from the database, checking for existence, etc.
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  * @deprecated deprecated since version 0.3.1
  */
 class GroupLoader {

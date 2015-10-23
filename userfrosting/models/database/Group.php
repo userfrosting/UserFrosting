@@ -5,9 +5,22 @@ namespace UserFrosting;
 use \Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * Ok.  This class can extend UFModel, which in turn can extend Model.  UFModel can continue to provide the registry of database information.
- * @see DatabaseInterface
- */ 
+ * Group Class
+ *
+ * Represents a group object as stored in the database.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
+ *
+ * @property string name
+ * @property string theme
+ * @property string landing_page
+ * @property string new_user_title
+ * @property string icon
+ * @property bool is_default
+ * @property bool can_delete
+ */
 class Group extends UFModel {
 
     /**
@@ -24,7 +37,7 @@ class Group extends UFModel {
     }
     
     /**
-     * @see DatabaseInterface
+     * Lazily load a collection of Users which belong to this group.
      */ 
     public function users(){
         $link_table = Database::getSchemaTable('group_user')->name;
@@ -47,7 +60,6 @@ class Group extends UFModel {
     /**
      * Delete this group from the database, along with any linked user and authorization rules
      *
-     * @see DatabaseInterface
      */
     public function delete(){        
         // Remove all user associations
