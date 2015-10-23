@@ -68,7 +68,7 @@ class ApiController extends \UserFrosting\BaseController {
             
             $userQuery = new User;
         }
-        
+                
         // Count unpaginated total
         $total = $userQuery->count();
             
@@ -82,14 +82,18 @@ class ApiController extends \UserFrosting\BaseController {
         // Get unfiltered, unsorted, unpaginated collection
         $user_collection = $userQuery->get();
         
-        // Load recent events for all users and merge into the collection
-        $user_collection = $user_collection->loadRecentEvents('sign_in');
+        // Load recent events for all users and merge into the collection.  This can't be done in one query,
+        // at least not efficiently.  See http://laravel.io/forum/04-05-2014-eloquent-eager-loading-to-limit-for-each-post
+        $last_sign_in_times = $user_collection->getRecentEvents('sign_in');
+        $last_sign_up_times = $user_collection->getRecentEvents('sign_up', 'sign_up_time');
         
         // Apply filters        
         foreach ($filters as $name => $value){
             // For date filters, search for weekday, month, or year
             if ($name == 'last_sign_in_time') {
-                $user_collection = $user_collection->filterRecentEventTime('sign_in', $value);
+                $user_collection = $user_collection->filterRecentEventTime('sign_in', $last_sign_in_times, $value);
+            } else if ($name == 'sign_up_time') {
+                $user_collection = $user_collection->filterRecentEventTime('sign_up', $last_sign_up_times, $value);
             } else {
                 $user_collection = $user_collection->filterTextField($name, $value);
             }
