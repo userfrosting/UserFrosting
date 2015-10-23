@@ -209,7 +209,7 @@ abstract class Database {
             `lost_password_timestamp` datetime DEFAULT NULL,
             `active` tinyint(1) NOT NULL DEFAULT '1',
             `title` varchar(150) NOT NULL,
-            `sign_up_stamp` datetime NOT NULL,
+            `sign_up_time` datetime NOT NULL,
             `last_sign_in_time` datetime DEFAULT NULL,
             `enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Specifies if the account is enabled.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.',
             `primary_group_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Specifies the primary group for the user.',

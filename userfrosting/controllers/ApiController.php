@@ -30,8 +30,9 @@ class ApiController extends \UserFrosting\BaseController {
      * Generates a list of users, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
+     * @param int $page optional.  For paging, the page number to start with.
+     * @param int $size optional.  For paging, the number of results per page.
      * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
-     * @todo implement interface to modify user-assigned authorization hooks and permissions
      */        
     public function listUsers($page = 0, $size = 10, $primary_group_name = null){
         $get = $this->_app->request->get();
@@ -59,7 +60,7 @@ class ApiController extends \UserFrosting\BaseController {
             
             $userQuery = new User;
             $userQuery = $userQuery->where('primary_group_id', $primary_group->id);
-
+            
         } else {
             // Access-controlled page
             if (!$this->_app->user->checkAccess('uri_users')){
@@ -76,8 +77,7 @@ class ApiController extends \UserFrosting\BaseController {
         $userQuery = $userQuery
                 ->exclude(['password', 'secret_token']);
         
-        Capsule::connection()->enableQueryLog();
-        
+        //Capsule::connection()->enableQueryLog();
         
         // Get unfiltered, unsorted, unpaginated collection
         $user_collection = $userQuery->get();
@@ -86,6 +86,10 @@ class ApiController extends \UserFrosting\BaseController {
         // at least not efficiently.  See http://laravel.io/forum/04-05-2014-eloquent-eager-loading-to-limit-for-each-post
         $last_sign_in_times = $user_collection->getRecentEvents('sign_in');
         $last_sign_up_times = $user_collection->getRecentEvents('sign_up', 'sign_up_time');
+        
+        print_r($last_sign_in_times);
+        print_r(UserEvent::mostRecentEventsByType('sign_in')->get()->toArray());
+        print_r(UserEvent::mostRecentEvents('sign_in')->get()->toArray());
         
         // Apply filters        
         foreach ($filters as $name => $value){
@@ -116,8 +120,7 @@ class ApiController extends \UserFrosting\BaseController {
             "count_filtered" => $total_filtered
         ];
         
-        $query = Capsule::getQueryLog();
-        //print_r($query);        
+        //$query = Capsule::getQueryLog();    
         
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).

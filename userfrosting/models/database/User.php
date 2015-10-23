@@ -104,7 +104,7 @@ class User extends UFModel {
     public function events(){
         return $this->hasMany('UserFrosting\UserEvent');
     }
-        
+    
     /**
      * Get the most recent sign-in event for this user.
      */    
@@ -113,10 +113,21 @@ class User extends UFModel {
     }    
 
     /**
+     * Get the most recent time for a specified event type for this user.
+     */     
+    public function lastEventTime($type){
+        return $this->events()
+        ->where('event_type', $type)
+        ->max('occurred_at');
+    }    
+    
+    /**
      * Get the most recent sign-in time for this user.
      */    
     public function lastSignInTime() {
-        return $this->events()->where('event_type', 'sign_in')->max('occurred_at');
+        return $this->events()
+        ->where('event_type', 'sign_in')
+        ->max('occurred_at');
     }    
         
     /**
@@ -260,13 +271,13 @@ class User extends UFModel {
     /**
      * Store the User to the database, along with any group associations, updating as necessary.
      *
-     * @param bool $force_create set to true if you want to force UF to set a new sign_up_stamp, secret_token, and last_activation_request, even if this object has already been assigned an id.
+     * @param bool $force_create set to true if you want to force UF to set a new sign_up_time, secret_token, and last_activation_request, even if this object has already been assigned an id.
      * @see DatabaseInterface
      */
     public function save(array $options = [], $force_create = false){
         // Initialize timestamps for new Users.  Should this be done here, or somewhere else?
         if (!isset($this->id) || $force_create){
-            $this->sign_up_stamp = date("Y-m-d H:i:s");
+            $this->sign_up_time = date("Y-m-d H:i:s");
             $this->secret_token = User::generateActivationToken();
             $this->last_activation_request = date("Y-m-d H:i:s");
         }    

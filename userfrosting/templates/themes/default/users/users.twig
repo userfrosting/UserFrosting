@@ -46,8 +46,8 @@
                                     <i class="fa fa-envelope"></i> <a href="mailto:{{user.email}}">{{user.email}}</a>
                                 </div>
                             </td>
-                            <td data-num="{{user.sign_up_stamp | date('U')}}">
-                                {{user.sign_up_stamp | date("l")}}<br>{{user.sign_up_stamp | date("M j, Y g:i a")}}
+                            <td data-num="{{user.sign_up_time | date('U')}}">
+                                {{user.sign_up_time | date("l")}}<br>{{user.sign_up_time | date("M j, Y g:i a")}}
                             </td>
                             {% if user.last_sign_in_time %}
                             <td data-num="{{user.last_sign_in_time | date('U')}}">

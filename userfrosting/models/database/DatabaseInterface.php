@@ -291,7 +291,7 @@ interface GroupObjectInterface {
  * @property int lost_password_request
  * @property datetime lost_password_timestamp
  * @property int active
- * @property datetime sign_up_stamp
+ * @property datetime sign_up_time
  * @property datetime last_sign_in_time
  * @property int enabled
  * @property int primary_group_id
