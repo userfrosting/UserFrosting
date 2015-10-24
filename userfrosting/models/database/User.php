@@ -93,18 +93,20 @@ class User extends UFModel {
     }
     
     /**
-     * Determine if the property for this object exists.
+     * Determine if the property for this object exists. 
      *
+     * Every property in __get must also be implemented here for Twig to recognize it.
      * @param string $name the name of the property to check.
      * @return bool true if the property is defined, false otherwise.
      */ 
     public function __isset($name) {
         if ($name == "primary_group" || $name == "theme" || $name == "icon" || $name == "landing_page")
             return isset($this->_primary_group);
+        else if (in_array($name, ["last_sign_in_event", "last_sign_in_time", "sign_up_time"]))
+            return true;
         else
             return parent::__isset($name);
     }
-    
     
     /**
      * Get a property for this object.
@@ -118,6 +120,8 @@ class User extends UFModel {
             return $this->lastSignInEvent();
         else if ($name == "last_sign_in_time")
             return $this->lastSignInTime();
+        else if ($name == "sign_up_time")
+            return $this->lastEventTime('sign_up');
         else if ($name == "primary_group")
             return $this->getPrimaryGroup();
         else if ($name == "theme")
@@ -325,14 +329,13 @@ class User extends UFModel {
     /**
      * Store the User to the database, along with any group associations, updating as necessary.
      *
-     * @param bool $force_create set to true if you want to force UF to set a new sign_up_time, secret_token, and last_activation_request, even if this object has already been assigned an id.
+     * @param bool $force_create set to true if you want to force UF to set a new secret_token even if this object has already been assigned an id.
      */
     public function save(array $options = [], $force_create = false){
-        // Initialize timestamps for new Users.  Should this be done here, or somewhere else?
+        // Initialize info for new Users.  Should this be done here, or somewhere else?
         if (!isset($this->id) || $force_create){
-            $this->sign_up_time = date("Y-m-d H:i:s");
             $this->secret_token = User::generateActivationToken();
-            $this->last_activation_request = date("Y-m-d H:i:s");
+            //$this->last_activation_request = date("Y-m-d H:i:s");
         }    
         
         // Update the user record itself
@@ -342,6 +345,25 @@ class User extends UFModel {
         $this->syncCachedGroups();
         
         return $result;
+    }
+    
+    /**
+     * Create an event saying that this user registered their account, or an account was created for them.
+     * 
+     *
+     * @param User $creator optional The User who created this account.  If set, this will be recorded in the event description.
+     */
+    public function newEventSignUp($creator = null){
+        if ($creator)
+            $description = "User {$this->user_name} was created by {$creator->user_name} on " . date("Y-m-d H:i:s") . ".";
+        else
+            $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
+        $event = new UserEvent([
+            "user_id"     => $this->id,
+            "event_type"  => "sign_up",
+            "description" => $description
+        ]);
+        $event->save();
     }
     
     /**
@@ -356,7 +378,11 @@ class User extends UFModel {
         // Remove all user auth rules
         $auth_table = Database::getSchemaTable('authorize_user')->name;
         Capsule::table($auth_table)->where("user_id", $this->id)->delete();
-                    
+        
+        // Remove all user events
+        $event_table = Database::getSchemaTable('user_event')->name;
+        Capsule::table($event_table)->where("user_id", $this->id)->delete();
+        
         // Delete the user        
         $result = parent::delete();
         

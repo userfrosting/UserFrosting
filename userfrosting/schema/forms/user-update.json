@@ -54,7 +54,7 @@
             }
         }
     },
-    "enabled" : {
+    "flag_enabled" : {
         "validators" : {
             "member_of" : {
                 "values" : [
@@ -64,7 +64,7 @@
             }
         }
     },
-    "active" : {
+    "flag_verified" : {
         "validators" : {
             "member_of" : {
                 "values" : [

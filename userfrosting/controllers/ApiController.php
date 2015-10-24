@@ -93,7 +93,7 @@ class ApiController extends \UserFrosting\BaseController {
             if ($name == 'last_sign_in_time') {
                 $user_collection = $user_collection->filterRecentEventTime('sign_in', $last_sign_in_times, $value);
             } else if ($name == 'sign_up_time') {
-                $user_collection = $user_collection->filterRecentEventTime('sign_up', $last_sign_up_times, $value);
+                $user_collection = $user_collection->filterRecentEventTime('sign_up', $last_sign_up_times, $value, "Unknown");
             } else {
                 $user_collection = $user_collection->filterTextField($name, $value);
             }

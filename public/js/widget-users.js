@@ -60,11 +60,11 @@ function bindUserTableButtons(table) {
 }
 
 // Enable/disable the specified user
-function updateUserEnabledStatus(user_id, enabled) {
-	enabled = typeof enabled !== 'undefined' ? enabled : 1;
+function updateUserEnabledStatus(user_id, flag_enabled) {
+	flag_enabled = typeof flag_enabled !== 'undefined' ? flag_enabled : 1;
 	csrf_token = $("meta[name=csrf_token]").attr("content");
     var data = {
-		enabled: enabled,
+		flag_enabled: flag_enabled,
 		csrf_token: csrf_token
 	};
 	
@@ -77,11 +77,11 @@ function updateUserEnabledStatus(user_id, enabled) {
     });
 }
 
-// Activate new user account
+// Activate (verify) new user account
 function updateUserActiveStatus(user_id) {
 	csrf_token = $("meta[name=csrf_token]").attr("content");
     var data = {
-		active: "1",
+		flag_verified: "1",
         csrf_token: csrf_token
 	}
     
@@ -231,7 +231,7 @@ function userForm(box_id, user_id) {
 		
 		// Link submission buttons
         ufFormSubmit(
-            $("form[name='user']"),
+            $('#' + box_id).find("form"),
             validators,
             $("#form-alerts"),
             function(data, statusText, jqXHR) {

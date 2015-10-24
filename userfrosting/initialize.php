@@ -110,9 +110,10 @@ $app->remember_me_table = [
 ];
 
 /* Event Types
-    "last_activation_request",
-    "lost_password_request",
-    "lost_password_timestamp",
+    "sign_up",
+    "sign_in",
+    "activation_request",
+    "password_reset_request",
 */
 
 /* Load UserFrosting site settings */

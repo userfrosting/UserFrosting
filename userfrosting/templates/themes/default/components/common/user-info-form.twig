@@ -60,7 +60,7 @@
                 <label>Registered Since</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                    <input type="text" class="form-control" name="sign_up_time" autocomplete="off" value="{{target_user.sign_up_time | date('M j, Y g:i a')}}" disabled>
+                    <input type="text" class="form-control" name="sign_up_time" autocomplete="off" value="{% if target_user.last_sign_in_time %}{{target_user.sign_up_time | date('M j, Y g:i a')}}{% else %}Unknown{% endif %}" disabled>
                 </div>
             </div>
         </div>

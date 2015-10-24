@@ -57,9 +57,11 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
             
-            //$users = UserLoader::fetchAll();
-            if (!$paginate_server_side)
-                $users = User::queryBuilder()->get();
+            if (!$paginate_server_side) {
+                $user_collection = (new User)->get();
+                $user_collection->getRecentEvents('sign_in');
+                $user_collection->getRecentEvents('sign_up', 'sign_up_time');                
+            }
             $name = "Users";
             $icon = "fa fa-users";
         }
@@ -69,7 +71,7 @@ class UserController extends \UserFrosting\BaseController {
             "icon" => $icon,
             "primary_group_name" => $primary_group_name,
             "paginate_server_side" => $paginate_server_side,
-            "users" => isset($users) ? $users : []
+            "users" => isset($user_collection) ? $user_collection->toArray() : []
         ]);          
     }
     
@@ -89,7 +91,7 @@ class UserController extends \UserFrosting\BaseController {
         
         // If the user no longer exists, forward to main user page
         if (!$target_user)
-            $this->_app->redirect("/users/");
+            $this->_app->redirect($this->_app->urlFor('uri_users'));
         
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
@@ -129,8 +131,12 @@ class UserController extends \UserFrosting\BaseController {
         $disabled_fields[] = "user_name";
         
         // Hide password fields for editing user
-        $hidden_fields[] = "password";    
-    
+        $hidden_fields[] = "password";
+        
+        // Load validator rules
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
+        $this->_app->jsValidator->setSchema($schema);             
+        
         $this->_app->render('users/user-info.twig', [
             "box_id" => 'view-user',
             "box_title" => $target_user->user_name,
@@ -146,7 +152,7 @@ class UserController extends \UserFrosting\BaseController {
                     "submit", "cancel"
                 ]
             ],
-            "validators" => "{ none: ''}"           
+            "validators" => $this->_app->jsValidator->rules()   
         ]);   
     }
 
@@ -387,10 +393,9 @@ class UserController extends \UserFrosting\BaseController {
         $rf->removeFields(['csrf_token, passwordc']);
         
         // Perform desired data transformations on required fields.  Is this a feature we could add to Fortress?
-        $data['user_name'] = strtolower(trim($data['user_name']));
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
-        $data['active'] = 1;
+        $data['flag_verified'] = 1;
         
         // Check if username or email already exists
         if (UserLoader::exists($data['user_name'], 'user_name')){
@@ -449,6 +454,9 @@ class UserController extends \UserFrosting\BaseController {
         
         // Store new user to database
         $user->store();        
+        
+        // Create account creation event
+        $user->newEventSignUp($this->_app->user);
         
         // Success message
         $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
@@ -514,7 +522,7 @@ class UserController extends \UserFrosting\BaseController {
         }
 
         // Check that we are not disabling the master account
-        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['enabled']) && $post['enabled'] == "0"){
+        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == "0"){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLE_MASTER");
             $this->_app->halt(403);
         }
@@ -555,13 +563,13 @@ class UserController extends \UserFrosting\BaseController {
             if ($value != $target_user->$name){
                 $target_user->$name = $value;
                 // Custom success messages (optional)
-                if ($name == "enabled") {
+                if ($name == "flag_enabled") {
                     if ($value == "1")
                         $ms->addMessageTranslated("success", "ACCOUNT_ENABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
                     else
                         $ms->addMessageTranslated("success", "ACCOUNT_DISABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
                 }
-                if ($name == "active") {
+                if ($name == "flag_verified") {
                     $ms->addMessageTranslated("success", "ACCOUNT_MANUALLY_ACTIVATED", ["user_name" => $target_user->user_name]);
                 }
             }

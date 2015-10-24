@@ -386,15 +386,14 @@ class AccountController extends \UserFrosting\BaseController {
         $rf->removeFields(['captcha', 'passwordc']);
         
         // Perform desired data transformations.  Is this a feature we could add to Fortress?
-        $data['user_name'] = strtolower(trim($data['user_name']));
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
         $data['locale'] = $this->_app->site->default_locale;
         
         if ($this->_app->site->require_activation)
-            $data['active'] = 0;
+            $data['flag_verified'] = 0;
         else
-            $data['active'] = 1;
+            $data['flag_verified'] = 1;
         
         // Check if username or email already exists
         if (UserLoader::exists($data['user_name'], 'user_name')){
@@ -439,6 +438,10 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Store new user to database
         $user->store();
+        
+        // Create sign-up event
+        $user->newEventSignUp();
+        
         if ($this->_app->site->require_activation) {
             // Create and send activation email
 
@@ -500,7 +503,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }    
         
-        // Ok, try to find a user with the specified activation token
+        // Ok, try to find a user with the specified secret token
         $user = UserLoader::fetch($data['secret_token'], 'secret_token');
         
         if (!$user || $user->flag_verified == "1"){
@@ -554,13 +557,13 @@ class AccountController extends \UserFrosting\BaseController {
         $user = UserLoader::fetch($data['user_name'], 'user_name');
         
         // Check that the specified email is correct
-        if ($user->email != $data['email']){
+        if (strtolower($user->email) != strtolower($data['email'])){
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
             $this->_app->halt(400);
         }
         
         // Check if the user has any outstanding lost password requests
-        if($user->lost_password_request == 1) {
+        if($user->flag_password_reset == 1) {
             $ms->addMessageTranslated("danger", "FORGOTPASS_REQUEST_EXISTS");
             $this->_app->halt(403);            
         }
@@ -568,7 +571,7 @@ class AccountController extends \UserFrosting\BaseController {
         // Generate a new activation token.  This will also be used as the password reset token.
         $user->secret_token = User::generateActivationToken();
         $user->last_activation_request = date("Y-m-d H:i:s");
-        $user->lost_password_request = "1";
+        $user->flag_password_reset = "1";
         $user->lost_password_timestamp = date("Y-m-d H:i:s");
         
         // Email the user asking to confirm this change password request
@@ -645,7 +648,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
  
         // Check that a lost password request is in progress and has not expired
-        if ($user->lost_password_request == 0 || $user->lost_password_timestamp === null){
+        if ($user->flag_password_reset == 0 || $user->lost_password_timestamp === null){
             $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
             $this->_app->halt(400);
         }
@@ -658,14 +661,14 @@ class AccountController extends \UserFrosting\BaseController {
         if($current_token_life >= $this->_app->site->reset_password_timeout || $current_token_life < 0){
             // Reset the password flag
             // TODO: should we do this here, or just when there is a new reset request?
-            $user->lost_password_request = "0";
+            $user->flag_password_reset = "0";
             $user->store();
             $ms->addMessageTranslated("danger", "FORGOTPASS_OLD_TOKEN");
             $this->_app->halt(400);
         }
 
         // Reset the password flag
-        $user->lost_password_request = "0";
+        $user->flag_password_reset = "0";
         
         // Hash the user's password and update
         $user->password = Authentication::hashPassword($data['password']);
@@ -714,7 +717,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // Reset the password flag
-        $user->lost_password_request = "0";	
+        $user->flag_password_reset = "0";	
 		
         // Store the updated info
         $user->store();

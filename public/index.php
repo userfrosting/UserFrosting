@@ -122,7 +122,7 @@
     $app->get('/users/?', function () use ($app) {
         $controller = new UF\UserController($app);
         return $controller->pageUsers();
-    });    
+    })->name('uri_users');    
 
     // List users in a particular primary group
     $app->get('/users/:primary_group/?', function ($primary_group) use ($app) {
