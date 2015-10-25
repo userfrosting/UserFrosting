@@ -15,3 +15,4 @@
 - Switch from DateJS to momentjs
 - Switch to jQueryValidation from FormValidation
 - Implement basic interface for modifying group authorization rules
+- User events - timestamps for things like sign-in, sign-up, password reset, etc are now stored in a `user_event` table
