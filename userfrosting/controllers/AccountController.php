@@ -442,36 +442,23 @@ class AccountController extends \UserFrosting\BaseController {
             // Create verification request
             $verification_request = $user->newEventVerificationRequest();
             
-            // TODO: pass into template
-            
-            // Create and send activation email
-            $mail = new \PHPMailer;
-            
-            $mail->From = $this->_app->site->admin_email;
-            $mail->FromName = $this->_app->site->site_title;
-            $mail->addAddress($user->email);     // Add a recipient
-            $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
-            
+            // Create and send verification email
             $twig = $this->_app->view()->getEnvironment();
-            $template = $twig->loadTemplate("mail/activate-new.twig");
-            $params = [
+            $template = $twig->loadTemplate("mail/activate-new.twig");        
+            $notification = new Notification($template);
+            $notification->fromWebsite();      // Automatically sets sender and reply-to
+            $notification->addEmailRecipient($user->email, $user->display_name, [
                 "user" => $user
-            ];
+            ]);
             
-            // Must manually merge in global variables for block rendering
-            $params = array_merge($twig->getGlobals(), $params);            
-            $mail->Subject = $template->renderBlock('subject', $params);
-            $mail->Body    = $template->renderBlock('body', $params);
-            
-            $mail->isHTML(true);                                  // Set email format to HTML
-            
-            if(!$mail->send()) {
+            try {
+                $notification->send();
+            } catch (\Exception\phpmailerException $e){
                 $ms->addMessageTranslated("danger", "MAIL_ERROR");
-                error_log('Mailer Error: ' . $mail->ErrorInfo);
+                error_log('Mailer Error: ' . $e->errorMessage());
                 $this->_app->halt(500);
             }
-
-            // Activation required
+            
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
             $verification_request->save();
         } else
@@ -578,33 +565,23 @@ class AccountController extends \UserFrosting\BaseController {
         $event = $user->newEventPasswordReset();
         
         // Email the user asking to confirm this change password request
-        $mail = new \PHPMailer;
-        
-        $mail->From = $this->_app->site->admin_email;
-        $mail->FromName = $this->_app->site->site_title;
-        $mail->addAddress($user->email);     // Add a recipient
-        $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
-        
         $twig = $this->_app->view()->getEnvironment();
-        $template = $twig->loadTemplate("mail/password-reset.twig");
-        $params = [
+        $template = $twig->loadTemplate("mail/password-reset.twig");        
+        $notification = new Notification($template);
+        $notification->fromWebsite();      // Automatically sets sender and reply-to
+        $notification->addEmailRecipient($user->email, $user->display_name, [
             "user" => $user,
             "request_date" => date("Y-m-d H:i:s")
-        ];
+        ]);
         
-        // Must manually merge in global variables for block rendering
-        $params = array_merge($twig->getGlobals(), $params);
-        $mail->Subject = $template->renderBlock('subject', $params);
-        $mail->Body    = $template->renderBlock('body', $params);
-        
-        $mail->isHTML(true);                                  // Set email format to HTML       
-        
-        if(!$mail->send()) {
+        try {
+            $notification->send();
+        } catch (\Exception\phpmailerException $e){
             $ms->addMessageTranslated("danger", "MAIL_ERROR");
-            error_log('Mailer Error: ' . $mail->ErrorInfo);
+            error_log('Mailer Error: ' . $e->errorMessage());
             $this->_app->halt(500);
         }
-
+        
         $user->store();
         $event->save();
         $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
@@ -803,30 +780,20 @@ class AccountController extends \UserFrosting\BaseController {
         $event = $user->newEventVerificationRequest();
         
         // Email the user
-        $mail = new \PHPMailer;
-        
-        $mail->From = $this->_app->site->admin_email;
-        $mail->FromName = $this->_app->site->site_title;
-        $mail->addAddress($user->email);     // Add a recipient
-        $mail->addReplyTo($this->_app->site->admin_email, $this->_app->site->site_title);
-        
         $twig = $this->_app->view()->getEnvironment();
-        $template = $twig->loadTemplate("mail/resend-activation.twig");
-        $params = [
+        $template = $twig->loadTemplate("mail/resend-activation.twig");        
+        $notification = new Notification($template);
+        $notification->fromWebsite();      // Automatically sets sender and reply-to
+        $notification->addEmailRecipient($user->email, $user->display_name, [
             "user" => $user,
             "secret_token" => $user->secret_token
-        ];
+        ]);
         
-        // Must manually merge in global variables for block rendering
-        $params = array_merge($twig->getGlobals(), $params);
-        $mail->Subject = $template->renderBlock('subject', $params);
-        $mail->Body    = $template->renderBlock('body', $params);
-        
-        $mail->isHTML(true);                                  // Set email format to HTML       
-        
-        if(!$mail->send()) {
+        try {
+            $notification->send();
+        } catch (\Exception\phpmailerException $e){
             $ms->addMessageTranslated("danger", "MAIL_ERROR");
-            error_log('Mailer Error: ' . $mail->ErrorInfo);
+            error_log('Mailer Error: ' . $e->errorMessage());
             $this->_app->halt(500);
         }
 

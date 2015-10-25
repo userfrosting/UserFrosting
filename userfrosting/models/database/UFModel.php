@@ -39,6 +39,8 @@ abstract class UFModel extends Model {
         $table_schema = Database::getSchemaTable(static::$_table_id);
         $this->table = $table_schema->name;
         $this->fillable = $table_schema->columns;
+        if (!static::$app)
+            static::$app = UserFrosting::getInstance();        
         parent::__construct($properties);
     }
     

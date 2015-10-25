@@ -50,6 +50,15 @@
                 'db_pass'  => 'password',
                 'db_prefix'=> 'uf_'
             ],
+            'mail' => 'smtp',
+            'smtp'  => [
+                'host' => 'mail.example.com',
+                'port' => 465,
+                'auth' => true,
+                'secure' => 'ssl',
+                'user' => 'relay@example.com',
+                'pass' => 'password'
+            ],
             'uri' => [
                 'public' =>    $uri_public_root,
                 'js' =>        $uri_public_root . "/js/",
@@ -83,6 +92,15 @@
                 'db_user'  => 'admin',
                 'db_pass'  => 'password',
                 'db_prefix'=> 'uf_'
+            ],
+            'mail' => 'smtp',
+            'smtp'  => [
+                'host' => 'mail.example.com',
+                'port' => 465,
+                'auth' => true,
+                'secure' => 'ssl',
+                'user' => 'relay@example.com',
+                'pass' => 'password'
             ],
             'uri' => [
                 'public' =>    $uri_public_root,
