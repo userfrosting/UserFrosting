@@ -333,7 +333,7 @@ class User extends UFModel {
      * Store the User to the database, along with any group associations, updating as necessary.
      *
      */
-    public function save(array $options = [], $force_create = false){       
+    public function save(array $options = []){       
         // Update the user record itself
         $result = parent::save($options);
         

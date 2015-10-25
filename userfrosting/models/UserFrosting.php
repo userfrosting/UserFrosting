@@ -68,6 +68,11 @@ class UserFrosting extends \Slim\Slim {
                 return $controller->logout(true);
             }
             
+            if ($e instanceof AccountInvalidException) {
+                $controller = new AccountController($this);
+                return $controller->logout(false);
+            }
+            
             if ($e instanceof AuthCompromisedException) {
                 $controller = new AccountController($this);
                 return $controller->pageAccountCompromised();

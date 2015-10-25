@@ -26,6 +26,7 @@ return array(
     'Slim\\Extras\\Middleware\\CsrfGuard' => $baseDir . '/middleware/CsrfGuard.php',
     'UserFrosting\\AccessConditionExpression' => $baseDir . '/models/auth/AccessConditionExpression.php',
     'UserFrosting\\AccountController' => $baseDir . '/controllers/AccountController.php',
+    'UserFrosting\\AccountInvalidException' => $baseDir . '/middleware/usersession/Exception.php',
     'UserFrosting\\AdminController' => $baseDir . '/controllers/AdminController.php',
     'UserFrosting\\ApiController' => $baseDir . '/controllers/ApiController.php',
     'UserFrosting\\AuthCompromisedException' => $baseDir . '/middleware/usersession/Exception.php',

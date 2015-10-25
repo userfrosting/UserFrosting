@@ -34,8 +34,9 @@ class UserSession extends \Slim\Middleware {
             // Determine if we are already logged in (user exists in the session variable)
             if(isset($_SESSION["userfrosting"]["user_id"]) && ($_SESSION["userfrosting"]["user_id"] != null)) {       
                 
-                // User is still logged in - refresh the user.  If they don't exist any more, then an exception will be thrown.
-                $this->app->user = User::find($_SESSION["userfrosting"]["user_id"]);                
+                // Load the user.  If they don't exist any more, throw an exception.
+                if (!($this->app->user = User::find($_SESSION["userfrosting"]["user_id"])))
+                    throw new AccountInvalidException();
                 
                 //error_log("Current user id is " . $this->app->user->id);
                 
@@ -64,7 +65,6 @@ class UserSession extends \Slim\Middleware {
                     // the fact that the user was logged in via RememberMe (instead of login form)
                     $_SESSION['remembered_by_cookie'] = true;
                 } else {
-                    //error_log("Cookie not found in db");
                     // If $rememberMe returned false, check if the token was invalid
                     if($this->app->remember_me->loginTokenWasInvalid()) {
                         //error_log("Cookie was stolen!");

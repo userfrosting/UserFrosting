@@ -35,6 +35,22 @@ class AuthCompromisedException extends \Exception
 }
 
 /**
+ * Account Invalid Exception.
+ */
+class AccountInvalidException extends \Exception
+{
+    /**
+     * Public constructor.
+     */
+    public function __construct()
+    {
+        $message = 'The account you were logged in with no longer exists.  We have logged you out now, so please try again.';
+        $code = 403;
+        parent::__construct($message, $code);
+    }
+}
+
+/**
  * Invalid Database Exception.
  */
 class DatabaseInvalidException extends \Exception

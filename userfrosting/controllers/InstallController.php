@@ -231,8 +231,13 @@ class InstallController extends \UserFrosting\BaseController {
         foreach ($defaultGroups as $group_id => $group)
             $user->addGroup($group_id);    
         
-        // Store new user to database, forcing it to insert the new user
-        $user->store(true);
+        // Store new user to database
+        $user->save();
+        
+        // Add sign-up event
+        $event = $user->newEventSignUp();
+        $event->save();
+        
         // No activation required
         $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
         
