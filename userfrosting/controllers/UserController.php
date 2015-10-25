@@ -456,7 +456,7 @@ class UserController extends \UserFrosting\BaseController {
         $user->store();        
         
         // Create account creation event
-        $user->newEventSignUp($this->_app->user);
+        $user->newEventSignUp($this->_app->user)->save();
         
         // Success message
         $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);

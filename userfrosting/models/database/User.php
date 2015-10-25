@@ -102,7 +102,7 @@ class User extends UFModel {
     public function __isset($name) {
         if ($name == "primary_group" || $name == "theme" || $name == "icon" || $name == "landing_page")
             return isset($this->_primary_group);
-        else if (in_array($name, ["last_sign_in_event", "last_sign_in_time", "sign_up_time"]))
+        else if (in_array($name, ["last_sign_in_event", "last_sign_in_time", "sign_up_time", "last_password_reset_time", "last_verification_request_time"]))
             return true;
         else
             return parent::__isset($name);
@@ -117,11 +117,15 @@ class User extends UFModel {
      */
     public function __get($name){
         if ($name == "last_sign_in_event")
-            return $this->lastSignInEvent();
+            return $this->lastEvent('sign_in');
         else if ($name == "last_sign_in_time")
-            return $this->lastSignInTime();
+            return $this->lastEventTime('sign_in');
         else if ($name == "sign_up_time")
             return $this->lastEventTime('sign_up');
+        else if ($name == "last_password_reset_time")
+            return $this->lastEventTime('password_reset_request');
+        else if ($name == "last_verification_request_time")
+            return $this->lastEventTime('verification_request');
         else if ($name == "primary_group")
             return $this->getPrimaryGroup();
         else if ($name == "theme")
@@ -149,28 +153,27 @@ class User extends UFModel {
     }
     
     /**
-     * Get the most recent sign-in event for this user.
-     */    
-    public function lastSignInEvent() {
-        return $this->events()->where('event_type', 'sign_in')->orderBy('occurred_at', 'desc')->first();
-    }    
-
-    /**
      * Get the most recent time for a specified event type for this user.
+     *
+     * @return string|null The last event time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an event of this type doesn't exist.
      */     
     public function lastEventTime($type){
-        return $this->events()
+        $result = $this->events()
         ->where('event_type', $type)
         ->max('occurred_at');
-    }    
+        return $result ? $result : null;
+    }
     
     /**
-     * Get the most recent sign-in time for this user.
+     * Get the most recent event of a specified type for this user.
+     *
+     * @return UserEvent
      */    
-    public function lastSignInTime() {
+    public function lastEvent($type) {
         return $this->events()
-        ->where('event_type', 'sign_in')
-        ->max('occurred_at');
+        ->where('event_type', $type)
+        ->orderBy('occurred_at', 'desc')
+        ->first();
     }    
      
     /**
@@ -329,15 +332,8 @@ class User extends UFModel {
     /**
      * Store the User to the database, along with any group associations, updating as necessary.
      *
-     * @param bool $force_create set to true if you want to force UF to set a new secret_token even if this object has already been assigned an id.
      */
-    public function save(array $options = [], $force_create = false){
-        // Initialize info for new Users.  Should this be done here, or somewhere else?
-        if (!isset($this->id) || $force_create){
-            $this->secret_token = User::generateActivationToken();
-            //$this->last_activation_request = date("Y-m-d H:i:s");
-        }    
-        
+    public function save(array $options = [], $force_create = false){       
         // Update the user record itself
         $result = parent::save($options);
         
@@ -350,7 +346,6 @@ class User extends UFModel {
     /**
      * Create an event saying that this user registered their account, or an account was created for them.
      * 
-     *
      * @param User $creator optional The User who created this account.  If set, this will be recorded in the event description.
      */
     public function newEventSignUp($creator = null){
@@ -363,8 +358,49 @@ class User extends UFModel {
             "event_type"  => "sign_up",
             "description" => $description
         ]);
-        $event->save();
+        return $event;
     }
+    
+    /**
+     * Create a new user sign-in event.
+     * 
+     */
+    public function newEventSignIn(){    
+        return new UserEvent([
+            "user_id"     => $this->id,
+            "event_type"  => "sign_in",
+            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
+        ]);
+    }
+    
+    /**
+     * Create a new email verification request event.  Also, generates a new secret token.
+     * 
+     */
+    public function newEventVerificationRequest(){
+        $this->secret_token = User::generateActivationToken();
+        $event = new UserEvent([
+            "user_id"     => $this->id,
+            "event_type"  => "verification_request",
+            "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
+        ]);
+        return $event;
+    }    
+    
+    /**
+     * Create a new password reset request event.  Also, generates a new secret token.
+     * 
+     */
+    public function newEventPasswordReset(){
+        $this->secret_token = User::generateActivationToken();
+        $this->flag_password_reset = "1";
+        $event = new UserEvent([
+            "user_id"     => $this->id,
+            "event_type"  => "password_reset_request",
+            "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
+        ]);
+        return $event;
+    } 
     
     /**
      * Delete this user from the database, along with any linked groups and authorization rules
@@ -472,12 +508,7 @@ class User extends UFModel {
      */
     public function login(){    
         // Add a sign in event (time is automatically set by database)
-        $event = new UserEvent([
-            "user_id"     => $this->id,
-            "event_type"  => "sign_in",
-            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
-        ]);
-        
+        $event = $this->newEventSignIn();
         $event->save();
         
         // Update password if we had encountered an outdated hash

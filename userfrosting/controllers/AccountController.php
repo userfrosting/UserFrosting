@@ -293,7 +293,6 @@ class AccountController extends \UserFrosting\BaseController {
      * Request type: POST     
      */      
     public function logout($complete = false){
-        error_log("Logging the user out...");
         if ($complete){
             $storage = new \Birke\Rememberme\Storage\PDO($this->_app->remember_me_table);
             $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
@@ -436,15 +435,16 @@ class AccountController extends \UserFrosting\BaseController {
         foreach ($defaultGroups as $group_id => $group)
             $user->addGroup($group_id);    
         
-        // Store new user to database
-        $user->store();
-        
         // Create sign-up event
-        $user->newEventSignUp();
+        $sign_up_event = $user->newEventSignUp();
         
         if ($this->_app->site->require_activation) {
+            // Create verification request
+            $verification_request = $user->newEventVerificationRequest();
+            
+            // TODO: pass into template
+            
             // Create and send activation email
-
             $mail = new \PHPMailer;
             
             $mail->From = $this->_app->site->admin_email;
@@ -458,6 +458,8 @@ class AccountController extends \UserFrosting\BaseController {
                 "user" => $user
             ];
             
+            // Must manually merge in global variables for block rendering
+            $params = array_merge($twig->getGlobals(), $params);            
             $mail->Subject = $template->renderBlock('subject', $params);
             $mail->Body    = $template->renderBlock('body', $params);
             
@@ -471,10 +473,14 @@ class AccountController extends \UserFrosting\BaseController {
 
             // Activation required
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
+            $verification_request->save();
         } else
             // No activation required
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
-        
+            
+        $sign_up_event->save();
+        // Store new user to database
+        $user->store();        
     }
     
     /**
@@ -568,11 +574,8 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(403);            
         }
         
-        // Generate a new activation token.  This will also be used as the password reset token.
-        $user->secret_token = User::generateActivationToken();
-        $user->last_activation_request = date("Y-m-d H:i:s");
-        $user->flag_password_reset = "1";
-        $user->lost_password_timestamp = date("Y-m-d H:i:s");
+        // Generate a new password reset request.  This will also generate a new secret token for the user.
+        $event = $user->newEventPasswordReset();
         
         // Email the user asking to confirm this change password request
         $mail = new \PHPMailer;
@@ -589,10 +592,12 @@ class AccountController extends \UserFrosting\BaseController {
             "request_date" => date("Y-m-d H:i:s")
         ];
         
+        // Must manually merge in global variables for block rendering
+        $params = array_merge($twig->getGlobals(), $params);
         $mail->Subject = $template->renderBlock('subject', $params);
         $mail->Body    = $template->renderBlock('body', $params);
         
-        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->isHTML(true);                                  // Set email format to HTML       
         
         if(!$mail->send()) {
             $ms->addMessageTranslated("danger", "MAIL_ERROR");
@@ -601,6 +606,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
 
         $user->store();
+        $event->save();
         $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
     }
     
@@ -641,25 +647,28 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(400);
         }
         
-        // Check that the username matches the activation token
-        if ($user->user_name != trim(strtolower($data['user_name']))){
+        // Check that the username matches the submitted username
+        if (strtolower($user->user_name) != strtolower($data['user_name'])){
             $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
             $this->_app->halt(400);
         }
- 
+        
+        // Get the most recent password reset request time
+        $last_password_reset_time = $user->lastEventTime('password_reset_request');
+        
         // Check that a lost password request is in progress and has not expired
-        if ($user->flag_password_reset == 0 || $user->lost_password_timestamp === null){
+        if ($user->flag_password_reset == 0 || $last_password_reset_time === null){
             $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
             $this->_app->halt(400);
         }
 
         // Check the time to see if the token is still valid based on the timeout value. If not valid make the user restart the password request
         $current_time = new \DateTime("now");
-        $last_request_time = new \DateTime($user->lost_password_timestamp);
-        $current_token_life = $current_time->getTimestamp() - $last_request_time->getTimestamp();
-
+        $last_password_reset_datetime = new \DateTime($last_password_reset_time);
+        $current_token_life = $current_time->getTimestamp() - $last_password_reset_datetime->getTimestamp();
+        
         if($current_token_life >= $this->_app->site->reset_password_timeout || $current_token_life < 0){
-            // Reset the password flag
+            // Reset the password reset flag
             // TODO: should we do this here, or just when there is a new reset request?
             $user->flag_password_reset = "0";
             $user->store();
@@ -764,7 +773,7 @@ class AccountController extends \UserFrosting\BaseController {
         $user = UserLoader::fetch($data['user_name'], 'user_name');
         
         // Check that the specified email is correct
-        if ($user->email != $data['email']){
+        if (strtolower($user->email) != strtolower($data['email'])){
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
             $this->_app->halt(400);
         }
@@ -775,10 +784,14 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(400);
         }
         
+        // Get the most recent account verification request time
+        $last_verification_request_time = $user->lastEventTime('verification_request');
+        $last_verification_request_time = $last_verification_request_time ? $last_verification_request_time : "0000-00-00 00:00:00";
+        
         // Check the time since the last activation request
         $current_time = new \DateTime("now");
-        $last_request_time = new \DateTime($user->last_activation_request);
-        $time_since_last_request = $current_time->getTimestamp() - $last_request_time->getTimestamp();
+        $last_verification_request_datetime = new \DateTime($last_verification_request_time);
+        $time_since_last_request = $current_time->getTimestamp() - $last_verification_request_datetime->getTimestamp();
 
         // If an activation request has been sent too recently, they must wait
         if($time_since_last_request < $this->_app->site->resend_activation_threshold || $time_since_last_request < 0){
@@ -786,10 +799,8 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(429); // "Too many requests" code (http://tools.ietf.org/html/rfc6585#section-4)
         }
         
-        // We're good to go - create a new activation token and send the email
-        $user->secret_token = User::generateActivationToken();
-        $user->last_activation_request = date("Y-m-d H:i:s");
-        $user->lost_password_timestamp = date("Y-m-d H:i:s");
+        // We're good to go - create a new verification request and send the email
+        $event = $user->newEventVerificationRequest();
         
         // Email the user
         $mail = new \PHPMailer;
@@ -806,10 +817,12 @@ class AccountController extends \UserFrosting\BaseController {
             "secret_token" => $user->secret_token
         ];
         
+        // Must manually merge in global variables for block rendering
+        $params = array_merge($twig->getGlobals(), $params);
         $mail->Subject = $template->renderBlock('subject', $params);
         $mail->Body    = $template->renderBlock('body', $params);
         
-        $mail->isHTML(true);                                  // Set email format to HTML
+        $mail->isHTML(true);                                  // Set email format to HTML       
         
         if(!$mail->send()) {
             $ms->addMessageTranslated("danger", "MAIL_ERROR");
@@ -818,6 +831,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
 
         $user->store();
+        $event->save();
         $ms->addMessageTranslated("success", "ACCOUNT_NEW_ACTIVATION_SENT");
     }
     

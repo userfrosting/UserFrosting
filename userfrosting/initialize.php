@@ -112,7 +112,7 @@ $app->remember_me_table = [
 /* Event Types
     "sign_up",
     "sign_in",
-    "activation_request",
+    "verification_request",
     "password_reset_request",
 */
 
