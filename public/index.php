@@ -88,12 +88,13 @@
         switch ($action) {
             case "login":               return $controller->pageLogin();
             case "logout":              return $controller->logout(true); 
-            case "register":            return $controller->pageRegister();
-            case "activate":            return $controller->activate();            
+            case "register":            return $controller->pageRegister();         
             case "resend-activation":   return $controller->pageResendActivation();
             case "forgot-password":     return $controller->pageForgotPassword();
+            case "activate":            return $controller->activate();
+            case "set-password":        return $controller->pageSetPassword(true); 
             case "reset-password":      if (isset($get['confirm']) && $get['confirm'] == "true")
-                                            return $controller->pageResetPassword();
+                                            return $controller->pageSetPassword(false);
                                         else
                                             return $controller->denyResetPassword();
             case "captcha":             return $controller->captcha();
@@ -110,7 +111,8 @@
             case "register":            return $controller->register();
             case "resend-activation":   return $controller->resendActivation();
             case "forgot-password":     return $controller->forgotPassword();
-            case "reset-password":      return $controller->resetPassword();            
+            case "set-password":        return $controller->setPassword(true);
+            case "reset-password":      return $controller->setPassword(false);            
             case "settings":            return $controller->accountSettings();
             default:                    $app->notFound();
         }

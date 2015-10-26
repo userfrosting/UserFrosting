@@ -2,6 +2,14 @@
 
 namespace UserFrosting;
 
+/**
+ * User session middleware.
+ *
+ * Handles creation of the authenticated user session at the beginning of each request.
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/
+ */
 class UserSession extends \Slim\Middleware {
 
     /**
@@ -19,6 +27,10 @@ class UserSession extends \Slim\Middleware {
         $this->next->call();
     }
     
+    /**
+     * Sets up the session for the currently logged-in user, trying to re-establish a session for "remember-me" users who have been logged out,
+     * or creates a guest user object if no one is logged in.
+     */     
     public function setup(){       
         try {
             // Initialize RememberMe

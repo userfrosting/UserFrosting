@@ -140,6 +140,8 @@ class User extends UFModel {
     
     /**
      * Extends Eloquent's Collection models.
+     *
+     * @return UserCollection
      */
     public function newCollection(array $models = Array()) {
 	    return new UserCollection($models);
@@ -284,8 +286,7 @@ class User extends UFModel {
             unset($this->_groups[$key]);
         }
         
-        return $this;           
-    
+        return $this; 
     }
 
     /**
@@ -347,6 +348,7 @@ class User extends UFModel {
      * Create an event saying that this user registered their account, or an account was created for them.
      * 
      * @param User $creator optional The User who created this account.  If set, this will be recorded in the event description.
+     * @return UserEvent     
      */
     public function newEventSignUp($creator = null){
         if ($creator)
@@ -363,7 +365,8 @@ class User extends UFModel {
     
     /**
      * Create a new user sign-in event.
-     * 
+     *
+     * @return UserEvent
      */
     public function newEventSignIn(){    
         return new UserEvent([
@@ -375,7 +378,8 @@ class User extends UFModel {
     
     /**
      * Create a new email verification request event.  Also, generates a new secret token.
-     * 
+     *
+     * @return UserEvent
      */
     public function newEventVerificationRequest(){
         $this->secret_token = User::generateActivationToken();
@@ -389,7 +393,8 @@ class User extends UFModel {
     
     /**
      * Create a new password reset request event.  Also, generates a new secret token.
-     * 
+     *
+     * @return UserEvent
      */
     public function newEventPasswordReset(){
         $this->secret_token = User::generateActivationToken();
@@ -504,7 +509,7 @@ class User extends UFModel {
     /**
      * Log this user in.  This basically updates the user's sign-in time, and updates any old password hashes.
      *
-     * You assign this user's id to $_SESSION["userfrosting"]["user"] after calling login, so that it will persist in the session.
+     * You assign this user's id to $_SESSION["userfrosting"]["user_id"] after calling login, so that it will persist in the session.
      */
     public function login(){    
         // Add a sign in event (time is automatically set by database)
@@ -527,6 +532,24 @@ class User extends UFModel {
         $this->store();
         
         return $this;
+    }
+    
+    public function logout($complete = false) {
+        if ($complete){
+            $storage = new \Birke\Rememberme\Storage\PDO(static::$app->remember_me_table);
+            $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
+            $storage->cleanAllTriplets($this->id);
+        }        
+        // Change cookie path
+        $cookie = static::$app->remember_me->getCookie();
+        $cookie->setPath("/");
+        static::$app->remember_me->setCookie($cookie);
+        
+        if (static::$app->remember_me->clearCookie())
+            error_log("Cleared cookie");
+            
+        session_regenerate_id(true);
+        session_destroy();    
     }
     
     /**

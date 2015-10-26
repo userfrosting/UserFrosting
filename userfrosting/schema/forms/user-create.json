@@ -41,40 +41,6 @@
         },
         "sanitizers" : { "raw" : {}}
     },
-    "password" : {
-        "validators" : {
-            "required" : {
-                "message" : "ACCOUNT_SPECIFY_PASSWORD"
-            },
-            "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
-            }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
-    },
-    "passwordc" : {
-        "validators" : {
-            "required" : {
-                "message" : "ACCOUNT_SPECIFY_PASSWORD"
-            },
-            "matches" : {
-                "field" : "password",
-                "message" : "ACCOUNT_PASS_MISMATCH"
-            },
-            "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
-            }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
-    },
     "title" : {
         "validators" : {
             "length" : {

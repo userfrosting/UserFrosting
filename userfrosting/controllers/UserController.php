@@ -130,9 +130,6 @@ class UserController extends \UserFrosting\BaseController {
         // Always disallow editing username
         $disabled_fields[] = "user_name";
         
-        // Hide password fields for editing user
-        $hidden_fields[] = "password";
-        
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
         $this->_app->jsValidator->setSchema($schema);             
@@ -307,7 +304,7 @@ class UserController extends \UserFrosting\BaseController {
             $template = "components/common/user-info-panel.twig";
         
         // Determine authorized fields
-        $fields = ['display_name', 'email', 'title', 'password', 'locale', 'groups', 'primary_group_id'];
+        $fields = ['display_name', 'email', 'title', 'locale', 'groups', 'primary_group_id'];
         $show_fields = [];
         $disabled_fields = [];
         $hidden_fields = [];
@@ -322,9 +319,6 @@ class UserController extends \UserFrosting\BaseController {
         
         // Always disallow editing username
         $disabled_fields[] = "user_name";
-        
-        // Hide password fields for editing user
-        $hidden_fields[] = "password";
                 
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
@@ -389,13 +383,15 @@ class UserController extends \UserFrosting\BaseController {
         // Get the filtered data
         $data = $rf->data();        
         
-        // Remove csrf_token, password confirmation from object data
-        $rf->removeFields(['csrf_token, passwordc']);
+        // Remove csrf_token from object data
+        $rf->removeFields(['csrf_token']);
         
         // Perform desired data transformations on required fields.  Is this a feature we could add to Fortress?
         $data['display_name'] = trim($data['display_name']);
         $data['email'] = strtolower(trim($data['email']));
         $data['flag_verified'] = 1;
+        // Set password as empty on initial creation.  We will then send email so new user can set it themselves via secret token        
+        $data['password'] = "";
         
         // Check if username or email already exists
         if (UserLoader::exists($data['user_name'], 'user_name')){
@@ -419,7 +415,7 @@ class UserController extends \UserFrosting\BaseController {
         // Set default values if not specified or not authorized
         if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "locale"]))
             $data['locale'] = $this->_app->site->default_locale;
-    
+            
         if (!isset($data['title']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "title"])) {
             // Set default title for new users
             $data['title'] = $primaryGroup->new_user_title;
@@ -438,12 +434,9 @@ class UserController extends \UserFrosting\BaseController {
             }
         }
         
-        // Hash password
-        $data['password'] = Authentication::hashPassword($data['password']);
-        
         // Create the user
         $user = new User($data);
-
+        
         // Add user to groups, including selected primary group
         $user->addGroup($data['primary_group_id']);
         foreach ($data['groups'] as $group_id => $is_member) {
@@ -452,11 +445,37 @@ class UserController extends \UserFrosting\BaseController {
             }
         }
         
-        // Store new user to database
-        $user->store();        
+        // Store new user to database so that we have a user_id
+        $user->save();
         
-        // Create account creation event
-        $user->newEventSignUp($this->_app->user)->save();
+        // Create events - account creation and password reset
+        $event_sign_up = $user->newEventSignUp($this->_app->user);
+        $event_password_reset_request = $user->newEventPasswordReset();    
+        
+        // Save user again after creating reset event
+        $user->save();        
+        
+        // Save user events
+        $event_sign_up->save();
+        $event_password_reset_request->save();        
+        
+        // Send an email to the user's email address to set up password
+        $twig = $this->_app->view()->getEnvironment();
+        $template = $twig->loadTemplate("mail/password-create.twig");        
+        $notification = new Notification($template);
+        $notification->fromWebsite();      // Automatically sets sender and reply-to
+        $notification->addEmailRecipient($user->email, $user->display_name, [
+            'user' => $user,
+            'create_password_expiration' => $this->_app->site->create_password_expiration / 3600 . " hours"
+        ]);
+        
+        try {
+            $notification->send();
+        } catch (\Exception\phpmailerException $e){
+            $ms->addMessageTranslated("danger", "MAIL_ERROR");
+            error_log('Mailer Error: ' . $e->errorMessage());
+            $this->_app->halt(500);
+        }
         
         // Success message
         $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);

@@ -10,9 +10,10 @@ namespace UserFrosting;
  * @link http://www.userfrosting.com/
  * @property \Fortress\MessageTranslator $translator
  * @property \Fortress\MessageStream $alerts
- * @property \UserFrosting\SiteSettingsInterface $site
- * @property \UserFrosting\UserObjectInterface $user
+ * @property \UserFrosting\SiteSettings $site
+ * @property \UserFrosting\User $user
  * @property \UserFrosting\PageSchema $schema
+ * @property \UserFrosting\JqueryValidationAdapter $jsValidator
  */
 class UserFrosting extends \Slim\Slim {
     
@@ -35,6 +36,9 @@ class UserFrosting extends \Slim\Slim {
         $this->setupTwigUserVariables();
     }
     
+    /**
+     * Sets up key UserFrosting services: message stream, translator, and client-side validation adapter
+     */    
     public function setupServices($locale){
         //error_log("Setting up message stream");
         /**** Message Stream Setup ****/
@@ -57,6 +61,12 @@ class UserFrosting extends \Slim\Slim {
         $this->jsValidator = new \Fortress\JqueryValidationAdapter($this->translator);        
     }
     
+    /**
+     * Sets up error-handling routines.
+     *
+     * UserFrosting uses Slim's custom error handler to log the error trace in the PHP error log, and then generates a client-side alert (SERVER_ERROR).
+     * It can also take specific actions for certain types of exceptions, such as those thrown from middleware.
+     */
     public function setupErrorHandling(){
         /**** Error Handling Setup ****/
         // Custom error-handler: send a generic message to the client, but put the specific error info in the error log.
@@ -183,6 +193,9 @@ class UserFrosting extends \Slim\Slim {
         */
     }
     
+    /**
+     * Set up the fatal error handler, so that we get a clean error message and alert instead of a WSOD.
+     */     
     public function fatalHandler() {
         $error = error_get_last();
       

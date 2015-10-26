@@ -92,7 +92,7 @@ class AccountController extends \UserFrosting\BaseController {
     }
 
     /**
-     * Render the "lost password" page.  
+     * Render the "forgot password" page.  
      *
      * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
      * By default, this is a "public page" (does not require authentication).
@@ -107,24 +107,33 @@ class AccountController extends \UserFrosting\BaseController {
             'validators' => $this->_app->jsValidator->rules()
         ]);
     }
-
+    
     /**
-     * Render the "reset password" page.  
+     * Render the "set password" page.  
      *
-     * This is the actual page that is linked to in the "forgot password" email.
-     * By default, this is a "public page" (does not require authentication).     
+     * If $flag_new_user is set to true, this renders the page where new users who have had accounts created
+     * for them by another user, can set their password.  If set to false, this renders the new password page for password reset requests.
+     * By default, this is a "public page" (does not require authentication).
      * Request type: GET
-     */     
-    public function pageResetPassword(){
+     * @param bool $flag_new_user Set to true if this is for a new user who doesn't yet have a password.
+     */      
+    public function pageSetPassword($flag_new_user = false){
+        // Look up the user for the secret token
+        $token = $this->_app->request->get()['secret_token'];  
       
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
-        $this->_app->jsValidator->setSchema($schema);          
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/set-password.json");
+        $this->_app->jsValidator->setSchema($schema);  
         
-        $this->_app->render('account/reset-password.twig', [
-            'secret_token' => $this->_app->request->get()['secret_token'],
+        if ($flag_new_user)
+            $template = 'account/create-password.twig';
+        else
+            $template = 'account/reset-password.twig';
+        
+        $this->_app->render($template, [
+            'secret_token' => $token,
             'validators' => $this->_app->jsValidator->rules()
         ]);
-    }
+    }   
     
     /**
      * Render the "resend account activation link" page.  
@@ -241,6 +250,12 @@ class AccountController extends \UserFrosting\BaseController {
             }
         }
         
+        // Check that the user has a password set (so, rule out newly created accounts without a password)
+        if (!$user->password) {
+            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
+            $this->_app->halt(403);
+        }
+        
         // Check that the user's account is enabled
         if ($user->flag_enabled == 0){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLED");
@@ -293,21 +308,7 @@ class AccountController extends \UserFrosting\BaseController {
      * Request type: POST     
      */      
     public function logout($complete = false){
-        if ($complete){
-            $storage = new \Birke\Rememberme\Storage\PDO($this->_app->remember_me_table);
-            $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
-            $storage->cleanAllTriplets($this->_app->user->id);
-        }        
-        // Change cookie path
-        $cookie = $this->_app->remember_me->getCookie();
-        $cookie->setPath("/");
-        $this->_app->remember_me->setCookie($cookie); 
-
-        if ($this->_app->remember_me->clearCookie())
-            error_log("Cleared cookie");
-            
-        session_regenerate_id(true);
-        session_destroy();        
+        $this->_app->user->logout($complete);    
         $this->_app->redirect($this->_app->site->uri['public']);
     }
 
@@ -435,12 +436,18 @@ class AccountController extends \UserFrosting\BaseController {
         foreach ($defaultGroups as $group_id => $group)
             $user->addGroup($group_id);    
         
+        // Store new user to database
+        $user->save();        
+        
         // Create sign-up event
         $sign_up_event = $user->newEventSignUp();
+        $sign_up_event->save();   
         
         if ($this->_app->site->require_activation) {
-            // Create verification request
+            // Create verification request event
             $verification_request = $user->newEventVerificationRequest();
+            $user->save();      // Re-save is needed to update user's secret token
+            $verification_request->save();            
             
             // Create and send verification email
             $twig = $this->_app->view()->getEnvironment();
@@ -460,15 +467,10 @@ class AccountController extends \UserFrosting\BaseController {
             }
             
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
-            $verification_request->save();
         } else
             // No activation required
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
-            
-        $sign_up_event->save();
-        // Store new user to database
-        $user->store();        
-    }
+    } 
     
     /**
      * Processes an new account activation request.
@@ -516,12 +518,14 @@ class AccountController extends \UserFrosting\BaseController {
      * Processes a request to email a forgotten password reset link to the user.
      *
      * Processes the request from the form on the "forgot password" page, checking that:
-     * 1. The provided username exists;
-     * 2. The provided email address matches the username;
-     * 3. The user doesn't already have an outstanding password reset request;
-     * 4. The submitted data is valid.
+     * 1. The provided email address belongs to a registered account;
+     * 2. The submitted data is valid.
+     * Note that we have removed the requirement that a password reset request not already be in progress.
+     * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
-     * Request type: POST     
+     * Request type: POST
+     * @todo rate-limit forgotten password requests, to prevent password-reset spamming
+     * @todo require additional user information
      */         
     public function forgotPassword(){
         $data = $this->_app->request->post();
@@ -540,26 +544,17 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(400);
         }    
         
-        // Check that the username exists
-        if(!UserLoader::exists($data['user_name'], 'user_name')) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
-            $this->_app->halt(400);
+        // Load the user, by the specified email address
+        $user = User::where('email', $data['email'])->first();
+        
+        // Check that the email exists.
+        // On failure, we should still pretend like we succeeded, to prevent account enumeration
+        if(!$user) {
+            $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
+            $this->_app->halt(200);
         }
         
-        // Load the user, by username
-        $user = UserLoader::fetch($data['user_name'], 'user_name');
-        
-        // Check that the specified email is correct
-        if (strtolower($user->email) != strtolower($data['email'])){
-            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
-            $this->_app->halt(400);
-        }
-        
-        // Check if the user has any outstanding lost password requests
-        if($user->flag_password_reset == 1) {
-            $ms->addMessageTranslated("danger", "FORGOTPASS_REQUEST_EXISTS");
-            $this->_app->halt(403);            
-        }
+        // TODO: rate-limit the number of password reset requests for a given user
         
         // Generate a new password reset request.  This will also generate a new secret token for the user.
         $event = $user->newEventPasswordReset();
@@ -588,22 +583,21 @@ class AccountController extends \UserFrosting\BaseController {
     }
     
     /**
-     * Processes a request to reset a user's password.
+     * Processes a request to reset a user's password, or set the password for a new user.
      *
-     * Processes the request from the password reset form, which should have the reset token embedded in it, checking that:
-     * 1. The provided activation token is associated with an existing user account;
-     * 2. The provided username matches the activation token;
-     * 3. The user has a lost password request in progress;
-     * 4. The token has not expired;
-     * 5. The submitted data (new password) is valid.
+     * Processes the request from the password create/reset form, which should have the secret token embedded in it, checking that:
+     * 1. The provided secret token is associated with an existing user account;
+     * 2. The user has a lost password request in progress;
+     * 3. The token has not expired;
+     * 4. The submitted data (new password) is valid.
      * This route is "public access".
      * Request type: POST     
      */       
-    public function resetPassword(){
+    public function setPassword($flag_new_user = false){
         $data = $this->_app->request->post();
         
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/reset-password.json");
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/set-password.json");
         
         // Get the alert message stream
         $ms = $this->_app->alerts; 
@@ -616,17 +610,12 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(400);
         }
         
-        // Fetch the user, by looking up the submitted activation token
-        $user = UserLoader::fetch($data['secret_token'], 'secret_token');
+        // Fetch the user, by looking up the submitted secret token
+        $user = User::where('secret_token', $data['secret_token'])->first();
         
+        // If no user exists for this token, just say the token is invalid.
         if (!$user){
             $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
-            $this->_app->halt(400);
-        }
-        
-        // Check that the username matches the submitted username
-        if (strtolower($user->user_name) != strtolower($data['user_name'])){
-            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
             $this->_app->halt(400);
         }
         
@@ -639,14 +628,19 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(400);
         }
 
-        // Check the time to see if the token is still valid based on the timeout value. If not valid make the user restart the password request
+        // Check the time to see if the token is still valid based on the timeout value. If not valid, make the user restart the password request
         $current_time = new \DateTime("now");
         $last_password_reset_datetime = new \DateTime($last_password_reset_time);
         $current_token_life = $current_time->getTimestamp() - $last_password_reset_datetime->getTimestamp();
         
-        if($current_token_life >= $this->_app->site->reset_password_timeout || $current_token_life < 0){
-            // Reset the password reset flag
-            // TODO: should we do this here, or just when there is a new reset request?
+        // Compare to appropriate expiration time
+        if ($flag_new_user)
+            $expiration = $this->_app->site->create_password_expiration;
+        else
+            $expiration = $this->_app->site->reset_password_timeout;
+            
+        if($current_token_life >= $expiration|| $current_token_life < 0){
+            // Reset the password reset flag so that they'll be able to submit another request
             $user->flag_password_reset = "0";
             $user->store();
             $ms->addMessageTranslated("danger", "FORGOTPASS_OLD_TOKEN");
@@ -656,7 +650,7 @@ class AccountController extends \UserFrosting\BaseController {
         // Reset the password flag
         $user->flag_password_reset = "0";
         
-        // Hash the user's password and update
+        // Hash the user's new password and update
         $user->password = Authentication::hashPassword($data['password']);
         
 		if (!$user->password){
@@ -665,8 +659,33 @@ class AccountController extends \UserFrosting\BaseController {
 		}		
 		
         // Store the updated info
-        $user->store();
-        $ms->addMessageTranslated("success", "ACCOUNT_PASSWORD_UPDATED");
+        $user->store();        
+        
+        // Log out any existing user, and create a new session
+        if (!$this->_app->user->isGuest()) {
+            $this->_app->user->logout(true);
+            // Use native PHP sessions
+            session_cache_limiter(false);
+            session_name("UserFrosting");  
+            // First, initialize the PHP session
+            session_start();              
+        }
+        
+        // Log in the user      
+        $user->login();
+        session_regenerate_id();
+        
+        // Assume identity
+        $this->_app->user = $user;
+        
+        // Store user id in session
+        $_SESSION["userfrosting"]["user_id"] = $user->id;
+        
+        // Setup logged in user environment
+        $this->_app->setupAuthenticatedEnvironment();
+        $ms = $this->_app->alerts; 
+        $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
+        $ms->addMessageTranslated("success", "ACCOUNT_PASSWORD_UPDATED");        
     }
     
     /**
@@ -674,7 +693,7 @@ class AccountController extends \UserFrosting\BaseController {
      *
      * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
      * Processes the request from the password reset link, checking that:
-     * 1. The provided activation token is associated with an existing user account.
+     * 1. The provided secret token is associated with an existing user account.
      * Request type: GET     
      */      
     public function denyResetPassword(){
