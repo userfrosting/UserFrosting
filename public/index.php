@@ -141,6 +141,13 @@
         else
             return $controller->formUserView($user_id);
     });  
+
+    // User edit password form
+    $app->get('/forms/users/u/:user_id/password/?', function ($user_id) use ($app) {
+        $controller = new UF\UserController($app);
+        $get = $app->request->get();        
+        return $controller->formUserEditPassword($user_id);
+    });
     
     // User creation form
     $app->get('/forms/users/?', function () use ($app) {

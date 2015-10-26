@@ -46,6 +46,34 @@
                 "message" : "VALIDATE_INTEGER"
             }
         }
+    },
+    "password" : {
+        "validators" : {
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        },
+        "sanitizers" : {
+            "raw" : {}
+        }    
+    },
+    "passwordc" : {
+        "validators" : {
+            "matches" : {
+                "field" : "password",
+                "message" : "ACCOUNT_PASS_MISMATCH"
+            },
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        },
+        "sanitizers" : {
+            "raw" : {}
+        }    
     },    
     "groups" : {
         "validators" : {
@@ -73,5 +101,15 @@
                 "message" : "VALIDATE_BOOLEAN" 
             }
         }
-    }
+    },
+    "flag_password_reset" : {
+        "validators" : {
+            "member_of" : {
+                "values" : [
+                    "0", "1"
+                ],
+                "message" : "VALIDATE_BOOLEAN" 
+            }
+        }
+    }    
 }

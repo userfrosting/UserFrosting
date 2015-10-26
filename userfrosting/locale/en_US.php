@@ -123,13 +123,13 @@ $lang = array_merge($lang,array(
 
 // Forgot Password
 $lang = array_merge($lang,array(
-	"FORGOTPASS_INVALID_TOKEN" => "Your activation token is not valid",
+	"FORGOTPASS_INVALID_TOKEN" => "Your secret token is not valid",
 	"FORGOTPASS_OLD_TOKEN" => "Token past expiration time",
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Couldn't update password",
-	"FORGOTPASS_NEW_PASS_EMAIL" => "We have emailed you a new password",
 	"FORGOTPASS_REQUEST_CANNED" => "Lost password request cancelled",
 	"FORGOTPASS_REQUEST_EXISTS" => "There is already an outstanding lost password request on this account",
-	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"
+	"FORGOTPASS_REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",     
+	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"   
 ));
 
 // Mail

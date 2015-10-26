@@ -21,6 +21,12 @@ function bindUserTableButtons(table) {
         userForm('dialog-user-edit', user_id);
     });
 
+    $(table).find('.js-user-password').click(function() {
+        var btn = $(this);
+        var user_id = btn.data('id');
+        userPasswordForm('dialog-user-password', user_id);
+    });
+
     $(table).find('.js-user-activate').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
@@ -237,6 +243,72 @@ function userForm(box_id, user_id) {
             function(data, statusText, jqXHR) {
                 // Reload the page on success
                 window.location.reload(true);   
+            }
+        );	
+	});
+}
+
+/**
+ * Display a modal form for changing a user's password.
+ */
+function userPasswordForm(box_id, user_id) {	
+	user_id = typeof user_id !== 'undefined' ? user_id : "";
+	
+	// Delete any existing instance of the form with the same name
+	if($('#' + box_id).length ) {
+		$('#' + box_id).remove();
+	}
+    
+    var url = site['uri']['public'] + "/forms/users/u/" + user_id + "/password";
+    
+	// Fetch and render the form
+	$.ajax({  
+	  type: "GET",  
+	  url: url,
+	  data: {
+        box_id: box_id
+      },
+	  cache: false
+	})
+	.fail(function(result) {
+        // Display errors on failure
+        $('#userfrosting-alerts').flashAlerts().done(function() {
+        });
+	})
+	.done(function(result) {
+		// Append the form as a modal dialog to the body
+		$( "body" ).append(result);
+		$('#' + box_id).modal('show');
+		
+		// Enable/disable password fields when switch is toggled
+        $(".controls-password").find("input[type='password']").prop('disabled', true);
+        $('#' + box_id).find("input[name='change_password_mode']").click(function() {
+            var type = $(this).val();
+            if (type == "link") {
+                $(".controls-password").find("input[type='password']").prop('disabled', true);
+                $('#' + box_id).find("input[name='flag_password_reset']").prop('disabled', false);
+            } else {
+                $(".controls-password").find("input[type='password']").prop('disabled', false);
+                $('#' + box_id).find("input[name='flag_password_reset']").prop('disabled', true);
+            }
+        });
+		
+		// Link submission buttons
+        ufFormSubmit(
+            $('#' + box_id).find("form"),
+            validators,
+            $("#form-alerts"),
+            function(data, statusText, jqXHR) {
+                // Reload the page on success
+                window.location.reload(true);   
+            },
+            function() {
+                // Enable radio buttons after submit
+                $('#' + box_id).find("input[name='change_password_mode']").prop('disabled', false);
+            },
+            function() {
+                // Disable radio buttons before submit
+                $('#' + box_id).find("input[name='change_password_mode']").prop('disabled', true);
             }
         );	
 	});

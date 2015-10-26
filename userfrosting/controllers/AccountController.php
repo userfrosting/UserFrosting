@@ -916,7 +916,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(400);
         }    
         
-        // If a new password was specified, hash it
+        // If a new password was specified, hash it.
         if (isset($data['password']))
             $data['password'] = Authentication::hashPassword($data['password']);
         

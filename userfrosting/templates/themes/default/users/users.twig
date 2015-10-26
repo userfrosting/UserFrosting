@@ -96,6 +96,11 @@
                                             </a>
                                         </li>
                                         <li>
+                                            <a href="#" data-id="{{user.id}}" class="js-user-password" data-target="#dialog-user-password" data-toggle="modal">
+                                            <i class="fa fa-key"></i> Change password
+                                            </a>
+                                        </li>
+                                        <li>
                                         {% if user.flag_enabled == 1 %}
                                             <a href="#" data-id="{{user.id}}" class="js-user-disable">
                                             <i class="fa fa-minus-circle"></i> Disable user

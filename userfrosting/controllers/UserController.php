@@ -345,6 +345,47 @@ class UserController extends \UserFrosting\BaseController {
         ]);   
     }    
 
+    /**
+     * Renders the form for editing a user's password.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */  
+    public function formUserEditPassword($user_id){
+        // Get the user to edit
+        $target_user = User::find($user_id);
+        
+        // Access-controlled resource
+        if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
+            $this->_app->notFound();
+        }
+        
+        $get = $this->_app->request->get();
+        
+         // Determine authorized fields
+        $hidden_fields = [];
+
+        if (!$this->_app->user->checkAccess("update_account_setting", ["user" => $target_user, "property" => 'password']))
+            $hidden_fields[] = 'password';
+                
+        // Load validator rules
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
+        $this->_app->jsValidator->setSchema($schema);  
+        
+        // This form posts to the same resource as "update user"
+        $this->_app->render("components/common/user-set-password.twig", [
+            "box_id" => isset($get['box_id']) ? $get['box_id'] : 'user-set-password',
+            "box_title" => "Change User Password",
+            "form_action" => $this->_app->site->uri['public'] . "/users/u/$user_id",
+            "target_user" => $target_user,
+            "fields" => [
+                "hidden" => $hidden_fields
+            ],
+            "validators" => $this->_app->jsValidator->rules()
+        ]);   
+    }    
+    
     /** 
      * Processes the request to create a new user (from the admin controls).
      * 
@@ -497,7 +538,7 @@ class UserController extends \UserFrosting\BaseController {
         $ms = $this->_app->alerts; 
         
         // Get the target user
-        $target_user = UserLoader::fetch($user_id);
+        $target_user = User::find($user_id);
         
         // Get the target user's groups
         $groups = $target_user->getGroups();
@@ -515,10 +556,17 @@ class UserController extends \UserFrosting\BaseController {
             $ms->addMessageTranslated("danger", "ACCESS_DENIED");
             $this->_app->halt(403);
         }
-                       
+        
         // Remove csrf_token
         unset($post['csrf_token']);
-                                
+        
+        // Set up Fortress to process the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);          
+        
+        if (isset($post['passwordc'])){
+            unset($post['passwordc']);        
+        }
+           
         // Check authorization for submitted fields, if the value has been changed
         foreach ($post as $name => $value) {
             if ($name == "groups" || (isset($target_user->$name) && $post[$name] != $target_user->$name)){
@@ -532,21 +580,19 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->halt(400);
             }
         }
-
+        
         // Check that we are not disabling the master account
         if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == "0"){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLE_MASTER");
             $this->_app->halt(403);
         }
-
+        
+        // Check that the email address is not in use
         if (isset($post['email']) && $post['email'] != $target_user->email && UserLoader::exists($post['email'], 'email')){
             $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $post);
             $this->_app->halt(400);
         }
         
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);                    
-    
         // Sanitize
         $rf->sanitize();
     
@@ -554,7 +600,10 @@ class UserController extends \UserFrosting\BaseController {
         if (!$rf->validate()) {
             $this->_app->halt(400);
         }   
-               
+        
+        // Remove passwordc
+        $rf->removeFields(['passwordc']);
+           
         // Get the filtered data
         $data = $rf->data();
         
@@ -568,6 +617,11 @@ class UserController extends \UserFrosting\BaseController {
                 }
             }
             unset($data['groups']);
+        }
+        
+        // Hash password
+        if (isset($data['password'])){
+            $data['password'] = Authentication::hashPassword($data['password']);
         }
         
         // Update the user and generate success messages
@@ -587,9 +641,39 @@ class UserController extends \UserFrosting\BaseController {
             }
         }
         
-        $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
-        $target_user->store();        
+        // If we're generating a password reset, create the corresponding event and shoot off an email
+        if (isset($data['flag_password_reset']) && ($data['flag_password_reset'] == "1")){
+            // Recheck auth
+            if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $target_user, 'property' => 'flag_password_reset'])){
+                $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+                $this->_app->halt(403);
+            }
+            // New password reset event - bypass any rate limiting
+            $target_user->newEventPasswordReset();
+            $target_user->save();
+            // Email the user asking to confirm this change password request
+            $twig = $this->_app->view()->getEnvironment();
+            $template = $twig->loadTemplate("mail/password-reset.twig");        
+            $notification = new Notification($template);
+            $notification->fromWebsite();      // Automatically sets sender and reply-to
+            $notification->addEmailRecipient($target_user->email, $target_user->display_name, [
+                "user" => $target_user,
+                "request_date" => date("Y-m-d H:i:s")
+            ]);
+            
+            try {
+                $notification->send();
+            } catch (\Exception\phpmailerException $e){
+                $ms->addMessageTranslated("danger", "MAIL_ERROR");
+                error_log('Mailer Error: ' . $e->errorMessage());
+                $this->_app->halt(500);
+            }
+            
+            $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SENT", ["user_name" => $target_user->user_name]);
+        }
         
+        $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
+        $target_user->save();        
     }
     
     /** 

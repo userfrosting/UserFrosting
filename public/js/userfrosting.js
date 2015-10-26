@@ -77,11 +77,14 @@ jQuery.validator.setDefaults({
 });
 
 // Process a UserFrosting form, displaying messages from the message stream and executing specified callbacks
-function ufFormSubmit(formElement, validators, msgElement, successCallback, msgCallback) {
+function ufFormSubmit(formElement, validators, msgElement, successCallback, msgCallback, beforeSubmitCallback) {
     formElement.validate({
         rules:          validators['rules'],
         messages :      validators['messages'],
         submitHandler:  function (f, event) {
+            // Execute any "before submit" callback
+            if (typeof beforeSubmitCallback !== "undefined")
+                beforeSubmitCallback();        
             var form = $(f);
             // Set "loading" text for submit button, if it exists, and disable button
             var submit_button = form.find("button[type=submit]");
@@ -93,7 +96,7 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
             // Serialize and post to the backend script in ajax mode
             var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
             // Get unchecked checkbox values, set them to 0
-            form.find('input[type=checkbox]').each(function() {
+            form.find('input[type=checkbox]:enabled').each(function() {
                 if ($(this).is(':checked'))
                     serializedData += "&" + encodeURIComponent(this.name) + "=1";
                 else
