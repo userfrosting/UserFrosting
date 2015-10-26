@@ -445,19 +445,12 @@ class UserController extends \UserFrosting\BaseController {
             }
         }
         
-        // Store new user to database so that we have a user_id
-        $user->save();
-        
         // Create events - account creation and password reset
-        $event_sign_up = $user->newEventSignUp($this->_app->user);
-        $event_password_reset_request = $user->newEventPasswordReset();    
+        $user->newEventSignUp($this->_app->user);
+        $user->newEventPasswordReset();    
         
-        // Save user again after creating reset event
-        $user->save();        
-        
-        // Save user events
-        $event_sign_up->save();
-        $event_password_reset_request->save();        
+        // Save user again after creating events
+        $user->save();             
         
         // Send an email to the user's email address to set up password
         $twig = $this->_app->view()->getEnvironment();

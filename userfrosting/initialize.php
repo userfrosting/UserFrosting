@@ -190,6 +190,7 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'resend_activation_threshold', "Resend Activation Email Cooloff (s)");
     $app->site->register('userfrosting', 'reset_password_timeout', "Password Recovery Timeout (s)");
+    $app->site->register('userfrosting', 'create_password_expiration', "Create Password for New Users Timeout (s)");    
     $app->site->register('userfrosting', 'minify_css', "Minify CSS", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'minify_js', "Minify JS", "toggle", [0 => "Off", 1 => "On"]);
 }, 1);

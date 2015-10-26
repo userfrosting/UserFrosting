@@ -436,18 +436,16 @@ class AccountController extends \UserFrosting\BaseController {
         foreach ($defaultGroups as $group_id => $group)
             $user->addGroup($group_id);    
         
-        // Store new user to database
-        $user->save();        
-        
         // Create sign-up event
-        $sign_up_event = $user->newEventSignUp();
-        $sign_up_event->save();   
+        $user->newEventSignUp();
+        
+        // Store new user to database
+        $user->save();
         
         if ($this->_app->site->require_activation) {
             // Create verification request event
-            $verification_request = $user->newEventVerificationRequest();
-            $user->save();      // Re-save is needed to update user's secret token
-            $verification_request->save();            
+            $user->newEventVerificationRequest();
+            $user->save();      // Re-save with verification event      
             
             // Create and send verification email
             $twig = $this->_app->view()->getEnvironment();
@@ -557,7 +555,7 @@ class AccountController extends \UserFrosting\BaseController {
         // TODO: rate-limit the number of password reset requests for a given user
         
         // Generate a new password reset request.  This will also generate a new secret token for the user.
-        $event = $user->newEventPasswordReset();
+        $user->newEventPasswordReset();
         
         // Email the user asking to confirm this change password request
         $twig = $this->_app->view()->getEnvironment();
@@ -577,8 +575,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(500);
         }
         
-        $user->store();
-        $event->save();
+        $user->save();
         $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
     }
     
@@ -740,7 +737,8 @@ class AccountController extends \UserFrosting\BaseController {
      * 4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
      * 5. The submitted data is valid.
      * This route is "public access".
-     * Request type: POST     
+     * Request type: POST
+     * @todo Again, just like with password reset - do we really need to get the user's user_name to do this?
      */         
     public function resendActivation(){
         $data = $this->_app->request->post();
@@ -796,7 +794,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         // We're good to go - create a new verification request and send the email
-        $event = $user->newEventVerificationRequest();
+        $user->newEventVerificationRequest();
         
         // Email the user
         $twig = $this->_app->view()->getEnvironment();
@@ -816,8 +814,7 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(500);
         }
 
-        $user->store();
-        $event->save();
+        $user->save();
         $ms->addMessageTranslated("success", "ACCOUNT_NEW_ACTIVATION_SENT");
     }
     

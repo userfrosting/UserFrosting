@@ -44,6 +44,11 @@ class User extends UFModel {
     protected $_primary_group;  
     
     /**
+     * @var UserEvent[] An array of events to be inserted for this User when save is called.
+     */
+    protected $new_events = [];
+    
+    /**
      * @var bool Enable timestamps for Users.
      */ 
     public $timestamps = true;    
@@ -149,6 +154,7 @@ class User extends UFModel {
     
     /**
      * Get all events for this user.
+     * @todo save events in $new_events as well?
      */    
     public function events(){
         return $this->hasMany('UserFrosting\UserEvent');
@@ -329,20 +335,6 @@ class User extends UFModel {
         }
         return $this->belongsTo('UserFrosting\Group', 'primary_group_id')->getEager()->first();
     }
- 
-    /**
-     * Store the User to the database, along with any group associations, updating as necessary.
-     *
-     */
-    public function save(array $options = []){       
-        // Update the user record itself
-        $result = parent::save($options);
-        
-        // Synchronize model's group relations with database
-        $this->syncCachedGroups();
-        
-        return $result;
-    }
     
     /**
      * Create an event saying that this user registered their account, or an account was created for them.
@@ -356,10 +348,10 @@ class User extends UFModel {
         else
             $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
         $event = new UserEvent([
-            "user_id"     => $this->id,
             "event_type"  => "sign_up",
             "description" => $description
         ]);
+        $this->new_events[] = $event;
         return $event;
     }
     
@@ -369,11 +361,12 @@ class User extends UFModel {
      * @return UserEvent
      */
     public function newEventSignIn(){    
-        return new UserEvent([
-            "user_id"     => $this->id,
+        $event = new UserEvent([
             "event_type"  => "sign_in",
             "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
         ]);
+        $this->new_events[] = $event;
+        return $event;
     }
     
     /**
@@ -384,10 +377,10 @@ class User extends UFModel {
     public function newEventVerificationRequest(){
         $this->secret_token = User::generateActivationToken();
         $event = new UserEvent([
-            "user_id"     => $this->id,
             "event_type"  => "verification_request",
             "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
         ]);
+        $this->new_events[] = $event;
         return $event;
     }    
     
@@ -400,12 +393,31 @@ class User extends UFModel {
         $this->secret_token = User::generateActivationToken();
         $this->flag_password_reset = "1";
         $event = new UserEvent([
-            "user_id"     => $this->id,
             "event_type"  => "password_reset_request",
             "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
         ]);
+        $this->new_events[] = $event;
         return $event;
     } 
+    
+    /**
+     * Store the User to the database, along with any group associations and new events, updating as necessary.
+     *
+     */
+    public function save(array $options = []){       
+        // Update the user record itself
+        $result = parent::save($options);
+        
+        // Synchronize model's group relations with database
+        $this->syncCachedGroups();
+        
+        // Save any new events for this user
+        foreach ($this->new_events as $event){
+            $this->events()->save($event);
+        }
+        
+        return $result;
+    }
     
     /**
      * Delete this user from the database, along with any linked groups and authorization rules
@@ -513,8 +525,7 @@ class User extends UFModel {
      */
     public function login(){    
         // Add a sign in event (time is automatically set by database)
-        $event = $this->newEventSignIn();
-        $event->save();
+        $this->newEventSignIn();
         
         // Update password if we had encountered an outdated hash
         if (Authentication::getPasswordHashType($this->password) != "modern"){
@@ -528,12 +539,18 @@ class User extends UFModel {
             }
         }
         
-        // Store changes
-        $this->store();
+        // Save changes
+        $this->save();
         
         return $this;
     }
     
+    /**
+     * Log this user out.
+     *
+     * Destroys the PHP session as well.
+     * @param bool $complete If set to true, will also clear out any persistent sessions.
+     */    
     public function logout($complete = false) {
         if ($complete){
             $storage = new \Birke\Rememberme\Storage\PDO(static::$app->remember_me_table);
