@@ -5,8 +5,16 @@
  * @author Alex Weissman
  * @link http://www.userfrosting.com
  */
+ 
+require_once 'vendor/autoload.php';
+require_once 'models/auth/password.php';
+require_once 'config-userfrosting.php';
 
-require_once("config-userfrosting.php");
+// Use native PHP sessions
+session_cache_limiter(false);
+session_name("UserFrosting");  
+// First, initialize the PHP session
+session_start();
 
 use \Slim\Extras\Middleware\CsrfGuard;
 

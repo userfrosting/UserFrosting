@@ -2,3 +2,5 @@
 .DS_Store
 _meta/*
 public/test/*
+ROLES.md
+userfrosting/config-userfrosting.php

@@ -261,7 +261,7 @@ abstract class Database {
           (2, 'uri_users', 'always()'),
           (1, 'uri_account_settings', 'always()'),
           (1, 'update_account_setting', 'equals(self.id, user.id)&&in(property,[\"email\",\"locale\",\"password\"])'),
-          (2, 'update_account_setting', 'in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"flag_enabled\"])'),
+          (2, 'update_account_setting', '!in_group(user.id,2)&&in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"flag_password_reset\",\"flag_enabled\"])'),
           (2, 'view_account_setting', 'in(property,[\"user_name\",\"email\",\"display_name\",\"title\",\"locale\",\"flag_enabled\",\"groups\",\"primary_group_id\"])'),
           (2, 'delete_account', '!in_group(user.id,2)'),
           (2, 'create_account', 'always()');");    

@@ -19,3 +19,4 @@
 - Wrapper class Notification for sending emails, other notifications to users
 - Remove username requirement for password reset.  It is more likely that an attacker would know the user's username, than the user themselves.  For the next version, we can try to implement some real multi-factor authentication.
 - When a user creates another user, they don't need to set a password.  Instead, an email is sent out to the new user, with a token allowing them to set their own password.
+- Admins can manually generate a password reset request for another user, or directly change the user's password.

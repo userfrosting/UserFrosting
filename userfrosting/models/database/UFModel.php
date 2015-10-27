@@ -35,7 +35,7 @@ abstract class UFModel extends Model {
      * Create a new object, initializing the table name and whitelisted columns.
      *
      */
-    public function __construct($properties = [], $id = null) {    
+    public function __construct($properties = []) {    
         $table_schema = Database::getSchemaTable(static::$_table_id);
         $this->table = $table_schema->name;
         $this->fillable = $table_schema->columns;
