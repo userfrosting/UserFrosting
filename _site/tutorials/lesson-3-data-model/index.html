@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Alex Weissman">
+
+    <link rel="shortcut icon" type="image/x-icon" href="http://localhost:4000/img/cupcake.ico">
+    <link rel="canonical" href="http://localhost:4000/tutorials/lesson-3-data-model/">
+    
+    <title>UserFrosting | Tutorials | Lesson 3: Extending the Data Model</title>
+    
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="http://localhost:4000/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="http://localhost:4000/css/freelancer.css" rel="stylesheet">
+    <link href="http://localhost:4000/css/userfrosting.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-37689257-2', 'www.userfrosting.com');
+        ga('send', 'pageview');
+      
+    </script>
+</head>
+
+    <body id="page-top" class="index">
+    
+        <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://localhost:4000/">UserFrosting</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#about">About</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#features">Features</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#get-started">Get Started</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#help">Help</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="https://pledgie.com/campaigns/29583" class="nav-highlight">Donate</a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/UserFrosting"><i class="fa fa-twitter"></i></a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+    
+        <header class="breadcrumb-header">
+    
+
+
+
+
+
+
+    
+    
+    
+
+
+<div class="btn-group version-button">
+  <button type="button" class="btn btn-primary btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    0.3.1 <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="http://localhost:4000/0.3.0/tutorials/lesson-3-data-model/index.html">0.3.0</a></li>
+    <li><a href="http://localhost:4000/tutorials/lesson-3-data-model/index.html">0.3.1</a></li>
+  </ul>
+</div>
+
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="http://localhost:4000/">Home</a></li>
+            <li><a href="http://localhost:4000/#get-started">Getting Started</a></li>
+            <li><a href="http://localhost:4000/tutorials">Tutorials</a></li>    
+            <li class="active">Extending the Data Model</li>
+        </ol>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1>Lesson 3<br><small>Extending the Data Model</small></h1>
+                <hr class="star-primary">
+            </div>
+        </div>        
+    </div>
+</header>
+
+<div class="container">
+    <section class="tutorial">
+        <p>Ok, so you've patiently completed lessons <a href="http://localhost:4000/tutorials/lesson-1-new-page">1</a> and <a href="http://localhost:4000/tutorials/lesson-2-process-form">2</a>, and hopefully you're starting to understand the basic concepts of the <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">model-view-controller (MVC)</a> architecture.  We've dived a bit into Twig, which handles the &quot;view&quot; part of &quot;model-view-controller&quot;.  </p>
+        
+        <p>We've also talked a lot about controllers, using them to send data <strong>to</strong> the view (to render a &quot;page&quot;), and also capturing data <strong>from</strong> <code>POST</code> requests to perform some operations on our data model (i.e., deleting a user, updating the name of a group, etc).</p>
+        
+        <p>What we <em>haven't</em> really talked about yet is the <strong>model</strong>.  We've interacted with it briefly, though.  In lesson 1 we used <code>$app-&gt;user</code>, which represents the currently logged-in user with an instance of the <code>User</code> class, to get a list of groups for that user.  In lesson 2, we used the Eloquent query builder to obtain collections of <code>User</code> and <code>Group</code> objects.  We then modified these objects and used the <code>-&gt;save()</code> method to update their information in the database.</p>
+        
+        <p>But of course, your application probably consists of more than just users and groups!  After all, your users are probably supposed to <em>do</em> something in your system, and interact with other sorts of data.  So, how do we extend the UserFrosting data model to include, for example, <code>Transactions</code> or <code>Events</code> or <code>Cats</code> or <code>NuclearMissiles</code>?</p>
+        
+        <p>In this tutorial, we will create a new type of data object, <code>StaffEvent</code>, which will represent events such as meetings, parties, luncheons, etc.  We will design our model so that our users can be assigned to these events.</p>
+    </section>
+    <section class="tutorial">
+        <h2 id="toc_0">Setting up the Database Tables</h2>
+        
+        <p>First, we need to represent events in our database.  To do this, we will manually create a table, <code>staff_event</code>, where each row will represent a unique event and its properties.  We will define the following columns for this table as well:</p>
+        
+        <ul>
+        <li><code>id</code> (int, primary key, autoincrement, unique, not null)</li>
+        <li><code>date</code> (datetime, not null)</li>
+        <li><code>location</code> (text)</li>
+        <li><code>description</code> (text)</li>
+        <li><code>created_at</code> (timestamp)</li>
+        <li><code>updated_at</code> (timestamp)</li>
+        </ul>
+        
+        <p><strong>In UserFrosting, every table must have a primary key called <code>id</code>!</strong>  UserFrosting's base classes for loading and manipulating the database will not work otherwise.</p>
+        
+        <p>Hopefully, you know how to create a database table in whichever system you are using.  If not, please consult your system's documentation.</p>
+        
+        <p>A user can be assigned to more than one event, and events can have more than one user.  Thus, this constitutes a <strong>many-to-many</strong> relationship.  To model a many-to-many relationship, we need an additional table called the <strong>link table</strong>.  We will name the table using the convention of placing an underscore between the names of the tables to be linked.  Thus, we will call this table <code>staff_event_user</code>.  This table will have three columns:</p>
+        
+        <ul>
+        <li><code>id</code> (int, primary key, autoincrement, unique, not null)</li>
+        <li><code>user_id</code> (int, not null)</li>
+        <li><code>event_id</code> (int, not null)</li>
+        </ul>
+        
+        <p>Great!  We're now ready to register our tables in UserFrosting.</p>
+    </section>
+    <section class="tutorial">
+        <h2 id="toc_1">Registering the New Tables</h2>
+        
+        <p>To work with our new tables in UserFrosting, we need two pieces of information: the names of the tables, and the names of their columns.  We will register this information all in one place in the code, in <code>userfrosting/initialize.php</code>.</p>
+        
+        <p>To do this, we will first create a new instance of the <code>DatabaseTable</code> class:</p>
+        
+        <pre><code>$table_staff_event = new \UserFrosting\DatabaseTable(&quot;staff_event&quot;, [
+    &quot;date&quot;,
+    &quot;location&quot;,
+    &quot;description&quot;,
+    &quot;created_at&quot;,
+    &quot;updated_at&quot;
+]);</code></pre>
+        
+        <p>Notice that the first argument is the name of the table, and the second argument is an array containing the names of the columns.  We don't need to specify the <code>id</code> column, because UserFrosting implicitly assumes that this column exists.</p>
+        
+        <p>The reason we need to specify the names of the columns in the code is mainly for security.  When UF's base classes execute a SQL query, they must interpolate the names of the columns into the query.  This is because <a href="http://stackoverflow.com/a/182353/2970321">prepared statements do not support parameterization of table and column names</a>. </p>
+        
+        <p>Thus, the array of column names serves as a <strong>whitelist</strong>, telling UF which column names are valid before it prepares a query.  Thus, <code>location</code> will be seen as a valid column name, while <code>1;DROP TABLE users</code> will not (and UF will throw an Exception).</p>
+        
+        <p>Once we define our <code>DatabaseTable</code> object, we can register it with UserFrosting:</p>
+        
+        <pre><code>\UserFrosting\Database::setSchemaTable(&quot;staff_event&quot;, $table_staff_event);</code></pre>
+        
+        <p>The first parameter for <code>setSchemaTable</code> is simply a <strong>handle</strong> that we will use to refer to the table throughout the code.  The convention is to give it the same name as the table itself, but you may name it however you like.  The second parameter is the <code>DatabaseTable</code> object that we just created, which will be registered with that handle.</p>
+        
+        <p>We will do the same thing for the link table, but with one minor difference - we won't bother specifying the column names.  This is because we usually will not model the rows in our link table as data objects, like we will do with events.  Instead, <a href="https://en.wikipedia.org/wiki/Create,_read,_update_and_delete">CRUD</a> for the link table will be managed through the data objects that it links. </p>
+        
+        <p>All we will do for the link table, then, is register the table name:</p>
+        
+        <pre><code>$table_staff_event_user = new \UserFrosting\DatabaseTable(&quot;staff_event_user&quot;);
+\UserFrosting\Database::setSchemaTable(&quot;staff_event_user&quot;, $table_staff_event_user);</code></pre>
+        
+        <p>Great, now we have an organized, sane way to access information <strong>about</strong> our tables (but not the data in those tables, yet).</p>
+    </section>
+    <section class="tutorial">
+        <h2 id="toc_2">Modeling the Event Object</h2>
+        
+        <p>You may be used to simply writing and executing a SQL query every time you need to interact with the database, or perhaps writing functions that encapsulate this behavior.  In UserFrosting, we will go one step further and use <strong>objects</strong> to encapsulate all the information about a particular row in the database, along with the functionality to modify and store it in the database.  This gives us a uniform, consistent way to represent and manipulate data without repetitive code.</p>
+        
+        <p>If you look in the <code>userfrosting/models</code> directory, you will notice classes called <code>Group</code> and <code>User</code>.  These are the classes used to model groups and users, and they both inherit the basic functionality of their base class, <code>UFModel</code>, which itself inherits from Eloquent's <a href="http://laravel.com/docs/5.0/eloquent#basic-usage"><code>Model</code></a> class.  If you don't know what &quot;inherit&quot; means, now is a good time to <a href="https://en.wikipedia.org/wiki/Class-based_programming#Inheritance">learn a little about object-oriented programming</a>.</p>
+        
+        <p>We will create a new class, in a new file, called StaffEvent<code>, which will also inherit from UFModel</code>:</p>
+        
+        <p><strong>userfrosting/models/mysql/StaffEvent.php</strong></p>
+        
+        <pre><code>&lt;?php
+        
+namespace UserFrosting;
+
+use \Illuminate\Database\Capsule\Manager as Capsule;
+
+class StaffEvent extends UFModel {
+
+    protected static $_table_id = &quot;staff_event&quot;;
+    
+}</code></pre>
+        
+        <p><strong>Note that since we are creating a new class, you must have Composer installed and run <code>composer update</code> to have your new class autoloaded.</strong>  See <a href="http://localhost:4000/navigating/#composer">here</a> for more information.</p>
+        
+        <p>Notice that we set a static <code>$_table_id</code> property in our class.  UserFrosting will use this to look up the <code>DatabaseTable</code> object containing the information about our table based on the handle that we assigned it in <code>initialize.php</code>.  </p>
+        
+        <p>With just these few lines, we can create new <code>StaffEvent</code> objects easily:</p>
+        
+        <pre><code>$new_event = new StaffEvent([
+    &quot;date&quot; =&gt; &quot;2015-12-24 14:00:00&quot;,
+    &quot;location&quot; =&gt; &quot;Room 101&quot;,
+    &quot;description&quot; =&gt; &quot;Mandatory Christmas party for all employees!&quot;
+]);</code></pre>
+        
+        <p>And we can store the new event to the database:</p>
+        
+        <pre><code>$new_event-&gt;save();
+$id = $new_event-&gt;id;</code></pre>
+        
+        <p>Notice how all the SQL queries are taken care of for us.  Event objects can also be used to update properties in the table:</p>
+        
+        <pre><code>$new_event-&gt;location = &quot;Torture Chamber Alpha&quot;;
+$new_event-&gt;save();</code></pre>
+        
+        <p>And we can even delete events from the database:</p>
+        
+        <pre><code>$new_event-&gt;delete();</code></pre>
+        
+        <p>Ok, so that covers the &quot;C&quot;, &quot;U&quot;, and &quot;D&quot; in CRUD.  But what about the &quot;R&quot; (read)?  </p>
+        
+        <p>Well, it turns out that our new class <code>StaffEvent</code> is also a query builder!  Want to get a list of all staff events in december, sorted by date?  No problem:</p>
+        
+        <pre><code>$december_events = StaffEvent::whereBetween('date', [
+    &quot;2015-12-01 00:00:00&quot;,
+    &quot;2016-01-01 00:00:00&quot;
+])
+-&gt;get();</code></pre>
+    </section>
+
+    <section class="tutorial">
+        <h2 id="toc_3">Modeling Relationships</h2>
+        
+        <p>That covers the basic CRUD operations for events.  But, we still haven't modeled the relationships <strong>between</strong> events and users!  An event can have multiple users, and a user can have multiple events.  It would be nice to be able to take a given <code>StaffEvent</code> object, and get an array of all users who are assigned to that event.  Or, we might want to take a specific <code>User</code> object, and get an array of all events associated with that user.  To do this, we will modify the <code>StaffEvent</code> and <code>User</code> objects.</p>
+        
+        <p>First, we have to ask ourselves some questions.  When we load a particular <code>StaffEvent</code> from the database, do we want to immediately load all of its assigned users?  Or, should we wait until we actually need them?</p>
+        
+        <p>The second method is commonly called <strong>lazy loading</strong>, and is the method that I prefer.  Why?  Because it saves us unnecessary querying.  If in a given request, we don't care about the users assigned to an event, then we won't waste time querying the database for that information.</p>
+        
+        <p>To implement lazy loading, all we need to do is implement a method in <code>StaffEvent</code> called <code>users</code>:</p>
+        
+        <pre><code>public function users(){
+    $link_table = Database::getSchemaTable('staff_event_user')-&gt;name;
+    return $this-&gt;belongsToMany('UserFrosting\User', $link_table);
+}</code></pre>
+        
+        <p>This is Eloquent's way of providing access to a many-to-many relationship.  All we need to go is get the name of the link table from our database schema, and then call <code>belongsToMany</code> on the current <code>StaffEvent</code> object.   The first argument is the name of the class that models our User object, and the second argument is the name of our link table.  This method will then return a collection of User objects for a particular <code>StaffEvent</code>.</p>
+        
+        <p>We can also add this functionality to the <a href="http://php.net/manual/en/language.oop5.magic.php">magic getter</a>, by overloading the <code>__get</code> and <code>__isset</code> methods in <code>StaffEvent</code>:</p>
+        
+        <pre><code>public function __get($name){
+    if ($name == &quot;users&quot;)
+        return $this-&gt;users();
+    else
+        return parent::__get($name);
+}
+        
+public function __isset($name){
+    if ($name == &quot;users&quot;)
+        return true;
+    else
+        return parent::__isset($name);
+}</code></pre>
+        
+        <p>This will let us access an event's users by simply calling <code>$users = $my_event-&gt;users;</code>.  Overloading the magic methods will also allow us to access this data in Twig.  If we pass a <code>StaffEvent</code> object into a Twig template through our call to <code>render</code>, then we can access the array of users for that event via: <code></code>.  Nifty, eh?</p>
+        
+        <h3 id="toc_4">Refreshing Related Data</h3>
+        
+        <p>Ok, but what if I modify my <code>user</code> table after I call <code>users</code>?  Fortunately, Eloquent provides the <code>fresh</code> method as an easy way for us to reload an object's data from the database, along with any relationships we care about:</p>
+        
+        <pre><code>$my_event = $my_event-&gt;fresh(['users']);</code></pre>
+        
+        <p>Thus, we can do things like:</p>
+        
+        <pre><code>// Fetch event 1
+$event = StaffEvent::find(1);
+
+// Load users for event 1
+$users = $event-&gt;users();
+
+// Change one of those users
+$users[0]-&gt;title = &quot;The New Kid in Town&quot;;
+$users[0]-&gt;save();
+
+// Refresh the event, updating the user info
+$event = $event-&gt;fresh(['users']));</code></pre>
+        
+        <h3 id="toc_5">Modifying Relationships</h3>
+        
+        <p>Ok, so we've seen how to get the related users for an event, but how do we add and remove related users?  To do this, we can use the <code>attach</code> and <code>detach</code> methods:</p>
+        
+        <pre><code>// Fetch user 1
+$user = User::find(1);
+
+// Fetch event 1
+$event = StaffEvent::find(1);
+
+// Associate user 1 with event 1
+$event-&gt;users()-&gt;attach($user-&gt;id);
+
+// De-associate user 1 with event 1
+$event-&gt;users()-&gt;detach($user-&gt;id);
+</code></pre>
+        
+        <p>We might want to automatically delete any relationships when we delete a particular object.  So, we will overload the <code>delete</code> method in <code>StaffEvent</code>:</p>
+        
+        <pre><code>public function delete(){        
+    // Remove all user associations
+    $this-&gt;users()-&gt;detach();
+    
+    // Delete the event itself        
+    $result = parent::delete();
+    
+    return $result;
+}</code></pre>
+        
+        <p>And that's it!  Our <code>StaffEvent</code> data is now a full-fledged, relational data model that can keep track of which users are assigned to it in a sane manner.  We can make the same modifications to <code>User</code> to create methods like <code>events()</code>, etc as necessary.</p>
+        
+        <p>Combining what you've learned here with what you learned in Lesson 2, you should now be able to implement a controller with all the routes you need to create, update, delete, and view/list events, as well as assign users to events.</p>
+    </section>
+</div>
+          
+        <!-- Footer -->
+        <footer class="text-center">
+            <div class="footer-below">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-2">
+                <ul class="list-unstyled text-left">
+                    <li>
+                        <a href="http://localhost:4000/installation">
+                            Requirements and Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://localhost:4000/navigating">
+                            Navigating the Code
+                        </a>
+                    </li>                    
+                    <li>
+                        <a href="http://localhost:4000/tutorials">
+                            Tutorials
+                        </a>
+                    </li>                      
+                    <li>
+                        <a href="http://localhost:4000/components">
+                            Components
+                        </a>
+                    </li>  
+                    <li>
+                        <a href="http://localhost:4000/security">
+                            Security
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://localhost:4000/0.2.2">
+                            Version 0.2.2
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://gitter.im/alexweissman/UserFrosting">
+                            Chat
+                        </a>
+                    </li>                 
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <p class="footer-p">
+                    Copyright &copy; Userfrosting 2015
+                </p>
+                <p class="footer-p">
+                    UserFrosting logo adapted from <a href="http://cliparts.co/clipart/1041303">Pink Cupcake by Jay Reed</a>
+                </p>
+                <p class="footer-p">
+                    Site theme is adapted from the <a href="http://startbootstrap.com/template-overviews/freelancer/">Freelancer</a> theme by <a href="http://startbootstrap.com">Start Bootstrap</a>.
+                </p>
+                <p class="footer-p">
+                    Donate via Bitcoin: <code>18Ew1xGy1E3kjH1UyPEgJ3nnDN3ZWUY1N1</code>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll visible-xs visible-sm">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
+
+<!-- Placed at the end of the document so the pages load faster --> 
+<!-- jQuery -->
+<script src="http://localhost:4000/js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="http://localhost:4000/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="http://localhost:4000/js/classie.js"></script>
+<script src="http://localhost:4000/js/cbpAnimatedHeader.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="http://localhost:4000/js/jqBootstrapValidation.js"></script>
+<script src="http://localhost:4000/js/contact_me.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="http://localhost:4000/js/freelancer.js"></script>    
+
+        </footer>
+    </body>
+</html>

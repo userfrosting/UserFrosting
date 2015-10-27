@@ -1,0 +1,241 @@
+---
+layout: new
+title: "UserFrosting | Tutorials | Lesson 1: Creating a New Page"
+---
+
+<header class="breadcrumb-header">
+    {% include version-menu.html %}
+    <div class="container">    
+        <ol class="breadcrumb">
+            <li><a href="{{site.url}}/">Home</a></li>
+            <li><a href="{{site.url}}/#get-started">Getting Started</a></li>
+            <li><a href="{{site.url}}/tutorials">Tutorials</a></li>    
+            <li class="active">Creating a new page</li>
+        </ol>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h1>Lesson 1<br><small>Creating a New Page</small></h1>
+                <hr class="star-primary">
+            </div>
+        </div>        
+    </div>
+</header>
+
+<div class="container">
+    <section class="tutorial">
+        <p>One of the simplest tasks in extending UserFrosting is to create a new page. If you're a beginner, you're probably used to creating a single <code>.php</code> file which contains the content of your page (e.g. <code>barracks.php</code>), that you then view by navigating to <code>http://mysite.com/barracks.php</code>.</p>
+        
+        <p>UserFrosting on the other hand uses the <strong>front controller pattern</strong>, which gives you more flexibility and decouples the URLs for your pages from the actual code that generates their content. This means that the code for generating a page is no longer contained to a single file. For more information about how this works, please see <a href="{{site.url}}/navigating/#slim">Front Controllers and the Slim Microframework</a>.</p>
+        
+        <p>For this tutorial, we will create a simple page that lists all of the <strong>groups</strong> to which the current user belongs.</p>
+        
+        <p>Let's start by creating the main route in <code>public/index.php</code>. You will see many blocks of code that look like this:</p>
+        
+        <pre><code>
+            $app-&gt;get('/dashboard/?', function () use ($app) {    
+                // Access-controlled page
+                error_log(&quot;Checking access&quot;);
+                if (!$app-&gt;user-&gt;checkAccess('uri_dashboard')){
+                    $app-&gt;notFound();
+                }
+    
+                $app-&gt;render('dashboard.twig', []);          
+            });
+        </code></pre>
+    
+        <p>These are <strong>routes</strong>, which <a href="www.slimframework.com">Slim</a> uses to decide what to do when a visitor to your site goes to a particular URL. This route handles the <code>/dashboard</code> URL.</p>
+        
+        <p>Let's create a route for our new page, right below this block of code. Let's call the URL <code>account/groups</code>. Why did I pick this name? Well, it's neat, and it explains precisely what it is that we're trying to access - a list of <em>groups</em> for my <em>account</em>. We can create a simple route like this:</p>
+        
+        <pre><code>
+            $app-&gt;get('/account/groups/?', function () use ($app) {   
+                echo &quot;For Aiur!&quot;;
+            });
+        </code></pre>
+        
+        <p><code>$app-&gt;get</code> tells us that we're creating a <code>GET</code> route, because when anyone navigates to a web page in their browser, they are really issuing a <code>GET</code> request to the web server. Then we specify the URL we would like to route. The <code>?</code> at the end of the route means that the trailing <code>/</code> is optional.</p>
+        
+        <p><code>function () use ($app)</code> defines a <code>callback</code>, which is basically a function that we can pass into another function as a parameter. This callback will contain all the code that should be executed when someone navigates to this URL.</p>
+        
+        <p>So, let's visit our new route:</p>
+        
+        <p><img src="{{site.url}}/img/tutorials/new-page-1.png" alt="UserFrosting - creating a new page - 1"></p>
+        
+        <p>Alright, but not very impressive. All we did was <code>echo</code> a single line, which hopefully you already know how to do. Let's try to make this into a UserFrosting page!</p>
+    </section>
+    <section class="tutorial">
+        <h2 id="toc_0">Extending a Template Layout</h2>
+        
+        <p>To create a page, we need to create a <a href="{{site.url}}/navigating/#twig">template</a>. Templates are stored in <code>userfrosting/templates/themes/</code>, which contains subdirectories for each theme. We'll talk more about themes later, but in general you'll want to add new content to the <code>default</code> theme. In <code>userfrosting/templates/themes/default/</code>, create a new HTML file called <code>account-groups.twig</code>. The <code>.twig</code> extension means that this is a Twig template, which gives us some powerful formatting and content reuse capabilities (more about Twig later). Add the following HTML:</p>
+        
+        <pre><code>
+        {% raw %}
+            {% extends &quot;layouts/layout-dashboard.twig&quot; %}
+            {% set page_group = &quot;dashboard&quot; %}
+
+            {% block page %}   
+                {% set page = page | merge({
+                    &quot;title&quot;       : &quot;Account Groups&quot;,
+                    &quot;description&quot; : &quot;A list of the groups to which you belong.&quot;
+                }) %}
+                {{ parent() }}
+            {% endblock %}
+
+            {% block content %}
+                &lt;h1&gt;The user's ID is {{user.id}}.&lt;/h1&gt;
+            {% endblock %}
+        {% endraw %}
+        </code></pre>
+        
+        <p>This is a basic, (nearly) empty user account page.  Let's take a look at how this works.  Our first line,</p>
+        
+        <p><code>{% raw %}{% extends &quot;layouts/layout-dashboard.twig&quot; %}{% endraw %}</code></p>
+        
+        <p>tells Twig which layout to use for this page.  Here, we've chosen to use the &quot;dashboard&quot; layout, which automatically adds the HTML <code>&lt;head&gt;</code>, top and side navigation bars, footer, and alert box, which will display any messages that have been placed in the <strong>message stream</strong>.  </p>
+        
+        <p>Think of layouts as a type of template, which provides blanks where we can fill in some content.  When we <code>extend</code> a layout, we are defining what we goes into those blanks.  In Twig, these blanks are called <strong>blocks</strong>.  To create content to be filled into a specific block, simply wrap it in the <code>{% raw %}{% block ... %}...{% endblock %}{% endraw %}</code> tags.</p>
+        
+        <p>Our <code>content</code> block is the main block where all of our content should reside, between the navigation bars and the page footer.  Other blocks available in this layout are:</p>
+        
+        <ul>
+        <li><code>head</code> - Useful if we want to override the content in the <code>&lt;head&gt;</code> element.</li>
+        <li><code>fragments</code> - Content that is not part of the main content block, but that we might display via Javascript.  For example, the TOS modal popup on the registration page. </li>
+        <li><code>page_scripts</code> - Page-specific <code>&lt;script&gt;</code> blocks go here.</li>
+        <li><code>page</code> - This is a special block that envelopes the entire page.  Generally, we don't put HTML content directly in here here.  Instead, we use it as a convenient place to define page-wide properties, such as the page title, description, and other variables that need to be set before rendering the page.  You'll notice in v0.3.0 we had to set these variables in the controller - now with 0.3.1, we can set them directly in the template!</li>
+        </ul>
+        
+        <p>You may, of course, define your own layouts - simply add them to the <code>layouts</code> directory.  To read more about template inheritance, see the Twig documentation on <a href="http://twig.sensiolabs.org/doc/tags/extends.html">extends</a>.</p>
+        
+        <p>The line</p>
+        
+        <p><code>{% raw %}&lt;h1&gt;The user's ID is {{user.id}}.&lt;/h1&gt;{% endraw %}</code></p>
+        
+        <p>is our first bit of actual content. <code>{% raw %}{{user.id}}{% endraw %}</code> is a <a href="http://twig.sensiolabs.org/doc/templates.html">Twig variable</a>. For convenience, UserFrosting automatically loads the current user into the Twig variable <code>user</code>. So, you can always access any property of the current user from Twig by using <code>{% raw %}{{user.*}}{% endraw %}</code>.</p>
+        
+        <p>Going back to our route in <code>index.php</code>, let's make UserFrosting render our new template!</p>
+        
+        <p>Change your new route to look like this:</p>
+        
+        <pre><code>
+            $app-&gt;get('/account/groups/?', function () use ($app) {   
+                $app-&gt;render('account-groups.twig', []);  
+            });
+        </code></pre>
+        
+        <p>This is telling UserFrosting to tell Twig to look in <code>userfrosting/templates/themes/default/</code> for a template called <code>account-groups.twig</code>, and render it.  The second array argument allows us to pass in any additional variables to be rendered in the corresponding placeholders on the page.</p>
+        
+        <p>If you're logged in, it should look like this:</p>
+        
+        <p><img src="{{site.url}}/img/tutorials/new-page-2.png" alt="UserFrosting - creating a new page - 2"></p>
+        
+        <p>Ok, now let's see if we can pull the group names for the user and print them nicely. Change your template file to look like this:</p>
+        
+        <pre><code>
+        {% raw %}
+            {% extends &quot;layouts/layout-dashboard.twig&quot; %}
+            {% set page_group = &quot;dashboard&quot; %}
+
+            {# Set page properties (page.*) here. #}
+            {% block page %}
+                {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+                but BEFORE the page itself is rendered. #}    
+                {% set page = page | merge({
+                    &quot;title&quot;       : &quot;Dashboard&quot;,
+                    &quot;description&quot; : &quot;Your user dashboard.&quot;
+                }) %}
+                {{ parent() }}
+            {% endblock %}
+
+            {% block content %}
+                &lt;h1&gt;User Groups&lt;/h1&gt;
+                &lt;ul class=&quot;list-group&quot;&gt;
+                {% for group in groups %}
+                    &lt;li class=&quot;list-group-item&quot;&gt;
+                          &lt;i class=&quot;{{group.icon}} fa-fw&quot;&gt;&lt;/i&gt; {{group.name}}
+                    &lt;/li&gt;
+                {% endfor %}
+                &lt;/ul&gt;
+            {% endblock %}
+        {% endraw %}
+        </code></pre>
+        
+        <p>The <code>{% raw %}{% for ... %}{% endraw %}</code> tag is Twig's syntax for a <code>for</code> loop, which you close with a <code>{% raw %}{% endfor %}{% endraw %}</code> tag. <code>groups</code> is a Twig variable, which we now need to define in our route. So now, change your route to:</p>
+        
+        <pre><code>
+            $app-&gt;get('/account/groups/?', function () use ($app) {   
+                $app-&gt;render('account-groups.twig', [
+                    'groups' =&gt; $app-&gt;user-&gt;getGroups()
+                ]);  
+            });
+        </code></pre>
+        
+        <p>That extra line <code>$app-&gt;user-&gt;getGroups()</code> loads a list of all the groups (as <code>Group</code> objects) that the currently logged in user (<code>$app-&gt;user</code>) belongs to, and passes them into the Twig variable <code>groups</code>.</p>
+        
+        <p>Great, now your page should look like this:</p>
+        
+        <p><img src="{{site.url}}/img/tutorials/new-page-3.png" alt="UserFrosting - creating a new page - 3"></p>    
+    </section>
+    <section class="tutorial">
+        <h2 id="toc_1">Access Control</h2>
+        
+        <p>Alright, one last thing. We need to control who can access this page! As it stands, this is a <strong>publicly accessible page</strong>. We can control access to the page through an <strong>authorization hook</strong>, like so:</p>
+        
+        <pre><code>
+            $app-&gt;get('/account/groups/?', function () use ($app) {   
+                // Access-controlled page
+                if (!$app-&gt;user-&gt;checkAccess('uri_account-groups')){
+                    $app-&gt;notFound();
+                }   
+     
+                $app-&gt;render('account-groups.twig', [
+                    'groups' =&gt; $app-&gt;user-&gt;getGroups()
+                ]);
+            });
+        </code></pre>
+        
+        <p>The function <code>$app-&gt;user-&gt;checkAccess</code> checks whether or not the current user has access to the authorization hook <code>uri_account-groups</code>, and returns a 404 error if they don't.</p>
+        
+        <p>To define the hook, and specify which users and groups have access to it, we need to add it to our database. The administrative interface actually provides a handy tool for us to do this.  To add a rule for a group, log in as the root user and go to <strong>Configuration-&gt;Groups</strong>.  Here you will see a list of all user groups.</p>
+        
+        <p>Next to each group you will see an &quot;Actions&quot; menu.  In the Actions menu for group <code>Users</code>, select &quot;Authorization rules&quot;.  Click &quot;create new rule&quot; at the bottom, and a form will pop up.</p>
+        
+        <p>Enter <code>uri_account-groups</code> as the name of the hook.  For &quot;conditions&quot;, enter <code>always()</code>.  This means that users in group &quot;Users&quot; will have unlimited access to the  <code>uri_account-groups</code> hook.  For more advanced and fine-grained access control, we can use boolean expressions consisting of <code>AccessCondition</code>s to limit the scope of access that we grant.</p>
+        
+        <p>Cool! Now anyone who is a member of group 1, that is the <code>Users</code> group, will be able to access your new page. Anyone who isn't a member, including unauthenticated users, will be shown a 404 error page.</p>
+    </section>
+    <section class="tutorial">
+        <h2 id="toc_2">Linking to Your Page in the Navbar</h2>
+        
+        <p>What's that, you want your page to show up in the sidebar? Well, ok.</p>
+        
+        <p>Head on over to <code>userfrosting/templates/themes/default/components/dashboard/menus/sidebar.twig</code>. You'll see some links like:</p>
+        
+        <pre><code>
+        {% raw %}
+            {% if checkAccess('uri_users') %}
+            &lt;li&gt;
+              &lt;a href=&quot;{{site.uri.public}}/users&quot;&gt;&lt;i class=&quot;fa fa-users fa-fw&quot;&gt;&lt;/i&gt; {{ translate(&quot;MENU_USERS&quot;) }}&lt;/a&gt;
+            &lt;/li&gt;
+            {% endif %}
+        {% endraw %}
+        </code></pre>
+        
+        <p>The <code>checkAccess</code> function in Twig works just like <code>$app-&gt;user-&gt;checkAccess</code>. This will let you display a menu item only when the user has access to that page.</p>
+        
+        <p><code>{% raw %}{{site.uri.public}}{% endraw %}</code> is the root URL of your site, which UserFrosting automatically detects and loads into the global <code>site</code> variable.</p>
+        
+        <p>The <code>translate</code> function allows for multilanguage support. If you want to have different versions of the text for this menu item depending on the user's locale, you can define a <strong>message id</strong> in the various language files in <code>userfrosting/locales</code>, and <code>translate</code> will select the appropriate message for the current user's locale. If you don't care about multilanguage support, you can simply put the text here that you'd like the menu item to appear as:</p>
+        
+        <pre><code>
+        {% raw %}
+            {% if checkAccess('uri_account-groups') %}
+            &lt;li&gt;
+              &lt;a href=&quot;{{site.uri.public}}/account/groups&quot;&gt;&lt;i class=&quot;fa fa-tags fa-fw&quot;&gt;&lt;/i&gt; My Groups&lt;/a&gt;
+            &lt;/li&gt;
+            {% endif %}
+        {% endraw %}</code></pre>
+        
+        <p>And that's it! I hope this was helpful!</p>
+
+    </section>
+</div>
