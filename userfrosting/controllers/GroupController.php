@@ -36,19 +36,31 @@ class GroupController extends \UserFrosting\BaseController {
             $this->_app->notFound();
         }
         
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::queryBuilder()->get();
         
-        $this->_app->render('groups.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Groups",
-                'description' =>    "Group management, authorization rules, add/remove groups, etc.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('groups/groups.twig', [
             "groups" => $groups
         ]);          
     }    
 
+    public function pageGroupAuthorization($group_id) {
+        // Access-controlled page
+        if (!$this->_app->user->checkAccess('uri_authorization_settings')){
+            $this->_app->notFound();
+        }
+        
+        $group = Group::find($group_id);
+        
+        // Load all auth rules
+        $rules = GroupAuth::where('group_id', $group_id)->get();
+        
+        $this->_app->render('config/authorization.twig', [
+            "group" => $group,
+            "rules" => $rules
+        ]);
+        
+    }
+    
     /**
      * Renders the form for creating a new group.
      *
@@ -88,9 +100,9 @@ class GroupController extends \UserFrosting\BaseController {
         $group = new Group($data);                
         
         if ($render == "modal")
-            $template = "components/group-info-modal.html";
+            $template = "components/common/group-info-modal.twig";
         else
-            $template = "components/group-info-panel.html";
+            $template = "components/common/group-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default', 'icon'];
@@ -105,7 +117,7 @@ class GroupController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);   
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -123,7 +135,7 @@ class GroupController extends \UserFrosting\BaseController {
                     "edit", "delete"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }            
     
@@ -157,9 +169,9 @@ class GroupController extends \UserFrosting\BaseController {
         $theme_list = $this->_app->site->getThemes();
         
         if ($render == "modal")
-            $template = "components/group-info-modal.html";
+            $template = "components/common/group-info-modal.twig";
         else
-            $template = "components/group-info-panel.html";
+            $template = "components/common/group-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default'];
@@ -177,7 +189,7 @@ class GroupController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-update.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);          
+        $this->_app->jsValidator->setSchema($schema);  
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -195,7 +207,7 @@ class GroupController extends \UserFrosting\BaseController {
                     "edit", "delete"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }
     
@@ -416,5 +428,5 @@ class GroupController extends \UserFrosting\BaseController {
         $group->delete();       // TODO: implement Group function
         unset($group);
     }
-        
+    
 }

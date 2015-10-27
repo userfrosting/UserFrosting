@@ -160,5 +160,3 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
         }
     }    
 }
-
-?>

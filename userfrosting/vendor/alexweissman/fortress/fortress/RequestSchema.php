@@ -27,7 +27,7 @@ class RequestSchema {
     public function __construct($file){
         $this->_schema = json_decode(file_get_contents($file),true);
         if ($this->_schema === null) {
-            throw new Exception("Either the schema '$file' could not be found, or it does not contain a valid JSON document: " . json_last_error());
+            throw new \Exception("Either the schema '$file' could not be found, or it does not contain a valid JSON document: " . json_last_error());
         }
     }
     

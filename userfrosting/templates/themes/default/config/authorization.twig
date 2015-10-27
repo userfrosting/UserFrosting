@@ -1,0 +1,144 @@
+{% extends "layouts/layout-dashboard.twig" %}
+{% set page_group = "auth" %}
+
+{# Set page properties (page.*) here. #}
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}    
+    {% set page = page | merge({
+        "title"       : "Authorization | " ~ group.name,
+        "description" : "Authorization and access control settings for " ~ group.name ~ "."
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <h1>Authorization rules for group '{{group.name}}'</h1>
+    <div class="table-responsive">
+        <table id="table-auth" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
+            <thead>
+                <tr>
+                    <th class="sorter-metatext">Hook <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum">Conditions <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum"> <i class="fa fa-sort"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for rule in rules %}
+                <tr>
+                    <td data-text="{{rule.hook}}">
+                        {{rule.hook}}
+                    </td>
+                    <td data-text="{{rule.conditions}}">
+                        {{rule.conditions}}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>            
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="#" data-id="{{rule.id}}" class="js-auth-edit" data-target="#dialog-auth-edit" data-toggle="modal">
+                                <i class="fa fa-edit"></i> Edit rule
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" data-id="{{rule.id}}" class="js-auth-delete" data-owner="{{group.name}}" data-hook="{{rule.hook}}" data-target="#dialog-auth-delete" data-toggle="modal">
+                                <i class="fa fa-trash-o"></i> Delete rule</a>
+                            </li>
+                        </ul>
+                    </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include 'components/common/table-tablesorter-default.twig' %}
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <button type="button" class="btn btn-success js-auth-create" data-toggle="modal" data-id="{{group.id}}" data-target="#dialog-auth-create">
+                <i class="fa fa-plus-square"></i>  Create New Rule
+            </button>
+        </div>
+    </div>    
+{% endblock %}
+{% block page_scripts %}
+        <!-- Include JS snippets -->
+        {% include 'components/common/js-snippets/user-table-columns.twig' %}
+        
+        <script>            
+            $(document).ready(function() {           
+                // Set up server-side pagination
+                // See http://jsfiddle.net/Mottie/uwZc2/
+                // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
+                
+                var pager_options = {                    
+                    // target the pager markup - see the HTML block below
+                    container: $(".pager"),
+                    
+                    // Saves the current pager page size and number (requires storage widget)
+                    savePages: false,
+                    
+                    output: '{startRow} to {endRow} of {filteredRows} ({totalRows})',
+              
+                    // apply disabled classname (cssDisabled option) to the pager arrows when the rows
+                    // are at either extreme is visible; default is true
+                    updateArrows: true,
+              
+                    // starting page of the pager (zero based index)
+                    page: 0,
+              
+                    // Number of visible rows - default is 10
+                    size: 10, 
+                    
+                    // Saves tablesorter paging to custom key if defined.
+                    // Key parameter name used by the $.tablesorter.storage function.
+                    // Useful if you have multiple tables defined
+                    storageKey: 'tablesorter-pager',
+              
+                    // Reset pager to this page after filtering; set to desired page number (zero-based index),
+                    // or false to not change page at filter start
+                    pageReset: 0,
+              
+                    // if true, the table will remain the same height no matter how many records are displayed.
+                    // The space is made up by an empty table row set to a height to compensate; default is false
+                    fixedHeight: false,
+              
+                    // remove rows from the table to speed up the sort of large tables.
+                    // setting this to false, only hides the non-visible rows; needed if you plan to
+                    // add/remove rows with the pager enabled.
+                    removeRows: false,
+              
+                    // If true, child rows will be counted towards the pager set size
+                    countChildRows: false,
+              
+                    // css class names of pager arrows
+                    cssNext        : '.next',  // next page arrow
+                    cssPrev        : '.prev',  // previous page arrow
+                    cssFirst       : '.first', // go to first page arrow
+                    cssLast        : '.last',  // go to last page arrow
+                    cssGoto        : '.gotoPage', // page select dropdown - select dropdown that set the "page" option
+              
+                    cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
+                    cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
+              
+                    // class added to arrows when at the extremes; see the "updateArrows" option
+                    // (i.e. prev/first arrows are "disabled" when on the first page)
+                    cssDisabled    : 'disabled', // Note there is no period "." in front of this class name
+                    cssErrorRow    : 'tablesorter-errorRow' // error information row
+                };
+                
+                $('#table-auth').tablesorter({
+                    debug: false,
+                    theme: 'bootstrap',
+                    widthFixed: true,
+                    widgets: ['filter']
+                })
+                .tablesorterPager(pager_options);
+            });
+        </script>
+    
+{% endblock %}

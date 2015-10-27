@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    $vendorDir . '/danielstjules/stringy/src/Create.php',
     $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+    $vendorDir . '/illuminate/support/helpers.php',
     $vendorDir . '/nikic/php-parser/lib/bootstrap.php',
 );

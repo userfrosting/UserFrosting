@@ -12,17 +12,19 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "twig/twig": "~1.0",
-        "slim/slim": "2.*",
-        "slim/views": "*",
-        "nikic/php-parser": "*",
-        "alexweissman/fortress" : "dev-master",
-        "phpmailer/phpmailer": "5.2.10"
+        "php" : ">=5.4.0",
+        "twig/twig" : "~1.0",
+        "slim/slim" : "2.*",
+        "slim/views" : "*",
+        "illuminate/database" : "5.0.33",
+        "nikic/php-parser" : "*",
+        "alexweissman/fortress" : "0.2.0.x-dev",
+        "phpmailer/phpmailer" : "5.2.10",
+        "birke/rememberme" : "dev-master"
     },
     "autoload": {
         "classmap" : [
-            "auth", "controllers", "models", "plugins"
+            "controllers", "middleware", "models", "plugins"
         ]
     }
 }

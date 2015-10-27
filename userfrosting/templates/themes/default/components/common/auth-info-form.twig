@@ -1,0 +1,50 @@
+<div id='{{box_id}}' class='modal fade' data-width="760">
+    <div class='modal-header'>
+        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+        <h4 class='modal-title'>{{box_title}}</h4>
+    </div>
+    <div class='modal-body'>
+        <form name="auth" method="post" action="{{form_action}}">
+            <div id="form-alerts">
+            </div>
+            <div class="alert alert-info">
+                {{subtext}}
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Hook</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-code"></i></span>
+                            <input type="text" class="form-control" name="hook" autocomplete="off" value="{{rule.hook}}" placeholder="Hook name, as specified in the code" {% if 'hook' in fields.disabled %}disabled{% endif %}>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Conditions</label>
+                        <textarea rows=4 class="form-control" name="conditions" placeholder="See the AccessCondition class for valid condition functions.  Conditions can be combined into boolean expressions." {% if 'conditions' in fields.disabled %}disabled{% endif %}>{{rule.conditions}}</textarea>
+                    </div>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="col-xs-8 col-sm-4">
+                    <div class="vert-pad">
+                        <button type="submit" class="btn btn-block btn-lg btn-success">{{submit_button}}</button>
+                    </div>          
+                </div> 
+                <div class="col-xs-4 col-sm-3 pull-right">
+                    <div class="vert-pad">
+                        <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script>
+        // Load the validator rules for this form
+        var validators = {{validators | raw}};
+        </script>
+    </div>
+</div>

@@ -138,17 +138,28 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         */
     }
 
+    public function testCompileSourceInlinesSource()
+    {
+        $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
+
+        $source = "<? */*foo*/ ?>\r\nbar\n";
+        $expected = "/* <? *//* *foo*//*  ?>*/\n/* bar*/\n/* */\n";
+        $compiled = $twig->compileSource($source, 'index');
+
+        $this->assertContains($expected, $compiled);
+        $this->assertNotContains('/**', $compiled);
+    }
+
     public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
     {
-        $options = array('cache' => sys_get_temp_dir().'/twig', 'auto_reload' => false, 'debug' => false);
+        $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig');
+        $options = array('cache' => $cache, 'auto_reload' => false, 'debug' => false);
 
         // force compilation
         $twig = new Twig_Environment($loader = new Twig_Loader_Array(array('index' => '{{ foo }}')), $options);
-        $cache = $twig->getCacheFilename('index');
-        if (!is_dir(dirname($cache))) {
-            mkdir(dirname($cache), 0777, true);
-        }
-        file_put_contents($cache, $twig->compileSource('{{ foo }}', 'index'));
+
+        $key = $cache->generateKey('index', $twig->getTemplateClass('index'));
+        $cache->write($key, $twig->compileSource('{{ foo }}', 'index'));
 
         // check that extensions won't be initialized when rendering a template that is already in the cache
         $twig = $this
@@ -164,7 +175,86 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $output = $twig->render('index', array('foo' => 'bar'));
         $this->assertEquals('bar', $output);
 
-        unlink($cache);
+        unlink($key);
+    }
+
+    public function testAutoReloadCacheMiss()
+    {
+        $templateName = __FUNCTION__;
+        $templateContent = __FUNCTION__;
+
+        $cache = $this->getMock('Twig_CacheInterface');
+        $loader = $this->getMockLoader($templateName, $templateContent);
+        $twig = new Twig_Environment($loader, array('cache' => $cache, 'auto_reload' => true, 'debug' => false));
+
+        // Cache miss: getTimestamp returns 0 and as a result the load() is
+        // skipped.
+        $cache->expects($this->once())
+            ->method('generateKey')
+            ->will($this->returnValue('key'));
+        $cache->expects($this->once())
+            ->method('getTimestamp')
+            ->will($this->returnValue(0));
+        $loader->expects($this->never())
+            ->method('isFresh');
+        $cache->expects($this->never())
+            ->method('load');
+
+        $twig->loadTemplate($templateName);
+    }
+
+    public function testAutoReloadCacheHit()
+    {
+        $templateName = __FUNCTION__;
+        $templateContent = __FUNCTION__;
+
+        $cache = $this->getMock('Twig_CacheInterface');
+        $loader = $this->getMockLoader($templateName, $templateContent);
+        $twig = new Twig_Environment($loader, array('cache' => $cache, 'auto_reload' => true, 'debug' => false));
+
+        $now = time();
+
+        // Cache hit: getTimestamp returns something > extension timestamps and
+        // the loader returns true for isFresh().
+        $cache->expects($this->once())
+            ->method('generateKey')
+            ->will($this->returnValue('key'));
+        $cache->expects($this->once())
+            ->method('getTimestamp')
+            ->will($this->returnValue($now));
+        $loader->expects($this->once())
+            ->method('isFresh')
+            ->will($this->returnValue(true));
+        $cache->expects($this->once())
+            ->method('load');
+
+        $twig->loadTemplate($templateName);
+    }
+
+    public function testAutoReloadOutdatedCacheHit()
+    {
+        $templateName = __FUNCTION__;
+        $templateContent = __FUNCTION__;
+
+        $cache = $this->getMock('Twig_CacheInterface');
+        $loader = $this->getMockLoader($templateName, $templateContent);
+        $twig = new Twig_Environment($loader, array('cache' => $cache, 'auto_reload' => true, 'debug' => false));
+
+        $now = time();
+
+        $cache->expects($this->once())
+            ->method('generateKey')
+            ->will($this->returnValue('key'));
+        $cache->expects($this->once())
+            ->method('getTimestamp')
+            ->will($this->returnValue($now));
+        $loader->expects($this->once())
+            ->method('isFresh')
+            ->will($this->returnValue(false));
+        $cache->expects($this->never())
+            ->method('load');
+
+        $twig->loadTemplate($templateName);
     }
 
     public function testAddExtension()
@@ -200,6 +290,21 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(array_key_exists('foo_binary', $twig->getBinaryOperators()));
         $this->assertFalse(array_key_exists('foo_global', $twig->getGlobals()));
         $this->assertCount(2, $twig->getNodeVisitors());
+    }
+
+    protected function getMockLoader($templateName, $templateContent)
+    {
+        $loader = $this->getMock('Twig_LoaderInterface');
+        $loader->expects($this->any())
+          ->method('getSource')
+          ->with($templateName)
+          ->will($this->returnValue($templateContent));
+        $loader->expects($this->any())
+          ->method('getCacheKey')
+          ->with($templateName)
+          ->will($this->returnValue($templateName));
+
+        return $loader;
     }
 }
 

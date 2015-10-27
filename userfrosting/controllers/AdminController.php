@@ -3,7 +3,7 @@
 namespace UserFrosting;
 
 /**
- * AccountController Class
+ * AdminController Class
  *
  * Controller class for /config/* URLs.  Handles admin-related activities, including site settings, etc
  *
@@ -39,19 +39,13 @@ class AdminController extends \UserFrosting\BaseController {
         // Hook for core and plugins to register their settings
         $this->_app->applyHook("settings.register");
         
-        $this->_app->render('site-settings.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Site Settings",
-                'description' =>    "Global settings for the site, including registration and activation settings, site title, admin emails, and default languages.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('config/site-settings.twig', [
             'settings' => $this->_app->site->getRegisteredSettings(),
             'info'     => $this->_app->site->getSystemInfo(),
             'error_log'=> $this->_app->site->getLog(50)
         ]);    
     }
-    
+        
     /**
      * Processes a request to update the site settings.
      *

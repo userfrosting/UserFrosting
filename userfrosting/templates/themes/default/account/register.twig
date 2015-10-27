@@ -1,0 +1,183 @@
+{% extends "layouts/layout-jumbotron.twig" %}
+{% set page_group = "loggedout" %}
+
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}
+    
+    {% set page = page | merge({
+        "title"       : "Register",
+        "description" : "Register for a new UserFrosting account.",
+        "active_page" : "account/register"
+    }) %}    
+
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<h1>Let's get started!</h1>
+<p class="lead">Registration is fast and simple.</p>
+{% include 'components/common/alerts.twig' %}
+<form name="register" method="post" action="{{site.uri.public}}/account/register" class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label  col-sm-4">Username</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                        <input type="text" class="form-control" name="user_name" autocomplete="off" value="" placeholder="User name">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Display Name</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                        <input type="text" class="form-control" name="display_name" autocomplete="off" value="" placeholder="Display name">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Email</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+                        <input type="text" class="form-control" name="email" placeholder="Email address" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>		  
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Password</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                        <input type="password" class="form-control" name="password" autocomplete="off" value="" placeholder="8-50 characters">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Confirm password</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                        <input type="password" class="form-control" name="passwordc" autocomplete="off" value="" placeholder="Re-enter your password">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if site.enable_captcha %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label class="control-label col-sm-4">Confirm captcha code</label>
+                <div class="col-sm-4">
+                    <div class="input-group"><span class="input-group-addon"><i class="fa fa-fw fa-eye"></i></span>
+                        <input type="text" class="form-control" id="captcha-input" name="captcha" autocomplete="off" value="" placeholder="Organics only!">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <img src="{{captcha_image}}" id="captcha" data-target="#captcha-input">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if site.show_terms_on_register %}
+    <div class="row">
+        <div class="col-sm-12">
+             By registering an account with {{site.site_title}}, you accept the <a href="#" data-toggle="modal" data-target="#tos">terms and conditions</a>.
+        </div>
+    </div>
+    {% endif %}
+    <br>
+    <div class="row">
+        <div class="col-sm-12">
+            <div>  
+                <button type="submit" name="btn_register" class="btn btn-success">Register</button>
+            </div>
+        </div>
+    </div>
+    <div class="collapse">
+      <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
+      <input name="spiderbro" id="spiderbro" value="http://"/>
+    </div>          
+</form>
+{% include 'components/jumbotron/jumbotron-links.twig' %}	
+{% endblock %}
+
+{% block fragments %}
+    <div id="tos" class="modal fade" tabindex="-1" data-width="760" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">Terms and Conditions for {{site.site_title}}</h4>
+        </div>
+        <div class="modal-body">
+            {% include 'components/common/tos.twig' %}	
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-primary">Got it!</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_scripts %} 
+    <script>
+        $(document).ready(function() {           
+            // Process form 
+            ufFormSubmit(
+                $("form[name='register']"),
+                {{ validators | raw }},
+                $("#userfrosting-alerts"),
+                function(data, statusText, jqXHR) {
+                    // Forward to login page on success
+                    window.location.replace(site['uri']['public'] + "/account/login");
+                },
+                function() {
+                    // Reload captcha
+                    $("#captcha").captcha();
+                }
+            );
+        });    
+        
+        // This plugin reloads the captcha in the specified field
+        (function( $ ) {
+            $.fn.captcha = function() {
+                var field = $(this);
+                console.log("Reloading captcha");
+                
+                var img_src = site['uri']['public'] + "/account/captcha?" + new Date().getTime();
+                
+                return $.ajax({  
+                  type: "GET",  
+                  url: img_src,  
+                  dataType: "text"
+                }).then(function(data, statusText, jqXHR) {  // Pass the deferral back
+                    field.attr('src', data);
+                    var target = field.data('target');
+                    $(target).val("");
+                    return data;
+                });
+            };
+        }( jQuery ));        
+        
+    </script>
+{% endblock %}

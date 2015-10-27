@@ -29,7 +29,7 @@
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "The value for {{self}} must be '0' or '1'."
+                "message" : "The value for '{{self}}' must be '0' or '1'."
             }
         }
     },
