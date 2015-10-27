@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class UserFrosting\UserController</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-UserFrosting.html" title="Summary of UserFrosting"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li class="active">
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">AccessConditionExpression</a></li>
+				<li><a href="class-UserFrosting.AccountController.html">AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">Database</a></li>
+				<li><a href="class-UserFrosting.DatabaseTable.html">DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">GroupLoader</a></li>
+				<li><a href="class-UserFrosting.InstallController.html">InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">Notification</a></li>
+				<li><a href="class-UserFrosting.PageSchema.html">PageSchema</a></li>
+				<li><a href="class-UserFrosting.SiteSettings.html">SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UFModel</a></li>
+				<li><a href="class-UserFrosting.User.html">User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserCollection</a></li>
+				<li class="active"><a href="class-UserFrosting.UserController.html">UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class UserController</h1>
+
+
+	<div class="description">
+	<p>UserController Class</p>
+
+<p>Controller class for /users/* URLs.  Handles user-related activities, including listing users, CRUD for users, etc.</p>
+	</div>
+
+	<dl class="tree well">
+		<dd style="padding-left:0px">
+			<a href="class-UserFrosting.BaseController.html"><span>UserFrosting\BaseController</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>UserFrosting\UserController</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-UserFrosting.html">UserFrosting</a><br>
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+				<b>Link:</b>
+				<a href="http://www.userfrosting.com/navigating/#structure">http://www.userfrosting.com/navigating/#structure</a><br>
+			<b>Located at</b> <a href="source-class-UserFrosting.UserController.html#5-715" title="Go to source code">controllers/UserController.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#16-23" title="Go to source code">__construct</a>( <span><code><a href="class-UserFrosting.UserFrosting.html">UserFrosting\UserFrosting</a></code> <var>$app</var></span> )</code>
+
+			<div class="description short">
+				<p>Create a new UserController object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new UserController object.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$app</var></dt>
+						<dd>The main UserFrosting app.</dd>
+					</dl></div>
+
+
+
+
+					<h4>Overrides</h4>
+					<div class="list"><code><a href="class-UserFrosting.BaseController.html#___construct">UserFrosting\BaseController::__construct</a></code></div>
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageUsers" id="_pageUsers">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageUsers">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#25-76" title="Go to source code">pageUsers</a>( <span>string <var>$primary_group_name</var> = <span class="php-keyword1">null</span></span>, <span>boolean <var>$paginate_server_side</var> = <span class="php-keyword1">true</span></span> )</code>
+
+			<div class="description short">
+				<p>Renders the user listing page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the user listing page.</p>
+
+<p>This page renders a table of users, with dropdown menus for admin actions for each user.
+Actions typically include: edit user details, activate user, enable/disable user, delete user.
+This page requires authentication.
+Request type: GET</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$primary_group_name</var></dt>
+						<dd>optional.  If specified, will only display users in that particular primary group.</dd>
+						<dt><var>$paginate_server_side</var></dt>
+						<dd>optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageUser" id="_pageUser">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageUser">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#78-154" title="Go to source code">pageUser</a>( <span>string <var>$user_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Renders a page displaying a user's information, in read-only mode.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders a page displaying a user's information, in read-only mode.</p>
+
+<p>This checks that the currently logged-in user has permission to view the requested user's info.
+It checks each field individually, showing only those that you have permission to view.
+This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
+This page requires authentication.
+Request type: GET</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$user_id</var></dt>
+						<dd>The id of the user to view.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="formUserCreate" id="_formUserCreate">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_formUserCreate">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#156-255" title="Go to source code">formUserCreate</a>( )</code>
+
+			<div class="description short">
+				<p>Renders the form for creating a new user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the form for creating a new user.</p>
+
+<p>This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter <code>render</code>.
+If the currently logged-in user has permission to modify user group membership, then the group toggles will be displayed.
+Otherwise, the user will be added to the default groups automatically.
+This page requires authentication.
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="formUserEdit" id="_formUserEdit">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_formUserEdit">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#257-346" title="Go to source code">formUserEdit</a>( <span>integer <var>$user_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Renders the form for editing an existing user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the form for editing an existing user.</p>
+
+<p>This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter <code>render</code>.
+For each field, we will first check if the currently logged-in user has permission to update the field.  If so,
+the field will be rendered as editable.  If not, we will check if they have permission to view the field.  If so,
+it will be displayed but disabled.  If they have neither permission, the field will be hidden.
+This page requires authentication.
+Request type: GET</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$user_id</var></dt>
+						<dd>the id of the user to edit.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="formUserEditPassword" id="_formUserEditPassword">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_formUserEditPassword">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#348-387" title="Go to source code">formUserEditPassword</a>( <span> <var>$user_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Renders the form for editing a user's password.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the form for editing a user's password.</p>
+
+<p>This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+This page requires authentication.
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="createUser" id="_createUser">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_createUser">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#389-516" title="Go to source code">createUser</a>( )</code>
+
+			<div class="description short">
+				<p>Processes the request to create a new user (from the admin controls).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes the request to create a new user (from the admin controls).</p>
+
+<p>Processes the request from the user creation form, checking that:
+1. The username and email are not already in use;
+2. The logged-in user has the necessary permissions to update the posted field(s);
+3. The submitted data is valid.
+This route requires authentication.
+Request type: POST</p>
+
+
+
+
+
+					<h4>See</h4>
+					<div class="list">
+							<code><a href="class-UserFrosting.UserController.html#_formUserCreate">UserFrosting\UserController::formUserCreate()</a></code><br>
+					</div>
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="updateUser" id="_updateUser">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_updateUser">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#518-677" title="Go to source code">updateUser</a>( <span>integer <var>$user_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Processes the request to update an existing user's details, including enabled/disabled status and activation status.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes the request to update an existing user's details, including enabled/disabled status and activation status.</p>
+
+<p>Processes the request from the user update form, checking that:
+1. The target user's new email address, if specified, is not already in use;
+2. The logged-in user has the necessary permissions to update the posted field(s);
+3. We're not trying to disable the master account;
+4. The submitted data is valid.
+This route requires authentication.
+Request type: POST</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$user_id</var></dt>
+						<dd>the id of the user to edit.</dd>
+					</dl></div>
+
+
+
+					<h4>See</h4>
+					<div class="list">
+							<code><a href="class-UserFrosting.UserController.html#_formUserEdit">UserFrosting\UserController::formUserEdit()</a></code><br>
+					</div>
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="deleteUser" id="_deleteUser">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_deleteUser">#</a>
+			<code><a href="source-class-UserFrosting.UserController.html#679-714" title="Go to source code">deleteUser</a>( <span>integer <var>$user_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Processes the request to delete an existing user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes the request to delete an existing user.</p>
+
+<p>Deletes the specified user, removing associations with any groups and any user-specific authorization rules.
+Before doing so, checks that:
+1. You are not trying to delete the master account;
+2. You have permission to delete user user accounts.
+This route requires authentication (and should generally be limited to admins or the root user).
+Request type: POST</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$user_id</var></dt>
+						<dd>the id of the user to delete.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-UserFrosting.BaseController.html#methods">UserFrosting\BaseController</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.BaseController.html#_alerts">alerts()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_configJS">configJS()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_generateCaptcha">generateCaptcha()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_page404">page404()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_pageDatabaseError">pageDatabaseError()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_themeCSS">themeCSS()</a></code>
+			</p>
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+		</div>
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-UserFrosting.BaseController.html#properties">UserFrosting\BaseController</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.BaseController.html#$_app"><var>$_app</var></a></code>
+			</p>
+		</div>
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

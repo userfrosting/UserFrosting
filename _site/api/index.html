@@ -1,198 +1,168 @@
 <!DOCTYPE html>
 <html>
+<head>
+	<meta charset="utf-8">
 
-  <head>
+	<title>Overview</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Alex Weissman">
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
 
-    <link rel="shortcut icon" type="image/x-icon" href="http://localhost:4000/img/cupcake.ico">
-    <link rel="canonical" href="http://localhost:4000/api/">
-    
-    <title>UserFrosting | API</title>
-    
-    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
-    <link href="http://localhost:4000/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="http://localhost:4000/css/freelancer.css" rel="stylesheet">
-    <link href="http://localhost:4000/css/userfrosting.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      
-        ga('create', 'UA-37689257-2', 'www.userfrosting.com');
-        ga('send', 'pageview');
-      
-    </script>
 </head>
 
-    <body id="page-top" class="index">
-    
-        <!-- Navigation -->
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="http://localhost:4000/">UserFrosting</a>
-        </div>
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="hidden">
-                    <a href="#page-top"></a>
-                </li>
-                <li class="page-scroll">
-                    <a href="http://localhost:4000/#about">About</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="http://localhost:4000/#features">Features</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="http://localhost:4000/#get-started">Get Started</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="http://localhost:4000/#help">Help</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="https://pledgie.com/campaigns/29583" class="nav-highlight">Donate</a>
-                </li>
-                <li>
-                    <a href="https://twitter.com/UserFrosting"><i class="fa fa-twitter"></i></a>
-                </li>
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container-fluid -->
-</nav>
-    
-        <header class="breadcrumb-header">
-    <div class="container">
-        <ol class="breadcrumb">
-            <li><a href="http://localhost:4000/">Home</a></li>
-            <li><a href="http://localhost:4000/#get-started">Getting Started</a></li>            
-            <li class="active">API</li>
-        </ol>
-    </div>
-</header>
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search" autofocus>
+					</div>
+				</form>
 
-Coming soon!
+				<ul class="nav navbar-nav">
+					<li>
+<span>Namespace</span>					</li>
+					<li>
+<span>Class</span>					</li>
 
-          
-        <!-- Footer -->
-        <footer class="text-center">
-            <div class="footer-below">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 col-lg-offset-2">
-                <ul class="list-unstyled text-left">
-                    <li>
-                        <a href="http://localhost:4000/installation">
-                            Requirements and Installation
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://localhost:4000/navigating">
-                            Navigating the Code
-                        </a>
-                    </li>                    
-                    <li>
-                        <a href="http://localhost:4000/tutorials">
-                            Tutorials
-                        </a>
-                    </li>                      
-                    <li>
-                        <a href="http://localhost:4000/components">
-                            Components
-                        </a>
-                    </li>  
-                    <li>
-                        <a href="http://localhost:4000/security">
-                            Security
-                        </a>
-                    </li>
-                    <li>
-                        <a href="http://localhost:4000/0.2.2">
-                            Version 0.2.2
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://gitter.im/alexweissman/UserFrosting">
-                            Chat
-                        </a>
-                    </li>                 
-                </ul>
-            </div>
-            <div class="col-lg-6">
-                <p class="footer-p">
-                    Copyright &copy; Userfrosting 2015
-                </p>
-                <p class="footer-p">
-                    UserFrosting logo adapted from <a href="http://cliparts.co/clipart/1041303">Pink Cupcake by Jay Reed</a>
-                </p>
-                <p class="footer-p">
-                    Site theme is adapted from the <a href="http://startbootstrap.com/template-overviews/freelancer/">Freelancer</a> theme by <a href="http://startbootstrap.com">Start Bootstrap</a>.
-                </p>
-                <p class="footer-p">
-                    Donate via Bitcoin: <code>18Ew1xGy1E3kjH1UyPEgJ3nnDN3ZWUY1N1</code>
-                </p>
-            </div>
-        </div>
-    </div>
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li>
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AccessCondition.html">AccessCondition</a></li>
+				<li><a href="class-ParserNodeFunctionEvaluator.html">ParserNodeFunctionEvaluator</a></li>
+				<li><a href="class-Slim.Extras.Middleware.CsrfGuard.html">Slim\Extras\Middleware\CsrfGuard</a></li>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">UserFrosting\AccessConditionExpression</a></li>
+				<li><a href="class-UserFrosting.AccountController.html">UserFrosting\AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">UserFrosting\AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">UserFrosting\ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">UserFrosting\AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">UserFrosting\Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">UserFrosting\BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">UserFrosting\Database</a></li>
+				<li><a href="class-UserFrosting.DatabaseTable.html">UserFrosting\DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">UserFrosting\EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">UserFrosting\Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">UserFrosting\GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">UserFrosting\GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">UserFrosting\GroupLoader</a></li>
+				<li><a href="class-UserFrosting.InstallController.html">UserFrosting\InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">UserFrosting\Notification</a></li>
+				<li><a href="class-UserFrosting.PageSchema.html">UserFrosting\PageSchema</a></li>
+				<li><a href="class-UserFrosting.SiteSettings.html">UserFrosting\SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UserFrosting\UFModel</a></li>
+				<li><a href="class-UserFrosting.User.html">UserFrosting\User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserFrosting\UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserFrosting\UserCollection</a></li>
+				<li><a href="class-UserFrosting.UserController.html">UserFrosting\UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting\UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserFrosting\UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserFrosting\UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">UserFrosting\AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">UserFrosting\AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">UserFrosting\AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">UserFrosting\AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">UserFrosting\DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
 </div>
 
-<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
-<div class="scroll-top page-scroll visible-xs visible-sm">
-    <a class="btn btn-primary" href="#page-top">
-        <i class="fa fa-chevron-up"></i>
-    </a>
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content">
+	<h1>Overview</h1>
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Namespaces summary</h2></div>
+			<table class="summary table table-bordered table-striped" id="namespaces">
+					<tr>
+						<td class="name"><a href="namespace-None.html">None</a></td>
+					</tr>
+					<tr>
+						<td class="name"><a href="namespace-Slim.html">Slim</a></td>
+					</tr>
+					<tr>
+						<td class="name"><a href="namespace-Slim.Extras.html">Slim\Extras</a></td>
+					</tr>
+					<tr>
+						<td class="name"><a href="namespace-Slim.Extras.Middleware.html">Slim\Extras\Middleware</a></td>
+					</tr>
+					<tr>
+						<td class="name"><a href="namespace-UserFrosting.html">UserFrosting</a></td>
+					</tr>
+			</table>
+		</div>
+
+
 </div>
+	</div>
 
-<!-- Placed at the end of the document so the pages load faster --> 
-<!-- jQuery -->
-<script src="http://localhost:4000/js/jquery.js"></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="http://localhost:4000/js/bootstrap.min.js"></script>
-
-<!-- Plugin JavaScript -->
-<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-<script src="http://localhost:4000/js/classie.js"></script>
-<script src="http://localhost:4000/js/cbpAnimatedHeader.js"></script>
-
-<!-- Contact Form JavaScript -->
-<script src="http://localhost:4000/js/jqBootstrapValidation.js"></script>
-<script src="http://localhost:4000/js/contact_me.js"></script>
-
-<!-- Custom Theme JavaScript -->
-<script src="http://localhost:4000/js/freelancer.js"></script>    
-
-        </footer>
-    </body>
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js?533e23ef2f02bd4b20548834a028566b6eb403e0"></script>
+<script src="elementlist.js?c1e4c041b02a79588112dbdacb15f35377968142"></script>
+</body>
 </html>

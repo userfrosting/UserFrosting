@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class UserFrosting\PageSchema</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-UserFrosting.html" title="Summary of UserFrosting"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li class="active">
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">AccessConditionExpression</a></li>
+				<li><a href="class-UserFrosting.AccountController.html">AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">Database</a></li>
+				<li><a href="class-UserFrosting.DatabaseTable.html">DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">GroupLoader</a></li>
+				<li><a href="class-UserFrosting.InstallController.html">InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">Notification</a></li>
+				<li class="active"><a href="class-UserFrosting.PageSchema.html">PageSchema</a></li>
+				<li><a href="class-UserFrosting.SiteSettings.html">SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UFModel</a></li>
+				<li><a href="class-UserFrosting.User.html">User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserCollection</a></li>
+				<li><a href="class-UserFrosting.UserController.html">UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class PageSchema</h1>
+
+
+	<div class="description">
+	<p>PageSchema class</p>
+
+<p>A PageSchema object manages the CSS and JS assets used by your website.
+This allows you to organize your pages into groups, and assign different sets of CSS and JS resources to include for each group,
+as well as a set of common resources to include in all pages.  It also provides an interface for automatically minifying and combining
+these resources for production builds, using the YUI Compressor.  Minification requires that your web server have write access to the <code>js/min</code>
+and <code>css/min</code> directories.
+The minification tool should be re-run any time a CSS/JS include is added or removed, including those from plugin installation.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-UserFrosting.html">UserFrosting</a><br>
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+			<b>Located at</b> <a href="source-class-UserFrosting.PageSchema.html#5-332" title="Go to source code">models/PageSchema.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-UserFrosting.PageSchema.html#49-62" title="Go to source code">__construct</a>( <span>string <var>$css_uri</var></span>, <span>string <var>$css_path</var></span>, <span>string <var>$js_uri</var></span>, <span>string <var>$js_path</var></span> )</code>
+
+			<div class="description short">
+				<p>Create a new PageSchema instance.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new PageSchema instance.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$css_uri</var></dt>
+						<dd>the root URI of the css directory</dd>
+						<dt><var>$css_path</var></dt>
+						<dd>the root filesystem path of the css directory</dd>
+						<dt><var>$js_uri</var></dt>
+						<dd>the root URI of the css directory</dd>
+						<dt><var>$js_path</var></dt>
+						<dd>the root URI of the css directory</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="registerCSS" id="_registerCSS">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_registerCSS">#</a>
+			<code><a href="source-class-UserFrosting.PageSchema.html#64-79" title="Go to source code">registerCSS</a>( <span>string <var>$group_name</var></span>, <span>string <var>$path</var></span> )</code>
+
+			<div class="description short">
+				<p>Register a CSS include for a specified page group.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Register a CSS include for a specified page group.</p>
+
+<p>The path should be the relative path of the file with respect to the <code>public/css/</code> directory of your website.
+You should use a group name of "common" if you wish to register the CSS resource for all page groups.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$group_name</var></dt>
+						<dd>the name of the page group to register this resource with.  Use "common" to register with all groups.</dd>
+						<dt><var>$path</var></dt>
+						<dd>the path, relative to the <code>public/css/</code> directory of your website, where the file is located.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="registerJS" id="_registerJS">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_registerJS">#</a>
+			<code><a href="source-class-UserFrosting.PageSchema.html#81-108" title="Go to source code">registerJS</a>( <span>string <var>$group_name</var></span>, <span>string <var>$path</var></span>, <span>string <var>$position</var> = <span class="php-quote">&quot;bottom&quot;</span></span> )</code>
+
+			<div class="description short">
+				<p>Register a JS include for a specified page group.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Register a JS include for a specified page group.</p>
+
+<p>The path should be the relative path of the file with respect to the <code>public/js/</code> directory of your website.
+You should use a group name of "common" if you wish to register the JS resource for all page groups.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$group_name</var></dt>
+						<dd>the name of the page group to register this resource with.  Use "common" to register with all groups.</dd>
+						<dt><var>$path</var></dt>
+						<dd>the path, relative to the <code>public/js/</code> directory of your website, where the file is located.</dd>
+						<dt><var>$position</var></dt>
+						<dd>whether to include this JS asset in the head ("top"), or footer ("bottom"), of your website.</dd>
+					</dl></div>
+
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>position must be specified as either "top" or "bottom".
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getCSSIncludes" id="_getCSSIncludes">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getCSSIncludes">#</a>
+			<code><a href="source-class-UserFrosting.PageSchema.html#110-124" title="Go to source code">getCSSIncludes</a>( <span>string <var>$group_name</var> = <span class="php-quote">&quot;common&quot;</span></span>, <span>boolean <var>$minify</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Get an array containing the full paths to all CSS includes to be used for a specified page group.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array containing the full paths to all CSS includes to be used for a specified page group.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$group_name</var></dt>
+						<dd>the name of the page group to retrieve the includes for.  Will automatically include any files that were assigned as "common".  Defaults to "common".</dd>
+						<dt><var>$minify</var></dt>
+						<dd>specify whether or not to minify and combine the includes.  If set to <code>true</code>, the returned array will have the minified combined asset file instead of the unminified files.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>an array containing the full paths of the CSS files to be included.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getJSTopIncludes" id="_getJSTopIncludes">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getJSTopIncludes">#</a>
+			<code><a href="source-class-UserFrosting.PageSchema.html#126-142" title="Go to source code">getJSTopIncludes</a>( <span>string <var>$group_name</var> = <span class="php-quote">&quot;common&quot;</span></span>, <span>boolean <var>$minify</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Get an array containing the full paths to all JS includes to be included in the header for a specified page group.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array containing the full paths to all JS includes to be included in the header for a specified page group.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$group_name</var></dt>
+						<dd>the name of the page group to retrieve the includes for.  Will automatically include any files that were assigned as "common".  Defaults to "common".</dd>
+						<dt><var>$minify</var></dt>
+						<dd>specify whether or not to minify and combine the includes.  If set to <code>true</code>, the returned array will have the minified combined asset file instead of the unminified files.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>an array containing the full paths of the JS files to be included.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getJSBottomIncludes" id="_getJSBottomIncludes">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getJSBottomIncludes">#</a>
+			<code><a href="source-class-UserFrosting.PageSchema.html#144-158" title="Go to source code">getJSBottomIncludes</a>( <span>string <var>$group_name</var> = <span class="php-quote">&quot;common&quot;</span></span>, <span>boolean <var>$minify</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Get an array containing the full paths to all JS includes to be included in the footer for a specified page group.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array containing the full paths to all JS includes to be included in the footer for a specified page group.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$group_name</var></dt>
+						<dd>the name of the page group to retrieve the includes for.  Will automatically include any files that were assigned as "common".  Defaults to "common".</dd>
+						<dt><var>$minify</var></dt>
+						<dd>specify whether or not to minify and combine the includes.  If set to <code>true</code>, the returned array will have the minified combined asset file instead of the unminified files.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>an array containing the full paths of the JS files to be included.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="build" id="_build">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_build">#</a>
+			<code><a href="source-class-UserFrosting.PageSchema.html#205-253" title="Go to source code">build</a>( <span>boolean <var>$debug</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Builds the minified CSS and JS files for the site.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Builds the minified CSS and JS files for the site.</p>
+
+<p>This function uses the Yahoo User Interface (YUI) interface (http://yui.github.io/yuicompressor/) to compress and minify the files as specified in this PageSchema object.  The user account under which the web server runs must have write access to the <code>min</code> subdirectories.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$debug</var></dt>
+						<dd>If set to true, write information about the minification process to the error log.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="_css_uri" id="$_css_uri">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.PageSchema.html#20-23" title="Go to source code"><var>$_css_uri</var></a>
+
+				<div class="description short">
+					<p>the root URI of the css directory</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>the root URI of the css directory</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_css_uri" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_css_path" id="$_css_path">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.PageSchema.html#24-27" title="Go to source code"><var>$_css_path</var></a>
+
+				<div class="description short">
+					<p>the root filesystem path of the css directory</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>the root filesystem path of the css directory</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_css_path" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_js_uri" id="$_js_uri">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.PageSchema.html#28-31" title="Go to source code"><var>$_js_uri</var></a>
+
+				<div class="description short">
+					<p>the root URI of the js directory</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>the root URI of the js directory</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_js_uri" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_js_path" id="$_js_path">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.PageSchema.html#32-35" title="Go to source code"><var>$_js_path</var></a>
+
+				<div class="description short">
+					<p>the root filesystem path of the js directory</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>the root filesystem path of the js directory</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_js_path" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_css_includes" id="$_css_includes">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.PageSchema.html#36-39" title="Go to source code"><var>$_css_includes</var></a>
+
+				<div class="description short">
+					<p>a multidimensional array of css includes, keyed by page group name, each which contains a list of CSS files</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>a multidimensional array of css includes, keyed by page group name, each which contains a list of CSS files</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_css_includes" class="anchor">#</a>
+					<code>[]</code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_js_includes_top" id="$_js_includes_top">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.PageSchema.html#40-43" title="Go to source code"><var>$_js_includes_top</var></a>
+
+				<div class="description short">
+					<p>a multidimensional array of js includes, keyed by page group name, each which contains a list of JS files</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>a multidimensional array of js includes, keyed by page group name, each which contains a list of JS files</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_js_includes_top" class="anchor">#</a>
+					<code>[]</code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_js_includes_bottom" id="$_js_includes_bottom">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.PageSchema.html#44-47" title="Go to source code"><var>$_js_includes_bottom</var></a>
+
+				<div class="description short">
+					<p>a multidimensional array of js includes, keyed by page group name, each which contains a list of JS files</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>a multidimensional array of js includes, keyed by page group name, each which contains a list of JS files</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_js_includes_bottom" class="anchor">#</a>
+					<code>[]</code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

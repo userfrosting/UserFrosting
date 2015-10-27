@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class UserFrosting\SiteSettings</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-UserFrosting.html" title="Summary of UserFrosting"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li class="active">
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">AccessConditionExpression</a></li>
+				<li><a href="class-UserFrosting.AccountController.html">AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">Database</a></li>
+				<li><a href="class-UserFrosting.DatabaseTable.html">DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">GroupLoader</a></li>
+				<li><a href="class-UserFrosting.InstallController.html">InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">Notification</a></li>
+				<li><a href="class-UserFrosting.PageSchema.html">PageSchema</a></li>
+				<li class="active"><a href="class-UserFrosting.SiteSettings.html">SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UFModel</a></li>
+				<li><a href="class-UserFrosting.User.html">User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserCollection</a></li>
+				<li><a href="class-UserFrosting.UserController.html">UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class SiteSettings</h1>
+
+
+	<div class="description">
+	<p>SiteSettings Class</p>
+
+<p>A site settings database object for MySQL databases.</p>
+	</div>
+
+	<dl class="tree well">
+		<dd style="padding-left:0px">
+Illuminate\Database\Eloquent\Model
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+			<a href="class-UserFrosting.UFModel.html"><span>UserFrosting\UFModel</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>UserFrosting\SiteSettings</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-UserFrosting.html">UserFrosting</a><br>
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+				<b>Link:</b>
+				<a href="http://alexanderweissman.com">http://alexanderweissman.com</a><br>
+			<b>Located at</b> <a href="source-class-UserFrosting.SiteSettings.html#7-468" title="Go to source code">models/database/SiteSettings.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#59-92" title="Go to source code">__construct</a>( <span>array <var>$settings</var> = []</span>, <span>array <var>$descriptions</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Construct the site settings object, loading values from the database.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Construct the site settings object, loading values from the database.</p>
+
+<p>Fall back to default settings, if the configuration table cannot be loaded for one reason or another.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$settings</var></dt>
+						<dd>the default settings to use, if they can't be retrieved from the DB.</dd>
+						<dt><var>$descriptions</var></dt>
+						<dd>the default descriptions to use, if they can't be retrieved from the DB.</dd>
+					</dl></div>
+
+
+
+
+					<h4>Overrides</h4>
+					<div class="list"><code><a href="class-UserFrosting.UFModel.html#___construct">UserFrosting\UFModel::__construct</a></code></div>
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="isConsistent" id="_isConsistent">
+
+			<td class="attributes"><code>
+				 public 
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_isConsistent">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#94-119" title="Go to source code">isConsistent</a>( )</code>
+
+			<div class="description short">
+				<p>Determine whether or not all settings defined in this object are present in the database.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Determine whether or not all settings defined in this object are present in the database.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if the table exists and all keys (core userfrosting and plugins) are defined in the table, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="fetchSettings" id="_fetchSettings">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_fetchSettings">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#121-146" title="Go to source code">fetchSettings</a>( )</code>
+
+			<div class="description short">
+				<p>Fetch the settings from the database.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Fetch the settings from the database.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>An array of site settings, containing the name and description for each setting.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="__isset" id="___isset">
+
+			<td class="attributes"><code>
+				 public 
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___isset">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#158-170" title="Go to source code">__isset</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				<p>Magic isset to determine if a particular setting is defined in the environment or core userfrosting settings.
+This does not check plugin settings or descriptions.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Magic isset to determine if a particular setting is defined in the environment or core userfrosting settings.
+This does not check plugin settings or descriptions.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>The name of the setting.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if $name is defined, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="__set" id="___set">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___set">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#172-181" title="Go to source code">__set</a>( <span>string <var>$name</var></span>, <span>string <var>$value</var></span> )</code>
+
+			<div class="description short">
+				<p>Magic setter to set the value of a core userfrosting setting.
+This does not allow you to set the setting description.  To do that, you must use <code>set</code>.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Magic setter to set the value of a core userfrosting setting.
+This does not allow you to set the setting description.  To do that, you must use <code>set</code>.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>The name of the setting.</dd>
+						<dt><var>$value</var></dt>
+						<dd>The value to assign the setting.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="__get" id="___get">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___get">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#183-201" title="Go to source code">__get</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				<p>Magic getter to get the value of an environment or core userfrosting setting.  This does not get plugin settings.  For that, you must use <code>get</code>.
+This will first check if an environment setting of the specified $name exists and return it.  If not, it will then check if a DB setting of that name exists.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Magic getter to get the value of an environment or core userfrosting setting.  This does not get plugin settings.  For that, you must use <code>get</code>.
+This will first check if an environment setting of the specified $name exists and return it.  If not, it will then check if a DB setting of that name exists.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>The name of the setting.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>the value of the setting.
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>The value does not exist in the environment or core settings.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="get" id="_get">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_get">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#203-216" title="Go to source code">get</a>( <span>string <var>$name</var></span>, <span>string <var>$plugin</var> = <span class="php-quote">&quot;userfrosting&quot;</span></span> )</code>
+
+			<div class="description short">
+				<p>Get a persistent setting value for a particular plugin.  Throws an exception if the plugin or value does not exist.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get a persistent setting value for a particular plugin.  Throws an exception if the plugin or value does not exist.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>The name of the setting.</dd>
+						<dt><var>$plugin</var></dt>
+						<dd>The plugin scope of this setting.  Defaults to "userfrosting".</dd>
+					</dl></div>
+
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>The value does not exist for this plugin.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getDescription" id="_getDescription">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getDescription">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#218-231" title="Go to source code">getDescription</a>( <span>string <var>$name</var></span>, <span>string <var>$plugin</var> = <span class="php-quote">&quot;userfrosting&quot;</span></span> )</code>
+
+			<div class="description short">
+				<p>Get the description persistent setting value for a particular plugin.  Throws an exception if the plugin or description does not exist.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the description persistent setting value for a particular plugin.  Throws an exception if the plugin or description does not exist.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>The name of the setting.</dd>
+						<dt><var>$plugin</var></dt>
+						<dd>The plugin scope of this setting.  Defaults to "userfrosting".</dd>
+					</dl></div>
+
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>The description does not exist for this value of the specified plugin.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getEnvironment" id="_getEnvironment">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getEnvironment">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#233-245" title="Go to source code">getEnvironment</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				<p>Get a site environment (non-persistent) variable.  Throws an exception if the variable does not exist.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get a site environment (non-persistent) variable.  Throws an exception if the variable does not exist.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>The name of the site environment variable.</dd>
+					</dl></div>
+
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>The specified environment variable does not exist.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="set" id="_set">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_set">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#247-270" title="Go to source code">set</a>( <span>string <var>$plugin</var></span>, <span>string <var>$name</var></span>, <span> <var>$value</var> = <span class="php-keyword1">null</span></span>, <span> <var>$description</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Create/update a setting value.  If it exists, update, otherwise, create.  If updating, then a value or description set to null tells it to remain the same.  If creating, a value or description of null sets the field to an empty string.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create/update a setting value.  If it exists, update, otherwise, create.  If updating, then a value or description set to null tells it to remain the same.  If creating, a value or description of null sets the field to an empty string.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$plugin</var></dt>
+						<dd>The name of the plugin to associate this setting with.</dd>
+						<dt><var>$name</var></dt>
+						<dd>The name of the setting.</dd>
+						<dt><var>$value</var></dt>
+						<dd></dd>
+						<dt><var>$description</var></dt>
+						<dd></dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="register" id="_register">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_register">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#272-308" title="Go to source code">register</a>( <span>string <var>$plugin</var></span>, <span>string <var>$name</var></span>, <span>string <var>$label</var></span>, <span>string <var>$type</var> = <span class="php-quote">&quot;text&quot;</span></span>, <span>array <var>$options</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Register a setting to appear on the site settings page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Register a setting to appear on the site settings page.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$plugin</var></dt>
+						<dd>The name of the plugin that this setting is associated with.</dd>
+						<dt><var>$name</var></dt>
+						<dd>The name of the site setting.</dd>
+						<dt><var>$label</var></dt>
+						<dd>The label to display next to the site setting field.</dd>
+						<dt><var>$type</var></dt>
+						<dd>"text"|"readonly"|"toggle"|"select" The type of field - plain text, readonly, toggle switch, or dropdown select.</dd>
+						<dt><var>$options</var></dt>
+						<dd>If this field is a switch or dropdown, an associative array of values => labels to be presented.  Switches should have values "0" and "1".</dd>
+					</dl></div>
+
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>The specified plugin or site setting does not exist.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getRegisteredSettings" id="_getRegisteredSettings">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getRegisteredSettings">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#310-324" title="Go to source code">getRegisteredSettings</a>( )</code>
+
+			<div class="description short">
+				<p>Get an array of site settings that have been registered for display on the site settings page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array of site settings that have been registered for display on the site settings page.</p>
+
+<p>The result is a multidimensional array indexed first by plugin name, then by setting name.  Each setting name will then have an array containing values for "value", "label", "type", "options", and "description".
+For example, $settings['userfrosting']['site_title']['value'] = "UserFrosting".</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>The array of site settings.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getLocales" id="_getLocales">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getLocales">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#326-340" title="Go to source code">getLocales</a>( )</code>
+
+			<div class="description short">
+				<p>Get an array of available locales for UserFrosting by scanning the path specified in $app->config('locales.path').</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array of available locales for UserFrosting by scanning the path specified in $app->config('locales.path').</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>An array containing the names of all available locales (e.g. "en_EN", "es_ES", etc.)
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getThemes" id="_getThemes">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getThemes">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#342-356" title="Go to source code">getThemes</a>( )</code>
+
+			<div class="description short">
+				<p>Get an array of available themes for UserFrosting by scanning the path specified in $app->config('themes.path').</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array of available themes for UserFrosting by scanning the path specified in $app->config('themes.path').</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>An array containing the names of all available themes (e.g. "default", "root", etc.)
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getPlugins" id="_getPlugins">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getPlugins">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#358-372" title="Go to source code">getPlugins</a>( )</code>
+
+			<div class="description short">
+				<p>Get an array of installed plugins by scanning the path specified in $app->config('plugins.path').</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array of installed plugins by scanning the path specified in $app->config('plugins.path').</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>An array containing the names of all available themes (e.g. "oauth", "datatables", etc.)
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getSystemInfo" id="_getSystemInfo">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getSystemInfo">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#374-392" title="Go to source code">getSystemInfo</a>( )</code>
+
+			<div class="description short">
+				<p>Get an array of system information for UserFrosting.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array of system information for UserFrosting.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>An array containing a list of information, such as software version, application path, etc.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getLog" id="_getLog">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getLog">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#394-425" title="Go to source code">getLog</a>( <span>integer <var>$lines</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Get the PHP error log as an array of lines.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the PHP error log as an array of lines.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$lines</var></dt>
+						<dd>the number of lines to display.  Set to <code>null</code> to display all lines.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array<br>An array containing 'path', which is the path of the PHP error log, and 'messages', which is an array of error messages sorted with the newest messages first.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="save" id="_save">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_save">#</a>
+			<code><a href="source-class-UserFrosting.SiteSettings.html#427-467" title="Go to source code">save</a>( <span>array <var>$options</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Store the site settings from this object to the database, inserting new records when necessary and updating existing records otherwise.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Store the site settings from this object to the database, inserting new records when necessary and updating existing records otherwise.</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-UserFrosting.UFModel.html#methods">UserFrosting\UFModel</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.UFModel.html#_export">export()</a></code>, 
+				<code><a href="class-UserFrosting.UFModel.html#_queryBuilder">queryBuilder()</a></code>, 
+				<code><a href="class-UserFrosting.UFModel.html#_scopeExclude">scopeExclude()</a></code>, 
+				<code><a href="class-UserFrosting.UFModel.html#_store">store()</a></code>
+			</p>
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="_table_id" id="$_table_id">
+			<td class="attributes"><code>
+				protected static 
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.SiteSettings.html#34-37" title="Go to source code"><var>$_table_id</var></a>
+
+				<div class="description short">
+					<p>The id of the table for the current model.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>The id of the table for the current model.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_table_id" class="anchor">#</a>
+					<code><span class="php-quote">&quot;configuration&quot;</span></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_environment" id="$_environment">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.SiteSettings.html#39-42" title="Go to source code"><var>$_environment</var></a>
+
+				<div class="description short">
+					<p>An array of UF environment variables.  Should be read-only.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>An array of UF environment variables.  Should be read-only.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_environment" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_settings" id="$_settings">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.SiteSettings.html#44-47" title="Go to source code"><var>$_settings</var></a>
+
+				<div class="description short">
+					<p>A list of plugin names => arrays of settings for that plugin.  The core plugin is "userfrosting".</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>A list of plugin names => arrays of settings for that plugin.  The core plugin is "userfrosting".</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_settings" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_descriptions" id="$_descriptions">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.SiteSettings.html#49-52" title="Go to source code"><var>$_descriptions</var></a>
+
+				<div class="description short">
+					<p>A list of plugin names => arrays of descriptions for that plugin.  The core plugin is "userfrosting".</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>A list of plugin names => arrays of descriptions for that plugin.  The core plugin is "userfrosting".</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_descriptions" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_settings_registered" id="$_settings_registered">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.SiteSettings.html#54-57" title="Go to source code"><var>$_settings_registered</var></a>
+
+				<div class="description short">
+					<p>A list of settings that have been registered to appear in the site settings interface.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>A list of settings that have been registered to appear in the site settings interface.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_settings_registered" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-UserFrosting.UFModel.html#properties">UserFrosting\UFModel</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.UFModel.html#$app"><var>$app</var></a></code>, 
+				<code><a href="class-UserFrosting.UFModel.html#$timestamps"><var>$timestamps</var></a></code>
+			</p>
+		</div>
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

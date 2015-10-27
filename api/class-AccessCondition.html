@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class AccessCondition</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-None.html" title="Summary of None"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li>
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-AccessCondition.html">AccessCondition</a></li>
+				<li><a href="class-ParserNodeFunctionEvaluator.html">ParserNodeFunctionEvaluator</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class AccessCondition</h1>
+
+
+	<div class="description">
+	<p>AccessCondition class</p>
+
+<p>This class contains static methods to be used in conditional clauses for authorization hooks.
+Here you may add your own methods for use in access hook conditional expressions.
+Every method of this class MUST be static and return a boolean value.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+				<b>See:</b>
+				http://www.userfrosting.com/components/#authorization<br>
+			<b>Located at</b> <a href="source-class-AccessCondition.html#3-96" title="Go to source code">models/auth/AccessCondition.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="always" id="_always">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_always">#</a>
+			<code><a href="source-class-AccessCondition.html#16-23" title="Go to source code">always</a>( )</code>
+
+			<div class="description short">
+				<p>Unconditionally grant permission - use carefully!</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Unconditionally grant permission - use carefully!</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>returns true no matter what.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="equals" id="_equals">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_equals">#</a>
+			<code><a href="source-class-AccessCondition.html#25-33" title="Go to source code">equals</a>( <span>mixed <var>$val1</var></span>, <span>mixed <var>$val2</var></span> )</code>
+
+			<div class="description short">
+				<p>Check if the specified values are identical to one another (strict comparison).</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if the specified values are identical to one another (strict comparison).</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$val1</var></dt>
+						<dd>the first value to compare.</dd>
+						<dt><var>$val2</var></dt>
+						<dd>the second value to compare.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if the values are strictly equal, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="equals_num" id="_equals_num">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_equals_num">#</a>
+			<code><a href="source-class-AccessCondition.html#35-48" title="Go to source code">equals_num</a>( <span>mixed <var>$val1</var></span>, <span>mixed <var>$val2</var></span> )</code>
+
+			<div class="description short">
+				<p>Check if the specified values are numeric, and if so, if they are equal to each other.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if the specified values are numeric, and if so, if they are equal to each other.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$val1</var></dt>
+						<dd>the first value to compare.</dd>
+						<dt><var>$val2</var></dt>
+						<dd>the second value to compare.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if the values are numeric and equal, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="subset_keys" id="_subset_keys">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_subset_keys">#</a>
+			<code><a href="source-class-AccessCondition.html#50-60" title="Go to source code">subset_keys</a>( <span>array[mixed] <var>$needle</var></span>, <span>array[mixed] <var>$haystack</var></span> )</code>
+
+			<div class="description short">
+				<p>Check if all keys of the array $needle are present in the values of $haystack.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if all keys of the array $needle are present in the values of $haystack.</p>
+
+<p>This function is useful for whitelisting an array of key-value parameters.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$needle</var></dt>
+						<dd>the array whose keys we should look for in $haystack</dd>
+						<dt><var>$haystack</var></dt>
+						<dd>the array of values to search.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if every key in $needle is present in the values of $haystack, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="subset" id="_subset">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_subset">#</a>
+			<code><a href="source-class-AccessCondition.html#62-71" title="Go to source code">subset</a>( <span>array[mixed] <var>$needle</var></span>, <span>array[mixed] <var>$haystack</var></span> )</code>
+
+			<div class="description short">
+				<p>Check if all values in the array $needle are present in the values of $haystack.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if all values in the array $needle are present in the values of $haystack.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$needle</var></dt>
+						<dd>the array whose values we should look for in $haystack</dd>
+						<dt><var>$haystack</var></dt>
+						<dd>the array of values to search.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if every value in $needle is present in the values of $haystack, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="in" id="_in">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_in">#</a>
+			<code><a href="source-class-AccessCondition.html#73-82" title="Go to source code">in</a>( <span>mixed <var>$needle</var></span>, <span>array[mixed] <var>$haystack</var></span> )</code>
+
+			<div class="description short">
+				<p>Check if the specified value $needle is in the values of $haystack.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if the specified value $needle is in the values of $haystack.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$needle</var></dt>
+						<dd>the value to look for in $haystack</dd>
+						<dt><var>$haystack</var></dt>
+						<dd>the array of values to search.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if $needle is present in the values of $haystack, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="in_group" id="_in_group">
+
+			<td class="attributes"><code>
+				 public static
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_in_group">#</a>
+			<code><a href="source-class-AccessCondition.html#84-95" title="Go to source code">in_group</a>( <span>integer <var>$user_id</var></span>, <span>integer <var>$group_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Check if the specified user (by user_id) is in a particular group.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Check if the specified user (by user_id) is in a particular group.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$user_id</var></dt>
+						<dd>the id of the user.</dd>
+						<dt><var>$group_id</var></dt>
+						<dd>the id of the group.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if the user is in the group, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

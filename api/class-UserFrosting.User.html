@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class UserFrosting\User</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-UserFrosting.html" title="Summary of UserFrosting"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li class="active">
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">AccessConditionExpression</a></li>
+				<li><a href="class-UserFrosting.AccountController.html">AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">Database</a></li>
+				<li><a href="class-UserFrosting.DatabaseTable.html">DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">GroupLoader</a></li>
+				<li><a href="class-UserFrosting.InstallController.html">InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">Notification</a></li>
+				<li><a href="class-UserFrosting.PageSchema.html">PageSchema</a></li>
+				<li><a href="class-UserFrosting.SiteSettings.html">SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UFModel</a></li>
+				<li class="active"><a href="class-UserFrosting.User.html">User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserCollection</a></li>
+				<li><a href="class-UserFrosting.UserController.html">UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class User</h1>
+
+
+	<div class="description">
+	<p>User Class</p>
+
+<p>Represents a User object as stored in the database.</p>
+	</div>
+
+	<dl class="tree well">
+		<dd style="padding-left:0px">
+Illuminate\Database\Eloquent\Model
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+			<a href="class-UserFrosting.UFModel.html"><span>UserFrosting\UFModel</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>UserFrosting\User</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-UserFrosting.html">UserFrosting</a><br>
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+				<b>See:</b>
+				http://www.userfrosting.com/tutorials/lesson-3-data-model/<br>
+			<b>Located at</b> <a href="source-class-UserFrosting.User.html#7-586" title="Go to source code">models/database/User.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-UserFrosting.User.html#56-66" title="Go to source code">__construct</a>( <span> <var>$properties</var> = []</span>, <span> <var>$id</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Create a new User object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new User object.</p>
+
+
+
+
+
+
+					<h4>Overrides</h4>
+					<div class="list"><code><a href="class-UserFrosting.UFModel.html#___construct">UserFrosting\UFModel::__construct</a></code></div>
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="isGuest" id="_isGuest">
+
+			<td class="attributes"><code>
+				 public 
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_isGuest">#</a>
+			<code><a href="source-class-UserFrosting.User.html#68-78" title="Go to source code">isGuest</a>( )</code>
+
+			<div class="description short">
+				<p>Determine whether or not this User object is a guest user (id set to <code>user_id_guest</code>) or an authenticated user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Determine whether or not this User object is a guest user (id set to <code>user_id_guest</code>) or an authenticated user.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>True if the user is a guest, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="isLoggedIn" id="_isLoggedIn">
+
+			<td class="attributes"><code>
+				 public static
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_isLoggedIn">#</a>
+			<code><a href="source-class-UserFrosting.User.html#80-85" title="Go to source code">isLoggedIn</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="fresh" id="_fresh">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_fresh">#</a>
+			<code><a href="source-class-UserFrosting.User.html#87-98" title="Go to source code">fresh</a>( <span>array <var>$options</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Refresh the User and their associated Groups from the DB.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Refresh the User and their associated Groups from the DB.</p>
+
+
+
+
+
+					<h4>See</h4>
+					<div class="list">
+							http://stackoverflow.com/a/27748794/2970321<br>
+					</div>
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="__isset" id="___isset">
+
+			<td class="attributes"><code>
+				 public 
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___isset">#</a>
+			<code><a href="source-class-UserFrosting.User.html#100-114" title="Go to source code">__isset</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				<p>Determine if the property for this object exists.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Determine if the property for this object exists.</p>
+
+<p>Every property in __get must also be implemented here for Twig to recognize it.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>the name of the property to check.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if the property is defined, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="__get" id="___get">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___get">#</a>
+			<code><a href="source-class-UserFrosting.User.html#116-144" title="Go to source code">__get</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				<p>Get a property for this object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get a property for this object.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>the name of the property to retrieve.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>the associated property.
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>the property does not exist for this object.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="newCollection" id="_newCollection">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.UserCollection.html">UserFrosting\UserCollection</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_newCollection">#</a>
+			<code><a href="source-class-UserFrosting.User.html#146-153" title="Go to source code">newCollection</a>( <span>array <var>$models</var> = <span class="php-keyword1">Array</span>()</span> )</code>
+
+			<div class="description short">
+				<p>Extends Eloquent's Collection models.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Extends Eloquent's Collection models.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.UserCollection.html">UserFrosting\UserCollection</a></code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="events" id="_events">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_events">#</a>
+			<code><a href="source-class-UserFrosting.User.html#155-161" title="Go to source code">events</a>( )</code>
+
+			<div class="description short">
+				<p>Get all events for this user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get all events for this user.</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="lastEventTime" id="_lastEventTime">
+
+			<td class="attributes"><code>
+				 public 
+				string|null
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_lastEventTime">#</a>
+			<code><a href="source-class-UserFrosting.User.html#163-173" title="Go to source code">lastEventTime</a>( <span> <var>$type</var></span> )</code>
+
+			<div class="description short">
+				<p>Get the most recent time for a specified event type for this user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the most recent time for a specified event type for this user.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						string|null<br>The last event time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an event of this type doesn't exist.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="lastEvent" id="_lastEvent">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_lastEvent">#</a>
+			<code><a href="source-class-UserFrosting.User.html#175-185" title="Go to source code">lastEvent</a>( <span> <var>$type</var></span> )</code>
+
+			<div class="description short">
+				<p>Get the most recent event of a specified type for this user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the most recent event of a specified type for this user.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="groups" id="_groups">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.Group.html">UserFrosting\Group</a>[]</code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_groups">#</a>
+			<code><a href="source-class-UserFrosting.User.html#187-199" title="Go to source code">groups</a>( )</code>
+
+			<div class="description short">
+				<p>Get an array containing all groups to which this user belongs.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array containing all groups to which this user belongs.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.Group.html">UserFrosting\Group</a>[]</code><br>An array of Group objects, indexed by the group id.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getGroups" id="_getGroups">
+
+			<td class="attributes"><code>
+				 public 
+				array[Group]
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getGroups">#</a>
+			<code><a href="source-class-UserFrosting.User.html#214-231" title="Go to source code">getGroups</a>( )</code>
+
+			<div class="description short">
+				<p>Get the groups to which this User currently belongs, as currently represented in this object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the groups to which this User currently belongs, as currently represented in this object.</p>
+
+<p>This method caches the data after the first time loading from the database.  To force a refresh, use the <code>fresh</code> method.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array[Group]<br>An array of Group objects, indexed by group_id, to which this User belongs.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getGroupIds" id="_getGroupIds">
+
+			<td class="attributes"><code>
+				 public 
+				array[int]
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getGroupIds">#</a>
+			<code><a href="source-class-UserFrosting.User.html#233-252" title="Go to source code">getGroupIds</a>( )</code>
+
+			<div class="description short">
+				<p>Get an array of group_ids to which this User currently belongs, as currently represented in this object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get an array of group_ids to which this User currently belongs, as currently represented in this object.</p>
+
+<p>This method does NOT modify the database.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array[int]<br>An array of group_ids to which this User belongs.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addGroup" id="_addGroup">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.User.html">UserFrosting\User</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addGroup">#</a>
+			<code><a href="source-class-UserFrosting.User.html#254-277" title="Go to source code">addGroup</a>( <span>integer <var>$group_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Add a group_id to the list of _groups to which this User belongs, checking that the Group exists and the User isn't already a member.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Add a group_id to the list of _groups to which this User belongs, checking that the Group exists and the User isn't already a member.</p>
+
+<p>This method does NOT modify the database.  Call <code>store</code> to persist to database.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$group_id</var></dt>
+						<dd>The id of the group to add the user to.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.User.html">UserFrosting\User</a></code><br>this User object.
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>The specified group does not exist.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="removeGroup" id="_removeGroup">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.User.html">UserFrosting\User</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_removeGroup">#</a>
+			<code><a href="source-class-UserFrosting.User.html#279-296" title="Go to source code">removeGroup</a>( <span>integer <var>$group_id</var></span> )</code>
+
+			<div class="description short">
+				<p>Remove a group_id from the list of _groups to which this User belongs, checking that the User is already a member.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Remove a group_id from the list of _groups to which this User belongs, checking that the User is already a member.</p>
+
+<p>This method does NOT modify the database. Call <code>store</code> to persist to database.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$group_id</var></dt>
+						<dd>The id of the group to remove the user from.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.User.html">UserFrosting\User</a></code><br>this User object.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getTheme" id="_getTheme">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getTheme">#</a>
+			<code><a href="source-class-UserFrosting.User.html#298-311" title="Go to source code">getTheme</a>( )</code>
+
+			<div class="description short">
+				<p>Get the theme for this user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get the theme for this user.</p>
+
+<p>The theme for the root user is always 'root'.  The theme for guest users is 'default'.  Any other users will have their themes determined by their primary group.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						string<br>The theme for this user.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getPrimaryGroup" id="_getPrimaryGroup">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.Group.html">UserFrosting\Group</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getPrimaryGroup">#</a>
+			<code><a href="source-class-UserFrosting.User.html#313-325" title="Go to source code">getPrimaryGroup</a>( )</code>
+
+			<div class="description short">
+				<p>Get this user's primary group.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get this user's primary group.</p>
+
+<p>This method caches the data after the first time loading from the database.  To force a refresh, use the <code>fresh</code> method.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.Group.html">UserFrosting\Group</a></code><br>the Group object representing the user's primary group.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="newEventSignUp" id="_newEventSignUp">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_newEventSignUp">#</a>
+			<code><a href="source-class-UserFrosting.User.html#339-356" title="Go to source code">newEventSignUp</a>( <span><code><a href="class-UserFrosting.User.html">UserFrosting\User</a></code> <var>$creator</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Create an event saying that this user registered their account, or an account was created for them.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create an event saying that this user registered their account, or an account was created for them.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$creator</var></dt>
+						<dd>optional The User who created this account.  If set, this will be recorded in the event description.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="newEventSignIn" id="_newEventSignIn">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_newEventSignIn">#</a>
+			<code><a href="source-class-UserFrosting.User.html#358-370" title="Go to source code">newEventSignIn</a>( )</code>
+
+			<div class="description short">
+				<p>Create a new user sign-in event.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new user sign-in event.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="newEventVerificationRequest" id="_newEventVerificationRequest">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_newEventVerificationRequest">#</a>
+			<code><a href="source-class-UserFrosting.User.html#372-385" title="Go to source code">newEventVerificationRequest</a>( )</code>
+
+			<div class="description short">
+				<p>Create a new email verification request event.  Also, generates a new secret token.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new email verification request event.  Also, generates a new secret token.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="newEventPasswordReset" id="_newEventPasswordReset">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_newEventPasswordReset">#</a>
+			<code><a href="source-class-UserFrosting.User.html#387-401" title="Go to source code">newEventPasswordReset</a>( )</code>
+
+			<div class="description short">
+				<p>Create a new password reset request event.  Also, generates a new secret token.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new password reset request event.  Also, generates a new secret token.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a></code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="save" id="_save">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_save">#</a>
+			<code><a href="source-class-UserFrosting.User.html#403-420" title="Go to source code">save</a>( <span>array <var>$options</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Store the User to the database, along with any group associations and new events, updating as necessary.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Store the User to the database, along with any group associations and new events, updating as necessary.</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="delete" id="_delete">
+
+			<td class="attributes"><code>
+				 public 
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_delete">#</a>
+			<code><a href="source-class-UserFrosting.User.html#422-443" title="Go to source code">delete</a>( )</code>
+
+			<div class="description short">
+				<p>Delete this user from the database, along with any linked groups and authorization rules</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Delete this user from the database, along with any linked groups and authorization rules</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>true if the deletion was successful, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="checkAccess" id="_checkAccess">
+
+			<td class="attributes"><code>
+				 public 
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_checkAccess">#</a>
+			<code><a href="source-class-UserFrosting.User.html#445-488" title="Go to source code">checkAccess</a>( <span>string <var>$hook</var></span>, <span>array <var>$params</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Checks whether or not this user has access for a particular authorization hook.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Checks whether or not this user has access for a particular authorization hook.</p>
+
+<p>Determine if this user has access to the given $hook under the given $params.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$hook</var></dt>
+						<dd>The authorization hook to check for access.</dd>
+						<dt><var>$params</var></dt>
+						<dd><p>$params[optional] An array of field names => values, specifying any additional data to provide the authorization module
+when determining whether or not this user has access.</p></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>True if the user has access, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="verifyPassword" id="_verifyPassword">
+
+			<td class="attributes"><code>
+				 public 
+				boolean
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_verifyPassword">#</a>
+			<code><a href="source-class-UserFrosting.User.html#490-519" title="Go to source code">verifyPassword</a>( <span>string <var>$password</var></span> )</code>
+
+			<div class="description short">
+				<p>Verify a plaintext password against the user's hashed password.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Verify a plaintext password against the user's hashed password.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$password</var></dt>
+						<dd>The plaintext password to verify.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						boolean<br>True if the password matches, false otherwise.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="login" id="_login">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_login">#</a>
+			<code><a href="source-class-UserFrosting.User.html#521-546" title="Go to source code">login</a>( )</code>
+
+			<div class="description short">
+				<p>Log this user in.  This basically updates the user's sign-in time, and updates any old password hashes.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Log this user in.  This basically updates the user's sign-in time, and updates any old password hashes.</p>
+
+<p>You assign this user's id to $_SESSION["userfrosting"]["user_id"] after calling login, so that it will persist in the session.</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="logout" id="_logout">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_logout">#</a>
+			<code><a href="source-class-UserFrosting.User.html#548-570" title="Go to source code">logout</a>( <span>boolean <var>$complete</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Log this user out.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Log this user out.</p>
+
+<p>Destroys the PHP session as well.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$complete</var></dt>
+						<dd>If set to true, will also clear out any persistent sessions.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="generateActivationToken" id="_generateActivationToken">
+
+			<td class="attributes"><code>
+				 public static
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_generateActivationToken">#</a>
+			<code><a href="source-class-UserFrosting.User.html#572-584" title="Go to source code">generateActivationToken</a>( <span>string <var>$gen</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Generate an activation token for a user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Generate an activation token for a user.</p>
+
+<p>This generates a token to use for activating a new account, resetting a lost password, etc.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$gen</var></dt>
+						<dd>specify an existing token that, if we happen to generate the same value, we should regenerate on.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-UserFrosting.UFModel.html#methods">UserFrosting\UFModel</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.UFModel.html#_export">export()</a></code>, 
+				<code><a href="class-UserFrosting.UFModel.html#_queryBuilder">queryBuilder()</a></code>, 
+				<code><a href="class-UserFrosting.UFModel.html#_scopeExclude">scopeExclude()</a></code>, 
+				<code><a href="class-UserFrosting.UFModel.html#_store">store()</a></code>
+			</p>
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="_table_id" id="$_table_id">
+			<td class="attributes"><code>
+				protected static 
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.User.html#33-36" title="Go to source code"><var>$_table_id</var></a>
+
+				<div class="description short">
+					<p>The id of the table for the current model.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>The id of the table for the current model.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_table_id" class="anchor">#</a>
+					<code><span class="php-quote">&quot;user&quot;</span></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_groups" id="$_groups">
+			<td class="attributes"><code>
+				protected  
+				int[]
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.User.html#37-40" title="Go to source code"><var>$_groups</var></a>
+
+				<div class="description short">
+					<p>An array of group_ids to which this user belongs. An empty array means that the user's groups have not been loaded yet.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>An array of group_ids to which this user belongs. An empty array means that the user's groups have not been loaded yet.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_groups" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_primary_group" id="$_primary_group">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-UserFrosting.Group.html">UserFrosting\Group</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.User.html#41-44" title="Go to source code"><var>$_primary_group</var></a>
+
+				<div class="description short">
+					<p>The primary group for the user.  TODO: separate groups from roles</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>The primary group for the user.  TODO: separate groups from roles</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_primary_group" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="new_events" id="$new_events">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-UserFrosting.UserEvent.html">UserFrosting\UserEvent</a>[]</code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.User.html#46-49" title="Go to source code"><var>$new_events</var></a>
+
+				<div class="description short">
+					<p>An array of events to be inserted for this User when save is called.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>An array of events to be inserted for this User when save is called.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$new_events" class="anchor">#</a>
+					<code>[]</code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="timestamps" id="$timestamps">
+			<td class="attributes"><code>
+				public  
+				boolean
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.User.html#51-54" title="Go to source code"><var>$timestamps</var></a>
+
+				<div class="description short">
+					<p>Enable timestamps for Users.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>Enable timestamps for Users.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$timestamps" class="anchor">#</a>
+					<code><span class="php-keyword1">true</span></code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-UserFrosting.UFModel.html#properties">UserFrosting\UFModel</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.UFModel.html#$app"><var>$app</var></a></code>
+			</p>
+		</div>
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

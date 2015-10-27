@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class UserFrosting\DatabaseTable</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-UserFrosting.html" title="Summary of UserFrosting"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li class="active">
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">AccessConditionExpression</a></li>
+				<li><a href="class-UserFrosting.AccountController.html">AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">Database</a></li>
+				<li class="active"><a href="class-UserFrosting.DatabaseTable.html">DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">GroupLoader</a></li>
+				<li><a href="class-UserFrosting.InstallController.html">InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">Notification</a></li>
+				<li><a href="class-UserFrosting.PageSchema.html">PageSchema</a></li>
+				<li><a href="class-UserFrosting.SiteSettings.html">SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UFModel</a></li>
+				<li><a href="class-UserFrosting.User.html">User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserCollection</a></li>
+				<li><a href="class-UserFrosting.UserController.html">UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class DatabaseTable</h1>
+
+
+	<div class="description">
+	<p>DatabaseTable Class</p>
+
+<p>A data class representing a database table.  Specifies the table name and whitelisted columns.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-UserFrosting.html">UserFrosting</a><br>
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+				<b>See:</b>
+				http://www.userfrosting.com/tutorials/lesson-3-data-model/<br>
+			<b>Located at</b> <a href="source-class-UserFrosting.DatabaseTable.html#5-80" title="Go to source code">models/database/DatabaseTable.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-UserFrosting.DatabaseTable.html#27-39" title="Go to source code">__construct</a>( <span>string <var>$name</var></span>, <span>array[string] <var>$columns</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Create a new DatabaseTable instance.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new DatabaseTable instance.</p>
+
+<p>A DatabaseTable object is used to encapsulate information about a particular table in your database.
+UserFrosting expects all tables to have an <code>id</code> column as their primary key.
+You can register it with the main data model by using Database::setSchemaTable().</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>the name of the table in your database.</dd>
+						<dt><var>$columns</var></dt>
+						<dd>a list of the column names, not including the <code>id</code> column (which is already assumed to exist).</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addColumns" id="_addColumns">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-UserFrosting.DatabaseTable.html">UserFrosting\DatabaseTable</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addColumns">#</a>
+			<code><a href="source-class-UserFrosting.DatabaseTable.html#41-51" title="Go to source code">addColumns</a>( )</code>
+
+			<div class="description short">
+				<p>Add additional columns to this DatabaseTable instance.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Add additional columns to this DatabaseTable instance.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-UserFrosting.DatabaseTable.html">UserFrosting\DatabaseTable</a></code><br>this DatabaseTable object.
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setName" id="_setName">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setName">#</a>
+			<code><a href="source-class-UserFrosting.DatabaseTable.html#53-61" title="Go to source code">setName</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				<p>Set the table name for this DatabaseTable instance.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Set the table name for this DatabaseTable instance.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>the new name for this DatabaseTable.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="__get" id="___get">
+
+			<td class="attributes"><code>
+				 public 
+				string|array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___get">#</a>
+			<code><a href="source-class-UserFrosting.DatabaseTable.html#63-78" title="Go to source code">__get</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				<p>Magic getter for DatabaseTable properties.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Magic getter for DatabaseTable properties.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd>the property to return (either 'name' or 'columns').</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string|array<br>the table name, or an array containing the table columns
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						Exception<br>attempted to access a nonexistent property.
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="_name" id="$_name">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.DatabaseTable.html#17-20" title="Go to source code"><var>$_name</var></a>
+
+				<div class="description short">
+					<p>The name of the table.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>The name of the table.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_name" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="_columns" id="$_columns">
+			<td class="attributes"><code>
+				protected  
+				array[string]
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.DatabaseTable.html#22-25" title="Go to source code"><var>$_columns</var></a>
+
+				<div class="description short">
+					<p>A list of the allowed columns for this table.  The <code>id</code> column is already assumed.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>A list of the allowed columns for this table.  The <code>id</code> column is already assumed.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$_columns" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Magic properties</h3></div>
+			<table class="summary table table-bordered table-striped properties" id="magicProperties">
+		<tr data-order="name" id="m$name">
+			<td class="attributes"><code>
+				public  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.DatabaseTable.html#9" title="Go to source code"><var>$name</var></a>
+
+				<div class="description short">
+					<p>the name of the database table.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="columns" id="m$columns">
+			<td class="attributes"><code>
+				public  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-UserFrosting.DatabaseTable.html#10" title="Go to source code"><var>$columns</var></a>
+
+				<div class="description short">
+					<p>an array containing the names of the columns in this database (not including the <code>id</code> column).</p>
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

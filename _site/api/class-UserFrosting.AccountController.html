@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class UserFrosting\AccountController</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-UserFrosting.html" title="Summary of UserFrosting"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li class="active">
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">AccessConditionExpression</a></li>
+				<li class="active"><a href="class-UserFrosting.AccountController.html">AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">Database</a></li>
+				<li><a href="class-UserFrosting.DatabaseTable.html">DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">GroupLoader</a></li>
+				<li><a href="class-UserFrosting.InstallController.html">InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">Notification</a></li>
+				<li><a href="class-UserFrosting.PageSchema.html">PageSchema</a></li>
+				<li><a href="class-UserFrosting.SiteSettings.html">SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UFModel</a></li>
+				<li><a href="class-UserFrosting.User.html">User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserCollection</a></li>
+				<li><a href="class-UserFrosting.UserController.html">UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class AccountController</h1>
+
+
+	<div class="description">
+	<p>AccountController Class</p>
+
+<p>Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.</p>
+	</div>
+
+	<dl class="tree well">
+		<dd style="padding-left:0px">
+			<a href="class-UserFrosting.BaseController.html"><span>UserFrosting\BaseController</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>UserFrosting\AccountController</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-UserFrosting.html">UserFrosting</a><br>
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+				<b>Link:</b>
+				<a href="http://www.userfrosting.com/navigating/#structure">http://www.userfrosting.com/navigating/#structure</a><br>
+			<b>Located at</b> <a href="source-class-UserFrosting.AccountController.html#5-946" title="Go to source code">controllers/AccountController.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#16-23" title="Go to source code">__construct</a>( <span><code><a href="class-UserFrosting.UserFrosting.html">UserFrosting\UserFrosting</a></code> <var>$app</var></span> )</code>
+
+			<div class="description short">
+				<p>Create a new AccountController object.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Create a new AccountController object.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$app</var></dt>
+						<dd>The main UserFrosting app.</dd>
+					</dl></div>
+
+
+
+
+					<h4>Overrides</h4>
+					<div class="list"><code><a href="class-UserFrosting.BaseController.html#___construct">UserFrosting\BaseController::__construct</a></code></div>
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageHome" id="_pageHome">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageHome">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#25-33" title="Go to source code">pageHome</a>( )</code>
+
+			<div class="description short">
+				<p>Renders the default home page for UserFrosting.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the default home page for UserFrosting.</p>
+
+<p>By default, this is the page that non-authenticated users will first see when they navigate to your website's root.
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageLogin" id="_pageLogin">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageLogin">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#35-52" title="Go to source code">pageLogin</a>( )</code>
+
+			<div class="description short">
+				<p>Renders the login page for UserFrosting.
+By definition, this is a "public page" (does not require authentication).
+Request type: GET</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the login page for UserFrosting.
+By definition, this is a "public page" (does not require authentication).
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageRegister" id="_pageRegister">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageRegister">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#54-92" title="Go to source code">pageRegister</a>( <span>boolean <var>$can_register</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Attempts to render the account registration page for UserFrosting.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Attempts to render the account registration page for UserFrosting.</p>
+
+<p>This allows new (non-authenticated) users to create a new account for themselves on your website.
+Request type: GET</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$can_register</var></dt>
+						<dd>Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageForgotPassword" id="_pageForgotPassword">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageForgotPassword">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#94-109" title="Go to source code">pageForgotPassword</a>( )</code>
+
+			<div class="description short">
+				<p>Render the "forgot password" page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Render the "forgot password" page.</p>
+
+<p>This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
+By default, this is a "public page" (does not require authentication).
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageSetPassword" id="_pageSetPassword">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageSetPassword">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#111-136" title="Go to source code">pageSetPassword</a>( <span>boolean <var>$flag_new_user</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Render the "set password" page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Render the "set password" page.</p>
+
+<p>If $flag_new_user is set to true, this renders the page where new users who have had accounts created
+for them by another user, can set their password.  If set to false, this renders the new password page for password reset requests.
+By default, this is a "public page" (does not require authentication).
+Request type: GET</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$flag_new_user</var></dt>
+						<dd>Set to true if this is for a new user who doesn't yet have a password.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageResendActivation" id="_pageResendActivation">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageResendActivation">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#138-153" title="Go to source code">pageResendActivation</a>( )</code>
+
+			<div class="description short">
+				<p>Render the "resend account activation link" page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Render the "resend account activation link" page.</p>
+
+<p>This is a form that allows users who lost their account activation link to have the link resent to their email address.
+By default, this is a "public page" (does not require authentication).
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageAccountSettings" id="_pageAccountSettings">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageAccountSettings">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#155-176" title="Go to source code">pageAccountSettings</a>( )</code>
+
+			<div class="description short">
+				<p>Account settings page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Account settings page.</p>
+
+<p>Provides a form for users to modify various properties of their account, such as display name, email, locale, etc.
+Any fields that the user does not have permission to modify will be automatically disabled.
+This page requires authentication.
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageAccountCompromised" id="_pageAccountCompromised">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageAccountCompromised">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#178-187" title="Go to source code">pageAccountCompromised</a>( )</code>
+
+			<div class="description short">
+				<p>Account compromised page.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Account compromised page.</p>
+
+<p>Warns the user that their account may have been compromised due to a stolen "remember me" cookie.
+This page is "public access".
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="login" id="_login">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_login">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#189-301" title="Go to source code">login</a>( )</code>
+
+			<div class="description short">
+				<p>Processes an account login request.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes an account login request.</p>
+
+<p>Processes the request from the form on the login page, checking that:
+1. The user is not already logged in.
+2. Email login is enabled, if an email address was used.
+3. The user account exists.
+4. The user account is enabled and active.
+5. The user entered a valid username/email and password.
+This route, by definition, is "public access".
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="logout" id="_logout">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_logout">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#303-313" title="Go to source code">logout</a>( <span> <var>$complete</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Processes an account logout request.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes an account logout request.</p>
+
+<p>Logs the current user out.
+This route is "public access".
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="register" id="_register">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_register">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#315-471" title="Go to source code">register</a>( )</code>
+
+			<div class="description short">
+				<p>Processes an new account registration request.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes an new account registration request.</p>
+
+<p>Processes the request from the form on the registration page, checking that:
+1. The honeypot was not modified;
+2. The master account has already been created (during installation);
+3. Account registration is enabled;
+4. The user is not already logged in;
+5. Valid information was entered;
+6. The captcha, if enabled, is correct;
+7. The username and email are not already taken.
+Automatically sends an activation link upon success, if account activation is enabled.
+This route is "public access".
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="activate" id="_activate">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_activate">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#473-513" title="Go to source code">activate</a>( )</code>
+
+			<div class="description short">
+				<p>Processes an new account activation request.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes an new account activation request.</p>
+
+<p>Processes the request from the account activation link that was emailed to the user, checking that:
+1. The token provided matches a user in the database;
+2. The user account is not already active;
+This route is "public access".
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="forgotPassword" id="_forgotPassword">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_forgotPassword">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#515-580" title="Go to source code">forgotPassword</a>( )</code>
+
+			<div class="description short">
+				<p>Processes a request to email a forgotten password reset link to the user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes a request to email a forgotten password reset link to the user.</p>
+
+<p>Processes the request from the form on the "forgot password" page, checking that:
+1. The provided email address belongs to a registered account;
+2. The submitted data is valid.
+Note that we have removed the requirement that a password reset request not already be in progress.
+This is because we need to allow users to re-request a reset, even if they lose the first reset email.
+This route is "public access".
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setPassword" id="_setPassword">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setPassword">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#582-686" title="Go to source code">setPassword</a>( <span> <var>$flag_new_user</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Processes a request to reset a user's password, or set the password for a new user.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes a request to reset a user's password, or set the password for a new user.</p>
+
+<p>Processes the request from the password create/reset form, which should have the secret token embedded in it, checking that:
+1. The provided secret token is associated with an existing user account;
+2. The user has a lost password request in progress;
+3. The token has not expired;
+4. The submitted data (new password) is valid.
+This route is "public access".
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="denyResetPassword" id="_denyResetPassword">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_denyResetPassword">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#688-728" title="Go to source code">denyResetPassword</a>( )</code>
+
+			<div class="description short">
+				<p>Processes a request to cancel a password reset request.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes a request to cancel a password reset request.</p>
+
+<p>This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
+Processes the request from the password reset link, checking that:
+1. The provided secret token is associated with an existing user account.
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="resendActivation" id="_resendActivation">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_resendActivation">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#730-819" title="Go to source code">resendActivation</a>( )</code>
+
+			<div class="description short">
+				<p>Processes a request to resend the activation email for a new user account.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes a request to resend the activation email for a new user account.</p>
+
+<p>Processes the request from the resend activation email form, checking that:
+1. The provided username is associated with an existing user account;
+2. The provided email matches the user account;
+3. The user account is not already active;
+4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
+5. The submitted data is valid.
+This route is "public access".
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="accountSettings" id="_accountSettings">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_accountSettings">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#821-935" title="Go to source code">accountSettings</a>( )</code>
+
+			<div class="description short">
+				<p>Processes a request to update a user's account information.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes a request to update a user's account information.</p>
+
+<p>Processes the request from the user account settings form, checking that:
+1. The user correctly input their current password;
+2. They have the necessary permissions to update the posted field(s);
+3. The submitted data is valid.
+This route requires authentication.
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="captcha" id="_captcha">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_captcha">#</a>
+			<code><a href="source-class-UserFrosting.AccountController.html#937-945" title="Go to source code">captcha</a>( )</code>
+
+			<div class="description short">
+				<p>Generates a new captcha.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Generates a new captcha.</p>
+
+<p>Wrapper for UserFrosting::generateCaptcha()
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-UserFrosting.BaseController.html#methods">UserFrosting\BaseController</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.BaseController.html#_alerts">alerts()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_configJS">configJS()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_generateCaptcha">generateCaptcha()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_page404">page404()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_pageDatabaseError">pageDatabaseError()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_themeCSS">themeCSS()</a></code>
+			</p>
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+		</div>
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-UserFrosting.BaseController.html#properties">UserFrosting\BaseController</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.BaseController.html#$_app"><var>$_app</var></a></code>
+			</p>
+		</div>
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

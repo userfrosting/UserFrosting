@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class UserFrosting\InstallController</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Overview</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-UserFrosting.html" title="Summary of UserFrosting"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li>
+						<a href="namespace-None.html">
+							None						</a>
+							</li>
+					<li>
+						<a href="namespace-Slim.html">
+							Slim<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.html">
+							Extras<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Slim.Extras.Middleware.html">
+							Middleware						</a>
+							</li>
+								</ul></li></ul></li>
+					<li class="active">
+						<a href="namespace-UserFrosting.html">
+							UserFrosting						</a>
+							</li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccessConditionExpression.html">AccessConditionExpression</a></li>
+				<li><a href="class-UserFrosting.AccountController.html">AccountController</a></li>
+				<li><a href="class-UserFrosting.AdminController.html">AdminController</a></li>
+				<li><a href="class-UserFrosting.ApiController.html">ApiController</a></li>
+				<li><a href="class-UserFrosting.AuthController.html">AuthController</a></li>
+				<li><a href="class-UserFrosting.Authentication.html">Authentication</a></li>
+				<li><a href="class-UserFrosting.BaseController.html">BaseController</a></li>
+				<li><a href="class-UserFrosting.Database.html">Database</a></li>
+				<li><a href="class-UserFrosting.DatabaseTable.html">DatabaseTable</a></li>
+				<li><a href="class-UserFrosting.EmailRecipient.html">EmailRecipient</a></li>
+				<li><a href="class-UserFrosting.Group.html">Group</a></li>
+				<li><a href="class-UserFrosting.GroupAuth.html">GroupAuth</a></li>
+				<li><a href="class-UserFrosting.GroupController.html">GroupController</a></li>
+				<li><a href="class-UserFrosting.GroupLoader.html" class="deprecated">GroupLoader</a></li>
+				<li class="active"><a href="class-UserFrosting.InstallController.html">InstallController</a></li>
+				<li><a href="class-UserFrosting.Notification.html">Notification</a></li>
+				<li><a href="class-UserFrosting.PageSchema.html">PageSchema</a></li>
+				<li><a href="class-UserFrosting.SiteSettings.html">SiteSettings</a></li>
+				<li><a href="class-UserFrosting.UFModel.html">UFModel</a></li>
+				<li><a href="class-UserFrosting.User.html">User</a></li>
+				<li><a href="class-UserFrosting.UserAuth.html">UserAuth</a></li>
+				<li><a href="class-UserFrosting.UserCollection.html">UserCollection</a></li>
+				<li><a href="class-UserFrosting.UserController.html">UserController</a></li>
+				<li><a href="class-UserFrosting.UserEvent.html">UserEvent</a></li>
+				<li><a href="class-UserFrosting.UserFrosting.html">UserFrosting</a></li>
+				<li><a href="class-UserFrosting.UserLoader.html" class="deprecated">UserLoader</a></li>
+				<li><a href="class-UserFrosting.UserSession.html">UserSession</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-UserFrosting.AccountInvalidException.html">AccountInvalidException</a></li>
+				<li><a href="class-UserFrosting.AuthCompromisedException.html">AuthCompromisedException</a></li>
+				<li><a href="class-UserFrosting.AuthExpiredException.html">AuthExpiredException</a></li>
+				<li><a href="class-UserFrosting.AuthorizationException.html">AuthorizationException</a></li>
+				<li><a href="class-UserFrosting.DatabaseInvalidException.html">DatabaseInvalidException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class InstallController</h1>
+
+
+	<div class="description">
+	<p>InstallController Class</p>
+
+<p>Controller class for /install/* URLs.  Handles activities for installing UserFrosting.  Not needed after installation is complete.</p>
+	</div>
+
+	<dl class="tree well">
+		<dd style="padding-left:0px">
+			<a href="class-UserFrosting.BaseController.html"><span>UserFrosting\BaseController</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by">
+<b><span>UserFrosting\InstallController</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-UserFrosting.html">UserFrosting</a><br>
+		<b>Package:</b> UserFrosting<br>
+
+				<b>Author:</b>
+				Alex Weissman<br>
+				<b>Link:</b>
+				<a href="http://www.userfrosting.com/navigating/#structure">http://www.userfrosting.com/navigating/#structure</a><br>
+			<b>Located at</b> <a href="source-class-UserFrosting.InstallController.html#5-249" title="Go to source code">controllers/InstallController.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="pageSetupDB" id="_pageSetupDB">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageSetupDB">#</a>
+			<code><a href="source-class-UserFrosting.InstallController.html#16-119" title="Go to source code">pageSetupDB</a>( )</code>
+
+			<div class="description short">
+				<p>Renders the initial page that comes up when you first install UserFrosting.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the initial page that comes up when you first install UserFrosting.</p>
+
+<p>This page performs the following steps:
+1. Check that the current version of PHP is adequate.
+2. Check that PDO is installed and enabled.
+3. Check that we can connect to the database, as configured in <code>config-userfrosting.php</code>.
+4. Check that the database tables have not already been created.
+5. If all of these checks are passed, set up the initial tables by calling <code>Database::install()</code>.
+This page is "public access".
+Request type: GET</p>
+
+
+
+
+
+					<h4>See</h4>
+					<div class="list">
+							MySqlDatabase::install()<br>
+					</div>
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="pageSetupMasterAccount" id="_pageSetupMasterAccount">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_pageSetupMasterAccount">#</a>
+			<code><a href="source-class-UserFrosting.InstallController.html#121-149" title="Go to source code">pageSetupMasterAccount</a>( )</code>
+
+			<div class="description short">
+				<p>Renders the page for creating the master account.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Renders the page for creating the master account.</p>
+
+<p>This page performs the following steps:
+1. Check that the master account doesn't already exist.  If it does, redirect to the home page.
+2. This page features a "configuration token" as a security feature, to prevent malicious agents from intercepting
+an in-progress installation and setting themselves as the master account.  This requires the developer to look
+in the configuration table of the database.
+Request type: GET</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setupMasterAccount" id="_setupMasterAccount">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setupMasterAccount">#</a>
+			<code><a href="source-class-UserFrosting.InstallController.html#151-247" title="Go to source code">setupMasterAccount</a>( )</code>
+
+			<div class="description short">
+				<p>Processes a request to create the master account.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes a request to create the master account.</p>
+
+<p>Processes the request from the master account creation form, checking that:
+1. The honeypot has not been changed;
+2. The master account does not already exist;
+3. The correct configuration token was submitted;
+3. The submitted data is valid.
+This route is "public access" (until the master account has been created, that is)
+Request type: POST</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+		<div class="panel panel-default">
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-UserFrosting.BaseController.html#methods">UserFrosting\BaseController</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.BaseController.html#___construct">__construct()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_alerts">alerts()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_configJS">configJS()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_generateCaptcha">generateCaptcha()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_page404">page404()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_pageDatabaseError">pageDatabaseError()</a></code>, 
+				<code><a href="class-UserFrosting.BaseController.html#_themeCSS">themeCSS()</a></code>
+			</p>
+		</div>
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+		</div>
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-UserFrosting.BaseController.html#properties">UserFrosting\BaseController</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-UserFrosting.BaseController.html#$_app"><var>$_app</var></a></code>
+			</p>
+		</div>
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
