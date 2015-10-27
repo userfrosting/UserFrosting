@@ -1,0 +1,23 @@
+{% assign url_parts = page.url | split: '/' %}
+{% assign url_parts_size = url_parts | size %}
+
+{% assign ufversion = url_parts[1] %}
+{% assign base_url =  page.url | remove_first: "/0.3.0" %}
+
+{% if ufversion == "0.3.0" %}
+    {% assign ufversion_url = "/0.3.0" %}
+{% else %}
+    {% assign ufversion_url = "" %}
+    {% assign ufversion = "0.3.1" %}
+    {% assign base_url = page.url %}
+{% endif %}
+
+<div class="btn-group version-button">
+  <button type="button" class="btn btn-primary btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{ufversion}} <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="{{site.url}}/0.3.0{{base_url}}">0.3.0</a></li>
+    <li><a href="{{site.url}}{{base_url}}">0.3.1</a></li>
+  </ul>
+</div>

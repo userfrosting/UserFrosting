@@ -16,30 +16,31 @@ public function pageGroupTitles(){
    }
     
    // Get a list of all groups
-   $groups = Group::get();
+   $groups = GroupLoader::fetchAll();
    
-   $this->_app->render('group-titles.twig', [
+   $this->_app->render('group-titles.html', [
+       'page' => [
+           'author' =>         $this->_app->site->author,
+           'title' =>          "Update Group Titles",
+           'description' =>    "Update the title for every user in a particular group",
+           'alerts' =>         $this->_app->alerts->getAndClearMessages()
+       ],
        "groups" => $groups     
    ]);   
 }
 ```
 
-We'll also create the form template file, `group-titles.twig`:
+We'll also create the form template file, `group-titles.html`:
 
 ```
-{% raw %}
-	{% extends "layouts/layout-dashboard.twig" %}
-	{% set page_group = "dashboard" %}
-
-	{% block page %}   
-	    {% set page = page | merge({
-	        "title"       : "Update Group Titles",
-	        "description" : "Update the title for every user in a particular group."
-	    }) %}
-	    {{ parent() }}
-	{% endblock %}
-
-	{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+{% include 'components/head.html' %} 
+<body>
+  <div id="wrapper">
+    {% include 'components/nav-account.html' %}
+    <div id="page-wrapper">
+      {% include 'components/alerts.html' %}
       <div class="row">
         <div class="col-lg-6">
           <div class="panel panel-primary">
@@ -48,6 +49,7 @@ We'll also create the form template file, `group-titles.twig`:
             </div>
             <div class="panel-body">
               <form class="form-horizontal" role="form" name="titles" action="{{site.uri.public}}/groups/titles" method="post">
+                {% include 'common/components/csrf.html' %}
                 <div class="form-group">
                   <label for="input_group" class="col-sm-4 control-label">Primary group</label>
                   <div class="col-sm-8">
@@ -72,9 +74,12 @@ We'll also create the form template file, `group-titles.twig`:
             </div>
           </div>
         </div>
-		</div>
-	{% endblock %}
-{% endraw %}
+      </div>
+      {% include 'components/footer.html' %}  
+    </div>
+  </div>
+</body>
+</html>
 ```
 
 Nothing too fancy here.  We're creating a form with the name `titles`, and giving it two fields: a `<select>` control, for choosing the group name, and a text input, for specifying the new title that will be given to all primary members of the selected group.
@@ -155,8 +160,6 @@ public function updateGroupTitles(){
    ...
 }
 ```
-
-Again, the authorization rules can be specified under "Configuration->Groups" and selecting "Authorization rules" from a group's action menu.
 
 ### Validating the Submitted Input
 
@@ -251,30 +254,24 @@ Oh yeah, there's one more thing!  There's actually one more field that gets subm
 
 Ok, so now we have a validated, clean `group_id` and `title`.  The next thing to do is actually interact with the data model, which will let us update the titles for each user in the database.
 
-The data model allows us to interact with the database via **database objects**, which are object-oriented representations of records in the database.  Starting in v0.3.1, UserFrosting uses Laravel's [Eloquent](http://laravel.com/docs/5.1/eloquent) ORM to provide rich, powerful capabilities for interacting with the database.  
+The data model allows us to interact with the database via **database objects**, which are object-oriented representations of records in the database.  I'll do a more in-depth tutorial on the data model later; for now, just follow along with what I'm doing here.
 
-You will learn more about the data model, and Eloquent, in [lesson 3]({{site.url}}/tutorials/lesson-3-data-model); for now, just follow along with what I'm doing here.
+The `MySqlUserLoader` class (aliased as simply `UserLoader`) is a static class that lets us fetch one or more `User` objects from the database.  We can use the `fetchAll` method to fetch an array of `User`s, and even filter by some criteria.  For example,
 
-The `User` class, found in `models/database/User.php`, implements an [active record](https://en.wikipedia.org/wiki/Active_record_pattern) which allows us to manipulate users in our database through an object-oriented interface.  It also encapsulates common functionality, such as creating and inserting new users, updating user properties, creating and removing associations with other entities, and deleting users.
+`$users = UserLoader::fetchAll($post['group_id'], "primary_group_id");`
 
-The `User` class also acts as a query builder, allowing us to fetch one or more `User` objects from the database.  The query builder allows us to "chain" various criteria for a query, generating and executing a (usually) single query at the end.  For example, the method `where()` allows us to filter the `user` table by the value of a column.  If we then chain this with the `get()` method, we'll get a collection of `User`s filtered by that criteria.  For example,
+will give us an array of all users whose primary group is `$post['group_id']`.
 
-`$users = User::where('primary_group_id', $post['group_id'])->get();`
-
-will give us a collection of all users whose primary group is `$post['group_id']`.
-
-For a complete list of available methods in Eloquent's query builder, please see their [documentation](http://laravel.com/docs/5.0/queries). 
-
-Now that we have a collection of users, we can simply cycle through and set their titles to the new value:
+Then, we can simply cycle through this array of users, and set their titles to the new value:
 
 ```
-foreach ($users as $user){
+foreach ($users as $user_id => $user){
   $user->title = $post['title'];
-  $user->save();
+  $user->store();
 }
 ```
 
-Behind the scenes, invoking `$user->title` takes advantage of PHP's [magic methods](http://php.net/manual/en/language.oop5.magic.php) to let us get and set the various fields for the database object.  Calling the `save()` method then commits the modified `User` back to the database.
+Behind the scenes, invoking `$user->title` takes advantage of PHP's [magic methods](http://php.net/manual/en/language.oop5.magic.php) to let us get and set the various fields for the database object.  Calling the `store()` method then commits the modified `User` back to the database.
 
 Ok, so let's put the entire route method together:
 
@@ -309,12 +306,12 @@ public function updateGroupTitles(){
    $data = $rf->data();
    
    // Load all users whose primary group matches the requested group
-   $users = User::where('primary_group_id', $post['group_id'])->get();
+   $users = UserLoader::fetchAll($post['group_id'], "primary_group_id");
    
    // Update title for these users
-	foreach ($users as $user){
+	foreach ($users as $user_id => $user){
 	  $user->title = $post['title'];
-	  $user->save();
+	  $user->store();
 	}
 	
 	// Give us a nice success message
@@ -333,41 +330,75 @@ However, we could choose to use AJAX instead. This is actually how most of the f
 
 The other nice thing about using AJAX is that, before the form is actually submitted, we can validate the contents of the fields with a Javascript plugin.  This **does not mean** that we don't have to validate the data in the `POST` route as well - it simply makes things a little easier on the client by telling them immediately if their input contains an error.  This way, they don't have to wait for the round trip to the server and back.
 
-To have the form submitted via AJAX, we'll add this block of Javascript code to our page, by setting it in the `page_scripts` block of our page template:
-
 ```
-{% raw %}
-{% block page_scripts %}
-	<script>
-	$(document).ready(function() { 
-		// Load the validator rules for this form
-		var validators = {{validators | raw}};
-		ufFormSubmit(
-		  $("form[name='title']"),
-		  validators,
-		  $("#userfrosting-alerts"),
-		  function(data, statusText, jqXHR) {
-		      // Reload the page on success
-		      window.location.reload(true);   
-		  }
-		);
+<script>
+    $(document).ready(function() { 
+      // Process form 
+      $("form[name='titles']").formValidation({
+        framework: 'bootstrap',
+        // Feedback icons
+        icon: {
+            valid: 'fa fa-check',
+            invalid: 'fa fa-times',
+            validating: 'fa fa-refresh'
+        },
+        fields: {{ validators | raw }}
+      }).on('success.form.fv', function(e) {
+        // Prevent double form submission
+        e.preventDefault();
+
+        // Get the form instance
+        var form = $(e.target);
+
+        // Serialize and post to the backend script in ajax mode
+        var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
+        // Get unchecked checkbox values, set them to 0
+        form.find('input[type=checkbox]').each(function() {
+            if ($(this).is(':checked'))
+                serializedData += "&" + encodeURIComponent(this.name) + "=1";
+            else
+                serializedData += "&" + encodeURIComponent(this.name) + "=0";
+        });
+
+        var url = form.attr('action');
+        return $.ajax({  
+          type: "POST",  
+          url: url,  
+          data: serializedData       
+        }).done(function(data, statusText, jqXHR) {
+            // Reload the page
+            window.location.reload();
+        }).fail(function(jqXHR) {
+            if (site['debug'] == true) {
+                document.body.innerHTML = jqXHR.responseText;
+            } else {
+                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+            }
+        }).always(function(data, statusText, jqXHR){
+            // Display messages
+            $('#userfrosting-alerts').flashAlerts().done(function() {
+                // Re-enable submit button
+                form.data('formValidation').disableSubmitButtons(false);
+            });
+        });
+      });
     });
 </script>
-{% endblock %}
-{% endraw %}
 ```
 
 Ok, so what's going on here?  `$(document).ready(...` is a jQuery construct that tells us to execute the enclosed code when the HTML document is ready (i.e., the page has completely loaded).
 
-`var validators = ...` sets up a place where Twig can inject client-side validation rules into our Javascript, so that we can validate form data before we actually submit it.
+`$("form[name='titles']").formValidation(...` creates a new instance of the [FormValidation](http://formvalidation.io/) plugin, which will perform our client-side validation.  The line `fields: {{ validators | raw }}` is where Twig will insert the client-side validation rules that it generates from the schema (more on this in a minute).
 
-`ufFormSubmit(...` sets up the form submission handler, which automatically handles form serialization, enabling/disabling the submit button, and inserting the CSRF token.
+`e.preventDefault()` overrides the default form submission behavior, letting AJAX take control instead.  We then serialize all the form data into a URI-encoded string, and pass it into a call to `$.ajax(...`, which actually performs the submission.
 
-The first argument of `ufFormSubmit` is the [jQuery selector](https://api.jquery.com/category/selectors/) for the form that we are trying to submit.  The second argument contains the validation rules, as a JSON object, for client-side validation.  Starting in v0.3.1, UserFrosting uses the [jQueryValidation plugin](http://jqueryvalidation.org/).  These rules can be automatically generated from our validation schema using [Fortress](https://github.com/alexweissman/fortress).
+The AJAX construct includes three callbacks: `.done`, `.fail`, and `.always`.  `.done` is called when the `POST` request is submitted successfully, i.e. when it returns a HTTP `200` response code.  In this case, we may want to reload the page using `window.location.reload()` (the necessity of this will depend on your specific application).  
 
-The third argument specifies the jQuery selector for the HTML element where messages should be displayed when the submission fails (i.e., when the `POST` request returns an HTTP code other than `200`, for example `400`, `403`, or `500`).
+`.fail` is called when the `POST` request returns an HTTP code other than `200`, for example `400`, `403`, or `500`.  In this case, we may want to take the client to a debugging page, or simply log the error code in the browser console.
 
-The fourth argument is a callback that should be called when the `POST` request is submitted successfully, i.e. when it returns a HTTP `200` response code.  In this case, we may want to reload the page using `window.location.reload()` (the necessity of this will depend on your specific application).  After reloading, any success messages will automatically appear on the page.
+`.always` is called regardless of whether the request was successful or not.  We always want to display any messages from the message stream, using UserFrosting's `flashAlerts()` jQuery plugin.  This will take care of displaying both success and error messages.
+
+**Add this block of Javascript code immediately before your closing `</body>` tag in the page template.**
 
 ### Client-side Validation
 
@@ -382,19 +413,25 @@ public function pageGroupTitles(){
    
    // Get the validation rules for the form on this page
    $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-titles.json");
-   $this->_app->jsValidator->setSchema($schema); 
+   $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
    
    // Get a list of all groups
-   $groups = Group::get();
+   $groups = GroupLoader::fetchAll();
    
-   $this->_app->render('group-titles.twig', [
+   $this->_app->render('group-titles.html', [
+       'page' => [
+           'author' =>         $this->_app->site->author,
+           'title' =>          "Update Group Titles",
+           'description' =>    "Update the title for every user in a particular group",
+           'alerts' =>         $this->_app->alerts->getAndClearMessages()
+       ],
        "groups" => $groups,
-       "validators" => $this->_app->jsValidator->rules()   
+       "validators" => $validators->formValidationRulesJson()   
    ]);   
 }
 ```
 
-We first pass our request schema into the application's global `jsValidator` object. Then, we convert the schema into the appropriate client-side validation rules for the jQueryValidation plugin by calling `->rules()`.  These then get passed into the page template through the `validators` placeholder.
+We generate a new `ClientSideValidator` object from the request schema, and then use the `formValidationRulesJson()` method to generate the client-side validation rules in the appropriate format for the FormValidation jQuery plugin.  These then get passed into the page template.
 
 ## Wrapping it up
 

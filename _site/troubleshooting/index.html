@@ -110,9 +110,10 @@
                 <p>These are some of the most common issues faced by developers who are new to UserFrosting.</p>
                 <ul class="list-unstyled">
                     <li><a href="#blank-page">I get a blank page when I try to install UserFrosting.</a></li>
-                    <li><a href="#wrong-status-code">UF takes me to a blank page after I create the master account.</a></li>                    
+                    <li><a href="#wrong-status-code">UF takes me to a blank page after I create the master account.</a></li> 
                     <li><a href="#new-class">I created a new class, but UserFrosting doesn't seem to recognize it.</a></li>
                     <li><a href="#other-servers">UF doesn't seem to work on nginx or IIS.</a></li>
+                    <li><a href="#alias">I'm using an Apache alias for my site and I get 404 errors when trying to install.</a></li>
                 </ul>
             </div>
         </div>
@@ -230,6 +231,32 @@
     </div>
 </section>
 
+<section class="tutorial" id="alias">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2><i class="fa fa-life-saver"></i> I'm using an Apache alias for my site and I get 404 errors when trying to install.</h2>    
+
+                <p>
+                    Assuming your Apache alias maps <code>/project</code> to <code>C:/WebProject/</code>, you'll be accessing the installer at <code>http://example.com/project/public/</code>, but your 404 error will be showing <code>/WebProject/public/index.php</code> instead.
+                </p>
+                <p>
+                    The problem here is that <code>mod_rewrite</code> is incorrectly pointing to the directory itself (<code>WebProject</code>) rather than the alias name (<code>project</code>).
+                </p>                    
+                <p>
+                To correct this, you’ll need to figure out the proper <code>RewriteBase</code> to use based on your alias and the 404 error.  Add a line in <code>/public/.htaccess</code> after <code>"RewriteEngine On"</code>:
+                </p>
+                <p>
+                    <code>RewriteBase /project/public/</code>
+                </p>
+                <p>
+                    This line will direct <code>mod_rewrite</code> to use the Apache alias. Once this is done, you can re-run the installer by going to <code>http://example.com/project/public</code> again.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
           
         <!-- Footer -->
         <footer class="text-center">
@@ -262,7 +289,17 @@
                         <a href="http://localhost:4000/security">
                             Security
                         </a>
-                    </li>                          
+                    </li>
+                    <li>
+                        <a href="http://localhost:4000/0.2.2">
+                            Version 0.2.2
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://gitter.im/alexweissman/UserFrosting">
+                            Chat
+                        </a>
+                    </li>                 
                 </ul>
             </div>
             <div class="col-lg-6">

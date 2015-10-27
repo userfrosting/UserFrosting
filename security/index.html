@@ -49,15 +49,15 @@ title: "UserFrosting | Security Features"
                 
                 <h2 id="toc_3"><a name="xss"></a><i class='fa fa-bomb'></i> Protection against cross-site scripting (XSS)</h2>
                 
-                <p>XSS is another variety of attack that tricks a user, but instead of tricking the user into submitting malicious data (CSRF), it tricks the user into running malicious scripts.  This vulnerability usually appears when you allow arbitrary content (including javascript and HTML tags) to be processed and then regurgitated back to other users.  Thus, an attacker on a forum could create a new &quot;post&quot; that contains javascript commands.  When anyone else on the site goes to view that post, the javascript commands are executed.  Those commands could easily be instructions to transmit the user&#39;s session data to a remote server, where attackers can use it to impersonate the user.</p>
+                <p>XSS is another variety of attack that tricks a user, but instead of tricking the user into submitting malicious data (CSRF), it tricks the user into running malicious scripts.  This vulnerability usually appears when you allow arbitrary content (including javascript and HTML tags) to be stored and then regurgitated back to other users without additional processing.  Thus, an attacker on a forum could create a new &quot;post&quot; that contains javascript commands.  When anyone else on the site goes to view that post, the javascript commands are executed.  Those commands could easily be instructions to transmit the user&#39;s session data to a remote server, where attackers can use it to impersonate the user.</p>
                 
-                <p>UserFrosting guards against this by sanitizing user input before storing or otherwise acting upon it.  Please let us know if you find a place where input is not properly sanitized.</p>
+                <p>UserFrosting guards against this by validating user input, and then escaping or sanitizing user-generated content before outputting.  Please let us know if you find a place where content is not properly sanitized.</p>
                 
                 <h2 id="toc_4"><a name="sql-inject"></a><i class='fa fa-bomb'></i> Protection against SQL injection</h2>
                 
                 <p>Whereas XSS tricks the <em>user</em> into executing malicious code, SQL injection tricks the <em>server</em> into executing malicious code; in this case, SQL statements.  Thus, sites vulnerable to SQL injection can end up executing code that, for example, deletes a table or database.</p>
                 
-                <p>UserFrosting protects against this by using parameterized queries, which do not allow user-supplied data to be executed as code.  However there are always exceptions, and we would be glad to have some contributors test and/or help patch any possible remaining SQL injection vulnerabilities.</p>
+                <p>UserFrosting protects against this by using parameterized queries, which do not allow user-supplied data to be executed as SQL.</p>
             </div>
         </div>
     </div>

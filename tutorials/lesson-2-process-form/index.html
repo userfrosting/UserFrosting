@@ -4,6 +4,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
 ---
 
 <header class="breadcrumb-header">
+    {% include version-menu.html %}
     <div class="container">
         <ol class="breadcrumb">
             <li><a href="{{site.url}}/">Home</a></li>
@@ -22,7 +23,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
 
 <div class="container">
     <section class="tutorial">
-        <p>So you&#39;ve completed <a href="{{site.url}}/tutorials/lesson-1-new-page">Lesson 1</a> and you&#39;re saying to yourself, &quot;ok, but how do I make this page actually <em>do</em> something?&quot; </p>
+        <p>So you've completed <a href="{{site.url}}/tutorials/lesson-1-new-page">Lesson 1</a> and you're saying to yourself, &quot;ok, but how do I make this page actually <em>do</em> something?&quot; </p>
         
         <p>This tutorial will guide you through setting up a simple form that can be used to update some information in the database.  For simplicity we will use a contrived example - updating the title for every user who belongs to a particular group.  However, the general pattern can be applied to any aspect of your data model.</p>
     </section>
@@ -31,44 +32,40 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         
         <p>To begin, we will create a new page that will contain the form itself.  Creating a page is covered in <a href="{{site.url}}/tutorials/lesson-1-new-page">Lesson 1</a>, so please go through that tutorial first.  </p>
         
-        <p>With all of our routes, you may notice that <code>index.php</code> could easily get to be quite long.  To help break the code into more manageable chunks, we&#39;ll factor out our code into controller classes, with each class in a separate file.  In <code>userfrosting/controllers/GroupController.php</code>, we&#39;ll create a method <code>pageGroupTitles</code>:</p>
+        <p>With all of our routes, you may notice that <code>index.php</code> could easily get to be quite long.  To help break the code into more manageable chunks, we'll factor out our code into controller classes, with each class in a separate file.  In <code>userfrosting/controllers/GroupController.php</code>, we'll create a method <code>pageGroupTitles</code>:</p>
         
         <pre><code>
-        {% raw %}
         public function pageGroupTitles(){
            // Access-controlled resource
-           if (!$this-&gt;_app-&gt;user-&gt;checkAccess(&#39;uri_group_titles&#39;)){
+           if (!$this-&gt;_app-&gt;user-&gt;checkAccess('uri_group_titles')){
                $this-&gt;_app-&gt;notFound();
            }
             
            // Get a list of all groups
-           $groups = GroupLoader::fetchAll();
+           $groups = Group::get();
            
-           $this-&gt;_app-&gt;render(&#39;group-titles.html&#39;, [
-               &#39;page&#39; =&gt; [
-                   &#39;author&#39; =&gt;         $this-&gt;_app-&gt;site-&gt;author,
-                   &#39;title&#39; =&gt;          &quot;Update Group Titles&quot;,
-                   &#39;description&#39; =&gt;    &quot;Update the title for every user in a particular group&quot;,
-                   &#39;alerts&#39; =&gt;         $this-&gt;_app-&gt;alerts-&gt;getAndClearMessages()
-               ],
+           $this-&gt;_app-&gt;render('group-titles.twig', [
                &quot;groups&quot; =&gt; $groups     
            ]);   
         }
-        {% endraw %}
         </code></pre>
         
-        <p>We&#39;ll also create the form template file, <code>group-titles.html</code>:</p>
+        <p>We'll also create the form template file, <code>group-titles.twig</code>:</p>
         
         <pre><code>
         {% raw %}
-        &lt;!DOCTYPE html&gt;
-        &lt;html lang=&quot;en&quot;&gt;
-        {% include &#39;components/head.html&#39; %} 
-        &lt;body&gt;
-          &lt;div id=&quot;wrapper&quot;&gt;
-            {% include &#39;components/nav-account.html&#39; %}
-            &lt;div id=&quot;page-wrapper&quot;&gt;
-              {% include &#39;components/alerts.html&#39; %}
+            {% extends &quot;layouts/layout-dashboard.twig&quot; %}
+            {% set page_group = &quot;dashboard&quot; %}
+        
+            {% block page %}   
+                {% set page = page | merge({
+                    &quot;title&quot;       : &quot;Update Group Titles&quot;,
+                    &quot;description&quot; : &quot;Update the title for every user in a particular group.&quot;
+                }) %}
+                {{ parent() }}
+            {% endblock %}
+        
+            {% block content %}
               &lt;div class=&quot;row&quot;&gt;
                 &lt;div class=&quot;col-lg-6&quot;&gt;
                   &lt;div class=&quot;panel panel-primary&quot;&gt;
@@ -77,7 +74,6 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
                     &lt;/div&gt;
                     &lt;div class=&quot;panel-body&quot;&gt;
                       &lt;form class=&quot;form-horizontal&quot; role=&quot;form&quot; name=&quot;titles&quot; action=&quot;{{site.uri.public}}/groups/titles&quot; method=&quot;post&quot;&gt;
-                        {% include &#39;common/components/csrf.html&#39; %}
                         &lt;div class=&quot;form-group&quot;&gt;
                           &lt;label for=&quot;input_group&quot; class=&quot;col-sm-4 control-label&quot;&gt;Primary group&lt;/label&gt;
                           &lt;div class=&quot;col-sm-8&quot;&gt;
@@ -102,37 +98,29 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
                     &lt;/div&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
-              &lt;/div&gt;
-              {% include &#39;components/footer.html&#39; %}  
-            &lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/body&gt;
-        &lt;/html&gt;
+                &lt;/div&gt;
+            {% endblock %}
         {% endraw %}
         </code></pre>
         
-        <p>Nothing too fancy here.  We&#39;re creating a form with the name <code>titles</code>, and giving it two fields: a <code>&lt;select&gt;</code> control, for choosing the group name, and a text input, for specifying the new title that will be given to all primary members of the selected group.</p>
+        <p>Nothing too fancy here.  We're creating a form with the name <code>titles</code>, and giving it two fields: a <code>&lt;select&gt;</code> control, for choosing the group name, and a text input, for specifying the new title that will be given to all primary members of the selected group.</p>
         
-        <p>You&#39;ll notice that we have the form <code>POST</code> to the <strong>exact same URL</strong> as the URL of the page itself.    How can we do this?  Well, it turns out that an HTTP request consists not just of a <strong>URL</strong>, but an <strong>HTTP method</strong> as well.  Thus, making a <code>GET</code> request from <code>http://example.com/groups/titles</code> is different from making a <code>POST</code> request to <code>http://example.com/groups/titles</code>.</p>
+        <p>You'll notice that we have the form <code>POST</code> to the <strong>exact same URL</strong> as the URL of the page itself.    How can we do this?  Well, it turns out that an HTTP request consists not just of a <strong>URL</strong>, but an <strong>HTTP method</strong> as well.  Thus, making a <code>GET</code> request from <code>http://example.com/groups/titles</code> is different from making a <code>POST</code> request to <code>http://example.com/groups/titles</code>.</p>
         
         <p>Slim can detect the difference between these two requests, and actually treats them as separate routes!  Thus, we can have:</p>
         
         <pre><code>
-        {% raw %}
-        $app-&gt;get(&#39;/groups/titles/?&#39;, function () use ($app) {    
+        $app-&gt;get('/groups/titles/?', function () use ($app) {    
             // Do what we need to do to render the page containing the form in the GET route
         });
-        {% endraw %}
         </code></pre>
         
         <p>and also</p>
         
         <pre><code>
-        {% raw %}
-        $app-&gt;post(&#39;/groups/titles/?&#39;, function () use ($app) {    
+        $app-&gt;post('/groups/titles/?', function () use ($app) {    
             // Process the form submission in the POST route
         });
-        {% endraw %}
         </code></pre>
         
         <p>Note the difference between <code>$app-&gt;get(...</code> and <code>$app-&gt;post(...</code>.</p>
@@ -147,15 +135,13 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         
         <p>Thus, <code>GET</code>ting that resource gives us an HTML page containing a form that we can fill out to interact with that service.  <code>POST</code>ing to that resource, on the other hand, actually invokes the service with the parameters specified by the filled-out form.</p>
         
-        <p>Ok, enough about REST.  Let's go back to <code>index.php</code>, and invoke our controller method <code>pageGroupTitles</code> in our <code>GET</code> route:</p>
+        <p>Ok, enough about REST.  Let's invoke our controller method <code>pageGroupTitles</code> in our <code>GET</code> route:</p>
         
         <pre><code>
-        {% raw %}
-        $app-&gt;get(&#39;/groups/titles/?&#39;, function () use ($app) {    
+        $app-&gt;get('/groups/titles/?', function () use ($app) {    
           $controller = new UF\GroupController($app);
           return $controller-&gt;pageGroupTitles();
         });
-        {% endraw %}
         </code></pre>
         
         <p>And then we should be able to visit <code>groups/titles</code>:</p>
@@ -165,25 +151,21 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
     <section class="tutorial">  
         <h2 id="toc_1">Processing the Submitted Form</h2>
         
-        <p>Alright, we now have a page that contains a form that will <code>POST</code> to <code>/groups/titles</code>.  Let&#39;s set up our <code>POST</code> route:</p>
+        <p>Alright, we now have a page that contains a form that will <code>POST</code> to <code>/groups/titles</code>.  Let's set up our <code>POST</code> route:</p>
         
         <pre><code>
-        {% raw %}
-        $app-&gt;post(&#39;/groups/titles/?&#39;, function () use ($app) {    
+        $app-&gt;post('/groups/titles/?', function () use ($app) {    
           $controller = new UF\GroupController($app);
           return $controller-&gt;updateGroupTitles();
         });
-        {% endraw %}
         </code></pre>
         
         <p>Where <code>updateGroupTitles</code> is a method that we will define, again in the <code>GroupController</code> class:</p>
         
         <pre><code>
-        {% raw %}
         public function updateGroupTitles(){
           ...
         }
-        {% endraw %}
         </code></pre>
         
         <h3 id="toc_2">Authorization (Access Control)</h3>
@@ -193,34 +175,33 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         <p>For simplicity, in this case we wil use a single authorization hook to control access to the entire route.  To make things even simpler, we will use the same authorization hook for <code>POST</code>ing to this resource as we do for <code>GET</code>ting from it:</p>
         
         <pre><code>
-        {% raw %}
         public function updateGroupTitles(){
            // Access-controlled resource
-           if (!$this-&gt;_app-&gt;user-&gt;checkAccess(&#39;uri_group_titles&#39;)){
+           if (!$this-&gt;_app-&gt;user-&gt;checkAccess('uri_group_titles')){
                $this-&gt;_app-&gt;notFound();
            }
            
            ...
         }
-        {% endraw %}
         </code></pre>
+        
+        <p>Again, the authorization rules can be specified under &quot;Configuration-&gt;Groups&quot; and selecting &quot;Authorization rules&quot; from a group's action menu.</p>
         
         <h3 id="toc_3">Validating the Submitted Input</h3>
         
-        <p>The next thing we need to do is validate the input.  After all, the cardinal rule of web development is to <strong>never trust user input</strong>!  If we don&#39;t validate the input, we potentially leave ourselves vulnerable to all sorts of security and usability hazards.</p>
+        <p>The next thing we need to do is validate the input.  After all, the cardinal rule of web development is to <strong>never trust user input</strong>!  If we don't validate the input, we potentially leave ourselves vulnerable to all sorts of security and usability hazards.</p>
         
         <p>First, we retrieve the <code>POST</code>ed data:</p>
         
         <p><code>$post = $this-&gt;_app-&gt;request-&gt;post();</code></p>
         
-        <p>Now, <code>$post</code> contains the raw request data, which is basically equivalent to PHP&#39;s <code>$_POST</code> array.  To validate the data, we can either go through and check each field in the code, or we can use <a href="https://github.com/alexweissman/fortress">Fortress</a> to automatically validate the data against a <a href="https://github.com/alexweissman/wdvss">WDVSS request schema</a>.  The <strong>request schema</strong> allows us to apply some common validation rules as defined in the WDVSS standard. In practice, you will often be able to perform simple, syntactic validation (numeric ranges, string lengths, etc) with a request schema, but will need to hand-code more complex database-driven validation (checking that a username is not in use, validating a security token, etc).</p>
+        <p>Now, <code>$post</code> contains the raw request data, which is basically equivalent to PHP's <code>$_POST</code> array.  To validate the data, we can either go through and check each field in the code, or we can use <a href="https://github.com/alexweissman/fortress">Fortress</a> to automatically validate the data against a <a href="https://github.com/alexweissman/wdvss">WDVSS request schema</a>.  The <strong>request schema</strong> allows us to apply some common validation rules as defined in the WDVSS standard. In practice, you will often be able to perform simple, syntactic validation (numeric ranges, string lengths, etc) with a request schema, but will need to hand-code more complex database-driven validation (checking that a username is not in use, validating a security token, etc).</p>
         
-        <p>Let&#39;s create a simple WDVSS request schema, written as a JSON document, for our form:</p>
+        <p>Let's create a simple WDVSS request schema, written as a JSON document, for our form:</p>
         
         <p><strong>/schema/forms/group-titles.json</strong></p>
         
         <pre><code>
-        {% raw %}
         {
             &quot;group_id&quot; : {
                 &quot;validators&quot; : {
@@ -245,20 +226,18 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
                 }
             }
         }
-        {% endraw %}
         </code></pre>
         
-        <p>Note that the two top-level keys in this JSON document, <code>group_id</code> and <code>title</code>, match the names of the fields in our form.  For each field we can define one or more validation rule, along with some parameters.  We can also define a sanitization protocol.  In most cases, we actually don&#39;t want to sanitize the input before using it, so we set the sanitizer to <code>raw</code>.</p>
+        <p>Note that the two top-level keys in this JSON document, <code>group_id</code> and <code>title</code>, match the names of the fields in our form.  For each field we can define one or more validation rule, along with some parameters.  We can also define a sanitization protocol.  In most cases, we actually don't want to sanitize the input before using it, so we set the sanitizer to <code>raw</code>.</p>
         
         <p>The schema also acts as a whitelist.  Fortress will ignore any submitted fields that do not match the name of a field in the request schema.  This is useful, for example, if we intend to pass the entire array of form data on to some other function, and we want to be sure that no (potentially malicious) data has been snuck into the request.</p>
         
         <p>Ok, so now we can actually use our schema along with Fortress in our controller code:</p>
         
         <pre><code>
-        {% raw %}
         public function updateGroupTitles(){
            // Access-controlled resource
-           if (!$this-&gt;_app-&gt;user-&gt;checkAccess(&#39;uri_group_titles&#39;)){
+           if (!$this-&gt;_app-&gt;user-&gt;checkAccess('uri_group_titles')){
                $this-&gt;_app-&gt;notFound();
            }
            
@@ -266,7 +245,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
            $post = $this-&gt;_app-&gt;request-&gt;post();
            
            // Load the request schema
-           $requestSchema = new \Fortress\RequestSchema($this-&gt;_app-&gt;config(&#39;schema.path&#39;) . &quot;/forms/group-titles.json&quot;);
+           $requestSchema = new \Fortress\RequestSchema($this-&gt;_app-&gt;config('schema.path') . &quot;/forms/group-titles.json&quot;);
            
            // Get the alert message stream
            $ms = $this-&gt;_app-&gt;alerts; 
@@ -287,7 +266,6 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
            
            ...
         }
-        {% endraw %}
         </code></pre>
         
         <p>Notice that we pass three things to <code>HTTPRequestFortress</code>: the request schema, the <code>POST</code>ed data, and a <a href="{{site.url}}/components/#messages">message stream</a> where Fortress can place any error messages generated during validation.</p>
@@ -296,40 +274,43 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         
         <p>If we are processing this form submission via AJAX, and we encounter an error during validation, we can simply <code>halt</code> the request and return an HTTP 400 error code.  Otherwise, we would need to redirect the request back to the original page containing the form - but more on this later.</p>
         
-        <p>Oh yeah, there&#39;s one more thing!  There&#39;s actually one more field that gets submitted in every form - the <a href="{{site.url}}/security">CSRF</a> token.  This gets checked by the CSRF middleware, so we don&#39;t need to worry about it here.  Fortress will, by default, automatically filter it out in the filtered data array, since it is not declared in the request schema.</p>
+        <p>Oh yeah, there's one more thing!  There's actually one more field that gets submitted in every form - the <a href="{{site.url}}/security">CSRF</a> token.  This gets checked by the CSRF middleware, so we don't need to worry about it here.  Fortress will, by default, automatically filter it out in the filtered data array, since it is not declared in the request schema.</p>
         
         <h3 id="toc_4">Interacting with the Data Model</h3>
         
         <p>Ok, so now we have a validated, clean <code>group_id</code> and <code>title</code>.  The next thing to do is actually interact with the data model, which will let us update the titles for each user in the database.</p>
         
-        <p>The data model allows us to interact with the database via <strong>database objects</strong>, which are object-oriented representations of records in the database.  I&#39;ll do a more in-depth tutorial on the data model later; for now, just follow along with what I&#39;m doing here.</p>
+        <p>The data model allows us to interact with the database via <strong>database objects</strong>, which are object-oriented representations of records in the database.  Starting in v0.3.1, UserFrosting uses Laravel's <a href="http://laravel.com/docs/5.1/eloquent">Eloquent</a> ORM to provide rich, powerful capabilities for interacting with the database.  </p>
         
-        <p>The <code>MySqlUserLoader</code> class (aliased as simply <code>UserLoader</code>) is a static class that lets us fetch one or more <code>User</code> objects from the database.  We can use the <code>fetchAll</code> method to fetch an array of <code>User</code>s, and even filter by some criteria.  For example,</p>
+        <p>You will learn more about the data model, and Eloquent, in <a href="{{site.url}}/tutorials/lesson-3-data-model">lesson 3</a>; for now, just follow along with what I'm doing here.</p>
         
-        <p><code>$users = UserLoader::fetchAll($post[&#39;group_id&#39;], &quot;primary_group_id&quot;);</code></p>
+        <p>The <code>User</code> class, found in <code>models/database/User.php</code>, implements an <a href="https://en.wikipedia.org/wiki/Active_record_pattern">active record</a> which allows us to manipulate users in our database through an object-oriented interface.  It also encapsulates common functionality, such as creating and inserting new users, updating user properties, creating and removing associations with other entities, and deleting users.</p>
         
-        <p>will give us an array of all users whose primary group is <code>$post[&#39;group_id&#39;]</code>.</p>
+        <p>The <code>User</code> class also acts as a query builder, allowing us to fetch one or more <code>User</code> objects from the database.  The query builder allows us to &quot;chain&quot; various criteria for a query, generating and executing a (usually) single query at the end.  For example, the method <code>where()</code> allows us to filter the <code>user</code> table by the value of a column.  If we then chain this with the <code>get()</code> method, we'll get a collection of <code>User</code>s filtered by that criteria.  For example,</p>
         
-        <p>Then, we can simply cycle through this array of users, and set their titles to the new value:</p>
+        <p><code>$users = User::where('primary_group_id', $post['group_id'])-&gt;get();</code></p>
+        
+        <p>will give us a collection of all users whose primary group is <code>$post['group_id']</code>.</p>
+        
+        <p>For a complete list of available methods in Eloquent's query builder, please see their <a href="http://laravel.com/docs/5.0/queries">documentation</a>. </p>
+        
+        <p>Now that we have a collection of users, we can simply cycle through and set their titles to the new value:</p>
         
         <pre><code>
-        {% raw %}
-        foreach ($users as $user_id =&gt; $user){
-          $user-&gt;title = $post[&#39;title&#39;];
-          $user-&gt;store();
+        foreach ($users as $user){
+          $user-&gt;title = $post['title'];
+          $user-&gt;save();
         }
-        {% endraw %}
         </code></pre>
         
-        <p>Behind the scenes, invoking <code>$user-&gt;title</code> takes advantage of PHP&#39;s <a href="http://php.net/manual/en/language.oop5.magic.php">magic methods</a> to let us get and set the various fields for the database object.  Calling the <code>store()</code> method then commits the modified <code>User</code> back to the database.</p>
+        <p>Behind the scenes, invoking <code>$user-&gt;title</code> takes advantage of PHP's <a href="http://php.net/manual/en/language.oop5.magic.php">magic methods</a> to let us get and set the various fields for the database object.  Calling the <code>save()</code> method then commits the modified <code>User</code> back to the database.</p>
         
-        <p>Ok, so let&#39;s put the entire route method together:</p>
+        <p>Ok, so let's put the entire route method together:</p>
         
         <pre><code>
-        {% raw %}
         public function updateGroupTitles(){
            // Access-controlled resource
-           if (!$this-&gt;_app-&gt;user-&gt;checkAccess(&#39;uri_group_titles&#39;)){
+           if (!$this-&gt;_app-&gt;user-&gt;checkAccess('uri_group_titles')){
                $this-&gt;_app-&gt;notFound();
            }
            
@@ -337,7 +318,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
            $post = $this-&gt;_app-&gt;request-&gt;post();
            
            // Load the request schema
-           $requestSchema = new \Fortress\RequestSchema($this-&gt;_app-&gt;config(&#39;schema.path&#39;) . &quot;/forms/group-titles.json&quot;);
+           $requestSchema = new \Fortress\RequestSchema($this-&gt;_app-&gt;config('schema.path') . &quot;/forms/group-titles.json&quot;);
            
            // Get the alert message stream
            $ms = $this-&gt;_app-&gt;alerts; 
@@ -357,19 +338,18 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
            $data = $rf-&gt;data();
            
            // Load all users whose primary group matches the requested group
-           $users = UserLoader::fetchAll($post[&#39;group_id&#39;], &quot;primary_group_id&quot;);
+           $users = User::where('primary_group_id', $post['group_id'])-&gt;get();
            
            // Update title for these users
-            foreach ($users as $user_id =&gt; $user){
-              $user-&gt;title = $post[&#39;title&#39;];
-              $user-&gt;store();
+            foreach ($users as $user){
+              $user-&gt;title = $post['title'];
+              $user-&gt;save();
             }
             
             // Give us a nice success message
-            $ms-&gt;addMessageTranslated(&quot;success&quot;, &quot;Everyone&#39;s title has been updated to {{title}}!&quot;, $post);
+            $ms-&gt;addMessageTranslated(&quot;success&quot;, &quot;Everyone's title has been updated to {{title}}!&quot;, $post);
             
         }
-        {% endraw %}
         </code></pre>
     </section>
     <section class="tutorial">      
@@ -377,119 +357,74 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         
         <p>Ok, so remember how I mentioned earlier that there are two different ways that we can submit the form?  Well, I did.</p>
         
-        <p>One option is to use a traditional form submission (i.e., just creating a submit button and letting HTML handle the rest).  If we do this, most browsers will take the response from the <code>POST</code> request and display it in the browser, just like they do with any other request.  In this case we&#39;d probably want to redirect the browser back to the submitting page, or perhaps a confirmation page, since the response body from the <code>POST</code> request itself will be empty (and we&#39;d just get a blank page).</p>
+        <p>One option is to use a traditional form submission (i.e., just creating a submit button and letting HTML handle the rest).  If we do this, most browsers will take the response from the <code>POST</code> request and display it in the browser, just like they do with any other request.  In this case we'd probably want to redirect the browser back to the submitting page, or perhaps a confirmation page, since the response body from the <code>POST</code> request itself will be empty (and we'd just get a blank page).</p>
         
-        <p>However, we could choose to use AJAX instead. This is actually how most of the forms that ship with UserFrosting already work. In this case, Javascript will detect when someone submits the form, and will pass the data to the POST route without leaving your current page. In this case, there is no need to redirect to another page (and actually, this wouldn&#39;t work because the response of that redirect would be sent back into the AJAX callback). Then, if necessary, we can use Javascript to reload the page after the request to the POST route is complete.</p>
+        <p>However, we could choose to use AJAX instead. This is actually how most of the forms that ship with UserFrosting already work. In this case, Javascript will detect when someone submits the form, and will pass the data to the POST route without leaving your current page. In this case, there is no need to redirect to another page (and actually, this wouldn't work because the response of that redirect would be sent back into the AJAX callback). Then, if necessary, we can use Javascript to reload the page after the request to the POST route is complete.</p>
         
-        <p>The other nice thing about using AJAX is that, before the form is actually submitted, we can validate the contents of the fields with a Javascript plugin.  This <strong>does not mean</strong> that we don&#39;t have to validate the data in the <code>POST</code> route as well - it simply makes things a little easier on the client by telling them immediately if their input contains an error.  This way, they don&#39;t have to wait for the round trip to the server and back.</p>
+        <p>The other nice thing about using AJAX is that, before the form is actually submitted, we can validate the contents of the fields with a Javascript plugin.  This <strong>does not mean</strong> that we don't have to validate the data in the <code>POST</code> route as well - it simply makes things a little easier on the client by telling them immediately if their input contains an error.  This way, they don't have to wait for the round trip to the server and back.</p>
         
-        <p><strong>To have the form submitted via AJAX, add this block of Javascript code immediately before your closing <code>&lt;/body&gt;</code> tag in the page template:</strong></p>
+        <p>To have the form submitted via AJAX, we'll add this block of Javascript code to our page, by setting it in the <code>page_scripts</code> block of our page template:</p>
         
         <pre><code>
         {% raw %}
-        &lt;script&gt;
+        {% block page_scripts %}
+            &lt;script&gt;
             $(document).ready(function() { 
-              // Process form 
-              $(&quot;form[name=&#39;titles&#39;]&quot;).formValidation({
-                framework: &#39;bootstrap&#39;,
-                // Feedback icons
-                icon: {
-                    valid: &#39;fa fa-check&#39;,
-                    invalid: &#39;fa fa-times&#39;,
-                    validating: &#39;fa fa-refresh&#39;
-                },
-                fields: {{ validators | raw }}
-              }).on(&#39;success.form.fv&#39;, function(e) {
-                // Prevent double form submission
-                e.preventDefault();
-        
-                // Get the form instance
-                var form = $(e.target);
-        
-                // Serialize and post to the backend script in ajax mode
-                var serializedData = form.find(&#39;input, textarea, select&#39;).not(&#39;:checkbox&#39;).serialize();
-                // Get unchecked checkbox values, set them to 0
-                form.find(&#39;input[type=checkbox]&#39;).each(function() {
-                    if ($(this).is(&#39;:checked&#39;))
-                        serializedData += &quot;&amp;&quot; + encodeURIComponent(this.name) + &quot;=1&quot;;
-                    else
-                        serializedData += &quot;&amp;&quot; + encodeURIComponent(this.name) + &quot;=0&quot;;
-                });
-        
-                var url = form.attr(&#39;action&#39;);
-                return $.ajax({  
-                  type: &quot;POST&quot;,  
-                  url: url,  
-                  data: serializedData       
-                }).done(function(data, statusText, jqXHR) {
-                    // Reload the page
-                    window.location.reload();
-                }).fail(function(jqXHR) {
-                    if (site[&#39;debug&#39;] == true) {
-                        document.body.innerHTML = jqXHR.responseText;
-                    } else {
-                        console.log(&quot;Error (&quot; + jqXHR.status + &quot;): &quot; + jqXHR.responseText );
-                    }
-                }).always(function(data, statusText, jqXHR){
-                    // Display messages
-                    $(&#39;#userfrosting-alerts&#39;).flashAlerts().done(function() {
-                        // Re-enable submit button
-                        form.data(&#39;formValidation&#39;).disableSubmitButtons(false);
-                    });
-                });
-              });
+                // Load the validator rules for this form
+                var validators = {{validators | raw}};
+                ufFormSubmit(
+                  $(&quot;form[name='title']&quot;),
+                  validators,
+                  $(&quot;#userfrosting-alerts&quot;),
+                  function(data, statusText, jqXHR) {
+                      // Reload the page on success
+                      window.location.reload(true);   
+                  }
+                );
             });
         &lt;/script&gt;
-        {% endraw %}
+        {% endblock %}
+        {% endraw %}        
         </code></pre>
         
-        <p>Ok, so what&#39;s going on here?  <code>$(document).ready(...</code> is a jQuery construct that tells us to execute the enclosed code when the HTML document is ready (i.e., the page has completely loaded).</p>
+        <p>Ok, so what's going on here?  <code>$(document).ready(...</code> is a jQuery construct that tells us to execute the enclosed code when the HTML document is ready (i.e., the page has completely loaded).</p>
         
-        <p><code>$(&quot;form[name=&#39;titles&#39;]&quot;).formValidation(...</code> creates a new instance of the <a href="http://formvalidation.io/">FormValidation</a> plugin, which will perform our client-side validation.  The line <code>fields: {{ validators | raw }}</code> is where Twig will insert the client-side validation rules that it generates from the schema (more on this in a minute).</p>
+        <p><code>var validators = ...</code> sets up a place where Twig can inject client-side validation rules into our Javascript, so that we can validate form data before we actually submit it.</p>
         
-        <p><code>e.preventDefault()</code> overrides the default form submission behavior, letting AJAX take control instead.  We then serialize all the form data into a URI-encoded string, and pass it into a call to <code>$.ajax(...</code>, which actually performs the submission.</p>
+        <p><code>ufFormSubmit(...</code> sets up the form submission handler, which automatically handles form serialization, enabling/disabling the submit button, and inserting the CSRF token.</p>
         
-        <p>The AJAX construct includes three callbacks: <code>.done</code>, <code>.fail</code>, and <code>.always</code>.  <code>.done</code> is called when the <code>POST</code> request is submitted successfully, i.e. when it returns a HTTP <code>200</code> response code.  In this case, we may want to reload the page using <code>window.location.reload()</code> (the necessity of this will depend on your specific application).  </p>
+        <p>The first argument of <code>ufFormSubmit</code> is the <a href="https://api.jquery.com/category/selectors/">jQuery selector</a> for the form that we are trying to submit.  The second argument contains the validation rules, as a JSON object, for client-side validation.  Starting in v0.3.1, UserFrosting uses the <a href="http://jqueryvalidation.org/">jQueryValidation plugin</a>.  These rules can be automatically generated from our validation schema using <a href="https://github.com/alexweissman/fortress">Fortress</a>.</p>
         
-        <p><code>.fail</code> is called when the <code>POST</code> request returns an HTTP code other than <code>200</code>, for example <code>400</code>, <code>403</code>, or <code>500</code>.  In this case, we may want to take the client to a debugging page, or simply log the error code in the browser console.</p>
+        <p>The third argument specifies the jQuery selector for the HTML element where messages should be displayed when the submission fails (i.e., when the <code>POST</code> request returns an HTTP code other than <code>200</code>, for example <code>400</code>, <code>403</code>, or <code>500</code>).</p>
         
-        <p><code>.always</code> is called regardless of whether the request was successful or not.  We always want to display any messages from the message stream, using UserFrosting&#39;s <code>flashAlerts()</code> jQuery plugin.  This will take care of displaying both success and error messages.</p>
-        
+        <p>The fourth argument is a callback that should be called when the <code>POST</code> request is submitted successfully, i.e. when it returns a HTTP <code>200</code> response code.  In this case, we may want to reload the page using <code>window.location.reload()</code> (the necessity of this will depend on your specific application).  After reloading, any success messages will automatically appear on the page.</p>
         
         <h3 id="toc_6">Client-side Validation</h3>
         
         <p>Ok, so about that client-side validation.  We already have a Twig placeholder, we just need to generate the appropriate rules as a JSON object.  It turns out that Fortress can do this as well, we simply need to load the <code>RequestSchema</code> in the page route:</p>
         
         <pre><code>
-        {% raw %}
         public function pageGroupTitles(){
            // Access-controlled resource
-           if (!$this-&gt;_app-&gt;user-&gt;checkAccess(&#39;uri_group_titles&#39;)){
+           if (!$this-&gt;_app-&gt;user-&gt;checkAccess('uri_group_titles')){
                $this-&gt;_app-&gt;notFound();
            }
            
            // Get the validation rules for the form on this page
-           $schema = new \Fortress\RequestSchema($this-&gt;_app-&gt;config(&#39;schema.path&#39;) . &quot;/forms/group-titles.json&quot;);
-           $validators = new \Fortress\ClientSideValidator($schema, $this-&gt;_app-&gt;translator);           
+           $schema = new \Fortress\RequestSchema($this-&gt;_app-&gt;config('schema.path') . &quot;/forms/group-titles.json&quot;);
+           $this-&gt;_app-&gt;jsValidator-&gt;setSchema($schema); 
            
            // Get a list of all groups
-           $groups = GroupLoader::fetchAll();
+           $groups = Group::get();
            
-           $this-&gt;_app-&gt;render(&#39;group-titles.html&#39;, [
-               &#39;page&#39; =&gt; [
-                   &#39;author&#39; =&gt;         $this-&gt;_app-&gt;site-&gt;author,
-                   &#39;title&#39; =&gt;          &quot;Update Group Titles&quot;,
-                   &#39;description&#39; =&gt;    &quot;Update the title for every user in a particular group&quot;,
-                   &#39;alerts&#39; =&gt;         $this-&gt;_app-&gt;alerts-&gt;getAndClearMessages()
-               ],
+           $this-&gt;_app-&gt;render('group-titles.twig', [
                &quot;groups&quot; =&gt; $groups,
-               &quot;validators&quot; =&gt; $validators-&gt;formValidationRulesJson()   
+               &quot;validators&quot; =&gt; $this-&gt;_app-&gt;jsValidator-&gt;rules()   
            ]);   
         }
-        {% endraw %}
         </code></pre>
         
-        <p>We generate a new <code>ClientSideValidator</code> object from the request schema, and then use the <code>formValidationRulesJson()</code> method to generate the client-side validation rules in the appropriate format for the FormValidation jQuery plugin.  These then get passed into the page template.</p>
+        <p>We first pass our request schema into the application's global <code>jsValidator</code> object. Then, we convert the schema into the appropriate client-side validation rules for the jQueryValidation plugin by calling <code>-&gt;rules()</code>.  These then get passed into the page template through the <code>validators</code> placeholder.</p>
     </section>
     <section class="tutorial">      
         <h2 id="toc_7">Wrapping it up</h2>
@@ -505,6 +440,5 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         <p>If we go back to our page and fill out the form, we should get something like:</p>
         
         <p><img src="{{site.url}}/img/tutorials/process-form-2.png" alt="UserFrosting - processing a form submission - 2"></p>
-
     </section>
 </div>

@@ -271,22 +271,27 @@
                 <h3>Step 3: Set the Path to initialize.php</h3>
                 <p>Once you have organized the codebase as you see fit, make sure that the <code>require_once</code> path for <code>initialize.php</code> is correctly set at the top of <code>public/index.php</code>.  Otherwise, UF will not be able to find the rest of the code!
                 </p>
-                <h3>Step 4: Create and Specify Database</h3>
+                <h3>Step 4: Create database and setup configuration file</h3>
                 <p>
-                    You need to create a database for UserFrosting to work properly.  You can do this in phpMyAdmin, cPanel, or whichever tool you prefer/have access to.  Specify your database information in <code>userfrosting/config-userfrosting.php</code>.  You will need to set the values of <code>db_host</code> (usually <code>localhost</code>), <code>db_name</code>, <code>db_user</code>, <code>db_pass</code>, and <code>db_prefix</code> (you can leave <code>db_prefix</code> as the default value if you wish).  
+                    You need to create a database for UserFrosting to work properly.  You can do this in phpMyAdmin, cPanel, or whichever tool you prefer/have access to.  To specify your database information in the code, find the file <code>userfrosting/config-userfrosting-example.php</code> and rename it to <code>userfrosting/config-userfrosting.php</code>.  You will need to set the values of <code>db_host</code> (usually <code>localhost</code>), <code>db_name</code>, <code>db_user</code>, <code>db_pass</code>, and <code>db_prefix</code> (you can leave <code>db_prefix</code> as the default value if you wish).  
                 </p>
+                <p>You may also specify your mail server information, if you have one set up.</p>
 <pre>
 /********* DEVELOPMENT SETTINGS *********/
-$app->configureMode('dev', function () use ($app) {
+$app->configureMode('dev', function () use ($app, $public_path, $uri_public_root) {
     $app->config([
         'log.enable' => true,
         'debug' => false,
         'base.path'     => __DIR__,            
-        'templates.path' => __DIR__ . '/templates',
+        'templates.path' => __DIR__ . '/templates',     // This will be overridden anyway by the default theme.
         'themes.path'    =>  __DIR__ . '/templates/themes',
+        'plugins.path' => __DIR__ . '/plugins',
         'schema.path' =>    __DIR__ . '/schema',
         'locales.path' =>   __DIR__ . '/locale',
         'log.path' =>   __DIR__ . '/log',
+        'public.path' => $public_path,
+        'js.path' => $public_path . "/js",
+        'css.path' => $public_path . "/css",
         'db'            =>  [
             'db_host'  => 'localhost',
             'db_name'  => 'userfrosting',
@@ -294,10 +299,31 @@ $app->configureMode('dev', function () use ($app) {
             'db_pass'  => 'password',
             'db_prefix'=> 'uf_'
         ],
-    ...
+        'mail' => 'smtp',
+        'smtp'  => [
+            'host' => 'mail.example.com',
+            'port' => 465,
+            'auth' => true,
+            'secure' => 'ssl',
+            'user' => 'relay@example.com',
+            'pass' => 'password'
+        ],
+        'uri' => [
+            'public' =>    $uri_public_root,
+            'js' =>        $uri_public_root . "/js/",
+            'css' =>       $uri_public_root . "/css/",        
+            'favicon' =>   $uri_public_root . "/css/favicon.ico",
+            'image' =>     $uri_public_root . "/images/"
+        ],
+        'user_id_guest'  => 0,
+        'user_id_master' => 1
+    ]);
+});
+
+...
 </pre>
                 <p>
-                If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of <code>$app->configureMode('dev' ...</code> it says <code>$app->configureMode('production' ...</code>.  You can then easily switch between these two modes on line 19:
+                If you frequently deploy and modify your code, you may wish to set up separate development and production configurations.  You will notice that immediately below this block of code is a nearly identical block, except that instead of <code>$app->configureMode('dev' ...</code> it says <code>$app->configureMode('production' ...</code>.  You can then easily switch between these two modes on line 12:
                 </p>
 
 <pre>
@@ -360,7 +386,17 @@ $app->configureMode('dev', function () use ($app) {
                         <a href="http://localhost:4000/security">
                             Security
                         </a>
-                    </li>                          
+                    </li>
+                    <li>
+                        <a href="http://localhost:4000/0.2.2">
+                            Version 0.2.2
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://gitter.im/alexweissman/UserFrosting">
+                            Chat
+                        </a>
+                    </li>                 
                 </ul>
             </div>
             <div class="col-lg-6">

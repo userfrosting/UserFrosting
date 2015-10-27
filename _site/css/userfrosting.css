@@ -82,13 +82,13 @@ header.breadcrumb-header .container {
     padding-bottom: 0px;
 }
 
-header.breadcrumb-header ul {
+header.breadcrumb-header .container ul {
     margin: 0px;
     font-size: 18px;
     font-weight: bold;
 }
 
-header.breadcrumb-header ul li {
+header.breadcrumb-header .container ul li {
 	margin-bottom: .5em;
 }
 
@@ -197,6 +197,13 @@ section.content-page ol li small {
 .navbar-default .navbar-nav > li > a.nav-highlight:hover {
   color: #f3f2e4;
   background-color: #f3c8ce;
+}
+
+.version-button {
+    position:absolute;
+    right: 150px;
+    top: 150px;
+    z-index: 3;
 }
 
 code {

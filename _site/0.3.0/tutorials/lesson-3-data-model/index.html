@@ -1,14 +1,123 @@
----
-layout: new
-title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
----
+<!DOCTYPE html>
+<html>
 
-<header class="breadcrumb-header">
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Alex Weissman">
+
+    <link rel="shortcut icon" type="image/x-icon" href="http://localhost:4000/img/cupcake.ico">
+    <link rel="canonical" href="http://localhost:4000/0.3.0/tutorials/lesson-3-data-model/">
+    
+    <title>UserFrosting | Tutorials | Lesson 3: Extending the Data Model</title>
+    
+    <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link href="http://localhost:4000/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="http://localhost:4000/css/freelancer.css" rel="stylesheet">
+    <link href="http://localhost:4000/css/userfrosting.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-37689257-2', 'www.userfrosting.com');
+        ga('send', 'pageview');
+      
+    </script>
+</head>
+
+    <body id="page-top" class="index">
+    
+        <!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://localhost:4000/">UserFrosting</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#about">About</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#features">Features</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#get-started">Get Started</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="http://localhost:4000/#help">Help</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="https://pledgie.com/campaigns/29583" class="nav-highlight">Donate</a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/UserFrosting"><i class="fa fa-twitter"></i></a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+    
+        <header class="breadcrumb-header">
+    
+
+
+
+
+
+
+    
+
+
+<div class="btn-group version-button">
+  <button type="button" class="btn btn-primary btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    0.3.0 <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="http://localhost:4000/0.3.0/tutorials/lesson-3-data-model/index.html">0.3.0</a></li>
+    <li><a href="http://localhost:4000/tutorials/lesson-3-data-model/index.html">0.3.1</a></li>
+  </ul>
+</div>
+
     <div class="container">
         <ol class="breadcrumb">
-            <li><a href="{{site.url}}/">Home</a></li>
-            <li><a href="{{site.url}}/#get-started">Getting Started</a></li>
-            <li><a href="{{site.url}}/tutorials">Tutorials</a></li>    
+            <li><a href="http://localhost:4000/">Home</a></li>
+            <li><a href="http://localhost:4000/#get-started">Getting Started</a></li>
+            <li><a href="http://localhost:4000/0.3.0/tutorials">Tutorials</a></li>    
             <li class="active">Extending the Data Model</li>
         </ol>
         <div class="row">
@@ -22,7 +131,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
 
 <div class="container">
     <section class="tutorial">
-        <p>Ok, so you&#39;ve patiently completed lessons <a href="{{site.url}}/tutorials/lesson-1-new-page">1</a> and <a href="{{site.url}}/tutorials/lesson-2-process-form">2</a>, and hopefully you&#39;re starting to understand the basic concepts of the <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">model-view-controller (MVC)</a> architecture.  We&#39;ve dived a bit into Twig, which handles the &quot;view&quot; part of &quot;model-view-controller&quot;.  </p>
+        <p>Ok, so you&#39;ve patiently completed lessons <a href="http://localhost:4000/0.3.0/tutorials/lesson-1-new-page">1</a> and <a href="http://localhost:4000/0.3.0/tutorials/lesson-2-process-form">2</a>, and hopefully you&#39;re starting to understand the basic concepts of the <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">model-view-controller (MVC)</a> architecture.  We&#39;ve dived a bit into Twig, which handles the &quot;view&quot; part of &quot;model-view-controller&quot;.  </p>
         
         <p>We&#39;ve also talked a lot about controllers, using them to send data <strong>to</strong> the view (to render a &quot;page&quot;), and also capturing data <strong>from</strong> <code>POST</code> requests to perform some operations on our data model (i.e., deleting a user, updating the name of a group, etc).</p>
         
@@ -66,13 +175,13 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>To do this, we will first create a new instance of the <code>DatabaseTable</code> class:</p>
         
         <pre><code>
-        {% raw %}
+        
         $table_event = new \UserFrosting\DatabaseTable(&quot;event&quot;, [
             &quot;date&quot;,
             &quot;location&quot;,
             &quot;description&quot;
         ]);
-        {% endraw %}
+        
         </code></pre>
         
         <p>Notice that the first argument is the name of the table, and the second argument is an array containing the names of the columns.  We don&#39;t need to specify the <code>id</code> column, because UserFrosting implicitly assumes that this column exists.</p>
@@ -92,10 +201,10 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>All we will do for the link table, then, is register the table name:</p>
         
         <pre><code>
-        {% raw %}
+        
         $table_event_user = new \UserFrosting\DatabaseTable(&quot;event_user&quot;);
         \UserFrosting\Database::setTable(&quot;event_user&quot;, $table_event_user);
-        {% endraw %}
+        
         </code></pre>
         
         <p>Great, now we have an organized, sane way to access information <strong>about</strong> our tables (but not the data in those tables, yet).</p>
@@ -112,7 +221,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p><strong>userfrosting/models/mysql/MySqlEvent.php</strong></p>
         
         <pre><code>
-        {% raw %}
+        
         &lt;?php
         
         namespace UserFrosting;
@@ -121,15 +230,15 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         
             ...
         }
-        {% endraw %}
+        
         </code></pre>
         
-        <p><strong>Note that since we are creating a new class, you must have Composer installed and run <code>composer update</code> to have your new class autoloaded.</strong>  See <a href="{{site.url}}/navigating/#composer">here</a> for more information.</p>
+        <p><strong>Note that since we are creating a new class, you must have Composer installed and run <code>composer update</code> to have your new class autoloaded.</strong>  See <a href="http://localhost:4000/navigating/#composer">here</a> for more information.</p>
         
         <p>We must then define a constructor for our new class.  For most purposes, all you need to do in the constructor is give the class the information about the <code>event</code> table, and then pass any data into the base (parent) class constructor:</p>
         
         <pre><code>
-        {% raw %}
+        
         &lt;?php
         
         namespace UserFrosting;
@@ -142,7 +251,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
             }
             
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>Notice that we use the static <code>getTable</code> method to look up the <code>DatabaseTable</code> object containing the information about our table based on the handle that we assigned it in <code>initialize.php</code>.  We then pass this information to <code>_table</code>, which is a member of the base <code>MySqlDatabaseObject</code> class and will be used for the basic CRUD operations.</p>
@@ -150,13 +259,13 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>Cool, now we can create new <code>Event</code> objects easily:</p>
         
         <pre><code>
-        {% raw %}
+        
         $new_event = new MySqlEvent([
             &quot;date&quot; =&gt; &quot;2015-12-24 14:00:00&quot;,
             &quot;location&quot; =&gt; &quot;Room 101&quot;,
             &quot;description&quot; =&gt; &quot;Mandatory Christmas party for all employees!&quot;
         ]);
-        {% endraw %}
+        
         </code></pre>
         
         <p>And we can store the new event to the database:</p>
@@ -166,10 +275,10 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>Notice how all the SQL queries are taken care of for us.  Event objects can also be used to update properties in the table:</p>
         
         <pre><code>
-        {% raw %}
+        
         $new_event-&gt;location = &quot;Torture Chamber Alpha&quot;;
         $new_event-&gt;store();
-        {% endraw %}
+        
         </code></pre>
         
         <p>And we can even delete events from the database:</p>
@@ -188,7 +297,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p><strong>userfrosting/models/mysql/MySqlEventLoader.php</strong></p>
         
         <pre><code>
-        {% raw %}
+        
         &lt;?php
         
         namespace UserFrosting;
@@ -219,7 +328,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
             }
             
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>Note how we&#39;ve basically just copied the <code>MySqlGroupLoader</code> class.  The only difference is that the <code>fetch</code> and <code>fetchAll</code> methods, instead of creating <code>Group</code> objects, now create <code>MySqlEvent</code> objects.</p>
@@ -231,7 +340,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>Great, now we can do things like:</p>
         
         <pre><code>
-        {% raw %}
+        
         // Fetch a single event by id
         $event1 = MySqlEventLoader::fetch(&quot;1&quot;);
         
@@ -243,7 +352,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         
         // Fetch all events for a specific location, as an array of MySqlEvent objects
         $events = MySqlEventLoader::fetchAll(&quot;Room 101&quot;, &quot;location&quot;);
-        {% endraw %}
+        
         </code></pre>
         
         <p>If we want to do other types of filtering, like counting events, fetching all events within a specific date range, or filtering by multiple criteria, you will need to create a new method in the <code>MySqlEventLoader</code> class.</p>
@@ -256,7 +365,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>First, we will add a member to the <code>MySqlEvent</code> class called <code>_users</code>, which will be an array of users who are assigned to this event.</p>
         
         <pre><code>
-        {% raw %}
+        
         &lt;?php
         
         namespace UserFrosting;
@@ -267,7 +376,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
             
             ...
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>Now, here we have to ask ourselves some questions.  When we load a particular <code>MySqlEvent</code> from the database, do we want to immediately load all of its assigned users?  Or, should we wait until we actually need them?</p>
@@ -277,7 +386,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>To implement lazy loading, we will first create a private method in <code>MySqlEvent</code> that does the heavy lifting:</p>
         
         <pre><code>
-        {% raw %}
+        
         private function fetchUsers(){
            $db = static::connection();
         
@@ -303,7 +412,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
            }
            return $results;        
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>This is the method that actually generates the array of <code>User</code> objects for our event.    Notice how we need to look up both the name of the <code>event</code> table, as well as the name of the <code>event_user</code> table.  The column names of the link table, <code>event_id</code> and <code>user_id</code>, are hardcoded into this method.</p>
@@ -311,20 +420,20 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>Next, we&#39;ll create a public wrapper method for <code>fetchUsers</code>, which we&#39;ll call <code>getUsers</code>:</p>
         
         <pre><code>
-        {% raw %}
+        
         public function getUsers(){
            if (!isset($this-&gt;_users))
                $this-&gt;_users = $this-&gt;fetchUsers();
                
            return $this-&gt;_users;
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>So, this function will load the users from the database if it hasn&#39;t already been loaded before.  We can also add this functionality to the <a href="http://php.net/manual/en/language.oop5.magic.php">magic getter</a>, by overloading the <code>__get</code> and <code>__isset</code> methods in <code>MySqlEvent</code>:</p>
         
         <pre><code>
-        {% raw %}
+        
         public function __get($name){
            if ($name == &quot;users&quot;)
                return $this-&gt;getUsers();
@@ -338,29 +447,29 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
            else
                return parent::__get($name);
         }
-        {% endraw %}
+        
         </code></pre>
         
-        <p>This will let us access an event&#39;s users by simply calling <code>$users = $my_event-&gt;users;</code>.  Overloading the magic methods will also allow us to access this data in Twig.  If we pass a <code>MySqlEvent</code> object into a Twig template through our call to <code>render</code>, then we can access the array of users for that event via: <code>{{my_event.users}}</code>.  Nifty, eh?</p>
+        <p>This will let us access an event&#39;s users by simply calling <code>$users = $my_event-&gt;users;</code>.  Overloading the magic methods will also allow us to access this data in Twig.  If we pass a <code>MySqlEvent</code> object into a Twig template through our call to <code>render</code>, then we can access the array of users for that event via: <code></code>.  Nifty, eh?</p>
         
         <h3 id="toc_5">Refreshing Related Data</h3>
         
         <p>Ok, but what if I modify my <code>user</code> table after I call <code>getUsers</code>?  We can overload the <code>fresh</code> method, which allows us to reload an object&#39;s data from the database, to also reload the associated users:</p>
         
         <pre><code>
-        {% raw %}
+        
         public function fresh(){
            $event = new MySqlEvent(parent::fresh(), $this-&gt;_id);
            $event-&gt;_users = $this-&gt;fetchUsers();
            return $event;
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>Then we can do things like:</p>
         
         <pre><code>
-        {% raw %}
+        
         // Fetch event 1
         $event = MySqlEventLoader::fetch(&quot;1&quot;);
         
@@ -372,7 +481,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         
         // Refresh the event, updating the user info
         $event = $event-&gt;fresh();
-        {% endraw %}
+        
         </code></pre>
         
         <h3 id="toc_6">Modifying Relationships</h3>
@@ -380,7 +489,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>Ok, so we&#39;ve seen how to get the related users for an event, but how do we add and remove relationships?  To do this, we will create <code>addUser</code> and <code>removeUser</code> methods:</p>
         
         <pre><code>
-        {% raw %}
+        
         public function addUser($user_id){
            // First, load current users for event
            $this-&gt;getUsers();
@@ -411,13 +520,13 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
            return $this;           
             
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>And, we will also need to overload the <code>store</code> method for <code>MySqlEvent</code> to update the link table whenever we add/remove users:</p>
         
         <pre><code>
-        {% raw %}
+        
         public function store(){
            // Update the event record itself
            parent::store();
@@ -471,13 +580,13 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
            // Store function should always return the id of the object
            return $this-&gt;_id;
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>Finally, we will probably want to automatically delete any relationships when we delete a particular object.  So, we will overload the <code>delete</code> method as well, again in <code>MySqlEvent</code>:</p>
         
         <pre><code>
-        {% raw %}
+        
         public function delete(){        
            // Can only delete an object where `id` is set
            if (!$this-&gt;_id) {
@@ -504,7 +613,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         
            return $result;
         }
-        {% endraw %}
+        
         </code></pre>
         
         <p>And that&#39;s it!  Our <code>MySqlEvent</code> data is now a full-fledged, relational data model that can keep track of which users are assigned to it in a sane manner.  We can make the same modifications to <code>MySqlUser</code> to create methods like <code>addEvent</code>, <code>removeEvent</code>, and so forth as necessary.</p>
@@ -512,3 +621,95 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         <p>Combining what you&#39;ve learned here with what you learned in Lesson 2, you should now be able to implement a controller with all the routes you need to create, update, delete, and view/list events, as well as assign users to events.</p>
     </section>
 </div>
+          
+        <!-- Footer -->
+        <footer class="text-center">
+            <div class="footer-below">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-2">
+                <ul class="list-unstyled text-left">
+                    <li>
+                        <a href="http://localhost:4000/installation">
+                            Requirements and Installation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://localhost:4000/navigating">
+                            Navigating the Code
+                        </a>
+                    </li>                    
+                    <li>
+                        <a href="http://localhost:4000/tutorials">
+                            Tutorials
+                        </a>
+                    </li>                      
+                    <li>
+                        <a href="http://localhost:4000/components">
+                            Components
+                        </a>
+                    </li>  
+                    <li>
+                        <a href="http://localhost:4000/security">
+                            Security
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://localhost:4000/0.2.2">
+                            Version 0.2.2
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://gitter.im/alexweissman/UserFrosting">
+                            Chat
+                        </a>
+                    </li>                 
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <p class="footer-p">
+                    Copyright &copy; Userfrosting 2015
+                </p>
+                <p class="footer-p">
+                    UserFrosting logo adapted from <a href="http://cliparts.co/clipart/1041303">Pink Cupcake by Jay Reed</a>
+                </p>
+                <p class="footer-p">
+                    Site theme is adapted from the <a href="http://startbootstrap.com/template-overviews/freelancer/">Freelancer</a> theme by <a href="http://startbootstrap.com">Start Bootstrap</a>.
+                </p>
+                <p class="footer-p">
+                    Donate via Bitcoin: <code>18Ew1xGy1E3kjH1UyPEgJ3nnDN3ZWUY1N1</code>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll visible-xs visible-sm">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
+
+<!-- Placed at the end of the document so the pages load faster --> 
+<!-- jQuery -->
+<script src="http://localhost:4000/js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="http://localhost:4000/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="http://localhost:4000/js/classie.js"></script>
+<script src="http://localhost:4000/js/cbpAnimatedHeader.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="http://localhost:4000/js/jqBootstrapValidation.js"></script>
+<script src="http://localhost:4000/js/contact_me.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="http://localhost:4000/js/freelancer.js"></script>    
+
+        </footer>
+    </body>
+</html>
