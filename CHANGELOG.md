@@ -20,3 +20,34 @@
 - Remove username requirement for password reset.  It is more likely that an attacker would know the user's username, than the user themselves.  For the next version, we can try to implement some real multi-factor authentication.
 - When a user creates another user, they don't need to set a password.  Instead, an email is sent out to the new user, with a token allowing them to set their own password.
 - Admins can manually generate a password reset request for another user, or directly change the user's password.
+
+## v0.3.0
+
+### Autoloading with Composer
+
+http://www.userfrosting.com/navigating/#composer
+
+### Front Controllers and the Slim Microframework
+
+http://www.userfrosting.com/navigating/#slim
+
+### MVC Architecture
+
+http://www.userfrosting.com/navigating/#structure
+
+### Templating with Twig
+
+http://www.userfrosting.com/navigating/#twig
+
+### Theming
+
+http://www.userfrosting.com/components/#theming
+
+### Plugins
+
+http://www.userfrosting.com/components/#plugins
+
+## Libraries
+
+- URL Routing and micro-framework: [Slim](http://www.slimframework.com/)
+- Templating: [Twig](http://twig.sensiolabs.org/)
