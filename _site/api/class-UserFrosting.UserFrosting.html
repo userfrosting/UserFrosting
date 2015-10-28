@@ -166,7 +166,7 @@ Slim\Slim
 				Alex Weissman<br>
 				<b>Link:</b>
 				<a href="http://www.userfrosting.com/">http://www.userfrosting.com/</a><br>
-			<b>Located at</b> <a href="source-class-UserFrosting.UserFrosting.html#5-217" title="Go to source code">models/UserFrosting.php</a>
+			<b>Located at</b> <a href="source-class-UserFrosting.UserFrosting.html#5-283" title="Go to source code">models/UserFrosting.php</a>
 		<br>
 	</div>
 
@@ -352,6 +352,109 @@ It can also take specific actions for certain types of exceptions, such as those
 			</div>
 			</div></td>
 		</tr>
+		<tr data-order="startSession" id="_startSession">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_startSession">#</a>
+			<code><a href="source-class-UserFrosting.UserFrosting.html#196-204" title="Go to source code">startSession</a>( )</code>
+
+			<div class="description short">
+				<p>Start the PHP session, with the name and parameters specified in the configuration file.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Start the PHP session, with the name and parameters specified in the configuration file.</p>
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="login" id="_login">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_login">#</a>
+			<code><a href="source-class-UserFrosting.UserFrosting.html#206-236" title="Go to source code">login</a>( <span><code><a href="class-UserFrosting.User.html">UserFrosting\User</a></code> <var>$user</var></span>, <span>boolean <var>$remember</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Process an account login request.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Process an account login request.</p>
+
+<p>This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$user</var></dt>
+						<dd>The user to log in.</dd>
+						<dt><var>$remember</var></dt>
+						<dd>Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="logout" id="_logout">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_logout">#</a>
+			<code><a href="source-class-UserFrosting.UserFrosting.html#238-260" title="Go to source code">logout</a>( <span>boolean <var>$complete</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				<p>Processes an account logout request.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Processes an account logout request.</p>
+
+<p>Logs the currently authenticated user out, destroying the PHP session and optionally removing persistent sessions</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$complete</var></dt>
+						<dd>If set to true, will also clear out any persistent sessions.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
 		<tr data-order="fatalHandler" id="_fatalHandler">
 
 			<td class="attributes"><code>
@@ -363,7 +466,7 @@ It can also take specific actions for certain types of exceptions, such as those
 
 			<td class="name"><div>
 			<a class="anchor" href="#_fatalHandler">#</a>
-			<code><a href="source-class-UserFrosting.UserFrosting.html#196-215" title="Go to source code">fatalHandler</a>( )</code>
+			<code><a href="source-class-UserFrosting.UserFrosting.html#262-281" title="Go to source code">fatalHandler</a>( )</code>
 
 			<div class="description short">
 				<p>Set up the fatal error handler, so that we get a clean error message and alert instead of a WSOD.</p>

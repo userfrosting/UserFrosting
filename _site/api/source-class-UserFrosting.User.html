@@ -678,45 +678,21 @@
 </span><span id="546" class="l"><a href="#546">546 </a>    }
 </span><span id="547" class="l"><a href="#547">547 </a>    
 </span><span id="548" class="l"><a href="#548">548 </a>    <span class="php-comment">/**
-</span></span><span id="549" class="l"><a href="#549">549 </a><span class="php-comment">     * Log this user out.
+</span></span><span id="549" class="l"><a href="#549">549 </a><span class="php-comment">     * Generate an activation token for a user.
 </span></span><span id="550" class="l"><a href="#550">550 </a><span class="php-comment">     *
-</span></span><span id="551" class="l"><a href="#551">551 </a><span class="php-comment">     * Destroys the PHP session as well.
-</span></span><span id="552" class="l"><a href="#552">552 </a><span class="php-comment">     * @param bool $complete If set to true, will also clear out any persistent sessions.
-</span></span><span id="553" class="l"><a href="#553">553 </a><span class="php-comment">     */</span>    
-</span><span id="554" class="l"><a href="#554">554 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> logout(<span class="php-var">$complete</span> = <span class="php-keyword1">false</span>) {
-</span><span id="555" class="l"><a href="#555">555 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$complete</span>){
-</span><span id="556" class="l"><a href="#556">556 </a>            <span class="php-var">$storage</span> = <span class="php-keyword1">new</span> \Birke\Rememberme\Storage\PDO(<span class="php-keyword1">static</span>::<span class="php-var">$app</span>-&gt;remember_me_table);
-</span><span id="557" class="l"><a href="#557">557 </a>            <span class="php-var">$storage</span>-&gt;setConnection(\Illuminate\Database\Capsule\Manager::connection()-&gt;getPdo());
-</span><span id="558" class="l"><a href="#558">558 </a>            <span class="php-var">$storage</span>-&gt;cleanAllTriplets(<span class="php-var">$this</span>-&gt;id);
-</span><span id="559" class="l"><a href="#559">559 </a>        }        
-</span><span id="560" class="l"><a href="#560">560 </a>        <span class="php-comment">// Change cookie path</span>
-</span><span id="561" class="l"><a href="#561">561 </a>        <span class="php-var">$cookie</span> = <span class="php-keyword1">static</span>::<span class="php-var">$app</span>-&gt;remember_me-&gt;getCookie();
-</span><span id="562" class="l"><a href="#562">562 </a>        <span class="php-var">$cookie</span>-&gt;setPath(<span class="php-quote">&quot;/&quot;</span>);
-</span><span id="563" class="l"><a href="#563">563 </a>        <span class="php-keyword1">static</span>::<span class="php-var">$app</span>-&gt;remember_me-&gt;<span class="php-keyword2">setCookie</span>(<span class="php-var">$cookie</span>);
-</span><span id="564" class="l"><a href="#564">564 </a>        
-</span><span id="565" class="l"><a href="#565">565 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">static</span>::<span class="php-var">$app</span>-&gt;remember_me-&gt;clearCookie())
-</span><span id="566" class="l"><a href="#566">566 </a>            <span class="php-keyword2">error_log</span>(<span class="php-quote">&quot;Cleared cookie&quot;</span>);
-</span><span id="567" class="l"><a href="#567">567 </a>            
-</span><span id="568" class="l"><a href="#568">568 </a>        <span class="php-keyword2">session_regenerate_id</span>(<span class="php-keyword1">true</span>);
-</span><span id="569" class="l"><a href="#569">569 </a>        <span class="php-keyword2">session_destroy</span>();    
-</span><span id="570" class="l"><a href="#570">570 </a>    }
-</span><span id="571" class="l"><a href="#571">571 </a>    
-</span><span id="572" class="l"><a href="#572">572 </a>    <span class="php-comment">/**
-</span></span><span id="573" class="l"><a href="#573">573 </a><span class="php-comment">     * Generate an activation token for a user.
-</span></span><span id="574" class="l"><a href="#574">574 </a><span class="php-comment">     *
-</span></span><span id="575" class="l"><a href="#575">575 </a><span class="php-comment">     * This generates a token to use for activating a new account, resetting a lost password, etc.
-</span></span><span id="576" class="l"><a href="#576">576 </a><span class="php-comment">     * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
-</span></span><span id="577" class="l"><a href="#577">577 </a><span class="php-comment">     * @return string
-</span></span><span id="578" class="l"><a href="#578">578 </a><span class="php-comment">     */</span>
-</span><span id="579" class="l"><a href="#579">579 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> generateActivationToken(<span class="php-var">$gen</span> = <span class="php-keyword1">null</span>) {
-</span><span id="580" class="l"><a href="#580">580 </a>        <span class="php-keyword1">do</span> {
-</span><span id="581" class="l"><a href="#581">581 </a>            <span class="php-var">$gen</span> = <span class="php-keyword2">md5</span>(<span class="php-keyword2">uniqid</span>(<span class="php-keyword2">mt_rand</span>(), <span class="php-keyword1">false</span>));
-</span><span id="582" class="l"><a href="#582">582 </a>        } <span class="php-keyword1">while</span>(User::where(<span class="php-quote">'secret_token'</span>, <span class="php-var">$gen</span>)-&gt;first());
-</span><span id="583" class="l"><a href="#583">583 </a>        <span class="php-keyword1">return</span> <span class="php-var">$gen</span>;
-</span><span id="584" class="l"><a href="#584">584 </a>    }    
-</span><span id="585" class="l"><a href="#585">585 </a>    
-</span><span id="586" class="l"><a href="#586">586 </a>}
-</span><span id="587" class="l"><a href="#587">587 </a></span></code></pre>
+</span></span><span id="551" class="l"><a href="#551">551 </a><span class="php-comment">     * This generates a token to use for activating a new account, resetting a lost password, etc.
+</span></span><span id="552" class="l"><a href="#552">552 </a><span class="php-comment">     * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
+</span></span><span id="553" class="l"><a href="#553">553 </a><span class="php-comment">     * @return string
+</span></span><span id="554" class="l"><a href="#554">554 </a><span class="php-comment">     */</span>
+</span><span id="555" class="l"><a href="#555">555 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">static</span> <span class="php-keyword1">function</span> generateActivationToken(<span class="php-var">$gen</span> = <span class="php-keyword1">null</span>) {
+</span><span id="556" class="l"><a href="#556">556 </a>        <span class="php-keyword1">do</span> {
+</span><span id="557" class="l"><a href="#557">557 </a>            <span class="php-var">$gen</span> = <span class="php-keyword2">md5</span>(<span class="php-keyword2">uniqid</span>(<span class="php-keyword2">mt_rand</span>(), <span class="php-keyword1">false</span>));
+</span><span id="558" class="l"><a href="#558">558 </a>        } <span class="php-keyword1">while</span>(User::where(<span class="php-quote">'secret_token'</span>, <span class="php-var">$gen</span>)-&gt;first());
+</span><span id="559" class="l"><a href="#559">559 </a>        <span class="php-keyword1">return</span> <span class="php-var">$gen</span>;
+</span><span id="560" class="l"><a href="#560">560 </a>    }    
+</span><span id="561" class="l"><a href="#561">561 </a>    
+</span><span id="562" class="l"><a href="#562">562 </a>}
+</span><span id="563" class="l"><a href="#563">563 </a></span></code></pre>
 	</div>
 
 	<div id="footer">
