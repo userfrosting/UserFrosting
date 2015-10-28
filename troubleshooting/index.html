@@ -23,6 +23,7 @@ title: "UserFrosting | Troubleshooting"
                     <li><a href="#blank-page">I get a blank page when I try to install UserFrosting.</a></li>
                     <li><a href="#wrong-status-code">UF takes me to a blank page after I create the master account.</a></li> 
                     <li><a href="#new-class">I created a new class, but UserFrosting doesn't seem to recognize it.</a></li>
+                    <li><a href="#composer-error">Composer gives me errors when I run <code>composer update</code>.</a></li>
                     <li><a href="#other-servers">UF doesn't seem to work on nginx or IIS.</a></li>
                     <li><a href="#alias">I'm using an Apache alias for my site and I get 404 errors when trying to install.</a></li>
                 </ul>
@@ -115,6 +116,19 @@ title: "UserFrosting | Troubleshooting"
                 <h2><i class="fa fa-life-saver"></i> I created a new class, but UserFrosting doesn't seem to recognize it.</h2>
                 <p>
                     You need to <a href="http://getcomposer.org">install Composer</a>, PHP's dependency manager.  In addition to automatically loading external packages, Composer also autoloads the class files for your project.  When you add a new class, you must run <code>composer update</code> in the <code>userfrosting</code> directory (the same directory that contains <code>composer.json</code>).  Make sure that you have installed Composer <a href="https://getcomposer.org/doc/00-intro.md#globally">globally</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tutorial" id="composer-error">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2><i class="fa fa-life-saver"></i> Composer gives me errors when I run <code>composer update</code>.</h2>
+                <p>
+                    When this happens, you might get an error message complaining about a <code>.git</code> directory missing in <code>vendor</code>.  To solve this problem, simply delete the <code>vendor/alexweissman</code> directory and re-run <code>composer update</code>.</p>
                 </p>
             </div>
         </div>
