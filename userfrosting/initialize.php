@@ -10,13 +10,10 @@ require_once 'vendor/autoload.php';
 require_once 'models/auth/password.php';
 require_once 'config-userfrosting.php';
 
-// Use native PHP sessions
-session_cache_limiter(false);
-session_name("UserFrosting");  
-// First, initialize the PHP session
-session_start();
-
 use \Slim\Extras\Middleware\CsrfGuard;
+
+// Start session
+$app->startSession();
 
 /*===== Middleware.  Middleware gets run when $app->run is called, i.e. AFTER the code in initialize.php ====*/
 

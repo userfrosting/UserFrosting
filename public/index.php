@@ -21,7 +21,6 @@
         }
     
         // Check that we can connect to the DB.  Again, you can remove this if you know what you're doing.
-        error_log("Testing db connection...");
         if (!UF\Database::testConnection()){
             // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
             session_destroy();
@@ -56,7 +55,6 @@
     
     $app->get('/dashboard/?', function () use ($app) {    
         // Access-controlled page
-        error_log("Checking access");
         if (!$app->user->checkAccess('uri_dashboard')){
             $app->notFound();
         }

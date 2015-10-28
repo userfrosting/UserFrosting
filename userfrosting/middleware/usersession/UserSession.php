@@ -56,7 +56,6 @@ class UserSession extends \Slim\Middleware {
                 // If not, we log out the current session
                 if(!empty($_COOKIE[$this->app->remember_me->getCookieName()]) && !$this->app->remember_me->cookieIsValid()) {
                     //error_log("Session expired. logging out...");
-                   
                     $this->app->remember_me->clearCookie();
                     throw new AuthExpiredException();
                 }
@@ -70,7 +69,7 @@ class UserSession extends \Slim\Middleware {
                 if($user_id) {
                     //error_log("Logging in via remember me for $user_id");
                     // Load the user
-                    $this->app->user = \UserFrosting\UserLoader::fetch($user_id);
+                    $this->app->user = User::find($user_id);
                     // Update in session
                     $_SESSION["userfrosting"]["user_id"] = $user_id;
                     // There is a chance that an attacker has stolen the login token, so we store

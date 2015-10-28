@@ -35,6 +35,10 @@
             'public.path' => $public_path,
             'js.path' => $public_path . "/js",
             'css.path' => $public_path . "/css",
+            'session' => [
+                'name' => 'UserFrosting',
+                'cache_limiter' => false
+            ],
             'db'            =>  [
                 'db_host'  => 'localhost',
                 'db_name'  => 'userfrosting',
@@ -77,7 +81,11 @@
             'log.path' =>   __DIR__ . '/log',
             'public.path' => $public_path,
             'js.path' => $public_path . "/js",
-            'css.path' => $public_path . "/css",            
+            'css.path' => $public_path . "/css",
+            'session' => [
+                'name' => 'UserFrosting',
+                'cache_limiter' => false
+            ],            
             'db'            =>  [
                 'db_host'  => 'localhost',
                 'db_name'  => 'userfrosting',
