@@ -546,30 +546,6 @@ class User extends UFModel {
     }
     
     /**
-     * Log this user out.
-     *
-     * Destroys the PHP session as well.
-     * @param bool $complete If set to true, will also clear out any persistent sessions.
-     */    
-    public function logout($complete = false) {
-        if ($complete){
-            $storage = new \Birke\Rememberme\Storage\PDO(static::$app->remember_me_table);
-            $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
-            $storage->cleanAllTriplets($this->id);
-        }        
-        // Change cookie path
-        $cookie = static::$app->remember_me->getCookie();
-        $cookie->setPath("/");
-        static::$app->remember_me->setCookie($cookie);
-        
-        if (static::$app->remember_me->clearCookie())
-            error_log("Cleared cookie");
-            
-        session_regenerate_id(true);
-        session_destroy();    
-    }
-    
-    /**
      * Generate an activation token for a user.
      *
      * This generates a token to use for activating a new account, resetting a lost password, etc.

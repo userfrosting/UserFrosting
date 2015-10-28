@@ -270,27 +270,7 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Here is my password.  May I please assume the identify of this user now?
         if ($user->verifyPassword($data['password']))  {
-            $user->login();
-            session_regenerate_id();
-            // If the user wants to be remembered, create Rememberme cookie
-            // Change cookie path
-            $cookie = $this->_app->remember_me->getCookie();
-            $cookie->setPath("/");
-            $this->_app->remember_me->setCookie($cookie);
-            if(!empty($data['rememberme'])) {
-                //error_log("Creating user cookie for " . $user->id);
-                $this->_app->remember_me->createCookie($user->id);
-            } else {
-                $this->_app->remember_me->clearCookie();
-            }            
-            // Assume identity
-            $this->_app->user = $user;
-            
-            // Store user id in session
-            $_SESSION["userfrosting"]["user_id"] = $user->id;
-            
-            // Setup logged in user environment
-            $this->_app->setupAuthenticatedEnvironment();            
+            $this->_app->login($user, !empty($data['rememberme']));       
             $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
         } else {
             //Again, we know the password is at fault here, but lets not give away the combination in case of someone bruteforcing
@@ -303,12 +283,12 @@ class AccountController extends \UserFrosting\BaseController {
     /**
      * Processes an account logout request.
      *
-     * Logs the current user out.
+     * Logs out the currently logged in user.
      * This route is "public access".
      * Request type: POST     
      */      
     public function logout($complete = false){
-        $this->_app->user->logout($complete);    
+        $this->_app->logout($complete);    
         $this->_app->redirect($this->_app->site->uri['public']);
     }
 
@@ -660,26 +640,14 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Log out any existing user, and create a new session
         if (!$this->_app->user->isGuest()) {
-            $this->_app->user->logout(true);
-            // Use native PHP sessions
-            session_cache_limiter(false);
-            session_name("UserFrosting");  
-            // First, initialize the PHP session
-            session_start();              
+            $this->_app->logout(true);
+            // Restart session
+            $this->_app->startSession();
         }
         
-        // Log in the user      
-        $user->login();
-        session_regenerate_id();
+        // Auto-login the user      
+        $this->_app->login($user);
         
-        // Assume identity
-        $this->_app->user = $user;
-        
-        // Store user id in session
-        $_SESSION["userfrosting"]["user_id"] = $user->id;
-        
-        // Setup logged in user environment
-        $this->_app->setupAuthenticatedEnvironment();
         $ms = $this->_app->alerts; 
         $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
         $ms->addMessageTranslated("success", "ACCOUNT_PASSWORD_UPDATED");        
