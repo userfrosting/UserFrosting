@@ -49,6 +49,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USER_OR_PASS_INVALID" => "ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง",
 	"ACCOUNT_ALREADY_ACTIVE" => "เปิดใช้งานบัญชีของคุณแล้ว",
 	"ACCOUNT_REGISTRATION_DISABLED" => "ขออภัย เราได้ปิดระบบลงทะเบียนแล้ว",
+	"ACCOUNT_REGISTRATION_BROKEN" => "เราขออภัย กระบวนการลงทะเบียนของเราเกิดปัญหาขึ้น กรุณาติดต่อเราโดยตรงสำหรับการช่วยเหลือ",
 	"ACCOUNT_REGISTRATION_LOGOUT" => "เราขออภัย คุณไม่สามารถลงทะเบียนผู้ใช้ขณะอยู่ในระบบ กรุณาออกจากระบบ",
 	"ACCOUNT_INACTIVE" => "บัญชีของคุณยังไม่ถูกเปิดใช้งาน กรุณาตรวจสอบอีเมล และกล่องจดหมายขยะของคุณเพื่อเปิดใช้งานบัญชี",
 	"ACCOUNT_DISABLED" => "บัญชีนี้ถูกปิดการใช้งานไปแล้ว กรุณาติดต่อเราเพื่อขอข้อมูลเพิ่มเติม",
@@ -84,7 +85,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_DISABLE_MASTER" => "คุณไม่สามารถปิดการใช้งานบัญชีผู้ดูแลระบบได้!",
 	"ACCOUNT_DISABLE_SUCCESSFUL" => "ปิดใช้งานบัญชีของผู้ใช้ '{{user_name}}' เรียบร้อยแล้ว",
 	"ACCOUNT_ENABLE_SUCCESSFUL" => "เปิดใช้งานบัญชีของผู้ใช้ '{{user_name}}' เรียบร้อยแล้ว",
-	"ACCOUNT_DELETIONS_SUCCESSFUL" => "ลบผู้ใช้ '{{user_name}}' เรียบร้อยแล้ว",
+	"ACCOUNT_DELETION_SUCCESSFUL" => "ลบผู้ใช้ '{{user_name}}' เรียบร้อยแล้ว",
 	"ACCOUNT_MANUALLY_ACTIVATED" => "เปิดใช้งานบัญชีของ '{{user_name}}' เรียบร้อยแล้ว",
 	"ACCOUNT_DISPLAYNAME_UPDATED" => "ชื่อแสดงของ '{{user_name}}' เปลี่ยนเป็น '{{display_name}}' แล้ว",
 	"ACCOUNT_TITLE_UPDATED" => "หัวข้อของ '{{user_name}}' เปลี่ยนเป็น '{{title}}' แล้ว",
@@ -122,12 +123,12 @@ $lang = array_merge($lang,array(
 
 // Forgot Password
 $lang = array_merge($lang,array(
-	"FORGOTPASS_INVALID_TOKEN" => "Token การเปิดใช้งานของคุณไม่ถูกต้อง",
+	"FORGOTPASS_INVALID_TOKEN" => "Token ลับของคุณไม่ถูกต้อง",
 	"FORGOTPASS_OLD_TOKEN" => "Token หมดอายุแล้ว",
 	"FORGOTPASS_COULD_NOT_UPDATE" => "ไม่สามารถอัพเดทรหัสผ่านได้",
-	"FORGOTPASS_NEW_PASS_EMAIL" => "เราได้ส่งรหัสผ่านใหม่ไปทางอีเมลแล้ว",
 	"FORGOTPASS_REQUEST_CANNED" => "การลืมรหัสผ่านถูกยกเลิก",
 	"FORGOTPASS_REQUEST_EXISTS" => "มีการร้องขอลืมรหัสผ่านสำหรับบัญชีนี้เป็นจำนวนมากแล้ว",
+	"FORGOTPASS_REQUEST_SENT" => "เราได้ส่งรหัสผ่านใหม่ไปทางอีเมลแล้ว",
 	"FORGOTPASS_REQUEST_SUCCESS" => "เราได้ส่งอีเมลขั้นตอนการเข้าถึงบัญชีของคุณแล้ว"
 ));
 
@@ -158,12 +159,18 @@ $lang = array_merge($lang,array(
 $lang = array_merge($lang,array(
 	"GROUP_INVALID_ID" => "ไม่พบไอดีกลุ่มที่ร้องขอมา",
 	"GROUP_NAME_CHAR_LIMIT" => "ชื่อกลุ่มต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
+	"AUTH_HOOK_CHAR_LIMIT" => "ชื่อของ Authorization hook ต้องมีความยาวอยู่ระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
 	"GROUP_NAME_IN_USE" => "ชื่อกลุ่ม '{{name}}' ถูกใช้งานแล้ว",
 	"GROUP_DELETION_SUCCESSFUL" => "ลบกลุ่ม '{{name}}' เรียบร้อยแล้ว",
 	"GROUP_CREATION_SUCCESSFUL" => "สร้างกลุ่ม '{{name}}' เรียบร้อยแล้ว",
 	"GROUP_UPDATE" => "อัพเดทขอมูลของกลุ่ม '{{name}}' เรียบร้อยแล้ว",
 	"CANNOT_DELETE_GROUP" => "คุณไม่สามารถลบกลุ่ม '{{name}}' ได้",
-	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "ไม่สามารถลบกลุ่ม '{{name}}' ได้เนื่องจากมันถูกตั้งให้เป็นกลุ่มเริ่มต้นสำหรับผู้ใช้ใหม่ กรุณาเลือกกลุ่มอื่นให้เป็นกลุ่มเริ่มต้นก่อน"
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "ไม่สามารถลบกลุ่ม '{{name}}' ได้เนื่องจากมันถูกตั้งให้เป็นกลุ่มเริ่มต้นสำหรับผู้ใช้ใหม่ กรุณาเลือกกลุ่มอื่นให้เป็นกลุ่มเริ่มต้นก่อน",
+	"GROUP_AUTH_EXISTS" => "กฎของกลุ่ม '{{name}}' ถูกตั้งสำหรับ hook '{{hook}}' ไปแล้ว",
+    "GROUP_AUTH_CREATION_SUCCESSFUL" => "สร้างกฎของ '{{hook}}' ขึ้นสำหรับกลุ่ม '{{name}}' เรียบร้อยแล้ว",
+    "GROUP_AUTH_UPDATE_SUCCESSFUL" => "ลบกฎการเข้าถึงของกลุ่ม '{{name}}' สำหรับ '{{hook}}' เรียบร้อยแล้ว",
+    "GROUP_AUTH_DELETION_SUCCESSFUL" => "ลบกฎการเข้าถึงของกลุ่ม '{{name}}' สำหรับ '{{hook}}' เรียบร้อยแล้ว",
+    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "คุณไม่สามารถสร้างผู้ใช้ใหม่ได้ เนื่องจากไม่ได้ตั้งกลุ่มเริ่มต้น กรุณาตรวจสอบการตั้งค่ากลุ่มของคุณ"
 ));
 
 return $lang;
