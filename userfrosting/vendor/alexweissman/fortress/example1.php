@@ -15,7 +15,7 @@ $ms = $_SESSION['Fortress']['alerts'];
 // Create a message translator
 $translator = new Fortress\MessageTranslator();
 // Set the translation paths
-$translator->setTranslationTable("fortress/locale/es_ES.php");
+$translator->setTranslationTable("fortress/locale/en_US.php");
 $translator->setDefaultTable("fortress/locale/en_US.php");
 // Set translator for message streams
 \Fortress\MessageStream::setTranslator($translator);

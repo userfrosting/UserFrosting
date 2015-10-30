@@ -139,7 +139,11 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
                 // Email validator
                 if ($validator_name == "email"){
                     $this->ruleWithMessage("email", $message_set, $field_name);
-                }            
+                }
+                // Regex validator
+                if ($validator_name == "regex"){
+                    $this->ruleWithMessage("regex", $message_set, $field_name, "/" . $validator['regex'] . "/");
+                }                
                 // Match another field
                 if ($validator_name == "matches"){
                     $this->ruleWithMessage("equals", $message_set, $field_name, $validator['field']);
@@ -155,6 +159,14 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
                 // Negation of membership
                 if ($validator_name == "not_member_of"){
                     $this->ruleWithMessage("notIn", $message_set, $field_name, $validator['values'], true);  // Strict comparison
+                }
+                // No leading whitespace
+                if ($validator_name == "no_leading_whitespace"){
+                    $this->ruleWithMessage("regex", $message_set, $field_name, "/^\S.*$/"); 
+                }
+                // No trailing whitespace
+                if ($validator_name == "no_trailing_whitespace"){
+                    $this->ruleWithMessage("regex", $message_set, $field_name, "/^.*\S$/"); 
                 }
             }
         }

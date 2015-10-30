@@ -725,81 +725,18 @@
         ]
     },
     {
-        "name": "symfony/translation",
-        "version": "v2.7.5",
-        "version_normalized": "2.7.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/translation.git",
-            "reference": "485877661835e188cd78345c6d4eef1290d17571"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/485877661835e188cd78345c6d4eef1290d17571",
-            "reference": "485877661835e188cd78345c6d4eef1290d17571",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9"
-        },
-        "conflict": {
-            "symfony/config": "<2.7"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/config": "~2.7",
-            "symfony/intl": "~2.4",
-            "symfony/phpunit-bridge": "~2.7",
-            "symfony/yaml": "~2.2"
-        },
-        "suggest": {
-            "psr/log": "To use logging capability in translator",
-            "symfony/config": "",
-            "symfony/yaml": ""
-        },
-        "time": "2015-09-06 08:36:38",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.7-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Translation\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "twig/twig",
-        "version": "v1.22.3",
-        "version_normalized": "1.22.3.0",
+        "version": "v1.23.0",
+        "version_normalized": "1.23.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/twigphp/Twig.git",
-            "reference": "ebfc36b7e77b0c1175afe30459cf943010245540"
+            "reference": "5868cd822fd6cf626d5f805439575f9c323cee2a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/ebfc36b7e77b0c1175afe30459cf943010245540",
-            "reference": "ebfc36b7e77b0c1175afe30459cf943010245540",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/5868cd822fd6cf626d5f805439575f9c323cee2a",
+            "reference": "5868cd822fd6cf626d5f805439575f9c323cee2a",
             "shasum": ""
         },
         "require": {
@@ -809,11 +746,11 @@
             "symfony/debug": "~2.7",
             "symfony/phpunit-bridge": "~2.7"
         },
-        "time": "2015-10-13 07:07:02",
+        "time": "2015-10-29 23:29:01",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.22-dev"
+                "dev-master": "1.23-dev"
             }
         },
         "installation-source": "dist",
@@ -851,18 +788,80 @@
         ]
     },
     {
+        "name": "symfony/translation",
+        "version": "v2.7.6",
+        "version_normalized": "2.7.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/translation.git",
+            "reference": "6ccd9289ec1c71d01a49d83480de3b5293ce30c8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/6ccd9289ec1c71d01a49d83480de3b5293ce30c8",
+            "reference": "6ccd9289ec1c71d01a49d83480de3b5293ce30c8",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "conflict": {
+            "symfony/config": "<2.7"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~2.7",
+            "symfony/intl": "~2.4",
+            "symfony/yaml": "~2.2"
+        },
+        "suggest": {
+            "psr/log": "To use logging capability in translator",
+            "symfony/config": "",
+            "symfony/yaml": ""
+        },
+        "time": "2015-10-27 15:38:06",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.7-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Translation\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "https://symfony.com"
+    },
+    {
         "name": "alexweissman/fortress",
         "version": "0.2.0.x-dev",
         "version_normalized": "0.2.0.9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/alexweissman/fortress.git",
-            "reference": "c1b7d8798e720215aa47a06d4753cd8850d414b1"
+            "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/c1b7d8798e720215aa47a06d4753cd8850d414b1",
-            "reference": "c1b7d8798e720215aa47a06d4753cd8850d414b1",
+            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/136e3e83c1c4b29842a4df45313672ca721acfa6",
+            "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6",
             "shasum": ""
         },
         "require": {
@@ -870,7 +869,7 @@
             "php": ">=5.4.0",
             "vlucas/valitron": "1.2.3"
         },
-        "time": "2015-10-24 14:47:01",
+        "time": "2015-10-30 04:35:09",
         "type": "library",
         "installation-source": "source",
         "autoload": {

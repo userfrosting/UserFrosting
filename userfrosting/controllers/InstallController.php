@@ -203,10 +203,8 @@ class InstallController extends \UserFrosting\BaseController {
         $rf->removeFields(['root_account_config_token', 'passwordc']);
         
         // Perform desired data transformations.  Is this a feature we could add to Fortress?
-        $data['user_name'] = strtolower(trim($data['user_name']));
         $data['display_name'] = trim($data['display_name']);
-        $data['email'] = strtolower(trim($data['email']));
-        $data['active'] = 1;
+        $data['flag_verified'] = 1;
         $data['locale'] = $this->_app->site->default_locale;
                 
         // Halt on any validation errors

@@ -106,11 +106,11 @@ class JqueryValidationAdapter extends ClientSideValidationAdapter {
                 break;
             case "member_of":
                 if (isset($validator['values']))
-                    $transformedValidatorJson['pattern'] = "^" . implode("|", $validator['values']) . "$";
+                    $transformedValidatorJson['memberOf'] = $validator['values'];
                 break;
             case "not_member_of":
                 if (isset($validator['values']))
-                    $transformedValidatorJson['pattern'] = "^(?!" . implode("|", $validator['values']) . "$).*$";
+                    $transformedValidatorJson['notMemberOf'] = $validator['values'];
                 break;
             case "matches":
                 if (isset($validator['field']))
@@ -119,7 +119,13 @@ class JqueryValidationAdapter extends ClientSideValidationAdapter {
             case "not_matches":
                 if (isset($validator['field']))
                 $transformedValidatorJson['notEqualTo'] = "input[name='" . $validator['field'] . "']";
-                break;                
+                break;
+            case "no_leading_whitespace":
+                $transformedValidatorJson['noLeadingWhitespace'] = true;
+                break;
+            case "no_trailing_whitespace":
+                $transformedValidatorJson['noTrailingWhitespace'] = true;
+                break;            
             default:
                 break;
         }

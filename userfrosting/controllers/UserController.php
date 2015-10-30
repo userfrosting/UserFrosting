@@ -429,7 +429,6 @@ class UserController extends \UserFrosting\BaseController {
         
         // Perform desired data transformations on required fields.  Is this a feature we could add to Fortress?
         $data['display_name'] = trim($data['display_name']);
-        $data['email'] = strtolower(trim($data['email']));
         $data['flag_verified'] = 1;
         // Set password as empty on initial creation.  We will then send email so new user can set it themselves via secret token        
         $data['password'] = "";

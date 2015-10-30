@@ -237,11 +237,13 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("common", "lib/metisMenu.js");
     $app->schema->registerJS("common", "jqueryValidation/jquery.validate.js");
     $app->schema->registerJS("common", "jqueryValidation/additional-methods.js");
+    $app->schema->registerJS("common", "jqueryValidation/jqueryvalidation-methods-fortress.js");    
     $app->schema->registerJS("common", "moment.js");
     $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.js");
     $app->schema->registerJS("common", "tablesorter/tables.js");
     $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.pager.js");
     $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.widgets.js");
+    $app->schema->registerJS("common", "tablesorter/widgets/widget-sort2Hash.js");
     $app->schema->registerJS("common", "select2/select2.min.js");
     $app->schema->registerJS("common", "bootstrapradio.js");
     $app->schema->registerJS("common", "bootstrap-switch.js");

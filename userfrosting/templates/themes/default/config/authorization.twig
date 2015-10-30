@@ -55,7 +55,7 @@
             {% endfor %}
             </tbody>
         </table>
-        {% include 'components/common/table-tablesorter-default.twig' %}
+        {% include 'components/common/table-tablesorter-default.twig'  with {'pager_id' : 'table-auth-pager'}  %}
     </div>
     <div class="row">
         <div class="col-md-6 ">
@@ -66,79 +66,9 @@
     </div>    
 {% endblock %}
 {% block page_scripts %}
-        <!-- Include JS snippets -->
-        {% include 'components/common/js-snippets/user-table-columns.twig' %}
-        
         <script>            
-            $(document).ready(function() {           
-                // Set up server-side pagination
-                // See http://jsfiddle.net/Mottie/uwZc2/
-                // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
-                
-                var pager_options = {                    
-                    // target the pager markup - see the HTML block below
-                    container: $(".pager"),
-                    
-                    // Saves the current pager page size and number (requires storage widget)
-                    savePages: false,
-                    
-                    output: '{startRow} to {endRow} of {filteredRows} ({totalRows})',
-              
-                    // apply disabled classname (cssDisabled option) to the pager arrows when the rows
-                    // are at either extreme is visible; default is true
-                    updateArrows: true,
-              
-                    // starting page of the pager (zero based index)
-                    page: 0,
-              
-                    // Number of visible rows - default is 10
-                    size: 10, 
-                    
-                    // Saves tablesorter paging to custom key if defined.
-                    // Key parameter name used by the $.tablesorter.storage function.
-                    // Useful if you have multiple tables defined
-                    storageKey: 'tablesorter-pager',
-              
-                    // Reset pager to this page after filtering; set to desired page number (zero-based index),
-                    // or false to not change page at filter start
-                    pageReset: 0,
-              
-                    // if true, the table will remain the same height no matter how many records are displayed.
-                    // The space is made up by an empty table row set to a height to compensate; default is false
-                    fixedHeight: false,
-              
-                    // remove rows from the table to speed up the sort of large tables.
-                    // setting this to false, only hides the non-visible rows; needed if you plan to
-                    // add/remove rows with the pager enabled.
-                    removeRows: false,
-              
-                    // If true, child rows will be counted towards the pager set size
-                    countChildRows: false,
-              
-                    // css class names of pager arrows
-                    cssNext        : '.next',  // next page arrow
-                    cssPrev        : '.prev',  // previous page arrow
-                    cssFirst       : '.first', // go to first page arrow
-                    cssLast        : '.last',  // go to last page arrow
-                    cssGoto        : '.gotoPage', // page select dropdown - select dropdown that set the "page" option
-              
-                    cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
-                    cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
-              
-                    // class added to arrows when at the extremes; see the "updateArrows" option
-                    // (i.e. prev/first arrows are "disabled" when on the first page)
-                    cssDisabled    : 'disabled', // Note there is no period "." in front of this class name
-                    cssErrorRow    : 'tablesorter-errorRow' // error information row
-                };
-                
-                $('#table-auth').tablesorter({
-                    debug: false,
-                    theme: 'bootstrap',
-                    widthFixed: true,
-                    widgets: ['filter']
-                })
-                .tablesorterPager(pager_options);
+            $(document).ready(function() {
+                ufTable('table-auth');
             });
         </script>
-    
 {% endblock %}

@@ -553,6 +553,8 @@ An extension is a class that implements the following interface::
          * This is where you can load some file that contains filter functions for instance.
          *
          * @param Twig_Environment $environment The current Twig_Environment instance
+         *
+         * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_InitRuntimeInterace instead
          */
         function initRuntime(Twig_Environment $environment);
 
@@ -602,6 +604,8 @@ An extension is a class that implements the following interface::
          * Returns a list of global variables to add to the existing list.
          *
          * @return array An array of global variables
+         *
+         * @deprecated since 1.23 (to be removed in 2.0), implement Twig_Extension_GlobalsProviderInterace instead
          */
         function getGlobals();
 
@@ -644,9 +648,6 @@ main ``Environment`` object::
 
     $twig = new Twig_Environment($loader);
     $twig->addExtension(new Project_Twig_Extension());
-
-Of course, you need to first load the extension file by either using
-``require_once()`` or by using an autoloader (see `spl_autoload_register()`_).
 
 .. tip::
 
@@ -866,7 +867,6 @@ Testing the node visitors can be complex, so extend your test cases from
 ``Twig_Test_NodeTestCase``. Examples can be found in the Twig repository
 `tests/Twig/Node`_ directory.
 
-.. _`spl_autoload_register()`: http://www.php.net/spl_autoload_register
 .. _`rot13`:                   http://www.php.net/manual/en/function.str-rot13.php
 .. _`tests/Twig/Fixtures`:     https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Fixtures
 .. _`tests/Twig/Node`:         https://github.com/twigphp/Twig/tree/master/test/Twig/Tests/Node

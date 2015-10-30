@@ -20,7 +20,7 @@
 				'table' + $( 'table' ).index( c.$table );
 		},
 		getSort : function( c, wo, clean ) {
-			// modified original code from http://www.netlobo.com/url_query_string_javascript.html
+            // modified original code from http://www.netlobo.com/url_query_string_javascript.html
 			var value,
 				name = s2h.getTableId( c, wo ).replace( /[\[]/, '\\[' ).replace( /[\]]/, '\\]' ),
 				sort = ( new RegExp( '[\\#&]' + name + '=([^&]*)' ) ).exec( window.location.hash );
@@ -72,7 +72,7 @@
 
 		// convert [[0,0],[1,1]] to 'first%20name,asc,last%20name,desc'
 		processSort : function( c, wo ) {
-			var index, txt, column, direction,
+            var index, txt, column, direction,
 				sort = [],
 				arry = c.sortList || [],
 				len = arry.length;
@@ -88,13 +88,12 @@
 				sort.push( column );
 				direction = wo.sort2Hash_directionText[ arry[ index ][ 1 ] ];
 				sort.push( direction );
-
 			}
 			// join with separator
 			return sort.join( wo.sort2Hash_separator );
 		},
 		setHash : function( c, wo ) {
-			var sort = s2h.processSort( c, wo );
+            var sort = s2h.processSort( c, wo );
 			if ( sort.length ) {
 				// remove old hash
 				s2h.getSort( c, wo, true );
@@ -117,7 +116,7 @@
 			sort2Hash_overrideSaveSort  : false     // if true, override saveSort widget if saved sort available
 		},
 		init: function(table, thisWidget, c, wo) {
-			s2h.init( c, wo );
+            s2h.init( c, wo );
 		},
 		remove: function(table, c) {
 			c.$table.off( 'sortEnd.sort2hash' );

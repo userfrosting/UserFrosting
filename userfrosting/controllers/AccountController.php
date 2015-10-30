@@ -367,7 +367,6 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Perform desired data transformations.  Is this a feature we could add to Fortress?
         $data['display_name'] = trim($data['display_name']);
-        $data['email'] = strtolower(trim($data['email']));
         $data['locale'] = $this->_app->site->default_locale;
         
         if ($this->_app->site->require_activation)
@@ -810,16 +809,16 @@ class AccountController extends \UserFrosting\BaseController {
         }
         
         $data = $this->_app->request->post();
-                       
+        
         // Remove csrf_token
         unset($data['csrf_token']);
-                        
+        
         // Check current password
         if (!isset($data['passwordcheck']) || !$this->_app->user->verifyPassword($data['passwordcheck'])){
             $ms->addMessageTranslated("danger", "ACCOUNT_PASSWORD_INVALID");
             $this->_app->halt(403);
         }        
-                
+        
         // Validate new email, if specified
         if (isset($data['email']) && $data['email'] != $this->_app->user->email){
             // Check authorization

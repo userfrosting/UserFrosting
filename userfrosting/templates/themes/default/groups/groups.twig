@@ -21,7 +21,7 @@
             </div>
             <div class='panel-body'>
                 <div class="table-responsive">
-                    <table class="tablesorter table table-bordered table-hover table-striped tablesorter-bootstrap" data-sortlist="[[0, 0]]">
+                    <table id="table-groups" class="tablesorter table table-bordered table-hover table-striped tablesorter-bootstrap" data-sortlist="[[0, 0]]">
                         <thead>
                             <tr>
                                 <th class="sorter-metatext">Group Name <i class="fa fa-sort"></i></th>
@@ -86,7 +86,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                    {% include 'components/common/table-tablesorter-default.twig' %}
+                    {% include 'components/common/table-tablesorter-default.twig' with {'pager_id' : 'table-groups-pager'} %}
                 </div>
                 <div class="row">
                     <div class="col-md-6 ">
@@ -103,3 +103,11 @@
     </div>
 </div>
 {% endblock %}
+{% block page_scripts %}
+        <script>            
+            $(document).ready(function() {
+                ufTable('table-groups');
+            });
+        </script>
+{% endblock %}
+
