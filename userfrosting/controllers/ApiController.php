@@ -37,11 +37,12 @@ class ApiController extends \UserFrosting\BaseController {
     public function listUsers($page = 0, $size = 10, $primary_group_name = null){
         $get = $this->_app->request->get();
                 
-        $size = isset($get['size']) ? $get['size'] : 10;
-        $page = isset($get['page']) ? $get['page'] : 0;
+        $size = isset($get['size']) ? $get['size'] : $size;
+        $page = isset($get['page']) ? $get['page'] : $page;
         $sort_field = isset($get['sort_field']) ? $get['sort_field'] : "user_name";
         $sort_order = isset($get['sort_order']) ? $get['sort_order'] : "asc";
         $filters = isset($get['filters']) ? $get['filters'] : [];
+        $format = isset($get['format']) ? $get['format'] : "json";
         $primary_group_name = isset($get['primary_group']) ? $get['primary_group'] : null;
         
         $offset = $size*$page;                
@@ -118,9 +119,20 @@ class ApiController extends \UserFrosting\BaseController {
         
         //$query = Capsule::getQueryLog();    
         
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        $this->_app->response->headers->set('Content-Type', 'application/json; charset=utf-8');
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        if ($format == "csv"){
+            $settings = http_build_query($get);
+            $this->_app->response->headers->set('Content-Disposition', "attachment;filename=users-$settings.csv");
+            $this->_app->response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+            $keys = $user_collection->keys()->toArray();
+            echo implode(array_keys($result['rows'][0]), ",") . "\r\n";
+            foreach ($result['rows'] as $row){
+                echo implode($row, ",") . "\r\n";    
+            }   
+        } else {
+            // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+            // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+            $this->_app->response->headers->set('Content-Type', 'application/json; charset=utf-8');
+            echo json_encode($result, JSON_PRETTY_PRINT);
+        }
     }
 }
