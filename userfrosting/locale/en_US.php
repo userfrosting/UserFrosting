@@ -54,6 +54,9 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_INACTIVE" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
 	"ACCOUNT_DISABLED" => "This account has been disabled. Please contact us for more information.",
 	"ACCOUNT_USER_CHAR_LIMIT" => "Your username must be between {{min}} and {{max}} characters in length.",
+	"ACCOUNT_USER_INVALID_CHARACTERS" => "Username can only include alpha-numeric characters",
+    "ACCOUNT_USER_NO_LEAD_WS" => "Username cannot begin with whitespace",
+    "ACCOUNT_USER_NO_TRAIL_WS" => "Username cannot end with whitespace",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "Your display name must be between {{min}} and {{max}} characters in length.",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "Your password must be between {{min}} and {{max}} characters in length.",
 	"ACCOUNT_EMAIL_CHAR_LIMIT" => "Email must be between {{min}} and {{max}} characters in length.",
@@ -80,7 +83,6 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PASSWORD_UPDATED" => "Account password updated",
 	"ACCOUNT_EMAIL_UPDATED" => "Account email updated",
 	"ACCOUNT_TOKEN_NOT_FOUND" => "Token does not exist / Account is already activated",
-	"ACCOUNT_USER_INVALID_CHARACTERS" => "Username can only include alpha-numeric characters",
 	"ACCOUNT_DELETE_MASTER" => "You cannot delete the master account!",
 	"ACCOUNT_DISABLE_MASTER" => "You cannot disable the master account!",
 	"ACCOUNT_DISABLE_SUCCESSFUL" => "Account for user '{{user_name}}' has been successfully disabled.",
@@ -102,7 +104,9 @@ $lang = array_merge($lang, array(
 	"VALIDATE_REQUIRED" => "The field '{{self}}' must be specified.",
 	"VALIDATE_BOOLEAN" => "The value for '{{self}}' must be either '0' or '1'.",
 	"VALIDATE_INTEGER" => "The value for '{{self}}' must be an integer.",
-	"VALIDATE_ARRAY" => "The values for '{{self}}' must be in an array."
+	"VALIDATE_ARRAY" => "The values for '{{self}}' must be in an array.",
+    "VALIDATE_NO_LEAD_WS" => "The value for '{{self}}' cannot begin with spaces, tabs, or other whitespace",
+    "VALIDATE_NO_TRAIL_WS" => "The value for '{{self}}' cannot end with spaces, tabs, or other whitespace"
 ));
 
 // Configuration
