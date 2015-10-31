@@ -237,6 +237,39 @@ function ufTable(table_id, ajaxSetupCallback, pagerCompleteCallback){
     }
 }
 
+/**
+ * Get state variables for a tablesorter table: sort_field, sort_order, filters, size, page
+ */
+function getTableStateVars(table){
+    // Get sort column and order                    
+    var sortOrders = {
+        "0" : "asc",
+        "1" : "desc"
+    };
+    
+    var sort_field_index = table.config.sortList[0][0];
+    var sort_field = $(table.config.headerList[sort_field_index]).data("column-name");
+    
+    // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
+    var filterList = $.tablesorter.getFilters(table);
+    var filters = {};
+    for (i = 0; i < filterList.length; i++){
+        if (filterList[i]) {
+            var column_name = $(table.config.headerList[i]).data("column-name");
+            filters[column_name] = filterList[i];
+        }
+    }                    
+    
+    var state = {
+        size: table.config.pager.size,
+        page: table.config.pager.page,
+        sort_field: sort_field,
+        sort_order: sortOrders[table.config.sortList[0][1]],
+        filters: filters
+    }
+    return state;
+}
+
 // Initialize bootstrap switches, if enabled
 if (jQuery().bootstrapSwitch){
     $('.bootstrapswitch').bootstrapSwitch();

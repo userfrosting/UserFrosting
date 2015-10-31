@@ -37,15 +37,14 @@ class ApiController extends \UserFrosting\BaseController {
     public function listUsers($page = 0, $size = 10, $primary_group_name = null){
         $get = $this->_app->request->get();
                 
-        $size = isset($get['size']) ? $get['size'] : $size;
-        $page = isset($get['page']) ? $get['page'] : $page;
+        $size = isset($get['size']) ? $get['size'] : null;
+        $page = isset($get['page']) ? $get['page'] : null;
         $sort_field = isset($get['sort_field']) ? $get['sort_field'] : "user_name";
         $sort_order = isset($get['sort_order']) ? $get['sort_order'] : "asc";
         $filters = isset($get['filters']) ? $get['filters'] : [];
         $format = isset($get['format']) ? $get['format'] : "json";
         $primary_group_name = isset($get['primary_group']) ? $get['primary_group'] : null;
         
-        $offset = $size*$page;                
                 
         // Optional filtering by primary group
         if ($primary_group_name){
@@ -103,14 +102,18 @@ class ApiController extends \UserFrosting\BaseController {
         // Count filtered results
         $total_filtered = count($user_collection);
         
-        // Paginate and sort
+        // Sort
         if ($sort_order == "desc")
             $user_collection = $user_collection->sortByDesc($sort_field);
         else        
             $user_collection = $user_collection->sortBy($sort_field);
-                    
-        $user_collection = $user_collection->slice($offset, $size);     
-                
+        
+        // Paginate
+        if ($page && $size){
+            $offset = $size*$page;
+            $user_collection = $user_collection->slice($offset, $size);
+        }
+        
         $result = [
             "count" => $total,
             "rows" => $user_collection->values()->toArray(),
@@ -121,7 +124,8 @@ class ApiController extends \UserFrosting\BaseController {
         
         if ($format == "csv"){
             $settings = http_build_query($get);
-            $this->_app->response->headers->set('Content-Disposition', "attachment;filename=users-$settings.csv");
+            $date = date("Ymd");
+            $this->_app->response->headers->set('Content-Disposition', "attachment;filename=$date-users-$settings.csv");
             $this->_app->response->headers->set('Content-Type', 'text/csv; charset=utf-8');
             $keys = $user_collection->keys()->toArray();
             echo implode(array_keys($result['rows'][0]), ",") . "\r\n";
