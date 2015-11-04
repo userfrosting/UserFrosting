@@ -105,9 +105,17 @@ class User extends UFModel {
      * @return bool true if the property is defined, false otherwise.
      */ 
     public function __isset($name) {
-        if ($name == "primary_group" || $name == "theme" || $name == "icon" || $name == "landing_page")
-            return isset($this->_primary_group);
-        else if (in_array($name, ["last_sign_in_event", "last_sign_in_time", "sign_up_time", "last_password_reset_time", "last_verification_request_time"]))
+        if (in_array($name, [
+                "primary_group",
+                "theme",
+                "icon",
+                "landing_page",
+                "last_sign_in_event",
+                "last_sign_in_time",
+                "sign_up_time",
+                "last_password_reset_time",
+                "last_verification_request_time"
+            ]))
             return true;
         else
             return parent::__isset($name);

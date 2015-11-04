@@ -1,5 +1,23 @@
 # Change Log
 
+## v0.3.1.4
+
+- .htaccess redirect trailing slash: change to only redirect GET requests
+- Natural sort order in API
+- Fix bug in table pagination
+- Fix bug in loading user primary group properties as user properties
+- Fix mailto link bug in tables
+- Warn if config file missing (#445)
+- Fix dutch error (#447)
+
+## v0.3.1.3
+
+- Implement CSV download feature
+
+## v0.3.1.2
+
+- Implement `no_leading_whitespace` and `no_trailing_whitespace` rules
+
 ## v0.3.1
 
 - Improved initialization routine as middleware

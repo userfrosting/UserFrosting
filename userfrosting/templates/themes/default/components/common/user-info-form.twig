@@ -29,7 +29,7 @@
             <div class="form-group ">
                 <label>Email</label>
                 <div class="input-group">
-                    <span class="input-group-addon"><a href="mailto: abweissman@gmail.com"><i class="fa fa-envelope"></i></a></span>
+                    <span class="input-group-addon"><a href="mailto: {{target_user.email}}"><i class="fa fa-envelope"></i></a></span>
                     <input type="text" class="form-control" name="email" autocomplete="off" value="{{target_user.email}}" placeholder="Email goes here" {% if 'email' in fields.disabled %}disabled{% endif %}>
                 </div>
             </div>

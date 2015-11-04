@@ -104,12 +104,12 @@ class ApiController extends \UserFrosting\BaseController {
         
         // Sort
         if ($sort_order == "desc")
-            $user_collection = $user_collection->sortByDesc($sort_field);
+            $user_collection = $user_collection->sortByDesc($sort_field, SORT_NATURAL|SORT_FLAG_CASE);
         else        
-            $user_collection = $user_collection->sortBy($sort_field);
+            $user_collection = $user_collection->sortBy($sort_field, SORT_NATURAL|SORT_FLAG_CASE);
         
         // Paginate
-        if ($page && $size){
+        if ( ($page !== null) && ($size !== null) ){
             $offset = $size*$page;
             $user_collection = $user_collection->slice($offset, $size);
         }

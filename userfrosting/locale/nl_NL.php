@@ -120,7 +120,7 @@ $lang = array_merge($lang,array(
 	"NOTHING_TO_UPDATE" => "Niets te updaten",
 	"SQL_ERROR" => "Fatale SQL fout",
 	"FEATURE_DISABLED" => "Deze functie is uitgeschakeld.",
-	"ACCESS_DENIED" => "Hmm, het lijtk erop dat je geen toestemming hebt om deze pagina te bekijken.",
+	"ACCESS_DENIED" => "Hmm, het lijkt erop dat je geen toestemming hebt om deze pagina te bekijken.",
 	"LOGIN_REQUIRED" => "Sorry, je moet ingelogt zijn om deze pagina te kunnen zien."
 ));
 

@@ -15,8 +15,9 @@ SetEnv SERVER_TYPE Apache
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
     
-    # Remove trailing slash from any non-directory path (canonicalization)
+    # Remove trailing slash from any non-directory path (canonicalization) - GET requests only
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_METHOD}  =GET
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
     
