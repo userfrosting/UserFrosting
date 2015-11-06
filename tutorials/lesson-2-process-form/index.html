@@ -373,7 +373,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
                 // Load the validator rules for this form
                 var validators = {{validators | raw}};
                 ufFormSubmit(
-                  $(&quot;form[name='title']&quot;),
+                  $(&quot;form[name='titles']&quot;),
                   validators,
                   $(&quot;#userfrosting-alerts&quot;),
                   function(data, statusText, jqXHR) {
