@@ -343,7 +343,7 @@ To have the form submitted via AJAX, we'll add this block of Javascript code to 
 		// Load the validator rules for this form
 		var validators = {{validators | raw}};
 		ufFormSubmit(
-		  $("form[name='title']"),
+		  $("form[name='titles']"),
 		  validators,
 		  $("#userfrosting-alerts"),
 		  function(data, statusText, jqXHR) {
