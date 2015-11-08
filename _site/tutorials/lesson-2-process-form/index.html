@@ -168,7 +168,6 @@
         <pre><code>
         
             {% extends &quot;layouts/layout-dashboard.twig&quot; %}
-            {% set page_group = &quot;dashboard&quot; %}
         
             {% block page %}   
                 {% set page = page | merge({
@@ -486,7 +485,7 @@
                 // Load the validator rules for this form
                 var validators = {{validators | raw}};
                 ufFormSubmit(
-                  $(&quot;form[name='title']&quot;),
+                  $(&quot;form[name='titles']&quot;),
                   validators,
                   $(&quot;#userfrosting-alerts&quot;),
                   function(data, statusText, jqXHR) {
