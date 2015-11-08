@@ -175,7 +175,7 @@ abstract class Database {
             
         $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('authorize_group')->name . "` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `group_id` int(11) NOT NULL,
+            `group_id` int(10) unsigned NOT NULL,
             `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the group has access to.',
             `conditions` text NOT NULL COMMENT 'The conditions under which members of this group have access to this hook.',
             PRIMARY KEY (`id`)
@@ -183,14 +183,14 @@ abstract class Database {
           
         $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('authorize_user')->name . "` (
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `user_id` int(11) NOT NULL,
+            `user_id` int(10) unsigned NOT NULL,
             `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the user has access to.',
             `conditions` text NOT NULL COMMENT 'The conditions under which the user has access to this action.',
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
               
         $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('group')->name . "` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `name` varchar(150) NOT NULL,
             `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission is a default setting for new accounts.',
             `can_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission can be deleted from the control panel.',
@@ -210,14 +210,14 @@ abstract class Database {
           ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Maps users to their group(s)' AUTO_INCREMENT=1 ;");
           
         $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('user')->name . "` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
             `user_name` varchar(50) NOT NULL,
             `display_name` varchar(50) NOT NULL,
             `email` varchar(150) NOT NULL,
             `title` varchar(150) NOT NULL,
             `locale` varchar(10) NOT NULL DEFAULT 'en_US' COMMENT 'The language and locale to use for this user.',
             `primary_group_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'The id of this user''s primary group.',
-            `secret_token` varchar(32) NOT NULL COMMENT 'The current one-time use token for various user activities confirmed via email.',
+            `secret_token` varchar(32) NOT NULL DEFAULT '' COMMENT 'The current one-time use token for various user activities confirmed via email.',
             `flag_verified` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user has verified their account via email, ''0'' otherwise.',
             `flag_enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user''s account is currently enabled, ''0'' otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.',
             `flag_password_reset` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Set to ''1'' if the user has an outstanding password reset request, ''0'' otherwise.',
@@ -229,7 +229,7 @@ abstract class Database {
         
         $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('user_event')->name . "` ( 
             `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `user_id` int(11) NOT NULL,
+            `user_id` int(10) unsigned NOT NULL,
             `event_type` varchar(255) NOT NULL COMMENT 'An identifier used to track the type of event.',
             `occurred_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
             `description` text NOT NULL,

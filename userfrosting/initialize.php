@@ -260,8 +260,6 @@ $app->hook('includes.js.register', function () use ($app){
     // Dashboard JS
     $app->schema->registerJS("dashboard", "lib/raphael.js");
     $app->schema->registerJS("dashboard", "lib/morris.js");
-    $app->schema->registerJS("dashboard", "morris-data.js");
-    $app->schema->registerJS("dashboard", "http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0");    
     
     // Users JS
     $app->schema->registerJS("user", "widget-users.js");

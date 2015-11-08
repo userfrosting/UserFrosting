@@ -575,3 +575,7 @@ template engine for PHP
 </div>
 <!-- /.row -->
 {% endblock %}
+{% block page_scripts %}
+    <script src="{{site.uri.js}}morris-data.js"></script>
+    <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+{% endblock %}
