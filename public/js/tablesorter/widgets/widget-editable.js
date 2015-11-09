@@ -1,4 +1,4 @@
-/*! Widget: editable - updated 8/17/2015 (v2.23.0) *//*
+/*! Widget: editable - updated 10/31/2015 (v2.24.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -193,7 +193,9 @@
 					}
 					if ( e.which === 27 ) {
 						// user cancelled
-						$this.html( $this.data( 'original' ) ).trigger( 'blur' + namespace );
+						$this
+							.html( $this.data( 'original' ) )
+							.trigger( 'blur' + namespace );
 						c.$table.data( 'contentFocused', false );
 						c.table.isUpdating = false;
 						return false;
@@ -220,17 +222,17 @@
 								.data( 'before', valid )
 								.data( 'original', valid )
 								.trigger( 'change' );
-							c.$table.trigger( 'updateCell', [ $this.closest( 'td' ), false, function() {
+							$.tablesorter.updateCell( c, $this.closest( 'td' ), false, function() {
 								if ( wo.editable_autoResort ) {
 									setTimeout( function() {
-										c.$table.trigger( 'sorton', [ c.sortList, function() {
+										$.tablesorter.sortOn( c, c.sortList, function() {
 											tse.editComplete( c, wo, c.$table.data( 'contentFocused' ), true );
-										}, true ] );
+										}, true );
 									}, 10 );
 								} else {
 									tse.editComplete( c, wo, c.$table.data( 'contentFocused' ) );
 								}
-							} ] );
+							});
 							return false;
 						}
 					} else if ( !valid && e.type !== 'keydown' ) {

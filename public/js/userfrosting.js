@@ -212,7 +212,7 @@ function ufTable(table_id, ajaxSetupCallback, pagerCompleteCallback){
             // this option > table ID > table index on page
             sort2Hash_tableId           : null,
             // if true, show header cell text instead of a zero-based column index
-            sort2Hash_useHeaderText     : false,
+            sort2Hash_headerTextAttr    : 'data-column-name',
             // allow processing of text if sort2Hash_useHeaderText: true
             sort2Hash_processHeaderText : function( text, config, columnIndex ) {
                 var column_name = $(config.headerList[columnIndex]).data("column-name");
@@ -222,6 +222,84 @@ function ufTable(table_id, ajaxSetupCallback, pagerCompleteCallback){
                     return columnIndex;
                 }
             },
+            sort2Hash_encodeHash : function( config, tableId, component, value, rawValue ) {
+              var wo = config.widgetOptions;
+              if ( component === 'filter' ) {
+                // rawValue is an array of filter values, numerically indexed
+                var encodedFilters = "";
+				var len = rawValue.length;
+                for ( index = 0; index < len; index++ ) {
+                    if (rawValue[index]) {
+                        var columnName = $(config.$headerIndexed[ index ][0]).attr(wo.sort2Hash_headerTextAttr);
+                        encodedFilters += '&filter[' + tableId + '][' + columnName + ']=' + encodeURIComponent(rawValue[index]);
+                    }
+                }                
+                return encodedFilters;
+              } else if ( component === 'sort' ) {
+                // rawValue is an array of sort pairs [columnNum, sortDirection]
+                var encodedFilters = "";
+				var len = rawValue.length;
+                for ( index = 0; index < len; index++ ) {
+                    var columnNum = rawValue[index][0];
+                    var sortDirection = rawValue[index][1];
+                    var columnName = $(config.$headerIndexed[columnNum][0]).attr(wo.sort2Hash_headerTextAttr);
+                    encodedFilters += '&sort[' + tableId + '][' + columnName + ']=' + wo.sort2Hash_directionText[sortDirection];
+                }                
+                return encodedFilters;
+              }
+              return false;
+            },            
+            sort2Hash_decodeHash : function( config, tableId, component ) {
+              var wo = config.widgetOptions;
+              var result;
+              // Convert hash into JSON object
+              var urlObject = $.String.deparam(window.location.hash);
+              delete urlObject[wo.sort2Hash_hash];  // Remove hash character
+              if ( component === 'filter' ) {
+                var decodedFilters = [];
+                // Extract filter names and values for the specified table
+                var filters = urlObject['filter'] ? urlObject['filter'] : [];
+                if (filters[tableId]) {
+                    var filters = filters[tableId];
+                    // Build a numerically indexed array of filter values
+                    var len = config.$headerIndexed.length;
+                    for ( index = 0; index < len; index++ ) {
+                        var column_name = $(config.$headerIndexed[ index ][0]).attr(wo.sort2Hash_headerTextAttr);
+                        if (filters[column_name]) {
+                            decodedFilters.push(filters[column_name]);
+                        } else {
+                            decodedFilters.push("");
+                        }
+                    }
+                    // Convert array of filter values to a delimited string
+                    result = decodedFilters.join(wo.sort2Hash_separator);
+                    // make sure to use decodeURIComponent on the result
+                    return decodeURIComponent( result );
+                } else {
+                    return '';
+                }
+              }
+              return false;
+            },
+            sort2Hash_cleanHash : function( config, tableId, component, hash ) {
+                var wo = config.widgetOptions;
+                // Convert hash to JSON object
+                var urlObject = $.String.deparam(hash);
+                delete urlObject[wo.sort2Hash_hash];  // Remove hash character
+                // Remove specified component for specified table
+                if (urlObject[component]) {
+                    if (urlObject[component][tableId]) {
+                        delete urlObject[component][tableId];
+                    }
+                    // Delete entire component if no other tables remaining
+                    if (jQuery.isEmptyObject(urlObject[component])) {
+                        delete urlObject[component];
+                    }
+                }
+                // Convert modified JSON object back into serialized representation
+                result = jQuery.param(urlObject);
+                return result.length ? result : '';
+            },           
             // direction text shown in the URL e.g. [ 'asc', 'desc' ]
             sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
             // if true, override saveSort widget sort, if used & stored sort is available
@@ -269,6 +347,72 @@ function getTableStateVars(table){
     }
     return state;
 }
+	
+/**
+ * @add jQuery.String
+ */
+$.String = $.extend($.String || {}, { 
+    /**
+     * @function deparam
+     * 
+     * Takes a string of name value pairs and returns a Object literal that represents those params.
+     * 
+     * @param {String} params a string like <code>"foo=bar&person[age]=3"</code>
+     * @return {Object} A JavaScript Object that represents the params:
+     * 
+     *     {
+     *       foo: "bar",
+     *       person: {
+     *         age: "3"
+     *       }
+     *     }
+     */
+    deparam: function(params){
+        var digitTest = /^\d+$/,
+            keyBreaker = /([^\[\]]+)|(\[\])/g,
+            plus = /\+/g,
+            paramTest = /([^?#]*)(#.*)?$/;
+    
+        if(! params || ! paramTest.test(params) ) {
+            return {};
+        } 
+       
+    
+        var data = {},
+            pairs = params.split('&'),
+            current;
+            
+        for(var i=0; i < pairs.length; i++){
+            current = data;
+            var pair = pairs[i].split('=');
+            
+            // if we find foo=1+1=2
+            if(pair.length != 2) { 
+                pair = [pair[0], pair.slice(1).join("=")]
+            }
+              
+    var key = decodeURIComponent(pair[0].replace(plus, " ")), 
+      value = decodeURIComponent(pair[1].replace(plus, " ")),
+                parts = key.match(keyBreaker);
+    
+            for ( var j = 0; j < parts.length - 1; j++ ) {
+                var part = parts[j];
+                if (!current[part] ) {
+                    // if what we are pointing to looks like an array
+                    current[part] = digitTest.test(parts[j+1]) || parts[j+1] == "[]" ? [] : {}
+                }
+                current = current[part];
+            }
+            lastPart = parts[parts.length - 1];
+            if(lastPart == "[]"){
+                current.push(value)
+            }else{
+                current[lastPart] = value;
+            }
+        }
+        return data;
+    }
+});	
 
 // Initialize bootstrap switches, if enabled
 if (jQuery().bootstrapSwitch){

@@ -1,4 +1,4 @@
-/*! Widget: scroller - updated 7/28/2015 (v2.22.4) *//*
+/*! Widget: scroller - updated 10/31/2015 (v2.24.0) *//*
 	Copyright (C) 2011 T. Connell & Associates, Inc.
 
 	Dual-licensed under the MIT and GPL licenses
@@ -88,7 +88,7 @@
 		}
 	});
 
-	/* Add window resizeEnd event */
+	/* Add window resizeEnd event (also used by columnSelector widget) */
 	ts.window_resize = function() {
 		if ( ts.timer_resize ) {
 			clearTimeout( ts.timer_resize );
@@ -186,7 +186,7 @@
 		},
 
 		setup : function( c, wo ) {
-			var maxHt, tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp,
+			var maxHt, tbHt, $hdr, $t, $hCells, $fCells, $tableWrap, events, tmp, detectedWidth,
 				$win = $( window ),
 				tsScroller = ts.scroller,
 				namespace = c.namespace + 'tsscroller',
@@ -202,10 +202,14 @@
 			wo.scroller_saved = [ 0, 0 ];
 			wo.scroller_isBusy = true;
 
-			// set scrollbar width & allow setting width to zero
-			wo.scroller_barSetWidth = wo.scroller_barWidth !== null ?
-				wo.scroller_barWidth :
-				( tsScroller.getBarWidth() || 15 );
+			// set scrollbar width to one of the following (1) explicitly set scroller_barWidth option,
+			// (2) detected scrollbar width or (3) fallback of 15px
+			if ( wo.scroller_barWidth !== null ) {
+				wo.scroller_barSetWidth = wo.scroller_barWidth;
+			} else {
+				detectedWidth = tsScroller.getBarWidth();
+				wo.scroller_barSetWidth = detectedWidth !== null ? detectedWidth : 15;
+			}
 
 			maxHt = wo.scroller_height || 300;
 

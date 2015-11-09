@@ -1,4 +1,4 @@
-/*! Widget: grouping - updated 9/1/2015 (v2.23.3) *//*
+/*! Widget: grouping - updated 11/2/2015 (v2.24.1) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -6,60 +6,97 @@
 /*global jQuery: false */
 ;(function($){
 	'use strict';
-	var ts = $.tablesorter;
+	var ts = $.tablesorter,
 
-	ts.grouping = {
+	tsg = ts.grouping = {
 
 		types : {
-			number : function(c, $column, txt, num, group){
-				var value, word;
-				if (num > 1 && txt !== '') {
-					if ($column.hasClass(ts.css.sortAsc)) {
-						value = Math.floor(parseFloat(txt) / num) * num;
-						return value > parseFloat(group || 0) ? value : parseFloat(group || 0);
+			number : function(c, $column, txt, num) {
+				var word, result,
+					ascSort = $column.hasClass( ts.css.sortAsc );
+				if ( num > 1 && txt !== '' ) {
+					if ( ascSort ) {
+						result = Math.floor( parseFloat( txt ) / num ) * num;
 					} else {
-						value = Math.ceil(parseFloat(txt) / num) * num;
-						return value < parseFloat(group || num) - value ? parseFloat(group || num) - value : value;
+						result = Math.ceil( parseFloat( txt ) / num ) * num;
 					}
+					// show range
+					result += ' - ' + ( result + ( num - 1 ) * ( ascSort ? 1 : -1 ) );
 				} else {
-					word = (txt + '').match(/\d+/g);
-					return word && word.length >= num ? word[num - 1] : txt || '';
+					result = parseFloat( txt ) || txt;
 				}
+				return result;
 			},
-			separator : function(c, $column, txt, num){
+			separator : function(c, $column, txt, num) {
 				var word = (txt + '').split(c.widgetOptions.group_separator);
-				return $.trim(word && num > 0 && word.length >= num ? word[(num || 1) - 1] : '');
+				// return $.trim(word && num > 0 && word.length >= num ? word[(num || 1) - 1] : '');
+				return $.trim( word[ num - 1 ] || '' );
 			},
-			word : function(c, $column, txt, num){
-				var word = (txt + ' ').match(/\w+/g);
-				return word && word.length >= num ? word[num - 1] : txt || '';
+			text : function( c, $column, txt ) {
+				return txt;
 			},
-			letter : function(c, $column, txt, num){
+			word : function(c, $column, txt, num) {
+				var word = (txt + ' ').match(/\w+/g) || [];
+				// return word && word.length >= num ? word[num - 1] : txt || '';
+				return word[ num - 1 ] || '';
+			},
+			letter : function(c, $column, txt, num) {
 				return txt ? (txt + ' ').substring(0, num) : '';
 			},
-			date : function(c, $column, txt, part, group){
-				var wo = c.widgetOptions,
-					time = new Date(txt || ''),
-					hours = time.getHours();
-				return part === 'year' ? time.getFullYear() :
-					part === 'month' ? wo.group_months[time.getMonth()] :
-					part === 'monthyear' ?  wo.group_months[time.getMonth()] + ' ' + time.getFullYear() :
-					part === 'day' ? wo.group_months[time.getMonth()] + ' ' + time.getDate() :
-					part === 'week' ? wo.group_week[time.getDay()] :
-					part === 'time' ? ('00' + (hours > 12 ? hours - 12 : hours === 0 ? hours + 12 : hours)).slice(-2) + ':' +
-						('00' + time.getMinutes()).slice(-2) + ' ' + ('00' + wo.group_time[hours >= 12 ? 1 : 0]).slice(-2) :
-					wo.group_dateString(time);
+			date : function(c, $column, txt, part, group) {
+				var year, month,
+					wo = c.widgetOptions,
+					time = new Date(txt || '');
+				// check for valid date
+				if ( time instanceof Date && isFinite( time ) ) {
+					year = time.getFullYear();
+					month = tsg.findMonth( wo, time.getMonth() );
+					return part === 'year' ? year :
+						part === 'month' ? month :
+						part === 'monthyear' ?  month + ' ' + year :
+						part === 'day' ? month + ' ' + time.getDate() :
+						part === 'week' ? tsg.findWeek( wo, time.getDay() ) :
+						part === 'time' ? tsg.findTime( wo, time ) :
+						wo.group_dateString( time, c, $column );
+				} else {
+					return wo.group_dateInvalid;
+				}
 			}
 		},
 
-		update : function(table, c, wo){
+		// group date type functions to allow using this widget with Globalize
+		findMonth : function( wo, month ) {
+			// CLDR returns an object { 1: "Jan", 2: "Feb", 3: "Mar", ..., 12: "Dec" }
+			return wo.group_months[ month + ( ( wo.group_months[0] || '' ) === '' ? 1 : 0 ) ];
+		},
+		findWeek : function( wo, day ) {
+			if ( $.isArray( wo.group_week ) ) {
+				return wo.group_week[ day ];
+			} else if ( !$.isEmptyObject( wo.group_week ) ) {
+				// CLDR returns { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", ... }
+				var cldrWeek = [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ];
+				return wo.group_week[ cldrWeek[ day ] ];
+			}
+		},
+		findTime : function( wo, time ) {
+			var suffix,
+				// CLDR returns { am: "AM", pm: "PM", ... }
+				isObj = wo.group_time.am && wo.group_time.pm,
+				h = time.getHours(),
+				period = h >= 12 ? 1 : 0,
+				p24 = wo.group_time24Hour && h > 12 ? h - 12 :
+					wo.group_time24Hour && h === 0 ? h + 12 : h,
+				hours = ( '00' + p24 ).slice(-2),
+				min = ( '00' + time.getMinutes() ).slice(-2);
+			suffix = wo.group_time[ isObj ? [ 'am', 'pm' ][ period ] : period ];
+			return hours + ':' + min + ( wo.group_time24Hour ? '' : ' ' + ( suffix || '' ) );
+		},
+
+		update : function(table, c, wo) {
 			if ($.isEmptyObject(c.cache)) { return; }
-			var rowIndex, tbodyIndex, currentGroup, $rows, groupClass, grouping, norm_rows, saveName, direction,
-				hasSort = typeof c.sortList[0] !== 'undefined',
-				group = '',
-				groupIndex = 0,
-				savedGroup = false,
-				column = typeof wo.group_forceColumn[0] !== 'undefined' ?
+			var hasSort = typeof c.sortList[0] !== 'undefined',
+				data = {},
+				column = $.isArray( wo.group_forceColumn ) && typeof wo.group_forceColumn[0] !== 'undefined' ?
 					( wo.group_enforceSort && !hasSort ? -1 : wo.group_forceColumn[0] ) :
 					( hasSort ? c.sortList[0][0] : -1 );
 			c.$table
@@ -70,97 +107,135 @@
 				c.$table.data('pagerSavedHeight', 0);
 			}
 			if (column >= 0 && column < c.columns && !c.$headerIndexed[column].hasClass('group-false')) {
-				wo.group_currentGroup = ''; // save current groups
-				wo.group_currentGroups = {};
+				wo.group_collapsedGroup = ''; // save current groups
+				wo.group_collapsedGroups = {};
 
+				data.column = column;
 				// group class finds 'group-{word/separator/letter/number/date/false}-{optional:#/year/month/day/week/time}'
-				groupClass = (c.$headerIndexed[column].attr('class') || '').match(/(group-\w+(-\w+)?)/g);
+				data.groupClass = (c.$headerIndexed[column].attr('class') || '').match(/(group-\w+(-\w+)?)/g);
 				// grouping = [ 'group', '{word/separator/letter/number/date/false}', '{#/year/month/day/week/time}' ]
-				grouping = groupClass ? groupClass[0].split('-') : [ 'group', 'letter', 1 ]; // default to letter 1
+				data.grouping = data.groupClass ? data.groupClass[0].split('-') : [ 'group', 'letter', 1 ]; // default to letter 1
 
 				// save current grouping
-				if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
-					wo.group_currentGroups = ts.storage( table, 'tablesorter-groups' ) || {};
-					// include direction when saving groups (reversed numbers shows different range values)
-					direction = 'dir' + c.sortList[0][1];
-					// combine column, sort direction & grouping as save key
-					saveName = wo.group_currentGroup = '' + c.sortList[0][0] + direction + grouping.join('');
-					if (!wo.group_currentGroups[saveName]) {
-						wo.group_currentGroups[saveName] = [];
-					} else {
-						savedGroup = true;
-					}
-				}
-				for (tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++) {
-					norm_rows = c.cache[tbodyIndex].normalized;
-					group = ''; // clear grouping across tbodies
-					$rows = c.$tbodies.eq(tbodyIndex).children('tr').not('.' + c.cssChildRow);
-					for (rowIndex = 0; rowIndex < $rows.length; rowIndex++) {
-						if ( $rows.eq(rowIndex).is(':visible') ) {
-							// fixes #438
-							if (ts.grouping.types[grouping[1]]) {
-								currentGroup = norm_rows[rowIndex] ?
-									ts.grouping.types[grouping[1]]( c, c.$headerIndexed[column], norm_rows[rowIndex][column], /date/.test(groupClass) ?
-									grouping[2] : parseInt(grouping[2] || 1, 10) || 1, group ) : currentGroup;
-								if (group !== currentGroup) {
-									group = currentGroup;
-									// show range if number > 1
-									if (grouping[1] === 'number' && grouping[2] > 1 && currentGroup !== '') {
-										currentGroup += ' - ' + (parseInt(currentGroup, 10) +
-											((parseInt(grouping[2], 10) - 1) * (c.$headerIndexed[column].hasClass(ts.css.sortAsc) ? 1 : -1)));
-									}
-									if ($.isFunction(wo.group_formatter)) {
-										currentGroup = wo.group_formatter((currentGroup || '').toString(), column, table, c, wo) || currentGroup;
-									}
-									$rows.eq(rowIndex).before('<tr class="group-header ' + c.selectorRemove.slice(1) +
-										'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
-										( groupIndex++ ) + '"><td colspan="' + c.columns + '">' +
-										( wo.group_collapsible ? '<i/>' : '' ) +
-										'<span class="group-name">' + currentGroup + '</span>' +
-										'<span class="group-count"></span></td></tr>');
-									if (wo.group_saveGroups && !savedGroup && wo.group_collapsed && wo.group_collapsible) {
-										// all groups start collapsed
-										wo.group_currentGroups[wo.group_currentGroup].push(currentGroup);
-									}
-								}
-							}
-						}
-					}
-				}
-				c.$table.find('tr.group-header')
-				.bind('selectstart', false)
-				.each(function(){
-					var isHidden, $label, name,
-						$row = $(this),
-						$rows = $row.nextUntil('tr.group-header').filter(':visible');
-					if (wo.group_count || $.isFunction(wo.group_callback)) {
-						$label = $row.find('.group-count');
-						if ($label.length) {
-							if (wo.group_count) {
-								$label.html( wo.group_count.replace(/\{num\}/g, $rows.length) );
-							}
-							if ($.isFunction(wo.group_callback)) {
-								wo.group_callback($row.find('td'), $rows, column, table);
-							}
-						}
-					}
-					if (wo.group_saveGroups && !$.isEmptyObject(wo.group_currentGroups) && wo.group_currentGroups[wo.group_currentGroup].length) {
-						name = $row.find('.group-name').text().toLowerCase() + $row.attr('data-group-index');
-						isHidden = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup] ) > -1;
-						$row.toggleClass('collapsed', isHidden);
-						$rows.toggleClass('group-hidden', isHidden);
-					} else if (wo.group_collapsed && wo.group_collapsible) {
-						$row.addClass('collapsed');
-						$rows.addClass('group-hidden');
-					}
-				});
+				data.savedGroup = tsg.saveCurrentGrouping( c, wo, data );
+
+				// find column groups
+				tsg.findColumnGroups( c, wo, data );
+				tsg.processHeaders( c, wo, data );
+
 				c.$table.trigger(wo.group_complete);
+			}
+		},
+
+		processHeaders : function( c, wo, data ) {
+			var index, isHidden, $label, name, $rows, $row,
+				$headers = c.$table.find( 'tr.group-header' ),
+				len = $headers.length;
+
+			$headers.bind( 'selectstart', false );
+			for ( index = 0; index < len; index++ ) {
+				$row = $headers.eq( index );
+				$rows = $row.nextUntil( 'tr.group-header' ).filter( ':visible' );
+
+				// add group count (only visible rows!)
+				if ( wo.group_count || $.isFunction( wo.group_callback ) ) {
+					$label = $row.find( '.group-count' );
+					if ( $label.length ) {
+						if ( wo.group_count ) {
+							$label.html( wo.group_count.replace( /\{num\}/g, $rows.length ) );
+						}
+						if ( $.isFunction( wo.group_callback ) ) {
+							wo.group_callback( $row.find( 'td' ), $rows, data.column, c.table );
+						}
+					}
+				}
+
+				// save collapsed groups
+				if ( wo.group_saveGroups &&
+					!$.isEmptyObject( wo.group_collapsedGroups ) &&
+					wo.group_collapsedGroups[ wo.group_collapsedGroup ].length ) {
+
+					name = $row.find( '.group-name' ).text().toLowerCase() + $row.attr( 'data-group-index' );
+					isHidden = $.inArray( name, wo.group_collapsedGroups[ wo.group_collapsedGroup ] ) > -1;
+					$row.toggleClass( 'collapsed', isHidden );
+					$rows.toggleClass( 'group-hidden', isHidden );
+				} else if ( wo.group_collapsed && wo.group_collapsible ) {
+					$row.addClass( 'collapsed' );
+					$rows.addClass( 'group-hidden' );
+				}
+			}
+		},
+
+		groupHeaderHTML : function( c, wo, data ) {
+			return '<tr class="group-header ' + c.selectorRemove.slice(1) +
+				'" unselectable="on" ' + ( c.tabIndex ? 'tabindex="0" ' : '' ) + 'data-group-index="' +
+				( data.groupIndex++ ) + '">' +
+				'<td colspan="' + c.columns + '">' +
+					( wo.group_collapsible ? '<i/>' : '' ) +
+					'<span class="group-name">' + data.currentGroup + '</span>' +
+					'<span class="group-count"></span>' +
+				'</td></tr>';
+		},
+		saveCurrentGrouping : function( c, wo, data ) {
+			// save current grouping
+			var saveName, direction,
+				savedGroup = false;
+			if (wo.group_collapsible && wo.group_saveGroups && ts.storage) {
+				wo.group_collapsedGroups = ts.storage( c.table, 'tablesorter-groups' ) || {};
+				// include direction when saving groups (reversed numbers shows different range values)
+				direction = 'dir' + c.sortList[0][1];
+				// combine column, sort direction & grouping as save key
+				saveName = wo.group_collapsedGroup = '' + c.sortList[0][0] + direction + data.grouping.join('');
+				if (!wo.group_collapsedGroups[saveName]) {
+					wo.group_collapsedGroups[saveName] = [];
+				} else {
+					savedGroup = true;
+				}
+			}
+			return savedGroup;
+		},
+		findColumnGroups : function( c, wo, data ) {
+			var tbodyIndex, norm_rows, $row, rowIndex, end,
+				hasPager = ts.hasWidget( c.table, 'pager' );
+			data.groupIndex = 0;
+			for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
+				norm_rows = c.cache[ tbodyIndex ].normalized;
+				data.group = ''; // clear grouping across tbodies
+				rowIndex = hasPager ? c.pager.startRow - 1 : 0;
+				end = hasPager ? c.pager.endRow : norm_rows.length;
+				for ( ; rowIndex < end; rowIndex++ ) {
+					data.rowData = norm_rows[ rowIndex ];
+					data.$row = data.rowData[ c.columns ].$row;
+					// fixes #438
+					if ( data.$row.is( ':visible' ) && tsg.types[ data.grouping[ 1 ] ] ) {
+						tsg.insertGroupHeader( c, wo, data );
+					}
+				}
+			}
+		},
+		insertGroupHeader: function( c, wo, data ) {
+			var $header = c.$headerIndexed[ data.column ],
+				txt = data.rowData[ data.column ],
+				num = /date/.test( data.groupClass ) ? data.grouping[ 2 ] : parseInt( data.grouping[ 2 ] || 1, 10 ) || 1;
+			data.currentGroup = data.rowData ?
+				tsg.types[ data.grouping[ 1 ] ]( c, $header, txt, num, data.group ) :
+				data.currentGroup;
+			if ( data.group !== data.currentGroup ) {
+				data.group = data.currentGroup;
+				if ( $.isFunction( wo.group_formatter ) ) {
+					data.currentGroup = wo.group_formatter( ( data.group || '' ).toString(), data.column, c.table, c, wo, data ) || data.group;
+				}
+				data.$row.before( tsg.groupHeaderHTML( c, wo, data ) );
+				if ( wo.group_saveGroups && !data.savedGroup && wo.group_collapsed && wo.group_collapsible ) {
+					// all groups start collapsed
+					wo.group_collapsedGroups[ wo.group_collapsedGroup ].push( data.currentGroup );
+				}
 			}
 		},
 
 		bindEvents : function(table, c, wo){
 			if (wo.group_collapsible) {
-				wo.group_currentGroups = [];
+				wo.group_collapsedGroups = [];
 				// .on() requires jQuery 1.7+
 				c.$table.on('click toggleGroup keyup', 'tr.group-header', function(event){
 					event.stopPropagation();
@@ -180,33 +255,33 @@
 					if (wo.group_saveGroups && ts.storage) {
 						$groups = c.$table.find('.group-header');
 						isCollapsed = $this.hasClass('collapsed');
-						if (!wo.group_currentGroups[wo.group_currentGroup]) {
-							wo.group_currentGroups[wo.group_currentGroup] = [];
+						if (!wo.group_collapsedGroups[wo.group_collapsedGroup]) {
+							wo.group_collapsedGroups[wo.group_collapsedGroup] = [];
 						}
-						if (isCollapsed && wo.group_currentGroup) {
-							wo.group_currentGroups[wo.group_currentGroup].push( name );
-						} else if (wo.group_currentGroup) {
-							indx = $.inArray( name, wo.group_currentGroups[wo.group_currentGroup]  );
+						if (isCollapsed && wo.group_collapsedGroup) {
+							wo.group_collapsedGroups[wo.group_collapsedGroup].push( name );
+						} else if (wo.group_collapsedGroup) {
+							indx = $.inArray( name, wo.group_collapsedGroups[wo.group_collapsedGroup]  );
 							if (indx > -1) {
-								wo.group_currentGroups[wo.group_currentGroup].splice( indx, 1 );
+								wo.group_collapsedGroups[wo.group_collapsedGroup].splice( indx, 1 );
 							}
 						}
-						ts.storage( table, 'tablesorter-groups', wo.group_currentGroups );
+						ts.storage( table, 'tablesorter-groups', wo.group_collapsedGroups );
 					}
 				});
 			}
 			$(wo.group_saveReset).on('click', function(){
-				ts.grouping.clearSavedGroups(table);
+				tsg.clearSavedGroups(table);
 			});
 			c.$table.on('pagerChange.tsgrouping', function(){
-				ts.grouping.update(table, c, wo);
+				tsg.update(table, c, wo);
 			});
 		},
 
 		clearSavedGroups: function(table){
 			if (table && ts.storage) {
 				ts.storage(table, 'tablesorter-groups', '');
-				ts.grouping.update(table, table.config, table.config.widgetOptions);
+				tsg.update(table, table.config, table.config.widgetOptions);
 			}
 		}
 
@@ -236,16 +311,22 @@
 			group_months      : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
 			group_week        : [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],
 			group_time        : [ 'AM', 'PM' ],
+
+			// use 12 vs 24 hour time
+			group_time24Hour  : false,
+			// group header text added for invalid dates
+			group_dateInvalid : 'Invalid Date',
+
 			// this function is used when 'group-date' is set to create the date string
 			// you can just return date, date.toLocaleString(), date.toLocaleDateString() or d.toLocaleTimeString()
 			// reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#Conversion_getter
 			group_dateString  : function(date) { return date.toLocaleString(); }
 		},
 		init: function(table, thisWidget, c, wo){
-			ts.grouping.bindEvents(table, c, wo);
+			tsg.bindEvents(table, c, wo);
 		},
 		format: function(table, c, wo) {
-			ts.grouping.update(table, c, wo);
+			tsg.update(table, c, wo);
 		},
 		remove : function(table, c, wo){
 			c.$table
