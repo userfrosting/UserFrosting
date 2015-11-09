@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.3.1.5
+
+- Add Romanian translation
+- Upgrade Tablesorter and pretty URLs for searched/sorted/paginated tables
+- Fix bug in default value for user `secret_token`
+
 ## v0.3.1.4
 
 - .htaccess redirect trailing slash: change to only redirect GET requests
