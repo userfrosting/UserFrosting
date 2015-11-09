@@ -1,4 +1,4 @@
-/*! Dragtable Mod for TableSorter - 2/7/2015 (v2.19.0) *//*
+/*! Dragtable Mod for TableSorter - updated 10/31/2015 (v2.24.0) *//*
  * Requires
  *   tablesorter v2.8+
  *   jQuery 1.7+
@@ -99,7 +99,7 @@
         }
         */
 
-        $table.trigger('updateAll', [ false, function() {
+        ts.updateAll( c, false, function() {
           if ( hasFilters ) {
             setTimeout( function() {
               // just update the filter values
@@ -111,7 +111,7 @@
               }
             }, 10 );
           }
-        } ]);
+        });
       }
     },
     getOrder : function( table ) {

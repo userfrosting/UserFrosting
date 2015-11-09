@@ -1,4 +1,4 @@
-/*! Parser: input & select - updated 8/17/2015 (v2.23.0) *//*
+/*! Parser: input & select - updated 10/31/2015 (v2.24.0) *//*
  * for jQuery 1.7+ & tablesorter 2.7.11+
  * Demo: http://mottie.github.com/tablesorter/docs/example-widget-grouping.html
  */
@@ -175,12 +175,12 @@
 						return;
 					}
 					// ignore change event if nothing changed
-					if ( val !== $target.data( 'ts-original-value' ) || event.target.type === 'checkbox' ) {
+					if ( c && val !== $target.data( 'ts-original-value' ) || event.target.type === 'checkbox' ) {
 						$target.data( 'ts-original-value', val );
 						// pass undefined resort value so it falls back to config.resort setting
-						$table.trigger( 'updateCell', [ $cell, undef, function() {
+						$.tablesorter.updateCell( c, $cell, undef, function() {
 							updateServer( event, $table, $target );
-						} ]);
+						});
 					}
 				}
 			});

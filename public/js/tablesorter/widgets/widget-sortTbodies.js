@@ -1,4 +1,4 @@
-/*! tablesorter tbody sorting widget (BETA) - 6/10/2015 (core v2.22.2)
+/*! tablesorter tbody sorting widget (BETA) - 10/31/2015 (v2.24.0)
  * Requires tablesorter v2.22.2+ and jQuery 1.4+
  * by Rob Garrison
  */
@@ -37,13 +37,13 @@
 				.bind( 'updateComplete' + namespace, function() {
 					// find parsers for each column
 					ts.sortTbodies.setTbodies( c, wo );
-					c.$table.trigger( 'updateCache', [ null, c.$tbodies ] );
+					ts.updateCache( c, null, c.$tbodies );
 				});
 
 			// detect parsers - in case the table contains only info-only tbodies
 			if ( $.isEmptyObject( c.parsers ) || c.$tbodies.length !== $tbodies.length ) {
 				ts.sortTbodies.setTbodies( c, wo );
-				c.$table.trigger( 'updateCache', [ null, c.$tbodies ] );
+				ts.updateCache( c, null, c.$tbodies );
 			}
 
 			// find colMax; this only matter for numeric columns
@@ -116,10 +116,10 @@
 								colMax = c.$headerIndexed[ col ].attr( 'data-ts-col-max-value' ) ||
 									1.79E+308; // close to Number.MAX_VALUE
 								// sort strings in numerical columns
-								if ( typeof ( c.string[ c.strings[ col ] ] ) === 'boolean' ) {
-									num = ( dir ? 1 : -1 ) * ( c.string[ c.strings[ col ] ] ? -1 : 1 );
+								if ( typeof ( ts.string[ c.strings[ col ] ] ) === 'boolean' ) {
+									num = ( dir ? 1 : -1 ) * ( ts.string[ c.strings[ col ] ] ? -1 : 1 );
 								} else {
-									num = ( c.strings[ col ] ) ? c.string[ c.strings[ col ] ] || 0 : 0;
+									num = ( c.strings[ col ] ) ? ts.string[ c.strings[ col ] ] || 0 : 0;
 								}
 								// fall back to built-in numeric sort
 								// var sort = $.tablesorter['sort' + s](a, b, dir, colMax, table);
@@ -138,7 +138,7 @@
 									sort = cts[ col ]( x, y, dir, col, table );
 								} else {
 									// fall back to natural sort
-									sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( colA, colB, col, table, c );
+									sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( colA, colB, col, c );
 								}
 							}
 							if ( sort ) { return sort; }

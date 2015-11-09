@@ -1,4 +1,4 @@
-/*! Widget: math - updated 7/28/2015 (v2.22.4) *//*
+/*! Widget: math - updated 10/31/2015 (v2.24.0) *//*
 * Requires tablesorter v2.16+ and jQuery 1.7+
 * by Rob Garrison
 */
@@ -18,11 +18,11 @@
 		},
 
 		// value returned when calculation is not possible, e.g. no values, dividing by zero, etc.
-		invalid : function( name, errorIndex ) {
+		invalid : function( c, name, errorIndex ) {
 			// name = function returning invalid results
 			// errorIndex = math.error index with an explanation of the error
 			console.log( name, math.error[ errorIndex ] );
-			return 'none'; // text for cell
+			return c && c.widgetOptions.math_none || 'none'; // text for cell
 		},
 
 		events : ( 'tablesorter-initialized update updateAll updateRows addRows updateCell ' +
@@ -60,6 +60,7 @@
 			var index, $t, len, $mathRows, mathAbove,
 				arry = [],
 				wo = c.widgetOptions,
+				mathAttr = wo.math_dataAttrib,
 				filtered = wo.filter_filteredRow || 'filtered',
 				cIndex = parseInt( $el.attr( 'data-column' ), 10 ),
 				$rows = c.$table.children( 'tbody' ).children(),
@@ -71,10 +72,10 @@
 				index = len;
 				while ( index >= 0 ) {
 					$t = $rows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
-					mathAbove = $t.filter( '[' + wo.math_dataAttrib + '^=above]' ).length;
+					mathAbove = $t.filter( '[' + mathAttr + '^=above]' ).length;
 					// ignore filtered rows & rows with data-math="ignore" (and starting row)
 					if ( ( !$rows.eq( index ).hasClass( filtered ) &&
-							$rows.eq( index ).not( '[' + wo.math_dataAttrib + '=ignore]' ).length &&
+							$rows.eq( index ).not( '[' + mathAttr + '=ignore]' ).length &&
 							index !== len ) ||
 							mathAbove && index !== len ) {
 						// stop calculating 'above', when encountering another 'above'
@@ -86,13 +87,28 @@
 					}
 					index--;
 				}
+			} else if ( type === 'below' ) {
+				len = $rows.length;
+				// index + 1 to ignore starting node
+				for ( index = $rows.index( $row ) + 1; index < len; index++ ) {
+					$t = $rows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
+					if ( $t.filter( '[' + mathAttr + '^=below]' ).length ) {
+						break;
+					}
+					if ( !$rows.eq( index ).hasClass( filtered ) &&
+							$rows.eq( index ).not( '[' + mathAttr + '=ignore]' ).length &&
+							$t.length ) {
+						arry.push( math.processText( c, $t ) );
+					}
+				}
+
 			} else {
-				$mathRows = $rows.not( '[' + wo.math_dataAttrib + '=ignore]' ); // .each(function(){
+				$mathRows = $rows.not( '[' + mathAttr + '=ignore]' );
 				len = $mathRows.length;
 				for ( index = 0; index < len; index++ ) {
 					$t = $mathRows.eq( index ).children().filter( '[data-column=' + cIndex + ']' );
 					if ( !$mathRows.eq( index ).hasClass( filtered ) &&
-						$t.not( '[' + wo.math_dataAttrib + '^=above],[' + wo.math_dataAttrib + '^=col]' ).length &&
+						$t.not( '[' + mathAttr + '^=above],[' + mathAttr + '^=below],[' + mathAttr + '^=col]' ).length &&
 						!$t.is( $el ) ) {
 						arry.push( math.processText( c, $t ) );
 					}
@@ -106,19 +122,20 @@
 			var $t, col, $row, rowIndex, rowLen, $cells, cellIndex, cellLen,
 				arry = [],
 				wo = c.widgetOptions,
+				mathAttr = wo.math_dataAttrib,
 				filtered = wo.filter_filteredRow || 'filtered',
-				$rows = c.$table.children( 'tbody' ).children().not( '[' + wo.math_dataAttrib + '=ignore]' );
+				$rows = c.$table.children( 'tbody' ).children().not( '[' + mathAttr + '=ignore]' );
 			rowLen = $rows.length;
 			for ( rowIndex = 0; rowIndex < rowLen; rowIndex++ ) {
 				$row = $rows.eq( rowIndex );
 				if ( !$row.hasClass( filtered ) ) {
-					$cells = $row.children().not( '[' + wo.math_dataAttrib + '=ignore]' );
+					$cells = $row.children().not( '[' + mathAttr + '=ignore]' );
 					cellLen = $cells.length;
 					// $row.children().each(function(){
 					for ( cellIndex = 0; cellIndex < cellLen; cellIndex++ ) {
 						$t = $cells.eq( cellIndex );
 						col = parseInt( $t.attr( 'data-column' ), 10);
-						if ( !$t.filter( '[' + wo.math_dataAttrib + ']' ).length && $.inArray( col, wo.math_ignore ) < 0 ) {
+						if ( !$t.filter( '[' + mathAttr + ']' ).length && $.inArray( col, wo.math_ignore ) < 0 ) {
 							arry.push( math.processText( c, $t ) );
 						}
 					}
@@ -127,36 +144,58 @@
 			return arry;
 		},
 
+		setColumnIndexes : function( c ) {
+			c.$table.after( '<div id="_tablesorter_table_placeholder"></div>' );
+			// detach table from DOM to speed up column indexing
+			var $table = c.$table.detach();
+			ts.computeColumnIndex( $table.children( 'tbody' ).children() );
+			$( '#_tablesorter_table_placeholder' )
+				.after( $table )
+				.remove();
+		},
+
 		recalculate : function(c, wo, init) {
 			if ( c && ( !wo.math_isUpdating || init ) ) {
 
+				var time, mathAttr, $mathCells;
+				if ( c.debug ) {
+					time = new Date();
+				}
+
 				// add data-column attributes to all table cells
 				if ( init ) {
-					ts.computeColumnIndex( c.$table.children( 'tbody' ).children() );
+					math.setColumnIndexes( c ) ;
 				}
 
 				// data-attribute name (defaults to data-math)
 				wo.math_dataAttrib = 'data-' + (wo.math_data || 'math');
 
 				// all non-info tbody cells
-				var $mathCells = c.$tbodies.find( '[' + wo.math_dataAttrib + ']' );
+				mathAttr = wo.math_dataAttrib;
+				$mathCells = c.$tbodies.find( '[' + mathAttr + ']' );
 				math.mathType( c, $mathCells, wo.math_priority );
 
 				// only info tbody cells
 				$mathCells = c.$table
 					.children( '.' + c.cssInfoBlock + ', tfoot' )
-					.find( '[' + wo.math_dataAttrib + ']' );
+					.find( '[' + mathAttr + ']' );
 				math.mathType( c, $mathCells, wo.math_priority );
 
 				// find the 'all' total
-				$mathCells = c.$table.find( '[' + wo.math_dataAttrib + '^=all]' );
+				$mathCells = c.$table.find( '[' + mathAttr + '^=all]' );
 				math.mathType( c, $mathCells, [ 'all' ] );
 
 				wo.math_isUpdating = true;
 				if ( c.debug ) {
 					console[ console.group ? 'group' : 'log' ]( 'Math widget triggering an update after recalculation' );
 				}
-				c.$table.trigger( 'update' );
+
+				// update internal cache
+				ts.update( c );
+
+				if ( c.debug ) {
+					console.log( 'Math widget update completed' + ts.benchmark( time ) );
+				}
 			}
 		},
 
@@ -164,6 +203,7 @@
 			if ( $cells.length ) {
 				var formula, result, $el, arry, getAll, $targetCells, index, len,
 					wo = c.widgetOptions,
+					mathAttr = wo.math_dataAttrib,
 					equations = ts.equations;
 				if ( priority[0] === 'all' ) {
 					// no need to get all cells more than once
@@ -172,9 +212,9 @@
 				if (c.debug) {
 					console[ console.group ? 'group' : 'log' ]( 'Tablesorter Math widget recalculation' );
 				}
-				// $.each is okay here... only 3 priorities
+				// $.each is okay here... only 4 priorities
 				$.each( priority, function( i, type ) {
-					$targetCells = $cells.filter( '[' + wo.math_dataAttrib + '^=' + type + ']' );
+					$targetCells = $cells.filter( '[' + mathAttr + '^=' + type + ']' );
 					len = $targetCells.length;
 					if ( len ) {
 						if (c.debug) {
@@ -182,18 +222,22 @@
 						}
 						for ( index = 0; index < len; index++ ) {
 							$el = $targetCells.eq( index );
-							formula = ( $el.attr( wo.math_dataAttrib ) || '' ).replace( type + '-', '' );
+							// Row is filtered, no need to do further checking
+							if ( $el.parent().hasClass( wo.filter_filteredRow || 'filtered' ) ) {
+								continue;
+							}
+							formula = ( $el.attr( mathAttr ) || '' ).replace( type + '-', '' );
 							arry = ( type === 'row' ) ? math.getRow( c, $el ) :
 								( type === 'all' ) ? getAll : math.getColumn( c, $el, type );
 							if ( equations[ formula ] ) {
 								if ( arry.length ) {
-									result = equations[ formula ]( arry );
+									result = equations[ formula ]( arry, c );
 									if ( c.debug ) {
-										console.log( $el.attr( wo.math_dataAttrib ), arry, '=', result );
+										console.log( $el.attr( mathAttr ), arry, '=', result );
 									}
 								} else {
 									// mean will return a divide by zero error, everything else shows an undefined error
-									result = math.invalid( formula, formula === 'mean' ? 0 : 'undef' );
+									result = math.invalid( c, formula, formula === 'mean' ? 0 : 'undef' );
 								}
 								math.output( $el, wo, result, arry );
 							}
@@ -343,7 +387,7 @@
 			var total = ts.equations.sum( arry );
 			return total / arry.length;
 		},
-		median : function( arry ) {
+		median : function( arry, c ) {
 			var half,
 				len = arry.length;
 			if ( len > 1 ) {
@@ -352,7 +396,7 @@
 				half = Math.floor( len / 2 );
 				return ( len % 2 ) ? arry[ half ] : ( arry[ half - 1 ] + arry[ half ] ) / 2;
 			}
-			return math.invalid( 'median', 1 );
+			return math.invalid( c, 'median', 1 );
 		},
 		mode : function( arry ) {
 			// http://stackoverflow.com/a/3451640/145346
@@ -387,7 +431,7 @@
 		},
 		// common variance equation
 		// (not accessible via data-attribute setting)
-		variance: function( arry, population ) {
+		variance: function( arry, population, c ) {
 			var divisor,
 				avg = ts.equations.mean( arry ),
 				v = 0,
@@ -397,27 +441,27 @@
 			}
 			divisor = ( arry.length - ( population ? 0 : 1 ) );
 			if ( divisor === 0 ) {
-				return math.invalid( 'variance', 0 );
+				return math.invalid( c, 'variance', 0 );
 			}
 			v /= divisor;
 			return v;
 		},
 		// variance (population)
-		varp : function( arry ) {
-			return ts.equations.variance( arry, true );
+		varp : function( arry, c ) {
+			return ts.equations.variance( arry, true, c );
 		},
 		// variance (sample)
-		vars : function( arry ) {
-			return ts.equations.variance( arry );
+		vars : function( arry, c ) {
+			return ts.equations.variance( arry, false, c );
 		},
 		// standard deviation (sample)
-		stdevs : function( arry ) {
-			var vars = ts.equations.variance( arry );
+		stdevs : function( arry, c ) {
+			var vars = ts.equations.variance( arry, false, c );
 			return Math.sqrt( vars );
 		},
 		// standard deviation (population)
-		stdevp : function( arry ) {
-			var varp = ts.equations.variance( arry, true );
+		stdevp : function( arry, c ) {
+			var varp = ts.equations.variance( arry, true, c );
 			return Math.sqrt( varp );
 		}
 	};
@@ -436,11 +480,13 @@
 			// complete executed after each fucntion
 			math_complete : null, // function($cell, wo, result, value, arry){ return result; },
 			// order of calculation; 'all' is last
-			math_priority : [ 'row', 'above', 'col' ],
+			math_priority : [ 'row', 'above', 'below', 'col' ],
 			// template for or just prepend the mask prefix & suffix with this HTML
 			// e.g. '<span class="red">{content}</span>'
 			math_prefix   : '',
 			math_suffix   : '',
+			// no matching math elements found (text added to cell)
+			math_none     : 'N/A',
 			math_event    : 'recalculate'
 		},
 		init : function( table, thisWidget, c, wo ) {
@@ -453,7 +499,7 @@
 					if ( !wo.math_isUpdating || init ) {
 						if ( !/filter/.test( e.type ) ) {
 							// redo data-column indexes on update
-							ts.computeColumnIndex( c.$table.children('tbody').children() );
+							math.setColumnIndexes( c ) ;
 						}
 						math.recalculate( c, wo, init );
 					}

@@ -1,4 +1,4 @@
-/*! Widget: Pager - updated 8/19/2015 (v2.23.1) */
+/*! Widget: Pager - updated 10/31/2015 (v2.24.0) */
 /* Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -129,7 +129,7 @@
 
 		init: function(table) {
 			// check if tablesorter has initialized
-			if (table.hasInitialized && table.config.pager.initialized) { return; }
+			if (table.hasInitialized && table.config.pager && table.config.pager.initialized) { return; }
 			var t,
 				c = table.config,
 				wo = c.widgetOptions,
@@ -171,7 +171,6 @@
 			p.oldAjaxSuccess = p.oldAjaxSuccess || wo.pager_ajaxObject.success;
 			c.appender = tsp.appender;
 			p.initializing = true;
-			p.showAll = false;
 			if (wo.pager_savePages && ts.storage) {
 				t = ts.storage(table, wo.pager_storageKey) || {}; // fixes #387
 				p.page = ( isNaN(t.page) ? p.page : t.page ) || p.setPage || 0;
@@ -203,7 +202,7 @@
 			} else {
 				p.ajax = false;
 				// Regular pager; all rows stored in memory
-				c.$table.trigger('appendCache', [ {}, true ]);
+				ts.appendCache( c, true ); // true = don't apply widgets
 			}
 
 		},
@@ -211,8 +210,7 @@
 		initComplete: function(table, c){
 			var p = c.pager;
 			tsp.bindEvents(table, c);
-			tsp.setPageSize(table, 0, c); // page size 0 is ignored
-
+			tsp.setPageSize(c, 0); // page size 0 is ignored
 			if (!p.ajax) {
 				tsp.hideRowsSetup(table, c);
 			}
@@ -224,7 +222,7 @@
 			if (c.debug) {
 				console.log('Pager: Triggering pagerInitialized');
 			}
-			c.$table.trigger('pagerInitialized', c);
+			c.$table.trigger( 'pagerInitialized', c );
 			// filter widget not initialized; it will update the output display & fire off the pagerComplete event
 			if ( !( c.widgetOptions.filter_initialized && ts.hasWidget(table, 'filter') ) ) {
 				// if ajax, then don't fire off pagerComplete
@@ -258,7 +256,7 @@
 						}
 						tsp.updatePageDisplay(table, c, false);
 						// tsp.moveToPage(table, p, false); <-- called when applyWidgets is triggered
-						c.$table.trigger('applyWidgets');
+						ts.applyWidget( table );
 					}
 				})
 				.on('disablePager' + namespace, function(e){
@@ -271,7 +269,8 @@
 				})
 				.on('destroyPager' + namespace, function(e, refreshing){
 					e.stopPropagation();
-					tsp.destroyPager(table, c, refreshing);
+					// call removeWidget to make sure internal flags are modified.
+					ts.removeWidget( table, 'pager', false );
 				})
 				.on('updateComplete' + namespace, function(e, table, triggered){
 					e.stopPropagation();
@@ -293,30 +292,30 @@
 					// update without triggering pagerComplete
 					tsp.updatePageDisplay(table, c, false);
 					// make sure widgets are applied - fixes #450
-					c.$table.trigger('applyWidgets');
+					ts.applyWidget( table );
 					tsp.updatePageDisplay(table, c);
 				})
-				.on('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, v){
+				.on('pageSize refreshComplete '.split(' ').join(namespace + ' '), function(e, size){
 					e.stopPropagation();
-					tsp.setPageSize(table, parseInt(v, 10) || p.setSize || 10, c);
+					tsp.setPageSize(c, tsp.parsePageSize( c, size, 'get' ));
 					tsp.hideRows(table, c);
 					tsp.updatePageDisplay(table, c, false);
 				})
-				.on('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, v){
+				.on('pageSet pagerUpdate '.split(' ').join(namespace + ' '), function(e, num){
 					e.stopPropagation();
 					// force pager refresh
 					if (e.type === 'pagerUpdate') {
-						v = typeof v === 'undefined' ? p.page + 1 : v;
+						num = typeof num === 'undefined' ? p.page + 1 : num;
 						p.last.page = true;
 					}
-					p.page = (parseInt(v, 10) || 1) - 1;
+					p.page = (parseInt(num, 10) || 1) - 1;
 					tsp.moveToPage(table, p, true);
 					tsp.updatePageDisplay(table, c, false);
 				})
 				.on('pageAndSize' + namespace, function(e, page, size){
 					e.stopPropagation();
 					p.page = (parseInt(page, 10) || 1) - 1;
-					tsp.setPageSize(table, parseInt(size, 10) || p.setSize || 10, c);
+					tsp.setPageSize(c, tsp.parsePageSize( c, size, 'get' ));
 					tsp.moveToPage(table, p, true);
 					tsp.hideRows(table, c);
 					tsp.updatePageDisplay(table, c, false);
@@ -364,9 +363,10 @@
 				p.$size
 					.off('change' + namespace)
 					.on('change' + namespace, function() {
-						p.$size.val( $(this).val() ); // in case there are more than one pagers
 						if ( !$(this).hasClass(wo.pager_css.disabled) ) {
-							tsp.setPageSize(table, parseInt( $(this).val(), 10 ), c);
+							var size = $(this).val();
+							p.$size.val( size ); // in case there are more than one pagers
+							tsp.setPageSize(c, size);
 							tsp.changeHeight(table, c);
 						}
 						return false;
@@ -420,11 +420,12 @@
 				wo = c.widgetOptions,
 				p = c.pager,
 				namespace = c.namespace + 'pager',
-				sz = p.size || p.setSize || 10; // don't allow dividing by zero
+				sz = tsp.parsePageSize( c, p.size, 'get' ); // don't allow dividing by zero
 			if (wo.pager_countChildRows) { t.push(c.cssChildRow); }
 			p.$size.add(p.$goto).removeClass(wo.pager_css.disabled).removeAttr('disabled').attr('aria-disabled', 'false');
 			p.totalPages = Math.ceil( p.totalRows / sz ); // needed for 'pageSize' method
 			c.totalRows = p.totalRows;
+			tsp.parsePageNumber( p );
 			tsp.calcFilters(table, c);
 			c.filteredRows = p.filteredRows;
 			p.filteredPages = Math.ceil( p.filteredRows / sz ) || 0;
@@ -634,8 +635,10 @@
 
 		hideRowsSetup: function(table, c){
 			var p = c.pager,
-				namespace = c.namespace + 'pager';
-			p.size = parseInt( p.$size.val(), 10 ) || p.size || p.setSize || 10;
+				namespace = c.namespace + 'pager',
+				size = p.$size.val();
+			p.size = tsp.parsePageSize( c, size, 'get' );
+			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
 			$.data(table, 'pagerLastSize', p.size);
 			tsp.pagerArrows(c);
 			if ( !c.widgetOptions.pager_removeRows ) {
@@ -692,7 +695,7 @@
 					if (d instanceof jQuery) {
 						if (wo.pager_processAjaxOnInit) {
 							// append jQuery object
-							c.$tbodies.eq(0).children('tr').detach();
+							c.$tbodies.eq(0).empty();
 							c.$tbodies.eq(0).append(d);
 						}
 					} else if (l) {
@@ -709,6 +712,9 @@
 						if (wo.pager_processAjaxOnInit) {
 							c.$tbodies.eq(0).html( tds );
 						}
+					} else {
+						// nothing returned by ajax, empty out the table; see #1032
+						c.$tbodies.eq(0).empty();
 					}
 					wo.pager_processAjaxOnInit = true;
 					// only add new header text if the length matches
@@ -744,14 +750,15 @@
 				}
 				// make sure last pager settings are saved, prevents multiple server side calls with
 				// the same parameters
-				p.totalPages = Math.ceil( p.totalRows / ( p.size || p.setSize || 10 ) );
+				p.totalPages = Math.ceil( p.totalRows / tsp.parsePageSize( c, p.size, 'get' ) );
 				p.last.totalRows = p.totalRows;
 				p.last.currentFilters = p.currentFilters;
 				p.last.sortList = (c.sortList || []).join(',');
 				p.initializing = false;
 				// update display without triggering pager complete... before updating cache
 				tsp.updatePageDisplay(table, c, false);
-				$table.trigger('updateCache', [ function(){
+				// tablesorter core updateCache (not pager)
+				ts.updateCache( c, function(){
 					if (p.initialized) {
 						// apply widgets after table has rendered & after a delay to prevent
 						// multiple applyWidget blocking code from blocking this trigger
@@ -759,16 +766,15 @@
 							if (c.debug) {
 								console.log('Pager: Triggering pagerChange');
 							}
-							$table
-								.trigger('applyWidgets')
-								.trigger('pagerChange', p);
+							$table.trigger( 'pagerChange', p );
+							ts.applyWidget( table );
 							tsp.updatePageDisplay(table, c);
 						}, 0);
 					}
-				} ]);
+				});
 			}
 			if (!p.initialized) {
-				c.$table.trigger('applyWidgets');
+				ts.applyWidget( table );
 			}
 		},
 
@@ -877,9 +883,9 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pagerChange');
 				}
-				c.$table.trigger('pagerChange', c);
+				c.$table.trigger( 'pagerChange', c );
 			}
-			if ( !wo.pager_removeRows && !p.showAll ) {
+			if ( !wo.pager_removeRows ) {
 				tsp.hideRows(table, c);
 			} else {
 				ts.clearTableBody(table);
@@ -927,14 +933,13 @@
 				p.page = 0;
 				p.size = p.totalRows;
 				p.totalPages = 1;
-				p.showAll = true;
 				c.$table
 					.addClass('pagerDisabled')
 					.removeAttr('aria-describedby')
 					.find('tr.pagerSavedHeightSpacer').remove();
 				tsp.renderTable(table, c.rowsCopy);
 				p.isDisabled = true;
-				c.$table.trigger('applyWidgets');
+				ts.applyWidget( table );
 				if (c.debug) {
 					console.log('Pager: Disabled');
 				}
@@ -956,7 +961,8 @@
 		updateCache: function(table) {
 			var c = table.config,
 				p = c.pager;
-			c.$table.trigger('updateCache', [ function(){
+			// tablesorter core updateCache (not pager)
+			ts.updateCache( c, function(){
 				if ( !$.isEmptyObject(table.config.cache) ) {
 					var i,
 						rows = [],
@@ -970,7 +976,7 @@
 					// clear out last search to force an update
 					p.last.currentFilters = [ ' ' ];
 				}
-			} ]);
+			});
 		},
 
 		moveToPage: function(table, p, pageMoved) {
@@ -978,17 +984,15 @@
 			if ( pageMoved !== false && p.initialized && $.isEmptyObject(table.config.cache)) {
 				return tsp.updateCache(table);
 			}
-			var pg, c = table.config,
+			var c = table.config,
 				wo = c.widgetOptions,
 				l = p.last;
 
 			// abort page move if the table has filters and has not been initialized
 			if (p.ajax && !wo.filter_initialized && ts.hasWidget(table, 'filter')) { return; }
 
+			tsp.parsePageNumber( p );
 			tsp.calcFilters(table, c);
-			pg = Math.min( p.totalPages, p.filteredPages );
-			if ( p.page < 0 ) { p.page = 0; }
-			if ( p.page > ( pg - 1 ) && pg !== 0 ) { p.page = pg - 1; }
 
 			// fixes issue where one current filter is [] and the other is [ '', '', '' ],
 			// making the next if comparison think the filters as different. Fixes #202.
@@ -1027,9 +1031,8 @@
 				if (c.debug) {
 					console.log('Pager: Triggering pageMoved');
 				}
-				c.$table
-					.trigger('pageMoved', c)
-					.trigger('applyWidgets');
+				c.$table.trigger('pageMoved', c);
+				ts.applyWidget( table );
 				if (!p.ajax && table.isUpdating) {
 					if (c.debug) {
 						console.log('Pager: Triggering updateComplete');
@@ -1039,11 +1042,32 @@
 			}
 		},
 
-		setPageSize: function(table, size, c) {
-			var p = c.pager;
-			p.size = size || p.size || p.setSize || 10;
-			p.$size.val(p.size);
-			$.data(table, 'pagerLastPage', p.page);
+		// set to either set or get value
+		parsePageSize: function( c, size, mode ) {
+			var p = c.pager,
+				s = parseInt( size, 10 ) || p.size || c.widgetOptions.pager_size || 10,
+				// if select does not contain an "all" option, use size
+				setAll = p.$size.find( 'option[value="all"]' ).length ? 'all' : p.totalRows;
+			return /all/i.test( size ) || s === p.totalRows ?
+				// "get" to set `p.size` or "set" to set `p.$size.val()`
+				( mode === 'get' ? p.totalRows : setAll ) :
+				( mode === 'get' ? s : p.size );
+		},
+
+		parsePageNumber: function( p ) {
+			var min = Math.min( p.totalPages, p.filteredPages ) - 1;
+			p.page = parseInt( p.page, 10 );
+			if ( p.page < 0 || isNaN( p.page ) ) { p.page = 0; }
+			if ( p.page > min && p.page !== 0 ) { p.page = min; }
+			return p.page;
+		},
+
+		setPageSize: function(c, size) {
+			var p = c.pager,
+				table = c.table;
+			p.size = tsp.parsePageSize( c, size, 'get' );
+			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) );
+			$.data(table, 'pagerLastPage', tsp.parsePageNumber( p ) );
 			$.data(table, 'pagerLastSize', p.size);
 			p.totalPages = Math.ceil( p.totalRows / p.size );
 			p.filteredPages = Math.ceil( p.filteredRows / p.size );
@@ -1100,12 +1124,13 @@
 		},
 
 		enablePager: function(table, c, triggered){
-			var info, p = c.pager;
+			var info, size,
+				p = c.pager;
 			p.isDisabled = false;
-			p.showAll = false;
 			p.page = $.data(table, 'pagerLastPage') || p.page || 0;
-			p.size = $.data(table, 'pagerLastSize') || parseInt(p.$size.find('option[selected]').val(), 10) || p.size || p.setSize || 10;
-			p.$size.val(p.size); // set page size
+			size = p.$size.find('option[selected]').val();
+			p.size = $.data(table, 'pagerLastSize') || tsp.parsePageSize( c, size, 'get' );
+			p.$size.val( tsp.parsePageSize( c, p.size, 'set' ) ); // set page size
 			p.totalPages = Math.ceil( Math.min( p.totalRows, p.filteredRows ) / p.size );
 			c.$table.removeClass('pagerDisabled');
 			// if table id exists, include page display with aria info
@@ -1116,8 +1141,9 @@
 			}
 			tsp.changeHeight(table, c);
 			if ( triggered ) {
-				c.$table.trigger('updateRows');
-				tsp.setPageSize(table, p.size, c);
+				// tablesorter core update table
+				ts.update( c );
+				tsp.setPageSize(c, p.size);
 				tsp.hideRowsSetup(table, c);
 				if (c.debug) {
 					console.log('Pager: Enabled');

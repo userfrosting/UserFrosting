@@ -1,4 +1,4 @@
-/* Widget: print - updated 2/7/2015 (v2.19.0) *//*
+/* Widget: print - updated 11/2/2015 (v2.24.1) *//*
  * Requires tablesorter v2.8+ and jQuery 1.2.6+
  */
 /*jshint browser:true, jquery:true, unused:false */
@@ -12,6 +12,7 @@
 
 		event      : 'printTable',
 		basicStyle : 'table, tr, td, th { border : solid 1px black; border-collapse : collapse; } td, th { padding: 2px; }',
+		popupStyle : 'width=500,height=300',
 
 		init : function(c) {
 			c.$table
@@ -26,11 +27,13 @@
 		process : function(c, wo) {
 			var $this,
 				$table = $('<div/>').append(c.$table.clone()),
-				printStyle = printTable.basicStyle + 'table { width: 100% }' +
+				printStyle = printTable.basicStyle + 'table { width: 100%; }' +
 					// hide filter row
-					'.tablesorter-filter-row { display: none }' +
+					'.' + ( ts.css.filterRow || 'tablesorter-filter-row' ) +
+					// hide filtered rows
+					', .' + ( wo.filter_filteredRow || 'filtered' ) + ' { display: none; }' +
 					// hide sort arrows
-					'.tablesorter-header { background-image: none !important; }';
+					'.' + ( ts.css.header || 'tablesorter-header' ) + ' { background-image: none !important; }';
 
 			// replace content with data-attribute content
 			$table.find('[' + wo.print_dataAttrib + ']').each(function(){
@@ -41,12 +44,16 @@
 			// === rows ===
 			// Assume 'visible' means rows hidden by the pager (rows set to 'display:none')
 			// or hidden by a class name which is added to the wo.print_extraCSS definition
-			if (/a/i.test(wo.print_rows)) {
-				// force show of all rows
+			// look for jQuery filter selector in wo.print_rows & use if found
+			if ( /^f/i.test( wo.print_rows ) ) {
+				printStyle += 'tbody tr:not(.' + ( wo.filter_filteredRow || 'filtered' ) + ') { display: table-row !important; }';
+			} else if ( /^a/i.test( wo.print_rows ) ) {
+				// default force show of all rows
 				printStyle += 'tbody tr { display: table-row !important; }';
-			} else if (/f/i.test(wo.print_rows)) {
-				// add definition to show all non-filtered rows (cells hidden by the pager)
-				printStyle += 'tbody tr:not(.' + (wo.filter_filteredRow || 'filtered') + ') { display: table-row !important; }';
+			} else if ( /^[.#:\[]/.test( wo.print_rows ) ) {
+				// look for '.' (class selector), '#' (id selector),
+				// ':' (basic filters, e.g. ':not()') or '[' (attribute selector start)
+				printStyle += 'tbody tr' + wo.print_rows + ' { display: table-row !important; }';
 			}
 
 			// === columns ===
@@ -74,7 +81,7 @@
 
 		printOutput : function(c, data, style) {
 			var wo = c.widgetOptions,
-				generator = window.open('', wo.print_title, 'width=500,height=300'),
+				generator = window.open( '', wo.print_title, printTable.popupStyle ),
 				t = wo.print_title || c.$table.find('caption').text() || c.$table[0].id || document.title || 'table';
 			generator.document.write(
 				'<html><head><title>' + t + '</title>' +
@@ -83,8 +90,12 @@
 				'</head><body>' + data + '</body></html>'
 			);
 			generator.document.close();
-			generator.print();
-			generator.close();
+			// use timeout to allow browser to build DOM before printing
+			// Print preview in Chrome doesn't work without this code
+			setTimeout( function() {
+				generator.print();
+				generator.close();
+			}, 10 );
 			return true;
 		},
 
@@ -99,8 +110,8 @@
 		options: {
 			print_title      : '',          // this option > caption > table id > 'table'
 			print_dataAttrib : 'data-name', // header attrib containing modified header name
-			print_rows       : 'filtered',  // (a)ll, (v)isible or (f)iltered
-			print_columns    : 'selected',  // (a)ll or (s)elected (if columnSelector widget is added)
+			print_rows       : 'filtered',  // (a)ll, (v)isible, (f)iltered or custom css selector
+			print_columns    : 'selected',  // (a)ll, (v)isbible or (s)elected (if columnSelector widget is added)
 			print_extraCSS   : '',          // add any extra css definitions for the popup window here
 			print_styleSheet : '',          // add the url of your print stylesheet
 			// callback executed when processing completes

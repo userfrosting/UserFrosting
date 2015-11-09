@@ -1,4 +1,7 @@
-/*! Widget: saveSort */
+/*! Widget: saveSort - updated 10/31/2015 (v2.24.0) *//*
+* Requires tablesorter v2.16+
+* by Rob Garrison
+*/
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};
@@ -54,7 +57,7 @@
 					c.sortList = sortList;
 				} else if (table.hasInitialized && sortList && sortList.length > 0) {
 					// update sort change
-					$table.trigger('sorton', [ sortList ]);
+					ts.sortOn( c, sortList );
 				}
 			}
 		},
