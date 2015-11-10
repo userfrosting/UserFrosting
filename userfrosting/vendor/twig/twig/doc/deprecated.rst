@@ -5,6 +5,12 @@ This document lists all deprecated features in Twig. Deprecated features are
 kept for backward compatibility and removed in the next major release (a
 feature that was deprecated in Twig 1.x is removed in Twig 2.0).
 
+Deprecation Notices
+-------------------
+
+As of Twig 1.21, Twig generates deprecation notices when a template uses
+deprecated features. See :ref:`deprecation-notices` for more information.
+
 Token Parsers
 -------------
 
@@ -19,6 +25,17 @@ Extensions
 
 * As of Twig 1.x, the ability to remove an extension is deprecated and the
   ``Twig_Environment::removeExtension()`` method will be removed in 2.0.
+
+* As of Twig 1.23, the ``Twig_ExtensionInterface::initRuntime()`` method is
+  deprecated. You have two options to avoid the deprecation notice: if you
+  implement this method to store the environment for your custom filters,
+  functions, or tests, use the ``needs_environment`` option instead; if you
+  have more complex needs, explicitly implement
+  ``Twig_Extension_InitRuntimeInterface`` (not recommended).
+
+* As of Twig 1.23, the ``Twig_ExtensionInterface::getGlobals()`` method is
+  deprecated. Implement ``Twig_Extension_GlobalsInterface`` to avoid
+  deprecation notices.
 
 PEAR
 ----
@@ -80,6 +97,12 @@ Tests
 * The ``sameas`` and ``divisibleby`` tests are deprecated in favor of ``same
   as`` and ``divisible by`` respectively.
 
+Tags
+----
+
+* As of Twig 1.x, the ``raw`` tag is deprecated. You should use ``verbatim``
+  instead.
+
 Nodes
 -----
 
@@ -105,7 +128,14 @@ Loaders
 -------
 
 * As of Twig 1.x, ``Twig_Loader_String`` is deprecated and will be removed in
-  2.0.
+  2.0. You can render a string via ``Twig_Environment::createTemplate()``.
+
+Node Visitors
+-------------
+
+* Because of the removal of ``Twig_NodeInterface`` in 2.0, you need to extend
+  ``Twig_BaseNodeVistor`` instead of implementing ``Twig_NodeVisitorInterface``
+  directly to make your node visitors compatible with both Twig 1.x and 2.x.
 
 Globals
 -------
@@ -113,3 +143,18 @@ Globals
 * As of Twig 2.x, the ability to register a global variable after the runtime
   or the extensions have been initialized is not possible anymore (but
   changing the value of an already registered global is possible).
+
+* As of Twig 1.x, the ``_self`` global variable is deprecated except for usage
+  in the ``from`` and the ``import`` tags. In Twig 2.0, ``_self`` is not
+  exposed anymore but still usable in the ``from`` and the ``import`` tags.
+
+Miscellaneous
+-------------
+
+* As of Twig 1.x, ``Twig_Environment::clearTemplateCache()``, ``Twig_Environment::writeCacheFile()``,
+  ``Twig_Environment::clearCacheFiles()``, ``Twig_Environment::getCacheFilename()``, and
+  ``Twig_Environment::getTemplateClassPrefix()`` are deprecated and will be removed in 2.0.
+
+* As of Twig 1.x, ``Twig_Template::getEnvironment()`` and
+  ``Twig_TemplateInterface::getEnvironment()`` are deprecated and will be
+  removed in 2.0.

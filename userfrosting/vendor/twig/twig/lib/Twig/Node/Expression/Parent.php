@@ -22,25 +22,20 @@ class Twig_Node_Expression_Parent extends Twig_Node_Expression
         parent::__construct(array(), array('output' => false, 'name' => $name), $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         if ($this->getAttribute('output')) {
             $compiler
                 ->addDebugInfo($this)
-                ->write("\$this->displayParentBlock(")
+                ->write('$this->displayParentBlock(')
                 ->string($this->getAttribute('name'))
                 ->raw(", \$context, \$blocks);\n")
             ;
         } else {
             $compiler
-                ->raw("\$this->renderParentBlock(")
+                ->raw('$this->renderParentBlock(')
                 ->string($this->getAttribute('name'))
-                ->raw(", \$context, \$blocks)")
+                ->raw(', $context, $blocks)')
             ;
         }
     }

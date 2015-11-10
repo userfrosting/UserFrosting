@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * en_US
+ *
+ * US English message token translations
+ *
+ * @package UserFrosting
+ * @link http://www.userfrosting.com/components/#i18n
+ * @author Alexander Weissman
+ */
+
 /*
 {{name}} - Dymamic markers which are replaced at run time by the relevant index.
 */
@@ -39,10 +49,14 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USER_OR_PASS_INVALID" => "Username or password is invalid.",
 	"ACCOUNT_ALREADY_ACTIVE" => "Your account is already activated.",
 	"ACCOUNT_REGISTRATION_DISABLED" => "We're sorry, account registration has been disabled.",
+    "ACCOUNT_REGISTRATION_BROKEN" => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
 	"ACCOUNT_REGISTRATION_LOGOUT" => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
 	"ACCOUNT_INACTIVE" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
 	"ACCOUNT_DISABLED" => "This account has been disabled. Please contact us for more information.",
 	"ACCOUNT_USER_CHAR_LIMIT" => "Your username must be between {{min}} and {{max}} characters in length.",
+	"ACCOUNT_USER_INVALID_CHARACTERS" => "Username can only include alpha-numeric characters",
+    "ACCOUNT_USER_NO_LEAD_WS" => "Username cannot begin with whitespace",
+    "ACCOUNT_USER_NO_TRAIL_WS" => "Username cannot end with whitespace",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "Your display name must be between {{min}} and {{max}} characters in length.",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "Your password must be between {{min}} and {{max}} characters in length.",
 	"ACCOUNT_EMAIL_CHAR_LIMIT" => "Email must be between {{min}} and {{max}} characters in length.",
@@ -69,7 +83,6 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PASSWORD_UPDATED" => "Account password updated",
 	"ACCOUNT_EMAIL_UPDATED" => "Account email updated",
 	"ACCOUNT_TOKEN_NOT_FOUND" => "Token does not exist / Account is already activated",
-	"ACCOUNT_USER_INVALID_CHARACTERS" => "Username can only include alpha-numeric characters",
 	"ACCOUNT_DELETE_MASTER" => "You cannot delete the master account!",
 	"ACCOUNT_DISABLE_MASTER" => "You cannot disable the master account!",
 	"ACCOUNT_DISABLE_SUCCESSFUL" => "Account for user '{{user_name}}' has been successfully disabled.",
@@ -91,7 +104,9 @@ $lang = array_merge($lang, array(
 	"VALIDATE_REQUIRED" => "The field '{{self}}' must be specified.",
 	"VALIDATE_BOOLEAN" => "The value for '{{self}}' must be either '0' or '1'.",
 	"VALIDATE_INTEGER" => "The value for '{{self}}' must be an integer.",
-	"VALIDATE_ARRAY" => "The values for '{{self}}' must be in an array."
+	"VALIDATE_ARRAY" => "The values for '{{self}}' must be in an array.",
+    "VALIDATE_NO_LEAD_WS" => "The value for '{{self}}' cannot begin with spaces, tabs, or other whitespace",
+    "VALIDATE_NO_TRAIL_WS" => "The value for '{{self}}' cannot end with spaces, tabs, or other whitespace"
 ));
 
 // Configuration
@@ -112,13 +127,13 @@ $lang = array_merge($lang,array(
 
 // Forgot Password
 $lang = array_merge($lang,array(
-	"FORGOTPASS_INVALID_TOKEN" => "Your activation token is not valid",
+	"FORGOTPASS_INVALID_TOKEN" => "Your secret token is not valid",
 	"FORGOTPASS_OLD_TOKEN" => "Token past expiration time",
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Couldn't update password",
-	"FORGOTPASS_NEW_PASS_EMAIL" => "We have emailed you a new password",
 	"FORGOTPASS_REQUEST_CANNED" => "Lost password request cancelled",
 	"FORGOTPASS_REQUEST_EXISTS" => "There is already an outstanding lost password request on this account",
-	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"
+	"FORGOTPASS_REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",     
+	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"   
 ));
 
 // Mail
@@ -148,12 +163,18 @@ $lang = array_merge($lang,array(
 $lang = array_merge($lang,array(
 	"GROUP_INVALID_ID" => "The requested group id does not exist",
 	"GROUP_NAME_CHAR_LIMIT" => "Group names must be between {{min}} and {{max}} characters in length",
+    "AUTH_HOOK_CHAR_LIMIT" => "Authorization hook names must be between {{min}} and {{max}} characters in length",
 	"GROUP_NAME_IN_USE" => "Group name '{{name}}' is already in use",
 	"GROUP_DELETION_SUCCESSFUL" => "Successfully deleted group '{{name}}'",
 	"GROUP_CREATION_SUCCESSFUL" => "Successfully created group '{{name}}'",
 	"GROUP_UPDATE" => "Details for group '{{name}}' successfully updated.",
 	"CANNOT_DELETE_GROUP" => "The group '{{name}}' cannot be deleted",
-	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "The group '{{name}}' cannot be deleted because it is set as the default primary group for new users. Please first select a different default primary group."
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "The group '{{name}}' cannot be deleted because it is set as the default primary group for new users. Please first select a different default primary group.",
+    "GROUP_AUTH_EXISTS" => "The group '{{name}}' already has a rule defined for hook '{{hook}}'.",
+    "GROUP_AUTH_CREATION_SUCCESSFUL" => "A rule for '{{hook}}' has been successfully created for group '{{name}}'.",
+    "GROUP_AUTH_UPDATE_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully updated.",
+    "GROUP_AUTH_DELETION_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully deleted.",
+    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "You cannot create a new user because there is no default primary group defined.  Please check your group settings."
 ));
 
 return $lang;

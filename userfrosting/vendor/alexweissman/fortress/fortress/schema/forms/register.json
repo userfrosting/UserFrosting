@@ -6,6 +6,12 @@
                 "max" : 50,
                 "message" : "ACCOUNT_USER_CHAR_LIMIT"
             },
+            "no_leading_whitespace" : {
+                "message" : "'{{self}}' must not contain leading whitespace."
+            },
+            "no_trailing_whitespace" : {
+                "message" : "'{{self}}' must not contain trailing whitespace."
+            },
             "required" : {
                 "message" : "ACCOUNT_SPECIFY_USERNAME"
             }
@@ -29,7 +35,7 @@
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "The value for {{self}} must be '0' or '1'."
+                "message" : "The value for '{{self}}' must be '0' or '1'."
             }
         }
     },

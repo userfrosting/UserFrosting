@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * es_ES
+ *
+ * Spanish (internationalized) message token translations
+ *
+ * @package UserFrosting
+ * @link http://www.userfrosting.com/components/#i18n 
+ * @author @jchorques
+ * @author @tyl3r
+ */
+
 /*
 {{name}} - Dynamic markers which are replaced at run time by the relevant index.
 */

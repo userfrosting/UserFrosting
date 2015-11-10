@@ -1,6 +1,8 @@
-# UserFrosting v0.3.0
+# UserFrosting v0.3.1
 
 http://www.userfrosting.com
+
+If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository.  Forking is only for when you are ready to create your own copy of the code to work on.
 
 [![Join the chat at https://gitter.im/alexweissman/UserFrosting](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/alexweissman/UserFrosting?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -12,7 +14,19 @@ Copyright (c) 2015, free to use in personal and commercial software as per the [
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/) and the [Twig](http://twig.sensiolabs.org/) templating engine.
 
-## Screenshots
+## Installation
+
+Please see our [installation guide](http://www.userfrosting.com/installation/).
+
+## Troubleshooting
+
+If you are having trouble installing UserFrosting, please read our [troubleshooting guide](http://www.userfrosting.com/troubleshooting) first!
+
+If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please read [Navigating UserFrosting](http://www.userfrosting.com/navigating).  
+
+If you want a good tour of the code base, we recommend going through our [tutorials](http://www.userfrosting.com/tutorials).
+
+## Features
 
 #### Login page
 ![Login page](/screenshots/login.png "Login page")
@@ -38,71 +52,68 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 - Build on existing, widely used server- and client-side components
 - Clean, consistent, and well-documented code
 
-## Installation
+## What's new in 0.3.1
 
-Please see our [installation guide](http://www.userfrosting.com/installation/).
+- Implement CSV download feature
+- Improved initialization routine as middleware
+- Implemented "remember me" for persistent sessions - see https://github.com/gbirke/rememberme
+- Converted page templates to inheritance architecture, using Twig `extends`
+- Start using the `.twig` extension for template files
+- All content is now part of a theme, and site can be configured so that one theme is the default theme for unauthenticated users
+- User session stored via `user_id`, rather than the entire User object
+- UserFrosting now uses Laravel's [Eloquent](http://laravel.com/docs/5.1/eloquent#introduction) as the data layer
+- Cleaned up some of the per-page Javascript, refactoring repetitive code
+- Implement server-side pagination
+- Upgrade to Tablesorter v2.23.4
+- Switch from DateJS to momentjs
+- Switch to jQueryValidation from FormValidation
+- Implement `no_leading_whitespace` and `no_trailing_whitespace` validation rules
+- Implement basic interface for modifying group authorization rules
+- User events - timestamps for things like sign-in, sign-up, password reset, etc are now stored in a `user_event` table
+- Wrapper class Notification for sending emails, other notifications to users
+- Remove username requirement for password reset.  It is more likely that an attacker would know the user's username, than the user themselves.  For the next version, we can try to implement some real multi-factor authentication.
+- When a user creates another user, they don't need to set a password.  Instead, an email is sent out to the new user, with a token allowing them to set their own password.
+- Admins can manually generate a password reset request for another user, or directly change the user's password.
+- .htaccess redirect trailing slash: change to only redirect GET requests
 
-## What's new in 0.3.0
+### Migrating from UF's classic data model to Eloquent:
 
-### Autoloading with Composer
+```
+// Instead of...
+$user = UserLoader::fetch(1);   // Fetch User with id=1
 
-http://www.userfrosting.com/navigating/#composer
+// You can do...
+$user = User::find(1);
 
-### Front Controllers and the Slim Microframework
 
-http://www.userfrosting.com/navigating/#slim
+// Instead of...
+$user = UserLoader::fetch("alex", "user_name");   // Fetch User with user_name = "alex"
 
-### MVC Architecture
+// You can do...
+$user = User::where("user_name", "alex")->first(); 
 
-http://www.userfrosting.com/navigating/#structure
+// Instead of...
+UserLoader::exists("zergling@userfrosting.com", "email");
 
-### Templating with Twig
+// You can do...
+( User::where("email", "zergling@userfrosting.com")->first() ? true : false );
 
-http://www.userfrosting.com/navigating/#twig
+// Instead of...
+$users = UserLoader::fetchAll();
 
-### Theming
+// You can do...
+$users = User::queryBuilder()->get();    // If you want an array of User objects (not indexed by id)
+// or...
+$users = User::all();                    // If you want an Eloquent Collection of User objects
+// or...
+$users = User::all()->getDictionary();   // If you want an array of User objects (indexed by id)
+```
 
-http://www.userfrosting.com/components/#theming
+[Complete change log](CHANGELOG.md)
 
-### Plugins
-
-http://www.userfrosting.com/components/#plugins
-
-## Libraries
-
-- URL Routing and micro-framework: [Slim](http://www.slimframework.com/)
-- Templating: [Twig](http://twig.sensiolabs.org/)
 
 ## Why UserFrosting?
 
-This project grew out of a need for a simple user management system for my tutoring business, [Bloomington Tutors](http://bloomingtontutors.com).  I wanted something that I could develop rapidly and easily customize for the needs of my business.  Since my [prior web development experience](http://alexanderweissman.com/projects/) was in pure PHP, I decided to go with the PHP-based UserCake system.
+This project grew out of a need for a simple user management system for my tutoring business, [Bloomington Tutors](https://bloomingtontutors.com).  I wanted something that I could develop rapidly and easily customize for the needs of my business.  Since my [prior web development experience](http://alexanderweissman.com/projects/) was in pure PHP, I decided to go with the PHP-based UserCake system.
 
-Over time I modified and expanded the codebase, turning it into the UserFrosting project.  This latest version (0.3.0) represents a major break from the original architecture of UserCake.  We now use a fully object-oriented data model and a front controller for URL routing.
-
-## TODO
-
-### Persistent sessions
-
-UserFrosting uses native PHP sessions.  We could use Slim's [encrypted session cookies](http://docs.slimframework.com/#Cookie-Session-Store), but unfortunately they only allow a max of 4KB of data - too little for what a typical use case will require.
-
-Many UF developers suffer from PHP's native sessions randomly expiring.  This may be an issue related to server configuration, rather than a problem with UF itself.  More research is needed.
-http://board.phpbuilder.com/showthread.php?10313632-Sessions-randomly-dropped!
-https://stackoverflow.com/questions/1327351/session-should-never-expire-by-itself
-http://jaspan.com/improved_persistent_login_cookie_best_practice
-
-It could also be due to issues with other PHP applications running on the same server: https://stackoverflow.com/questions/3476538/php-sessions-timing-out-too-quickly
-
-### Remove input sanitization
-
-Sanitization should probably happen when data is used (i.e. displayed), rather than when input.  See http://lukeplant.me.uk/blog/posts/why-escape-on-input-is-a-bad-idea/.
-So, it should go something like:
-raw input -> validation -> database -> sanitization -> output
-
-### Modifying permissions
- 
-We need a better interface for modifying permissions:
-https://github.com/alexweissman/UserFrosting/issues/127
- 
-### Plugins
-
-We need a plugin system that is easily extendable, and exposes the Slim `$app` instance to the plugin developer.  It should also allow the developer to modify the user's environment.
+Over time I modified and expanded the codebase, turning it into the UserFrosting project.  Starting with version 0.3.0, UserFrosting represents a major break from the original architecture of UserCake.  We now use a fully object-oriented data model and a front controller for URL routing.

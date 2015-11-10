@@ -6,6 +6,12 @@
                 "max" : 50,
                 "message" : "ACCOUNT_USER_CHAR_LIMIT"
             },
+            "no_leading_whitespace" : {
+                "message" : "ACCOUNT_USER_NO_LEAD_WS"
+            },
+            "no_trailing_whitespace" : {
+                "message" : "ACCOUNT_USER_NO_TRAIL_WS"
+            },            
             "required" : {
                 "message" : "ACCOUNT_SPECIFY_USERNAME"
             }
@@ -40,40 +46,6 @@
             }
         },
         "sanitizers" : { "raw" : {}}
-    },
-    "password" : {
-        "validators" : {
-            "required" : {
-                "message" : "ACCOUNT_SPECIFY_PASSWORD"
-            },
-            "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
-            }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
-    },
-    "passwordc" : {
-        "validators" : {
-            "required" : {
-                "message" : "ACCOUNT_SPECIFY_PASSWORD"
-            },
-            "matches" : {
-                "field" : "password",
-                "message" : "ACCOUNT_PASS_MISMATCH"
-            },
-            "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
-            }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
     },
     "title" : {
         "validators" : {

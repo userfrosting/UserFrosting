@@ -2,19 +2,34 @@
 
 namespace UserFrosting;
 
-/*******
-
-/config/*
-
-*******/
-
-// Handles admin-related activities, including site settings, user management, etc
+/**
+ * AdminController Class
+ *
+ * Controller class for /config/* URLs.  Handles admin-related activities, including site settings, etc
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/navigating/#structure
+ */
 class AdminController extends \UserFrosting\BaseController {
 
+    /**
+     * Create a new AdminController object.
+     *
+     * @param UserFrosting $app The main UserFrosting app.
+     */
     public function __construct($app){
         $this->_app = $app;
     }
 
+    /**
+     * Renders the site settings page.
+     *
+     * This page provides an interface for modifying site settings, especially those handled by the SiteSettings class.
+     * It also shows some basic configuration information for the site, along with a nicely formatted readout of the PHP error log.
+     * This page requires authentication (and should generally be limited to the root user).
+     * Request type: GET
+     */
     public function pageSiteSettings(){
         // Access-controlled page
         if (!$this->_app->user->checkAccess('uri_site_settings')){
@@ -24,19 +39,22 @@ class AdminController extends \UserFrosting\BaseController {
         // Hook for core and plugins to register their settings
         $this->_app->applyHook("settings.register");
         
-        $this->_app->render('site-settings.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Site Settings",
-                'description' =>    "Global settings for the site, including registration and activation settings, site title, admin emails, and default languages.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('config/site-settings.twig', [
             'settings' => $this->_app->site->getRegisteredSettings(),
             'info'     => $this->_app->site->getSystemInfo(),
             'error_log'=> $this->_app->site->getLog(50)
         ]);    
     }
-    
+        
+    /**
+     * Processes a request to update the site settings.
+     *
+     * Processes the request from the site settings form, checking that:
+     * 1. The setting name has been registered with the SiteSettings object.
+     * This route requires authentication.
+     * Request type: POST
+     * @todo validate setting syntax
+     */       
     public function siteSettings(){
         // Get the alert message stream
         $ms = $this->_app->alerts;
@@ -85,4 +103,3 @@ class AdminController extends \UserFrosting\BaseController {
     }
     
 }
-?>

@@ -60,6 +60,9 @@ Many IDEs support syntax highlighting and auto-completion for Twig:
 * *Emacs* via `web-mode.el`_
 * *Atom* via the `PHP-twig for atom`_
 
+Also, `TwigFiddle`_ is an online service that allows you to execute Twig templates
+from a browser; it supports all versions of Twig.
+
 Variables
 ---------
 
@@ -93,7 +96,7 @@ access the variable attribute:
     don't put the braces around them.
 
 If a variable or attribute does not exist, you will receive a ``null`` value
-when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables`` 
+when the ``strict_variables`` option is set to ``false``; alternatively, if ``strict_variables``
 is set, Twig will throw an error (see :ref:`environment options<environment_options>`).
 
 .. sidebar:: Implementation
@@ -124,7 +127,7 @@ Global Variables
 
 The following variables are always available in templates:
 
-* ``_self``: references the current template;
+* ``_self``: references the current template (deprecated since Twig 1.20);
 * ``_context``: references the current context;
 * ``_charset``: references the current charset.
 
@@ -541,6 +544,9 @@ macro call:
         <input type="{{ type }}" name="{{ name }}" value="{{ value|e }}" size="{{ size }}" />
     {% endmacro %}
 
+If extra positional arguments are passed to a macro call, they end up in the
+special ``varargs`` variable as a list of values.
+
 .. _twig-expressions:
 
 Expressions
@@ -765,14 +771,26 @@ Other Operators
 .. versionadded:: 1.12.0
     Support for the extended ternary operator was added in Twig 1.12.0.
 
-The following operators are very useful but don't fit into any of the other
-categories:
-
-* ``..``: Creates a sequence based on the operand before and after the
-  operator (this is just syntactic sugar for the :doc:`range<functions/range>`
-  function).
+The following operators don't fit into any of the other categories:
 
 * ``|``: Applies a filter.
+
+* ``..``: Creates a sequence based on the operand before and after the operator
+  (this is just syntactic sugar for the :doc:`range<functions/range>` function):
+
+  .. code-block:: jinja
+
+      {{ 1..5 }}
+
+      {# equivalent to #}
+      {{ range(1, 5) }}
+
+  Note that you must use parentheses when combining it with the filter operator
+  due to the :ref:`operator precedence rules <twig-expressions>`:
+
+  .. code-block:: jinja
+
+      (1..5)|join(', ')
 
 * ``~``: Converts all operands into strings and concatenates them. ``{{ "Hello
   " ~ name ~ "!" }}`` would return (assuming ``name`` is ``'John'``) ``Hello
@@ -879,3 +897,4 @@ Extension<creating_extensions>` chapter.
 .. _`web-mode.el`:                http://web-mode.org/
 .. _`regular expressions`:        http://php.net/manual/en/pcre.pattern.php
 .. _`PHP-twig for atom`:          https://github.com/reesef/php-twig
+.. _`TwigFiddle`:                 http://twigfiddle.com/

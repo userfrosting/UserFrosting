@@ -2,20 +2,38 @@
 
 namespace UserFrosting;
 
-/*******
-
-/users/*
-
-*******/
-
-// Handles user-related activities
+/**
+ * UserController Class
+ *
+ * Controller class for /users/* URLs.  Handles user-related activities, including listing users, CRUD for users, etc.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/navigating/#structure
+ */
 class UserController extends \UserFrosting\BaseController {
 
+    /**
+     * Create a new UserController object.
+     *
+     * @param UserFrosting $app The main UserFrosting app.
+     */
     public function __construct($app){
         $this->_app = $app;
     }
 
-    public function pageUsers($primary_group_name = null){
+    /**
+     * Renders the user listing page.
+     *
+     * This page renders a table of users, with dropdown menus for admin actions for each user.
+     * Actions typically include: edit user details, activate user, enable/disable user, delete user.
+     * This page requires authentication.
+     * Request type: GET
+     * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
+     * @param bool $paginate_server_side optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.
+     * @todo implement interface to modify user-assigned authorization hooks and permissions
+     */        
+    public function pageUsers($primary_group_name = null, $paginate_server_side = true){
         // Optional filtering by primary group
         if ($primary_group_name){
             $primary_group = GroupLoader::fetch($primary_group_name, 'name');
@@ -28,7 +46,8 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
         
-            $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
+            if (!$paginate_server_side)
+                $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
             $name = $primary_group->name;
             $icon = $primary_group->icon;
 
@@ -38,27 +57,41 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
             
-            $users = UserLoader::fetchAll();
+            if (!$paginate_server_side) {
+                $user_collection = (new User)->get();
+                $user_collection->getRecentEvents('sign_in');
+                $user_collection->getRecentEvents('sign_up', 'sign_up_time');                
+            }
             $name = "Users";
             $icon = "fa fa-users";
         }
         
-        $this->_app->render('users.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          $name,
-                'description' =>    "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('users/users.twig', [
             "box_title" => $name,
             "icon" => $icon,
-            "users" => $users
+            "primary_group_name" => $primary_group_name,
+            "paginate_server_side" => $paginate_server_side,
+            "users" => isset($user_collection) ? $user_collection->toArray() : []
         ]);          
     }
-
+    
+    /**
+     * Renders a page displaying a user's information, in read-only mode.
+     *
+     * This checks that the currently logged-in user has permission to view the requested user's info.
+     * It checks each field individually, showing only those that you have permission to view.
+     * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
+     * This page requires authentication.
+     * Request type: GET
+     * @param string $user_id The id of the user to view.
+     */  
     public function pageUser($user_id){
         // Get the user to view
         $target_user = UserLoader::fetch($user_id);    
+        
+        // If the user no longer exists, forward to main user page
+        if (!$target_user)
+            $this->_app->redirect($this->_app->urlFor('uri_users'));
         
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
@@ -72,10 +105,11 @@ class UserController extends \UserFrosting\BaseController {
         $locale_list = $this->_app->site->getLocales();
         
         // Determine which groups this user is a member of
-        $user_groups = $target_user->getGroups();
-        foreach ($groups as $group_id => $group){
+        $user_groups = $target_user->getGroupIds();
+        foreach ($groups as $group){
+            $group_id = $group->id;
             $group_list[$group_id] = $group->export();
-            if (isset($user_groups[$group_id]))
+            if (in_array($group_id, $user_groups))
                 $group_list[$group_id]['member'] = true;
             else
                 $group_list[$group_id]['member'] = false;
@@ -96,16 +130,11 @@ class UserController extends \UserFrosting\BaseController {
         // Always disallow editing username
         $disabled_fields[] = "user_name";
         
-        // Hide password fields for editing user
-        $hidden_fields[] = "password";    
-    
-        $this->_app->render('user_info.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Users | " . $target_user->user_name,
-                'description' =>    "User information page for " . $target_user->user_name,
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        // Load validator rules
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
+        $this->_app->jsValidator->setSchema($schema);             
+        
+        $this->_app->render('users/user-info.twig', [
             "box_id" => 'view-user',
             "box_title" => $target_user->user_name,
             "target_user" => $target_user,
@@ -120,11 +149,20 @@ class UserController extends \UserFrosting\BaseController {
                     "submit", "cancel"
                 ]
             ],
-            "validators" => "{ none: ''}"           
+            "validators" => $this->_app->jsValidator->rules()   
         ]);   
     }
 
-   // Display the form for creating a new user
+    /**
+     * Renders the form for creating a new user.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`.
+     * If the currently logged-in user has permission to modify user group membership, then the group toggles will be displayed.
+     * Otherwise, the user will be added to the default groups automatically.
+     * This page requires authentication.
+     * Request type: GET
+     */  
     public function formUserCreate(){
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('create_account')){
@@ -139,16 +177,22 @@ class UserController extends \UserFrosting\BaseController {
             $render = "modal";
         
         // Get a list of all groups
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::all()->getDictionary();
         
         // Get a list of all locales
         $locale_list = $this->_app->site->getLocales();
         
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primary_group = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        $primary_group = Group::where("is_default", GROUP_DEFAULT_PRIMARY)->first();
+        
+        // If there is no default primary group, there is a problem.  Show an error message for now.
+        if (!$primary_group){
+            $this->_app->alerts->addMessageTranslated("danger", "GROUP_DEFAULT_PRIMARY_NOT_DEFINED");
+            $this->_app->halt(500);
+        }
         
         // Get the default groups
-        $default_groups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+        $default_groups = Group::all()->where("is_default", GROUP_DEFAULT)->getDictionary();
         
         // Set default groups, including default primary group
         foreach ($groups as $group_id => $group){
@@ -169,9 +213,9 @@ class UserController extends \UserFrosting\BaseController {
         $target_user = new User($data);        
         
         if ($render == "modal")
-            $template = "components/user-info-modal.html";
+            $template = "components/common/user-info-modal.twig";
         else
-            $template = "components/user-info-panel.html";
+            $template = "components/common/user-info-panel.twig";
         
         // Determine authorized fields for those that have default values.  Don't hide any fields
         $fields = ['title', 'locale', 'groups', 'primary_group_id'];
@@ -187,7 +231,7 @@ class UserController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-create.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);        
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -206,11 +250,22 @@ class UserController extends \UserFrosting\BaseController {
                     "edit", "enable", "delete", "activate"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }  
         
-    // Display the form for editing an existing user
+    /**
+     * Renders the form for editing an existing user.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`.
+     * For each field, we will first check if the currently logged-in user has permission to update the field.  If so,
+     * the field will be rendered as editable.  If not, we will check if they have permission to view the field.  If so,
+     * it will be displayed but disabled.  If they have neither permission, the field will be hidden.
+     * This page requires authentication.
+     * Request type: GET
+     * @param int $user_id the id of the user to edit.
+     */    
     public function formUserEdit($user_id){
         // Get the user to edit
         $target_user = UserLoader::fetch($user_id);        
@@ -244,12 +299,12 @@ class UserController extends \UserFrosting\BaseController {
         }
         
         if ($render == "modal")
-            $template = "components/user-info-modal.html";
+            $template = "components/common/user-info-modal.twig";
         else
-            $template = "components/user-info-panel.html";
+            $template = "components/common/user-info-panel.twig";
         
         // Determine authorized fields
-        $fields = ['display_name', 'email', 'title', 'password', 'locale', 'groups', 'primary_group_id'];
+        $fields = ['display_name', 'email', 'title', 'locale', 'groups', 'primary_group_id'];
         $show_fields = [];
         $disabled_fields = [];
         $hidden_fields = [];
@@ -264,13 +319,10 @@ class UserController extends \UserFrosting\BaseController {
         
         // Always disallow editing username
         $disabled_fields[] = "user_name";
-        
-        // Hide password fields for editing user
-        $hidden_fields[] = "password";
                 
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);  
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -289,16 +341,64 @@ class UserController extends \UserFrosting\BaseController {
                     "edit", "enable", "delete", "activate"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }    
 
-    // Create new user
+    /**
+     * Renders the form for editing a user's password.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */  
+    public function formUserEditPassword($user_id){
+        // Get the user to edit
+        $target_user = User::find($user_id);
+        
+        // Access-controlled resource
+        if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
+            $this->_app->notFound();
+        }
+        
+        $get = $this->_app->request->get();
+        
+         // Determine authorized fields
+        $hidden_fields = [];
+
+        if (!$this->_app->user->checkAccess("update_account_setting", ["user" => $target_user, "property" => 'password']))
+            $hidden_fields[] = 'password';
+                
+        // Load validator rules
+        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
+        $this->_app->jsValidator->setSchema($schema);  
+        
+        // This form posts to the same resource as "update user"
+        $this->_app->render("components/common/user-set-password.twig", [
+            "box_id" => isset($get['box_id']) ? $get['box_id'] : 'user-set-password',
+            "box_title" => "Change User Password",
+            "form_action" => $this->_app->site->uri['public'] . "/users/u/$user_id",
+            "target_user" => $target_user,
+            "fields" => [
+                "hidden" => $hidden_fields
+            ],
+            "validators" => $this->_app->jsValidator->rules()
+        ]);   
+    }    
+    
+    /** 
+     * Processes the request to create a new user (from the admin controls).
+     * 
+     * Processes the request from the user creation form, checking that:
+     * 1. The username and email are not already in use;
+     * 2. The logged-in user has the necessary permissions to update the posted field(s);
+     * 3. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST
+     * @see formUserCreate
+     */
     public function createUser(){
         $post = $this->_app->request->post();
-        
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
         
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-create.json");
@@ -324,14 +424,14 @@ class UserController extends \UserFrosting\BaseController {
         // Get the filtered data
         $data = $rf->data();        
         
-        // Remove csrf_token, password confirmation from object data
-        $rf->removeFields(['csrf_token, passwordc']);
+        // Remove csrf_token from object data
+        $rf->removeFields(['csrf_token']);
         
         // Perform desired data transformations on required fields.  Is this a feature we could add to Fortress?
-        $data['user_name'] = strtolower(trim($data['user_name']));
         $data['display_name'] = trim($data['display_name']);
-        $data['email'] = strtolower(trim($data['email']));
-        $data['active'] = 1;
+        $data['flag_verified'] = 1;
+        // Set password as empty on initial creation.  We will then send email so new user can set it themselves via secret token        
+        $data['password'] = "";
         
         // Check if username or email already exists
         if (UserLoader::exists($data['user_name'], 'user_name')){
@@ -355,7 +455,7 @@ class UserController extends \UserFrosting\BaseController {
         // Set default values if not specified or not authorized
         if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "locale"]))
             $data['locale'] = $this->_app->site->default_locale;
-    
+            
         if (!isset($data['title']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "title"])) {
             // Set default title for new users
             $data['title'] = $primaryGroup->new_user_title;
@@ -365,35 +465,70 @@ class UserController extends \UserFrosting\BaseController {
             $data['primary_group_id'] = $primaryGroup->id;
         }
         
+        // Set groups to default groups if not specified or not authorized to set groups
         if (!isset($data['groups']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "groups"])) {
-            $data['groups'] = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+            $default_groups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+            $data['groups'] = [];
+            foreach ($default_groups as $group_id => $group){
+                $data['groups'][$group_id] = "1";
+            }
         }
-        
-        // Hash password
-        $data['password'] = Authentication::hashPassword($data['password']);
         
         // Create the user
         $user = new User($data);
-
-        // Add user to groups, including default primary group
-        $user->addGroup($data['primary_group_id']);
-        foreach ($data['groups'] as $group_id => $group)
-            $user->addGroup($group_id);    
         
-        // Store new user to database
-        $user->store();        
+        // Add user to groups, including selected primary group
+        $user->addGroup($data['primary_group_id']);
+        foreach ($data['groups'] as $group_id => $is_member) {
+            if ($is_member == "1"){      
+                $user->addGroup($group_id);    
+            }
+        }
+        
+        // Create events - account creation and password reset
+        $user->newEventSignUp($this->_app->user);
+        $user->newEventPasswordReset();    
+        
+        // Save user again after creating events
+        $user->save();             
+        
+        // Send an email to the user's email address to set up password
+        $twig = $this->_app->view()->getEnvironment();
+        $template = $twig->loadTemplate("mail/password-create.twig");        
+        $notification = new Notification($template);
+        $notification->fromWebsite();      // Automatically sets sender and reply-to
+        $notification->addEmailRecipient($user->email, $user->display_name, [
+            'user' => $user,
+            'create_password_expiration' => $this->_app->site->create_password_expiration / 3600 . " hours"
+        ]);
+        
+        try {
+            $notification->send();
+        } catch (\Exception\phpmailerException $e){
+            $ms->addMessageTranslated("danger", "MAIL_ERROR");
+            error_log('Mailer Error: ' . $e->errorMessage());
+            $this->_app->halt(500);
+        }
         
         // Success message
         $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
     }
     
-    
-    // Update user details, enabled/disabled status, activation status, 
+    /** 
+     * Processes the request to update an existing user's details, including enabled/disabled status and activation status.
+     * 
+     * Processes the request from the user update form, checking that:
+     * 1. The target user's new email address, if specified, is not already in use;
+     * 2. The logged-in user has the necessary permissions to update the posted field(s);
+     * 3. We're not trying to disable the master account;
+     * 4. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST
+     * @param int $user_id the id of the user to edit.     
+     * @see formUserEdit
+     */      
     public function updateUser($user_id){
         $post = $this->_app->request->post();
-        
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
         
         // Load the request schema
         $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
@@ -402,7 +537,7 @@ class UserController extends \UserFrosting\BaseController {
         $ms = $this->_app->alerts; 
         
         // Get the target user
-        $target_user = UserLoader::fetch($user_id);
+        $target_user = User::find($user_id);
         
         // Get the target user's groups
         $groups = $target_user->getGroups();
@@ -420,10 +555,17 @@ class UserController extends \UserFrosting\BaseController {
             $ms->addMessageTranslated("danger", "ACCESS_DENIED");
             $this->_app->halt(403);
         }
-                       
+        
         // Remove csrf_token
         unset($post['csrf_token']);
-                                
+        
+        // Set up Fortress to process the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);          
+        
+        if (isset($post['passwordc'])){
+            unset($post['passwordc']);        
+        }
+           
         // Check authorization for submitted fields, if the value has been changed
         foreach ($post as $name => $value) {
             if ($name == "groups" || (isset($target_user->$name) && $post[$name] != $target_user->$name)){
@@ -437,21 +579,19 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->halt(400);
             }
         }
-
+        
         // Check that we are not disabling the master account
-        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['enabled']) && $post['enabled'] == "0"){
+        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == "0"){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLE_MASTER");
             $this->_app->halt(403);
         }
-
+        
+        // Check that the email address is not in use
         if (isset($post['email']) && $post['email'] != $target_user->email && UserLoader::exists($post['email'], 'email')){
             $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $post);
             $this->_app->halt(400);
         }
         
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);                    
-    
         // Sanitize
         $rf->sanitize();
     
@@ -459,7 +599,10 @@ class UserController extends \UserFrosting\BaseController {
         if (!$rf->validate()) {
             $this->_app->halt(400);
         }   
-               
+        
+        // Remove passwordc
+        $rf->removeFields(['passwordc']);
+           
         // Get the filtered data
         $data = $rf->data();
         
@@ -475,29 +618,74 @@ class UserController extends \UserFrosting\BaseController {
             unset($data['groups']);
         }
         
+        // Hash password
+        if (isset($data['password'])){
+            $data['password'] = Authentication::hashPassword($data['password']);
+        }
+        
         // Update the user and generate success messages
         foreach ($data as $name => $value){
             if ($value != $target_user->$name){
                 $target_user->$name = $value;
                 // Custom success messages (optional)
-                if ($name == "enabled") {
+                if ($name == "flag_enabled") {
                     if ($value == "1")
                         $ms->addMessageTranslated("success", "ACCOUNT_ENABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
                     else
                         $ms->addMessageTranslated("success", "ACCOUNT_DISABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
                 }
-                if ($name == "active") {
+                if ($name == "flag_verified") {
                     $ms->addMessageTranslated("success", "ACCOUNT_MANUALLY_ACTIVATED", ["user_name" => $target_user->user_name]);
                 }
             }
         }
         
-        $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
-        $target_user->store();        
+        // If we're generating a password reset, create the corresponding event and shoot off an email
+        if (isset($data['flag_password_reset']) && ($data['flag_password_reset'] == "1")){
+            // Recheck auth
+            if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $target_user, 'property' => 'flag_password_reset'])){
+                $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+                $this->_app->halt(403);
+            }
+            // New password reset event - bypass any rate limiting
+            $target_user->newEventPasswordReset();
+            $target_user->save();
+            // Email the user asking to confirm this change password request
+            $twig = $this->_app->view()->getEnvironment();
+            $template = $twig->loadTemplate("mail/password-reset.twig");        
+            $notification = new Notification($template);
+            $notification->fromWebsite();      // Automatically sets sender and reply-to
+            $notification->addEmailRecipient($target_user->email, $target_user->display_name, [
+                "user" => $target_user,
+                "request_date" => date("Y-m-d H:i:s")
+            ]);
+            
+            try {
+                $notification->send();
+            } catch (\Exception\phpmailerException $e){
+                $ms->addMessageTranslated("danger", "MAIL_ERROR");
+                error_log('Mailer Error: ' . $e->errorMessage());
+                $this->_app->halt(500);
+            }
+            
+            $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SENT", ["user_name" => $target_user->user_name]);
+        }
         
+        $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
+        $target_user->save();        
     }
     
-    // Delete a user, cleaning up their group memberships and any user-specific authorization rules
+    /** 
+     * Processes the request to delete an existing user.
+     * 
+     * Deletes the specified user, removing associations with any groups and any user-specific authorization rules.
+     * Before doing so, checks that:
+     * 1. You are not trying to delete the master account;
+     * 2. You have permission to delete user user accounts.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @param int $user_id the id of the user to delete.     
+     */       
     public function deleteUser($user_id){
         $post = $this->_app->request->post();
     
@@ -518,11 +706,9 @@ class UserController extends \UserFrosting\BaseController {
             $ms->addMessageTranslated("danger", "ACCOUNT_DELETE_MASTER");
             $this->_app->halt(403);
         }
-
+        
         $ms->addMessageTranslated("success", "ACCOUNT_DELETION_SUCCESSFUL", ["user_name" => $target_user->user_name]);
         $target_user->delete();
         unset($target_user);
     }
-    
 }
-?>

@@ -1,15 +1,42 @@
 <?php
-    require_once "../userfrosting/initialize.php";
+    // This is the path to initialize.php, your site's gateway to the rest of the UF codebase!  Make sure that it is correct!
+    $init_path = "../userfrosting/initialize.php";
+
+    // This if-block just checks that the path for initialize.php is correct.  Remove this once you know what you're doing.
+    if (!file_exists($init_path)){
+        echo "<h2>We can't seem to find our way to initialize.php!  Please check the require_once statement at the top of index.php, and make sure it contains the correct path to initialize.php.</h2><br>";
+    }
+
+    require_once($init_path);
 
     use UserFrosting as UF;
    
     // Front page
     $app->get('/', function () use ($app) {
+        // This if-block detects if mod_rewrite is enabled.
+        // This is just an anti-noob device, remove it if you know how to read the docs and/or breathe through your nose.
+        if (isset($_SERVER['SERVER_TYPE']) && ($_SERVER['SERVER_TYPE'] == "Apache") && !isset($_SERVER['HTTP_MOD_REWRITE'])) {
+            $app->render('errors/bad-config.twig');
+            exit;
+        }
+    
+        // Check that we can connect to the DB.  Again, you can remove this if you know what you're doing.
+        if (!UF\Database::testConnection()){
+            // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
+            session_destroy();
+            // TODO: log out from remember me as well.
+            $controller = new UF\AccountController($app);
+            return $controller->pageDatabaseError();
+        }
+    
         // Forward to installation if not complete
+        // TODO: Is there any way to detect that installation was complete, but the DB is malfunctioning?
         if (!isset($app->site->install_status) || $app->site->install_status == "pending"){
             $app->redirect($app->urlFor('uri_install'));
-        }        
+        }
+        
         // Forward to the user's landing page (if logged in), otherwise take them to the home page
+        // This is probably where you, the developer, would start making changes if you need to change the default behavior.
         if ($app->user->isGuest()){
             $controller = new UF\AccountController($app);
             $controller->pageHome();
@@ -24,21 +51,15 @@
         }
     })->name('uri_home');
 
-    // Miscellaneous pages
+    /********** FEATURE PAGES **********/
+    
     $app->get('/dashboard/?', function () use ($app) {    
         // Access-controlled page
         if (!$app->user->checkAccess('uri_dashboard')){
             $app->notFound();
         }
         
-        $app->render('dashboard.html', [
-            'page' => [
-                'author' =>         $app->site->author,
-                'title' =>          "Dashboard",
-                'description' =>    "Your user dashboard.",
-                'alerts' =>         $app->alerts->getAndClearMessages()
-            ]
-        ]);          
+        $app->render('dashboard.twig', []);          
     });
     
     $app->get('/zerg/?', function () use ($app) {    
@@ -47,17 +68,11 @@
             $app->notFound();
         }
         
-        $app->render('zerg.html', [
-            'page' => [
-                'author' =>         $app->site->author,
-                'title' =>          "Zerg",
-                'description' =>    "Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.",
-                'alerts' =>         $app->alerts->getAndClearMessages()
-            ]
-        ]); 
+        $app->render('users/zerg.twig'); 
     });    
        
-    // Account management pages
+    /********** ACCOUNT MANAGEMENT INTERFACE **********/
+    
     $app->get('/account/:action/?', function ($action) use ($app) {    
         // Forward to installation if not complete
         if (!isset($app->site->install_status) || $app->site->install_status == "pending"){
@@ -70,13 +85,14 @@
     
         switch ($action) {
             case "login":               return $controller->pageLogin();
-            case "logout":              return $controller->logout(); 
-            case "register":            return $controller->pageRegister();
-            case "activate":            return $controller->activate();            
+            case "logout":              return $controller->logout(true); 
+            case "register":            return $controller->pageRegister();         
             case "resend-activation":   return $controller->pageResendActivation();
             case "forgot-password":     return $controller->pageForgotPassword();
+            case "activate":            return $controller->activate();
+            case "set-password":        return $controller->pageSetPassword(true); 
             case "reset-password":      if (isset($get['confirm']) && $get['confirm'] == "true")
-                                            return $controller->pageResetPassword();
+                                            return $controller->pageSetPassword(false);
                                         else
                                             return $controller->denyResetPassword();
             case "captcha":             return $controller->captcha();
@@ -93,18 +109,22 @@
             case "register":            return $controller->register();
             case "resend-activation":   return $controller->resendActivation();
             case "forgot-password":     return $controller->forgotPassword();
-            case "reset-password":      return $controller->resetPassword();            
+            case "set-password":        return $controller->setPassword(true);
+            case "reset-password":      return $controller->setPassword(false);            
             case "settings":            return $controller->accountSettings();
             default:                    $app->notFound();
         }
     });    
     
-    // User management pages
+    /********** USER MANAGEMENT INTERFACE **********/
+    
+    // List users
     $app->get('/users/?', function () use ($app) {
         $controller = new UF\UserController($app);
         return $controller->pageUsers();
-    });    
+    })->name('uri_users');    
 
+    // List users in a particular primary group
     $app->get('/users/:primary_group/?', function ($primary_group) use ($app) {
         $controller = new UF\UserController($app);
         return $controller->pageUsers($primary_group);
@@ -119,6 +139,13 @@
         else
             return $controller->formUserView($user_id);
     });  
+
+    // User edit password form
+    $app->get('/forms/users/u/:user_id/password/?', function ($user_id) use ($app) {
+        $controller = new UF\UserController($app);
+        $get = $app->request->get();        
+        return $controller->formUserEditPassword($user_id);
+    });
     
     // User creation form
     $app->get('/forms/users/?', function () use ($app) {
@@ -150,11 +177,19 @@
         return $controller->deleteUser($user_id);
     });
     
-    // Group management pages
+    /********** GROUP MANAGEMENT INTERFACE **********/
+    
+    // List groups
     $app->get('/groups/?', function () use ($app) {
         $controller = new UF\GroupController($app);
         return $controller->pageGroups();
     }); 
+    
+    // List auth rules for a group
+    $app->get('/groups/g/:group_id/auth?', function ($group_id) use ($app) {
+        $controller = new UF\GroupController($app);
+        return $controller->pageGroupAuthorization($group_id);
+    })->name('uri_authorization');  
     
     // Group info form (update/view)
     $app->get('/forms/groups/g/:group_id/?', function ($group_id) use ($app) {
@@ -183,18 +218,53 @@
         $controller = new UF\GroupController($app);
         return $controller->updateGroup($group_id);
     });       
-    
+
     // Delete group
     $app->post('/groups/g/:group_id/delete/?', function ($group_id) use ($app) {
         $controller = new UF\GroupController($app);
         return $controller->deleteGroup($group_id);
     });
     
-    // Admin tools
+    /********** GROUP AUTH RULES INTERFACE **********/
+    
+    // Group auth creation form
+    $app->get('/forms/groups/g/:group_id/auth/?', function ($group_id) use ($app) {
+        $controller = new UF\AuthController($app);
+        return $controller->formAuthCreate($group_id, "group");
+    });      
+    
+    // Group auth update form
+    $app->get('/forms/groups/auth/a/:rule_id/?', function ($rule_id) use ($app) {
+        $controller = new UF\AuthController($app);
+        $get = $app->request->get();        
+        return $controller->formAuthEdit($rule_id);
+    });    
+
+    // Group auth create
+    $app->post('/groups/g/:group_id/auth/?', function ($group_id) use ($app) {
+        $controller = new UF\AuthController($app);
+        return $controller->createAuthRule($group_id, "group");
+    });     
+
+    // Group auth update
+    $app->post('/groups/auth/a/:rule_id?', function ($rule_id) use ($app) {
+        $controller = new UF\AuthController($app);
+        return $controller->updateAuthRule($rule_id, "group");
+    });
+    
+    // Group auth delete
+    $app->post('/auth/a/:rule_id/delete/?', function ($rule_id) use ($app) {
+        $controller = new UF\AuthController($app);
+        $get = $app->request->get();        
+        return $controller->deleteAuthRule($rule_id);
+    });  
+        
+    /************ ADMIN TOOLS *************/
+    
     $app->get('/config/settings/?', function () use ($app) {
         $controller = new UF\AdminController($app);
         return $controller->pageSiteSettings();
-    })->name('uri_settings');   
+    })->name('uri_settings');     
     
     $app->post('/config/settings/?', function () use ($app) {
         $controller = new UF\AdminController($app);
@@ -213,7 +283,42 @@
         $app->redirect($app->urlFor('uri_settings'));
     });    
     
-    // Installation pages
+    // Slim info page
+    $app->get('/sliminfo/?', function () use ($app) {
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_slim_info')){
+            $app->notFound();
+        }
+        echo "<pre>";
+        print_r($app->environment());
+        echo "</pre>";
+    });
+
+    // PHP info page
+    $app->get('/phpinfo/?', function () use ($app) {
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_php_info')){
+            $app->notFound();
+        }    
+        echo "<pre>";
+        print_r(phpinfo());
+        echo "</pre>";
+    });
+
+    // Error log page
+    $app->get('/errorlog/?', function () use ($app) {
+        // Access-controlled page
+        if (!$app->user->checkAccess('uri_error_log')){
+            $app->notFound();
+        }
+        $log = $app->site->getLog();
+        echo "<pre>";
+        echo implode("<br>",$log['messages']);
+        echo "</pre>";
+    });      
+       
+    /************ INSTALLER *************/
+
     $app->get('/install/?', function () use ($app) {
         $controller = new UF\InstallController($app);
         if (isset($app->site->install_status)){
@@ -246,39 +351,15 @@
         }   
     });
     
-    // Slim info page
-    $app->get('/sliminfo/?', function () use ($app) {
-        // Access-controlled page
-        if (!$app->user->checkAccess('uri_slim_info')){
-            $app->notFound();
-        }
-        echo "<pre>";
-        print_r($app->environment());
-        echo "</pre>";
+    /************ API *************/
+    
+    $app->get('/api/users/?', function () use ($app) {
+        $controller = new UF\ApiController($app);
+        $controller->listUsers();
     });
-
-    // PHP info page
-    $app->get('/phpinfo/?', function () use ($app) {
-        // Access-controlled page
-        if (!$app->user->checkAccess('uri_php_info')){
-            $app->notFound();
-        }    
-        echo "<pre>";
-        print_r(phpinfo());
-        echo "</pre>";
-    });
-
-    // PHP info page
-    $app->get('/errorlog/?', function () use ($app) {
-        // Access-controlled page
-        if (!$app->user->checkAccess('uri_error_log')){
-            $app->notFound();
-        }
-        $log = $app->site->getLog();
-        echo "<pre>";
-        echo implode("<br>",$log['messages']);
-        echo "</pre>";
-    });      
+    
+    
+    /************ MISCELLANEOUS UTILITY ROUTES *************/
     
     // Generic confirmation dialog
     $app->get('/forms/confirm/?', function () use ($app) {
@@ -306,7 +387,7 @@
         
         $data = $rf->data();
         
-        $app->render('components/confirm-modal.html', $data);   
+        $app->render('components/common/confirm-modal.twig', $data);   
     }); 
     
     // Alert stream
@@ -334,31 +415,6 @@
             $controller->page404();
         } else {
             $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
-        }
-    });     
-    
-    $app->get('/test/auth', function() use ($app){
-        if (0 == "php")
-            echo "0 = php";
-        
-        $params = [
-            "user" => [
-                "id" => 1
-            ],
-            "post" => [
-                "id" => 7
-            ]
-        ];
-        
-        $conditions = "(equals(self.id,user.id)||hasPost(self.id,post.id))&&subset(post, [\"id\", \"title\", \"content\", \"subject\", 3])";
-        
-        $ace = new UF\AccessConditionExpression($app);
-        $result = $ace->evaluateCondition($conditions, $params);
-        
-        if ($result){
-            echo "Passed $conditions";
-        } else {
-            echo "Failed $conditions";
         }
     });
     

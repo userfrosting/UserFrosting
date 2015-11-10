@@ -1,42 +1,33 @@
-/*
-
-UserFrosting
-By Alex Weissman
-
-UserFrosting is 100% free and open-source.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the 'Software'), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
-
+/**
+ * @file This file contains functions and bindings for the UserFrosting user management pages.
+ *
+ * @author Alex Weissman
+ * @license MIT
+ */
+ 
 $(document).ready(function() {                   
+    bindUserTableButtons($("body"));
+});
+
+function bindUserTableButtons(table) {
     // Link buttons
-    $('.js-user-create').click(function() { 
+    $(table).find('.js-user-create').click(function() { 
         userForm('dialog-user-create');
     });
     
-    $('.js-user-edit').click(function() {
+    $(table).find('.js-user-edit').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
         userForm('dialog-user-edit', user_id);
     });
 
-    $('.js-user-activate').click(function() {
+    $(table).find('.js-user-password').click(function() {
+        var btn = $(this);
+        var user_id = btn.data('id');
+        userPasswordForm('dialog-user-password', user_id);
+    });
+
+    $(table).find('.js-user-activate').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
         updateUserActiveStatus(user_id)
@@ -46,7 +37,7 @@ $(document).ready(function() {
         });
     });
     
-    $('.js-user-enable').click(function () {
+    $(table).find('.js-user-enable').click(function () {
         var btn = $(this);
         var user_id = btn.data('id');
         updateUserEnabledStatus(user_id, "1")
@@ -56,7 +47,7 @@ $(document).ready(function() {
         });
     });
     
-    $('.js-user-disable').click(function () {
+    $(table).find('.js-user-disable').click(function () {
         var btn = $(this);
         var user_id = btn.data('id');
         updateUserEnabledStatus(user_id, "0")
@@ -66,20 +57,20 @@ $(document).ready(function() {
         });
     });	
     
-    $('.js-user-delete').click(function() {
+    $(table).find('.js-user-delete').click(function() {
         var btn = $(this);
         var user_id = btn.data('id');
         var user_name = btn.data('user_name');
         deleteUserDialog('dialog-user-delete', user_id, user_name);
-    });	 	
-});
+    });	 	        
+}
 
 // Enable/disable the specified user
-function updateUserEnabledStatus(user_id, enabled) {
-	enabled = typeof enabled !== 'undefined' ? enabled : 1;
+function updateUserEnabledStatus(user_id, flag_enabled) {
+	flag_enabled = typeof flag_enabled !== 'undefined' ? flag_enabled : 1;
 	csrf_token = $("meta[name=csrf_token]").attr("content");
     var data = {
-		enabled: enabled,
+		flag_enabled: flag_enabled,
 		csrf_token: csrf_token
 	};
 	
@@ -92,11 +83,11 @@ function updateUserEnabledStatus(user_id, enabled) {
     });
 }
 
-// Activate new user account
+// Activate (verify) new user account
 function updateUserActiveStatus(user_id) {
 	csrf_token = $("meta[name=csrf_token]").attr("content");
     var data = {
-		active: "1",
+		flag_verified: "1",
         csrf_token: csrf_token
 	}
     
@@ -171,7 +162,9 @@ function deleteUserDialog(box_id, user_id, name){
 	});
 }
 
-/* Display a modal form for updating/creating a user */
+/**
+ * Display a modal form for updating/creating a user.
+ */
 function userForm(box_id, user_id) {	
 	user_id = typeof user_id !== 'undefined' ? user_id : "";
 	
@@ -243,55 +236,81 @@ function userForm(box_id, user_id) {
 		});
 		
 		// Link submission buttons
-        $("form[name='user']").formValidation({
-          framework: 'bootstrap',
-          // Feedback icons
-          icon: {
-              valid: 'fa fa-check',
-              invalid: 'fa fa-times',
-              validating: 'fa fa-refresh'
-          },
-          fields: validators
-        }).on('success.form.fv', function(e) {
-          // Prevent double form submission
-          e.preventDefault();
+        ufFormSubmit(
+            $('#' + box_id).find("form"),
+            validators,
+            $("#form-alerts"),
+            function(data, statusText, jqXHR) {
+                // Reload the page on success
+                window.location.reload(true);   
+            }
+        );	
+	});
+}
+
+/**
+ * Display a modal form for changing a user's password.
+ */
+function userPasswordForm(box_id, user_id) {	
+	user_id = typeof user_id !== 'undefined' ? user_id : "";
+	
+	// Delete any existing instance of the form with the same name
+	if($('#' + box_id).length ) {
+		$('#' + box_id).remove();
+	}
     
-          // Get the form instance
-          var form = $(e.target);
+    var url = site['uri']['public'] + "/forms/users/u/" + user_id + "/password";
     
-          // Serialize and post to the backend script in ajax mode
-          var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
-          // Get non-disabled, unchecked checkbox values, set them to 0
-          form.find('input[type=checkbox]:enabled').each(function() {
-              if ($(this).is(':checked'))
-                  serializedData += "&" + encodeURIComponent(this.name) + "=1";
-              else
-                  serializedData += "&" + encodeURIComponent(this.name) + "=0";
-          });
-          // Append page CSRF token
-          var csrf_token = $("meta[name=csrf_token]").attr("content");
-          serializedData += "&csrf_token=" + encodeURIComponent(csrf_token);
-          
-          var url = form.attr('action');
-          return $.ajax({  
-            type: "POST",  
-            url: url,  
-            data: serializedData       
-          }).done(function(data, statusText, jqXHR) {
-              // Reload the page
-              window.location.reload(true);         
-          }).fail(function(jqXHR) {
-              if (site['debug'] == true) {
-                  document.body.innerHTML = jqXHR.responseText;
-              } else {
-                  console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-              }
-              $('#form-alerts').flashAlerts().done(function() {
-                  // Re-enable submit button
-                  form.data('formValidation').disableSubmitButtons(false);
-              });              
-          });
-        }); 	
+	// Fetch and render the form
+	$.ajax({  
+	  type: "GET",  
+	  url: url,
+	  data: {
+        box_id: box_id
+      },
+	  cache: false
+	})
+	.fail(function(result) {
+        // Display errors on failure
+        $('#userfrosting-alerts').flashAlerts().done(function() {
+        });
+	})
+	.done(function(result) {
+		// Append the form as a modal dialog to the body
+		$( "body" ).append(result);
+		$('#' + box_id).modal('show');
+		
+		// Enable/disable password fields when switch is toggled
+        $(".controls-password").find("input[type='password']").prop('disabled', true);
+        $('#' + box_id).find("input[name='change_password_mode']").click(function() {
+            var type = $(this).val();
+            if (type == "link") {
+                $(".controls-password").find("input[type='password']").prop('disabled', true);
+                $('#' + box_id).find("input[name='flag_password_reset']").prop('disabled', false);
+            } else {
+                $(".controls-password").find("input[type='password']").prop('disabled', false);
+                $('#' + box_id).find("input[name='flag_password_reset']").prop('disabled', true);
+            }
+        });
+		
+		// Link submission buttons
+        ufFormSubmit(
+            $('#' + box_id).find("form"),
+            validators,
+            $("#form-alerts"),
+            function(data, statusText, jqXHR) {
+                // Reload the page on success
+                window.location.reload(true);   
+            },
+            function() {
+                // Enable radio buttons after submit
+                $('#' + box_id).find("input[name='change_password_mode']").prop('disabled', false);
+            },
+            function() {
+                // Disable radio buttons before submit
+                $('#' + box_id).find("input[name='change_password_mode']").prop('disabled', true);
+            }
+        );	
 	});
 }
 
@@ -323,7 +342,6 @@ function userDisplay(box_id, user_id) {
         });
 	})
 	.done(function(result) {
-
 		// Initialize bootstrap switches for user groups
 		var switches = $('#' + box_id + ' input[name="select_groups"]');
 		switches.data('on-label', '<i class="fa fa-check"></i>');

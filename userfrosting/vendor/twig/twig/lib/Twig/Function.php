@@ -9,12 +9,15 @@
  * file that was distributed with this source code.
  */
 
+@trigger_error('The Twig_Function class is deprecated since version 1.12 and will be removed in 2.0. Use Twig_SimpleFunction instead.', E_USER_DEPRECATED);
+
 /**
  * Represents a template function.
  *
  * Use Twig_SimpleFunction instead.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
  * @deprecated since 1.12 (to be removed in 2.0)
  */
 abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCallableInterface
@@ -26,8 +29,8 @@ abstract class Twig_Function implements Twig_FunctionInterface, Twig_FunctionCal
     {
         $this->options = array_merge(array(
             'needs_environment' => false,
-            'needs_context'     => false,
-            'callable'          => null,
+            'needs_context' => false,
+            'callable' => null,
         ), $options);
     }
 

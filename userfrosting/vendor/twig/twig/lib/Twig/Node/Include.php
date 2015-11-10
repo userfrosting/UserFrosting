@@ -22,11 +22,6 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
         parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (bool) $only, 'ignore_missing' => (bool) $ignoreMissing), $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this);
@@ -61,13 +56,13 @@ class Twig_Node_Include extends Twig_Node implements Twig_NodeOutputInterface
     protected function addGetTemplate(Twig_Compiler $compiler)
     {
         $compiler
-             ->write("\$this->loadTemplate(")
+             ->write('$this->loadTemplate(')
              ->subcompile($this->getNode('expr'))
              ->raw(', ')
              ->repr($compiler->getFilename())
              ->raw(', ')
              ->repr($this->getLine())
-             ->raw(")")
+             ->raw(')')
          ;
     }
 

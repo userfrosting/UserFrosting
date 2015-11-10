@@ -387,7 +387,13 @@ class Twig_ExpressionParser
                     throw new Twig_Error_Syntax(sprintf('Dynamic macro names are not supported (called on "%s")', $node->getAttribute('name')), $token->getLine(), $this->parser->getFilename());
                 }
 
-                $node = new Twig_Node_Expression_MethodCall($node, 'get'.$arg->getAttribute('value'), $arguments, $lineno);
+                $name = $arg->getAttribute('value');
+
+                if ($this->parser->isReservedMacroName($name)) {
+                    throw new Twig_Error_Syntax(sprintf('"%s" cannot be called as macro as it is a reserved keyword', $name), $token->getLine(), $this->parser->getFilename());
+                }
+
+                $node = new Twig_Node_Expression_MethodCall($node, 'get'.$name, $arguments, $lineno);
                 $node->setAttribute('safe', true);
 
                 return $node;
@@ -564,12 +570,20 @@ class Twig_ExpressionParser
         $env = $this->parser->getEnvironment();
 
         if (false === $function = $env->getFunction($name)) {
-            $message = sprintf('The function "%s" does not exist', $name);
-            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getFunctions()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
+            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" function.', $name), $line, $this->parser->getFilename());
+            $e->addSuggestions($name, array_keys($env->getFunctions()));
 
-            throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
+            throw $e;
+        }
+
+        if ($function instanceof Twig_SimpleFunction && $function->isDeprecated()) {
+            $message = sprintf('Twig Function "%s" is deprecated', $function->getName());
+            if ($function->getAlternative()) {
+                $message .= sprintf('. Use "%s" instead', $function->getAlternative());
+            }
+            $message .= sprintf(' in %s at line %d.', $this->parser->getFilename(), $line);
+
+            @trigger_error($message, E_USER_DEPRECATED);
         }
 
         if ($function instanceof Twig_SimpleFunction) {
@@ -584,12 +598,20 @@ class Twig_ExpressionParser
         $env = $this->parser->getEnvironment();
 
         if (false === $filter = $env->getFilter($name)) {
-            $message = sprintf('The filter "%s" does not exist', $name);
-            if ($alternatives = $env->computeAlternatives($name, array_keys($env->getFilters()))) {
-                $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
-            }
+            $e = new Twig_Error_Syntax(sprintf('Unknown "%s" filter.', $name), $line, $this->parser->getFilename());
+            $e->addSuggestions($name, array_keys($env->getFilters()));
 
-            throw new Twig_Error_Syntax($message, $line, $this->parser->getFilename());
+            throw $e;
+        }
+
+        if ($filter instanceof Twig_SimpleFilter && $filter->isDeprecated()) {
+            $message = sprintf('Twig Filter "%s" is deprecated', $filter->getName());
+            if ($filter->getAlternative()) {
+                $message .= sprintf('. Use "%s" instead', $filter->getAlternative());
+            }
+            $message .= sprintf(' in %s at line %d.', $this->parser->getFilename(), $line);
+
+            @trigger_error($message, E_USER_DEPRECATED);
         }
 
         if ($filter instanceof Twig_SimpleFilter) {

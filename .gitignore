@@ -1,3 +1,5 @@
 *.komodoproject
 .DS_Store
 _meta/*
+public/test/*
+userfrosting/config-userfrosting.php

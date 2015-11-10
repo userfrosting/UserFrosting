@@ -1,5 +1,5 @@
 {
-    "activation_token" : {
+    "secret_token" : {
         "validators" : {
             "required" : {
             }

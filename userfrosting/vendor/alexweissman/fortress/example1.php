@@ -15,7 +15,7 @@ $ms = $_SESSION['Fortress']['alerts'];
 // Create a message translator
 $translator = new Fortress\MessageTranslator();
 // Set the translation paths
-$translator->setTranslationTable("fortress/locale/es_ES.php");
+$translator->setTranslationTable("fortress/locale/en_US.php");
 $translator->setDefaultTable("fortress/locale/en_US.php");
 // Set translator for message streams
 \Fortress\MessageStream::setTranslator($translator);
@@ -67,10 +67,11 @@ if (!$rf->validate()) {
 }
 
 // Test client validators
-$clientVal = new Fortress\ClientSideValidator($schema, $translator);
+$clientVal = new Fortress\JqueryValidationAdapter($translator);
+$clientVal->setSchema($schema);
 echo "<h2>Client-side validation schema (JSON)</h2>";
 echo "<pre>";
-print_r($clientVal->formValidationRulesJson());
+print_r($clientVal->rules());
 echo "</pre>";
 
 // Create a new group with the filtered data

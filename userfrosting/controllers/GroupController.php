@@ -2,39 +2,73 @@
 
 namespace UserFrosting;
 
-/*******
-
-/groups/*
-
-*******/
-
-// Handles group-related activities
+/**
+ * GroupController Class
+ *
+ * Controller class for /groups/* URLs.  Handles group-related activities, including listing groups, CRUD for groups, etc.
+ *
+ * @package UserFrosting
+ * @author Alex Weissman
+ * @link http://www.userfrosting.com/navigating/#structure
+ */
 class GroupController extends \UserFrosting\BaseController {
 
+    /**
+     * Create a new GroupController object.
+     *
+     * @param UserFrosting $app The main UserFrosting app.
+     */
     public function __construct($app){
         $this->_app = $app;
     }
-    
+
+    /**
+     * Renders the group listing page.
+     *
+     * This page renders a table of user groups, with dropdown menus for modifying those groups.
+     * This page requires authentication (and should generally be limited to admins or the root user).
+     * Request type: GET
+     * @todo implement interface to modify authorization hooks and permissions
+     */    
     public function pageGroups(){
         // Access-controlled page
         if (!$this->_app->user->checkAccess('uri_groups')){
             $this->_app->notFound();
         }
         
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::queryBuilder()->get();
         
-        $this->_app->render('groups.html', [
-            'page' => [
-                'author' =>         $this->_app->site->author,
-                'title' =>          "Groups",
-                'description' =>    "Group management, authorization rules, add/remove groups, etc.",
-                'alerts' =>         $this->_app->alerts->getAndClearMessages()
-            ],
+        $this->_app->render('groups/groups.twig', [
             "groups" => $groups
         ]);          
     }    
 
-   // Display the form for creating a new group
+    public function pageGroupAuthorization($group_id) {
+        // Access-controlled page
+        if (!$this->_app->user->checkAccess('uri_authorization_settings')){
+            $this->_app->notFound();
+        }
+        
+        $group = Group::find($group_id);
+        
+        // Load all auth rules
+        $rules = GroupAuth::where('group_id', $group_id)->get();
+        
+        $this->_app->render('config/authorization.twig', [
+            "group" => $group,
+            "rules" => $rules
+        ]);
+        
+    }
+    
+    /**
+     * Renders the form for creating a new group.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`
+     * This page requires authentication (and should generally be limited to admins or the root user).
+     * Request type: GET
+     */      
     public function formGroupCreate(){
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('create_group')){
@@ -66,9 +100,9 @@ class GroupController extends \UserFrosting\BaseController {
         $group = new Group($data);                
         
         if ($render == "modal")
-            $template = "components/group-info-modal.html";
+            $template = "components/common/group-info-modal.twig";
         else
-            $template = "components/group-info-panel.html";
+            $template = "components/common/group-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default', 'icon'];
@@ -83,7 +117,7 @@ class GroupController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);           
+        $this->_app->jsValidator->setSchema($schema);   
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -101,11 +135,20 @@ class GroupController extends \UserFrosting\BaseController {
                     "edit", "delete"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }            
     
-   // Display the form for editing an existing group
+    /**
+     * Renders the form for editing an existing group.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`.
+     * Any fields that the user does not have permission to modify will be automatically disabled.     
+     * This page requires authentication (and should generally be limited to admins or the root user).
+     * Request type: GET
+     * @param int $group_id the id of the group to edit.
+     */       
     public function formGroupEdit($group_id){
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('uri_groups')){
@@ -126,9 +169,9 @@ class GroupController extends \UserFrosting\BaseController {
         $theme_list = $this->_app->site->getThemes();
         
         if ($render == "modal")
-            $template = "components/group-info-modal.html";
+            $template = "components/common/group-info-modal.twig";
         else
-            $template = "components/group-info-panel.html";
+            $template = "components/common/group-info-panel.twig";
         
         // Determine authorized fields
         $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default'];
@@ -146,7 +189,7 @@ class GroupController extends \UserFrosting\BaseController {
         
         // Load validator rules
         $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-update.json");
-        $validators = new \Fortress\ClientSideValidator($schema, $this->_app->translator);          
+        $this->_app->jsValidator->setSchema($schema);  
         
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
@@ -164,11 +207,21 @@ class GroupController extends \UserFrosting\BaseController {
                     "edit", "delete"
                 ]
             ],
-            "validators" => $validators->formValidationRulesJson()
+            "validators" => $this->_app->jsValidator->rules()
         ]);   
     }
     
-    // Create new group
+    /** 
+     * Processes the request to create a new group.
+     * 
+     * Processes the request from the group creation form, checking that:
+     * 1. The group name is not already in use;
+     * 2. The user has the necessary permissions to update the posted field(s);
+     * 3. The submitted data is valid.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @see formGroupCreate
+     */
     public function createGroup(){
         $post = $this->_app->request->post();
         
@@ -251,8 +304,18 @@ class GroupController extends \UserFrosting\BaseController {
         $ms->addMessageTranslated("success", "GROUP_CREATION_SUCCESSFUL", $data);
     }
         
-    
-    // Update group details
+    /** 
+     * Processes the request to update an existing group's details.
+     * 
+     * Processes the request from the group update form, checking that:
+     * 1. The group name is not already in use;
+     * 2. The user has the necessary permissions to update the posted field(s);
+     * 3. The submitted data is valid.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @param int $group_id the id of the group to edit.     
+     * @see formGroupEdit
+     */    
     public function updateGroup($group_id){
         $post = $this->_app->request->post();
         
@@ -322,7 +385,18 @@ class GroupController extends \UserFrosting\BaseController {
         
     }
     
-    // Delete a group, removing all users and any group-specific authorization rules
+    /** 
+     * Processes the request to delete an existing group.
+     * 
+     * Deletes the specified group, removing associations with any users and any group-specific authorization rules.
+     * Before doing so, checks that:
+     * 1. The group is deleteable (as specified in the `can_delete` column in the database);
+     * 2. The group is not currently set as the default primary group;
+     * 3. The submitted data is valid.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @param int $group_id the id of the group to delete.     
+     */     
     public function deleteGroup($group_id){
         $post = $this->_app->request->post();
     
@@ -354,6 +428,5 @@ class GroupController extends \UserFrosting\BaseController {
         $group->delete();       // TODO: implement Group function
         unset($group);
     }
-        
+    
 }
-

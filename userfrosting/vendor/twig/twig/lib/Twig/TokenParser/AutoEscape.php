@@ -29,13 +29,6 @@
  */
 class Twig_TokenParser_AutoEscape extends Twig_TokenParser
 {
-    /**
-     * Parses a token and returns a node.
-     *
-     * @param Twig_Token $token A Twig_Token instance
-     *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
-     */
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
@@ -57,6 +50,8 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
             }
 
             if ($compat && $stream->test(Twig_Token::NAME_TYPE)) {
+                @trigger_error('Using the autoescape tag with "true" or "false" before the strategy name is deprecated.', E_USER_DEPRECATED);
+
                 if (false === $value) {
                     throw new Twig_Error_Syntax('Unexpected escaping strategy as you set autoescaping to false.', $stream->getCurrent()->getLine(), $stream->getFilename());
                 }
@@ -77,11 +72,6 @@ class Twig_TokenParser_AutoEscape extends Twig_TokenParser
         return $token->test('endautoescape');
     }
 
-    /**
-     * Gets the tag name associated with this token parser.
-     *
-     * @return string The tag name
-     */
     public function getTag()
     {
         return 'autoescape';
