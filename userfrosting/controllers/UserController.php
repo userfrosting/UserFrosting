@@ -502,16 +502,17 @@ class UserController extends \UserFrosting\BaseController {
             'create_password_expiration' => $this->_app->site->create_password_expiration / 3600 . " hours"
         ]);
         
+        // Success message even if we can't email them
+        $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
+        
         try {
             $notification->send();
-        } catch (\Exception\phpmailerException $e){
+        } catch (\phpmailerException $e){
             $ms->addMessageTranslated("danger", "MAIL_ERROR");
             error_log('Mailer Error: ' . $e->errorMessage());
             $this->_app->halt(500);
         }
         
-        // Success message
-        $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
     }
     
     /** 
@@ -662,7 +663,7 @@ class UserController extends \UserFrosting\BaseController {
             
             try {
                 $notification->send();
-            } catch (\Exception\phpmailerException $e){
+            } catch (\phpmailerException $e){
                 $ms->addMessageTranslated("danger", "MAIL_ERROR");
                 error_log('Mailer Error: ' . $e->errorMessage());
                 $this->_app->halt(500);
