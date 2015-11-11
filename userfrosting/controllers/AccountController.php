@@ -437,7 +437,7 @@ class AccountController extends \UserFrosting\BaseController {
             
             try {
                 $notification->send();
-            } catch (\Exception\phpmailerException $e){
+            } catch (\phpmailerException $e){
                 $ms->addMessageTranslated("danger", "MAIL_ERROR");
                 error_log('Mailer Error: ' . $e->errorMessage());
                 $this->_app->halt(500);
@@ -548,7 +548,7 @@ class AccountController extends \UserFrosting\BaseController {
         
         try {
             $notification->send();
-        } catch (\Exception\phpmailerException $e){
+        } catch (\phpmailerException $e){
             $ms->addMessageTranslated("danger", "MAIL_ERROR");
             error_log('Mailer Error: ' . $e->errorMessage());
             $this->_app->halt(500);
@@ -775,7 +775,7 @@ class AccountController extends \UserFrosting\BaseController {
         
         try {
             $notification->send();
-        } catch (\Exception\phpmailerException $e){
+        } catch (\phpmailerException $e){
             $ms->addMessageTranslated("danger", "MAIL_ERROR");
             error_log('Mailer Error: ' . $e->errorMessage());
             $this->_app->halt(500);
