@@ -32,7 +32,7 @@ class Group extends UFModel {
      * Create a new Group object.
      *
      */
-    public function __construct($properties = [], $id = null) {
+    public function __construct($properties = []) {
         parent::__construct($properties);
     }
     

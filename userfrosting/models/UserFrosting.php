@@ -22,7 +22,8 @@ class UserFrosting extends \Slim\Slim {
      */
     public function setupGuestEnvironment(){
         //error_log("Current user id is guest");
-        $this->user = new User([], $this->config('user_id_guest')); 
+        $this->user = new User([]);
+        $this->user->id = $this->config('user_id_guest');
         $this->setupServices($this->site->default_locale);
         $this->setupErrorHandling();
     }
@@ -92,7 +93,7 @@ class UserFrosting extends \Slim\Slim {
                 // Log this error
                 error_log("Error in " . $e->getFile() . " on line " . $e->getLine() . ": " . $e->getMessage());
                 error_log($e->getTraceAsString());
-
+                
                 // In case the error is because someone is trying to reinstall with new db info while still logged in, log them out
                 session_destroy();
                 $controller = new AccountController($this);
@@ -116,13 +117,13 @@ class UserFrosting extends \Slim\Slim {
         //error_log("Setting Twig user variables");
         $twig = $this->view()->getEnvironment();  
         
-        // If a user is logged in, add the user object as a global Twig variable
-        if ($this->user)
+        // If a user object is set, add the user object as a global Twig variable and set their theme
+        if ($this->user) {
             $twig->addGlobal("user", $this->user);
-        
-        // Set path to user's theme, prioritizing over any other themes.
-        $loader = $twig->getLoader();
-        $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());           
+            // Set path to user's theme, prioritizing over any other themes.
+            $loader = $twig->getLoader();
+            $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());
+        }
     }
     
     /**
@@ -134,9 +135,9 @@ class UserFrosting extends \Slim\Slim {
         $twig = $this->view()->getEnvironment();   
         $twig->addGlobal("site", $this->site);
         
-        // Set path to default theme, overwriting any other paths that have been added at this point.
+        // Set path to base theme, overwriting any other paths that have been added at this point.  The user theme will get set in setupTwigUserVariables().
         $loader = $twig->getLoader();
-        $loader->setPaths($this->config('themes.path') . "/" . $this->site->default_theme); 
+        $loader->setPaths($this->config('themes.path') . "/" . $this->config('theme-base'));
         
         // Add Twig function for checking permissions during dynamic menu rendering
         $function_check_access = new \Twig_SimpleFunction('checkAccess', function ($hook, $params = []) {

@@ -181,7 +181,7 @@ class PageSchema {
  
         // For minified, replace with minified file but we still need to include any external includes
         if ($minify){
-            $includes_parsed = [$root . $minfile];
+            $includes_parsed = [$root . "/" . $minfile];
             // Include external files
             if ($include_externals) {
                 foreach ($includes as $path){
@@ -196,7 +196,7 @@ class PageSchema {
                     if ($include_externals)
                         $includes_parsed[] = $path;
                 } else
-                    $includes_parsed[] = $root . $path;
+                    $includes_parsed[] = $root . "/" . $path;
             }
         }
         return $includes_parsed;
@@ -265,7 +265,7 @@ class PageSchema {
      * @return void
      */  
     private function buildGroup($yui, $path_root, $includes, $group_name, $minfile, $debug = false){
-        $paths = $this->mergeIncludes($path_root . "/", $includes, $group_name, "", false, false);
+        $paths = $this->mergeIncludes($path_root, $includes, $group_name, "", false, false);
         
         // Test permissions on writing to min file:
         $output_dir = $path_root . "/min/";
