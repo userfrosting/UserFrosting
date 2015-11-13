@@ -21,7 +21,7 @@
     $uri_public_root = $environment['slim.url_scheme'] . "://" . $environment['SERVER_NAME'] . $serverport . $environment['SCRIPT_NAME'];
     
     /********* DEVELOPMENT SETTINGS *********/
-    $app->configureMode('dev', function () use ($app, $public_path, $uri_public_root) {
+    $app->configureMode('dev', function () use ($app, $public_path, $uri_public_root) {   
         $app->config([
             'log.enable' => true,
             'debug' => false,
@@ -33,8 +33,8 @@
             'locales.path' =>   __DIR__ . '/locale',
             'log.path' =>   __DIR__ . '/log',
             'public.path' => $public_path,
-            'js.path' => $public_path . "/js",
-            'css.path' => $public_path . "/css",
+            'js.path.relative' => "/js",
+            'css.path.relative' => "/css", 
             'session' => [
                 'name' => 'UserFrosting',
                 'cache_limiter' => false
@@ -56,19 +56,21 @@
                 'pass' => 'password'
             ],
             'uri' => [
-                'public' =>    $uri_public_root,
-                'js' =>        $uri_public_root . "/js/",
-                'css' =>       $uri_public_root . "/css/",        
-                'favicon' =>   $uri_public_root . "/css/favicon.ico",
-                'image' =>     $uri_public_root . "/images/"
+                'public'            => $uri_public_root,
+                'js-relative'       => "/js",            
+                'css-relative'      => "/css",        
+                'favicon-relative'  => "/css/favicon.ico",
+                'image-relative'    => "/images"
             ],
             'user_id_guest'  => 0,
-            'user_id_master' => 1
+            'user_id_master' => 1,
+            'theme-base'     => "default",
+            'theme-root'     => "root"
         ]);
     });    
     
     /********* PRODUCTION SETTINGS *********/    
-    $app->configureMode('production', function () use ($app, $public_path, $uri_public_root) {
+    $app->configureMode('production', function () use ($app, $public_path, $uri_public_root) {  
         $app->config([
             'log.enable' => true,
             'debug' => false,
@@ -80,8 +82,8 @@
             'locales.path' =>   __DIR__ . '/locale',
             'log.path' =>   __DIR__ . '/log',
             'public.path' => $public_path,
-            'js.path' => $public_path . "/js",
-            'css.path' => $public_path . "/css",
+            'js.path.relative' => "/js",
+            'css.path.relative' => "/css", 
             'session' => [
                 'name' => 'UserFrosting',
                 'cache_limiter' => false
@@ -103,14 +105,28 @@
                 'pass' => 'password'
             ],
             'uri' => [
-                'public' =>    $uri_public_root,
-                'js' =>        $uri_public_root . "/js/",
-                'css' =>       $uri_public_root . "/css/",        
-                'favicon' =>   $uri_public_root . "/css/favicon.ico",
-                'image' =>     $uri_public_root . "/images/"
-            ],            
+                'public'            => $uri_public_root,
+                'js-relative'       => "/js",            
+                'css-relative'      => "/css",        
+                'favicon-relative'  => "/css/favicon.ico",
+                'image-relative'    => "/images"
+            ],
             'user_id_guest'  => 0,
-            'user_id_master' => 1
+            'user_id_master' => 1,
+            'theme-base'     => "default",
+            'theme-root'     => "root"
         ]);
     });
        
+    // Set up derived configuration values
+    $app->config([
+        'js.path' =>  $app->config('public.path') . $app->config('js.path.relative'),
+        'css.path' => $app->config('public.path') . $app->config('css.path.relative'),
+        'uri' => [
+            'js' =>        $app->config('uri')['public'] . $app->config('uri')['js-relative'],
+            'css' =>       $app->config('uri')['public'] . $app->config('uri')['css-relative'],
+            'favicon' =>   $app->config('uri')['public'] . $app->config('uri')['favicon-relative'],
+            'image' =>     $app->config('uri')['public'] . $app->config('uri')['image-relative'],
+        ]
+    ], true);
+    

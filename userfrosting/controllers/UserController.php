@@ -552,7 +552,7 @@ class UserController extends \UserFrosting\BaseController {
         */
         
         // Only the master account can edit the master account!
-        if (($target_user->id == $this->_app->config('user_id_master')) && $this->_app->user->id != $this->_app->config('user_id_master')) {
+        if (($target_user->id === $this->_app->config('user_id_master')) && $this->_app->user->id !== $this->_app->config('user_id_master')) {
             $ms->addMessageTranslated("danger", "ACCESS_DENIED");
             $this->_app->halt(403);
         }
@@ -582,7 +582,7 @@ class UserController extends \UserFrosting\BaseController {
         }
         
         // Check that we are not disabling the master account
-        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == "0"){
+        if (($target_user->id === $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == "0"){
             $ms->addMessageTranslated("danger", "ACCOUNT_DISABLE_MASTER");
             $this->_app->halt(403);
         }
@@ -703,7 +703,7 @@ class UserController extends \UserFrosting\BaseController {
         }
                 
         // Check that we are not disabling the master account
-        if (($target_user->id == $this->_app->config('user_id_master'))){
+        if (($target_user->id === $this->_app->config('user_id_master'))){
             $ms->addMessageTranslated("danger", "ACCOUNT_DELETE_MASTER");
             $this->_app->halt(403);
         }

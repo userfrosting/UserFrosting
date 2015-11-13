@@ -1,5 +1,19 @@
 # Change Log
 
+## v0.3.1.7
+
+- Change "default theme" to "guest theme" and fix loading issues (#463).  What used to be called "default theme" is now base theme, i.e. the theme to fall back to when a template file cannot be found in the current theme (user group or guest theme)
+- New public template for "nyx" theme
+- Remove trailing slash from configuration JS/CSS paths to make uniform with site.uri.public
+- Make routes for config.js and theme.css dynamically generated from configuration variables (#461)
+- Make cookie name for "remember me" use session name
+- Fix potential bug in configuration user_id's for guest, master accounts
+
+## v0.3.1.6
+
+- Fix exception-handling for mail server errors
+- Notify if account creation was successful, even if mail server failed.
+
 ## v0.3.1.5
 
 - Add Romanian translation

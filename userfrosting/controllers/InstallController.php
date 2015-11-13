@@ -220,9 +220,10 @@ class InstallController extends \UserFrosting\BaseController {
         // Hash password
         $data['password'] = Authentication::hashPassword($data['password']);
             
-        // Create the user
-        $user = new User($data, $this->_app->config('user_id_master'));
-
+        // Create the master user
+        $user = new User($data);
+        $user->id = $this->_app->config('user_id_master');
+        
         // Add user to default groups, including default primary group
         $defaultGroups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
         $user->addGroup($primaryGroup->id);

@@ -41,7 +41,7 @@
             $controller = new UF\AccountController($app);
             $controller->pageHome();
         // If this is the first the root user is logging in, take them to site settings
-        } else if ($app->user->id == $app->config('user_id_master') && $app->site->install_status == "new"){
+        } else if ($app->user->id === $app->config('user_id_master') && $app->site->install_status == "new"){
             $app->site->install_status = "complete";
             $app->site->store();
             $app->alerts->addMessage("success", "Congratulations, you've successfully logged in for the first time.  Please take a moment to customize your site settings.");
@@ -83,6 +83,9 @@
         
         $controller = new UF\AccountController($app);
     
+        $twig = $app->view()->getEnvironment();   
+        $loader = $twig->getLoader();
+          
         switch ($action) {
             case "login":               return $controller->pageLogin();
             case "logout":              return $controller->logout(true); 
@@ -278,7 +281,7 @@
             $app->notFound();
         }
         
-        $app->schema->build();
+        $app->schema->build(true);
         $app->alerts->addMessageTranslated("success", "MINIFICATION_SUCCESS");
         $app->redirect($app->urlFor('uri_settings'));
     });    
@@ -397,13 +400,13 @@
     });
     
     // JS Config
-    $app->get('/js/config.js', function () use ($app) {
+    $app->get($app->config('uri')['js-relative'] . '/config.js', function () use ($app) {
         $controller = new UF\BaseController($app);
         $controller->configJS();
     });
     
     // Theme CSS
-    $app->get('/css/theme.css', function () use ($app) {
+    $app->get($app->config('uri')['css-relative'] . '/theme.css', function () use ($app) {
         $controller = new UF\BaseController($app);
         $controller->themeCSS();
     });

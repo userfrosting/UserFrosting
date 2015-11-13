@@ -3,3 +3,5 @@
 _meta/*
 public/test/*
 userfrosting/config-userfrosting.php
+public/js/min/*
+public/css/min/*
