@@ -75,6 +75,9 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 - When a user creates another user, they don't need to set a password.  Instead, an email is sent out to the new user, with a token allowing them to set their own password.
 - Admins can manually generate a password reset request for another user, or directly change the user's password.
 - .htaccess redirect trailing slash: change to only redirect GET requests
+- Change "default theme" to "guest theme" and fix loading issues (#463).  What used to be called "default theme" is now base theme, i.e. the theme to fall back to when a template file cannot be found in the current theme (user group or guest theme)
+- New public template for "nyx" theme
+- Make routes for config.js and theme.css dynamically generated from configuration variables (#461)
 
 ### Migrating from UF's classic data model to Eloquent:
 
