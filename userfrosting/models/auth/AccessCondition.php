@@ -89,7 +89,7 @@ class AccessCondition {
      * @return bool true if the user is in the group, false otherwise.
      */     
     static function in_group($user_id, $group_id){
-        $user = \UserFrosting\UserLoader::fetch($user_id);
+        $user = \UserFrosting\User::find($user_id);
         $groups = $user->getGroups();
         return isset($groups[$group_id]);
     }

@@ -1,5 +1,5 @@
 <form name="user" method="post" action="{{form_action}}">
-    <div id="form-alerts">
+    <div id="{{alerts_id | default('form-alerts')}}">
     </div>
     <div class="row">
         {% if 'user_name' not in fields.hidden %}

@@ -151,11 +151,11 @@ class BaseController {
         $x = ( 150 - 0 - imagefontwidth( 5 ) * strlen( $security_code ) ) / 2 + 0 + 5;
     
         //write string twice
-        ImageString($image,5, $x, 7, $security_code, $black);
-        ImageString($image,5, $x, 7, $security_code, $black);
+        imagestring($image,5, $x, 7, $security_code, $black);
+        imagestring($image,5, $x, 7, $security_code, $black);
         //start ob
         ob_start();
-        ImagePng($image);
+        imagepng($image);
     
         //get binary image data
         $data = ob_get_clean();

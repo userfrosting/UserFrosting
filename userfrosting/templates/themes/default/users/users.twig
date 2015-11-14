@@ -231,6 +231,8 @@
                         state['format'] = "csv";
                         delete state['page'];
                         delete state['size'];
+                        if (primary_group)
+                            state['primary_group'] = primary_group;       
                         var url = site['uri']['public'] + "/api/users?" + $.param( state );
                         window.location = url;
                     });

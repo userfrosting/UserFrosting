@@ -36,7 +36,7 @@ class UserController extends \UserFrosting\BaseController {
     public function pageUsers($primary_group_name = null, $paginate_server_side = true){
         // Optional filtering by primary group
         if ($primary_group_name){
-            $primary_group = GroupLoader::fetch($primary_group_name, 'name');
+            $primary_group = Group::where('name', $primary_group_name)->first();
             
             if (!$primary_group)
                 $this->_app->notFound();
@@ -46,8 +46,11 @@ class UserController extends \UserFrosting\BaseController {
                 $this->_app->notFound();
             }
         
-            if (!$paginate_server_side)
-                $users = UserLoader::fetchAll($primary_group->id, 'primary_group_id');
+            if (!$paginate_server_side) {
+                $user_collection = User::where('primary_group_id', $primary_group->id)->get();
+                $user_collection->getRecentEvents('sign_in');
+                $user_collection->getRecentEvents('sign_up', 'sign_up_time');                
+            }
             $name = $primary_group->name;
             $icon = $primary_group->icon;
 
@@ -58,7 +61,7 @@ class UserController extends \UserFrosting\BaseController {
             }
             
             if (!$paginate_server_side) {
-                $user_collection = (new User)->get();
+                $user_collection = User::get();
                 $user_collection->getRecentEvents('sign_in');
                 $user_collection->getRecentEvents('sign_up', 'sign_up_time');                
             }
@@ -87,7 +90,7 @@ class UserController extends \UserFrosting\BaseController {
      */  
     public function pageUser($user_id){
         // Get the user to view
-        $target_user = UserLoader::fetch($user_id);    
+        $target_user = User::find($user_id);    
         
         // If the user no longer exists, forward to main user page
         if (!$target_user)
@@ -99,7 +102,7 @@ class UserController extends \UserFrosting\BaseController {
         }
     
         // Get a list of all groups
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::get();
         
         // Get a list of all locales
         $locale_list = $this->_app->site->getLocales();
@@ -136,6 +139,7 @@ class UserController extends \UserFrosting\BaseController {
         
         $this->_app->render('users/user-info.twig', [
             "box_id" => 'view-user',
+            "alerts_id" => 'form-view-user-alerts',
             "box_title" => $target_user->user_name,
             "target_user" => $target_user,
             "groups" => $group_list,
@@ -191,7 +195,7 @@ class UserController extends \UserFrosting\BaseController {
             $this->_app->halt(500);
         }
         
-        // Get the default groups
+        // Get the default groups as a dictionary
         $default_groups = Group::all()->where("is_default", GROUP_DEFAULT)->getDictionary();
         
         // Set default groups, including default primary group
@@ -268,7 +272,7 @@ class UserController extends \UserFrosting\BaseController {
      */    
     public function formUserEdit($user_id){
         // Get the user to edit
-        $target_user = UserLoader::fetch($user_id);        
+        $target_user = User::find($user_id);        
         
         // Access-controlled resource
         if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
@@ -283,14 +287,15 @@ class UserController extends \UserFrosting\BaseController {
             $render = "modal";
         
         // Get a list of all groups
-        $groups = GroupLoader::fetchAll();
+        $groups = Group::get();
         
         // Get a list of all locales
         $locale_list = $this->_app->site->getLocales();
         
         // Determine which groups this user is a member of
         $user_groups = $target_user->getGroups();
-        foreach ($groups as $group_id => $group){
+        foreach ($groups as $group){
+            $group_id = $group->id;
             $group_list[$group_id] = $group->export();
             if (isset($user_groups[$group_id]))
                 $group_list[$group_id]['member'] = true;
@@ -434,12 +439,12 @@ class UserController extends \UserFrosting\BaseController {
         $data['password'] = "";
         
         // Check if username or email already exists
-        if (UserLoader::exists($data['user_name'], 'user_name')){
+        if (User::where('user_name', $data['user_name'])->first()){
             $ms->addMessageTranslated("danger", "ACCOUNT_USERNAME_IN_USE", $data);
             $error = true;
         }
 
-        if (UserLoader::exists($data['email'], 'email')){
+        if (User::where('email', $data['email'])->first()){
             $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
             $error = true;
         }
@@ -450,7 +455,7 @@ class UserController extends \UserFrosting\BaseController {
         }
     
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primaryGroup = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
             
         // Set default values if not specified or not authorized
         if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "locale"]))
@@ -467,9 +472,10 @@ class UserController extends \UserFrosting\BaseController {
         
         // Set groups to default groups if not specified or not authorized to set groups
         if (!isset($data['groups']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "groups"])) {
-            $default_groups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+            $default_groups = Group::where('is_default', GROUP_DEFAULT)->get();
             $data['groups'] = [];
-            foreach ($default_groups as $group_id => $group){
+            foreach ($default_groups as $group){
+                $group_id = $group->id;
                 $data['groups'][$group_id] = "1";
             }
         }
@@ -588,7 +594,7 @@ class UserController extends \UserFrosting\BaseController {
         }
         
         // Check that the email address is not in use
-        if (isset($post['email']) && $post['email'] != $target_user->email && UserLoader::exists($post['email'], 'email')){
+        if (isset($post['email']) && $post['email'] != $target_user->email && User::where('email', $post['email'])->first()){
             $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $post);
             $this->_app->halt(400);
         }
@@ -691,7 +697,7 @@ class UserController extends \UserFrosting\BaseController {
         $post = $this->_app->request->post();
     
         // Get the target user
-        $target_user = UserLoader::fetch($user_id);
+        $target_user = User::find($user_id);
     
         // Get the alert message stream
         $ms = $this->_app->alerts;
