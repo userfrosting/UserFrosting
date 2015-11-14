@@ -104,12 +104,20 @@ class InstallController extends \UserFrosting\BaseController {
             }            
             
             // Check for GD library (required for Captcha)
-            if (!(extension_loaded('gd') && function_exists('gd_info'))) {
+            if (!(extension_loaded('gd') && function_exists('gd_info'))) {                
                 $messages[] = [
                     "title" => "<i class='fa fa-warning'></i> GD library not installed",
-                    "message" => "We could not confirm that the <code>GD</code> library is installed and enabled.  GD is an image processing library that UserFrosting uses to generate captcha codes for user account registration.  If you don't need captcha, you can disable it in Site Settings and ignore this message.", 
+                    "message" => "We could not confirm that the <code>GD</code> library is installed and enabled.  GD is an image processing library that UserFrosting uses to generate captcha codes for user account registration.  If you don't need captcha, you can disable it in Site Settings and ignore this message.  Otherwise, please see the <a href='http://www.userfrosting.com/troubleshooting/' target='_blank'>troubleshooting guide</a> for information on installing and configuring GD.", 
                     "class" => "warning"
                 ];
+            } else {
+                if (!function_exists('imagepng')){
+                    $messages[] = [
+                        "title" => "<i class='fa fa-warning'></i> PNG operations not available",
+                        "message" => "The <code>GD</code> library is installed and enabled, but PNG functions do not seem to be available.  UserFrosting uses the PNG functions of GD, an image processing library, to generate captcha codes for user account registration.  If you don't need captcha, you can disable it in Site Settings and ignore this message.  Otherwise, please see the <a href='http://www.userfrosting.com/troubleshooting/' target='_blank'>troubleshooting guide</a> for information on updating GD to support PNG operations.", 
+                        "class" => "warning"
+                    ];
+                }
             }
             
             $this->_app->render('install/install-ready.twig', [
