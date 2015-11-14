@@ -21,11 +21,12 @@ title: "UserFrosting | Troubleshooting"
                 <p>These are some of the most common issues faced by developers who are new to UserFrosting.</p>
                 <ul class="list-unstyled">
                     <li><a href="#blank-page">I get a blank page when I try to install UserFrosting.</a></li>
+                    <li><a href="#other-servers">UF doesn't seem to work on nginx or IIS.</a></li>
+                    <li><a href="#alias">I'm using an Apache alias for my site and I get 404 errors when trying to install.</a></li>
+                    <li><a href="#gd-error">I get warnings about the GD library and/or <code>imagepng</code> during installation.</a></li>
                     <li><a href="#wrong-status-code">UF takes me to a blank page after I create the master account.</a></li> 
                     <li><a href="#new-class">I created a new class, but UserFrosting doesn't seem to recognize it.</a></li>
                     <li><a href="#composer-error">Composer gives me errors when I run <code>composer update</code>.</a></li>
-                    <li><a href="#other-servers">UF doesn't seem to work on nginx or IIS.</a></li>
-                    <li><a href="#alias">I'm using an Apache alias for my site and I get 404 errors when trying to install.</a></li>
                 </ul>
             </div>
         </div>
@@ -72,6 +73,78 @@ title: "UserFrosting | Troubleshooting"
                 <h3>Solution 3</h3>
                 <p>
                     If you are sure that you have the Rewrite module enabled and properly configured, make sure that you have your database credentials properly set in <code>config-userfrosting.php</code>.  See <a href="{{site.url}}/installation">Installing UserFrosting</a> for more details.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tutorial" id="other-servers">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2><i class="fa fa-life-saver"></i> UF doesn't seem to work on nginx or IIS.</h2>    
+
+                <p>
+                    Currently, UserFrosting only comes with a configuration file for Apache.  So, we do not yet "officially" support nginx or IIS (but we hope to soon!)
+                </p>
+                
+                <p>If you are proficient in IIS or other server technologies, and wish to contribute the corresponding configuration file, please open a pull request - we'd really appreciate it!
+                </p>
+                
+                <p>
+                    In the meantime, there may be a workaround: you can install <a href="http://www.helicontech.com/ape/">Helicon Ape</a>, which provides support for Apache <code>.htaccess</code> and <code>.htpasswd</code> configuration files in Microsoft IIS.  Choose "full server download" when prompted by the Helicon Ape installer.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="tutorial" id="alias">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2><i class="fa fa-life-saver"></i> I'm using an Apache alias for my site and I get 404 errors when trying to install.</h2>    
+
+                <p>
+                    Assuming your Apache alias maps <code>/project</code> to <code>C:/WebProject/</code>, you'll be accessing the installer at <code>http://example.com/project/public/</code>, but your 404 error will be showing <code>/WebProject/public/index.php</code> instead.
+                </p>
+                <p>
+                    The problem here is that <code>mod_rewrite</code> is incorrectly pointing to the directory itself (<code>WebProject</code>) rather than the alias name (<code>project</code>).
+                </p>                    
+                <p>
+                To correct this, you’ll need to figure out the proper <code>RewriteBase</code> to use based on your alias and the 404 error.  Add a line in <code>/public/.htaccess</code> after <code>"RewriteEngine On"</code>:
+                </p>
+                <p>
+                    <code>RewriteBase /project/public/</code>
+                </p>
+                <p>
+                    This line will direct <code>mod_rewrite</code> to use the Apache alias. Once this is done, you can re-run the installer by going to <code>http://example.com/project/public</code> again.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="tutorial" id="gd-error">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2><i class="fa fa-life-saver"></i> I get warnings about the GD library and/or <code>imagepng</code> during installation.</h2>    
+                <p>
+                    Occasionally, people use web hosting services that do not provide the GD library, or provide it but do not have it enabled.  The GD library is an image processing module for PHP.  UserFrosting uses it to generate the captcha code for new account registration.
+                </p>
+                <p>
+                    If you are having trouble with <code>gd</code> in Windows, you should first check your <code>php.ini</code> file to make sure it is enabled.  You'll include the GD2 DLL <code>php_gd2.dll</code> as an extension in <code>php.ini</code>.  See <a href="http://php.net/manual/en/image.installation.php">http://php.net/manual/en/image.installation.php</a>.  
+                </p>
+                <p>
+                    In Ubuntu/Debian, you can install GD as a separate module:<br>
+                    <code>sudo apt-get install php5-gd</code><br>
+                    <code>sudo service apache2 restart</code>
+                </p>
+                <p>
+                    For OSX users (Yosemite and Capitan), you might have GD installed but <code>imagepng</code> isn't available.  In this case, you need to upgrade the default version of GD that ships with these versions of OSX.  See <a href="http://stackoverflow.com/a/26505558/2970321">this answer on StackOverflow for a complete guide.</a>
                 </p>
             </div>
         </div>
@@ -129,53 +202,6 @@ title: "UserFrosting | Troubleshooting"
                 <h2><i class="fa fa-life-saver"></i> Composer gives me errors when I run <code>composer update</code>.</h2>
                 <p>
                     When this happens, you might get an error message complaining about a <code>.git</code> directory missing in <code>vendor</code>.  To solve this problem, simply delete the <code>vendor/alexweissman</code> directory and re-run <code>composer update</code>.</p>
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="tutorial" id="other-servers">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h2><i class="fa fa-life-saver"></i> UF doesn't seem to work on nginx or IIS.</h2>    
-
-                <p>
-                    Currently, UserFrosting only comes with a configuration file for Apache.  So, we do not yet "officially" support nginx or IIS (but we hope to soon!)
-                </p>
-                
-                <p>If you are proficient in IIS or other server technologies, and wish to contribute the corresponding configuration file, please open a pull request - we'd really appreciate it!
-                </p>
-                
-                <p>
-                    In the meantime, there may be a workaround: you can install <a href="http://www.helicontech.com/ape/">Helicon Ape</a>, which provides support for Apache <code>.htaccess</code> and <code>.htpasswd</code> configuration files in Microsoft IIS.  Choose "full server download" when prompted by the Helicon Ape installer.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="tutorial" id="alias">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h2><i class="fa fa-life-saver"></i> I'm using an Apache alias for my site and I get 404 errors when trying to install.</h2>    
-
-                <p>
-                    Assuming your Apache alias maps <code>/project</code> to <code>C:/WebProject/</code>, you'll be accessing the installer at <code>http://example.com/project/public/</code>, but your 404 error will be showing <code>/WebProject/public/index.php</code> instead.
-                </p>
-                <p>
-                    The problem here is that <code>mod_rewrite</code> is incorrectly pointing to the directory itself (<code>WebProject</code>) rather than the alias name (<code>project</code>).
-                </p>                    
-                <p>
-                To correct this, you’ll need to figure out the proper <code>RewriteBase</code> to use based on your alias and the 404 error.  Add a line in <code>/public/.htaccess</code> after <code>"RewriteEngine On"</code>:
-                </p>
-                <p>
-                    <code>RewriteBase /project/public/</code>
-                </p>
-                <p>
-                    This line will direct <code>mod_rewrite</code> to use the Apache alias. Once this is done, you can re-run the installer by going to <code>http://example.com/project/public</code> again.
                 </p>
             </div>
         </div>
