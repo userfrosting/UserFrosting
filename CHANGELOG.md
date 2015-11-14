@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.1.3.8
+
+- Finish replacing all usages of `*Loader` classes with Eloquent syntax
+- Installer warning for missing `imagepng`
+- Fix bug in CSV generation for user table
+
 ## v0.3.1.7
 
 - Change "default theme" to "guest theme" and fix loading issues (#463).  What used to be called "default theme" is now base theme, i.e. the theme to fall back to when a template file cannot be found in the current theme (user group or guest theme)
