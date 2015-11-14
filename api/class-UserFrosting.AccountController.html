@@ -169,7 +169,7 @@
 				Alex Weissman<br>
 				<b>Link:</b>
 				<a href="http://www.userfrosting.com/navigating/#structure">http://www.userfrosting.com/navigating/#structure</a><br>
-			<b>Located at</b> <a href="source-class-UserFrosting.AccountController.html#5-914" title="Go to source code">controllers/AccountController.php</a>
+			<b>Located at</b> <a href="source-class-UserFrosting.AccountController.html#5-915" title="Go to source code">controllers/AccountController.php</a>
 		<br>
 	</div>
 
@@ -570,7 +570,7 @@ Request type: POST</p>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_register">#</a>
-			<code><a href="source-class-UserFrosting.AccountController.html#295-451" title="Go to source code">register</a>( )</code>
+			<code><a href="source-class-UserFrosting.AccountController.html#295-450" title="Go to source code">register</a>( )</code>
 
 			<div class="description short">
 				<p>Processes an new account registration request.</p>
@@ -611,18 +611,18 @@ Request type: POST</p>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_activate">#</a>
-			<code><a href="source-class-UserFrosting.AccountController.html#453-493" title="Go to source code">activate</a>( )</code>
+			<code><a href="source-class-UserFrosting.AccountController.html#452-493" title="Go to source code">activate</a>( )</code>
 
 			<div class="description short">
-				<p>Processes an new account activation request.</p>
+				<p>Processes an new email verification request.</p>
 			</div>
 
 			<div class="description detailed hidden">
-				<p>Processes an new account activation request.</p>
+				<p>Processes an new email verification request.</p>
 
-<p>Processes the request from the account activation link that was emailed to the user, checking that:
+<p>Processes the request from the email verification link that was emailed to the user, checking that:
 1. The token provided matches a user in the database;
-2. The user account is not already active;
+2. The user account is not already verified;
 This route is "public access".
 Request type: GET</p>
 
@@ -720,7 +720,7 @@ Request type: POST</p>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_denyResetPassword">#</a>
-			<code><a href="source-class-UserFrosting.AccountController.html#656-696" title="Go to source code">denyResetPassword</a>( )</code>
+			<code><a href="source-class-UserFrosting.AccountController.html#656-697" title="Go to source code">denyResetPassword</a>( )</code>
 
 			<div class="description short">
 				<p>Processes a request to cancel a password reset request.</p>
@@ -754,7 +754,7 @@ Request type: GET</p>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_resendActivation">#</a>
-			<code><a href="source-class-UserFrosting.AccountController.html#698-787" title="Go to source code">resendActivation</a>( )</code>
+			<code><a href="source-class-UserFrosting.AccountController.html#699-788" title="Go to source code">resendActivation</a>( )</code>
 
 			<div class="description short">
 				<p>Processes a request to resend the activation email for a new user account.</p>
@@ -792,7 +792,7 @@ Request type: POST</p>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_accountSettings">#</a>
-			<code><a href="source-class-UserFrosting.AccountController.html#789-903" title="Go to source code">accountSettings</a>( )</code>
+			<code><a href="source-class-UserFrosting.AccountController.html#790-904" title="Go to source code">accountSettings</a>( )</code>
 
 			<div class="description short">
 				<p>Processes a request to update a user's account information.</p>
@@ -828,7 +828,7 @@ Request type: POST</p>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_captcha">#</a>
-			<code><a href="source-class-UserFrosting.AccountController.html#905-913" title="Go to source code">captcha</a>( )</code>
+			<code><a href="source-class-UserFrosting.AccountController.html#906-914" title="Go to source code">captcha</a>( )</code>
 
 			<div class="description short">
 				<p>Generates a new captcha.</p>

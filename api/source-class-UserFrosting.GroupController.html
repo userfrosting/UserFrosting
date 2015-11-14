@@ -295,7 +295,7 @@
 </span><span id="163" class="l"><a href="#163">163 </a>            <span class="php-var">$render</span> = <span class="php-quote">&quot;modal&quot;</span>;
 </span><span id="164" class="l"><a href="#164">164 </a>        
 </span><span id="165" class="l"><a href="#165">165 </a>        <span class="php-comment">// Get the group to edit</span>
-</span><span id="166" class="l"><a href="#166">166 </a>        <span class="php-var">$group</span> = GroupLoader::fetch(<span class="php-var">$group_id</span>);
+</span><span id="166" class="l"><a href="#166">166 </a>        <span class="php-var">$group</span> = Group::find(<span class="php-var">$group_id</span>);
 </span><span id="167" class="l"><a href="#167">167 </a>        
 </span><span id="168" class="l"><a href="#168">168 </a>        <span class="php-comment">// Get a list of all themes</span>
 </span><span id="169" class="l"><a href="#169">169 </a>        <span class="php-var">$theme_list</span> = <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;getThemes();
@@ -391,11 +391,11 @@
 </span><span id="259" class="l"><a href="#259">259 </a>        <span class="php-var">$data</span>[<span class="php-quote">'name'</span>] = <span class="php-keyword2">trim</span>(<span class="php-var">$data</span>[<span class="php-quote">'name'</span>]);
 </span><span id="260" class="l"><a href="#260">260 </a>        <span class="php-var">$data</span>[<span class="php-quote">'new_user_title'</span>] = <span class="php-keyword2">trim</span>(<span class="php-var">$data</span>[<span class="php-quote">'new_user_title'</span>]);
 </span><span id="261" class="l"><a href="#261">261 </a>        <span class="php-var">$data</span>[<span class="php-quote">'landing_page'</span>] = <span class="php-keyword2">strtolower</span>(<span class="php-keyword2">trim</span>(<span class="php-var">$data</span>[<span class="php-quote">'landing_page'</span>]));
-</span><span id="262" class="l"><a href="#262">262 </a>        <span class="php-var">$data</span>[<span class="php-quote">'theme'</span>] = <span class="php-keyword2">strtolower</span>(<span class="php-keyword2">trim</span>(<span class="php-var">$data</span>[<span class="php-quote">'theme'</span>]));
+</span><span id="262" class="l"><a href="#262">262 </a>        <span class="php-var">$data</span>[<span class="php-quote">'theme'</span>] = <span class="php-keyword2">trim</span>(<span class="php-var">$data</span>[<span class="php-quote">'theme'</span>]);
 </span><span id="263" class="l"><a href="#263">263 </a>        <span class="php-var">$data</span>[<span class="php-quote">'can_delete'</span>] = <span class="php-num">1</span>;
 </span><span id="264" class="l"><a href="#264">264 </a>        
 </span><span id="265" class="l"><a href="#265">265 </a>        <span class="php-comment">// Check if group name already exists</span>
-</span><span id="266" class="l"><a href="#266">266 </a>        <span class="php-keyword1">if</span> (GroupLoader::exists(<span class="php-var">$data</span>[<span class="php-quote">'name'</span>], <span class="php-quote">'name'</span>)){
+</span><span id="266" class="l"><a href="#266">266 </a>        <span class="php-keyword1">if</span> (Group::where(<span class="php-quote">'name'</span>, <span class="php-var">$data</span>[<span class="php-quote">'name'</span>])-&gt;first()){
 </span><span id="267" class="l"><a href="#267">267 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;GROUP_NAME_IN_USE&quot;</span>, <span class="php-var">$post</span>);
 </span><span id="268" class="l"><a href="#268">268 </a>            <span class="php-var">$error</span> = <span class="php-keyword1">true</span>;
 </span><span id="269" class="l"><a href="#269">269 </a>        }
@@ -461,7 +461,7 @@
 </span><span id="329" class="l"><a href="#329">329 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts; 
 </span><span id="330" class="l"><a href="#330">330 </a>        
 </span><span id="331" class="l"><a href="#331">331 </a>        <span class="php-comment">// Get the target group</span>
-</span><span id="332" class="l"><a href="#332">332 </a>        <span class="php-var">$group</span> = GroupLoader::fetch(<span class="php-var">$group_id</span>);
+</span><span id="332" class="l"><a href="#332">332 </a>        <span class="php-var">$group</span> = Group::find(<span class="php-var">$group_id</span>);
 </span><span id="333" class="l"><a href="#333">333 </a>        
 </span><span id="334" class="l"><a href="#334">334 </a>        <span class="php-comment">// If desired, put route-level authorization check here</span>
 </span><span id="335" class="l"><a href="#335">335 </a>        
@@ -483,7 +483,7 @@
 </span><span id="351" class="l"><a href="#351">351 </a>        }
 </span><span id="352" class="l"><a href="#352">352 </a>        
 </span><span id="353" class="l"><a href="#353">353 </a>        <span class="php-comment">// Check that name is not already in use</span>
-</span><span id="354" class="l"><a href="#354">354 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$post</span>[<span class="php-quote">'name'</span>]) &amp;&amp; <span class="php-var">$post</span>[<span class="php-quote">'name'</span>] != <span class="php-var">$group</span>-&gt;name &amp;&amp; GroupLoader::exists(<span class="php-var">$post</span>[<span class="php-quote">'name'</span>], <span class="php-quote">'name'</span>)){
+</span><span id="354" class="l"><a href="#354">354 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$post</span>[<span class="php-quote">'name'</span>]) &amp;&amp; <span class="php-var">$post</span>[<span class="php-quote">'name'</span>] != <span class="php-var">$group</span>-&gt;name &amp;&amp; Group::where(<span class="php-quote">'name'</span>, <span class="php-var">$post</span>[<span class="php-quote">'name'</span>])-&gt;first()){
 </span><span id="355" class="l"><a href="#355">355 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;GROUP_NAME_IN_USE&quot;</span>, <span class="php-var">$post</span>);
 </span><span id="356" class="l"><a href="#356">356 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
 </span><span id="357" class="l"><a href="#357">357 </a>        }
@@ -533,7 +533,7 @@
 </span><span id="401" class="l"><a href="#401">401 </a>        <span class="php-var">$post</span> = <span class="php-var">$this</span>-&gt;_app-&gt;request-&gt;post();
 </span><span id="402" class="l"><a href="#402">402 </a>    
 </span><span id="403" class="l"><a href="#403">403 </a>        <span class="php-comment">// Get the target group</span>
-</span><span id="404" class="l"><a href="#404">404 </a>        <span class="php-var">$group</span> = GroupLoader::fetch(<span class="php-var">$group_id</span>);
+</span><span id="404" class="l"><a href="#404">404 </a>        <span class="php-var">$group</span> = Group::find(<span class="php-var">$group_id</span>);
 </span><span id="405" class="l"><a href="#405">405 </a>    
 </span><span id="406" class="l"><a href="#406">406 </a>        <span class="php-comment">// Get the alert message stream</span>
 </span><span id="407" class="l"><a href="#407">407 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts;

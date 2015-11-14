@@ -283,11 +283,11 @@
 </span><span id="151" class="l"><a href="#151">151 </a>        <span class="php-var">$x</span> = ( <span class="php-num">150</span> - <span class="php-num">0</span> - <span class="php-keyword2">imagefontwidth</span>( <span class="php-num">5</span> ) * <span class="php-keyword2">strlen</span>( <span class="php-var">$security_code</span> ) ) / <span class="php-num">2</span> + <span class="php-num">0</span> + <span class="php-num">5</span>;
 </span><span id="152" class="l"><a href="#152">152 </a>    
 </span><span id="153" class="l"><a href="#153">153 </a>        <span class="php-comment">//write string twice</span>
-</span><span id="154" class="l"><a href="#154">154 </a>        <span class="php-keyword2">ImageString</span>(<span class="php-var">$image</span>,<span class="php-num">5</span>, <span class="php-var">$x</span>, <span class="php-num">7</span>, <span class="php-var">$security_code</span>, <span class="php-var">$black</span>);
-</span><span id="155" class="l"><a href="#155">155 </a>        <span class="php-keyword2">ImageString</span>(<span class="php-var">$image</span>,<span class="php-num">5</span>, <span class="php-var">$x</span>, <span class="php-num">7</span>, <span class="php-var">$security_code</span>, <span class="php-var">$black</span>);
+</span><span id="154" class="l"><a href="#154">154 </a>        <span class="php-keyword2">imagestring</span>(<span class="php-var">$image</span>,<span class="php-num">5</span>, <span class="php-var">$x</span>, <span class="php-num">7</span>, <span class="php-var">$security_code</span>, <span class="php-var">$black</span>);
+</span><span id="155" class="l"><a href="#155">155 </a>        <span class="php-keyword2">imagestring</span>(<span class="php-var">$image</span>,<span class="php-num">5</span>, <span class="php-var">$x</span>, <span class="php-num">7</span>, <span class="php-var">$security_code</span>, <span class="php-var">$black</span>);
 </span><span id="156" class="l"><a href="#156">156 </a>        <span class="php-comment">//start ob</span>
 </span><span id="157" class="l"><a href="#157">157 </a>        <span class="php-keyword2">ob_start</span>();
-</span><span id="158" class="l"><a href="#158">158 </a>        <span class="php-keyword2">ImagePng</span>(<span class="php-var">$image</span>);
+</span><span id="158" class="l"><a href="#158">158 </a>        <span class="php-keyword2">imagepng</span>(<span class="php-var">$image</span>);
 </span><span id="159" class="l"><a href="#159">159 </a>    
 </span><span id="160" class="l"><a href="#160">160 </a>        <span class="php-comment">//get binary image data</span>
 </span><span id="161" class="l"><a href="#161">161 </a>        <span class="php-var">$data</span> = <span class="php-keyword2">ob_get_clean</span>();

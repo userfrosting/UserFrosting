@@ -201,7 +201,7 @@
 </span><span id="69" class="l"><a href="#69"> 69 </a>        }
 </span><span id="70" class="l"><a href="#70"> 70 </a>
 </span><span id="71" class="l"><a href="#71"> 71 </a>        <span class="php-comment">// Security measure: do not allow registering new users until the master account has been created.        </span>
-</span><span id="72" class="l"><a href="#72"> 72 </a>        <span class="php-keyword1">if</span> (!UserLoader::exists(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'user_id_master'</span>))){
+</span><span id="72" class="l"><a href="#72"> 72 </a>        <span class="php-keyword1">if</span> (!User::find(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'user_id_master'</span>))){
 </span><span id="73" class="l"><a href="#73"> 73 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;MASTER_ACCOUNT_NOT_EXISTS&quot;</span>);
 </span><span id="74" class="l"><a href="#74"> 74 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_install'</span>));
 </span><span id="75" class="l"><a href="#75"> 75 </a>        }
@@ -368,14 +368,14 @@
 </span><span id="236" class="l"><a href="#236">236 </a>        
 </span><span id="237" class="l"><a href="#237">237 </a>        <span class="php-comment">// Load user by email address</span>
 </span><span id="238" class="l"><a href="#238">238 </a>        <span class="php-keyword1">if</span>(<span class="php-var">$isEmail</span>){
-</span><span id="239" class="l"><a href="#239">239 </a>            <span class="php-var">$user</span> = UserLoader::fetch(<span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>], <span class="php-quote">'email'</span>);
+</span><span id="239" class="l"><a href="#239">239 </a>            <span class="php-var">$user</span> = User::where(<span class="php-quote">'email'</span>, <span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>])-&gt;first();
 </span><span id="240" class="l"><a href="#240">240 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$user</span>){
 </span><span id="241" class="l"><a href="#241">241 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_USER_OR_PASS_INVALID&quot;</span>);
 </span><span id="242" class="l"><a href="#242">242 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);         
 </span><span id="243" class="l"><a href="#243">243 </a>            }
 </span><span id="244" class="l"><a href="#244">244 </a>        <span class="php-comment">// Load user by user name    </span>
 </span><span id="245" class="l"><a href="#245">245 </a>        } <span class="php-keyword1">else</span> {
-</span><span id="246" class="l"><a href="#246">246 </a>            <span class="php-var">$user</span> = UserLoader::fetch(<span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>], <span class="php-quote">'user_name'</span>);
+</span><span id="246" class="l"><a href="#246">246 </a>            <span class="php-var">$user</span> = User::where(<span class="php-quote">'user_name'</span>, <span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>])-&gt;first();
 </span><span id="247" class="l"><a href="#247">247 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$user</span>) {
 </span><span id="248" class="l"><a href="#248">248 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_USER_OR_PASS_INVALID&quot;</span>);
 </span><span id="249" class="l"><a href="#249">249 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
@@ -460,7 +460,7 @@
 </span><span id="328" class="l"><a href="#328">328 </a>        <span class="php-var">$rf</span> = <span class="php-keyword1">new</span> \Fortress\HTTPRequestFortress(<span class="php-var">$ms</span>, <span class="php-var">$requestSchema</span>, <span class="php-var">$post</span>);        
 </span><span id="329" class="l"><a href="#329">329 </a>
 </span><span id="330" class="l"><a href="#330">330 </a>        <span class="php-comment">// Security measure: do not allow registering new users until the master account has been created.        </span>
-</span><span id="331" class="l"><a href="#331">331 </a>        <span class="php-keyword1">if</span> (!UserLoader::exists(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'user_id_master'</span>))){
+</span><span id="331" class="l"><a href="#331">331 </a>        <span class="php-keyword1">if</span> (!User::find(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'user_id_master'</span>))){
 </span><span id="332" class="l"><a href="#332">332 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;MASTER_ACCOUNT_NOT_EXISTS&quot;</span>);
 </span><span id="333" class="l"><a href="#333">333 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
 </span><span id="334" class="l"><a href="#334">334 </a>        }
@@ -499,119 +499,119 @@
 </span><span id="367" class="l"><a href="#367">367 </a>        
 </span><span id="368" class="l"><a href="#368">368 </a>        <span class="php-comment">// Perform desired data transformations.  Is this a feature we could add to Fortress?</span>
 </span><span id="369" class="l"><a href="#369">369 </a>        <span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>] = <span class="php-keyword2">trim</span>(<span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>]);
-</span><span id="370" class="l"><a href="#370">370 </a>        <span class="php-var">$data</span>[<span class="php-quote">'email'</span>] = <span class="php-keyword2">strtolower</span>(<span class="php-keyword2">trim</span>(<span class="php-var">$data</span>[<span class="php-quote">'email'</span>]));
-</span><span id="371" class="l"><a href="#371">371 </a>        <span class="php-var">$data</span>[<span class="php-quote">'locale'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;default_locale;
-</span><span id="372" class="l"><a href="#372">372 </a>        
-</span><span id="373" class="l"><a href="#373">373 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;require_activation)
-</span><span id="374" class="l"><a href="#374">374 </a>            <span class="php-var">$data</span>[<span class="php-quote">'flag_verified'</span>] = <span class="php-num">0</span>;
-</span><span id="375" class="l"><a href="#375">375 </a>        <span class="php-keyword1">else</span>
-</span><span id="376" class="l"><a href="#376">376 </a>            <span class="php-var">$data</span>[<span class="php-quote">'flag_verified'</span>] = <span class="php-num">1</span>;
-</span><span id="377" class="l"><a href="#377">377 </a>        
-</span><span id="378" class="l"><a href="#378">378 </a>        <span class="php-comment">// Check if username or email already exists</span>
-</span><span id="379" class="l"><a href="#379">379 </a>        <span class="php-keyword1">if</span> (UserLoader::exists(<span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>], <span class="php-quote">'user_name'</span>)){
-</span><span id="380" class="l"><a href="#380">380 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_USERNAME_IN_USE&quot;</span>, <span class="php-var">$data</span>);
-</span><span id="381" class="l"><a href="#381">381 </a>            <span class="php-var">$error</span> = <span class="php-keyword1">true</span>;
-</span><span id="382" class="l"><a href="#382">382 </a>        }
-</span><span id="383" class="l"><a href="#383">383 </a>
-</span><span id="384" class="l"><a href="#384">384 </a>        <span class="php-keyword1">if</span> (UserLoader::exists(<span class="php-var">$data</span>[<span class="php-quote">'email'</span>], <span class="php-quote">'email'</span>)){
-</span><span id="385" class="l"><a href="#385">385 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_EMAIL_IN_USE&quot;</span>, <span class="php-var">$data</span>);
-</span><span id="386" class="l"><a href="#386">386 </a>            <span class="php-var">$error</span> = <span class="php-keyword1">true</span>;
-</span><span id="387" class="l"><a href="#387">387 </a>        }
-</span><span id="388" class="l"><a href="#388">388 </a>        
-</span><span id="389" class="l"><a href="#389">389 </a>        <span class="php-comment">// Halt on any validation errors</span>
-</span><span id="390" class="l"><a href="#390">390 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$error</span>) {
-</span><span id="391" class="l"><a href="#391">391 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="392" class="l"><a href="#392">392 </a>        }
-</span><span id="393" class="l"><a href="#393">393 </a>    
-</span><span id="394" class="l"><a href="#394">394 </a>        <span class="php-comment">// Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)</span>
-</span><span id="395" class="l"><a href="#395">395 </a>        <span class="php-var">$primaryGroup</span> = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, <span class="php-quote">&quot;is_default&quot;</span>);
-</span><span id="396" class="l"><a href="#396">396 </a>        
-</span><span id="397" class="l"><a href="#397">397 </a>        <span class="php-comment">// Check that a default primary group is actually set</span>
-</span><span id="398" class="l"><a href="#398">398 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$primaryGroup</span>){
-</span><span id="399" class="l"><a href="#399">399 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_REGISTRATION_BROKEN&quot;</span>);
-</span><span id="400" class="l"><a href="#400">400 </a>            <span class="php-keyword2">error_log</span>(<span class="php-quote">&quot;Account registration is not working because a default primary group has not been set.&quot;</span>);
-</span><span id="401" class="l"><a href="#401">401 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">500</span>);
-</span><span id="402" class="l"><a href="#402">402 </a>        }
-</span><span id="403" class="l"><a href="#403">403 </a>        
-</span><span id="404" class="l"><a href="#404">404 </a>        <span class="php-var">$data</span>[<span class="php-quote">'primary_group_id'</span>] = <span class="php-var">$primaryGroup</span>-&gt;id;
-</span><span id="405" class="l"><a href="#405">405 </a>        <span class="php-comment">// Set default title for new users</span>
-</span><span id="406" class="l"><a href="#406">406 </a>        <span class="php-var">$data</span>[<span class="php-quote">'title'</span>] = <span class="php-var">$primaryGroup</span>-&gt;new_user_title;
-</span><span id="407" class="l"><a href="#407">407 </a>        <span class="php-comment">// Hash password</span>
-</span><span id="408" class="l"><a href="#408">408 </a>        <span class="php-var">$data</span>[<span class="php-quote">'password'</span>] = Authentication::hashPassword(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]);
-</span><span id="409" class="l"><a href="#409">409 </a>        
-</span><span id="410" class="l"><a href="#410">410 </a>        <span class="php-comment">// Create the user</span>
-</span><span id="411" class="l"><a href="#411">411 </a>        <span class="php-var">$user</span> = <span class="php-keyword1">new</span> User(<span class="php-var">$data</span>);
-</span><span id="412" class="l"><a href="#412">412 </a>
-</span><span id="413" class="l"><a href="#413">413 </a>        <span class="php-comment">// Add user to default groups, including default primary group</span>
-</span><span id="414" class="l"><a href="#414">414 </a>        <span class="php-var">$defaultGroups</span> = GroupLoader::fetchAll(GROUP_DEFAULT, <span class="php-quote">&quot;is_default&quot;</span>);
-</span><span id="415" class="l"><a href="#415">415 </a>        <span class="php-var">$user</span>-&gt;addGroup(<span class="php-var">$primaryGroup</span>-&gt;id);
-</span><span id="416" class="l"><a href="#416">416 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$defaultGroups</span> <span class="php-keyword1">as</span> <span class="php-var">$group_id</span> =&gt; <span class="php-var">$group</span>)
-</span><span id="417" class="l"><a href="#417">417 </a>            <span class="php-var">$user</span>-&gt;addGroup(<span class="php-var">$group_id</span>);    
-</span><span id="418" class="l"><a href="#418">418 </a>        
-</span><span id="419" class="l"><a href="#419">419 </a>        <span class="php-comment">// Create sign-up event</span>
-</span><span id="420" class="l"><a href="#420">420 </a>        <span class="php-var">$user</span>-&gt;newEventSignUp();
-</span><span id="421" class="l"><a href="#421">421 </a>        
-</span><span id="422" class="l"><a href="#422">422 </a>        <span class="php-comment">// Store new user to database</span>
-</span><span id="423" class="l"><a href="#423">423 </a>        <span class="php-var">$user</span>-&gt;save();
-</span><span id="424" class="l"><a href="#424">424 </a>        
-</span><span id="425" class="l"><a href="#425">425 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;require_activation) {
-</span><span id="426" class="l"><a href="#426">426 </a>            <span class="php-comment">// Create verification request event</span>
-</span><span id="427" class="l"><a href="#427">427 </a>            <span class="php-var">$user</span>-&gt;newEventVerificationRequest();
-</span><span id="428" class="l"><a href="#428">428 </a>            <span class="php-var">$user</span>-&gt;save();      <span class="php-comment">// Re-save with verification event      </span>
-</span><span id="429" class="l"><a href="#429">429 </a>            
-</span><span id="430" class="l"><a href="#430">430 </a>            <span class="php-comment">// Create and send verification email</span>
-</span><span id="431" class="l"><a href="#431">431 </a>            <span class="php-var">$twig</span> = <span class="php-var">$this</span>-&gt;_app-&gt;view()-&gt;getEnvironment();
-</span><span id="432" class="l"><a href="#432">432 </a>            <span class="php-var">$template</span> = <span class="php-var">$twig</span>-&gt;loadTemplate(<span class="php-quote">&quot;mail/activate-new.twig&quot;</span>);        
-</span><span id="433" class="l"><a href="#433">433 </a>            <span class="php-var">$notification</span> = <span class="php-keyword1">new</span> Notification(<span class="php-var">$template</span>);
-</span><span id="434" class="l"><a href="#434">434 </a>            <span class="php-var">$notification</span>-&gt;fromWebsite();      <span class="php-comment">// Automatically sets sender and reply-to</span>
-</span><span id="435" class="l"><a href="#435">435 </a>            <span class="php-var">$notification</span>-&gt;addEmailRecipient(<span class="php-var">$user</span>-&gt;email, <span class="php-var">$user</span>-&gt;display_name, [
-</span><span id="436" class="l"><a href="#436">436 </a>                <span class="php-quote">&quot;user&quot;</span> =&gt; <span class="php-var">$user</span>
-</span><span id="437" class="l"><a href="#437">437 </a>            ]);
-</span><span id="438" class="l"><a href="#438">438 </a>            
-</span><span id="439" class="l"><a href="#439">439 </a>            <span class="php-keyword1">try</span> {
-</span><span id="440" class="l"><a href="#440">440 </a>                <span class="php-var">$notification</span>-&gt;send();
-</span><span id="441" class="l"><a href="#441">441 </a>            } <span class="php-keyword1">catch</span> (\Exception\phpmailerException <span class="php-var">$e</span>){
-</span><span id="442" class="l"><a href="#442">442 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;MAIL_ERROR&quot;</span>);
-</span><span id="443" class="l"><a href="#443">443 </a>                <span class="php-keyword2">error_log</span>(<span class="php-quote">'Mailer Error: '</span> . <span class="php-var">$e</span>-&gt;errorMessage());
-</span><span id="444" class="l"><a href="#444">444 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">500</span>);
-</span><span id="445" class="l"><a href="#445">445 </a>            }
-</span><span id="446" class="l"><a href="#446">446 </a>            
-</span><span id="447" class="l"><a href="#447">447 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_REGISTRATION_COMPLETE_TYPE2&quot;</span>);
-</span><span id="448" class="l"><a href="#448">448 </a>        } <span class="php-keyword1">else</span>
-</span><span id="449" class="l"><a href="#449">449 </a>            <span class="php-comment">// No activation required</span>
-</span><span id="450" class="l"><a href="#450">450 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_REGISTRATION_COMPLETE_TYPE1&quot;</span>);
-</span><span id="451" class="l"><a href="#451">451 </a>    } 
-</span><span id="452" class="l"><a href="#452">452 </a>    
-</span><span id="453" class="l"><a href="#453">453 </a>    <span class="php-comment">/**
-</span></span><span id="454" class="l"><a href="#454">454 </a><span class="php-comment">     * Processes an new account activation request.
-</span></span><span id="455" class="l"><a href="#455">455 </a><span class="php-comment">     *
-</span></span><span id="456" class="l"><a href="#456">456 </a><span class="php-comment">     * Processes the request from the account activation link that was emailed to the user, checking that:
-</span></span><span id="457" class="l"><a href="#457">457 </a><span class="php-comment">     * 1. The token provided matches a user in the database;
-</span></span><span id="458" class="l"><a href="#458">458 </a><span class="php-comment">     * 2. The user account is not already active;
-</span></span><span id="459" class="l"><a href="#459">459 </a><span class="php-comment">     * This route is &quot;public access&quot;.
-</span></span><span id="460" class="l"><a href="#460">460 </a><span class="php-comment">     * Request type: GET     
-</span></span><span id="461" class="l"><a href="#461">461 </a><span class="php-comment">     */</span>          
-</span><span id="462" class="l"><a href="#462">462 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> activate(){
-</span><span id="463" class="l"><a href="#463">463 </a>        <span class="php-var">$data</span> = <span class="php-var">$this</span>-&gt;_app-&gt;request-&gt;get();
-</span><span id="464" class="l"><a href="#464">464 </a>        
-</span><span id="465" class="l"><a href="#465">465 </a>        <span class="php-comment">// Load the request schema</span>
-</span><span id="466" class="l"><a href="#466">466 </a>        <span class="php-var">$requestSchema</span> = <span class="php-keyword1">new</span> \Fortress\RequestSchema(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'schema.path'</span>) . <span class="php-quote">&quot;/forms/account-activate.json&quot;</span>);
-</span><span id="467" class="l"><a href="#467">467 </a>        
-</span><span id="468" class="l"><a href="#468">468 </a>        <span class="php-comment">// Get the alert message stream</span>
-</span><span id="469" class="l"><a href="#469">469 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts; 
-</span><span id="470" class="l"><a href="#470">470 </a>        
-</span><span id="471" class="l"><a href="#471">471 </a>        <span class="php-comment">// Set up Fortress to validate the request</span>
-</span><span id="472" class="l"><a href="#472">472 </a>        <span class="php-var">$rf</span> = <span class="php-keyword1">new</span> \Fortress\HTTPRequestFortress(<span class="php-var">$ms</span>, <span class="php-var">$requestSchema</span>, <span class="php-var">$data</span>);
-</span><span id="473" class="l"><a href="#473">473 </a>        
-</span><span id="474" class="l"><a href="#474">474 </a>        <span class="php-comment">// Validate</span>
-</span><span id="475" class="l"><a href="#475">475 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$rf</span>-&gt;validate()) {
-</span><span id="476" class="l"><a href="#476">476 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
-</span><span id="477" class="l"><a href="#477">477 </a>        }    
-</span><span id="478" class="l"><a href="#478">478 </a>        
-</span><span id="479" class="l"><a href="#479">479 </a>        <span class="php-comment">// Ok, try to find a user with the specified secret token</span>
-</span><span id="480" class="l"><a href="#480">480 </a>        <span class="php-var">$user</span> = UserLoader::fetch(<span class="php-var">$data</span>[<span class="php-quote">'secret_token'</span>], <span class="php-quote">'secret_token'</span>);
+</span><span id="370" class="l"><a href="#370">370 </a>        <span class="php-var">$data</span>[<span class="php-quote">'locale'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;default_locale;
+</span><span id="371" class="l"><a href="#371">371 </a>        
+</span><span id="372" class="l"><a href="#372">372 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;require_activation)
+</span><span id="373" class="l"><a href="#373">373 </a>            <span class="php-var">$data</span>[<span class="php-quote">'flag_verified'</span>] = <span class="php-num">0</span>;
+</span><span id="374" class="l"><a href="#374">374 </a>        <span class="php-keyword1">else</span>
+</span><span id="375" class="l"><a href="#375">375 </a>            <span class="php-var">$data</span>[<span class="php-quote">'flag_verified'</span>] = <span class="php-num">1</span>;
+</span><span id="376" class="l"><a href="#376">376 </a>        
+</span><span id="377" class="l"><a href="#377">377 </a>        <span class="php-comment">// Check if username or email already exists</span>
+</span><span id="378" class="l"><a href="#378">378 </a>        <span class="php-keyword1">if</span> (User::where(<span class="php-quote">'user_name'</span>, <span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>])-&gt;first()){
+</span><span id="379" class="l"><a href="#379">379 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_USERNAME_IN_USE&quot;</span>, <span class="php-var">$data</span>);
+</span><span id="380" class="l"><a href="#380">380 </a>            <span class="php-var">$error</span> = <span class="php-keyword1">true</span>;
+</span><span id="381" class="l"><a href="#381">381 </a>        }
+</span><span id="382" class="l"><a href="#382">382 </a>
+</span><span id="383" class="l"><a href="#383">383 </a>        <span class="php-keyword1">if</span> (User::where(<span class="php-quote">'email'</span>, <span class="php-var">$data</span>[<span class="php-quote">'email'</span>])-&gt;first()){
+</span><span id="384" class="l"><a href="#384">384 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_EMAIL_IN_USE&quot;</span>, <span class="php-var">$data</span>);
+</span><span id="385" class="l"><a href="#385">385 </a>            <span class="php-var">$error</span> = <span class="php-keyword1">true</span>;
+</span><span id="386" class="l"><a href="#386">386 </a>        }
+</span><span id="387" class="l"><a href="#387">387 </a>        
+</span><span id="388" class="l"><a href="#388">388 </a>        <span class="php-comment">// Halt on any validation errors</span>
+</span><span id="389" class="l"><a href="#389">389 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$error</span>) {
+</span><span id="390" class="l"><a href="#390">390 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="391" class="l"><a href="#391">391 </a>        }
+</span><span id="392" class="l"><a href="#392">392 </a>    
+</span><span id="393" class="l"><a href="#393">393 </a>        <span class="php-comment">// Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)</span>
+</span><span id="394" class="l"><a href="#394">394 </a>        <span class="php-var">$primaryGroup</span> = Group::where(<span class="php-quote">'is_default'</span>, GROUP_DEFAULT_PRIMARY)-&gt;first();
+</span><span id="395" class="l"><a href="#395">395 </a>        
+</span><span id="396" class="l"><a href="#396">396 </a>        <span class="php-comment">// Check that a default primary group is actually set</span>
+</span><span id="397" class="l"><a href="#397">397 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$primaryGroup</span>){
+</span><span id="398" class="l"><a href="#398">398 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_REGISTRATION_BROKEN&quot;</span>);
+</span><span id="399" class="l"><a href="#399">399 </a>            <span class="php-keyword2">error_log</span>(<span class="php-quote">&quot;Account registration is not working because a default primary group has not been set.&quot;</span>);
+</span><span id="400" class="l"><a href="#400">400 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">500</span>);
+</span><span id="401" class="l"><a href="#401">401 </a>        }
+</span><span id="402" class="l"><a href="#402">402 </a>        
+</span><span id="403" class="l"><a href="#403">403 </a>        <span class="php-var">$data</span>[<span class="php-quote">'primary_group_id'</span>] = <span class="php-var">$primaryGroup</span>-&gt;id;
+</span><span id="404" class="l"><a href="#404">404 </a>        <span class="php-comment">// Set default title for new users</span>
+</span><span id="405" class="l"><a href="#405">405 </a>        <span class="php-var">$data</span>[<span class="php-quote">'title'</span>] = <span class="php-var">$primaryGroup</span>-&gt;new_user_title;
+</span><span id="406" class="l"><a href="#406">406 </a>        <span class="php-comment">// Hash password</span>
+</span><span id="407" class="l"><a href="#407">407 </a>        <span class="php-var">$data</span>[<span class="php-quote">'password'</span>] = Authentication::hashPassword(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]);
+</span><span id="408" class="l"><a href="#408">408 </a>        
+</span><span id="409" class="l"><a href="#409">409 </a>        <span class="php-comment">// Create the user</span>
+</span><span id="410" class="l"><a href="#410">410 </a>        <span class="php-var">$user</span> = <span class="php-keyword1">new</span> User(<span class="php-var">$data</span>);
+</span><span id="411" class="l"><a href="#411">411 </a>
+</span><span id="412" class="l"><a href="#412">412 </a>        <span class="php-comment">// Add user to default groups, including default primary group</span>
+</span><span id="413" class="l"><a href="#413">413 </a>        <span class="php-var">$defaultGroups</span> = Group::where(<span class="php-quote">'is_default'</span>, GROUP_DEFAULT)-&gt;get();
+</span><span id="414" class="l"><a href="#414">414 </a>        <span class="php-var">$user</span>-&gt;addGroup(<span class="php-var">$primaryGroup</span>-&gt;id);
+</span><span id="415" class="l"><a href="#415">415 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$defaultGroups</span> <span class="php-keyword1">as</span> <span class="php-var">$group</span>)
+</span><span id="416" class="l"><a href="#416">416 </a>            <span class="php-var">$user</span>-&gt;addGroup(<span class="php-var">$group</span>-&gt;id);    
+</span><span id="417" class="l"><a href="#417">417 </a>        
+</span><span id="418" class="l"><a href="#418">418 </a>        <span class="php-comment">// Create sign-up event</span>
+</span><span id="419" class="l"><a href="#419">419 </a>        <span class="php-var">$user</span>-&gt;newEventSignUp();
+</span><span id="420" class="l"><a href="#420">420 </a>        
+</span><span id="421" class="l"><a href="#421">421 </a>        <span class="php-comment">// Store new user to database</span>
+</span><span id="422" class="l"><a href="#422">422 </a>        <span class="php-var">$user</span>-&gt;save();
+</span><span id="423" class="l"><a href="#423">423 </a>        
+</span><span id="424" class="l"><a href="#424">424 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;require_activation) {
+</span><span id="425" class="l"><a href="#425">425 </a>            <span class="php-comment">// Create verification request event</span>
+</span><span id="426" class="l"><a href="#426">426 </a>            <span class="php-var">$user</span>-&gt;newEventVerificationRequest();
+</span><span id="427" class="l"><a href="#427">427 </a>            <span class="php-var">$user</span>-&gt;save();      <span class="php-comment">// Re-save with verification event      </span>
+</span><span id="428" class="l"><a href="#428">428 </a>            
+</span><span id="429" class="l"><a href="#429">429 </a>            <span class="php-comment">// Create and send verification email</span>
+</span><span id="430" class="l"><a href="#430">430 </a>            <span class="php-var">$twig</span> = <span class="php-var">$this</span>-&gt;_app-&gt;view()-&gt;getEnvironment();
+</span><span id="431" class="l"><a href="#431">431 </a>            <span class="php-var">$template</span> = <span class="php-var">$twig</span>-&gt;loadTemplate(<span class="php-quote">&quot;mail/activate-new.twig&quot;</span>);        
+</span><span id="432" class="l"><a href="#432">432 </a>            <span class="php-var">$notification</span> = <span class="php-keyword1">new</span> Notification(<span class="php-var">$template</span>);
+</span><span id="433" class="l"><a href="#433">433 </a>            <span class="php-var">$notification</span>-&gt;fromWebsite();      <span class="php-comment">// Automatically sets sender and reply-to</span>
+</span><span id="434" class="l"><a href="#434">434 </a>            <span class="php-var">$notification</span>-&gt;addEmailRecipient(<span class="php-var">$user</span>-&gt;email, <span class="php-var">$user</span>-&gt;display_name, [
+</span><span id="435" class="l"><a href="#435">435 </a>                <span class="php-quote">&quot;user&quot;</span> =&gt; <span class="php-var">$user</span>
+</span><span id="436" class="l"><a href="#436">436 </a>            ]);
+</span><span id="437" class="l"><a href="#437">437 </a>            
+</span><span id="438" class="l"><a href="#438">438 </a>            <span class="php-keyword1">try</span> {
+</span><span id="439" class="l"><a href="#439">439 </a>                <span class="php-var">$notification</span>-&gt;send();
+</span><span id="440" class="l"><a href="#440">440 </a>            } <span class="php-keyword1">catch</span> (\phpmailerException <span class="php-var">$e</span>){
+</span><span id="441" class="l"><a href="#441">441 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;MAIL_ERROR&quot;</span>);
+</span><span id="442" class="l"><a href="#442">442 </a>                <span class="php-keyword2">error_log</span>(<span class="php-quote">'Mailer Error: '</span> . <span class="php-var">$e</span>-&gt;errorMessage());
+</span><span id="443" class="l"><a href="#443">443 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">500</span>);
+</span><span id="444" class="l"><a href="#444">444 </a>            }
+</span><span id="445" class="l"><a href="#445">445 </a>            
+</span><span id="446" class="l"><a href="#446">446 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_REGISTRATION_COMPLETE_TYPE2&quot;</span>);
+</span><span id="447" class="l"><a href="#447">447 </a>        } <span class="php-keyword1">else</span>
+</span><span id="448" class="l"><a href="#448">448 </a>            <span class="php-comment">// No activation required</span>
+</span><span id="449" class="l"><a href="#449">449 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_REGISTRATION_COMPLETE_TYPE1&quot;</span>);
+</span><span id="450" class="l"><a href="#450">450 </a>    } 
+</span><span id="451" class="l"><a href="#451">451 </a>    
+</span><span id="452" class="l"><a href="#452">452 </a>    <span class="php-comment">/**
+</span></span><span id="453" class="l"><a href="#453">453 </a><span class="php-comment">     * Processes an new email verification request.
+</span></span><span id="454" class="l"><a href="#454">454 </a><span class="php-comment">     *
+</span></span><span id="455" class="l"><a href="#455">455 </a><span class="php-comment">     * Processes the request from the email verification link that was emailed to the user, checking that:
+</span></span><span id="456" class="l"><a href="#456">456 </a><span class="php-comment">     * 1. The token provided matches a user in the database;
+</span></span><span id="457" class="l"><a href="#457">457 </a><span class="php-comment">     * 2. The user account is not already verified;
+</span></span><span id="458" class="l"><a href="#458">458 </a><span class="php-comment">     * This route is &quot;public access&quot;.
+</span></span><span id="459" class="l"><a href="#459">459 </a><span class="php-comment">     * Request type: GET     
+</span></span><span id="460" class="l"><a href="#460">460 </a><span class="php-comment">     */</span>          
+</span><span id="461" class="l"><a href="#461">461 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> activate(){
+</span><span id="462" class="l"><a href="#462">462 </a>        <span class="php-var">$data</span> = <span class="php-var">$this</span>-&gt;_app-&gt;request-&gt;get();
+</span><span id="463" class="l"><a href="#463">463 </a>        
+</span><span id="464" class="l"><a href="#464">464 </a>        <span class="php-comment">// Load the request schema</span>
+</span><span id="465" class="l"><a href="#465">465 </a>        <span class="php-var">$requestSchema</span> = <span class="php-keyword1">new</span> \Fortress\RequestSchema(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'schema.path'</span>) . <span class="php-quote">&quot;/forms/account-activate.json&quot;</span>);
+</span><span id="466" class="l"><a href="#466">466 </a>        
+</span><span id="467" class="l"><a href="#467">467 </a>        <span class="php-comment">// Get the alert message stream</span>
+</span><span id="468" class="l"><a href="#468">468 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts; 
+</span><span id="469" class="l"><a href="#469">469 </a>        
+</span><span id="470" class="l"><a href="#470">470 </a>        <span class="php-comment">// Set up Fortress to validate the request</span>
+</span><span id="471" class="l"><a href="#471">471 </a>        <span class="php-var">$rf</span> = <span class="php-keyword1">new</span> \Fortress\HTTPRequestFortress(<span class="php-var">$ms</span>, <span class="php-var">$requestSchema</span>, <span class="php-var">$data</span>);
+</span><span id="472" class="l"><a href="#472">472 </a>        
+</span><span id="473" class="l"><a href="#473">473 </a>        <span class="php-comment">// Validate</span>
+</span><span id="474" class="l"><a href="#474">474 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$rf</span>-&gt;validate()) {
+</span><span id="475" class="l"><a href="#475">475 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
+</span><span id="476" class="l"><a href="#476">476 </a>        }    
+</span><span id="477" class="l"><a href="#477">477 </a>        
+</span><span id="478" class="l"><a href="#478">478 </a>        <span class="php-comment">// Ok, try to find an unverified user with the specified secret token</span>
+</span><span id="479" class="l"><a href="#479">479 </a>        <span class="php-var">$user</span> = User::where(<span class="php-quote">'secret_token'</span>, <span class="php-var">$data</span>[<span class="php-quote">'secret_token'</span>])
+</span><span id="480" class="l"><a href="#480">480 </a>                    -&gt;where(<span class="php-quote">'flag_verified'</span>, <span class="php-quote">'0'</span>)-&gt;first();
 </span><span id="481" class="l"><a href="#481">481 </a>        
-</span><span id="482" class="l"><a href="#482">482 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$user</span> || <span class="php-var">$user</span>-&gt;flag_verified == <span class="php-quote">&quot;1&quot;</span>){
+</span><span id="482" class="l"><a href="#482">482 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$user</span>){
 </span><span id="483" class="l"><a href="#483">483 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_TOKEN_NOT_FOUND&quot;</span>);
 </span><span id="484" class="l"><a href="#484">484 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
 </span><span id="485" class="l"><a href="#485">485 </a>        }
@@ -681,7 +681,7 @@
 </span><span id="549" class="l"><a href="#549">549 </a>        
 </span><span id="550" class="l"><a href="#550">550 </a>        <span class="php-keyword1">try</span> {
 </span><span id="551" class="l"><a href="#551">551 </a>            <span class="php-var">$notification</span>-&gt;send();
-</span><span id="552" class="l"><a href="#552">552 </a>        } <span class="php-keyword1">catch</span> (\Exception\phpmailerException <span class="php-var">$e</span>){
+</span><span id="552" class="l"><a href="#552">552 </a>        } <span class="php-keyword1">catch</span> (\phpmailerException <span class="php-var">$e</span>){
 </span><span id="553" class="l"><a href="#553">553 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;MAIL_ERROR&quot;</span>);
 </span><span id="554" class="l"><a href="#554">554 </a>            <span class="php-keyword2">error_log</span>(<span class="php-quote">'Mailer Error: '</span> . <span class="php-var">$e</span>-&gt;errorMessage());
 </span><span id="555" class="l"><a href="#555">555 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">500</span>);
@@ -810,241 +810,242 @@
 </span><span id="678" class="l"><a href="#678">678 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
 </span><span id="679" class="l"><a href="#679">679 </a>        }
 </span><span id="680" class="l"><a href="#680">680 </a>        
-</span><span id="681" class="l"><a href="#681">681 </a>        <span class="php-comment">// Fetch the user, by looking up the submitted activation token</span>
-</span><span id="682" class="l"><a href="#682">682 </a>        <span class="php-var">$user</span> = UserLoader::fetch(<span class="php-var">$data</span>[<span class="php-quote">'secret_token'</span>], <span class="php-quote">'secret_token'</span>);
-</span><span id="683" class="l"><a href="#683">683 </a>        
-</span><span id="684" class="l"><a href="#684">684 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$user</span>){
-</span><span id="685" class="l"><a href="#685">685 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;FORGOTPASS_INVALID_TOKEN&quot;</span>);
-</span><span id="686" class="l"><a href="#686">686 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
-</span><span id="687" class="l"><a href="#687">687 </a>        }
-</span><span id="688" class="l"><a href="#688">688 </a>        
-</span><span id="689" class="l"><a href="#689">689 </a>        <span class="php-comment">// Reset the password flag</span>
-</span><span id="690" class="l"><a href="#690">690 </a>        <span class="php-var">$user</span>-&gt;flag_password_reset = <span class="php-quote">&quot;0&quot;</span>;   
-</span><span id="691" class="l"><a href="#691">691 </a>        
-</span><span id="692" class="l"><a href="#692">692 </a>        <span class="php-comment">// Store the updated info</span>
-</span><span id="693" class="l"><a href="#693">693 </a>        <span class="php-var">$user</span>-&gt;store();
-</span><span id="694" class="l"><a href="#694">694 </a>        <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;FORGOTPASS_REQUEST_CANNED&quot;</span>);
-</span><span id="695" class="l"><a href="#695">695 </a>        <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
-</span><span id="696" class="l"><a href="#696">696 </a>    }
-</span><span id="697" class="l"><a href="#697">697 </a>    
-</span><span id="698" class="l"><a href="#698">698 </a>    <span class="php-comment">/**
-</span></span><span id="699" class="l"><a href="#699">699 </a><span class="php-comment">     * Processes a request to resend the activation email for a new user account.
-</span></span><span id="700" class="l"><a href="#700">700 </a><span class="php-comment">     *
-</span></span><span id="701" class="l"><a href="#701">701 </a><span class="php-comment">     * Processes the request from the resend activation email form, checking that:
-</span></span><span id="702" class="l"><a href="#702">702 </a><span class="php-comment">     * 1. The provided username is associated with an existing user account;
-</span></span><span id="703" class="l"><a href="#703">703 </a><span class="php-comment">     * 2. The provided email matches the user account;
-</span></span><span id="704" class="l"><a href="#704">704 </a><span class="php-comment">     * 3. The user account is not already active;
-</span></span><span id="705" class="l"><a href="#705">705 </a><span class="php-comment">     * 4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
-</span></span><span id="706" class="l"><a href="#706">706 </a><span class="php-comment">     * 5. The submitted data is valid.
-</span></span><span id="707" class="l"><a href="#707">707 </a><span class="php-comment">     * This route is &quot;public access&quot;.
-</span></span><span id="708" class="l"><a href="#708">708 </a><span class="php-comment">     * Request type: POST
-</span></span><span id="709" class="l"><a href="#709">709 </a><span class="php-comment">     * @todo Again, just like with password reset - do we really need to get the user's user_name to do this?
-</span></span><span id="710" class="l"><a href="#710">710 </a><span class="php-comment">     */</span>         
-</span><span id="711" class="l"><a href="#711">711 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> resendActivation(){
-</span><span id="712" class="l"><a href="#712">712 </a>        <span class="php-var">$data</span> = <span class="php-var">$this</span>-&gt;_app-&gt;request-&gt;post();
-</span><span id="713" class="l"><a href="#713">713 </a>        
-</span><span id="714" class="l"><a href="#714">714 </a>        <span class="php-comment">// Load the request schema</span>
-</span><span id="715" class="l"><a href="#715">715 </a>        <span class="php-var">$requestSchema</span> = <span class="php-keyword1">new</span> \Fortress\RequestSchema(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'schema.path'</span>) . <span class="php-quote">&quot;/forms/resend-activation.json&quot;</span>);
-</span><span id="716" class="l"><a href="#716">716 </a>        
-</span><span id="717" class="l"><a href="#717">717 </a>        <span class="php-comment">// Get the alert message stream</span>
-</span><span id="718" class="l"><a href="#718">718 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts; 
-</span><span id="719" class="l"><a href="#719">719 </a>        
-</span><span id="720" class="l"><a href="#720">720 </a>        <span class="php-comment">// Set up Fortress to validate the request</span>
-</span><span id="721" class="l"><a href="#721">721 </a>        <span class="php-var">$rf</span> = <span class="php-keyword1">new</span> \Fortress\HTTPRequestFortress(<span class="php-var">$ms</span>, <span class="php-var">$requestSchema</span>, <span class="php-var">$data</span>);
-</span><span id="722" class="l"><a href="#722">722 </a>        
-</span><span id="723" class="l"><a href="#723">723 </a>        <span class="php-comment">// Validate</span>
-</span><span id="724" class="l"><a href="#724">724 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$rf</span>-&gt;validate()) {
-</span><span id="725" class="l"><a href="#725">725 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="726" class="l"><a href="#726">726 </a>        }    
-</span><span id="727" class="l"><a href="#727">727 </a>        
-</span><span id="728" class="l"><a href="#728">728 </a>        <span class="php-comment">// Check that the username exists</span>
-</span><span id="729" class="l"><a href="#729">729 </a>        <span class="php-keyword1">if</span>(!UserLoader::exists(<span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>], <span class="php-quote">'user_name'</span>)) {
-</span><span id="730" class="l"><a href="#730">730 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_INVALID_USERNAME&quot;</span>);
-</span><span id="731" class="l"><a href="#731">731 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="732" class="l"><a href="#732">732 </a>        }
-</span><span id="733" class="l"><a href="#733">733 </a>        
-</span><span id="734" class="l"><a href="#734">734 </a>        <span class="php-comment">// Load the user, by username</span>
-</span><span id="735" class="l"><a href="#735">735 </a>        <span class="php-var">$user</span> = UserLoader::fetch(<span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>], <span class="php-quote">'user_name'</span>);
-</span><span id="736" class="l"><a href="#736">736 </a>        
-</span><span id="737" class="l"><a href="#737">737 </a>        <span class="php-comment">// Check that the specified email is correct</span>
-</span><span id="738" class="l"><a href="#738">738 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strtolower</span>(<span class="php-var">$user</span>-&gt;email) != <span class="php-keyword2">strtolower</span>(<span class="php-var">$data</span>[<span class="php-quote">'email'</span>])){
-</span><span id="739" class="l"><a href="#739">739 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_USER_OR_EMAIL_INVALID&quot;</span>);
-</span><span id="740" class="l"><a href="#740">740 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="741" class="l"><a href="#741">741 </a>        }
-</span><span id="742" class="l"><a href="#742">742 </a>        
-</span><span id="743" class="l"><a href="#743">743 </a>        <span class="php-comment">// Check if user's account is already active</span>
-</span><span id="744" class="l"><a href="#744">744 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$user</span>-&gt;flag_verified == <span class="php-quote">&quot;1&quot;</span>) {
-</span><span id="745" class="l"><a href="#745">745 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_ALREADY_ACTIVE&quot;</span>);
-</span><span id="746" class="l"><a href="#746">746 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="747" class="l"><a href="#747">747 </a>        }
-</span><span id="748" class="l"><a href="#748">748 </a>        
-</span><span id="749" class="l"><a href="#749">749 </a>        <span class="php-comment">// Get the most recent account verification request time</span>
-</span><span id="750" class="l"><a href="#750">750 </a>        <span class="php-var">$last_verification_request_time</span> = <span class="php-var">$user</span>-&gt;lastEventTime(<span class="php-quote">'verification_request'</span>);
-</span><span id="751" class="l"><a href="#751">751 </a>        <span class="php-var">$last_verification_request_time</span> = <span class="php-var">$last_verification_request_time</span> ? <span class="php-var">$last_verification_request_time</span> : <span class="php-quote">&quot;0000-00-00 00:00:00&quot;</span>;
-</span><span id="752" class="l"><a href="#752">752 </a>        
-</span><span id="753" class="l"><a href="#753">753 </a>        <span class="php-comment">// Check the time since the last activation request</span>
-</span><span id="754" class="l"><a href="#754">754 </a>        <span class="php-var">$current_time</span> = <span class="php-keyword1">new</span> \DateTime(<span class="php-quote">&quot;now&quot;</span>);
-</span><span id="755" class="l"><a href="#755">755 </a>        <span class="php-var">$last_verification_request_datetime</span> = <span class="php-keyword1">new</span> \DateTime(<span class="php-var">$last_verification_request_time</span>);
-</span><span id="756" class="l"><a href="#756">756 </a>        <span class="php-var">$time_since_last_request</span> = <span class="php-var">$current_time</span>-&gt;getTimestamp() - <span class="php-var">$last_verification_request_datetime</span>-&gt;getTimestamp();
-</span><span id="757" class="l"><a href="#757">757 </a>
-</span><span id="758" class="l"><a href="#758">758 </a>        <span class="php-comment">// If an activation request has been sent too recently, they must wait</span>
-</span><span id="759" class="l"><a href="#759">759 </a>        <span class="php-keyword1">if</span>(<span class="php-var">$time_since_last_request</span> &lt; <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;resend_activation_threshold || <span class="php-var">$time_since_last_request</span> &lt; <span class="php-num">0</span>){
-</span><span id="760" class="l"><a href="#760">760 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_LINK_ALREADY_SENT&quot;</span>, [<span class="php-quote">&quot;resend_activation_threshold&quot;</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;resend_activation_threshold]);
-</span><span id="761" class="l"><a href="#761">761 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">429</span>); <span class="php-comment">// &quot;Too many requests&quot; code (http://tools.ietf.org/html/rfc6585#section-4)</span>
-</span><span id="762" class="l"><a href="#762">762 </a>        }
-</span><span id="763" class="l"><a href="#763">763 </a>        
-</span><span id="764" class="l"><a href="#764">764 </a>        <span class="php-comment">// We're good to go - create a new verification request and send the email</span>
-</span><span id="765" class="l"><a href="#765">765 </a>        <span class="php-var">$user</span>-&gt;newEventVerificationRequest();
-</span><span id="766" class="l"><a href="#766">766 </a>        
-</span><span id="767" class="l"><a href="#767">767 </a>        <span class="php-comment">// Email the user</span>
-</span><span id="768" class="l"><a href="#768">768 </a>        <span class="php-var">$twig</span> = <span class="php-var">$this</span>-&gt;_app-&gt;view()-&gt;getEnvironment();
-</span><span id="769" class="l"><a href="#769">769 </a>        <span class="php-var">$template</span> = <span class="php-var">$twig</span>-&gt;loadTemplate(<span class="php-quote">&quot;mail/resend-activation.twig&quot;</span>);        
-</span><span id="770" class="l"><a href="#770">770 </a>        <span class="php-var">$notification</span> = <span class="php-keyword1">new</span> Notification(<span class="php-var">$template</span>);
-</span><span id="771" class="l"><a href="#771">771 </a>        <span class="php-var">$notification</span>-&gt;fromWebsite();      <span class="php-comment">// Automatically sets sender and reply-to</span>
-</span><span id="772" class="l"><a href="#772">772 </a>        <span class="php-var">$notification</span>-&gt;addEmailRecipient(<span class="php-var">$user</span>-&gt;email, <span class="php-var">$user</span>-&gt;display_name, [
-</span><span id="773" class="l"><a href="#773">773 </a>            <span class="php-quote">&quot;user&quot;</span> =&gt; <span class="php-var">$user</span>,
-</span><span id="774" class="l"><a href="#774">774 </a>            <span class="php-quote">&quot;secret_token&quot;</span> =&gt; <span class="php-var">$user</span>-&gt;secret_token
-</span><span id="775" class="l"><a href="#775">775 </a>        ]);
-</span><span id="776" class="l"><a href="#776">776 </a>        
-</span><span id="777" class="l"><a href="#777">777 </a>        <span class="php-keyword1">try</span> {
-</span><span id="778" class="l"><a href="#778">778 </a>            <span class="php-var">$notification</span>-&gt;send();
-</span><span id="779" class="l"><a href="#779">779 </a>        } <span class="php-keyword1">catch</span> (\Exception\phpmailerException <span class="php-var">$e</span>){
-</span><span id="780" class="l"><a href="#780">780 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;MAIL_ERROR&quot;</span>);
-</span><span id="781" class="l"><a href="#781">781 </a>            <span class="php-keyword2">error_log</span>(<span class="php-quote">'Mailer Error: '</span> . <span class="php-var">$e</span>-&gt;errorMessage());
-</span><span id="782" class="l"><a href="#782">782 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">500</span>);
-</span><span id="783" class="l"><a href="#783">783 </a>        }
-</span><span id="784" class="l"><a href="#784">784 </a>
-</span><span id="785" class="l"><a href="#785">785 </a>        <span class="php-var">$user</span>-&gt;save();
-</span><span id="786" class="l"><a href="#786">786 </a>        <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_NEW_ACTIVATION_SENT&quot;</span>);
-</span><span id="787" class="l"><a href="#787">787 </a>    }
-</span><span id="788" class="l"><a href="#788">788 </a>    
-</span><span id="789" class="l"><a href="#789">789 </a>    <span class="php-comment">/**
-</span></span><span id="790" class="l"><a href="#790">790 </a><span class="php-comment">     * Processes a request to update a user's account information.
-</span></span><span id="791" class="l"><a href="#791">791 </a><span class="php-comment">     *
-</span></span><span id="792" class="l"><a href="#792">792 </a><span class="php-comment">     * Processes the request from the user account settings form, checking that:
-</span></span><span id="793" class="l"><a href="#793">793 </a><span class="php-comment">     * 1. The user correctly input their current password;
-</span></span><span id="794" class="l"><a href="#794">794 </a><span class="php-comment">     * 2. They have the necessary permissions to update the posted field(s);
-</span></span><span id="795" class="l"><a href="#795">795 </a><span class="php-comment">     * 3. The submitted data is valid.
-</span></span><span id="796" class="l"><a href="#796">796 </a><span class="php-comment">     * This route requires authentication.
-</span></span><span id="797" class="l"><a href="#797">797 </a><span class="php-comment">     * Request type: POST     
-</span></span><span id="798" class="l"><a href="#798">798 </a><span class="php-comment">     */</span>         
-</span><span id="799" class="l"><a href="#799">799 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> accountSettings(){
-</span><span id="800" class="l"><a href="#800">800 </a>        <span class="php-comment">// Load the request schema</span>
-</span><span id="801" class="l"><a href="#801">801 </a>        <span class="php-var">$requestSchema</span> = <span class="php-keyword1">new</span> \Fortress\RequestSchema(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'schema.path'</span>) . <span class="php-quote">&quot;/forms/account-settings.json&quot;</span>);
-</span><span id="802" class="l"><a href="#802">802 </a>        
-</span><span id="803" class="l"><a href="#803">803 </a>        <span class="php-comment">// Get the alert message stream</span>
-</span><span id="804" class="l"><a href="#804">804 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts; 
-</span><span id="805" class="l"><a href="#805">805 </a>        
-</span><span id="806" class="l"><a href="#806">806 </a>        <span class="php-comment">// Access control for entire page</span>
-</span><span id="807" class="l"><a href="#807">807 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'uri_account_settings'</span>)){
-</span><span id="808" class="l"><a href="#808">808 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
-</span><span id="809" class="l"><a href="#809">809 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
-</span><span id="810" class="l"><a href="#810">810 </a>        }
-</span><span id="811" class="l"><a href="#811">811 </a>        
-</span><span id="812" class="l"><a href="#812">812 </a>        <span class="php-var">$data</span> = <span class="php-var">$this</span>-&gt;_app-&gt;request-&gt;post();
-</span><span id="813" class="l"><a href="#813">813 </a>                       
-</span><span id="814" class="l"><a href="#814">814 </a>        <span class="php-comment">// Remove csrf_token</span>
-</span><span id="815" class="l"><a href="#815">815 </a>        <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'csrf_token'</span>]);
-</span><span id="816" class="l"><a href="#816">816 </a>                        
-</span><span id="817" class="l"><a href="#817">817 </a>        <span class="php-comment">// Check current password</span>
-</span><span id="818" class="l"><a href="#818">818 </a>        <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordcheck'</span>]) || !<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;verifyPassword(<span class="php-var">$data</span>[<span class="php-quote">'passwordcheck'</span>])){
-</span><span id="819" class="l"><a href="#819">819 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_PASSWORD_INVALID&quot;</span>);
-</span><span id="820" class="l"><a href="#820">820 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
-</span><span id="821" class="l"><a href="#821">821 </a>        }        
-</span><span id="822" class="l"><a href="#822">822 </a>                
-</span><span id="823" class="l"><a href="#823">823 </a>        <span class="php-comment">// Validate new email, if specified</span>
-</span><span id="824" class="l"><a href="#824">824 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'email'</span>]) &amp;&amp; <span class="php-var">$data</span>[<span class="php-quote">'email'</span>] != <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;email){
-</span><span id="825" class="l"><a href="#825">825 </a>            <span class="php-comment">// Check authorization</span>
-</span><span id="826" class="l"><a href="#826">826 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'email'</span>])){
-</span><span id="827" class="l"><a href="#827">827 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
-</span><span id="828" class="l"><a href="#828">828 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
-</span><span id="829" class="l"><a href="#829">829 </a>            }
-</span><span id="830" class="l"><a href="#830">830 </a>            <span class="php-comment">// Check if address is in use</span>
-</span><span id="831" class="l"><a href="#831">831 </a>            <span class="php-keyword1">if</span> (UserLoader::exists(<span class="php-var">$data</span>[<span class="php-quote">'email'</span>], <span class="php-quote">'email'</span>)){
-</span><span id="832" class="l"><a href="#832">832 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_EMAIL_IN_USE&quot;</span>, <span class="php-var">$data</span>);
-</span><span id="833" class="l"><a href="#833">833 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="834" class="l"><a href="#834">834 </a>            }            
-</span><span id="835" class="l"><a href="#835">835 </a>        } <span class="php-keyword1">else</span> {
-</span><span id="836" class="l"><a href="#836">836 </a>            <span class="php-var">$data</span>[<span class="php-quote">'email'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;email;
-</span><span id="837" class="l"><a href="#837">837 </a>        }
-</span><span id="838" class="l"><a href="#838">838 </a>            
-</span><span id="839" class="l"><a href="#839">839 </a>        <span class="php-comment">// Validate locale, if specified</span>
-</span><span id="840" class="l"><a href="#840">840 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'locale'</span>]) &amp;&amp; <span class="php-var">$data</span>[<span class="php-quote">'locale'</span>] != <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;locale){
-</span><span id="841" class="l"><a href="#841">841 </a>            <span class="php-comment">// Check authorization</span>
-</span><span id="842" class="l"><a href="#842">842 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'locale'</span>])){
-</span><span id="843" class="l"><a href="#843">843 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
-</span><span id="844" class="l"><a href="#844">844 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
-</span><span id="845" class="l"><a href="#845">845 </a>            }
-</span><span id="846" class="l"><a href="#846">846 </a>            <span class="php-comment">// Validate locale</span>
-</span><span id="847" class="l"><a href="#847">847 </a>            <span class="php-keyword1">if</span> (!<span class="php-keyword2">in_array</span>(<span class="php-var">$data</span>[<span class="php-quote">'locale'</span>], <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;getLocales())){
-</span><span id="848" class="l"><a href="#848">848 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_SPECIFY_LOCALE&quot;</span>);
-</span><span id="849" class="l"><a href="#849">849 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="850" class="l"><a href="#850">850 </a>            }
-</span><span id="851" class="l"><a href="#851">851 </a>        } <span class="php-keyword1">else</span> {
-</span><span id="852" class="l"><a href="#852">852 </a>            <span class="php-var">$data</span>[<span class="php-quote">'locale'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;locale;
-</span><span id="853" class="l"><a href="#853">853 </a>        }
-</span><span id="854" class="l"><a href="#854">854 </a>    
-</span><span id="855" class="l"><a href="#855">855 </a>        <span class="php-comment">// Validate display_name, if specified</span>
-</span><span id="856" class="l"><a href="#856">856 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>]) &amp;&amp; <span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>] != <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;display_name){
-</span><span id="857" class="l"><a href="#857">857 </a>            <span class="php-comment">// Check authorization</span>
-</span><span id="858" class="l"><a href="#858">858 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'display_name'</span>])){
-</span><span id="859" class="l"><a href="#859">859 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
-</span><span id="860" class="l"><a href="#860">860 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
-</span><span id="861" class="l"><a href="#861">861 </a>            }
-</span><span id="862" class="l"><a href="#862">862 </a>        } <span class="php-keyword1">else</span> {
-</span><span id="863" class="l"><a href="#863">863 </a>            <span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;display_name;
-</span><span id="864" class="l"><a href="#864">864 </a>        }
-</span><span id="865" class="l"><a href="#865">865 </a>    
-</span><span id="866" class="l"><a href="#866">866 </a>        <span class="php-comment">// Validate password, if specified and not empty</span>
-</span><span id="867" class="l"><a href="#867">867 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]) &amp;&amp; !<span class="php-keyword1">empty</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>])){
-</span><span id="868" class="l"><a href="#868">868 </a>            <span class="php-comment">// Check authorization</span>
-</span><span id="869" class="l"><a href="#869">869 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'password'</span>])){
-</span><span id="870" class="l"><a href="#870">870 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
-</span><span id="871" class="l"><a href="#871">871 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
-</span><span id="872" class="l"><a href="#872">872 </a>            }
-</span><span id="873" class="l"><a href="#873">873 </a>        } <span class="php-keyword1">else</span> {
-</span><span id="874" class="l"><a href="#874">874 </a>            <span class="php-comment">// Do not pass to model if no password is specified</span>
-</span><span id="875" class="l"><a href="#875">875 </a>            <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]);
-</span><span id="876" class="l"><a href="#876">876 </a>            <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordc'</span>]);
-</span><span id="877" class="l"><a href="#877">877 </a>        }  
-</span><span id="878" class="l"><a href="#878">878 </a>        
-</span><span id="879" class="l"><a href="#879">879 </a>        <span class="php-comment">// Set up Fortress to validate the request</span>
-</span><span id="880" class="l"><a href="#880">880 </a>        <span class="php-var">$rf</span> = <span class="php-keyword1">new</span> \Fortress\HTTPRequestFortress(<span class="php-var">$ms</span>, <span class="php-var">$requestSchema</span>, <span class="php-var">$data</span>);
-</span><span id="881" class="l"><a href="#881">881 </a>        
-</span><span id="882" class="l"><a href="#882">882 </a>        <span class="php-comment">// Validate</span>
-</span><span id="883" class="l"><a href="#883">883 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$rf</span>-&gt;validate()) {
-</span><span id="884" class="l"><a href="#884">884 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
-</span><span id="885" class="l"><a href="#885">885 </a>        }    
-</span><span id="886" class="l"><a href="#886">886 </a>        
-</span><span id="887" class="l"><a href="#887">887 </a>        <span class="php-comment">// If a new password was specified, hash it.</span>
-</span><span id="888" class="l"><a href="#888">888 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]))
-</span><span id="889" class="l"><a href="#889">889 </a>            <span class="php-var">$data</span>[<span class="php-quote">'password'</span>] = Authentication::hashPassword(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]);
-</span><span id="890" class="l"><a href="#890">890 </a>        
-</span><span id="891" class="l"><a href="#891">891 </a>        <span class="php-comment">// Remove passwordc, passwordcheck</span>
-</span><span id="892" class="l"><a href="#892">892 </a>        <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordc'</span>]);
-</span><span id="893" class="l"><a href="#893">893 </a>        <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordcheck'</span>]);
-</span><span id="894" class="l"><a href="#894">894 </a>        
-</span><span id="895" class="l"><a href="#895">895 </a>        <span class="php-comment">// Looks good, let's update with new values!</span>
-</span><span id="896" class="l"><a href="#896">896 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$data</span> <span class="php-keyword1">as</span> <span class="php-var">$name</span> =&gt; <span class="php-var">$value</span>){
-</span><span id="897" class="l"><a href="#897">897 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;<span class="php-var">$name</span> = <span class="php-var">$value</span>;
-</span><span id="898" class="l"><a href="#898">898 </a>        }
-</span><span id="899" class="l"><a href="#899">899 </a>        
-</span><span id="900" class="l"><a href="#900">900 </a>        <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;store();
-</span><span id="901" class="l"><a href="#901">901 </a>        
-</span><span id="902" class="l"><a href="#902">902 </a>        <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_SETTINGS_UPDATED&quot;</span>);
-</span><span id="903" class="l"><a href="#903">903 </a>    }    
-</span><span id="904" class="l"><a href="#904">904 </a>    
-</span><span id="905" class="l"><a href="#905">905 </a>    <span class="php-comment">/**
-</span></span><span id="906" class="l"><a href="#906">906 </a><span class="php-comment">     * Generates a new captcha.
-</span></span><span id="907" class="l"><a href="#907">907 </a><span class="php-comment">     *
-</span></span><span id="908" class="l"><a href="#908">908 </a><span class="php-comment">     * Wrapper for UserFrosting::generateCaptcha()
-</span></span><span id="909" class="l"><a href="#909">909 </a><span class="php-comment">     * Request type: GET     
-</span></span><span id="910" class="l"><a href="#910">910 </a><span class="php-comment">     */</span>        
-</span><span id="911" class="l"><a href="#911">911 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> captcha(){
-</span><span id="912" class="l"><a href="#912">912 </a>        <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;generateCaptcha();
-</span><span id="913" class="l"><a href="#913">913 </a>    }  
-</span><span id="914" class="l"><a href="#914">914 </a>}
-</span><span id="915" class="l"><a href="#915">915 </a></span></code></pre>
+</span><span id="681" class="l"><a href="#681">681 </a>        <span class="php-comment">// Fetch the user with the specified secret token and who has a pending password reset request</span>
+</span><span id="682" class="l"><a href="#682">682 </a>        <span class="php-var">$user</span> = User::where(<span class="php-quote">'secret_token'</span>, <span class="php-var">$data</span>[<span class="php-quote">'secret_token'</span>])
+</span><span id="683" class="l"><a href="#683">683 </a>                    -&gt;where(<span class="php-quote">'flag_password_reset'</span>, <span class="php-quote">&quot;1&quot;</span>)-&gt;first();
+</span><span id="684" class="l"><a href="#684">684 </a>        
+</span><span id="685" class="l"><a href="#685">685 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$user</span>){
+</span><span id="686" class="l"><a href="#686">686 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;FORGOTPASS_INVALID_TOKEN&quot;</span>);
+</span><span id="687" class="l"><a href="#687">687 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
+</span><span id="688" class="l"><a href="#688">688 </a>        }
+</span><span id="689" class="l"><a href="#689">689 </a>        
+</span><span id="690" class="l"><a href="#690">690 </a>        <span class="php-comment">// Reset the password flag</span>
+</span><span id="691" class="l"><a href="#691">691 </a>        <span class="php-var">$user</span>-&gt;flag_password_reset = <span class="php-quote">&quot;0&quot;</span>;   
+</span><span id="692" class="l"><a href="#692">692 </a>        
+</span><span id="693" class="l"><a href="#693">693 </a>        <span class="php-comment">// Store the updated info</span>
+</span><span id="694" class="l"><a href="#694">694 </a>        <span class="php-var">$user</span>-&gt;store();
+</span><span id="695" class="l"><a href="#695">695 </a>        <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;FORGOTPASS_REQUEST_CANNED&quot;</span>);
+</span><span id="696" class="l"><a href="#696">696 </a>        <span class="php-var">$this</span>-&gt;_app-&gt;redirect(<span class="php-var">$this</span>-&gt;_app-&gt;urlFor(<span class="php-quote">'uri_home'</span>));
+</span><span id="697" class="l"><a href="#697">697 </a>    }
+</span><span id="698" class="l"><a href="#698">698 </a>    
+</span><span id="699" class="l"><a href="#699">699 </a>    <span class="php-comment">/**
+</span></span><span id="700" class="l"><a href="#700">700 </a><span class="php-comment">     * Processes a request to resend the activation email for a new user account.
+</span></span><span id="701" class="l"><a href="#701">701 </a><span class="php-comment">     *
+</span></span><span id="702" class="l"><a href="#702">702 </a><span class="php-comment">     * Processes the request from the resend activation email form, checking that:
+</span></span><span id="703" class="l"><a href="#703">703 </a><span class="php-comment">     * 1. The provided username is associated with an existing user account;
+</span></span><span id="704" class="l"><a href="#704">704 </a><span class="php-comment">     * 2. The provided email matches the user account;
+</span></span><span id="705" class="l"><a href="#705">705 </a><span class="php-comment">     * 3. The user account is not already active;
+</span></span><span id="706" class="l"><a href="#706">706 </a><span class="php-comment">     * 4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
+</span></span><span id="707" class="l"><a href="#707">707 </a><span class="php-comment">     * 5. The submitted data is valid.
+</span></span><span id="708" class="l"><a href="#708">708 </a><span class="php-comment">     * This route is &quot;public access&quot;.
+</span></span><span id="709" class="l"><a href="#709">709 </a><span class="php-comment">     * Request type: POST
+</span></span><span id="710" class="l"><a href="#710">710 </a><span class="php-comment">     * @todo Again, just like with password reset - do we really need to get the user's user_name to do this?
+</span></span><span id="711" class="l"><a href="#711">711 </a><span class="php-comment">     */</span>         
+</span><span id="712" class="l"><a href="#712">712 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> resendActivation(){
+</span><span id="713" class="l"><a href="#713">713 </a>        <span class="php-var">$data</span> = <span class="php-var">$this</span>-&gt;_app-&gt;request-&gt;post();
+</span><span id="714" class="l"><a href="#714">714 </a>        
+</span><span id="715" class="l"><a href="#715">715 </a>        <span class="php-comment">// Load the request schema</span>
+</span><span id="716" class="l"><a href="#716">716 </a>        <span class="php-var">$requestSchema</span> = <span class="php-keyword1">new</span> \Fortress\RequestSchema(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'schema.path'</span>) . <span class="php-quote">&quot;/forms/resend-activation.json&quot;</span>);
+</span><span id="717" class="l"><a href="#717">717 </a>        
+</span><span id="718" class="l"><a href="#718">718 </a>        <span class="php-comment">// Get the alert message stream</span>
+</span><span id="719" class="l"><a href="#719">719 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts; 
+</span><span id="720" class="l"><a href="#720">720 </a>        
+</span><span id="721" class="l"><a href="#721">721 </a>        <span class="php-comment">// Set up Fortress to validate the request</span>
+</span><span id="722" class="l"><a href="#722">722 </a>        <span class="php-var">$rf</span> = <span class="php-keyword1">new</span> \Fortress\HTTPRequestFortress(<span class="php-var">$ms</span>, <span class="php-var">$requestSchema</span>, <span class="php-var">$data</span>);
+</span><span id="723" class="l"><a href="#723">723 </a>        
+</span><span id="724" class="l"><a href="#724">724 </a>        <span class="php-comment">// Validate</span>
+</span><span id="725" class="l"><a href="#725">725 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$rf</span>-&gt;validate()) {
+</span><span id="726" class="l"><a href="#726">726 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="727" class="l"><a href="#727">727 </a>        }    
+</span><span id="728" class="l"><a href="#728">728 </a>        
+</span><span id="729" class="l"><a href="#729">729 </a>        <span class="php-comment">// Load the user, by username</span>
+</span><span id="730" class="l"><a href="#730">730 </a>        <span class="php-var">$user</span> = User::where(<span class="php-quote">'user_name'</span>, <span class="php-var">$data</span>[<span class="php-quote">'user_name'</span>])-&gt;first();        
+</span><span id="731" class="l"><a href="#731">731 </a>        
+</span><span id="732" class="l"><a href="#732">732 </a>        <span class="php-comment">// Check that the username exists</span>
+</span><span id="733" class="l"><a href="#733">733 </a>        <span class="php-keyword1">if</span>(!<span class="php-var">$user</span>) {
+</span><span id="734" class="l"><a href="#734">734 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_INVALID_USERNAME&quot;</span>);
+</span><span id="735" class="l"><a href="#735">735 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="736" class="l"><a href="#736">736 </a>        }
+</span><span id="737" class="l"><a href="#737">737 </a>        
+</span><span id="738" class="l"><a href="#738">738 </a>        <span class="php-comment">// Check that the specified email is correct</span>
+</span><span id="739" class="l"><a href="#739">739 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strtolower</span>(<span class="php-var">$user</span>-&gt;email) != <span class="php-keyword2">strtolower</span>(<span class="php-var">$data</span>[<span class="php-quote">'email'</span>])){
+</span><span id="740" class="l"><a href="#740">740 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_USER_OR_EMAIL_INVALID&quot;</span>);
+</span><span id="741" class="l"><a href="#741">741 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="742" class="l"><a href="#742">742 </a>        }
+</span><span id="743" class="l"><a href="#743">743 </a>        
+</span><span id="744" class="l"><a href="#744">744 </a>        <span class="php-comment">// Check if user's account is already active</span>
+</span><span id="745" class="l"><a href="#745">745 </a>        <span class="php-keyword1">if</span> (<span class="php-var">$user</span>-&gt;flag_verified == <span class="php-quote">&quot;1&quot;</span>) {
+</span><span id="746" class="l"><a href="#746">746 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_ALREADY_ACTIVE&quot;</span>);
+</span><span id="747" class="l"><a href="#747">747 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="748" class="l"><a href="#748">748 </a>        }
+</span><span id="749" class="l"><a href="#749">749 </a>        
+</span><span id="750" class="l"><a href="#750">750 </a>        <span class="php-comment">// Get the most recent account verification request time</span>
+</span><span id="751" class="l"><a href="#751">751 </a>        <span class="php-var">$last_verification_request_time</span> = <span class="php-var">$user</span>-&gt;lastEventTime(<span class="php-quote">'verification_request'</span>);
+</span><span id="752" class="l"><a href="#752">752 </a>        <span class="php-var">$last_verification_request_time</span> = <span class="php-var">$last_verification_request_time</span> ? <span class="php-var">$last_verification_request_time</span> : <span class="php-quote">&quot;0000-00-00 00:00:00&quot;</span>;
+</span><span id="753" class="l"><a href="#753">753 </a>        
+</span><span id="754" class="l"><a href="#754">754 </a>        <span class="php-comment">// Check the time since the last activation request</span>
+</span><span id="755" class="l"><a href="#755">755 </a>        <span class="php-var">$current_time</span> = <span class="php-keyword1">new</span> \DateTime(<span class="php-quote">&quot;now&quot;</span>);
+</span><span id="756" class="l"><a href="#756">756 </a>        <span class="php-var">$last_verification_request_datetime</span> = <span class="php-keyword1">new</span> \DateTime(<span class="php-var">$last_verification_request_time</span>);
+</span><span id="757" class="l"><a href="#757">757 </a>        <span class="php-var">$time_since_last_request</span> = <span class="php-var">$current_time</span>-&gt;getTimestamp() - <span class="php-var">$last_verification_request_datetime</span>-&gt;getTimestamp();
+</span><span id="758" class="l"><a href="#758">758 </a>
+</span><span id="759" class="l"><a href="#759">759 </a>        <span class="php-comment">// If an activation request has been sent too recently, they must wait</span>
+</span><span id="760" class="l"><a href="#760">760 </a>        <span class="php-keyword1">if</span>(<span class="php-var">$time_since_last_request</span> &lt; <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;resend_activation_threshold || <span class="php-var">$time_since_last_request</span> &lt; <span class="php-num">0</span>){
+</span><span id="761" class="l"><a href="#761">761 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_LINK_ALREADY_SENT&quot;</span>, [<span class="php-quote">&quot;resend_activation_threshold&quot;</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;resend_activation_threshold]);
+</span><span id="762" class="l"><a href="#762">762 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">429</span>); <span class="php-comment">// &quot;Too many requests&quot; code (http://tools.ietf.org/html/rfc6585#section-4)</span>
+</span><span id="763" class="l"><a href="#763">763 </a>        }
+</span><span id="764" class="l"><a href="#764">764 </a>        
+</span><span id="765" class="l"><a href="#765">765 </a>        <span class="php-comment">// We're good to go - create a new verification request and send the email</span>
+</span><span id="766" class="l"><a href="#766">766 </a>        <span class="php-var">$user</span>-&gt;newEventVerificationRequest();
+</span><span id="767" class="l"><a href="#767">767 </a>        
+</span><span id="768" class="l"><a href="#768">768 </a>        <span class="php-comment">// Email the user</span>
+</span><span id="769" class="l"><a href="#769">769 </a>        <span class="php-var">$twig</span> = <span class="php-var">$this</span>-&gt;_app-&gt;view()-&gt;getEnvironment();
+</span><span id="770" class="l"><a href="#770">770 </a>        <span class="php-var">$template</span> = <span class="php-var">$twig</span>-&gt;loadTemplate(<span class="php-quote">&quot;mail/resend-activation.twig&quot;</span>);        
+</span><span id="771" class="l"><a href="#771">771 </a>        <span class="php-var">$notification</span> = <span class="php-keyword1">new</span> Notification(<span class="php-var">$template</span>);
+</span><span id="772" class="l"><a href="#772">772 </a>        <span class="php-var">$notification</span>-&gt;fromWebsite();      <span class="php-comment">// Automatically sets sender and reply-to</span>
+</span><span id="773" class="l"><a href="#773">773 </a>        <span class="php-var">$notification</span>-&gt;addEmailRecipient(<span class="php-var">$user</span>-&gt;email, <span class="php-var">$user</span>-&gt;display_name, [
+</span><span id="774" class="l"><a href="#774">774 </a>            <span class="php-quote">&quot;user&quot;</span> =&gt; <span class="php-var">$user</span>,
+</span><span id="775" class="l"><a href="#775">775 </a>            <span class="php-quote">&quot;secret_token&quot;</span> =&gt; <span class="php-var">$user</span>-&gt;secret_token
+</span><span id="776" class="l"><a href="#776">776 </a>        ]);
+</span><span id="777" class="l"><a href="#777">777 </a>        
+</span><span id="778" class="l"><a href="#778">778 </a>        <span class="php-keyword1">try</span> {
+</span><span id="779" class="l"><a href="#779">779 </a>            <span class="php-var">$notification</span>-&gt;send();
+</span><span id="780" class="l"><a href="#780">780 </a>        } <span class="php-keyword1">catch</span> (\phpmailerException <span class="php-var">$e</span>){
+</span><span id="781" class="l"><a href="#781">781 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;MAIL_ERROR&quot;</span>);
+</span><span id="782" class="l"><a href="#782">782 </a>            <span class="php-keyword2">error_log</span>(<span class="php-quote">'Mailer Error: '</span> . <span class="php-var">$e</span>-&gt;errorMessage());
+</span><span id="783" class="l"><a href="#783">783 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">500</span>);
+</span><span id="784" class="l"><a href="#784">784 </a>        }
+</span><span id="785" class="l"><a href="#785">785 </a>
+</span><span id="786" class="l"><a href="#786">786 </a>        <span class="php-var">$user</span>-&gt;save();
+</span><span id="787" class="l"><a href="#787">787 </a>        <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_NEW_ACTIVATION_SENT&quot;</span>);
+</span><span id="788" class="l"><a href="#788">788 </a>    }
+</span><span id="789" class="l"><a href="#789">789 </a>    
+</span><span id="790" class="l"><a href="#790">790 </a>    <span class="php-comment">/**
+</span></span><span id="791" class="l"><a href="#791">791 </a><span class="php-comment">     * Processes a request to update a user's account information.
+</span></span><span id="792" class="l"><a href="#792">792 </a><span class="php-comment">     *
+</span></span><span id="793" class="l"><a href="#793">793 </a><span class="php-comment">     * Processes the request from the user account settings form, checking that:
+</span></span><span id="794" class="l"><a href="#794">794 </a><span class="php-comment">     * 1. The user correctly input their current password;
+</span></span><span id="795" class="l"><a href="#795">795 </a><span class="php-comment">     * 2. They have the necessary permissions to update the posted field(s);
+</span></span><span id="796" class="l"><a href="#796">796 </a><span class="php-comment">     * 3. The submitted data is valid.
+</span></span><span id="797" class="l"><a href="#797">797 </a><span class="php-comment">     * This route requires authentication.
+</span></span><span id="798" class="l"><a href="#798">798 </a><span class="php-comment">     * Request type: POST     
+</span></span><span id="799" class="l"><a href="#799">799 </a><span class="php-comment">     */</span>         
+</span><span id="800" class="l"><a href="#800">800 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> accountSettings(){
+</span><span id="801" class="l"><a href="#801">801 </a>        <span class="php-comment">// Load the request schema</span>
+</span><span id="802" class="l"><a href="#802">802 </a>        <span class="php-var">$requestSchema</span> = <span class="php-keyword1">new</span> \Fortress\RequestSchema(<span class="php-var">$this</span>-&gt;_app-&gt;config(<span class="php-quote">'schema.path'</span>) . <span class="php-quote">&quot;/forms/account-settings.json&quot;</span>);
+</span><span id="803" class="l"><a href="#803">803 </a>        
+</span><span id="804" class="l"><a href="#804">804 </a>        <span class="php-comment">// Get the alert message stream</span>
+</span><span id="805" class="l"><a href="#805">805 </a>        <span class="php-var">$ms</span> = <span class="php-var">$this</span>-&gt;_app-&gt;alerts; 
+</span><span id="806" class="l"><a href="#806">806 </a>        
+</span><span id="807" class="l"><a href="#807">807 </a>        <span class="php-comment">// Access control for entire page</span>
+</span><span id="808" class="l"><a href="#808">808 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'uri_account_settings'</span>)){
+</span><span id="809" class="l"><a href="#809">809 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
+</span><span id="810" class="l"><a href="#810">810 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
+</span><span id="811" class="l"><a href="#811">811 </a>        }
+</span><span id="812" class="l"><a href="#812">812 </a>        
+</span><span id="813" class="l"><a href="#813">813 </a>        <span class="php-var">$data</span> = <span class="php-var">$this</span>-&gt;_app-&gt;request-&gt;post();
+</span><span id="814" class="l"><a href="#814">814 </a>        
+</span><span id="815" class="l"><a href="#815">815 </a>        <span class="php-comment">// Remove csrf_token</span>
+</span><span id="816" class="l"><a href="#816">816 </a>        <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'csrf_token'</span>]);
+</span><span id="817" class="l"><a href="#817">817 </a>        
+</span><span id="818" class="l"><a href="#818">818 </a>        <span class="php-comment">// Check current password</span>
+</span><span id="819" class="l"><a href="#819">819 </a>        <span class="php-keyword1">if</span> (!<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordcheck'</span>]) || !<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;verifyPassword(<span class="php-var">$data</span>[<span class="php-quote">'passwordcheck'</span>])){
+</span><span id="820" class="l"><a href="#820">820 </a>            <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_PASSWORD_INVALID&quot;</span>);
+</span><span id="821" class="l"><a href="#821">821 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
+</span><span id="822" class="l"><a href="#822">822 </a>        }        
+</span><span id="823" class="l"><a href="#823">823 </a>        
+</span><span id="824" class="l"><a href="#824">824 </a>        <span class="php-comment">// Validate new email, if specified</span>
+</span><span id="825" class="l"><a href="#825">825 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'email'</span>]) &amp;&amp; <span class="php-var">$data</span>[<span class="php-quote">'email'</span>] != <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;email){
+</span><span id="826" class="l"><a href="#826">826 </a>            <span class="php-comment">// Check authorization</span>
+</span><span id="827" class="l"><a href="#827">827 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'email'</span>])){
+</span><span id="828" class="l"><a href="#828">828 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
+</span><span id="829" class="l"><a href="#829">829 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
+</span><span id="830" class="l"><a href="#830">830 </a>            }
+</span><span id="831" class="l"><a href="#831">831 </a>            <span class="php-comment">// Check if address is in use</span>
+</span><span id="832" class="l"><a href="#832">832 </a>            <span class="php-keyword1">if</span> (User::where(<span class="php-quote">'email'</span>, <span class="php-var">$data</span>[<span class="php-quote">'email'</span>])-&gt;first()){
+</span><span id="833" class="l"><a href="#833">833 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_EMAIL_IN_USE&quot;</span>, <span class="php-var">$data</span>);
+</span><span id="834" class="l"><a href="#834">834 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="835" class="l"><a href="#835">835 </a>            }            
+</span><span id="836" class="l"><a href="#836">836 </a>        } <span class="php-keyword1">else</span> {
+</span><span id="837" class="l"><a href="#837">837 </a>            <span class="php-var">$data</span>[<span class="php-quote">'email'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;email;
+</span><span id="838" class="l"><a href="#838">838 </a>        }
+</span><span id="839" class="l"><a href="#839">839 </a>            
+</span><span id="840" class="l"><a href="#840">840 </a>        <span class="php-comment">// Validate locale, if specified</span>
+</span><span id="841" class="l"><a href="#841">841 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'locale'</span>]) &amp;&amp; <span class="php-var">$data</span>[<span class="php-quote">'locale'</span>] != <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;locale){
+</span><span id="842" class="l"><a href="#842">842 </a>            <span class="php-comment">// Check authorization</span>
+</span><span id="843" class="l"><a href="#843">843 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'locale'</span>])){
+</span><span id="844" class="l"><a href="#844">844 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
+</span><span id="845" class="l"><a href="#845">845 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
+</span><span id="846" class="l"><a href="#846">846 </a>            }
+</span><span id="847" class="l"><a href="#847">847 </a>            <span class="php-comment">// Validate locale</span>
+</span><span id="848" class="l"><a href="#848">848 </a>            <span class="php-keyword1">if</span> (!<span class="php-keyword2">in_array</span>(<span class="php-var">$data</span>[<span class="php-quote">'locale'</span>], <span class="php-var">$this</span>-&gt;_app-&gt;site-&gt;getLocales())){
+</span><span id="849" class="l"><a href="#849">849 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCOUNT_SPECIFY_LOCALE&quot;</span>);
+</span><span id="850" class="l"><a href="#850">850 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="851" class="l"><a href="#851">851 </a>            }
+</span><span id="852" class="l"><a href="#852">852 </a>        } <span class="php-keyword1">else</span> {
+</span><span id="853" class="l"><a href="#853">853 </a>            <span class="php-var">$data</span>[<span class="php-quote">'locale'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;locale;
+</span><span id="854" class="l"><a href="#854">854 </a>        }
+</span><span id="855" class="l"><a href="#855">855 </a>    
+</span><span id="856" class="l"><a href="#856">856 </a>        <span class="php-comment">// Validate display_name, if specified</span>
+</span><span id="857" class="l"><a href="#857">857 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>]) &amp;&amp; <span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>] != <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;display_name){
+</span><span id="858" class="l"><a href="#858">858 </a>            <span class="php-comment">// Check authorization</span>
+</span><span id="859" class="l"><a href="#859">859 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'display_name'</span>])){
+</span><span id="860" class="l"><a href="#860">860 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
+</span><span id="861" class="l"><a href="#861">861 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
+</span><span id="862" class="l"><a href="#862">862 </a>            }
+</span><span id="863" class="l"><a href="#863">863 </a>        } <span class="php-keyword1">else</span> {
+</span><span id="864" class="l"><a href="#864">864 </a>            <span class="php-var">$data</span>[<span class="php-quote">'display_name'</span>] = <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;display_name;
+</span><span id="865" class="l"><a href="#865">865 </a>        }
+</span><span id="866" class="l"><a href="#866">866 </a>    
+</span><span id="867" class="l"><a href="#867">867 </a>        <span class="php-comment">// Validate password, if specified and not empty</span>
+</span><span id="868" class="l"><a href="#868">868 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]) &amp;&amp; !<span class="php-keyword1">empty</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>])){
+</span><span id="869" class="l"><a href="#869">869 </a>            <span class="php-comment">// Check authorization</span>
+</span><span id="870" class="l"><a href="#870">870 </a>            <span class="php-keyword1">if</span> (!<span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;checkAccess(<span class="php-quote">'update_account_setting'</span>, [<span class="php-quote">'user'</span> =&gt; <span class="php-var">$this</span>-&gt;_app-&gt;user, <span class="php-quote">'property'</span> =&gt; <span class="php-quote">'password'</span>])){
+</span><span id="871" class="l"><a href="#871">871 </a>                <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;danger&quot;</span>, <span class="php-quote">&quot;ACCESS_DENIED&quot;</span>);
+</span><span id="872" class="l"><a href="#872">872 </a>                <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">403</span>);
+</span><span id="873" class="l"><a href="#873">873 </a>            }
+</span><span id="874" class="l"><a href="#874">874 </a>        } <span class="php-keyword1">else</span> {
+</span><span id="875" class="l"><a href="#875">875 </a>            <span class="php-comment">// Do not pass to model if no password is specified</span>
+</span><span id="876" class="l"><a href="#876">876 </a>            <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]);
+</span><span id="877" class="l"><a href="#877">877 </a>            <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordc'</span>]);
+</span><span id="878" class="l"><a href="#878">878 </a>        }  
+</span><span id="879" class="l"><a href="#879">879 </a>        
+</span><span id="880" class="l"><a href="#880">880 </a>        <span class="php-comment">// Set up Fortress to validate the request</span>
+</span><span id="881" class="l"><a href="#881">881 </a>        <span class="php-var">$rf</span> = <span class="php-keyword1">new</span> \Fortress\HTTPRequestFortress(<span class="php-var">$ms</span>, <span class="php-var">$requestSchema</span>, <span class="php-var">$data</span>);
+</span><span id="882" class="l"><a href="#882">882 </a>        
+</span><span id="883" class="l"><a href="#883">883 </a>        <span class="php-comment">// Validate</span>
+</span><span id="884" class="l"><a href="#884">884 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$rf</span>-&gt;validate()) {
+</span><span id="885" class="l"><a href="#885">885 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;halt(<span class="php-num">400</span>);
+</span><span id="886" class="l"><a href="#886">886 </a>        }    
+</span><span id="887" class="l"><a href="#887">887 </a>        
+</span><span id="888" class="l"><a href="#888">888 </a>        <span class="php-comment">// If a new password was specified, hash it.</span>
+</span><span id="889" class="l"><a href="#889">889 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]))
+</span><span id="890" class="l"><a href="#890">890 </a>            <span class="php-var">$data</span>[<span class="php-quote">'password'</span>] = Authentication::hashPassword(<span class="php-var">$data</span>[<span class="php-quote">'password'</span>]);
+</span><span id="891" class="l"><a href="#891">891 </a>        
+</span><span id="892" class="l"><a href="#892">892 </a>        <span class="php-comment">// Remove passwordc, passwordcheck</span>
+</span><span id="893" class="l"><a href="#893">893 </a>        <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordc'</span>]);
+</span><span id="894" class="l"><a href="#894">894 </a>        <span class="php-keyword1">unset</span>(<span class="php-var">$data</span>[<span class="php-quote">'passwordcheck'</span>]);
+</span><span id="895" class="l"><a href="#895">895 </a>        
+</span><span id="896" class="l"><a href="#896">896 </a>        <span class="php-comment">// Looks good, let's update with new values!</span>
+</span><span id="897" class="l"><a href="#897">897 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$data</span> <span class="php-keyword1">as</span> <span class="php-var">$name</span> =&gt; <span class="php-var">$value</span>){
+</span><span id="898" class="l"><a href="#898">898 </a>            <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;<span class="php-var">$name</span> = <span class="php-var">$value</span>;
+</span><span id="899" class="l"><a href="#899">899 </a>        }
+</span><span id="900" class="l"><a href="#900">900 </a>        
+</span><span id="901" class="l"><a href="#901">901 </a>        <span class="php-var">$this</span>-&gt;_app-&gt;user-&gt;store();
+</span><span id="902" class="l"><a href="#902">902 </a>        
+</span><span id="903" class="l"><a href="#903">903 </a>        <span class="php-var">$ms</span>-&gt;addMessageTranslated(<span class="php-quote">&quot;success&quot;</span>, <span class="php-quote">&quot;ACCOUNT_SETTINGS_UPDATED&quot;</span>);
+</span><span id="904" class="l"><a href="#904">904 </a>    }    
+</span><span id="905" class="l"><a href="#905">905 </a>    
+</span><span id="906" class="l"><a href="#906">906 </a>    <span class="php-comment">/**
+</span></span><span id="907" class="l"><a href="#907">907 </a><span class="php-comment">     * Generates a new captcha.
+</span></span><span id="908" class="l"><a href="#908">908 </a><span class="php-comment">     *
+</span></span><span id="909" class="l"><a href="#909">909 </a><span class="php-comment">     * Wrapper for UserFrosting::generateCaptcha()
+</span></span><span id="910" class="l"><a href="#910">910 </a><span class="php-comment">     * Request type: GET     
+</span></span><span id="911" class="l"><a href="#911">911 </a><span class="php-comment">     */</span>        
+</span><span id="912" class="l"><a href="#912">912 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> captcha(){
+</span><span id="913" class="l"><a href="#913">913 </a>        <span class="php-keyword1">echo</span> <span class="php-var">$this</span>-&gt;generateCaptcha();
+</span><span id="914" class="l"><a href="#914">914 </a>    }  
+</span><span id="915" class="l"><a href="#915">915 </a>}
+</span><span id="916" class="l"><a href="#916">916 </a></span></code></pre>
 	</div>
 
 	<div id="footer">

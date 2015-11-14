@@ -307,7 +307,7 @@
 </span><span id="175" class="l"><a href="#175">175 </a>            
 </span><span id="176" class="l"><a href="#176">176 </a>        <span class="php-var">$connection</span>-&gt;statement(<span class="php-quote">&quot;CREATE TABLE IF NOT EXISTS `&quot;</span> . <span class="php-keyword1">static</span>::getSchemaTable(<span class="php-quote">'authorize_group'</span>)-&gt;name . <span class="php-quote">&quot;` (
 </span></span><span id="177" class="l"><a href="#177">177 </a><span class="php-quote">            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-</span></span><span id="178" class="l"><a href="#178">178 </a><span class="php-quote">            `group_id` int(11) NOT NULL,
+</span></span><span id="178" class="l"><a href="#178">178 </a><span class="php-quote">            `group_id` int(10) unsigned NOT NULL,
 </span></span><span id="179" class="l"><a href="#179">179 </a><span class="php-quote">            `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the group has access to.',
 </span></span><span id="180" class="l"><a href="#180">180 </a><span class="php-quote">            `conditions` text NOT NULL COMMENT 'The conditions under which members of this group have access to this hook.',
 </span></span><span id="181" class="l"><a href="#181">181 </a><span class="php-quote">            PRIMARY KEY (`id`)
@@ -315,14 +315,14 @@
 </span><span id="183" class="l"><a href="#183">183 </a>          
 </span><span id="184" class="l"><a href="#184">184 </a>        <span class="php-var">$connection</span>-&gt;statement(<span class="php-quote">&quot;CREATE TABLE IF NOT EXISTS `&quot;</span> . <span class="php-keyword1">static</span>::getSchemaTable(<span class="php-quote">'authorize_user'</span>)-&gt;name . <span class="php-quote">&quot;` (
 </span></span><span id="185" class="l"><a href="#185">185 </a><span class="php-quote">            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-</span></span><span id="186" class="l"><a href="#186">186 </a><span class="php-quote">            `user_id` int(11) NOT NULL,
+</span></span><span id="186" class="l"><a href="#186">186 </a><span class="php-quote">            `user_id` int(10) unsigned NOT NULL,
 </span></span><span id="187" class="l"><a href="#187">187 </a><span class="php-quote">            `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the user has access to.',
 </span></span><span id="188" class="l"><a href="#188">188 </a><span class="php-quote">            `conditions` text NOT NULL COMMENT 'The conditions under which the user has access to this action.',
 </span></span><span id="189" class="l"><a href="#189">189 </a><span class="php-quote">            PRIMARY KEY (`id`)
 </span></span><span id="190" class="l"><a href="#190">190 </a><span class="php-quote">          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;&quot;</span>);
 </span><span id="191" class="l"><a href="#191">191 </a>              
 </span><span id="192" class="l"><a href="#192">192 </a>        <span class="php-var">$connection</span>-&gt;statement(<span class="php-quote">&quot;CREATE TABLE IF NOT EXISTS `&quot;</span> . <span class="php-keyword1">static</span>::getSchemaTable(<span class="php-quote">'group'</span>)-&gt;name . <span class="php-quote">&quot;` (
-</span></span><span id="193" class="l"><a href="#193">193 </a><span class="php-quote">            `id` int(11) NOT NULL AUTO_INCREMENT,
+</span></span><span id="193" class="l"><a href="#193">193 </a><span class="php-quote">            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 </span></span><span id="194" class="l"><a href="#194">194 </a><span class="php-quote">            `name` varchar(150) NOT NULL,
 </span></span><span id="195" class="l"><a href="#195">195 </a><span class="php-quote">            `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission is a default setting for new accounts.',
 </span></span><span id="196" class="l"><a href="#196">196 </a><span class="php-quote">            `can_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission can be deleted from the control panel.',
@@ -342,14 +342,14 @@
 </span></span><span id="210" class="l"><a href="#210">210 </a><span class="php-quote">          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Maps users to their group(s)' AUTO_INCREMENT=1 ;&quot;</span>);
 </span><span id="211" class="l"><a href="#211">211 </a>          
 </span><span id="212" class="l"><a href="#212">212 </a>        <span class="php-var">$connection</span>-&gt;statement(<span class="php-quote">&quot;CREATE TABLE IF NOT EXISTS `&quot;</span> . <span class="php-keyword1">static</span>::getSchemaTable(<span class="php-quote">'user'</span>)-&gt;name . <span class="php-quote">&quot;` (
-</span></span><span id="213" class="l"><a href="#213">213 </a><span class="php-quote">            `id` int(11) NOT NULL AUTO_INCREMENT,
+</span></span><span id="213" class="l"><a href="#213">213 </a><span class="php-quote">            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 </span></span><span id="214" class="l"><a href="#214">214 </a><span class="php-quote">            `user_name` varchar(50) NOT NULL,
 </span></span><span id="215" class="l"><a href="#215">215 </a><span class="php-quote">            `display_name` varchar(50) NOT NULL,
 </span></span><span id="216" class="l"><a href="#216">216 </a><span class="php-quote">            `email` varchar(150) NOT NULL,
 </span></span><span id="217" class="l"><a href="#217">217 </a><span class="php-quote">            `title` varchar(150) NOT NULL,
 </span></span><span id="218" class="l"><a href="#218">218 </a><span class="php-quote">            `locale` varchar(10) NOT NULL DEFAULT 'en_US' COMMENT 'The language and locale to use for this user.',
 </span></span><span id="219" class="l"><a href="#219">219 </a><span class="php-quote">            `primary_group_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'The id of this user''s primary group.',
-</span></span><span id="220" class="l"><a href="#220">220 </a><span class="php-quote">            `secret_token` varchar(32) NOT NULL COMMENT 'The current one-time use token for various user activities confirmed via email.',
+</span></span><span id="220" class="l"><a href="#220">220 </a><span class="php-quote">            `secret_token` varchar(32) NOT NULL DEFAULT '' COMMENT 'The current one-time use token for various user activities confirmed via email.',
 </span></span><span id="221" class="l"><a href="#221">221 </a><span class="php-quote">            `flag_verified` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user has verified their account via email, ''0'' otherwise.',
 </span></span><span id="222" class="l"><a href="#222">222 </a><span class="php-quote">            `flag_enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user''s account is currently enabled, ''0'' otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.',
 </span></span><span id="223" class="l"><a href="#223">223 </a><span class="php-quote">            `flag_password_reset` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Set to ''1'' if the user has an outstanding password reset request, ''0'' otherwise.',
@@ -361,7 +361,7 @@
 </span><span id="229" class="l"><a href="#229">229 </a>        
 </span><span id="230" class="l"><a href="#230">230 </a>        <span class="php-var">$connection</span>-&gt;statement(<span class="php-quote">&quot;CREATE TABLE IF NOT EXISTS `&quot;</span> . <span class="php-keyword1">static</span>::getSchemaTable(<span class="php-quote">'user_event'</span>)-&gt;name . <span class="php-quote">&quot;` ( 
 </span></span><span id="231" class="l"><a href="#231">231 </a><span class="php-quote">            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-</span></span><span id="232" class="l"><a href="#232">232 </a><span class="php-quote">            `user_id` int(11) NOT NULL,
+</span></span><span id="232" class="l"><a href="#232">232 </a><span class="php-quote">            `user_id` int(10) unsigned NOT NULL,
 </span></span><span id="233" class="l"><a href="#233">233 </a><span class="php-quote">            `event_type` varchar(255) NOT NULL COMMENT 'An identifier used to track the type of event.',
 </span></span><span id="234" class="l"><a href="#234">234 </a><span class="php-quote">            `occurred_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 </span></span><span id="235" class="l"><a href="#235">235 </a><span class="php-quote">            `description` text NOT NULL,
