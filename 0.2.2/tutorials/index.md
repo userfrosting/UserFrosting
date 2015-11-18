@@ -11,9 +11,9 @@ title: "UserFrosting: Tutorials and Help"
 
 ## Adding a new user field
 
-The most common question we get is "how do I add a new user field?"  We have created a [simple tutorial on our wiki]https://github.com/alexweissman/UserFrosting/wiki/0.2.2-only---How-to-add-a-new-user-field) to help you get started.  Please note that it is only a guide to help you get started, and only covers the very basics of modifying and extending UF.  To make more advanced changes, you must take the time to read through the code to understand the different components and how they interact.
+The most common question we get is "how do I add a new user field?"  We have created a [simple tutorial on our wiki]https://github.com/userfrosting/UserFrosting/wiki/0.2.2-only---How-to-add-a-new-user-field) to help you get started.  Please note that it is only a guide to help you get started, and only covers the very basics of modifying and extending UF.  To make more advanced changes, you must take the time to read through the code to understand the different components and how they interact.
 
-Please feel free to ask specific questions on our [Issues page](https://github.com/alexweissman/UserFrosting/issues), **after** you have spent time trying to figure it out yourself and **after** you have already searched the existing issues.  Also, remember that courtesy and proper grammar go a long way.  Please take the time to craft a precise, polite question.  We will do our best to help, but remember that this is an open source project - none of us are getting paid to develop this project, or act as your personal support hotline ;-)
+Please feel free to ask specific questions on our [Issues page](https://github.com/userfrosting/UserFrosting/issues), **after** you have spent time trying to figure it out yourself and **after** you have already searched the existing issues.  Also, remember that courtesy and proper grammar go a long way.  Please take the time to craft a precise, polite question.  We will do our best to help, but remember that this is an open source project - none of us are getting paid to develop this project, or act as your personal support hotline ;-)
 
 **If you post an issue on Github, please report any error messages you get.**  There are two main places where you may find error messages:
 
@@ -25,5 +25,5 @@ If you find a problem in any of the tutorials, let us know on the Issues page.  
 
 ## Adding new navigation menu items
 
-Please see the wiki page, https://github.com/alexweissman/UserFrosting/wiki/0.2.2-only---Adding-a-navigation-menu-item.
+Please see the wiki page, https://github.com/userfrosting/UserFrosting/wiki/0.2.2-only---Adding-a-navigation-menu-item.
 
