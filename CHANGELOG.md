@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.1.3.9
+
+Revert to loose comparison for `user_id`s because of issues with Ubuntu's PDO driver (see http://stackoverflow.com/questions/5323146/mysql-integer-field-is-returned-as-string-in-php#comment41836471_5323169)
+
 ## v0.1.3.8
 
 - Finish replacing all usages of `*Loader` classes with Eloquent syntax

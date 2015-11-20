@@ -41,7 +41,7 @@
             $controller = new UF\AccountController($app);
             $controller->pageHome();
         // If this is the first the root user is logging in, take them to site settings
-        } else if ($app->user->id === $app->config('user_id_master') && $app->site->install_status == "new"){
+        } else if ($app->user->id == $app->config('user_id_master') && $app->site->install_status == "new"){
             $app->site->install_status = "complete";
             $app->site->store();
             $app->alerts->addMessage("success", "Congratulations, you've successfully logged in for the first time.  Please take a moment to customize your site settings.");
