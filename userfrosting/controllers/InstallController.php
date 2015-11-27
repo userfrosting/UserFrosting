@@ -104,12 +104,20 @@ class InstallController extends \UserFrosting\BaseController {
             }            
             
             // Check for GD library (required for Captcha)
-            if (!(extension_loaded('gd') && function_exists('gd_info'))) {
+            if (!(extension_loaded('gd') && function_exists('gd_info'))) {                
                 $messages[] = [
                     "title" => "<i class='fa fa-warning'></i> GD library not installed",
-                    "message" => "We could not confirm that the <code>GD</code> library is installed and enabled.  GD is an image processing library that UserFrosting uses to generate captcha codes for user account registration.  If you don't need captcha, you can disable it in Site Settings and ignore this message.", 
+                    "message" => "We could not confirm that the <code>GD</code> library is installed and enabled.  GD is an image processing library that UserFrosting uses to generate captcha codes for user account registration.  If you don't need captcha, you can disable it in Site Settings and ignore this message.  Otherwise, please see the <a href='http://www.userfrosting.com/troubleshooting/' target='_blank'>troubleshooting guide</a> for information on installing and configuring GD.", 
                     "class" => "warning"
                 ];
+            } else {
+                if (!function_exists('imagepng')){
+                    $messages[] = [
+                        "title" => "<i class='fa fa-warning'></i> PNG operations not available",
+                        "message" => "The <code>GD</code> library is installed and enabled, but PNG functions do not seem to be available.  UserFrosting uses the PNG functions of GD, an image processing library, to generate captcha codes for user account registration.  If you don't need captcha, you can disable it in Site Settings and ignore this message.  Otherwise, please see the <a href='http://www.userfrosting.com/troubleshooting/' target='_blank'>troubleshooting guide</a> for information on updating GD to support PNG operations.", 
+                        "class" => "warning"
+                    ];
+                }
             }
             
             $this->_app->render('install/install-ready.twig', [
@@ -134,7 +142,7 @@ class InstallController extends \UserFrosting\BaseController {
         $ms = $this->_app->alerts;
         
         // Do not allow registering a master account if one has already been created     
-        if (UserLoader::exists($this->_app->config('user_id_master'))){
+        if (User::find($this->_app->config('user_id_master'))){
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_EXISTS");
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
@@ -173,7 +181,7 @@ class InstallController extends \UserFrosting\BaseController {
         }  
         
         // Do not allow registering a master account if one has already been created     
-        if (UserLoader::exists($this->_app->config('user_id_master'))){
+        if (User::find($this->_app->config('user_id_master'))){
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_EXISTS");
             $this->_app->halt(403); 
         }        
@@ -213,21 +221,24 @@ class InstallController extends \UserFrosting\BaseController {
         }
     
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primaryGroup = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
         $data['primary_group_id'] = $primaryGroup->id;
         // Set default title for new users
         $data['title'] = $primaryGroup->new_user_title;
         // Hash password
         $data['password'] = Authentication::hashPassword($data['password']);
             
-        // Create the user
-        $user = new User($data, $this->_app->config('user_id_master'));
-
+        // Create the master user
+        $user = new User($data);
+        $user->id = $this->_app->config('user_id_master');
+        
         // Add user to default groups, including default primary group
-        $defaultGroups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+        $defaultGroups = Group::where('is_default', GROUP_DEFAULT)->get();
         $user->addGroup($primaryGroup->id);
-        foreach ($defaultGroups as $group_id => $group)
+        foreach ($defaultGroups as $group) {
+            $group_id = $group->id;
             $user->addGroup($group_id);    
+        }
         
         // Add sign-up event
         $user->newEventSignUp();

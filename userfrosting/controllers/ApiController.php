@@ -30,11 +30,8 @@ class ApiController extends \UserFrosting\BaseController {
      * Generates a list of users, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
-     * @param int $page optional.  For paging, the page number to start with.
-     * @param int $size optional.  For paging, the number of results per page.
-     * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
      */        
-    public function listUsers($page = 0, $size = 10, $primary_group_name = null){
+    public function listUsers(){
         $get = $this->_app->request->get();
                 
         $size = isset($get['size']) ? $get['size'] : null;
@@ -43,9 +40,8 @@ class ApiController extends \UserFrosting\BaseController {
         $sort_order = isset($get['sort_order']) ? $get['sort_order'] : "asc";
         $filters = isset($get['filters']) ? $get['filters'] : [];
         $format = isset($get['format']) ? $get['format'] : "json";
-        $primary_group_name = isset($get['primary_group']) ? $get['primary_group'] : null;
+        $primary_group_name = isset($get['primary_group']) ? $get['primary_group'] : null;  
         
-                
         // Optional filtering by primary group
         if ($primary_group_name){
             $primary_group = Group::where('name', $primary_group_name)->first();

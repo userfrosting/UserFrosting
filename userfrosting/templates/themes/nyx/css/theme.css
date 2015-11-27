@@ -1,4 +1,172 @@
-/* CSS crunched with Crunch - http://crunchapp.net/ */
+/*
+ * nyx-cover (for guest pages)
+ */
+
+/* Links */
+.nyx-cover a,
+.nyx-cover a:focus,
+.nyx-cover a:hover {
+  color: #fff;
+}
+
+/* Custom default button */
+.nyx-cover .btn-default,
+.nyx-cover .btn-default:hover,
+.nyx-cover .btn-default:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritence from `body` */
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+
+/*
+ * Base structure
+ */
+
+html.nyx-cover,
+.nyx-cover body {
+  height: 100%;
+  background-color: #333;
+}
+.nyx-cover body {
+  padding-top: 0px;
+  padding-bottom: 0px;  
+}
+
+/* Extra markup and styles for table-esque vertical and horizontal centering */
+.nyx-cover .site-wrapper {
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  display: table;
+  width: 100%;
+  height: 100%; /* For at least Firefox */
+  min-height: 100%;
+  -webkit-box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+          box-shadow: inset 0 0 100px rgba(0,0,0,.5);
+}
+.nyx-cover .site-wrapper-inner {
+  display: table-cell;
+  vertical-align: top;
+}
+.nyx-cover .cover-container {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Padding for spacing */
+.nyx-cover .inner {
+  padding: 30px;
+}
+
+
+/*
+ * Header
+ */
+.nyx-cover .masthead-brand {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.nyx-cover .masthead-nav > li {
+  display: inline-block;
+}
+.nyx-cover .masthead-nav > li + li {
+  margin-left: 20px;
+}
+.nyx-cover .masthead-nav > li > a {
+  padding-right: 0;
+  padding-left: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff; /* IE8 proofing */
+  color: rgba(255,255,255,.75);
+  border-bottom: 2px solid transparent;
+}
+.nyx-cover .masthead-nav > li > a:hover,
+.nyx-cover .masthead-nav > li > a:focus {
+  background-color: transparent;
+  border-bottom-color: #a9a9a9;
+  border-bottom-color: rgba(255,255,255,.25);
+}
+.nyx-cover .masthead-nav > .active > a,
+.nyx-cover .masthead-nav > .active > a:hover,
+.nyx-cover .masthead-nav > .active > a:focus {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+@media (min-width: 768px) {
+  .nyx-cover .masthead-brand {
+    float: left;
+  }
+  .nyx-cover .masthead-nav {
+    float: right;
+  }
+}
+
+
+/*
+ * Cover
+ */
+
+.nyx-cover .cover {
+  padding: 0 20px;
+}
+.nyx-cover .cover .btn-lg {
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
+
+/*
+ * Footer
+ */
+
+.nyx-cover .mastfoot {
+  color: #999; /* IE8 proofing */
+  color: rgba(255,255,255,.5);
+}
+
+
+/*
+ * Affix and center
+ */
+
+@media (min-width: 768px) {
+  /* Pull out the header and footer */
+  .nyx-cover .masthead {
+    position: fixed;
+    top: 0;
+  }
+  .nyx-cover .mastfoot {
+    position: fixed;
+    bottom: 0;
+  }
+  /* Start the vertical centering */
+  .nyx-cover .site-wrapper-inner {
+    vertical-align: middle;
+  }
+  /* Handle the widths */
+  .nyx-cover .masthead,
+  .nyx-cover .mastfoot,
+  .nyx-cover .cover-container {
+    width: 100%; /* Must be percentage or pixels for horizontal alignment */
+  }
+}
+
+@media (min-width: 992px) {
+  .nyx-cover .masthead,
+  .nyx-cover .mastfoot,
+  .nyx-cover .cover-container {
+    width: 700px;
+  }
+}
+
+/*
+ * Styles for authenticated pages
+ */
+
 body {
   background-color: #ffffff;
 }
@@ -17,7 +185,8 @@ body {
     padding: 60px 30px 30px 30px;
     border-left: 1px solid #eeeeee;
   }
-}
+} 
+ 
 .navbar-header .navbar-brand {
   color: #ffffff;
 }

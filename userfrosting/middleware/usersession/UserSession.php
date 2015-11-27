@@ -37,6 +37,8 @@ class UserSession extends \Slim\Middleware {
             $storage = new \Birke\Rememberme\Storage\PDO($this->app->remember_me_table);
             $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
             $this->app->remember_me = new \Birke\Rememberme\Authenticator($storage);
+            // Set cookie name
+            $this->app->remember_me->setCookieName($this->app->config('session')['name'] . "-rememberme");
             
             // Change cookie path
             $cookie = $this->app->remember_me->getCookie();
@@ -61,11 +63,8 @@ class UserSession extends \Slim\Middleware {
                 }
             // If not, try to login via RememberMe cookie
             } else {
-                // If we can present the correct tokens from the cookie, log the user in
-                // Get the user id
-                $name = $this->app->remember_me->getCookieName();
+                // Get the user id. If we can present the correct tokens from the cookie, log the user in
                 $user_id = $this->app->remember_me->login();               
-                
                 if($user_id) {
                     //error_log("Logging in via remember me for $user_id");
                     // Load the user
@@ -76,13 +75,10 @@ class UserSession extends \Slim\Middleware {
                     // the fact that the user was logged in via RememberMe (instead of login form)
                     $_SESSION['remembered_by_cookie'] = true;
                 } else {
-                    // If $rememberMe returned false, check if the token was invalid
+                    // If $remember_me->login() returned false, check if the token was invalid.  This means the cookie was stolen.
                     if($this->app->remember_me->loginTokenWasInvalid()) {
                         //error_log("Cookie was stolen!");
                         throw new AuthCompromisedException();
-                    } else {
-                        // $rememberMe returned false because of invalid/missing Rememberme cookie - create a dummy "guest" user
-                        $this->app->user = new User([], $this->app->config('user_id_guest'));
                     }
                 }
             }
@@ -90,7 +86,7 @@ class UserSession extends \Slim\Middleware {
             $this->app->setupAuthenticatedEnvironment();
         } catch (\PDOException $e){
             // If we can't connect to the DB, then we can't create an authenticated user.  That's ok if we're in installation mode.
-            error_log("Unable to authenticate user, falling back to guest user.");
+            error_log("Unable to authenticate user because the database is not yet initialized, invalid, or inaccessible.  Falling back to guest user.");
             error_log($e->getTraceAsString());
         }
     }

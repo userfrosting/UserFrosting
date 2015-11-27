@@ -30,7 +30,7 @@
         {% endfor %}
         
         <!-- Theme stylesheet -->
-        <link rel="stylesheet" href="{{site.uri.css}}theme.css?user={{user.id}}" type="text/css" >
+        <link rel="stylesheet" href="{{site.uri.css}}/theme.css?user={{user.id}}" type="text/css" >
         
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -75,7 +75,7 @@
         {# This block is for dynamic fragments of code that lie outside of the main DOM #}
         {% block fragments %}{% endblock %}
         
-        <script src="{{site.uri.js}}config.js" ></script>
+        <script src="{{site.uri.js}}/config.js" ></script>
         {% for item in includeJSBottom(page_group|default("common")) %}
           <script src="{{item}}" ></script>
         {% endfor %}

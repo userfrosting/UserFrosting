@@ -1,5 +1,29 @@
 # Change Log
 
+## v0.1.3.9
+
+Revert to loose comparison for `user_id`s because of issues with Ubuntu's PDO driver (see http://stackoverflow.com/questions/5323146/mysql-integer-field-is-returned-as-string-in-php#comment41836471_5323169)
+
+## v0.1.3.8
+
+- Finish replacing all usages of `*Loader` classes with Eloquent syntax
+- Installer warning for missing `imagepng`
+- Fix bug in CSV generation for user table
+
+## v0.3.1.7
+
+- Change "default theme" to "guest theme" and fix loading issues (#463).  What used to be called "default theme" is now base theme, i.e. the theme to fall back to when a template file cannot be found in the current theme (user group or guest theme)
+- New public template for "nyx" theme
+- Remove trailing slash from configuration JS/CSS paths to make uniform with site.uri.public
+- Make routes for config.js and theme.css dynamically generated from configuration variables (#461)
+- Make cookie name for "remember me" use session name
+- Fix potential bug in configuration user_id's for guest, master accounts
+
+## v0.3.1.6
+
+- Fix exception-handling for mail server errors
+- Notify if account creation was successful, even if mail server failed.
+
 ## v0.3.1.5
 
 - Add Romanian translation

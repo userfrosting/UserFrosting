@@ -57,7 +57,7 @@ class User extends UFModel {
      * Create a new User object.
      *
      */
-    public function __construct($properties = [], $id = null) {    
+    public function __construct($properties = []) {    
         // Set default locale, if not specified
         if (!isset($properties['locale']))
             $properties['locale'] = static::$app->site->default_locale;
@@ -71,7 +71,7 @@ class User extends UFModel {
      * @return boolean True if the user is a guest, false otherwise.
      */ 
     public function isGuest(){
-        if (!isset($this->id) || $this->id === static::$app->config('user_id_guest'))
+        if (!isset($this->id) || $this->id == static::$app->config('user_id_guest'))   // Need to use loose comparison for now, because some DBs return `id` as a string
             return true;
         else
             return false;
@@ -306,14 +306,14 @@ class User extends UFModel {
     /**
      * Get the theme for this user.
      *
-     * The theme for the root user is always 'root'.  The theme for guest users is 'default'.  Any other users will have their themes determined by their primary group.
+     * The root user gets a special theme.  The theme for guest users is the site guest theme.  Any other users will have their themes determined by their primary group.
      * @return string The theme for this user.
      */ 
     public function getTheme(){
-        if (!isset($this->id) || $this->id == static::$app->config('user_id_guest'))
-            return "default";
-        else if ($this->id == static::$app->config('user_id_master'))
-            return "root";
+        if ($this->isGuest())
+            return static::$app->site->guest_theme;
+        else if ($this->id == static::$app->config('user_id_master'))  // Need to use loose comparison for now, because some DBs return `id` as a string
+            return static::$app->config('theme-root');
         else
             return $this->getPrimaryGroup()->theme;
     }
@@ -465,7 +465,7 @@ class User extends UFModel {
         }
     
         // The master (root) account has access to everything.
-        if ($this->id == static::$app->config('user_id_master'))
+        if ($this->id == static::$app->config('user_id_master'))  // Need to use loose comparison for now, because some DBs return `id` as a string
             return true;
              
         // Try to find an authorization rule for $hook that matches the currently logged-in user, or one of their groups.

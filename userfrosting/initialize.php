@@ -143,10 +143,10 @@ $setting_values = [
         'reset_password_timeout' => '10800',
         'create_password_expiration' => '86400',
         'default_locale' => 'en_US',
-        'default_theme' => 'default',
+        'guest_theme' => 'default',
         'minify_css' => '0',
         'minify_js' => '0',
-        'version' => '0.3.1.5', 
+        'version' => '0.3.1.9', 
         'author' => 'Alex Weissman',
         'show_terms_on_register' => '1',
         'site_location' => 'The State of Indiana'
@@ -164,7 +164,7 @@ $setting_descriptions = [
         "reset_password_timeout" => "The time, in seconds, before a user's password reset token expires.", 
         "create_password_expiration" => "The time, in seconds, before a new user's password creation token expires.",
         "default_locale" => "The default language for newly registered users.",
-        "default_theme" => "The default template theme to use for unauthenticated users.",
+        "guest_theme" => "The template theme to use for unauthenticated (guest) users.",
         "minify_css" => "Specify whether to use concatenated, minified CSS (production) or raw CSS includes (dev).",
         "minify_js" => "Specify whether to use concatenated, minified JS (production) or raw JS includes (dev).",
         "version" => "The current version of UserFrosting.", 
@@ -194,7 +194,7 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'author', "Site Author");
     $app->site->register('userfrosting', 'admin_email', "Account Management Email");
     $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
-    $app->site->register('userfrosting', 'default_theme', "Default Site Theme", "select", $app->site->getThemes());
+    $app->site->register('userfrosting', 'guest_theme', "Guest Theme", "select", $app->site->getThemes());
     $app->site->register('userfrosting', 'can_register', "Public Registration", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'enable_captcha', "Registration Captcha", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'show_terms_on_register', "Show TOS", "toggle", [0 => "Off", 1 => "On"]);
@@ -272,7 +272,6 @@ $app->hook('includes.js.register', function () use ($app){
 }, 1);  
 
 /** Plugins */
-//error_log("Registering plugins");
 // Run initialization scripts for plugins
 $var_plugins = $app->site->getPlugins();
 foreach($var_plugins as $var_plugin) {     

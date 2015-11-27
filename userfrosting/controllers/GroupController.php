@@ -163,7 +163,7 @@ class GroupController extends \UserFrosting\BaseController {
             $render = "modal";
         
         // Get the group to edit
-        $group = GroupLoader::fetch($group_id);
+        $group = Group::find($group_id);
         
         // Get a list of all themes
         $theme_list = $this->_app->site->getThemes();
@@ -259,11 +259,11 @@ class GroupController extends \UserFrosting\BaseController {
         $data['name'] = trim($data['name']);
         $data['new_user_title'] = trim($data['new_user_title']);
         $data['landing_page'] = strtolower(trim($data['landing_page']));
-        $data['theme'] = strtolower(trim($data['theme']));
+        $data['theme'] = trim($data['theme']);
         $data['can_delete'] = 1;
         
         // Check if group name already exists
-        if (GroupLoader::exists($data['name'], 'name')){
+        if (Group::where('name', $data['name'])->first()){
             $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
             $error = true;
         }
@@ -329,7 +329,7 @@ class GroupController extends \UserFrosting\BaseController {
         $ms = $this->_app->alerts; 
         
         // Get the target group
-        $group = GroupLoader::fetch($group_id);
+        $group = Group::find($group_id);
         
         // If desired, put route-level authorization check here
         
@@ -351,7 +351,7 @@ class GroupController extends \UserFrosting\BaseController {
         }
         
         // Check that name is not already in use
-        if (isset($post['name']) && $post['name'] != $group->name && GroupLoader::exists($post['name'], 'name')){
+        if (isset($post['name']) && $post['name'] != $group->name && Group::where('name', $post['name'])->first()){
             $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
             $this->_app->halt(400);
         }
@@ -401,7 +401,7 @@ class GroupController extends \UserFrosting\BaseController {
         $post = $this->_app->request->post();
     
         // Get the target group
-        $group = GroupLoader::fetch($group_id);
+        $group = Group::find($group_id);
     
         // Get the alert message stream
         $ms = $this->_app->alerts;

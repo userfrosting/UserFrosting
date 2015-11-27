@@ -69,7 +69,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
 
         // Security measure: do not allow registering new users until the master account has been created.        
-        if (!UserLoader::exists($this->_app->config('user_id_master'))){
+        if (!User::find($this->_app->config('user_id_master'))){
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
             $this->_app->redirect($this->_app->urlFor('uri_install'));
         }
@@ -236,14 +236,14 @@ class AccountController extends \UserFrosting\BaseController {
         
         // Load user by email address
         if($isEmail){
-            $user = UserLoader::fetch($data['user_name'], 'email');
+            $user = User::where('email', $data['user_name'])->first();
             if (!$user){
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);         
             }
         // Load user by user name    
         } else {
-            $user = UserLoader::fetch($data['user_name'], 'user_name');
+            $user = User::where('user_name', $data['user_name'])->first();
             if (!$user) {
                 $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
                 $this->_app->halt(403);
@@ -328,7 +328,7 @@ class AccountController extends \UserFrosting\BaseController {
         $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);        
 
         // Security measure: do not allow registering new users until the master account has been created.        
-        if (!UserLoader::exists($this->_app->config('user_id_master'))){
+        if (!User::find($this->_app->config('user_id_master'))){
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
             $this->_app->halt(403);
         }
@@ -375,12 +375,12 @@ class AccountController extends \UserFrosting\BaseController {
             $data['flag_verified'] = 1;
         
         // Check if username or email already exists
-        if (UserLoader::exists($data['user_name'], 'user_name')){
+        if (User::where('user_name', $data['user_name'])->first()){
             $ms->addMessageTranslated("danger", "ACCOUNT_USERNAME_IN_USE", $data);
             $error = true;
         }
 
-        if (UserLoader::exists($data['email'], 'email')){
+        if (User::where('email', $data['email'])->first()){
             $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
             $error = true;
         }
@@ -391,7 +391,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
     
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primaryGroup = GroupLoader::fetch(GROUP_DEFAULT_PRIMARY, "is_default");
+        $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
         
         // Check that a default primary group is actually set
         if (!$primaryGroup){
@@ -410,10 +410,10 @@ class AccountController extends \UserFrosting\BaseController {
         $user = new User($data);
 
         // Add user to default groups, including default primary group
-        $defaultGroups = GroupLoader::fetchAll(GROUP_DEFAULT, "is_default");
+        $defaultGroups = Group::where('is_default', GROUP_DEFAULT)->get();
         $user->addGroup($primaryGroup->id);
-        foreach ($defaultGroups as $group_id => $group)
-            $user->addGroup($group_id);    
+        foreach ($defaultGroups as $group)
+            $user->addGroup($group->id);    
         
         // Create sign-up event
         $user->newEventSignUp();
@@ -450,11 +450,11 @@ class AccountController extends \UserFrosting\BaseController {
     } 
     
     /**
-     * Processes an new account activation request.
+     * Processes an new email verification request.
      *
-     * Processes the request from the account activation link that was emailed to the user, checking that:
+     * Processes the request from the email verification link that was emailed to the user, checking that:
      * 1. The token provided matches a user in the database;
-     * 2. The user account is not already active;
+     * 2. The user account is not already verified;
      * This route is "public access".
      * Request type: GET     
      */          
@@ -475,10 +475,11 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }    
         
-        // Ok, try to find a user with the specified secret token
-        $user = UserLoader::fetch($data['secret_token'], 'secret_token');
+        // Ok, try to find an unverified user with the specified secret token
+        $user = User::where('secret_token', $data['secret_token'])
+                    ->where('flag_verified', '0')->first();
         
-        if (!$user || $user->flag_verified == "1"){
+        if (!$user){
             $ms->addMessageTranslated("danger", "ACCOUNT_TOKEN_NOT_FOUND");
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
@@ -677,8 +678,9 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
         
-        // Fetch the user, by looking up the submitted activation token
-        $user = UserLoader::fetch($data['secret_token'], 'secret_token');
+        // Fetch the user with the specified secret token and who has a pending password reset request
+        $user = User::where('secret_token', $data['secret_token'])
+                    ->where('flag_password_reset', "1")->first();
         
         if (!$user){
             $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
@@ -724,14 +726,14 @@ class AccountController extends \UserFrosting\BaseController {
             $this->_app->halt(400);
         }    
         
+        // Load the user, by username
+        $user = User::where('user_name', $data['user_name'])->first();        
+        
         // Check that the username exists
-        if(!UserLoader::exists($data['user_name'], 'user_name')) {
+        if(!$user) {
             $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
             $this->_app->halt(400);
         }
-        
-        // Load the user, by username
-        $user = UserLoader::fetch($data['user_name'], 'user_name');
         
         // Check that the specified email is correct
         if (strtolower($user->email) != strtolower($data['email'])){
@@ -827,7 +829,7 @@ class AccountController extends \UserFrosting\BaseController {
                 $this->_app->halt(403);
             }
             // Check if address is in use
-            if (UserLoader::exists($data['email'], 'email')){
+            if (User::where('email', $data['email'])->first()){
                 $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
                 $this->_app->halt(400);
             }            
