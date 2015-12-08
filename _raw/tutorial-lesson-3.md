@@ -78,7 +78,7 @@ You may be used to simply writing and executing a SQL query every time you need 
 
 If you look in the `userfrosting/models` directory, you will notice classes called `Group` and `User`.  These are the classes used to model groups and users, and they both inherit the basic functionality of their base class, `UFModel`, which itself inherits from Eloquent's [`Model`](http://laravel.com/docs/5.0/eloquent#basic-usage) class.  If you don't know what "inherit" means, now is a good time to [learn a little about object-oriented programming](https://en.wikipedia.org/wiki/Class-based_programming#Inheritance).
 
-We will create a new class, in a new file, called StaffEvent`, which will also inherit from UFModel`:
+We will create a new class, in a new file, called `StaffEvent`, which will also inherit from UFModel:
 
 **userfrosting/models/mysql/StaffEvent.php**
 

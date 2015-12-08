@@ -29,7 +29,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         
         <p>What we <em>haven't</em> really talked about yet is the <strong>model</strong>.  We've interacted with it briefly, though.  In lesson 1 we used <code>$app-&gt;user</code>, which represents the currently logged-in user with an instance of the <code>User</code> class, to get a list of groups for that user.  In lesson 2, we used the Eloquent query builder to obtain collections of <code>User</code> and <code>Group</code> objects.  We then modified these objects and used the <code>-&gt;save()</code> method to update their information in the database.</p>
         
-        <p>But of course, your application probably consists of more than just users and groups!  After all, your users are probably supposed to <em>do</em> something in your system, and interact with other sorts of data.  So, how do we extend the UserFrosting data model to include, for example, <code>Transactions</code> or <code>Events</code> or <code>Cats</code> or <code>NuclearMissiles</code>?</p>
+        <p>But of course, your application probably consists of more than just users and groups!  After all, your users are probably supposed to <em>do</em> something in your system, and interact with other sorts of data.  So, how do we extend the UserFrosting data model to include, for example, <code>Transaction</code>s or <code>Event</code>s or <code>Cat</code>s or <code>NuclearMissile</code>s?</p>
         
         <p>In this tutorial, we will create a new type of data object, <code>StaffEvent</code>, which will represent events such as meetings, parties, luncheons, etc.  We will design our model so that our users can be assigned to these events.</p>
     </section>
@@ -104,7 +104,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         
         <p>If you look in the <code>userfrosting/models</code> directory, you will notice classes called <code>Group</code> and <code>User</code>.  These are the classes used to model groups and users, and they both inherit the basic functionality of their base class, <code>UFModel</code>, which itself inherits from Eloquent's <a href="http://laravel.com/docs/5.0/eloquent#basic-usage"><code>Model</code></a> class.  If you don't know what &quot;inherit&quot; means, now is a good time to <a href="https://en.wikipedia.org/wiki/Class-based_programming#Inheritance">learn a little about object-oriented programming</a>.</p>
         
-        <p>We will create a new class, in a new file, called StaffEvent<code>, which will also inherit from UFModel</code>:</p>
+        <p>We will create a new class, in a new file, called <code>StaffEvent</code>, which will also inherit from UFModel:</p>
         
         <p><strong>userfrosting/models/mysql/StaffEvent.php</strong></p>
         
@@ -148,7 +148,7 @@ $new_event-&gt;save();</code></pre>
         
         <p>Ok, so that covers the &quot;C&quot;, &quot;U&quot;, and &quot;D&quot; in CRUD.  But what about the &quot;R&quot; (read)?  </p>
         
-        <p>Well, it turns out that our new class <code>StaffEvent</code> is also a query builder!  Want to get a list of all staff events in december, sorted by date?  No problem:</p>
+        <p>Well, it turns out that our new class <code>StaffEvent</code> is also a query builder!  Want to get a list of all staff events in December, sorted by date?  No problem:</p>
         
         <pre><code>$december_events = StaffEvent::whereBetween('date', [
     &quot;2015-12-01 00:00:00&quot;,
@@ -191,7 +191,7 @@ public function __isset($name){
         return parent::__isset($name);
 }</code></pre>
         
-        <p>This will let us access an event's users by simply calling <code>$users = $my_event-&gt;users;</code>.  Overloading the magic methods will also allow us to access this data in Twig.  If we pass a <code>StaffEvent</code> object into a Twig template through our call to <code>render</code>, then we can access the array of users for that event via: <code>{{my_event.users}}</code>.  Nifty, eh?</p>
+        <p>This will let us access an event's users by simply calling <code>$users = $my_event-&gt;users;</code>.  Overloading the magic methods will also allow us to access this data in Twig.  If we pass a <code>StaffEvent</code> object into a Twig template through our call to <code>render</code>, then we can access the array of users for that event via: <code>{% raw %}{{my_event.users}}{% endraw %}</code>.  Nifty, eh?</p>
         
         <h3 id="toc_4">Refreshing Related Data</h3>
         
