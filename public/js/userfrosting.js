@@ -97,10 +97,17 @@ function ufFormSubmit(formElement, validators, msgElement, successCallback, msgC
             var serializedData = form.find('input, textarea, select').not(':checkbox').serialize();
             // Get unchecked checkbox values, set them to 0
             form.find('input[type=checkbox]:enabled').each(function() {
-                if ($(this).is(':checked'))
-                    serializedData += "&" + encodeURIComponent(this.name) + "=1";
-                else
-                    serializedData += "&" + encodeURIComponent(this.name) + "=0";
+                var thisname = $(this).attr('name');
+// Adding this check, because when we use controls like Bootstrapmulti select  https://github.com/davidstutz/bootstrap-multiselect
+// this creates a set of checkboxes for the multi select SELECT tag, and this part of the Script detects those checkboxes
+// and is creating multiple POST entries without any name, as the checkboxes created by Multiselect do not have a name
+                if (typeof thisname !== typeof undefined && thisname !== false)
+                {
+                    if ($(this).is(':checked'))
+                        serializedData += "&" + encodeURIComponent(this.name) + "=1";
+                    else
+                        serializedData += "&" + encodeURIComponent(this.name) + "=0";
+                }
             });        
             
             // Append page CSRF token
