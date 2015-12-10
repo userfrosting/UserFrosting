@@ -11,11 +11,11 @@
 
 namespace Symfony\Component\Translation\Tests\Catalogue;
 
-use Symfony\Component\Translation\Catalogue\DiffOperation;
+use Symfony\Component\Translation\Catalogue\TargetOperation;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
-class DiffOperationTest extends AbstractOperationTest
+class TargetOperationTest extends AbstractOperationTest
 {
     public function testGetMessagesFromSingleDomain()
     {
@@ -77,6 +77,7 @@ class DiffOperationTest extends AbstractOperationTest
 
     protected function createOperation(MessageCatalogueInterface $source, MessageCatalogueInterface $target)
     {
-        return new DiffOperation($source, $target);
+        return new TargetOperation($source, $target);
     }
+
 }

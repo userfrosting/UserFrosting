@@ -11,6 +11,8 @@
 
 class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 {
+    private $deprecations = array();
+
     /**
      * @expectedException        LogicException
      * @expectedExceptionMessage You must set a loader first.
@@ -152,7 +154,8 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
 
     public function testExtensionsAreNotInitializedWhenRenderingACompiledTemplate()
     {
-        $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig');
+        $uid = function_exists('posix_getuid') ? posix_getuid() : '';
+        $cache = new Twig_Cache_Filesystem($dir = sys_get_temp_dir().'/twig'.$uid);
         $options = array('cache' => $cache, 'auto_reload' => false, 'debug' => false);
 
         // force compilation
@@ -287,7 +290,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('foo_global', $twig->getGlobals());
 
         $this->assertCount(1, $this->deprecations);
-        $this->assertContains('Defining the getGlobals() method in an extension is deprecated', $this->deprecations[0]);
+        $this->assertContains('Defining the getGlobals() method in the "environment_test" extension is deprecated', $this->deprecations[0]);
 
         restore_error_handler();
     }
@@ -349,7 +352,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
         $twig->initRuntime();
 
         $this->assertCount(1, $this->deprecations);
-        $this->assertContains('Defining the initRuntime() method in an extension is deprecated.', $this->deprecations[0]);
+        $this->assertContains('Defining the initRuntime() method in the "with_deprecation" extension is deprecated.', $this->deprecations[0]);
 
         restore_error_handler();
     }
@@ -364,7 +367,7 @@ class Twig_Tests_EnvironmentTest extends PHPUnit_Framework_TestCase
     /**
      * @requires PHP 5.3
      */
-    public function testOverrideExtenion()
+    public function testOverrideExtension()
     {
         $twig = new Twig_Environment($this->getMock('Twig_LoaderInterface'));
         $twig->addExtension(new Twig_Tests_EnvironmentTest_ExtensionWithDeprecationInitRuntime());
