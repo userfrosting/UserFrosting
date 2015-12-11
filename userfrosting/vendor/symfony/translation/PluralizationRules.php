@@ -131,6 +131,7 @@ class PluralizationRules
             case 'fr':
             case 'gun':
             case 'hi':
+            case 'hy':
             case 'ln':
             case 'mg':
             case 'nso':
@@ -191,10 +192,8 @@ class PluralizationRules
      *
      * @param callable $rule   A PHP callable
      * @param string   $locale The locale
-     *
-     * @throws \LogicException
      */
-    public static function set($rule, $locale)
+    public static function set(callable $rule, $locale)
     {
         if ('pt_BR' === $locale) {
             // temporary set a locale for brazilian
@@ -203,10 +202,6 @@ class PluralizationRules
 
         if (strlen($locale) > 3) {
             $locale = substr($locale, 0, -strlen(strrchr($locale, '_')));
-        }
-
-        if (!is_callable($rule)) {
-            throw new \LogicException('The given rule can not be called');
         }
 
         self::$rules[$locale] = $rule;
