@@ -11,5 +11,4 @@ return array(
     'Slim' => array($vendorDir . '/slim/slim'),
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
-    'Carbon' => array($vendorDir . '/nesbot/carbon/src'),
 );
