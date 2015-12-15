@@ -27,9 +27,9 @@ $lang = array_merge($lang, [
 ]);
 // Installer
 $lang = array_merge($lang,array(
-	"INSTALLER_INCOMPLETE" => "No puedes registrar la cuenta maestra hasta que el instalador haya finalizado!",
-	"MASTER_ACCOUNT_EXISTS" => "Ya existe una cuenta maestra!",
-	"MASTER_ACCOUNT_NOT_EXISTS" => "No puedes registrar ninguna cuenta hasta que la cuenta maestra haya sido creada!",
+	"INSTALLER_INCOMPLETE" => "¡No puedes registrar la cuenta maestra hasta que el instalador haya finalizado!",
+	"MASTER_ACCOUNT_EXISTS" => "¡Ya existe una cuenta maestra!",
+	"MASTER_ACCOUNT_NOT_EXISTS" => "¡No puedes registrar ninguna cuenta hasta que la cuenta maestra haya sido creada!",
 	"CONFIG_TOKEN_MISMATCH" => "El token de configuración no es correcto."
 ));
 // Account
@@ -78,8 +78,8 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_EMAIL_UPDATED" => "Correo electrónico de la cuenta actualizado",
 	"ACCOUNT_TOKEN_NOT_FOUND" => "El token no existe / La cuenta ya está activada",
 	"ACCOUNT_USER_INVALID_CHARACTERS" => "El nombre de usuario sólo pueden incluir caracteres alfanuméricos",
-	"ACCOUNT_DELETE_MASTER" => "No puedes eliminar la cuenta maestra!",
-	"ACCOUNT_DISABLE_MASTER" => "No puedes desactivar la cuenta maestra!",
+	"ACCOUNT_DELETE_MASTER" => "¡No puedes eliminar la cuenta maestra!",
+	"ACCOUNT_DISABLE_MASTER" => "¡No puedes desactivar la cuenta maestra!",
 	"ACCOUNT_DISABLE_SUCCESSFUL" => "La cuenta del usuario '{{user_name}}' se ha desactivado con éxito.",
 	"ACCOUNT_ENABLE_SUCCESSFUL" => "La cuenta del usuario '{{user_name}}' se ha activado con éxito.",
 	"ACCOUNT_DELETION_SUCCESSFUL" => "La cuenta del usuario '{{user_name}}' se ha eliminado con éxito.",
@@ -144,7 +144,7 @@ $lang = array_merge($lang,array(
 	"FEATURE_DISABLED" => "Esta característica se encuentra actualmente deshabilitada",
 	"ACCESS_DENIED" => "Mmm, parece que no tienes permiso para hacer esto.",
 	"LOGIN_REQUIRED" => "Lo siento, debes iniciar sesión para acceder a este recurso.",
-	"LOGIN_ALREADY_COMPLETE" => "Ya has iniciado sesión!"
+	"LOGIN_ALREADY_COMPLETE" => "¡Ya has iniciado sesión!"
 ));
 // Permissions
 $lang = array_merge($lang,array(
@@ -155,6 +155,6 @@ $lang = array_merge($lang,array(
 	"GROUP_CREATION_SUCCESSFUL" => "El grupo '{{name}}' se ha creado correctamente",
 	"GROUP_UPDATE" => "Los detalles del grupo '{{name}}' se han actualizado correctamente.",
 	"CANNOT_DELETE_GROUP" => "El grupo '{{name}}' no puede eliminarse",
-	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "El grupo '{{name}}' no puede eliminarse por que esta asignado como grupo primario para los nuevos usuarios. Para eliminarlo primero debes establecer otro grupo primario como predefinido."
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "El grupo '{{name}}' no puede eliminarse porque está asignado como grupo primario para los nuevos usuarios. Para eliminarlo primero debes establecer otro grupo primario como predefinido."
 ));
 return $lang;
