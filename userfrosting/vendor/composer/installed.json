@@ -563,51 +563,6 @@
         ]
     },
     {
-        "name": "alexweissman/fortress",
-        "version": "0.2.0.x-dev",
-        "version_normalized": "0.2.0.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/alexweissman/fortress.git",
-            "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/136e3e83c1c4b29842a4df45313672ca721acfa6",
-            "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6",
-            "shasum": ""
-        },
-        "require": {
-            "ezyang/htmlpurifier": ">=4.6.0",
-            "php": ">=5.4.0",
-            "vlucas/valitron": "1.2.3"
-        },
-        "time": "2015-10-30 04:35:09",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "fortress/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Alexander Weissman",
-                "homepage": "http://alexanderweissman.com"
-            }
-        ],
-        "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
-        "homepage": "https://github.com/alexweissman/fortress",
-        "keywords": [
-            "php sanitization",
-            "php validation"
-        ]
-    },
-    {
         "name": "twig/twig",
         "version": "v1.23.1",
         "version_normalized": "1.23.1.0",
@@ -954,6 +909,51 @@
             "cookie",
             "remember",
             "security"
+        ]
+    },
+    {
+        "name": "alexweissman/fortress",
+        "version": "0.2.0.x-dev",
+        "version_normalized": "0.2.0.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/alexweissman/fortress.git",
+            "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/e58b2e558b52e762c179aa436e47a8732f6cc284",
+            "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284",
+            "shasum": ""
+        },
+        "require": {
+            "ezyang/htmlpurifier": ">=4.6.0",
+            "php": ">=5.4.0",
+            "vlucas/valitron": "1.2.3"
+        },
+        "time": "2015-12-16 03:07:46",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "fortress/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Alexander Weissman",
+                "homepage": "http://alexanderweissman.com"
+            }
+        ],
+        "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
+        "homepage": "https://github.com/alexweissman/fortress",
+        "keywords": [
+            "php sanitization",
+            "php validation"
         ]
     }
 ]

@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/alexweissman/fortress.git",
-                "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6"
+                "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alexweissman/fortress/zipball/136e3e83c1c4b29842a4df45313672ca721acfa6",
-                "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6",
+                "url": "https://api.github.com/repos/alexweissman/fortress/zipball/e58b2e558b52e762c179aa436e47a8732f6cc284",
+                "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 "php sanitization",
                 "php validation"
             ],
-            "time": "2015-10-30 04:35:09"
+            "time": "2015-12-16 03:07:46"
         },
         {
             "name": "birke/rememberme",
