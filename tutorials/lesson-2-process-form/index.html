@@ -77,8 +77,8 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
                           &lt;label for=&quot;input_group&quot; class=&quot;col-sm-4 control-label&quot;&gt;Primary group&lt;/label&gt;
                           &lt;div class=&quot;col-sm-8&quot;&gt;
                             &lt;select id=&quot;input_group&quot; class=&quot;form-control select2&quot; name=&quot;group_id&quot;&gt;
-                              {% for id, group in groups %}
-                              &lt;option value=&quot;{{id}}&quot;&gt;{{group.name}}&lt;/option&gt;
+                              {% for group in groups %}
+                              &lt;option value=&quot;{{group.id}}&quot;&gt;{{group.name}}&lt;/option&gt;
                               {% endfor %}
                             &lt;/select&gt;
                           &lt;/div&gt;
