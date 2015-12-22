@@ -307,6 +307,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
         <p>Ok, so let's put the entire route method together:</p>
         
         <pre><code>
+	    {% raw %}
         public function updateGroupTitles(){
            // Access-controlled resource
            if (!$this-&gt;_app-&gt;user-&gt;checkAccess('uri_group_titles')){
@@ -349,6 +350,7 @@ title: "UserFrosting | Tutorials | Lesson 2: Processing a Form Submission"
             $ms-&gt;addMessageTranslated(&quot;success&quot;, &quot;Everyone's title has been updated to {{title}}!&quot;, $post);
             
         }
+        {% endraw %}
         </code></pre>
     </section>
     <section class="tutorial">      
