@@ -254,50 +254,6 @@
         ]
     },
     {
-        "name": "birke/rememberme",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/gbirke/rememberme.git",
-            "reference": "4e71b0d9c692db28ae78c7eea752c4599b87dc2c"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/gbirke/rememberme/zipball/4e71b0d9c692db28ae78c7eea752c4599b87dc2c",
-            "reference": "4e71b0d9c692db28ae78c7eea752c4599b87dc2c",
-            "shasum": ""
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.*"
-        },
-        "time": "2015-07-22 18:26:14",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Birke\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Gabriel Birke",
-                "email": "gb@birke-software.de"
-            }
-        ],
-        "description": "Secure \"Remember Me\" functionality",
-        "homepage": "https://github.com/gbirke/rememberme",
-        "keywords": [
-            "cookie",
-            "remember",
-            "security"
-        ]
-    },
-    {
         "name": "nikic/php-parser",
         "version": "v1.4.1",
         "version_normalized": "1.4.1.0",
@@ -607,51 +563,6 @@
         ]
     },
     {
-        "name": "alexweissman/fortress",
-        "version": "0.2.0.x-dev",
-        "version_normalized": "0.2.0.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/alexweissman/fortress.git",
-            "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/136e3e83c1c4b29842a4df45313672ca721acfa6",
-            "reference": "136e3e83c1c4b29842a4df45313672ca721acfa6",
-            "shasum": ""
-        },
-        "require": {
-            "ezyang/htmlpurifier": ">=4.6.0",
-            "php": ">=5.4.0",
-            "vlucas/valitron": "1.2.3"
-        },
-        "time": "2015-10-30 04:35:09",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "fortress/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Alexander Weissman",
-                "homepage": "http://alexanderweissman.com"
-            }
-        ],
-        "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
-        "homepage": "https://github.com/alexweissman/fortress",
-        "keywords": [
-            "php sanitization",
-            "php validation"
-        ]
-    },
-    {
         "name": "twig/twig",
         "version": "v1.23.1",
         "version_normalized": "1.23.1.0",
@@ -773,72 +684,6 @@
         ]
     },
     {
-        "name": "symfony/translation",
-        "version": "v3.0.0",
-        "version_normalized": "3.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/translation.git",
-            "reference": "7f14717150a7445f8475864d1235875dd04061fb"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/7f14717150a7445f8475864d1235875dd04061fb",
-            "reference": "7f14717150a7445f8475864d1235875dd04061fb",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.9",
-            "symfony/polyfill-mbstring": "~1.0"
-        },
-        "conflict": {
-            "symfony/config": "<2.8"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/config": "~2.8|~3.0",
-            "symfony/intl": "~2.8|~3.0",
-            "symfony/yaml": "~2.8|~3.0"
-        },
-        "suggest": {
-            "psr/log": "To use logging capability in translator",
-            "symfony/config": "",
-            "symfony/yaml": ""
-        },
-        "time": "2015-11-18 13:48:51",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Translation\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "nesbot/carbon",
         "version": "1.21.0",
         "version_normalized": "1.21.0.0",
@@ -954,6 +799,161 @@
             "pluralize",
             "singularize",
             "string"
+        ]
+    },
+    {
+        "name": "symfony/translation",
+        "version": "v2.8.0",
+        "version_normalized": "2.8.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/translation.git",
+            "reference": "6772657767649fc3b31df12705194fb4af11ef98"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/6772657767649fc3b31df12705194fb4af11ef98",
+            "reference": "6772657767649fc3b31df12705194fb4af11ef98",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9",
+            "symfony/polyfill-mbstring": "~1.0"
+        },
+        "conflict": {
+            "symfony/config": "<2.7"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~2.8",
+            "symfony/intl": "~2.4|~3.0.0",
+            "symfony/yaml": "~2.2|~3.0.0"
+        },
+        "suggest": {
+            "psr/log": "To use logging capability in translator",
+            "symfony/config": "",
+            "symfony/yaml": ""
+        },
+        "time": "2015-11-18 13:45:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.8-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Translation\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "birke/rememberme",
+        "version": "1.0.4",
+        "version_normalized": "1.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/gbirke/rememberme.git",
+            "reference": "4e71b0d9c692db28ae78c7eea752c4599b87dc2c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/gbirke/rememberme/zipball/4e71b0d9c692db28ae78c7eea752c4599b87dc2c",
+            "reference": "4e71b0d9c692db28ae78c7eea752c4599b87dc2c",
+            "shasum": ""
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.*"
+        },
+        "time": "2015-07-22 18:26:14",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Birke\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Gabriel Birke",
+                "email": "gb@birke-software.de"
+            }
+        ],
+        "description": "Secure \"Remember Me\" functionality",
+        "homepage": "https://github.com/gbirke/rememberme",
+        "keywords": [
+            "cookie",
+            "remember",
+            "security"
+        ]
+    },
+    {
+        "name": "alexweissman/fortress",
+        "version": "0.2.0.x-dev",
+        "version_normalized": "0.2.0.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/alexweissman/fortress.git",
+            "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/e58b2e558b52e762c179aa436e47a8732f6cc284",
+            "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284",
+            "shasum": ""
+        },
+        "require": {
+            "ezyang/htmlpurifier": ">=4.6.0",
+            "php": ">=5.4.0",
+            "vlucas/valitron": "1.2.3"
+        },
+        "time": "2015-12-16 03:07:46",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "fortress/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Alexander Weissman",
+                "homepage": "http://alexanderweissman.com"
+            }
+        ],
+        "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
+        "homepage": "https://github.com/alexweissman/fortress",
+        "keywords": [
+            "php sanitization",
+            "php validation"
         ]
     }
 ]

@@ -15,12 +15,12 @@
         "php" : ">=5.4.0",
         "twig/twig" : "~1.0",
         "slim/slim" : "2.*",
-        "slim/views" : "*",
+        "slim/views" : "0.1.3",
         "illuminate/database" : "5.0.33",
         "nikic/php-parser" : "~1",
         "alexweissman/fortress" : "0.2.0.x-dev",
         "phpmailer/phpmailer" : "5.2.10",
-        "birke/rememberme" : "dev-master"
+        "birke/rememberme" : "1.0.4"
     },
     "autoload": {
         "classmap" : [

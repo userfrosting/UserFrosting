@@ -305,7 +305,8 @@ class AccountController extends \UserFrosting\BaseController {
      * 7. The username and email are not already taken.
      * Automatically sends an activation link upon success, if account activation is enabled.
      * This route is "public access".
-     * Request type: POST     
+     * Request type: POST    
+     * Returns the User Object for the user record that was created. 
      */      
     public function register(){
         // POST: user_name, display_name, email, title, password, passwordc, captcha, spiderbro, csrf_token
@@ -447,6 +448,9 @@ class AccountController extends \UserFrosting\BaseController {
         } else
             // No activation required
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
+        
+        // Return the user object to the calling program
+        return $user;
     } 
     
     /**
