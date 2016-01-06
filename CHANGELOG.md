@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.1.3.11
+
+- Composer can now include composer.json files from plugin folders (added "wikimedia/composer-merge-plugin" to composer)
+
 ## v0.1.3.10
 
 - Select correct versions (PHP 5.x compatible) of packages in `composer.json`
