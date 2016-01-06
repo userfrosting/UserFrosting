@@ -20,7 +20,19 @@
         "nikic/php-parser" : "~1",
         "alexweissman/fortress" : "0.2.0.x-dev",
         "phpmailer/phpmailer" : "5.2.10",
-        "birke/rememberme" : "1.0.4"
+        "birke/rememberme" : "1.0.4",
+        "wikimedia/composer-merge-plugin": "1.0"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "plugins/*/composer.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "merge-dev": true,
+            "merge-extra": false
+        }
     },
     "autoload": {
         "classmap" : [
