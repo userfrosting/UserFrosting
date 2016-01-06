@@ -5,7 +5,7 @@
  * @author Alex Weissman
  * @link http://www.userfrosting.com
  */
- 
+
 require_once 'vendor/autoload.php';
 require_once 'models/auth/password.php';
 
@@ -57,7 +57,7 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 // Set enumerative values
-defined("GROUP_NOT_DEFAULT") or define("GROUP_NOT_DEFAULT", 0);    
+defined("GROUP_NOT_DEFAULT") or define("GROUP_NOT_DEFAULT", 0);
 defined("GROUP_DEFAULT") or define("GROUP_DEFAULT", 1);
 defined("GROUP_DEFAULT_PRIMARY") or define("GROUP_DEFAULT_PRIMARY", 2);
 
@@ -72,7 +72,7 @@ $table_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . 
     "email",
     "title",
     "locale",
-    "primary_group_id",       
+    "primary_group_id",
     "secret_token",
     "flag_verified",
     "flag_enabled",
@@ -102,15 +102,15 @@ $table_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] .
 $table_group_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "group_user");
 $table_configuration = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "configuration");
 $table_authorize_user = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_user");
-$table_authorize_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_group");    
+$table_authorize_group = new \UserFrosting\DatabaseTable($app->config('db')['db_prefix'] . "authorize_group");
 
 \UserFrosting\Database::setSchemaTable("user", $table_user);
 \UserFrosting\Database::setSchemaTable("user_event", $table_user_event);
-\UserFrosting\Database::setSchemaTable("group", $table_group);    
+\UserFrosting\Database::setSchemaTable("group", $table_group);
 \UserFrosting\Database::setSchemaTable("group_user", $table_group_user);
 \UserFrosting\Database::setSchemaTable("configuration", $table_configuration);
 \UserFrosting\Database::setSchemaTable("authorize_user", $table_authorize_user);
-\UserFrosting\Database::setSchemaTable("authorize_group", $table_authorize_group);  
+\UserFrosting\Database::setSchemaTable("authorize_group", $table_authorize_group);
 
 // Info for RememberMe table
 $app->remember_me_table = [
@@ -133,20 +133,20 @@ $app->remember_me_table = [
 // Default settings
 $setting_values = [
     'userfrosting' => [
-        'site_title' => 'UserFrosting', 
-        'admin_email' => 'admin@userfrosting.com', 
-        'email_login' => '1', 
-        'can_register' => '1', 
+        'site_title' => 'UserFrosting',
+        'admin_email' => 'admin@userfrosting.com',
+        'email_login' => '1',
+        'can_register' => '1',
         'enable_captcha' => '1',
-        'require_activation' => '1', 
-        'resend_activation_threshold' => '0', 
+        'require_activation' => '1',
+        'resend_activation_threshold' => '0',
         'reset_password_timeout' => '10800',
         'create_password_expiration' => '86400',
         'default_locale' => 'en_US',
         'guest_theme' => 'default',
         'minify_css' => '0',
         'minify_js' => '0',
-        'version' => '0.3.1.10', 
+        'version' => '0.3.1.10',
         'author' => 'Alex Weissman',
         'show_terms_on_register' => '1',
         'site_location' => 'The State of Indiana'
@@ -154,20 +154,20 @@ $setting_values = [
 ];
 $setting_descriptions = [
     'userfrosting' => [
-        "site_title" => "The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.", 
-        "admin_email" => "The administrative email for the site.  Automated emails, such as verification emails and password reset links, will come from this address.", 
-        "email_login" => "Specify whether users can login via email address or username instead of just username.", 
-        "can_register" => "Specify whether public registration of new accounts is enabled.  Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.", 
+        "site_title" => "The title of the site.  By default, displayed in the title tag, as well as the upper left corner of every user page.",
+        "admin_email" => "The administrative email for the site.  Automated emails, such as verification emails and password reset links, will come from this address.",
+        "email_login" => "Specify whether users can login via email address or username instead of just username.",
+        "can_register" => "Specify whether public registration of new accounts is enabled.  Enable if you have a service that users can sign up for, disable if you only want accounts to be created by you or an admin.",
         "enable_captcha" => "Specify whether new users must complete a captcha code when registering for an account.",
-        "require_activation" => "Specify whether email verification is required for newly registered accounts.  Accounts created by another user never need to be verified.", 
-        "resend_activation_threshold" => "The time, in seconds, that a user must wait before requesting that the account verification email be resent.", 
-        "reset_password_timeout" => "The time, in seconds, before a user's password reset token expires.", 
+        "require_activation" => "Specify whether email verification is required for newly registered accounts.  Accounts created by another user never need to be verified.",
+        "resend_activation_threshold" => "The time, in seconds, that a user must wait before requesting that the account verification email be resent.",
+        "reset_password_timeout" => "The time, in seconds, before a user's password reset token expires.",
         "create_password_expiration" => "The time, in seconds, before a new user's password creation token expires.",
         "default_locale" => "The default language for newly registered users.",
         "guest_theme" => "The template theme to use for unauthenticated (guest) users.",
         "minify_css" => "Specify whether to use concatenated, minified CSS (production) or raw CSS includes (dev).",
         "minify_js" => "Specify whether to use concatenated, minified JS (production) or raw JS includes (dev).",
-        "version" => "The current version of UserFrosting.", 
+        "version" => "The current version of UserFrosting.",
         "author" => "The author of the site.  Will be used in the site's author meta tag.",
         "show_terms_on_register" => "Specify whether or not to show terms and conditions when registering.",
         "site_location" => "The nation or state in which legal jurisdiction for this site falls."
@@ -190,7 +190,7 @@ $app->setupTwig();
 $app->hook('settings.register', function () use ($app){
     // Register core site settings
     $app->site->register('userfrosting', 'site_title', "Site Title");
-    $app->site->register('userfrosting', 'site_location', "Site Location");    
+    $app->site->register('userfrosting', 'site_location', "Site Location");
     $app->site->register('userfrosting', 'author', "Site Author");
     $app->site->register('userfrosting', 'admin_email', "Account Management Email");
     $app->site->register('userfrosting', 'default_locale', "Locale for New Users", "select", $app->site->getLocales());
@@ -202,7 +202,7 @@ $app->hook('settings.register', function () use ($app){
     $app->site->register('userfrosting', 'email_login', "Email Login", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'resend_activation_threshold', "Resend Activation Email Cooloff (s)");
     $app->site->register('userfrosting', 'reset_password_timeout', "Password Recovery Timeout (s)");
-    $app->site->register('userfrosting', 'create_password_expiration', "Create Password for New Users Timeout (s)");    
+    $app->site->register('userfrosting', 'create_password_expiration', "Create Password for New Users Timeout (s)");
     $app->site->register('userfrosting', 'minify_css', "Minify CSS", "toggle", [0 => "Off", 1 => "On"]);
     $app->site->register('userfrosting', 'minify_js', "Minify JS", "toggle", [0 => "Off", 1 => "On"]);
 }, 1);
@@ -223,15 +223,15 @@ $app->hook('includes.css.register', function () use ($app){
     $app->schema->registerCSS("common", "select2/select2.css");
     $app->schema->registerCSS("common", "select2/select2-bootstrap.css");
     $app->schema->registerCSS("common", "bootstrapradio.css");
-    
+
     // Dashboard CSS
     $app->schema->registerCSS("dashboard", "timeline.css");
     $app->schema->registerCSS("dashboard", "lib/morris.css");
-    $app->schema->registerCSS("dashboard", "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css");    
-    
+    $app->schema->registerCSS("dashboard", "http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css");
+
     // Logged-out CSS
     $app->schema->registerCSS("loggedout", "jumbotron-narrow.css");
-    
+
 }, 1);
 
 $app->hook('includes.js.register', function () use ($app){
@@ -239,12 +239,12 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("common", "jquery-1.11.2.js");
     $app->schema->registerJS("common", "bootstrap-3.3.2.js");
     $app->schema->registerJS("common", "bootstrap-modal.js");
-    $app->schema->registerJS("common", "bootstrap-modalmanager.js");    
+    $app->schema->registerJS("common", "bootstrap-modalmanager.js");
     $app->schema->registerJS("common", "sb-admin-2.js");
     $app->schema->registerJS("common", "lib/metisMenu.js");
     $app->schema->registerJS("common", "jqueryValidation/jquery.validate.js");
     $app->schema->registerJS("common", "jqueryValidation/additional-methods.js");
-    $app->schema->registerJS("common", "jqueryValidation/jqueryvalidation-methods-fortress.js");    
+    $app->schema->registerJS("common", "jqueryValidation/jqueryvalidation-methods-fortress.js");
     $app->schema->registerJS("common", "moment.js");
     $app->schema->registerJS("common", "tablesorter/jquery.tablesorter.js");
     $app->schema->registerJS("common", "tablesorter/tables.js");
@@ -254,27 +254,27 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("common", "select2/select2.min.js");
     $app->schema->registerJS("common", "bootstrapradio.js");
     $app->schema->registerJS("common", "bootstrap-switch.js");
-    $app->schema->registerJS("common", "handlebars-v1.2.0.js");    
+    $app->schema->registerJS("common", "handlebars-v1.2.0.js");
     $app->schema->registerJS("common", "userfrosting.js");
-    
+
     // Dashboard JS
     $app->schema->registerJS("dashboard", "lib/raphael.js");
     $app->schema->registerJS("dashboard", "lib/morris.js");
-    
+
     // Users JS
     $app->schema->registerJS("user", "widget-users.js");
-    
+
     // Groups JS
     $app->schema->registerJS("group", "widget-groups.js");
 
     // Auth JS
-    $app->schema->registerJS("auth", "widget-auth.js");    
-}, 1);  
+    $app->schema->registerJS("auth", "widget-auth.js");
+}, 1);
 
 /** Plugins */
 // Run initialization scripts for plugins
 $var_plugins = $app->site->getPlugins();
-foreach($var_plugins as $var_plugin) {     
+foreach($var_plugins as $var_plugin) {
     require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
 }
 

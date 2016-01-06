@@ -626,64 +626,6 @@
         ]
     },
     {
-        "name": "symfony/polyfill-mbstring",
-        "version": "v1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "0b6a8940385311a24e060ec1fe35680e17c74497"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/0b6a8940385311a24e060ec1fe35680e17c74497",
-            "reference": "0b6a8940385311a24e060ec1fe35680e17c74497",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2015-11-04 20:28:58",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Polyfill\\Mbstring\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Grekas",
-                "email": "p@tchwork.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony polyfill for the Mbstring extension",
-        "homepage": "https://symfony.com",
-        "keywords": [
-            "compatibility",
-            "mbstring",
-            "polyfill",
-            "portable",
-            "shim"
-        ]
-    },
-    {
         "name": "nesbot/carbon",
         "version": "1.21.0",
         "version_normalized": "1.21.0.0",
@@ -802,72 +744,6 @@
         ]
     },
     {
-        "name": "symfony/translation",
-        "version": "v2.8.0",
-        "version_normalized": "2.8.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/translation.git",
-            "reference": "6772657767649fc3b31df12705194fb4af11ef98"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/6772657767649fc3b31df12705194fb4af11ef98",
-            "reference": "6772657767649fc3b31df12705194fb4af11ef98",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.9",
-            "symfony/polyfill-mbstring": "~1.0"
-        },
-        "conflict": {
-            "symfony/config": "<2.7"
-        },
-        "require-dev": {
-            "psr/log": "~1.0",
-            "symfony/config": "~2.8",
-            "symfony/intl": "~2.4|~3.0.0",
-            "symfony/yaml": "~2.2|~3.0.0"
-        },
-        "suggest": {
-            "psr/log": "To use logging capability in translator",
-            "symfony/config": "",
-            "symfony/yaml": ""
-        },
-        "time": "2015-11-18 13:45:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Translation\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Translation Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "birke/rememberme",
         "version": "1.0.4",
         "version_normalized": "1.0.4.0",
@@ -955,5 +831,175 @@
             "php sanitization",
             "php validation"
         ]
+    },
+    {
+        "name": "wikimedia/composer-merge-plugin",
+        "version": "v1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/wikimedia/composer-merge-plugin.git",
+            "reference": "ed426b785f9f786b33be4fd78584e43f4e962356"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/wikimedia/composer-merge-plugin/zipball/ed426b785f9f786b33be4fd78584e43f4e962356",
+            "reference": "ed426b785f9f786b33be4fd78584e43f4e962356",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "1.0.0",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev",
+            "jakub-onderka/php-parallel-lint": "~0.8",
+            "phpspec/prophecy-phpunit": "~1.0",
+            "phpunit/phpunit": "~4.0",
+            "squizlabs/php_codesniffer": "~2.1.0"
+        },
+        "time": "2015-02-21 00:57:13",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "Wikimedia\\Composer\\MergePlugin"
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Wikimedia\\Composer\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Composer plugin to merge multiple composer.json files"
+    },
+    {
+        "name": "symfony/polyfill-mbstring",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-mbstring.git",
+            "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
+            "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "suggest": {
+            "ext-mbstring": "For best performance"
+        },
+        "time": "2015-11-20 09:19:13",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Polyfill\\Mbstring\\": ""
+            },
+            "files": [
+                "bootstrap.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Grekas",
+                "email": "p@tchwork.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony polyfill for the Mbstring extension",
+        "homepage": "https://symfony.com",
+        "keywords": [
+            "compatibility",
+            "mbstring",
+            "polyfill",
+            "portable",
+            "shim"
+        ]
+    },
+    {
+        "name": "symfony/translation",
+        "version": "v3.0.1",
+        "version_normalized": "3.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/translation.git",
+            "reference": "dff0867826a7068d673801b7522f8e2634016ef9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/dff0867826a7068d673801b7522f8e2634016ef9",
+            "reference": "dff0867826a7068d673801b7522f8e2634016ef9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.9",
+            "symfony/polyfill-mbstring": "~1.0"
+        },
+        "conflict": {
+            "symfony/config": "<2.8"
+        },
+        "require-dev": {
+            "psr/log": "~1.0",
+            "symfony/config": "~2.8|~3.0",
+            "symfony/intl": "~2.8|~3.0",
+            "symfony/yaml": "~2.8|~3.0"
+        },
+        "suggest": {
+            "psr/log": "To use logging capability in translator",
+            "symfony/config": "",
+            "symfony/yaml": ""
+        },
+        "time": "2015-12-05 17:45:07",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Symfony\\Component\\Translation\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
+            }
+        ],
+        "description": "Symfony Translation Component",
+        "homepage": "https://symfony.com"
     }
 ]
