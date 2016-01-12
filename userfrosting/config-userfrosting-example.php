@@ -26,8 +26,6 @@
             'log.enable' => true,
             'debug' => false,
             'base.path'     => __DIR__,
-            'twig.cache.enable' => false,
-            'twig.cache.path' => __DIR__ . '/cache',
             'templates.path' => __DIR__ . '/templates',     // This will be overridden anyway by the default theme.
             'themes.path'    =>  __DIR__ . '/templates/themes',
             'plugins.path' => __DIR__ . '/plugins',
@@ -77,8 +75,6 @@
             'log.enable' => true,
             'debug' => false,
             'base.path'     => __DIR__,
-            'twig.cache.enable' => false,
-            'twig.cache.path' => __DIR__ . '/cache',
             'templates.path' => __DIR__ . '/templates',
             'themes.path'    =>  __DIR__ . '/templates/themes',
             'plugins.path' => __DIR__ . '/plugins',
