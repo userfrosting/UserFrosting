@@ -130,6 +130,14 @@ class UserFrosting extends \Slim\Slim {
      * Sets up the Twig environment and custom functions
      */
     public function setupTwig(){
+        // need to be set before environment
+        if ($this->config('twig.cache.enable')) {
+            $view = $this->view();
+            $view->parserOptions = array(
+                'cache' => $this->config('twig.cache.path')
+            );
+        }
+
         //error_log("Setting up twig environment");
         /* Import UserFrosting variables as global Twig variables */    
         $twig = $this->view()->getEnvironment();   
@@ -184,14 +192,6 @@ class UserFrosting extends \Slim\Slim {
         });
         
         $twig->addFunction($function_include_top_js);
-        
-        /* TODO: enable Twig caching?
-        $view = $app->view();
-        $view->parserOptions = array(
-            'debug' => true,
-            'cache' => dirname(__FILE__) . '/cache'
-        );
-        */
     }
     
     /**
