@@ -2,6 +2,8 @@
 
 ## v0.3.1.12
 
+- Minor syntax fixes in `public/js/userfrosting.js`, `widget-auth.js`, `widget-groups.js`, and `widget-users.js`
+
 ## v0.3.1.11
 
 - Composer can now include composer.json files from plugin folders (added "wikimedia/composer-merge-plugin" to composer)

@@ -39,7 +39,7 @@ Handlebars.registerHelper('dateFormat', function(context, block) {
     return moment(context).format(f);
   }else{
     return context;   //  moment plugin not available. return data as is.
-  };
+  }
 });
 
 // Equality helper for Handlebars
@@ -344,7 +344,7 @@ function getTableStateVars(table){
         sort_field: sort_field,
         sort_order: sortOrders[table.config.sortList[0][1]],
         filters: filters
-    }
+    };
     return state;
 }
 	

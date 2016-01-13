@@ -107,7 +107,7 @@ function deleteAuthDialog(box_id, rule_id, owner, hook){
 		box_title: "Delete Group Auth Rule",
 		confirm_message: "Are you sure you want to delete the rule for hook '" + hook + "' for group '" + owner + "'?",
 		confirm_button: "Yes, delete rule"
-	}
+	};
 	
 	// Generate the form
 	$.ajax({  
@@ -130,7 +130,7 @@ function deleteAuthDialog(box_id, rule_id, owner, hook){
             csrf_token = $("meta[name=csrf_token]").attr("content");
             var data = {
                 csrf_token: csrf_token
-            }
+            };
             
             $.ajax({  
               type: "POST",  
