@@ -1,5 +1,7 @@
 # Change Log
 
+## v0.3.1.12
+
 ## v0.3.1.11
 
 - Composer can now include composer.json files from plugin folders (added "wikimedia/composer-merge-plugin" to composer)
