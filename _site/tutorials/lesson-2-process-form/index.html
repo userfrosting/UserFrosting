@@ -190,8 +190,8 @@
                           &lt;label for=&quot;input_group&quot; class=&quot;col-sm-4 control-label&quot;&gt;Primary group&lt;/label&gt;
                           &lt;div class=&quot;col-sm-8&quot;&gt;
                             &lt;select id=&quot;input_group&quot; class=&quot;form-control select2&quot; name=&quot;group_id&quot;&gt;
-                              {% for id, group in groups %}
-                              &lt;option value=&quot;{{id}}&quot;&gt;{{group.name}}&lt;/option&gt;
+                              {% for group in groups %}
+                              &lt;option value=&quot;{{group.id}}&quot;&gt;{{group.name}}&lt;/option&gt;
                               {% endfor %}
                             &lt;/select&gt;
                           &lt;/div&gt;
@@ -420,6 +420,7 @@
         <p>Ok, so let's put the entire route method together:</p>
         
         <pre><code>
+	    
         public function updateGroupTitles(){
            // Access-controlled resource
            if (!$this-&gt;_app-&gt;user-&gt;checkAccess('uri_group_titles')){
@@ -459,9 +460,10 @@
             }
             
             // Give us a nice success message
-            $ms-&gt;addMessageTranslated(&quot;success&quot;, &quot;Everyone's title has been updated to !&quot;, $post);
+            $ms-&gt;addMessageTranslated(&quot;success&quot;, &quot;Everyone's title has been updated to {{title}}!&quot;, $post);
             
         }
+        
         </code></pre>
     </section>
     <section class="tutorial">      
