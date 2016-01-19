@@ -19,7 +19,7 @@ title: "UserFrosting | Navigating the Code"
         <div class="row">
             <div class="col-lg-12">
                 <p>
-                Version 0.3.0 is an attempt to bring UserFrosting up to speed with the tools and practices of the modern PHP community.  If you're not familiar with these concepts, don't worry!  They're easy, and definitely worth it.  If you are, feel free to skip those sections.
+                UserFrosting tries to keep up with the tools and best practices of the modern PHP community.  If any of the tools and concepts discussed below are unfamiliar to you, don't worry!  They're easy, and definitely worth it.  If you are, feel free to skip those sections.
                 </p>
                 <p>We also highly recommend that you check out <a href="http://www.phptherightway.com">PHP The Right Way</a>.  It does a good job explaining the major considerations for building clean, maintainable, and secure software in PHP, without pushing any particular framework down your throat.
                 </p>
@@ -82,7 +82,7 @@ title: "UserFrosting | Navigating the Code"
         <div class="row">
             <div class="col-lg-12">
                 <h2 id="toc_2">Front Controllers and the Slim Microframework</h2>
-                <p>If you&#39;re coming from a previous version of UserFrosting, you&#39;ve probably that the flow of the code has changed substantially.  In particular, we now use a <a href="https://en.wikipedia.org/wiki/Front_Controller_pattern"><strong>front controller pattern</strong></a>, also known as a URL router, which creates a layer of abstraction between the URL that you visit (for example, http://mysite.com/dashboard) and the code that gets run.</p>
+                <p>If you&#39;re coming from the 0.1.x or 0.2.x versions of UserFrosting, you&#39;ve probably noticed that the flow of the code has changed substantially.  In particular, we now use a <a href="https://en.wikipedia.org/wiki/Front_Controller_pattern"><strong>front controller pattern</strong></a>, also known as a URL router, which creates a layer of abstraction between the URL that you visit (for example, http://mysite.com/dashboard) and the code that gets run.</p>
                 
                 <p>If you&#39;re new to PHP, you&#39;ve probably been using the <strong>one-url-one-file</strong> scheme.  This means that, in the document root of the filesystem on your server (for example, <code>/~alexw/dev/htdocs/</code>), you create <code>.php</code> files that correspond to the URLs that users of your site can visit.  So, you might have a file <code>/~alexw/dev/htdocs/command-center.php</code>, and then you visit <code>http://localhost/command-center.php</code> to see the output of this script.</p>
                 
