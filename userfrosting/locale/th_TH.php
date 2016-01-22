@@ -54,6 +54,9 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_INACTIVE" => "บัญชีของคุณยังไม่ถูกเปิดใช้งาน กรุณาตรวจสอบอีเมล และกล่องจดหมายขยะของคุณเพื่อเปิดใช้งานบัญชี",
 	"ACCOUNT_DISABLED" => "บัญชีนี้ถูกปิดการใช้งานไปแล้ว กรุณาติดต่อเราเพื่อขอข้อมูลเพิ่มเติม",
 	"ACCOUNT_USER_CHAR_LIMIT" => "ชื่อผู้ใช้ของคุณต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
+    "ACCOUNT_USER_INVALID_CHARACTERS" => "ชื่อผู้ใช้สามารถใส่ได้แค่ตัวอักษรกับตัวเลขเท่านั้น",
+-   "ACCOUNT_USER_NO_LEAD_WS" => "ชื่อผู้ใช้ต้องไม่ขึ้นต้นด้วยช่องว่าง",
+-   "ACCOUNT_USER_NO_TRAIL_WS" => "ชื่อผู้ใช้ต้องไม่ลงท้ายด้วยช่องว่าง",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "ชื่อแสดงของคุณต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "รหัสผ่านของคุณต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
 	"ACCOUNT_EMAIL_CHAR_LIMIT" => "อีเมลต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
@@ -102,7 +105,9 @@ $lang = array_merge($lang, array(
 	"VALIDATE_REQUIRED" => "ต้องระบุฟิลด์ '{{self}}'",
 	"VALIDATE_BOOLEAN" => "ค่าของ '{{self}}' ต้องเป็น '0' หรือ '1'",
 	"VALIDATE_INTEGER" => "ค่าของ '{{self}}' ต้องอยู่ในรูปแบบตัวเลข (integer)",
-	"VALIDATE_ARRAY" => "ค่าของ '{{self}}' ต้องอยู่ในรูปแบบแถว (array)"
+	"VALIDATE_ARRAY" => "ค่าของ '{{self}}' ต้องอยู่ในรูปแบบแถว (array)",
+	"VALIDATE_NO_LEAD_WS" => "ค่าของ '{{self}}' ต้องไม่ขึ้นต้นด้วยเว้นวรรค ย่อหน้า หรือช่องว่างอื่นๆ",
+	"VALIDATE_NO_TRAIL_WS" => "ค่าของ '{{self}}' ต้องไม่ลงท้ายด้วยเว้นวรรค ย่อหน้า หรือช่องว่างอื่นๆ"
 ));
 
 // Configuration
