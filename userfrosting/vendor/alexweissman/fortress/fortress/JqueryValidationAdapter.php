@@ -112,13 +112,13 @@ class JqueryValidationAdapter extends ClientSideValidationAdapter {
                 if (isset($validator['values']))
                     $transformedValidatorJson['notMemberOf'] = $validator['values'];
                 break;
-            case "matches":
+            case "matches":           
                 if (isset($validator['field']))
-                $transformedValidatorJson['equalTo'] = "input[name='" . $validator['field'] . "']";
+                $transformedValidatorJson['matchFormField'] = $validator['field'];
                 break;
             case "not_matches":
                 if (isset($validator['field']))
-                $transformedValidatorJson['notEqualTo'] = "input[name='" . $validator['field'] . "']";
+                $transformedValidatorJson['notMatchFormField'] = $validator['field'];
                 break;
             case "no_leading_whitespace":
                 $transformedValidatorJson['noLeadingWhitespace'] = true;

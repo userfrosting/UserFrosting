@@ -35,17 +35,17 @@ class AdminController extends \UserFrosting\BaseController {
         if (!$this->_app->user->checkAccess('uri_site_settings')){
             $this->_app->notFound();
         }
-        
+
         // Hook for core and plugins to register their settings
         $this->_app->applyHook("settings.register");
-        
+
         $this->_app->render('config/site-settings.twig', [
             'settings' => $this->_app->site->getRegisteredSettings(),
             'info'     => $this->_app->site->getSystemInfo(),
             'error_log'=> $this->_app->site->getLog(50)
-        ]);    
+        ]);
     }
-        
+
     /**
      * Processes a request to update the site settings.
      *
@@ -54,29 +54,29 @@ class AdminController extends \UserFrosting\BaseController {
      * This route requires authentication.
      * Request type: POST
      * @todo validate setting syntax
-     */       
+     */
     public function siteSettings(){
         // Get the alert message stream
         $ms = $this->_app->alerts;
-        
+
         $post = $this->_app->request->post();
-        
+
         // Remove CSRF token
         if (isset($post['csrf_token']))
             unset($post['csrf_token']);
-            
+
         // Access-controlled page
         if (!$this->_app->user->checkAccess('update_site_settings')){
             $ms->addMessageTranslated("danger", "ACCESS_DENIED");
             $this->_app->halt(403);
         }
-        
+
         // Hook for core and plugins to register their settings
         $this->_app->applyHook("settings.register");
-        
+
         // Get registered settings
         $registered_settings = $this->_app->site->getRegisteredSettings();
-        
+
         // Ok, check that all posted settings are registered
         foreach ($post as $plugin => $settings){
             if (!isset($registered_settings[$plugin])){
@@ -90,9 +90,9 @@ class AdminController extends \UserFrosting\BaseController {
                 }
             }
         }
-        
+
         // TODO: validate setting syntax
-        
+
         // If validation passed, then update
         foreach ($post as $plugin => $settings){
             foreach ($settings as $name => $value){
@@ -101,5 +101,5 @@ class AdminController extends \UserFrosting\BaseController {
         }
         $this->_app->site->store();
     }
-    
+
 }
