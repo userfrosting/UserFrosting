@@ -51,6 +51,22 @@ class AccountInvalidException extends \Exception
 }
 
 /**
+ * Account Disabled Exception.
+ */
+class AccountDisabledException extends \Exception
+{
+    /**
+     * Public constructor.
+     */
+    public function __construct()
+    {
+        $message = 'The account you were logged in with is currently disabled.  We have logged you out now, so please try again.';
+        $code = 403;
+        parent::__construct($message, $code);
+    }
+}
+
+/**
  * Invalid Database Exception.
  */
 class DatabaseInvalidException extends \Exception

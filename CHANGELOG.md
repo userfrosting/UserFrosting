@@ -2,6 +2,7 @@
 
 ## v0.3.1.12
 
+- Fixed a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
 - Added option for HTTPS in `.htaccess`, commented out by default
 - Minor syntax fixes in `public/js/userfrosting.js`, `widget-auth.js`, `widget-groups.js`, and `widget-users.js`
 
