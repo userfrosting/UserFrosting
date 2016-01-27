@@ -2,6 +2,7 @@
 
 ## v0.3.1.12
 
+- Fixed the Bootstrap CSS file to support the UserFrosting directory structure
 - Added missing lines of Thai language (popiazaza)
 - Fixed a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
 - Added option for HTTPS in `.htaccess`, commented out by default
