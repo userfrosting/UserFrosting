@@ -1,3 +1,9 @@
+# Navigating UserFrosting
+
+UserFrosting tries to keep up with the tools and best practices of the modern PHP community.  If any of the tools and concepts discussed below are unfamiliar to you, don't worry!  They're easy, and definitely worth it.  If you are, feel free to skip those sections.
+
+We also highly recommend that you check out [PHP The Right Way](http://www.phptherightway.com).  It does a good job explaining the major considerations for building clean, maintainable, and secure software in PHP, without pushing any particular framework down your throat.
+                
 ## Dependency Management with Composer
 
 UserFrosting builds on top of a number of existing components.  After all, why reinvent the wheel if there is already a well-documented, well-tested solution?  However, new versions of these *dependencies* are released all the time, and it can be difficult to keep up with changes.
@@ -26,7 +32,7 @@ Libraries which have been installed with composer are autoloaded, so there is no
 
 ## Front Controllers and the Slim Microframework
 
-If you're coming from a previous version of UserFrosting, you've probably that the flow of the code has changed substantially.  In particular, we now use a [**front controller pattern**](https://en.wikipedia.org/wiki/Front_Controller_pattern), also known as a URL router, which creates a layer of abstraction between the URL that you visit (for example, http://mysite.com/dashboard) and the code that gets run.
+If you're coming from a previous version of UserFrosting, you've probably noticed that the flow of the code has changed substantially.  In particular, we now use a [**front controller pattern**](https://en.wikipedia.org/wiki/Front_Controller_pattern), also known as a URL router, which creates a layer of abstraction between the URL that you visit (for example, http://mysite.com/dashboard) and the code that gets run.
 
 If you're new to PHP, you've probably been using the **one-url-one-file** scheme.  This means that, in the document root of the filesystem on your server (for example, `/~alexw/dev/htdocs/`), you create `.php` files that correspond to the URLs that users of your site can visit.  So, you might have a file `/~alexw/dev/htdocs/command-center.php`, and then you visit `http://localhost/command-center.php` to see the output of this script.
 
