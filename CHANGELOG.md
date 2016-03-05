@@ -1,5 +1,15 @@
 # Change Log
 
+## v0.3.1.12
+
+- Add sendmail support in Notification class
+- Fixed problem with strict comparison in Handlebars templates and inconsistent data types among different database technologies
+- Overrided paths to font files for Bootstrap Glyphicons to support the UserFrosting directory structure
+- Added missing lines of Thai language (popiazaza)
+- Fixed a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
+- Added option for HTTPS in `.htaccess`, commented out by default
+- Minor syntax fixes in `public/js/userfrosting.js`, `widget-auth.js`, `widget-groups.js`, and `widget-users.js`
+
 ## v0.3.1.11
 
 - Composer can now include composer.json files from plugin folders (added "wikimedia/composer-merge-plugin" to composer)

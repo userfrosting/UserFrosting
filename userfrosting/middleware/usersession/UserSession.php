@@ -51,6 +51,9 @@ class UserSession extends \Slim\Middleware {
                 // Load the user.  If they don't exist any more, throw an exception.
                 if (!($this->app->user = User::find($_SESSION["userfrosting"]["user_id"])))
                     throw new AccountInvalidException();
+
+                if (!$this->app->user->flag_enabled)
+                    throw new AccountDisabledException();
                 
                 //error_log("Current user id is " . $this->app->user->id);
                 
