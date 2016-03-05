@@ -5,3 +5,5 @@ public/test/*
 public/js/min/*
 public/css/min/*
 app/config/development.php
+
+userfrosting/config-userfrosting.php
