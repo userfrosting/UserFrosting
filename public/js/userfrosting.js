@@ -45,7 +45,7 @@ Handlebars.registerHelper('dateFormat', function(context, block) {
 // Equality helper for Handlebars
 // http://stackoverflow.com/questions/8853396/logical-operator-in-a-handlebars-js-if-conditional/21915381#21915381
 Handlebars.registerHelper('ifCond', function(v1, v2, options) {
-  if(v1 === v2) {
+  if(v1 == v2) {
     return options.fn(this);
   }
   return options.inverse(this);
