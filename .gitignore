@@ -1,7 +1,18 @@
+# Ignores my text editor metadata
 *.komodoproject
+
+# Ignores Mac metadata.  You can configure this globally if you use a Mac: http://islegend.com/development/setting-global-gitignore-mac-windows/
 .DS_Store
+
+# Ignore developer resources
 _meta/*
-public/test/*
+
+# Ignore personal config files (v0.3.1)
 userfrosting/config-userfrosting.php
+
+# Ignore minified assets
 public/js/min/*
 public/css/min/*
+
+# Ignore personal config files (dev)
+app/config/development.php
