@@ -4,7 +4,7 @@
 
 - Add sendmail support in Notification class
 - Fixed problem with strict comparison in Handlebars templates and inconsistent data types among different database technologies
-- Fixed the Bootstrap CSS file to support the UserFrosting directory structure
+- Overrided paths to font files for Bootstrap Glyphicons to support the UserFrosting directory structure
 - Added missing lines of Thai language (popiazaza)
 - Fixed a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
 - Added option for HTTPS in `.htaccess`, commented out by default
