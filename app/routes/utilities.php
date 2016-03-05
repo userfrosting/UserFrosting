@@ -88,17 +88,3 @@
         $app->response->setBody(file_get_contents($css_include));
     });
     
-    /**
-     * Renders the 404 error page.
-     *
-     * This page shows the 404 "page not found" page.
-     * Request type: GET
-     */
-    $app->notFound(function () use ($app) {
-        if ($app->request->isGet()) {
-            $app->render('errors/404.twig');
-        } else {
-            $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
-        }
-    });
-    

@@ -54,12 +54,17 @@ class UserFrosting extends \Slim\Slim {
     }
     
     public function process(){       
-        require_once APP_DIR . '/' . INIT_DIR_NAME . "/initialize.php";
-        
+        // If there is a common init file, load that first
+        $init_path = APP_DIR . '/' . INIT_DIR_NAME . "/initialize.php";
+        if (file_exists($init_path))
+            require_once $init_path;    
+    
         // Bring in any site-specific initialization scripts.  This gives specific sites/plugins the opportunity to register functionality during the initialization process.
         if ($this->site_name){
-            require_once SITES_DIR . "/{$this->site_name}/". INIT_DIR_NAME . "/initialize.php";
-        }       
+            $init_path = SITES_DIR . "/{$this->site_name}/". INIT_DIR_NAME . "/initialize.php";
+            if (file_exists($init_path))
+                require_once $init_path;
+        }    
         
         // Start session
         $this->startSession();
@@ -426,10 +431,14 @@ class UserFrosting extends \Slim\Slim {
     
     /**
      * Set up the routes for this application.
+     *
+     * Loads site-specific routes, as well as common routes by including all files in the `routes` directories.
+     * Also, loads the notFound handler by invoking the routes.common.notfound and routes.site.notfound hooks.
+     * @todo integrate this with a common resource locator class (see https://github.com/userfrosting/UserFrosting/issues/512)
      */
-    public function setupRoutes(){
+    protected function setupRoutes(){
         
-        // First, get any site-specific routes.  If they override any common routes, they need to be declared first.
+        // First, get any site-specific routes.  These may override the common routes.
         if ($this->site_name) {
             $routes = glob(SITES_DIR . "/{$this->site_name}/" . ROUTE_DIR_NAME . "/*.php");
             foreach ($routes as $route){
@@ -437,12 +446,39 @@ class UserFrosting extends \Slim\Slim {
             }
         }
         
-        // Now get the routes common to the entire system.
+        // Then, get the routes common to the entire system.
         $routes = glob(APP_DIR . '/' . ROUTE_DIR_NAME . "/*.php");
         foreach ($routes as $route){
             require_once $route;
         }
-    }    
+        
+        // Next, boot up the common notFound handler (if it exists)
+        $this->applyHook("routes.common.notfound");
+        
+        // Finally, boot up any site-specific notFound handler (if it exists)
+        $this->applyHook("routes.site.notfound");
+    }
+    
+    /**
+     * Temporary method to load a request schema by looking in the site, then in the system schema directories
+     *
+     * @param string $path The path to the request schema, relative to the base schema path(s) that we search in
+     * @return \Fortress\RequestSchema
+     * @todo move this to its own class
+     */
+    public function loadRequestSchema($path){
+        // First, get any site-specific schema.  If they override any common schema, they need to be declared first.
+        if ($this->site_name) {
+            $full_path = SITES_DIR . "/{$this->site_name}/" . SCHEMA_DIR_NAME . $path;
+            if (file_exists($full_path))
+                return new \Fortress\RequestSchema($full_path);
+        }
+        
+        // Now get the routes common to the entire system.
+        $full_path = APP_DIR . '/' . SCHEMA_DIR_NAME . $path;
+        if (file_exists($full_path))
+            return new \Fortress\RequestSchema($full_path);
+    }       
     
     /**
      * Set up the fatal error handler, so that we get a clean error message and alert instead of a WSOD.

@@ -162,3 +162,20 @@
         // Auth JS
         $app->schema->registerJS("auth", "widget-auth.js");
     }, 1);
+
+    $app->hook('routes.common.notfound', function () use ($app) {
+        /**
+         * Renders the 404 error page.
+         *
+         * This page shows the 404 "page not found" page.
+         * Request type: GET
+         */
+        $app->notFound(function () use ($app) {
+            if ($app->request->isGet()) {
+                $app->render('errors/404.twig');
+            } else {
+                $app->alerts->addMessageTranslated("danger", "SERVER_ERROR");
+            }
+        });
+    });
+    

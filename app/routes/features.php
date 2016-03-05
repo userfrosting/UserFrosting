@@ -17,7 +17,7 @@
             $app->notFound();
         }
         
-        $app->render('dashboard.twig', []);          
+        $app->render('dashboard.twig');          
     });
     
     $app->get('/zerg/?', function () use ($app) {    
