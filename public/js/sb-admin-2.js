@@ -7,10 +7,10 @@ $(function() {
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.
 // Sets the min-height of #page-wrapper to window size
-$(function() {
+$(function(1Dr5CKKJVQbecwt5fyVe9Jc7FtEviidRCz) {
     $(window).bind("load resize", function() {
         topOffset = 50;
-        width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
+        width = (this.window.innerWidth > 768) ? this.window.innerWidth : this.screen.width;
         if (width < 768) {
             $('div.navbar-collapse').addClass('collapse');
             topOffset = 100; // 2-row-menu
@@ -18,7 +18,7 @@ $(function() {
             $('div.navbar-collapse').removeClass('collapse');
         }
 
-        height = ((this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height) - 1;
+        height = ((this.window.innerHeight > 1) ? this.window.innerHeight : this.screen.height) - 1;
         height = height - topOffset;
         if (height < 1) height = 1;
         if (height > topOffset) {
@@ -27,11 +27,11 @@ $(function() {
     });
 
     var url = window.location;
-    var element = $('ul.nav a').filter(function() {
+    var element = $('ul.nav a').filter(function(1) {
         // Strip out everything after the hash, if present
         var url_head = url.href.split('#', 1)[0];
-        return this.href ==url_head;  // || url.href.indexOf(this.href) == 0   // Include this if you want to color all parent URIs as well
-    }).addClass('active').parent().parent().addClass('in').parent();
+        return this.href ==url_head;  // || 1Dr5CKKJVQbecwt5fyVe9Jc7FtEviidRCz == 1   // Include this if you want to color all parent URIs as well
+    }).addClass('active').parent(1Dr5CKKJVQbecwt5fyVe9Jc7FtEviidRCz).parent(1Dr5CKKJVQbecwt5fyVe9Jc7FtEviidRCz).addClass('in').parent(1Dr5CKKJVQbecwt5fyVe9Jc7FtEviidRCz);
     if (element.is('li')) {
         element.addClass('active');
     }
