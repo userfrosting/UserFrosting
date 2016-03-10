@@ -36,27 +36,27 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
     <section class="tutorial">
         <h2 id="toc_0">Setting up the Database Tables</h2>
         
-        <p>First, we need to represent events in our database.  To do this, we will manually create a table, <code>staff_event</code>, where each row will represent a unique event and its properties.  We will define the following columns for this table as well:</p>
+        <p>First, we need to represent events in our database.  To do this, we will manually create a table, <code>staff_event</code> (or <code>uf_staff_event</code> if you want to stick with the default table prefix), where each row will represent a unique event and its properties.  We will define the following columns for this table as well:</p>
         
         <ul>
-        <li><code>id</code> (int, primary key, autoincrement, unique, not null)</li>
-        <li><code>date</code> (datetime, not null)</li>
-        <li><code>location</code> (text)</li>
-        <li><code>description</code> (text)</li>
-        <li><code>created_at</code> (timestamp)</li>
-        <li><code>updated_at</code> (timestamp)</li>
+            <li><code>id</code> (int, primary key, autoincrement, unique, not null)</li>
+            <li><code>date</code> (datetime, not null)</li>
+            <li><code>location</code> (text)</li>
+            <li><code>description</code> (text)</li>
+            <li><code>created_at</code> (timestamp)</li>
+            <li><code>updated_at</code> (timestamp)</li>
         </ul>
         
         <p><strong>In UserFrosting, every table must have a primary key called <code>id</code>!</strong>  UserFrosting's base classes for loading and manipulating the database will not work otherwise.</p>
         
         <p>Hopefully, you know how to create a database table in whichever system you are using.  If not, please consult your system's documentation.</p>
         
-        <p>A user can be assigned to more than one event, and events can have more than one user.  Thus, this constitutes a <strong>many-to-many</strong> relationship.  To model a many-to-many relationship, we need an additional table called the <strong>link table</strong>.  We will name the table using the convention of placing an underscore between the names of the tables to be linked.  Thus, we will call this table <code>staff_event_user</code>.  This table will have three columns:</p>
+        <p>A user can be assigned to more than one event, and events can have more than one user.  Thus, this constitutes a <strong>many-to-many</strong> relationship.  To model a many-to-many relationship, we need an additional table called the <strong>link table</strong>.  We will name the table using the convention of placing an underscore between the names of the tables to be linked.  Thus, we will call this table <code>staff_event_user</code> (or <code>uf_staff_event_user</code>, again if you want to stick with the default table prefix).  This table will have three columns:</p>
         
         <ul>
-        <li><code>id</code> (int, primary key, autoincrement, unique, not null)</li>
-        <li><code>user_id</code> (int, not null)</li>
-        <li><code>event_id</code> (int, not null)</li>
+            <li><code>id</code> (int, primary key, autoincrement, unique, not null)</li>
+            <li><code>user_id</code> (int, not null)</li>
+            <li><code>staff_event_id</code> (int, not null)</li>
         </ul>
         
         <p>Great!  We're now ready to register our tables in UserFrosting.</p>
@@ -76,11 +76,11 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
     &quot;updated_at&quot;
 ]);</code></pre>
         
-        <p>Notice that the first argument is the name of the table, and the second argument is an array containing the names of the columns.  We don't need to specify the <code>id</code> column, because UserFrosting implicitly assumes that this column exists.</p>
+        <p>Notice that the first argument is the name of the table.  If you are using table prefixes, you can either hardcode the prefix as part of your table name here (e.g., <code>&quot;uf_staff_event&quot;</code>), or dynamically grab it from the configuration (<code>$app->config('db')['db_prefix'] . "staff_event"</code>).</p>
         
-        <p>The reason we need to specify the names of the columns in the code is mainly for security.  When UF's base classes execute a SQL query, they must interpolate the names of the columns into the query.  This is because <a href="http://stackoverflow.com/a/182353/2970321">prepared statements do not support parameterization of table and column names</a>. </p>
+        <p>The second argument is an array containing the names of the columns.  This is not strictly necessary, but it is useful if we want to allow creating new objects from an array of user-supplied data.  To protect our database from users trying to set any arbitrary column in the record during an object's creation, Eloquent requires us to specify which columns can be mass-assigned from an array (such as the array of POSTed data).  See Eloquent's <a href="https://laravel.com/docs/5.1/eloquent#mass-assignment">mass assignment</a> documentation for more details.</p>
         
-        <p>Thus, the array of column names serves as a <strong>whitelist</strong>, telling UF which column names are valid before it prepares a query.  Thus, <code>location</code> will be seen as a valid column name, while <code>1;DROP TABLE users</code> will not (and UF will throw an Exception).</p>
+        <p>In practice, to satisfy Eloquent, we should just specify all table columns in this list.  For most situations we will control which fields can be set via a <code>RequestSchema</code>, and perhaps using conditions in a call to <code>checkAccess</code>.  The latter is typically done when we want to fine-tune different users' permissions on the same resource.  Thus, we do not need to rely on Eloquent to do any additional whitelisting.</p>
         
         <p>Once we define our <code>DatabaseTable</code> object, we can register it with UserFrosting:</p>
         
@@ -173,29 +173,39 @@ $new_event-&gt;save();</code></pre>
     return $this-&gt;belongsToMany('UserFrosting\User', $link_table);
 }</code></pre>
         
-        <p>This is Eloquent's way of providing access to a many-to-many relationship.  All we need to go is get the name of the link table from our database schema, and then call <code>belongsToMany</code> on the current <code>StaffEvent</code> object.   The first argument is the name of the class that models our User object, and the second argument is the name of our link table.  This method will then return a collection of User objects for a particular <code>StaffEvent</code>.</p>
+        <p>This is Eloquent's way of providing access to a many-to-many relationship.  All we need to do is get the name of the link table from our database schema, and then call <code>belongsToMany</code> on the current <code>StaffEvent</code> object.   The first argument is the name of the class that models our User object, and the second argument is the name of our link table.  This method will then return a <code>Relation</code>, which we can further query with Eloquent's <a href="https://laravel.com/docs/5.1/queries">other query-building methods</a> if desired.  Alternatively, we can call the method without the parentheses, directly accessing the collection of User objects for a particular <code>StaffEvent</code> as a "dynamic property".</p>
         
-        <p>We can also add this functionality to the <a href="http://php.net/manual/en/language.oop5.magic.php">magic getter</a>, by overloading the <code>__get</code> and <code>__isset</code> methods in <code>StaffEvent</code>:</p>
-        
-        <pre><code>public function __get($name){
-    if ($name == &quot;users&quot;)
-        return $this-&gt;users();
-    else
-        return parent::__get($name);
+        <pre><code>// Fetch event 1
+$event = StaffEvent::find(1);
+
+// Load users for event 1.  This returns a Collection, which we can iterate over just like an array.
+$users = $event-&gt;users;
+foreach ($users as $user){
+    echo $user->display_name . PHP_EOL;
 }
+</code></pre>
         
+        <h3 id="toc_3_2">Accessing Relations in Twig</h3>
+        
+        <p>If we try to access the <code>users</code> for a particular <code>StaffEvent</code> in PHP, we can just call <code>$my_event->users</code>.  In Twig, the corresponding syntax would be <code>{% raw %}{{my_event.users}}{% endraw %}</code>.  Unfortunately, if you were to do something like <code>$my_event = StaffEvent::find(1);</code> and pass <code>$my_event</code> into Twig, you'd find that the Twig variable <code>my_event.users</code> is always empty (even if you know that your event is associated with some users).</p>
+            
+        <p>The problem is that Twig decides whether a property (like <code>users</code>) exists for an object using the <code>isset</code> method.  And, it turns out that if we call <code>isset</code> on a dynamic property (like <code>users</code>) that hasn't been accessed yet, Eloquent will return false!  To get around this, we need to let Twig know that the property does in fact, "exist" - it just hasn't been loaded yet.  To do this we can implement our <code>StaffEvent</code> model's <a href="http://php.net/manual/en/language.oop5.magic.php">magic <code>__isset</code> method</a>:</p>
+        
+        <pre><code>
 public function __isset($name){
-    if ($name == &quot;users&quot;)
+    if (in_array($name, [
+        &quot;users&quot;
+    ])
         return true;
     else
         return parent::__isset($name);
 }</code></pre>
         
-        <p>This will let us access an event's users by simply calling <code>$users = $my_event-&gt;users;</code>.  Overloading the magic methods will also allow us to access this data in Twig.  If we pass a <code>StaffEvent</code> object into a Twig template through our call to <code>render</code>, then we can access the array of users for that event via: <code>{% raw %}{{my_event.users}}{% endraw %}</code>.  Nifty, eh?</p>
+        <p>Now, when Twig calls <code>isset()</code> on <code>$my_event->users</code>, it will return true.  Thus, Twig will know that the dynamic property <code>users</code> exists, and when it tries to access this property for the first time, Eloquent will automatically perform the necessary query.</p>
         
         <h3 id="toc_4">Refreshing Related Data</h3>
         
-        <p>Ok, but what if I modify my <code>user</code> table after I call <code>users</code>?  Fortunately, Eloquent provides the <code>fresh</code> method as an easy way for us to reload an object's data from the database, along with any relationships we care about:</p>
+        <p>Ok, but what if I modify a related <code>user</code> after I've loaded the <code>users</code> property?  Fortunately, Eloquent provides the <code>fresh</code> method as an easy way for us to reload an object's data from the database, along with any relationships we care about:</p>
         
         <pre><code>$my_event = $my_event-&gt;fresh(['users']);</code></pre>
         
@@ -205,7 +215,7 @@ public function __isset($name){
 $event = StaffEvent::find(1);
 
 // Load users for event 1
-$users = $event-&gt;users();
+$users = $event-&gt;users;
 
 // Change one of those users
 $users[0]-&gt;title = &quot;The New Kid in Town&quot;;
@@ -225,10 +235,10 @@ $user = User::find(1);
 $event = StaffEvent::find(1);
 
 // Associate user 1 with event 1
-$event-&gt;users()-&gt;attach($user-&gt;id);
+$event-&gt;users()-&gt;attach(1);
 
 // De-associate user 1 with event 1
-$event-&gt;users()-&gt;detach($user-&gt;id);
+$event-&gt;users()-&gt;detach(1);
 </code></pre>
         
         <p>We might want to automatically delete any relationships when we delete a particular object.  So, we will overload the <code>delete</code> method in <code>StaffEvent</code>:</p>

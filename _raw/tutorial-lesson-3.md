@@ -27,7 +27,7 @@ A user can be assigned to more than one event, and events can have more than one
 
 - `id` (int, primary key, autoincrement, unique, not null)
 - `user_id` (int, not null)
-- `event_id` (int, not null)
+- `staff_event_id` (int, not null)
 
 Great!  We're now ready to register our tables in UserFrosting.
 
