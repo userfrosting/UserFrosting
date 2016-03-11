@@ -114,7 +114,7 @@ function deleteGroupDialog(box_id, group_id, name){
 		box_title: "Delete Group",
 		confirm_message: "Are you sure you want to delete the group " + name + "?",
 		confirm_button: "Yes, delete group"
-	}
+	};
 	
 	// Generate the form
 	$.ajax({  
@@ -138,7 +138,7 @@ function deleteGroupDialog(box_id, group_id, name){
             var data = {
                 group_id: group_id,
                 csrf_token: csrf_token
-            }
+            };
             
             $.ajax({  
               type: "POST",  

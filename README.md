@@ -10,6 +10,6 @@ If you simply want to show that you like this project, or want to remember it fo
 
 ## By [Alex Weissman](http://alexanderweissman.com)
 
-Copyright (c) 2015, free to use in personal and commercial software as per the [license](licenses/UserFrosting.md).
+Copyright (c) 2016, free to use in personal and commercial software as per the [license](licenses/UserFrosting.md).
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/) and the [Twig](http://twig.sensiolabs.org/) templating engine.

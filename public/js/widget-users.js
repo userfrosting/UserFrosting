@@ -89,7 +89,7 @@ function updateUserActiveStatus(user_id) {
     var data = {
 		flag_verified: "1",
         csrf_token: csrf_token
-	}
+	};
     
     var url = site['uri']['public'] + "/users/u/" + user_id;
 
@@ -113,7 +113,7 @@ function deleteUserDialog(box_id, user_id, name){
 		box_title: "Delete User",
 		confirm_message: "Are you sure you want to delete the user " + name + "?",
 		confirm_button: "Yes, delete user"
-	}
+	};
 	
 	// Generate the form
 	$.ajax({  
@@ -138,7 +138,7 @@ function deleteUserDialog(box_id, user_id, name){
             var data = {
                 user_id: user_id,
                 csrf_token: csrf_token
-            }
+            };
             
             $.ajax({  
               type: "POST",  

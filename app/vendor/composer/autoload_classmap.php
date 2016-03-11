@@ -25,6 +25,7 @@ return array(
     'SMTP' => $vendorDir . '/phpmailer/phpmailer/class.smtp.php',
     'Slim\\Extras\\Middleware\\CsrfGuard' => $baseDir . '/system/middleware/CsrfGuard.php',
     'UserFrosting\\AccessConditionExpression' => $baseDir . '/system/auth/AccessConditionExpression.php',
+    'UserFrosting\\AccountDisabledException' => $baseDir . '/system/middleware/usersession/Exception.php',
     'UserFrosting\\AccountInvalidException' => $baseDir . '/system/middleware/usersession/Exception.php',
     'UserFrosting\\AuthCompromisedException' => $baseDir . '/system/middleware/usersession/Exception.php',
     'UserFrosting\\AuthExpiredException' => $baseDir . '/system/middleware/usersession/Exception.php',
