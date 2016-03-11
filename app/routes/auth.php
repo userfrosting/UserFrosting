@@ -35,7 +35,7 @@
         $group = UF\Group::find($rule->group_id);
         
         // Load validator rules
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/auth-update.json");
+        $schema = $app->loadRequestSchema("forms/auth-update.json");
         $app->jsValidator->setSchema($schema);
         
         $app->render("components/common/auth-info-form.twig", [
@@ -69,7 +69,7 @@
         $get = $app->request->get();
 
         // Load validator rules
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/auth-create.json");
+        $schema = $app->loadRequestSchema("forms/auth-create.json");
         $app->jsValidator->setSchema($schema);
 
         // Get the group for which we are creating this new rule
@@ -152,7 +152,7 @@
         $post = $app->request->post();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/auth-update.json");
+        $requestSchema = $app->loadRequestSchema("forms/auth-update.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -210,7 +210,7 @@
         $post = $app->request->post();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/auth-create.json");
+        $requestSchema = $app->loadRequestSchema("forms/auth-create.json");
 
         // Get the alert message stream
         $ms = $app->alerts;

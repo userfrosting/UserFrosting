@@ -16,7 +16,7 @@
         $get = $app->request->get();
         
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/confirm-modal.json");
+        $requestSchema = $app->loadRequestSchema("forms/confirm-modal.json");
         
         // Get the alert message stream
         $ms = $app->alerts;         

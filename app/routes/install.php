@@ -156,7 +156,7 @@
                 $app->redirect($app->urlFor('uri_home'));
             }
     
-            $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/register.json");
+            $schema = $app->loadRequestSchema("forms/register.json");
             $app->jsValidator->setSchema($schema);
     
             $app->render('install/install-master.twig', [
@@ -205,7 +205,7 @@
         }
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/register.json");
+        $requestSchema = $app->loadRequestSchema("forms/register.json");
 
         // Set up Fortress to process the request
         $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);

@@ -467,17 +467,22 @@ class UserFrosting extends \Slim\Slim {
      * @todo move this to its own class
      */
     public function loadRequestSchema($path){
+        $search_paths = [];
         // First, get any site-specific schema.  If they override any common schema, they need to be declared first.
         if ($this->site_name) {
-            $full_path = SITES_DIR . "/{$this->site_name}/" . SCHEMA_DIR_NAME . $path;
+            $search_paths[] = SITES_DIR . "/{$this->site_name}/" . SCHEMA_DIR_NAME;
+        }
+        
+        // Now get the schema common to the entire system.
+        $search_paths[] = APP_DIR . '/' . SCHEMA_DIR_NAME;
+        
+        foreach ($search_paths as $search_path) {
+            $full_path = $search_path . '/' . $path;
             if (file_exists($full_path))
                 return new \Fortress\RequestSchema($full_path);
         }
-        
-        // Now get the routes common to the entire system.
-        $full_path = APP_DIR . '/' . SCHEMA_DIR_NAME . $path;
-        if (file_exists($full_path))
-            return new \Fortress\RequestSchema($full_path);
+        $search_paths_str = implode(";", $search_paths);
+        throw new \Exception("Could not find the schema $path! Looked in $search_paths_str");
     }       
     
     /**

@@ -22,7 +22,7 @@
     /**
      * Generates a new captcha.
      *
-     * Wrapper for Util::generateCaptcha()
+     * Wrapper for Utils::generateCaptcha()
      * Request type: GET
      */        
     $app->get('/account/captcha/?', function () use ($app) {   
@@ -38,7 +38,7 @@
      * Request type: GET
      */
     $app->get('/account/forgot-password/?', function () use ($app) {       
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/forgot-password.json");
+        $schema = $app->loadRequestSchema("forms/forgot-password.json");
         $app->jsValidator->setSchema($schema);
 
         $app->render('account/forgot-password.twig', [
@@ -57,7 +57,7 @@
             $app->redirect($app->urlFor('uri_home'));
         }
 
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/login.json");
+        $schema = $app->loadRequestSchema("forms/login.json");
         $app->jsValidator->setSchema($schema);
 
         $app->render('account/login.twig', [
@@ -100,7 +100,7 @@
             $app->redirect($app->urlFor('uri_install'));
         }
 
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/register.json");
+        $schema = $app->loadRequestSchema("forms/register.json");
         $app->jsValidator->setSchema($schema);
 
         $settings = $app->site;
@@ -112,7 +112,7 @@
         }
 
         $app->render('account/register.twig', [
-            'captcha_image' =>  $this->generateCaptcha(),
+            'captcha_image' =>  UF\Utils::generateCaptcha(),
             'validators' => $app->jsValidator->rules()
         ]);
     });
@@ -125,7 +125,7 @@
      * Request type: GET
      */    
     $app->get('/account/resend-activation/?', function () use ($app) {   
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/resend-activation.json");
+        $schema = $app->loadRequestSchema("forms/resend-activation.json");
         $app->jsValidator->setSchema($schema);
 
         $app->render('account/resend-activation.twig', [
@@ -146,7 +146,7 @@
         // Look up the user for the secret token
         $token = $get['secret_token'];
 
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/set-password.json");
+        $schema = $app->loadRequestSchema("forms/set-password.json");
         $app->jsValidator->setSchema($schema);
 
         if ($flag_new_user)
@@ -172,7 +172,7 @@
         $data = $app->request->get();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/deny-password.json");
+        $requestSchema = $app->loadRequestSchema("forms/deny-password.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -214,7 +214,7 @@
         // Look up the user for the secret token
         $token = $app->request->get()['secret_token'];
         
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/set-password.json");
+        $schema = $app->loadRequestSchema("forms/set-password.json");
         $app->jsValidator->setSchema($schema);
         
         $template = 'account/create-password.twig';
@@ -239,7 +239,7 @@
             $app->notFound();
         }
 
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/account-settings.json");
+        $schema = $app->loadRequestSchema("forms/account-settings.json");
         $app->jsValidator->setSchema($schema);
 
         $app->render('account/account-settings.twig', [
@@ -261,7 +261,7 @@
         $data = $app->request->get();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/account-activate.json");
+        $requestSchema = $app->loadRequestSchema("forms/account-activate.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -308,7 +308,7 @@
         $data = $app->request->post();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/forgot-password.json");
+        $requestSchema = $app->loadRequestSchema("forms/forgot-password.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -372,7 +372,7 @@
      */
     $app->post('/account/login/?', function () use ($app) {  
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/login.json");
+        $requestSchema = $app->loadRequestSchema("forms/login.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -482,7 +482,7 @@
         }
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/register.json");
+        $requestSchema = $app->loadRequestSchema("forms/register.json");
 
         // Set up Fortress to process the request
         $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
@@ -626,7 +626,7 @@
         $data = $app->request->post();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/resend-activation.json");
+        $requestSchema = $app->loadRequestSchema("forms/resend-activation.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -715,7 +715,7 @@
         $data = $app->request->post();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/set-password.json");
+        $requestSchema = $app->loadRequestSchema("forms/set-password.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -806,7 +806,7 @@
      */
     $app->post('/account/settings/?', function () use ($app) { 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/account-settings.json");
+        $requestSchema = $app->loadRequestSchema("forms/account-settings.json");
 
         // Get the alert message stream
         $ms = $app->alerts;

@@ -42,7 +42,7 @@
                 $app->notFound();
             }
 
-            $userQuery = new UF\UF\User;
+            $userQuery = new UF\User;
             $userQuery = $userQuery->where('primary_group_id', $primary_group->id);
 
         } else {

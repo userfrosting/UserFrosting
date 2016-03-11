@@ -66,7 +66,7 @@
         }
 
         // Load validator rules
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/group-create.json");
+        $schema = $app->loadRequestSchema("forms/group-create.json");
         $app->jsValidator->setSchema($schema);
 
         $app->render($template, [
@@ -138,7 +138,7 @@
         }
 
         // Load validator rules
-        $schema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/group-update.json");
+        $schema = $app->loadRequestSchema("forms/group-update.json");
         $app->jsValidator->setSchema($schema);
 
         $app->render($template, [
@@ -199,7 +199,7 @@
         //error_log(print_r($post, true));
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/group-create.json");
+        $requestSchema = $app->loadRequestSchema("forms/group-create.json");
 
         // Get the alert message stream
         $ms = $app->alerts;
@@ -293,7 +293,7 @@
         //error_log(print_r($post, true));
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($app->config('schema.path') . "/forms/group-update.json");
+        $requestSchema = $app->loadRequestSchema("forms/group-update.json");
 
         // Get the alert message stream
         $ms = $app->alerts;

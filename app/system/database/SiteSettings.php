@@ -329,7 +329,7 @@ class SiteSettings extends UFModel {
      * @return array An array containing the names of all available locales (e.g. "en_EN", "es_ES", etc.)
      */  
     public function getLocales(){
-    	$directory = static::$app->config('locales.path');
+    	$directory = APP_DIR . '/' . LOCALE_DIR_NAME;
         $languages = glob($directory . "/*.php");
         $results = [];
         foreach ($languages as $language){
@@ -345,7 +345,7 @@ class SiteSettings extends UFModel {
      * @return array An array containing the names of all available themes (e.g. "default", "root", etc.)
      */     
     public function getThemes(){
-    	$directory = static::$app->config('themes.path');
+    	$directory = APP_DIR . '/' . TEMPLATE_DIR_NAME;
         $themes = glob($directory . "/*", GLOB_ONLYDIR);
         $results = [];
         foreach ($themes as $theme){
@@ -361,7 +361,7 @@ class SiteSettings extends UFModel {
      * @return array An array containing the names of all available themes (e.g. "oauth", "datatables", etc.)
      */      
     public function getPlugins(){
-    	$directory = static::$app->config('plugins.path');
+    	$directory = APP_DIR . '/' . PLUGIN_DIR_NAME;
         $themes = glob($directory . "/*", GLOB_ONLYDIR);
         $results = [];
         foreach ($themes as $theme){
@@ -386,7 +386,7 @@ class SiteSettings extends UFModel {
         $results['Database Name'] = $dbinfo['db_name'];
         $results['Table Prefix'] = $dbinfo['table_prefix'];
         $environment = static::$app->environment();
-        $results['Application Root'] = static::$app->config('base.path');
+        $results['Application Root'] = APP_DIR;
         $results['Document Root'] = $this->uri['public'];
         return $results;
     }
