@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.3.1.13
+
+- Bump dependencies
+- userfrosting/fortress now has a release version
+
 ## v0.3.1.12
 
 - Add sendmail support in Notification class
