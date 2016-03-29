@@ -1,3 +1,5 @@
 vendor/
 *.komodoproject
 _meta/
+
+composer.lock

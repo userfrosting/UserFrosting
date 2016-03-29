@@ -1,4 +1,21 @@
-* 1.23.1 (2015-XX-XX)
+* 1.24.0 (2016-01-25)
+
+ * adding support for the ?? operator
+ * fixed the defined test when used on a constant, a map, or a sequence
+ * undeprecated _self (should only be used to get the template name, not the template instance)
+ * fixed parsing on PHP7
+
+* 1.23.3 (2016-01-11)
+
+ * fixed typo
+
+* 1.23.2 (2015-01-11)
+
+ * added versions in deprecated messages
+ * made file cache tolerant for trailing (back)slashes on directory configuration
+ * deprecated unused Twig_Node_Expression_ExtensionReference class
+
+* 1.23.1 (2015-11-05)
 
  * fixed some exception messages which triggered PHP warnings
  * fixed BC on Twig_Test_NodeTestCase

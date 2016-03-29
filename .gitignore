@@ -16,3 +16,6 @@ public/css/min/*
 
 # Ignore personal config files (dev)
 app/config/development.php
+
+# Ignore composer.lock
+userfrosting/composer.lock

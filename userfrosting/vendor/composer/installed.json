@@ -563,69 +563,6 @@
         ]
     },
     {
-        "name": "twig/twig",
-        "version": "v1.23.1",
-        "version_normalized": "1.23.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
-            "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.7"
-        },
-        "require-dev": {
-            "symfony/debug": "~2.7",
-            "symfony/phpunit-bridge": "~2.7"
-        },
-        "time": "2015-11-05 12:49:06",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.23-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
-            },
-            {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
-            },
-            {
-                "name": "Twig Team",
-                "homepage": "http://twig.sensiolabs.org/contributors",
-                "role": "Contributors"
-            }
-        ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
-        "keywords": [
-            "templating"
-        ]
-    },
-    {
         "name": "nesbot/carbon",
         "version": "1.21.0",
         "version_normalized": "1.21.0.0",
@@ -788,51 +725,6 @@
         ]
     },
     {
-        "name": "alexweissman/fortress",
-        "version": "0.2.0.x-dev",
-        "version_normalized": "0.2.0.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/alexweissman/fortress.git",
-            "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/alexweissman/fortress/zipball/e58b2e558b52e762c179aa436e47a8732f6cc284",
-            "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284",
-            "shasum": ""
-        },
-        "require": {
-            "ezyang/htmlpurifier": ">=4.6.0",
-            "php": ">=5.4.0",
-            "vlucas/valitron": "1.2.3"
-        },
-        "time": "2015-12-16 03:07:46",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "fortress/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Alexander Weissman",
-                "homepage": "http://alexanderweissman.com"
-            }
-        ],
-        "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
-        "homepage": "https://github.com/alexweissman/fortress",
-        "keywords": [
-            "php sanitization",
-            "php validation"
-        ]
-    },
-    {
         "name": "wikimedia/composer-merge-plugin",
         "version": "v1.0.0",
         "version_normalized": "1.0.0.0",
@@ -876,18 +768,81 @@
         "description": "Composer plugin to merge multiple composer.json files"
     },
     {
-        "name": "symfony/polyfill-mbstring",
-        "version": "v1.0.1",
-        "version_normalized": "1.0.1.0",
+        "name": "twig/twig",
+        "version": "v1.24.0",
+        "version_normalized": "1.24.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/polyfill-mbstring.git",
-            "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
-            "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+            "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.7"
+        },
+        "require-dev": {
+            "symfony/debug": "~2.7",
+            "symfony/phpunit-bridge": "~2.7"
+        },
+        "time": "2016-01-25 21:22:18",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.24-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com",
+                "homepage": "http://fabien.potencier.org",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Twig Team",
+                "homepage": "http://twig.sensiolabs.org/contributors",
+                "role": "Contributors"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
+        "name": "symfony/polyfill-mbstring",
+        "version": "v1.1.1",
+        "version_normalized": "1.1.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/polyfill-mbstring.git",
+            "reference": "1289d16209491b584839022f29257ad859b8532d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
+            "reference": "1289d16209491b584839022f29257ad859b8532d",
             "shasum": ""
         },
         "require": {
@@ -896,11 +851,11 @@
         "suggest": {
             "ext-mbstring": "For best performance"
         },
-        "time": "2015-11-20 09:19:13",
+        "time": "2016-01-20 09:13:37",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.0-dev"
+                "dev-master": "1.1-dev"
             }
         },
         "installation-source": "dist",
@@ -938,17 +893,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v3.0.1",
-        "version_normalized": "3.0.1.0",
+        "version": "v3.0.3",
+        "version_normalized": "3.0.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "dff0867826a7068d673801b7522f8e2634016ef9"
+            "reference": "2de0b6f7ebe43cffd8a06996ebec6aab79ea9e91"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/dff0867826a7068d673801b7522f8e2634016ef9",
-            "reference": "dff0867826a7068d673801b7522f8e2634016ef9",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/2de0b6f7ebe43cffd8a06996ebec6aab79ea9e91",
+            "reference": "2de0b6f7ebe43cffd8a06996ebec6aab79ea9e91",
             "shasum": ""
         },
         "require": {
@@ -969,7 +924,7 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2015-12-05 17:45:07",
+        "time": "2016-02-02 13:44:19",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1001,5 +956,50 @@
         ],
         "description": "Symfony Translation Component",
         "homepage": "https://symfony.com"
+    },
+    {
+        "name": "userfrosting/fortress",
+        "version": "v1.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/userfrosting/fortress.git",
+            "reference": "0587e032ca804e5e2e0558facac298c9ea9f2a53"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/userfrosting/fortress/zipball/0587e032ca804e5e2e0558facac298c9ea9f2a53",
+            "reference": "0587e032ca804e5e2e0558facac298c9ea9f2a53",
+            "shasum": ""
+        },
+        "require": {
+            "ezyang/htmlpurifier": ">=4.6.0",
+            "php": ">=5.4.0",
+            "vlucas/valitron": "1.2.3"
+        },
+        "time": "2016-03-29 18:34:24",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "fortress/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Alexander Weissman",
+                "homepage": "https://alexanderweissman.com"
+            }
+        ],
+        "description": "A PHP library for whitelisting, validating, and canonicalizing HTTP request data against a JSON Schema",
+        "homepage": "https://github.com/userfrosting/fortress",
+        "keywords": [
+            "php validation",
+            "php whitelisting"
+        ]
     }
 ]
