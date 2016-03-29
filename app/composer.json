@@ -1,14 +1,14 @@
 {
-    "name": "alexweissman/UserFrosting",
+    "name": "userfrosting/UserFrosting",
     "type": "project",
-    "description": "A secure, modern user management system.",
-    "keywords": ["php user management", "usercake"],
-    "homepage": "https://github.com/alexweissman/UserFrosting",
+    "description": "A secure, modern user management system for PHP.",
+    "keywords": ["php user management", "usercake", "bootstrap"],
+    "homepage": "https://github.com/userfrosting/UserFrosting",
     "license" : "MIT",
     "authors" : [
         {
             "name": "Alexander Weissman",
-            "homepage": "http://alexanderweissman.com"
+            "homepage": "https://alexanderweissman.com"
         }
     ],
     "require": {
@@ -18,7 +18,7 @@
         "slim/views" : "0.1.3",
         "illuminate/database" : "5.0.33",
         "nikic/php-parser" : "~1",
-        "alexweissman/fortress" : "0.2.0.x-dev",
+        "userfrosting/fortress" : "1.0",
         "phpmailer/phpmailer" : "5.2.10",
         "birke/rememberme" : "1.0.4",
         "wikimedia/composer-merge-plugin": "1.0"

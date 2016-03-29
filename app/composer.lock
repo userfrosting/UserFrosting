@@ -4,51 +4,8 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a9d36d579da9dafbb5fd1c1e28bb5739",
+    "hash": "a5903a7fbb4df66a8afdc8dd1c6006e1",
     "packages": [
-        {
-            "name": "alexweissman/fortress",
-            "version": "0.2.0.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/alexweissman/fortress.git",
-                "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/alexweissman/fortress/zipball/e58b2e558b52e762c179aa436e47a8732f6cc284",
-                "reference": "e58b2e558b52e762c179aa436e47a8732f6cc284",
-                "shasum": ""
-            },
-            "require": {
-                "ezyang/htmlpurifier": ">=4.6.0",
-                "php": ">=5.4.0",
-                "vlucas/valitron": "1.2.3"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "fortress/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alexander Weissman",
-                    "homepage": "http://alexanderweissman.com"
-                }
-            ],
-            "description": "A PHP library for sanitizing, validating, and canonicalizing HTTP request data against a JSON Schema",
-            "homepage": "https://github.com/alexweissman/fortress",
-            "keywords": [
-                "php sanitization",
-                "php validation"
-            ],
-            "time": "2015-12-16 03:07:46"
-        },
         {
             "name": "birke/rememberme",
             "version": "1.0.4",
@@ -885,6 +842,49 @@
             "time": "2016-01-25 21:22:18"
         },
         {
+            "name": "userfrosting/fortress",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/userfrosting/fortress.git",
+                "reference": "0587e032ca804e5e2e0558facac298c9ea9f2a53"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/userfrosting/fortress/zipball/0587e032ca804e5e2e0558facac298c9ea9f2a53",
+                "reference": "0587e032ca804e5e2e0558facac298c9ea9f2a53",
+                "shasum": ""
+            },
+            "require": {
+                "ezyang/htmlpurifier": ">=4.6.0",
+                "php": ">=5.4.0",
+                "vlucas/valitron": "1.2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fortress/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexander Weissman",
+                    "homepage": "https://alexanderweissman.com"
+                }
+            ],
+            "description": "A PHP library for whitelisting, validating, and canonicalizing HTTP request data against a JSON Schema",
+            "homepage": "https://github.com/userfrosting/fortress",
+            "keywords": [
+                "php validation",
+                "php whitelisting"
+            ],
+            "time": "2016-03-29 18:34:24"
+        },
+        {
             "name": "vlucas/valitron",
             "version": "v1.2.3",
             "source": {
@@ -975,9 +975,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "alexweissman/fortress": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
