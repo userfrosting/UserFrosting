@@ -5,17 +5,17 @@
 .DS_Store
 
 # Ignore developer resources
-_meta/*
+/_meta/*
 
 # Ignore old directory
-userfrosting
+/userfrosting
 
 # Ignore minified assets
-public/js/min/*
-public/css/min/*
+/public/js/min/*
+/public/css/min/*
 
 # Ignore personal config files (dev)
-app/config/development.php
+/app/config/development.php
 
 # Ignore composer.lock
-app/composer.lock
+/app/composer.lock
