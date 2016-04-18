@@ -1,0 +1,20 @@
+{% extends "layouts/layout-simple.twig" %}
+
+{# Set page properties (page.*) here. #}
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}    
+    {% set page = page | merge({
+        "title"       : "Server Misconfiguration",
+        "description" : "Your server doesn't seem to be properly configured for UserFrosting."
+    }) %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div class="container text-center">
+        <h1>Your server doesn't seem to be configured properly.</h1>
+        <img src="{{site.uri.image}}/eniac.png">
+        <br><br>
+        <p class="lead">Specifically, it looks like you are using Apache but don't have the <code>mod_rewrite</code> module enabled.  Please see the <a href="http://www.userfrosting.com/troubleshooting/#blank-page">troubleshooting guide</a> to get this sorted out.</p>
+    </div> <!-- /container -->
+{% endblock %}

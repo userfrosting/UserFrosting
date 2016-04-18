@@ -1,0 +1,8 @@
+{
+    "secret_token" : {
+        "validators" : {
+            "required" : {
+            }
+        }
+    }
+}

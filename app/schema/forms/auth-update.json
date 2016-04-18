@@ -1,0 +1,12 @@
+{         
+    "conditions" : {
+        "validators" : {
+            "required" : {
+                "message" : "VALIDATE_REQUIRED"
+            }
+        },
+        "sanitizers" : {
+            "raw" : ""
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{% extends "layouts/layout-jumbotron.twig" %}
+{% set page_group = "loggedout" %}
+
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}
+    
+    {% set page = page | merge({
+        "title"       : "A secure, modern user management system for PHP.",
+        "description" : "Main landing page for public access to this website.",
+        "active_page" : ""
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}    
+    <h1>Welcome to {{site.site_title}}!</h1>
+    <p class="lead">A secure, modern user management system based on the Slim Framework and the Twig templating engine.</p>
+    {% include 'components/common/alerts.twig' %}	
+    <div class="row">
+        <div class="col-sm-12">
+          <a href="{{site.uri.public}}/account/login" class="btn btn-success" role="button" value="Login">Login</a>
+        </div>
+    </div>
+    {% include 'components/jumbotron/jumbotron-links.twig' %}	
+{% endblock %}

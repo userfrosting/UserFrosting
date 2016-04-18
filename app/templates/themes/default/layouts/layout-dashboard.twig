@@ -1,0 +1,87 @@
+{# This is the base layout template for "dashboard" style pages (basically, all authenticated pages). #}
+
+{# Default page properties.  You can override these in your child templates. #}
+{% set page = page | default({}) | merge({
+    "title"       : "New Dashboard Page",
+    "description" : "This page has not yet been configured.",
+    "author"      : site.author,
+    "alerts"      : getAlerts()
+}) %}
+
+{% block page %}
+<!DOCTYPE html>
+<html lang="en">
+    {% block head %}
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="{{page.description}}">
+        <meta name="author" content="{{site.author}}">
+        <meta name="{{csrf_key}}" content="{{csrf_token}}"> 
+        
+        <title>{{site.site_title}} | {{page.title}}</title>
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="{{site.uri.favicon}}" />
+        
+        <!-- Page stylesheets -->
+        {% for item in includeCSS(page_group|default("common")) %}
+          <link rel="stylesheet" href="{{item}}" type="text/css" >
+        {% endfor %}
+        
+        <!-- Theme stylesheet -->
+        <link rel="stylesheet" href="{{site.uri.css}}/theme.css?user={{user.id}}" type="text/css" >
+        
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        
+        <!-- Header javascript (not recommended) -->
+        {% for item in includeJSTop(page_group|default("common")) %}
+          <script src="{{item}}" ></script>
+        {% endfor %}    
+        
+    </head>
+    {% endblock %}
+    
+    <body>
+        <div id="wrapper">
+            {% include 'components/dashboard/nav-account.twig' %}
+            <div id="page-wrapper">
+                {% include 'components/common/alerts.twig' %}
+                
+                {% block content %}{% endblock %}
+                
+                <footer>
+                  <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6 text-left">
+                            &copy; <a href="{{site.uri.public}}">{{site.site_title}}</a>, {{ "now"|date("Y") }}
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            Built with <a href="http://www.userfrosting.com">UserFrosting</a>.
+                        </div>        
+                    </div>
+                  </div>
+                </footer>
+            </div>
+            <!-- /#page-wrapper -->
+        </div>
+        <!-- /#wrapper -->
+        
+        {# This block is for dynamic fragments of code that lie outside of the main DOM #}
+        {% block fragments %}{% endblock %}
+        
+        <script src="{{site.uri.js}}/config.js" ></script>
+        {% for item in includeJSBottom(page_group|default("common")) %}
+          <script src="{{item}}" ></script>
+        {% endfor %}
+        
+        {# This block allows you to create page-specific Javascript in a child template #}
+        {% block page_scripts %}{% endblock %}        
+    </body>  
+</html>
+{% endblock %}

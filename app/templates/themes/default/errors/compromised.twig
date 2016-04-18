@@ -1,0 +1,20 @@
+{% extends "layouts/layout-simple.twig" %}
+
+{# Set page properties (page.*) here. #}
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}    
+    {% set page = page | merge({
+        "title"       : "Your account may have been compromised",
+        "description" : "Your account may have been compromised.  You have been logged out for your safety."
+    }) %}
+    {{ parent() }}
+{% endblock %}
+{% block content %}
+    <div class="container text-center">
+        <h1>Your account may have been compromised!</h1>
+        <img src="{{site.uri.image}}/compromised.jpg">
+        <br><br>
+        <p class="lead">Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{site.uri.public}}/account/login">log in</a> and check your account for suspicious activity.  You may also wish to change your password.</p>
+    </div> <!-- /container -->
+{% endblock %}

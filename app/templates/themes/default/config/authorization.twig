@@ -1,0 +1,74 @@
+{% extends "layouts/layout-dashboard.twig" %}
+{% set page_group = "auth" %}
+
+{# Set page properties (page.*) here. #}
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}    
+    {% set page = page | merge({
+        "title"       : "Authorization | " ~ group.name,
+        "description" : "Authorization and access control settings for " ~ group.name ~ "."
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <h1>Authorization rules for group '{{group.name}}'</h1>
+    <div class="table-responsive">
+        <table id="table-auth" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
+            <thead>
+                <tr>
+                    <th class="sorter-metatext">Hook <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum">Conditions <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum"> <i class="fa fa-sort"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for rule in rules %}
+                <tr>
+                    <td data-text="{{rule.hook}}">
+                        {{rule.hook}}
+                    </td>
+                    <td data-text="{{rule.conditions}}">
+                        {{rule.conditions}}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>            
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="#" data-id="{{rule.id}}" class="js-auth-edit" data-target="#dialog-auth-edit" data-toggle="modal">
+                                <i class="fa fa-edit"></i> Edit rule
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" data-id="{{rule.id}}" class="js-auth-delete" data-owner="{{group.name}}" data-hook="{{rule.hook}}" data-target="#dialog-auth-delete" data-toggle="modal">
+                                <i class="fa fa-trash-o"></i> Delete rule</a>
+                            </li>
+                        </ul>
+                    </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% include 'components/common/table-tablesorter-default.twig'  with {'pager_id' : 'table-auth-pager'}  %}
+    </div>
+    <div class="row">
+        <div class="col-md-6 ">
+            <button type="button" class="btn btn-success js-auth-create" data-toggle="modal" data-id="{{group.id}}" data-target="#dialog-auth-create">
+                <i class="fa fa-plus-square"></i>  Create New Rule
+            </button>
+        </div>
+    </div>    
+{% endblock %}
+{% block page_scripts %}
+        <script>            
+            $(document).ready(function() {
+                ufTable('table-auth');
+            });
+        </script>
+{% endblock %}

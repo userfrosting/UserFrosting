@@ -1,0 +1,61 @@
+{% extends "layouts/layout-jumbotron.twig" %}
+{% set page_group = "loggedout" %}
+
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}
+    
+    {% set page = page | merge({
+        "title"       : "Resend Activation",
+        "description" : "Resend the activation email for your new UserFrosting account.",
+        "active_page" : ""      
+    }) %}    
+
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <h1>Account Activation</h1>
+    <p class="lead">Please enter your username and the email address you used to sign up, and your activation email will be resent.</p>
+    {% include 'components/common/alerts.twig' %}
+    <form class='form-horizontal' role='form' name='resend_activation' action='{{site.uri.public}}/account/resend-activation' method='post'>
+        <div class="form-group">
+            <label for="input_user_name" class="control-label col-sm-4">Username</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>                    
+                    <input id="input_user_name" type="text" class="form-control" placeholder="Username" name="user_name">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="input_email" class="control-label col-sm-4">Email</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>                    
+                    <input id="input_email" type="text" class="form-control" placeholder="The email address you used to register" name="email">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-success submit" value='Resend'>Resend Activation Email</button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block page_scripts %} 
+    <script>
+        $(document).ready(function() {           
+            // Process form 
+            ufFormSubmit(
+                $("form[name='resend_activation']"),
+                {{ validators | raw }},
+                $("#userfrosting-alerts"),
+                function(data, statusText, jqXHR) {
+                    // Forward to home page on success
+                    window.location.replace(site['uri']['public']);
+                }
+            );
+        });       
+    </script>
+{% endblock %}

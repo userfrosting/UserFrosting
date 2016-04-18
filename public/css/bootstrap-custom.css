@@ -1,5 +1,16 @@
+ @font-face {
+   font-family: 'Glyphicons Halflings';
+   
+   src: url('fonts/glyphicons-halflings-regular.eot');
+   src: url('fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('fonts/glyphicons-halflings-regular.woff') format('woff'), url('fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
 .container-narrow {
     width: 800px;
+}
+
+.panel-heading-buttons h3 {
+    padding-top: 7.5px;
 }
 
 .pager-lg {
@@ -20,4 +31,8 @@
 
 label.label-switch {
     margin-top: 5px;
+}
+
+form textarea {
+  resize: vertical; /* user can resize vertically, but width is fixed */
 }

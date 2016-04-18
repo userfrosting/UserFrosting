@@ -1,0 +1,23 @@
+{% set navigation_bar = [['', 'Home'], ['account/login', 'Login']] %}
+{% set can_register = site.can_register|default(false) %}
+{% if can_register %}
+    {% set navigation_bar = navigation_bar|merge([['account/register', 'Register']])  %}
+{% endif%}
+{% set active_page = page.active_page|default('') %}
+{% block navigation %}
+<div class="masthead clearfix">
+  <div class="inner">
+    <h3 class="masthead-brand">{{site.site_title}}</h3>
+    <nav>
+      <ul class="nav masthead-nav">
+        {% for item in navigation_bar %}
+        <li{% if item[0] == active_page %} class="active"{% endif%}>
+            <a role="menuitem" href="{{site.uri.public}}/{{item[0]}}">{{item[1]}}</a>
+        </li>
+        {% endfor %}  
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+

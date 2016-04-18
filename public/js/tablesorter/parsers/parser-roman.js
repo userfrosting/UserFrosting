@@ -1,11 +1,11 @@
-/*! Roman numeral parsers
+/*! Parser: roman - updated 6/28/MMXIV (v2.17.3) *//*
  * code modified from both:
  * Steven Levithan @ http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
  * Jonathan Snook comment @ http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter#comment-16140
  */
 /*jshint jquery:true, unused:false */
 ;(function($){
-"use strict";
+	'use strict';
 
 	// allow lower case roman numerals, since lists use i, ii, iii, etc.
 	var validator = /^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/i,
@@ -34,7 +34,7 @@
 
 			return num;
 		},
-		type: "numeric"
+		type: 'numeric'
 	});
 
 	$.tablesorter.addParser({
@@ -75,7 +75,7 @@
 
 			return num ? s.replace(orig, num) : s;
 		},
-		type: "text"
+		type: 'text'
 	});
 
 	$.tablesorter.addParser({
@@ -111,7 +111,7 @@
 
 			return num ? num : s;
 		},
-		type: "numeric"
+		type: 'numeric'
 	});
 
 })(jQuery);
