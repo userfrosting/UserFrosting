@@ -24,7 +24,7 @@
      * @see UF\Database::install()
      */
     $app->get('/install/?', function () use ($app) {
-        $controller = new UF\InstallController($app);
+       // $controller = new UF\InstallController($app); // removeme. InstallController is not needed.
         if (isset($app->site->install_status)){
             // If tables have been created, move on to master account setup
             if ($app->site->install_status == "pending"){
@@ -179,7 +179,7 @@
      * This route is "public access" (until the master account has been created, that is)
      * Request type: POST
      */    
-    $app->post('/install/master/?', function ($action) use ($app) {
+    $app->post('/install/master(/:action)/?', function ($action=false) use ($app) {
         $post = $app->request->post();
 
         // Get the alert message stream
