@@ -1,0 +1,113 @@
+{% extends "layouts/layout-dashboard.twig" %}
+{% set page_group = "group" %}
+
+{# Set page properties (page.*) here. #}
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}    
+    {% set page = page | merge({
+        "title"       : "Groups",
+        "description" : "Group management, authorization rules, add/remove groups, etc."
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class='panel panel-primary'>
+            <div class='panel-heading'>
+                <h3 class='panel-title'><i class='fa fa-users'></i> Groups</h3>
+            </div>
+            <div class='panel-body'>
+                <div class="table-responsive">
+                    <table id="table-groups" class="tablesorter table table-bordered table-hover table-striped tablesorter-bootstrap" data-sortlist="[[0, 0]]">
+                        <thead>
+                            <tr>
+                                <th class="sorter-metatext" data-column-name="group_name">Group Name <i class="fa fa-sort"></i></th>
+                                <th class="sorter-metatext" data-column-name="landing_page">Landing Page <i class="fa fa-sort"></i></th>
+                                <th class="sorter-metatext" data-column-name="new_user_title">New User Title <i class="fa fa-sort"></i></th>
+                                <th class="sorter-metatext" data-column-name="theme">Theme <i class="fa fa-sort"></i></th>
+                                <th data-column-name="flag_can_delete">Actions <i class="fa fa-sort"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for group in groups %}
+                            <tr>
+                                <td data-text="{{group.name}}">
+                                    <strong>
+                                        <i class="{{group.icon}} fa-fw"></i> {{group.name}}
+                                    </strong>
+                                    <div>
+                                        {% if group.is_default == "2" %}
+                                            <i>Default Primary Group</i>
+                                        {% elseif group.is_default == "1" %}
+                                            <i>Default Group</i>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    {{group.landing_page}}
+                                </td>
+                                <td>
+                                    {{group.new_user_title}}
+                                </td>
+                                <td>
+                                    {{group.theme}}
+                                </td>                                    
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            Actions
+                                            <span class="caret"></span>
+                                        </button>            
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                                                <a href="#" data-id="{{group.id}}" class="js-group-edit" data-target="#dialog-group-edit" data-toggle="modal">
+                                                <i class="fa fa-edit"></i> Edit group
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{site.uri.public}}/groups/g/{{group.id}}/auth">
+                                                <i class="fa fa-key"></i> Authorization rules
+                                                </a>
+                                            </li>
+                                            <li>
+                                            {% if group.can_delete == 1 %}
+                                                <a href="#" data-id="{{group.id}}" class="js-group-delete" data-name="{{group.name}}" data-target="#dialog-group-delete" data-toggle="modal">
+                                                <i class="fa fa-trash-o"></i> Delete group
+                                                </a>
+                                            {% endif %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% include 'components/common/table-tablesorter-default.twig' with {'pager_id' : 'table-groups-pager'} %}
+                </div>
+                <div class="row">
+                    <div class="col-md-6 ">
+                        <button type="button" class="btn btn-success js-group-create" data-toggle="modal" data-target="#dialog-group-create">
+                            <i class="fa fa-plus-square"></i>  Create New Group
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-right ">
+                        <a href="#">View All Groups <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block page_scripts %}
+        <script>            
+            $(document).ready(function() {
+                ufTable('table-groups');
+            });
+        </script>
+{% endblock %}
+

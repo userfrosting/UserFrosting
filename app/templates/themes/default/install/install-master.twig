@@ -1,0 +1,127 @@
+{% extends "layouts/layout-simple.twig" %}
+
+{# Set page properties (page.*) here. #}
+{% block page %}
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
+    but BEFORE the page itself is rendered. #}    
+    {% set page = page | merge({
+        "title"       : "Installation | Register Master Account",
+        "description" : "Set up the master account for your installation of UserFrosting"
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container container-narrow">
+        <h1 class="text-center">Register Master Account</h1>
+        <hr>
+        {% include 'components/common/alerts.twig' %}
+        <div class="alert alert-info">
+            <i class='fa fa-hand-o-right'></i> The master account must be created before any other user accounts can be created.  The master account will have full permissions to all access-controlled resources on your UserFrosting installation, regardless of any individual- or group-level permissions that they have been assigned.
+        </div>
+        <form name="register" method="post" action="{{site.uri.public}}/install/master" class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label  col-sm-4">Username</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                                <input type="text" class="form-control" name="user_name" autocomplete="off" value="" placeholder="User name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Display Name</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-edit"></i></span>
+                                <input type="text" class="form-control" name="display_name" autocomplete="off" value="" placeholder="Display name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Email</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+                                <input type="text" class="form-control" name="email" placeholder="Email address" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>		  
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Password</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="password" class="form-control" name="password" autocomplete="off" value="" placeholder="8-50 characters">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Confirm password</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="password" class="form-control" name="passwordc" autocomplete="off" value="" placeholder="Re-enter your password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Configuration Token</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-key"></i></span>
+                                <input type="text" class="form-control" name="root_account_config_token" autocomplete="off" value="" placeholder="Look in your '{{table_config}}' table for the value of 'root_account_config_token'.">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-lg btn-success">Register</button>
+            </div>
+            <div class="collapse">
+              <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
+              <input name="spiderbro" id="spiderbro" value="http://"/>
+            </div>          
+        </form>
+      </div>	
+    </div> <!-- /container -->
+{% endblock %}
+{% block page_scripts %}
+    <script>
+        $(document).ready(function() {           
+            // Process form 
+            ufFormSubmit(
+                $("form[name='register']"),
+                {{ validators | raw }},
+                $("#userfrosting-alerts"),
+                function(data, statusText, jqXHR) {
+                    // Forward to login page on success
+                    window.location.replace(site['uri']['public'] + "/account/login");
+                }
+            );
+        });     
+    </script>
+{% endblock %}

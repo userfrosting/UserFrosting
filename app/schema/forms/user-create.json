@@ -1,0 +1,79 @@
+{
+    "user_name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 50,
+                "message" : "ACCOUNT_USER_CHAR_LIMIT"
+            },
+            "no_leading_whitespace" : {
+                "message" : "ACCOUNT_USER_NO_LEAD_WS"
+            },
+            "no_trailing_whitespace" : {
+                "message" : "ACCOUNT_USER_NO_TRAIL_WS"
+            },            
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_USERNAME"
+            }
+        },
+        "sanitizers" : { "raw" : {}}
+    },
+    "display_name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 50,
+                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
+            },
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_DISPLAY_NAME"
+            }
+        },
+        "sanitizers" : { "raw" : {}}
+    },          
+    "email" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_EMAIL"
+            },
+            "length" : {
+                "min" : 1,
+                "max" : 150,
+                "message" : "ACCOUNT_EMAIL_CHAR_LIMIT"
+            },
+            "email" : {
+                "message" : "ACCOUNT_INVALID_EMAIL"
+            }
+        },
+        "sanitizers" : { "raw" : {}}
+    },
+    "title" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 150,
+                "message" : "ACCOUNT_TITLE_CHAR_LIMIT"
+            }
+        }
+    },
+    "locale" : {
+        "default" : "en_US",
+        "validators" : {
+
+        }
+    },
+    "primary_group_id" : {
+        "validators" : {
+            "integer" : {
+                "message" : "VALIDATE_INTEGER"
+            }
+        }
+    },    
+    "groups" : {
+        "validators" : {
+            "array" : {
+                "message" : "VALIDATE_ARRAY"
+            }
+        }
+    }
+}

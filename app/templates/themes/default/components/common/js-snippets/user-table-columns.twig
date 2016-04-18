@@ -1,0 +1,99 @@
+{# This contains a series of <script> blocks, each of which is a client-side Handlebars template. #}
+{% verbatim %}
+<script id="user-table-column-info" type="text/x-handlebars-template">
+    <td data-text="{{user.user_name}}">
+        <strong>
+            <a href="{{site.uri.public}}/users/u/{{user.id}}">{{user.user_name}} ({{user.display_name}})</a>
+        </strong>
+        <div>
+            <i>{{user.title}}</i>
+        </div>
+        <div>
+            <i class="fa fa-envelope"></i> <a href="mailto:{{user.email}}">{{user.email}}</a>
+        </div>
+    </td>
+</script>
+
+<script id="user-table-column-registered-since" type="text/x-handlebars-template">
+    {{#if user.sign_up_time }}    
+    <td data-num="{{dateFormat user.sign_up_time format='x'}}">
+        {{dateFormat user.sign_up_time format="dddd"}}<br>{{dateFormat user.sign_up_time format="MMM Do, YYYY h:mm a"}}
+    </td>
+    {{ else }}
+    <td data-num="0">
+            <i>Unknown</i>
+    </td>
+    {{/if }}    
+</script>
+
+<script id="user-table-column-last-sign-in" type="text/x-handlebars-template">
+    {{#if user.last_sign_in_time }}
+    <td data-num="{{dateFormat user.last_sign_in_time format='x'}}">
+        {{dateFormat user.last_sign_in_time format="dddd"}}<br>{{dateFormat user.last_sign_in_time format="MMM Do, YYYY h:mm a"}}
+    </td>
+    {{ else }}
+    <td data-num="0">
+            <i>Brand new!</i>
+    </td>
+    {{/if }}
+</script>
+
+<script id="user-table-column-actions" type="text/x-handlebars-template">
+    <td>
+        <div class="btn-group">
+            {{#ifCond user.flag_enabled 0 }}
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Disabled
+                    <span class="caret"></span>
+                </button>
+            {{ else }}
+                {{#ifCond user.flag_verified 0 }}
+                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                        Unactivated
+                        <span class="caret"></span>
+                    </button>            
+                {{ else }}
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        Active
+                        <span class="caret"></span>
+                    </button>            
+                {{/ifCond }}
+            {{/ifCond }}
+            <ul class="dropdown-menu" role="menu">
+                {{#ifCond user.flag_verified 0 }}
+                <li>
+                    <a href="#" data-id="{{user.id}}" class="js-user-activate">
+                    <i class="fa fa-bolt"></i> Activate user
+                    </a>
+                </li>
+                {{/ifCond }}
+                <li>
+                    <a href="#" data-id="{{user.id}}" class="js-user-edit" data-target="#dialog-user-edit" data-toggle="modal">
+                    <i class="fa fa-edit"></i> Edit user
+                    </a>
+                </li>
+                <li>
+                    <a href="#" data-id="{{user.id}}" class="js-user-password" data-target="#dialog-user-password" data-toggle="modal">
+                    <i class="fa fa-key"></i> Change password
+                    </a>
+                </li>
+                <li>
+                {{#ifCond user.flag_enabled 1 }}
+                    <a href="#" data-id="{{user.id}}" class="js-user-disable">
+                    <i class="fa fa-minus-circle"></i> Disable user
+                    </a>
+                {{ else }}
+                    <a href="#" data-id="{{user.id}}" class="js-user-enable">
+                    <i class="fa fa-plus-circle"></i> Enable user
+                    </a> 
+                {{/ifCond }}
+                </li>
+                <li>
+                    <a href="#" data-id="{{user.id}}" class="js-user-delete" data-user_name="{{user.user_name}}" data-target="#dialog-user-delete" data-toggle="modal">
+                    <i class="fa fa-trash-o"></i> Delete user</a>
+                </li>
+            </ul>
+        </div>
+    </td>
+</script>
+{% endverbatim %}

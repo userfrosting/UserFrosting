@@ -1,0 +1,21 @@
+{
+    "name": "birke/rememberme",
+    "version": "1.0.4",
+    "description": "Secure \"Remember Me\" functionality",
+    "keywords": [ "cookie", "remember", "security"],
+    "homepage": "https://github.com/gbirke/rememberme",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gabriel Birke",
+            "email": "gb@birke-software.de"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"Birke\\": "src/"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
+    }
+}
