@@ -2,7 +2,7 @@
 /**
  * This file is part of the Composer Merge plugin.
  *
- * Copyright (C) 2014 Bryan Davis, Wikimedia Foundation, and contributors
+ * Copyright (C) 2015 Bryan Davis, Wikimedia Foundation, and contributors
  *
  * This software may be modified and distributed under the terms of the MIT
  * license. See the LICENSE file for details.
@@ -10,39 +10,56 @@
 
 namespace Wikimedia\Composer;
 
+use Wikimedia\Composer\Merge\ExtraPackage;
+use Wikimedia\Composer\Merge\MissingFileException;
+use Wikimedia\Composer\Merge\PluginState;
+
 use Composer\Composer;
-use Composer\Config;
+use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Factory;
+use Composer\Installer;
 use Composer\Installer\InstallerEvent;
 use Composer\Installer\InstallerEvents;
+use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
-use Composer\Json\JsonFile;
-use Composer\Package\BasePackage;
-use Composer\Package\CompletePackage;
-use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\RootPackageInterface;
-use Composer\Package\Version\VersionParser;
 use Composer\Plugin\PluginInterface;
-use Composer\Script\CommandEvent;
+use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 
 /**
  * Composer plugin that allows merging multiple composer.json files.
  *
- * When installed, this plugin will look for a "merge-patterns" key in the
- * composer configuration's "extra" section. The value of this setting can be
- * either a single value or an array of values. Each value is treated as
- * a glob() pattern identifying additional composer.json style configuration
- * files to merge into the configuration for the current compser execution.
+ * When installed, this plugin will look for a "merge-plugin" key in the
+ * composer configuration's "extra" section. The value for this key is
+ * a set of options configuring the plugin.
  *
- * The "require", "require-dev", "repositories" and "suggest" sections of the
+ * An "include" setting is required. The value of this setting can be either
+ * a single value or an array of values. Each value is treated as a glob()
+ * pattern identifying additional composer.json style configuration files to
+ * merge into the configuration for the current compser execution.
+ *
+ * The "autoload", "autoload-dev", "conflict", "provide", "replace",
+ * "repositories", "require", "require-dev", and "suggest" sections of the
  * found configuration files will be merged into the root package
  * configuration as though they were directly included in the top-level
  * composer.json file.
  *
  * If included files specify conflicting package versions for "require" or
  * "require-dev", the normal Composer dependency solver process will be used
- * to attempt to resolve the conflict.
+ * to attempt to resolve the conflict. Specifying the 'replace' key as true will
+ * change this default behaviour so that the last-defined version of a package
+ * will win, allowing for force-overrides of package defines.
+ *
+ * By default the "extra" section is not merged. This can be enabled by
+ * setitng the 'merge-extra' key to true. In normal mode, when the same key is
+ * found in both the original and the imported extra section, the version in
+ * the original config is used and the imported version is skipped. If
+ * 'replace' mode is active, this behaviour changes so the imported version of
+ * the key is used, replacing the version in the original config.
+ *
  *
  * @code
  * {
@@ -65,36 +82,24 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
 {
 
     /**
+     * Offical package name
+     */
+    const PACKAGE_NAME = 'wikimedia/composer-merge-plugin';
+
+    /**
      * @var Composer $composer
      */
     protected $composer;
 
     /**
-     * @var IOInterface $inputOutput
+     * @var PluginState $state
      */
-    protected $inputOutput;
+    protected $state;
 
     /**
-     * @var ArrayLoader $loader
+     * @var Logger $logger
      */
-    protected $loader;
-
-    /**
-     * @var array $duplicateLinks
-     */
-    protected $duplicateLinks;
-
-    /**
-     * @var bool $devMode
-     */
-    protected $devMode;
-
-    /**
-     * Whether to recursively include dependencies
-     *
-     * @var bool $recurse
-     */
-    protected $recurse = true;
+    protected $logger;
 
     /**
      * Files that have already been processed
@@ -109,7 +114,8 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->composer = $composer;
-        $this->inputOutput = $io;
+        $this->state = new PluginState($this->composer);
+        $this->logger = new Logger('merge-plugin', $io);
     }
 
     /**
@@ -119,69 +125,66 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         return array(
             InstallerEvents::PRE_DEPENDENCIES_SOLVING => 'onDependencySolve',
-            ScriptEvents::PRE_INSTALL_CMD => 'onInstallOrUpdate',
-            ScriptEvents::PRE_UPDATE_CMD => 'onInstallOrUpdate',
+            PackageEvents::POST_PACKAGE_INSTALL => 'onPostPackageInstall',
+            ScriptEvents::POST_INSTALL_CMD => 'onPostInstallOrUpdate',
+            ScriptEvents::POST_UPDATE_CMD => 'onPostInstallOrUpdate',
+            ScriptEvents::PRE_AUTOLOAD_DUMP => 'onInstallUpdateOrDump',
+            ScriptEvents::PRE_INSTALL_CMD => 'onInstallUpdateOrDump',
+            ScriptEvents::PRE_UPDATE_CMD => 'onInstallUpdateOrDump',
         );
     }
 
     /**
-     * Handle an event callback for an install or update command by checking
-     * for "merge-patterns" in the "extra" data and merging package contents
-     * if found.
+     * Handle an event callback for an install, update or dump command by
+     * checking for "merge-plugin" in the "extra" data and merging package
+     * contents if found.
      *
-     * @param CommandEvent $event
+     * @param Event $event
      */
-    public function onInstallOrUpdate(CommandEvent $event)
+    public function onInstallUpdateOrDump(Event $event)
     {
-        $config = $this->readConfig($this->composer->getPackage());
-        if (isset($config['recurse'])) {
-            $this->recurse = (bool)$config['recurse'];
-        }
-        if ($config['include']) {
-            $this->loader = new ArrayLoader();
-            $this->duplicateLinks = array(
-                'require' => array(),
-                'require-dev' => array(),
-            );
-            $this->devMode = $event->isDevMode();
-            $this->mergePackages($config);
-        }
-    }
+        $this->state->loadSettings();
+        $this->state->setDevMode($event->isDevMode());
+        $this->mergeFiles($this->state->getIncludes(), false);
+        $this->mergeFiles($this->state->getRequires(), true);
 
-    /**
-     * @param RootPackageInterface $package
-     * @return array
-     */
-    protected function readConfig(RootPackageInterface $package)
-    {
-        $config = array(
-            'include' => array(),
-        );
-        $extra = $package->getExtra();
-        if (isset($extra['merge-plugin'])) {
-            $config = array_merge($config, $extra['merge-plugin']);
-            if (!is_array($config['include'])) {
-                $config['include'] = array($config['include']);
+        if ($event->getName() === ScriptEvents::PRE_AUTOLOAD_DUMP) {
+            $this->state->setDumpAutoloader(true);
+            $flags = $event->getFlags();
+            if (isset($flags['optimize'])) {
+                $this->state->setOptimizeAutoloader($flags['optimize']);
             }
         }
-        return $config;
     }
 
     /**
      * Find configuration files matching the configured glob patterns and
      * merge their contents with the master package.
      *
-     * @param array $config
+     * @param array $patterns List of files/glob patterns
+     * @param bool $required Are the patterns required to match files?
+     * @throws MissingFileException when required and a pattern returns no
+     *      results
      */
-    protected function mergePackages(array $config)
+    protected function mergeFiles(array $patterns, $required = false)
     {
         $root = $this->composer->getPackage();
-        foreach (array_reduce(
-            array_map('glob', $config['include']),
-            'array_merge',
-            array()
-        ) as $path) {
-            $this->loadFile($root, $path);
+
+        $files = array_map(
+            function ($files, $pattern) use ($required) {
+                if ($required && !$files) {
+                    throw new MissingFileException(
+                        "merge-plugin: No files matched required '{$pattern}'"
+                    );
+                }
+                return $files;
+            },
+            array_map('glob', $patterns),
+            $patterns
+        );
+
+        foreach (array_reduce($files, 'array_merge', array()) as $path) {
+            $this->mergeFile($root, $path);
         }
     }
 
@@ -191,179 +194,23 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      * @param RootPackageInterface $root
      * @param string $path
      */
-    protected function loadFile($root, $path)
+    protected function mergeFile(RootPackageInterface $root, $path)
     {
-        if (in_array($path, $this->loadedFiles)) {
-            $this->debug("Skipping duplicate <comment>$path</comment>...");
+        if (isset($this->loadedFiles[$path])) {
+            $this->logger->debug("Already merged <comment>$path</comment>");
             return;
         } else {
-            $this->loadedFiles[] = $path;
+            $this->loadedFiles[$path] = true;
         }
-        $this->debug("Loading <comment>{$path}</comment>...");
-        $json = $this->readPackageJson($path);
-        $package = $this->loader->load($json);
+        $this->logger->info("Loading <comment>{$path}</comment>...");
 
-        $this->mergeRequires($root, $package);
-        $this->mergeDevRequires($root, $package);
+        $package = new ExtraPackage($path, $this->composer, $this->logger);
+        $package->mergeInto($root, $this->state);
 
-        if (isset($json['repositories'])) {
-            $this->addRepositories($json['repositories'], $root);
+        if ($this->state->recurseIncludes()) {
+            $this->mergeFiles($package->getIncludes(), false);
+            $this->mergeFiles($package->getRequires(), true);
         }
-
-        if ($package->getSuggests()) {
-            $root->setSuggests(array_merge(
-                $root->getSuggests(),
-                $package->getSuggests()
-            ));
-        }
-
-        if ($this->recurse && isset($json['extra']['merge-plugin'])) {
-            $this->mergePackages($json['extra']['merge-plugin']);
-        }
-    }
-
-    /**
-     * Read the contents of a composer.json style file into an array.
-     *
-     * The package contents are fixed up to be usable to create a Package
-     * object by providing dummy "name" and "version" values if they have not
-     * been provided in the file. This is consistent with the default root
-     * package loading behavior of Composer.
-     *
-     * @param string $path
-     * @return array
-     */
-    protected function readPackageJson($path)
-    {
-        $file = new JsonFile($path);
-        $json = $file->read();
-        if (!isset($json['name'])) {
-            $json['name'] = 'merge-plugin/' .
-                strtr($path, DIRECTORY_SEPARATOR, '-');
-        }
-        if (!isset($json['version'])) {
-            $json['version'] = '1.0.0';
-        }
-        return $json;
-    }
-
-    /**
-     * @param RootPackageInterface $root
-     * @param CompletePackage $package
-     */
-    protected function mergeRequires(
-        RootPackageInterface $root,
-        CompletePackage $package
-    ) {
-        $requires = $package->getRequires();
-        if (!$requires) {
-            return;
-        }
-
-        $this->mergeStabilityFlags($root, $requires);
-
-        $root->setRequires($this->mergeLinks(
-            $root->getRequires(),
-            $requires,
-            $this->duplicateLinks['require']
-        ));
-    }
-
-    /**
-     * @param RootPackageInterface $root
-     * @param CompletePackage $package
-     */
-    protected function mergeDevRequires(
-        RootPackageInterface $root,
-        CompletePackage $package
-    ) {
-        $requires = $package->getDevRequires();
-        if (!$requires) {
-            return;
-        }
-
-        $this->mergeStabilityFlags($root, $requires);
-
-        $root->setDevRequires($this->mergeLinks(
-            $root->getDevRequires(),
-            $requires,
-            $this->duplicateLinks['require-dev']
-        ));
-    }
-
-    /**
-     * Extract and merge stability flags from the given collection of
-     * requires.
-     *
-     * @param RootPackageInterface $root
-     * @param array $requires
-     */
-    protected function mergeStabilityFlags(
-        RootPackageInterface $root,
-        array $requires
-    ) {
-        $flags = $root->getStabilityFlags();
-        foreach ($requires as $name => $link) {
-            $name = strtolower($name);
-            $version = $link->getPrettyConstraint();
-            $stability = VersionParser::parseStability($version);
-            $flags[$name] = BasePackage::$stabilities[$stability];
-        }
-        $root->setStabilityFlags($flags);
-    }
-
-    /**
-     * Add a collection of repositories described by the given configuration
-     * to the given package and the global repository manager.
-     *
-     * @param array $repositories
-     * @param RootPackageInterface $root
-     */
-    protected function addRepositories(
-        array $repositories,
-        RootPackageInterface $root
-    ) {
-        $repoManager = $this->composer->getRepositoryManager();
-        $newRepos = array();
-
-        foreach ($repositories as $repoJson) {
-            $this->debug("Adding {$repoJson['type']} repository");
-            $repo = $repoManager->createRepository(
-                $repoJson['type'],
-                $repoJson
-            );
-            $repoManager->addRepository($repo);
-            $newRepos[] = $repo;
-        }
-
-        $root->setRepositories(array_merge(
-            $newRepos,
-            $root->getRepositories()
-        ));
-    }
-
-    /**
-     * Merge two collections of package links and collect duplicates for
-     * subsequent processing.
-     *
-     * @param array $origin Primary collection
-     * @param array $merge Additional collection
-     * @param array &dups Duplicate storage
-     * @return array Merged collection
-     */
-    protected function mergeLinks(array $origin, array $merge, array &$dups)
-    {
-        foreach ($merge as $name => $link) {
-            if (!isset($origin[$name])) {
-                $this->debug("Merging <comment>{$name}</comment>");
-                $origin[$name] = $link;
-            } else {
-                // Defer to solver.
-                $this->debug("Deferring duplicate <comment>{$name}</comment>");
-                $dups[] = $link;
-            }
-        }
-        return $origin;
     }
 
     /**
@@ -376,36 +223,92 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      */
     public function onDependencySolve(InstallerEvent $event)
     {
-        if (!$this->duplicateLinks) {
-            return;
-        }
-
         $request = $event->getRequest();
-        foreach ($this->duplicateLinks['require'] as $link) {
-            $this->debug("Adding dependency <comment>{$link}</comment>");
+        foreach ($this->state->getDuplicateLinks('require') as $link) {
+            $this->logger->info(
+                "Adding dependency <comment>{$link}</comment>"
+            );
             $request->install($link->getTarget(), $link->getConstraint());
         }
-        if ($this->devMode) {
-            foreach ($this->duplicateLinks['require-dev'] as $link) {
-                $this->debug("Adding dev dependency <comment>{$link}</comment>");
+        if ($this->state->isDevMode()) {
+            foreach ($this->state->getDuplicateLinks('require-dev') as $link) {
+                $this->logger->info(
+                    "Adding dev dependency <comment>{$link}</comment>"
+                );
                 $request->install($link->getTarget(), $link->getConstraint());
             }
         }
     }
 
     /**
-     * Log a debug message
+     * Handle an event callback following installation of a new package by
+     * checking to see if the package that was installed was our plugin.
      *
-     * Messages will be output at the "verbose" logging level (eg `-v` needed
-     * on the Composer command).
-     *
-     * @param string $message
+     * @param PackageEvent $event
      */
-    protected function debug($message)
+    public function onPostPackageInstall(PackageEvent $event)
     {
-        if ($this->inputOutput->isVerbose()) {
-            $this->inputOutput->write("  <info>[merge]</info> {$message}");
+        $op = $event->getOperation();
+        if ($op instanceof InstallOperation) {
+            $package = $op->getPackage()->getName();
+            if ($package === self::PACKAGE_NAME) {
+                $this->logger->info('composer-merge-plugin installed');
+                $this->state->setFirstInstall(true);
+                $this->state->setLocked(
+                    $event->getComposer()->getLocker()->isLocked()
+                );
+            }
         }
+    }
+
+    /**
+     * Handle an event callback following an install or update command. If our
+     * plugin was installed during the run then trigger an update command to
+     * process any merge-patterns in the current config.
+     *
+     * @param Event $event
+     */
+    public function onPostInstallOrUpdate(Event $event)
+    {
+        // @codeCoverageIgnoreStart
+        if ($this->state->isFirstInstall()) {
+            $this->state->setFirstInstall(false);
+            $this->logger->info(
+                '<comment>' .
+                'Running additional update to apply merge settings' .
+                '</comment>'
+            );
+
+            $config = $this->composer->getConfig();
+
+            $preferSource = $config->get('preferred-install') == 'source';
+            $preferDist = $config->get('preferred-install') == 'dist';
+
+            $installer = Installer::create(
+                $event->getIO(),
+                // Create a new Composer instance to ensure full processing of
+                // the merged files.
+                Factory::create($event->getIO(), null, false)
+            );
+
+            $installer->setPreferSource($preferSource);
+            $installer->setPreferDist($preferDist);
+            $installer->setDevMode($event->isDevMode());
+            $installer->setDumpAutoloader($this->state->shouldDumpAutoloader());
+            $installer->setOptimizeAutoloader(
+                $this->state->shouldOptimizeAutoloader()
+            );
+
+            if ($this->state->forceUpdate()) {
+                // Force update mode so that new packages are processed rather
+                // than just telling the user that composer.json and
+                // composer.lock don't match.
+                $installer->setUpdate(true);
+            }
+
+            $installer->run();
+        }
+        // @codeCoverageIgnoreEnd
     }
 }
 // vim:sw=4:ts=4:sts=4:et:
