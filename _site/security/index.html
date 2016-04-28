@@ -121,15 +121,13 @@
                 
                 <p>Unsecured (&quot;ssl&quot;) websites exchange data between the user and the server in plain text.  If the connection between the user and server is not secure, this data can be intercepted, and possibly even altered and/or rerouted.  And, even if the sensitive data itself is encrypted, the user&#39;s session on the website can be stolen and impersonated unless ALL communication between the user and server is handled over SSL (&quot;https&quot; websites).  If you walk into any coffee shop with an unsecured wireless network, and launch a simple program such as <a href="http://codebutler.com/firesheep/">Firesheep</a>, you will see how huge of a problem this is, and why <a href="http://www.wired.com/2014/04/https/">Google and other companies are pushing for <em>everyone</em> to use SSL</a>.</p>
                 
-                <p>This is also why there are strict standards about websites that handle sensitive user data such as credit card numbers!  We strongly encourage anyone planning to deploy a website that handles user passwords and sessions (such as ones based on UserFrosting) to purchase an SSL certificate and deploy it on their web server.  <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/794/67/how-to-activate-ssl-certificate">Namecheap</a> offers basic, inexpensive certs for $9/year (you do not need to have Namecheap hosting or domain registration to use their certificates on your site).  If your web hosting happens to use cPanel, this is easy to <a href="http://docs.cpanel.net/twiki/bin/view/AllDocumentation/WHMDocs/InstallCert">set up yourself</a> without needing to contact your hosting provider.  Please note that SSL on shared hosting accounts may create false security warnings for end-users with <a href="https://en.wikipedia.org/wiki/Server_Name_Indication#No_support">older browsers</a>.</p>
-                
-                <p>For <strong>local testing purposes only</strong> you may create a self-signed certificate.  For instructions on how to do this for XAMPP/Apache in OSX, see <a href="http://shahpunyerblog.blogspot.com/2007/10/create-self-signed-ssl-certificate-in.html">this blog post</a>.</p>
+                <p>This is also why there are strict standards about websites that handle sensitive user data such as credit card numbers!  We strongly encourage anyone planning to deploy a website that handles user passwords and sessions (such as ones based on UserFrosting) to get an SSL certificate.  With the launch of <a href="https://letsencrypt.org">Lets Encrypt</a>, SSL certificates are <b>free</b> and easy to set up.  So no more excuses, go get yourself a cert!</p>
                 
                 <h2 id="toc_1"><a name="passwords"></a><i class='fa fa-key'></i> Strong password hashing</h2>
                 
                 <p>UserFrosting uses the <code>password_hash</code> and <code>password_verify</code> functions to hash and validate passwords (new in PHP v5.5.0).  <code>password_hash</code> uses the <a href="https://en.wikipedia.org/wiki/Bcrypt">bcrypt</a> algorithm, based on the Blowfish cipher.  This is stronger than SHA1 (used by UserCake), which has been demonstrated vulnerable to attack.  UserFrosting also appends a salt to user passwords, protecting against dictionary attacks.</p>
                 
-                <p>For versions of PHP between 5.3.7 and 5.5.0, UserFrosting uses the <a href="https://github.com/ircmaxell/password_compat">password compatibility pack</a>.  UserFrosting is <strong>not compatible with versions of PHP prior to 5.3.7.</strong>  This is because <a href="http://php.net/security/crypt_blowfish.php">versions of PHP prior to 5.3.7 have a security flaw in their implementation of Blowfish</a>.  </p>
+                <p>For PHP 5.4.*, UserFrosting uses the <a href="https://github.com/ircmaxell/password_compat">password compatibility pack</a>.</p>
                 
                 <p>UserFrosting provides backwards compatibility for existing UserCake user databases that have passwords hashed with SHA1.  User accounts that have been hashed with SHA1 will automatically be updated to the new encryption standard when the user successfully logs in.</p>
                 
@@ -143,13 +141,13 @@
                 
                 <p>XSS is another variety of attack that tricks a user, but instead of tricking the user into submitting malicious data (CSRF), it tricks the user into running malicious scripts.  This vulnerability usually appears when you allow arbitrary content (including javascript and HTML tags) to be stored and then regurgitated back to other users without additional processing.  Thus, an attacker on a forum could create a new &quot;post&quot; that contains javascript commands.  When anyone else on the site goes to view that post, the javascript commands are executed.  Those commands could easily be instructions to transmit the user&#39;s session data to a remote server, where attackers can use it to impersonate the user.</p>
                 
-                <p>UserFrosting guards against this by validating user input, and then escaping or sanitizing user-generated content before outputting.  Please let us know if you find a place where content is not properly sanitized.</p>
+                <p>UserFrosting guards against this by validating user input, and then escaping or sanitizing user-generated content before outputting (via <a href="http://twig.sensiolabs.org/doc/templates.html#html-escaping">Twig</a>).  Please let us know if you find a place where content is not properly sanitized.</p>
                 
                 <h2 id="toc_4"><a name="sql-inject"></a><i class='fa fa-bomb'></i> Protection against SQL injection</h2>
                 
                 <p>Whereas XSS tricks the <em>user</em> into executing malicious code, SQL injection tricks the <em>server</em> into executing malicious code; in this case, SQL statements.  Thus, sites vulnerable to SQL injection can end up executing code that, for example, deletes a table or database.</p>
                 
-                <p>UserFrosting protects against this by using parameterized queries, which do not allow user-supplied data to be executed as SQL.</p>
+                <p>UserFrosting protects against this by using parameterized queries (via Eloquent), which do not allow user-supplied data to be executed as SQL.</p>
             </div>
         </div>
     </div>
