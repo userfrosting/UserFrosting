@@ -42,7 +42,7 @@ class AdminController extends \UserFrosting\BaseController {
         $this->_app->render('config/site-settings.twig', [
             'settings' => $this->_app->site->getRegisteredSettings(),
             'info'     => $this->_app->site->getSystemInfo(),
-            'error_log'=> $this->_app->site->getLog(50)
+            'error_log'=> SiteSettings::getLog(50)
         ]);
     }
 

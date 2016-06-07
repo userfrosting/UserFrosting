@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.1.14
+
+- Stopped reading entire log files to avoid out-of-memory errors (#497)
+
 ## v0.3.1.13
 
 - Bump dependencies
