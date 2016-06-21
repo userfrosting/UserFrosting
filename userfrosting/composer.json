@@ -12,15 +12,16 @@
         }
     ],
     "require": {
+        "birke/rememberme" : "1.0.4",    
+        "illuminate/database" : "5.0.33",
+        "league/csv": "8.1.*",
+        "nikic/php-parser" : "~1",
         "php" : ">=5.4.0",
+        "phpmailer/phpmailer" : "5.2.10",        
         "twig/twig" : "~1.0",
         "slim/slim" : "2.*",
         "slim/views" : "0.1.3",
-        "illuminate/database" : "5.0.33",
-        "nikic/php-parser" : "~1",
         "userfrosting/fortress" : "1.0",
-        "phpmailer/phpmailer" : "5.2.10",
-        "birke/rememberme" : "1.0.4",
         "wikimedia/composer-merge-plugin": "~1"
     },
     "extra": {
