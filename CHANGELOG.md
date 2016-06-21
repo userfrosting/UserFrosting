@@ -2,7 +2,9 @@
 
 ## v0.3.1.14
 
-- Stopped reading entire log files to avoid out-of-memory errors (#497)
+- Stop reading entire log files to avoid out-of-memory errors (#497)
+- Deploy [league/csv](https://github.com/thephpleague/csv) to properly generate CSV files (#557)
+- Fix typos in language files
 
 ## v0.3.1.13
 

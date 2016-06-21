@@ -11,7 +11,7 @@
  */
 
 /*
-{{name}} - Dymamic markers which are replaced at run time by the relevant index.
+{{name}} - Dynamic markers which are replaced at run time by the relevant index.
 */
 
 $lang = array();
