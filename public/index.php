@@ -314,7 +314,7 @@
         if (!$app->user->checkAccess('uri_error_log')){
             $app->notFound();
         }
-        $log = $app->site->getLog();
+        $log = UF\SiteSettings::getLog();
         echo "<pre>";
         echo implode("<br>",$log['messages']);
         echo "</pre>";
