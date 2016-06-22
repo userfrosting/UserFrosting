@@ -78,7 +78,7 @@ function authForm(box_id, options) {
         
 		// Link submission buttons
         ufFormSubmit(
-            $("form[name='auth']"),
+            $('#' + box_id).find("form"),
             validators,
             $("#form-alerts"),
             function(data, statusText, jqXHR) {

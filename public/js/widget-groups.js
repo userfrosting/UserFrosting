@@ -89,7 +89,7 @@ function groupForm(box_id, group_id) {
         
 		// Link submission buttons
         ufFormSubmit(
-            $("form[name='group']"),
+            $('#' + box_id).find("form"),
             validators,
             $("#form-alerts"),
             function(data, statusText, jqXHR) {
