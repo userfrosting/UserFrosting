@@ -53,8 +53,7 @@ function groupForm(box_id, group_id) {
     if (group_id) {
         data = {
             box_id: box_id,
-            render: 'modal',
-            mode: "update"
+            render: 'modal'
         };
         
         url = site['uri']['public'] + "/forms/groups/g/" + group_id;

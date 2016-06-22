@@ -133,14 +133,10 @@
         return $controller->pageUsers($primary_group);
     });
     
-    // User info form (update/view)
+    // User info form (update)
     $app->get('/forms/users/u/:user_id/?', function ($user_id) use ($app) {
         $controller = new UF\UserController($app);
-        $get = $app->request->get();        
-        if (isset($get['mode']) && $get['mode'] == "update")
-            return $controller->formUserEdit($user_id);
-        else
-            return $controller->formUserView($user_id);
+        return $controller->formUserEdit($user_id);
     });  
 
     // User edit password form
@@ -194,14 +190,10 @@
         return $controller->pageGroupAuthorization($group_id);
     })->name('uri_authorization');  
     
-    // Group info form (update/view)
+    // Group info form (update)
     $app->get('/forms/groups/g/:group_id/?', function ($group_id) use ($app) {
         $controller = new UF\GroupController($app);
-        $get = $app->request->get();        
-        if (isset($get['mode']) && $get['mode'] == "update")
-            return $controller->formGroupEdit($group_id);
-        else
-            return $controller->formGroupView($group_id);
+        return $controller->formGroupEdit($group_id);
     });
 
     // Group creation form

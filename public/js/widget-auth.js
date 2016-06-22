@@ -46,19 +46,14 @@ function authForm(box_id, options) {
 		$('#' + box_id).remove();
 	}
     
-    // If we are updating an existing auth rule
-    if (options['auth_id']) {
-        var data = {
-            box_id: box_id,
-            mode: "update"
-        };
+    var data = {
+        box_id: box_id
+    };
         
+    // Creating vs updating an existing auth rule
+    if (options['auth_id']) {
         var url = site['uri']['public'] + "/forms/groups/auth/a/" + options['auth_id'];
     } else {
-        var data = {
-            box_id: box_id
-        };
-        
         var url = site['uri']['public'] + "/forms/groups/g/" + options['owner_id'] + "/auth";  
     }
     

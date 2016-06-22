@@ -338,13 +338,13 @@ class GroupController extends \UserFrosting\BaseController {
 
         // Check authorization for submitted fields, if the value has been changed
         foreach ($post as $name => $value) {
-            if (isset($group->$name) && $post[$name] != $group->$name){
+            if ($group->attributeExists($name) && $post[$name] != $group->$name){
                 // Check authorization
                 if (!$this->_app->user->checkAccess('update_group_setting', ['group' => $group, 'property' => $name])){
                     $ms->addMessageTranslated("danger", "ACCESS_DENIED");
                     $this->_app->halt(403);
                 }
-            } else if (!isset($group->$name)) {
+            } else if (!$group->attributeExists($name)) {
                 $ms->addMessageTranslated("danger", "NO_DATA");
                 $this->_app->halt(400);
             }

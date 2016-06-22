@@ -184,8 +184,7 @@ function userForm(box_id, user_id) {
     if (user_id) {
         data = {
             box_id: box_id,
-            render: 'modal',
-            mode: "update"
+            render: 'modal'
         };
         
         url = site['uri']['public'] + "/forms/users/u/" + user_id;
@@ -314,7 +313,11 @@ function userPasswordForm(box_id, user_id) {
 	});
 }
 
-// Display user info in a panel
+/**
+ * Display user info in a panel
+ *
+ * @deprecated
+ */
 function userDisplay(box_id, user_id) {
 	user_id = typeof user_id !== 'undefined' ? user_id : "";
 	
@@ -325,8 +328,7 @@ function userDisplay(box_id, user_id) {
 	
 	var data = {
 		box_id: box_id,
-		render: 'modal',
-        mode: 'view'
+		render: 'modal'
 	};
 	
 	// Generate the form
