@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.3.1.15
+
+- Fix unattached submitHandler bug in Group and Auth edit interfaces (#465)
+- Remove references to nonexistent `formUserView` and `formGroupView` (#478)
+- Gracefully handle session destruction due to missing or disabled accounts (#510)
+- Add `attributeExists` and `relationExists` for models (#520)
+
 ## v0.3.1.14
 
 - Stop reading entire log files to avoid out-of-memory errors (#497)
