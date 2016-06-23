@@ -457,8 +457,22 @@ title: "UserFrosting | Modern, open source user management for PHP"
                         <p>If you're just getting started with UserFrosting and the code looks completely different from anything you've ever seen before, we recommend that you start with <a href="{{site.url}}/navigating/">Navigating UserFrosting</a>.  This will explain the components and practices that UserFrosting uses to do its magic.</p>
                         <p>If you're having trouble with installation, please see our <a href="{{site.url}}/troubleshooting">troubleshooting guide</a>.</p>
                         <p>If you feel comfortable with the basic concepts, and were able to install UserFrosting successfully, you can dive into the code with our <a href="{{site.url}}/tutorials">tutorials</a>.</p>
-                        <p>If you have a problem that you've already tried to solve and you can ask a specific, focused question (preferably including the relevant code, and any errors reported in your PHP error log and/or browser console), consider asking a question on <a href="http://stackoverflow.com">Stack Overflow</a>.  We don't have our own tag yet, but you can use the tags for the technologies that UserFrosting is built upon (like Slim, Twig, etc.).  You should then cross-post a link to your question in our <a href="https://gitter.im/userfrosting/UserFrosting">chat room</a>.</p>
-                        <p>If you've <strong>already done all of this</strong> and need more help, please join us in <a href="https://gitter.im/userfrosting/UserFrosting">chat</a>.  We'll do our best to help you out.</p>
+                        <p>If you have a problem that you've already tried to solve and you can ask a specific, focused question, consider asking on <a href="http://stackoverflow.com">Stack Overflow</a>.  Include the relevant code, and any errors reported in your PHP error log and/or browser console.  Tag your question with the <code>userfrosting</code> tag, and optionally with any tags specific to the relevant underlying technologies, such as <code>slim</code>, <code>twig</code>, <code>eloquent</code>, <code>composer</code>, etc.  You should also mention the version of UserFrosting that you are using.</p>
+                        <p>After posting a question on Stack Overflow, please link to it our <a href="https://gitter.im/userfrosting/UserFrosting">chat room</a>.  This will ensure that more people see it, and provide a place where we can discuss and help clarify your question.</p>
+                        
+                        <h3>Tips for getting help</h3>
+                        <ul>
+                          <li>Remember that courtesy and proper grammar go a long way. Please take the time to craft a <strong>precise, polite question</strong>. We will do our best to help, but remember that this is an open source project - none of us are getting paid a salary to develop this project, or act as your personal support hotline ;-)</li>
+                          <li>Carefully search <a href="http://stackoverflow.com/tags/userfrosting">Stack Overflow</a>, the <a href="https://github.com/userfrosting/UserFrosting/issues?utf8=%E2%9C%93&q=is%3Aissue">Github issue tracker</a>, and the <a href="https://github.com/userfrosting/UserFrosting/wiki">wiki</a>.  Your question may have already been asked and answered before!</li>
+                          <li>Report any error messages you get. There are two main places where you may find error messages:
+                            <ul>
+                              <li>Backend (PHP-related) errors: in your PHP error log. This is usually a file called <code>php_error_log</code> or something like that. In XAMPP, the default location of this file is <code>XAMPP/xamppfiles/logs/</code>. For other web hosting platforms, please consult the documentation or do a quick Google search (i.e. "where is the php error log in _____"). Some web hosts may provide a special interface for accessing the php error log, through ssh, cpanel, etc. Please ask them directly for help with this.
+                              </li>
+                              <li>Frontend (Javascript-related) errors: in your browser's Javascript console. This can be accessed from "Tools->Web Developer" menu in Firefox, or "More tools->Javascript Console" in Chrome. For help with other browsers, please Google "where is the javascript console in ____".
+                              </li>
+                            </ul>
+                          <li>If you find a problem in any of the tutorials, let us know on the Issues page. Also, please feel free to contribute to the <a href="https://github.com/userfrosting/UserFrosting/wiki">wiki</a> if you have something relevant and useful to add.</li>
+                        </ul>                        
                     </div>
                     <div class="col-lg-10 col-lg-offset-1 text-center">
                         <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Ok, got it!</button>
@@ -501,7 +515,7 @@ title: "UserFrosting | Modern, open source user management for PHP"
                               <li>Frontend (Javascript-related) errors: in your browser's Javascript console. This can be accessed from "Tools->Web Developer" menu in Firefox, or "More tools->Javascript Console" in Chrome. For help with other browsers, please Google "where is the javascript console in ____".
                               </li>
                             </ul>
-                          <li>If you find a problem in any of the tutorials, let us know on the Issues page. Also, please feel free to contribute to the wiki pages if you have something relevant and useful to add.</li>
+                          <li>If you find a problem in any of the tutorials, let us know on the Issues page. Also, please feel free to contribute to the <a href="https://github.com/userfrosting/UserFrosting/wiki">wiki</a> pages if you have something relevant and useful to add.</li>
                         </ul>
                     </div>
                     <div class="col-lg-10 col-lg-offset-1 text-center">
@@ -528,8 +542,8 @@ title: "UserFrosting | Modern, open source user management for PHP"
                         <hr class="star-primary">
                     </div>
                     <div class="col-lg-10 col-lg-offset-1 text-left">
-                        <p>Needless to say, we get tons of feature requests. If you'd like to make a suggestion, you must first search the <a href="https://github.com/userfrosting/UserFrosting/issues?utf8=%E2%9C%93&q=is%3Aissue">existing issues</a>, both opened and closed.  Your question may have already been asked and answered before!</p>
-                        <p>If your suggestion doesn't appear to have been made before, you may <a href="https://github.com/userfrosting/UserFrosting/issues/new">open a new issue</a>.  Please note that we have a massive "todo" list for UserFrosting, so it may take us a long time to get to your suggestion.  If you'd like, you may volunteer to contribute code, or even consider <a href="{{site.url}}/components/#plugins">writing a plugin</a>.</p>
+                        <p>Needless to say, we get tons of feature requests. If you'd like to make a suggestion, you must first search the <a href="https://github.com/userfrosting/UserFrosting/issues?utf8=%E2%9C%93&q=is%3Aissue%20label%3A%22feature%20request%22%20">existing issues</a>, both opened and closed.  Your idea may already have been suggested!</p>
+                        <p>If your request doesn't appear to have been made before, you may <a href="https://github.com/userfrosting/UserFrosting/issues/new">open a new issue</a>.  Please note that we have a massive "todo" list for UserFrosting, so it may take us a long time to get to your suggestion.  If you'd like, you may volunteer to contribute code, or even consider <a href="{{site.url}}/components/#plugins">writing a plugin</a>.</p>
                     </div>
                     <div class="col-lg-10 col-lg-offset-1 text-center">
                         <button type="button" class="btn btn-modal" data-dismiss="modal"><i class="fa fa-times"></i> Ok, got it!</button>
