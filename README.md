@@ -8,11 +8,11 @@ If you simply want to show that you like this project, or want to remember it fo
 
 [![Click here to lend your support to: UserFrosting: A secure, modern user management system for PHP and make a donation at pledgie.com !](https://pledgie.com/campaigns/29583.png?skin_name=chrome)](https://pledgie.com/campaigns/29583)
 
-## By [Alex Weissman](http://alexanderweissman.com)
+## By [Alex Weissman](https://alexanderweissman.com)
 
 Copyright (c) 2016, free to use in personal and commercial software as per the [license](licenses/UserFrosting.md).
 
-UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/) and the [Twig](http://twig.sensiolabs.org/) templating engine.
+UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.2/eloquent#introduction) ORM.
 
 ## Installation
 
@@ -120,3 +120,9 @@ $users = User::all()->getDictionary();   // If you want an array of User objects
 This project grew out of a need for a simple user management system for my tutoring business, [Bloomington Tutors](https://bloomingtontutors.com).  I wanted something that I could develop rapidly and easily customize for the needs of my business.  Since my [prior web development experience](http://alexanderweissman.com/projects/) was in pure PHP, I decided to go with the PHP-based UserCake system.
 
 Over time I modified and expanded the codebase, turning it into the UserFrosting project.  Starting with version 0.3.0, UserFrosting represents a major break from the original architecture of UserCake.  We now use a fully object-oriented data model and a front controller for URL routing.
+
+## About the Developers
+
+### Alex Weissman
+
+Alex is the founder and co-owner of two companies, one that does [math tutoring at IU](https://bloomingtontutors.com) in Bloomington, IN and another company that does [math tutoring at UMD](https://collegeparktutors.com) in College Park, MD.  He is also a PhD student in the School of Informatics and Computing at Indiana University.
