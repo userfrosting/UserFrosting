@@ -1,0 +1,23 @@
+{
+  "name": "userfrosting/bones",
+  "version": "1.0.0",
+  "description": "basic skeleton for next generation of UF",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/userfrosting/bones"
+  },
+  "author": "Alex Weissman",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-bundle-assets": "^2.23.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-load-plugins": "^1.2.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rev": "^7.0.0"
+  }
+}

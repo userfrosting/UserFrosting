@@ -1,0 +1,57 @@
+{
+  "bundle": {
+    "js/main": {
+        "scripts": [
+            "js/bootstrap-3.3.1.js",
+            "vendor/jQueryValidation/jquery.validate.js",
+            "vendor/jQueryValidation/additional-methods.js",
+            "vendor/jQueryValidation/jqueryvalidation-methods-fortress.js",
+            "js/uf-alerts.js",
+            "js/uf-form.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/register" : {
+        "scripts": [
+            "js/pages/register.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "css/main": {
+        "styles": [
+            "vendor/font-awesome-4.5.0/css/font-awesome.css",
+            "css/bootstrap-3.3.1.css",
+            "css/modern-business.css"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "styles": "plain"
+                }
+            }
+        }
+    }
+  },
+  "copy": [
+    {
+        "src": "images/**/*",
+        "base": "."
+    },
+    {
+        "src": "vendor/font-awesome-4.5.0/fonts/**/*",
+        "base": "vendor/font-awesome-4.5.0/"
+    }
+  ]
+}

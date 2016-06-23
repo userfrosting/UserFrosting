@@ -1,0 +1,15 @@
+# The `resources` directory should not be made publicly accessible (i.e., in the public document directory) at all.
+# But just in case you're an idiot, this should at least give you protection from exposing passwords and other sensitive info in your .env files.
+
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+
+## Begin - Security
+# Block all direct access to files and folders beginning with a dot
+RewriteRule (^\.|/\.) - [F]
+# Block access to specific files in the root folder
+RewriteRule ^(LICENSE.txt|composer.lock|composer.json|\.htaccess|\.env)$ error [F]
+## End - Security
+
+</IfModule>
