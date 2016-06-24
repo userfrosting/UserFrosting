@@ -1,5 +1,10 @@
-<?php namespace Illuminate\Database\Eloquent;
+<?php
+
+namespace Illuminate\Database\Eloquent;
 
 use RuntimeException;
 
-class MassAssignmentException extends RuntimeException {}
+class MassAssignmentException extends RuntimeException
+{
+    //
+}

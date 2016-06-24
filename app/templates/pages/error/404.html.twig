@@ -1,0 +1,21 @@
+{% extends "layouts/error.html.twig" %}
+{% set page_group = "error" %}
+
+{% set page_active = "" %}
+
+{% block head %}
+    {% set uf_page = uf_page | merge({
+        'title'      : "404 Error",
+        'description': "We couldn't deliver.  We're sorry."
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container text-center">
+        <h1>We tried to find your page...</h1>
+        <img src="{{ assets.url('assets://images/404.png') }}">
+        <br><br>
+        <p class="lead">Maybe next season.  Click <a href="{{site.uri.public}}">here</a> to return to the front page.</p>
+    </div> <!-- /container -->
+{% endblock %}

@@ -1,153 +1,119 @@
 <?php
 /**
- * Slim - a micro PHP 5 framework
+ * Slim Framework (http://slimframework.com)
  *
- * @author      Josh Lockhart <info@slimframework.com>
- * @copyright   2011 Josh Lockhart
- * @link        http://www.slimframework.com
- * @license     http://www.slimframework.com/license
- * @version     2.6.1
- * @package     Slim
- *
- * MIT LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * @link      https://github.com/slimphp/Slim
+ * @copyright Copyright (c) 2011-2016 Josh Lockhart
+ * @license   https://github.com/slimphp/Slim/blob/3.x/LICENSE.md (MIT License)
  */
 namespace Slim;
 
+use Exception;
+use InvalidArgumentException;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Handlers\Strategies\RequestResponse;
+use Slim\Interfaces\InvocationStrategyInterface;
+use Slim\Interfaces\RouteInterface;
+
 /**
  * Route
- * @package Slim
- * @author  Josh Lockhart, Thomas Bley
- * @since   1.0.0
  */
-class Route
+class Route extends Routable implements RouteInterface
 {
-    /**
-     * @var string The route pattern (e.g. "/books/:id")
-     */
-    protected $pattern;
+    use MiddlewareAwareTrait;
 
     /**
-     * @var mixed The route callable
+     * HTTP methods supported by this route
+     *
+     * @var string[]
      */
-    protected $callable;
+    protected $methods = [];
 
     /**
-     * @var array Conditions for this route's URL parameters
+     * Route identifier
+     *
+     * @var string
      */
-    protected $conditions = array();
+    protected $identifier;
 
     /**
-     * @var array Default conditions applied to all route instances
-     */
-    protected static $defaultConditions = array();
-
-    /**
-     * @var string The name of this route (optional)
+     * Route name
+     *
+     * @var null|string
      */
     protected $name;
 
     /**
-     * @var array Key-value array of URL parameters
+     * Parent route groups
+     *
+     * @var RouteGroup[]
      */
-    protected $params = array();
+    protected $groups;
+
+    private $finalized = false;
 
     /**
-     * @var array value array of URL parameter names
+     * Output buffering mode
+     *
+     * One of: false, 'prepend' or 'append'
+     *
+     * @var boolean|string
      */
-    protected $paramNames = array();
+    protected $outputBuffering = 'append';
 
     /**
-     * @var array key array of URL parameter names with + at the end
+     * Route parameters
+     *
+     * @var array
      */
-    protected $paramNamesPath = array();
+    protected $arguments = [];
 
     /**
-     * @var array HTTP methods supported by this Route
+     * Create new route
+     *
+     * @param string[]     $methods The route HTTP methods
+     * @param string       $pattern The route pattern
+     * @param callable     $callable The route callable
+     * @param int          $identifier The route identifier
+     * @param RouteGroup[] $groups The parent route groups
      */
-    protected $methods = array();
-
-    /**
-     * @var array[Callable] Middleware to be run before only this route instance
-     */
-    protected $middleware = array();
-
-    /**
-     * @var bool Whether or not this route should be matched in a case-sensitive manner
-     */
-    protected $caseSensitive;
-
-    /**
-     * Constructor
-     * @param string $pattern The URL pattern (e.g. "/books/:id")
-     * @param mixed $callable Anything that returns TRUE for is_callable()
-     * @param bool $caseSensitive Whether or not this route should be matched in a case-sensitive manner
-     */
-    public function __construct($pattern, $callable, $caseSensitive = true)
+    public function __construct($methods, $pattern, $callable, $groups = [], $identifier = 0)
     {
-        $this->setPattern($pattern);
-        $this->setCallable($callable);
-        $this->setConditions(self::getDefaultConditions());
-        $this->caseSensitive = $caseSensitive;
+        $this->methods  = $methods;
+        $this->pattern  = $pattern;
+        $this->callable = $callable;
+        $this->groups   = $groups;
+        $this->identifier = 'route' . $identifier;
     }
 
     /**
-     * Set default route conditions for all instances
-     * @param  array $defaultConditions
+     * Finalize the route in preparation for dispatching
      */
-    public static function setDefaultConditions(array $defaultConditions)
+    public function finalize()
     {
-        self::$defaultConditions = $defaultConditions;
-    }
+        if ($this->finalized) {
+            return;
+        }
 
-    /**
-     * Get default route conditions for all instances
-     * @return array
-     */
-    public static function getDefaultConditions()
-    {
-        return self::$defaultConditions;
-    }
+        $groupMiddleware = [];
+        foreach ($this->getGroups() as $group) {
+            $groupMiddleware = array_merge($group->getMiddleware(), $groupMiddleware);
+        }
 
-    /**
-     * Get route pattern
-     * @return string
-     */
-    public function getPattern()
-    {
-        return $this->pattern;
-    }
+        $this->middleware = array_merge($this->middleware, $groupMiddleware);
 
-    /**
-     * Set route pattern
-     * @param  string $pattern
-     */
-    public function setPattern($pattern)
-    {
-        $this->pattern = $pattern;
+        foreach ($this->getMiddleware() as $middleware) {
+            $this->addMiddleware($middleware);
+        }
+
+        $this->finalized = true;
     }
 
     /**
      * Get route callable
-     * @return mixed
+     *
+     * @return callable
      */
     public function getCallable()
     {
@@ -155,53 +121,29 @@ class Route
     }
 
     /**
-     * Set route callable
-     * @param  mixed $callable
-     * @throws \InvalidArgumentException If argument is not callable
+     * Get route methods
+     *
+     * @return string[]
      */
-    public function setCallable($callable)
+    public function getMethods()
     {
-        $matches = array();
-        if (is_string($callable) && preg_match('!^([^\:]+)\:([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)$!', $callable, $matches)) {
-            $class = $matches[1];
-            $method = $matches[2];
-            $callable = function() use ($class, $method) {
-                static $obj = null;
-                if ($obj === null) {
-                    $obj = new $class;
-                }
-                return call_user_func_array(array($obj, $method), func_get_args());
-            };
-        }
-
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException('Route callable must be callable');
-        }
-
-        $this->callable = $callable;
+        return $this->methods;
     }
 
     /**
-     * Get route conditions
-     * @return array
+     * Get parent route groups
+     *
+     * @return RouteGroup[]
      */
-    public function getConditions()
+    public function getGroups()
     {
-        return $this->conditions;
-    }
-
-    /**
-     * Set route conditions
-     * @param  array $conditions
-     */
-    public function setConditions(array $conditions)
-    {
-        $this->conditions = $conditions;
+        return $this->groups;
     }
 
     /**
      * Get route name
-     * @return string|null
+     *
+     * @return null|string
      */
     public function getName()
     {
@@ -209,263 +151,207 @@ class Route
     }
 
     /**
+     * Get route identifier
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * Get output buffering mode
+     *
+     * @return boolean|string
+     */
+    public function getOutputBuffering()
+    {
+        return $this->outputBuffering;
+    }
+
+    /**
+     * Set output buffering mode
+     *
+     * One of: false, 'prepend' or 'append'
+     *
+     * @param boolean|string $mode
+     *
+     * @throws InvalidArgumentException If an unknown buffering mode is specified
+     */
+    public function setOutputBuffering($mode)
+    {
+        if (!in_array($mode, [false, 'prepend', 'append'], true)) {
+            throw new InvalidArgumentException('Unknown output buffering mode');
+        }
+        $this->outputBuffering = $mode;
+    }
+
+    /**
      * Set route name
-     * @param  string $name
+     *
+     * @param string $name
+     *
+     * @return self
+     *
+     * @throws InvalidArgumentException if the route name is not a string
      */
     public function setName($name)
     {
-        $this->name = (string)$name;
+        if (!is_string($name)) {
+            throw new InvalidArgumentException('Route name must be a string');
+        }
+        $this->name = $name;
+        return $this;
     }
 
     /**
-     * Get route parameters
+     * Set a route argument
+     *
+     * @param string $name
+     * @param string $value
+     *
+     * @return self
+     */
+    public function setArgument($name, $value)
+    {
+        $this->arguments[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * Replace route arguments
+     *
+     * @param array $arguments
+     *
+     * @return self
+     */
+    public function setArguments(array $arguments)
+    {
+        $this->arguments = $arguments;
+        return $this;
+    }
+
+    /**
+     * Retrieve route arguments
+     *
      * @return array
      */
-    public function getParams()
+    public function getArguments()
     {
-        return $this->params;
+        return $this->arguments;
     }
 
     /**
-     * Set route parameters
-     * @param  array $params
-     */
-    public function setParams($params)
-    {
-        $this->params = $params;
-    }
-
-    /**
-     * Get route parameter value
-     * @param  string $index Name of URL parameter
-     * @return string
-     * @throws \InvalidArgumentException If route parameter does not exist at index
-     */
-    public function getParam($index)
-    {
-        if (!isset($this->params[$index])) {
-            throw new \InvalidArgumentException('Route parameter does not exist at specified index');
-        }
-
-        return $this->params[$index];
-    }
-
-    /**
-     * Set route parameter value
-     * @param  string $index Name of URL parameter
-     * @param  mixed $value The new parameter value
-     * @throws \InvalidArgumentException If route parameter does not exist at index
-     */
-    public function setParam($index, $value)
-    {
-        if (!isset($this->params[$index])) {
-            throw new \InvalidArgumentException('Route parameter does not exist at specified index');
-        }
-        $this->params[$index] = $value;
-    }
-
-    /**
-     * Add supported HTTP method(s)
-     */
-    public function setHttpMethods()
-    {
-        $args = func_get_args();
-        $this->methods = $args;
-    }
-
-    /**
-     * Get supported HTTP methods
-     * @return array
-     */
-    public function getHttpMethods()
-    {
-        return $this->methods;
-    }
-
-    /**
-     * Append supported HTTP methods
-     */
-    public function appendHttpMethods()
-    {
-        $args = func_get_args();
-        if(count($args) && is_array($args[0])){
-            $args = $args[0];
-        }
-        $this->methods = array_merge($this->methods, $args);
-    }
-
-    /**
-     * Append supported HTTP methods (alias for Route::appendHttpMethods)
-     * @return \Slim\Route
-     */
-    public function via()
-    {
-        $args = func_get_args();
-        if(count($args) && is_array($args[0])){
-            $args = $args[0];
-        }
-        $this->methods = array_merge($this->methods, $args);
-
-        return $this;
-    }
-
-    /**
-     * Detect support for an HTTP method
-     * @param  string $method
-     * @return bool
-     */
-    public function supportsHttpMethod($method)
-    {
-        return in_array($method, $this->methods);
-    }
-
-    /**
-     * Get middleware
-     * @return array[Callable]
-     */
-    public function getMiddleware()
-    {
-        return $this->middleware;
-    }
-
-    /**
-     * Set middleware
+     * Retrieve a specific route argument
      *
-     * This method allows middleware to be assigned to a specific Route.
-     * If the method argument `is_callable` (including callable arrays!),
-     * we directly append the argument to `$this->middleware`. Else, we
-     * assume the argument is an array of callables and merge the array
-     * with `$this->middleware`.  Each middleware is checked for is_callable()
-     * and an InvalidArgumentException is thrown immediately if it isn't.
+     * @param string $name
+     * @param mixed $default
      *
-     * @param  Callable|array[Callable]
-     * @return \Slim\Route
-     * @throws \InvalidArgumentException If argument is not callable or not an array of callables.
+     * @return mixed
      */
-    public function setMiddleware($middleware)
+    public function getArgument($name, $default = null)
     {
-        if (is_callable($middleware)) {
-            $this->middleware[] = $middleware;
-        } elseif (is_array($middleware)) {
-            foreach ($middleware as $callable) {
-                if (!is_callable($callable)) {
-                    throw new \InvalidArgumentException('All Route middleware must be callable');
-                }
-            }
-            $this->middleware = array_merge($this->middleware, $middleware);
-        } else {
-            throw new \InvalidArgumentException('Route middleware must be callable or an array of callables');
+        if (array_key_exists($name, $this->arguments)) {
+            return $this->arguments[$name];
         }
-
-        return $this;
+        return $default;
     }
 
+    /********************************************************************************
+     * Route Runner
+     *******************************************************************************/
+
     /**
-     * Matches URI?
+     * Prepare the route for use
      *
-     * Parse this route's pattern, and then compare it to an HTTP resource URI
-     * This method was modeled after the techniques demonstrated by Dan Sosedoff at:
+     * @param ServerRequestInterface $request
+     * @param array $arguments
+     */
+    public function prepare(ServerRequestInterface $request, array $arguments)
+    {
+        // Add the arguments
+        foreach ($arguments as $k => $v) {
+            $this->setArgument($k, $v);
+        }
+    }
+
+    /**
+     * Run route
      *
-     * http://blog.sosedoff.com/2009/09/20/rails-like-php-url-router/
+     * This method traverses the middleware stack, including the route's callable
+     * and captures the resultant HTTP response object. It then sends the response
+     * back to the Application.
      *
-     * @param  string $resourceUri A Request URI
-     * @return bool
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     *
+     * @return ResponseInterface
      */
-    public function matches($resourceUri)
+    public function run(ServerRequestInterface $request, ResponseInterface $response)
     {
-        //Convert URL params into regex patterns, construct a regex for this route, init params
-        $patternAsRegex = preg_replace_callback(
-            '#:([\w]+)\+?#',
-            array($this, 'matchesCallback'),
-            str_replace(')', ')?', (string)$this->pattern)
-        );
-        if (substr($this->pattern, -1) === '/') {
-            $patternAsRegex .= '?';
-        }
+        // Finalise route now that we are about to run it
+        $this->finalize();
 
-        $regex = '#^' . $patternAsRegex . '$#';
-
-        if ($this->caseSensitive === false) {
-            $regex .= 'i';
-        }
-
-        //Cache URL params' names and values if this route matches the current HTTP request
-        if (!preg_match($regex, $resourceUri, $paramValues)) {
-            return false;
-        }
-        foreach ($this->paramNames as $name) {
-            if (isset($paramValues[$name])) {
-                if (isset($this->paramNamesPath[$name])) {
-                    $this->params[$name] = explode('/', urldecode($paramValues[$name]));
-                } else {
-                    $this->params[$name] = urldecode($paramValues[$name]);
-                }
-            }
-        }
-
-        return true;
+        // Traverse middleware stack and fetch updated response
+        return $this->callMiddlewareStack($request, $response);
     }
 
     /**
-     * Convert a URL parameter (e.g. ":id", ":id+") into a regular expression
-     * @param  array $m URL parameters
-     * @return string       Regular expression for URL parameter
-     */
-    protected function matchesCallback($m)
-    {
-        $this->paramNames[] = $m[1];
-        if (isset($this->conditions[$m[1]])) {
-            return '(?P<' . $m[1] . '>' . $this->conditions[$m[1]] . ')';
-        }
-        if (substr($m[0], -1) === '+') {
-            $this->paramNamesPath[$m[1]] = 1;
-
-            return '(?P<' . $m[1] . '>.+)';
-        }
-
-        return '(?P<' . $m[1] . '>[^/]+)';
-    }
-
-    /**
-     * Set route name
-     * @param  string $name The name of the route
-     * @return \Slim\Route
-     */
-    public function name($name)
-    {
-        $this->setName($name);
-
-        return $this;
-    }
-
-    /**
-     * Merge route conditions
-     * @param  array $conditions Key-value array of URL parameter conditions
-     * @return \Slim\Route
-     */
-    public function conditions(array $conditions)
-    {
-        $this->conditions = array_merge($this->conditions, $conditions);
-
-        return $this;
-    }
-
-    /**
-     * Dispatch route
+     * Dispatch route callable against current Request and Response objects
      *
      * This method invokes the route object's callable. If middleware is
      * registered for the route, each callable middleware is invoked in
      * the order specified.
      *
-     * @return bool
+     * @param ServerRequestInterface $request  The current Request object
+     * @param ResponseInterface      $response The current Response object
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Exception  if the route callable throws an exception
      */
-    public function dispatch()
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
     {
-        foreach ($this->middleware as $mw) {
-            call_user_func_array($mw, array($this));
+        $this->callable = $this->resolveCallable($this->callable);
+
+        /** @var InvocationStrategyInterface $handler */
+        $handler = isset($this->container) ? $this->container->get('foundHandler') : new RequestResponse();
+
+        // invoke route callable
+        if ($this->outputBuffering === false) {
+            $newResponse = $handler($this->callable, $request, $response, $this->arguments);
+        } else {
+            try {
+                ob_start();
+                $newResponse = $handler($this->callable, $request, $response, $this->arguments);
+                $output = ob_get_clean();
+            } catch (Exception $e) {
+                ob_end_clean();
+                throw $e;
+            }
         }
 
-        $return = call_user_func_array($this->getCallable(), array_values($this->getParams()));
-        return ($return === false) ? false : true;
+        if ($newResponse instanceof ResponseInterface) {
+            // if route callback returns a ResponseInterface, then use it
+            $response = $newResponse;
+        } elseif (is_string($newResponse)) {
+            // if route callback returns a string, then append it to the response
+            if ($response->getBody()->isWritable()) {
+                $response->getBody()->write($newResponse);
+            }
+        }
+
+        if (!empty($output) && $response->getBody()->isWritable()) {
+            if ($this->outputBuffering === 'prepend') {
+                // prepend output buffer content
+                $body = new Http\Body(fopen('php://temp', 'r+'));
+                $body->write($output . $response->getBody());
+                $response = $response->withBody($body);
+            } elseif ($this->outputBuffering === 'append') {
+                // append output buffer content
+                $response->getBody()->write($output);
+            }
+        }
+
+        return $response;
     }
 }

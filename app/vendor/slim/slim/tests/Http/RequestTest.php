@@ -1,949 +1,1027 @@
 <?php
 /**
- * Slim - a micro PHP 5 framework
+ * Slim Framework (http://slimframework.com)
  *
- * @author      Josh Lockhart <info@slimframework.com>
- * @copyright   2011 Josh Lockhart
- * @link        http://www.slimframework.com
- * @license     http://www.slimframework.com/license
- * @version     2.6.1
- *
- * MIT LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * @link      https://github.com/slimphp/Slim
+ * @copyright Copyright (c) 2011-2016 Josh Lockhart
+ * @license   https://github.com/slimphp/Slim/blob/master/LICENSE.md (MIT License)
  */
 
-class RequestTest extends PHPUnit_Framework_TestCase
+namespace Slim\Tests\Http;
+
+use ReflectionProperty;
+use Slim\Collection;
+use Slim\Http\Environment;
+use Slim\Http\Headers;
+use Slim\Http\Request;
+use Slim\Http\RequestBody;
+use Slim\Http\UploadedFile;
+use Slim\Http\Uri;
+
+class RequestTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Test sets HTTP method
-     */
+    public function requestFactory($envData = [])
+    {
+        $env = Environment::mock($envData);
+
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = Headers::createFromEnvironment($env);
+        $cookies = [
+            'user' => 'john',
+            'id' => '123',
+        ];
+        $serverParams = $env->all();
+        $body = new RequestBody();
+        $uploadedFiles = UploadedFile::createFromEnvironment($env);
+        $request = new Request('GET', $uri, $headers, $cookies, $serverParams, $body, $uploadedFiles);
+
+        return $request;
+    }
+
+    public function testDisableSetter()
+    {
+        $request = $this->requestFactory();
+        $request->foo = 'bar';
+
+        $this->assertFalse(property_exists($request, 'foo'));
+    }
+
+    public function testAddsHostHeaderFromUri()
+    {
+        $request = $this->requestFactory();
+        $this->assertEquals('example.com', $request->getHeaderLine('Host'));
+    }
+
+    /*******************************************************************************
+     * Method
+     ******************************************************************************/
+
     public function testGetMethod()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'GET'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('GET', $req->getMethod());
+        $this->assertEquals('GET', $this->requestFactory()->getMethod());
+    }
+
+    public function testGetOriginalMethod()
+    {
+        $this->assertEquals('GET', $this->requestFactory()->getOriginalMethod());
+    }
+
+    public function testWithMethod()
+    {
+        $request = $this->requestFactory()->withMethod('PUT');
+
+        $this->assertAttributeEquals('PUT', 'method', $request);
+        $this->assertAttributeEquals('PUT', 'originalMethod', $request);
     }
 
     /**
-     * Test HTTP GET method detection
+     * @expectedException \InvalidArgumentException
      */
+    public function testWithMethodInvalid()
+    {
+        $this->requestFactory()->withMethod('FOO');
+    }
+
+    public function testWithMethodNull()
+    {
+        $request = $this->requestFactory()->withMethod(null);
+
+        $this->assertAttributeEquals(null, 'originalMethod', $request);
+    }
+
+    /**
+     * @covers Slim\Http\Request::createFromEnvironment
+     */
+    public function testCreateFromEnvironment()
+    {
+        $env = Environment::mock([
+            'SCRIPT_NAME' => '/index.php',
+            'REQUEST_URI' => '/foo',
+            'REQUEST_METHOD' => 'POST',
+        ]);
+
+        $request = Request::createFromEnvironment($env);
+        $this->assertEquals('POST', $request->getMethod());
+        $this->assertEquals($env->all(), $request->getServerParams());
+    }
+
+    /**
+     * @covers Slim\Http\Request::createFromEnvironment
+     */
+    public function testCreateFromEnvironmentWithMultipart()
+    {
+        $_POST['foo'] = 'bar';
+
+        $env = Environment::mock([
+            'SCRIPT_NAME' => '/index.php',
+            'REQUEST_URI' => '/foo',
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'multipart/form-data; boundary=---foo'
+        ]);
+
+        $request = Request::createFromEnvironment($env);
+        unset($_POST);
+
+        $this->assertEquals(['foo' => 'bar'], $request->getParsedBody());
+    }
+
+    /**
+     * @covers Slim\Http\Request::createFromEnvironment
+     */
+    public function testCreateFromEnvironmentWithMultipartMethodOverride()
+    {
+        $_POST['_METHOD'] = 'PUT';
+
+        $env = Environment::mock([
+            'SCRIPT_NAME' => '/index.php',
+            'REQUEST_URI' => '/foo',
+            'REQUEST_METHOD' => 'POST',
+            'HTTP_CONTENT_TYPE' => 'multipart/form-data; boundary=---foo'
+        ]);
+
+        $request = Request::createFromEnvironment($env);
+        unset($_POST);
+
+        $this->assertEquals('POST', $request->getOriginalMethod());
+        $this->assertEquals('PUT', $request->getMethod());
+    }
+
+    public function testGetMethodWithOverrideHeader()
+    {
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers([
+            'HTTP_X_HTTP_METHOD_OVERRIDE' => 'PUT',
+        ]);
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $request = new Request('POST', $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals('PUT', $request->getMethod());
+        $this->assertEquals('POST', $request->getOriginalMethod());
+    }
+
+    public function testGetMethodWithOverrideParameterFromBodyObject()
+    {
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers([
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ]);
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('_METHOD=PUT');
+        $body->rewind();
+        $request = new Request('POST', $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals('PUT', $request->getMethod());
+        $this->assertEquals('POST', $request->getOriginalMethod());
+    }
+
+    public function testGetMethodOverrideParameterFromBodyArray()
+    {
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers([
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ]);
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('_METHOD=PUT');
+        $body->rewind();
+        $request = new Request('POST', $uri, $headers, $cookies, $serverParams, $body);
+        $request->registerMediaTypeParser('application/x-www-form-urlencoded', function ($input) {
+            parse_str($input, $body);
+            return $body; // <-- Array
+        });
+
+        $this->assertEquals('PUT', $request->getMethod());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateRequestWithInvalidMethodString()
+    {
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers();
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $request = new Request('FOO', $uri, $headers, $cookies, $serverParams, $body);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateRequestWithInvalidMethodOther()
+    {
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers();
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $request = new Request(10, $uri, $headers, $cookies, $serverParams, $body);
+    }
+
     public function testIsGet()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'GET'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isGet());
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'originalMethod');
+        $prop->setAccessible(true);
+        $prop->setValue($request, 'GET');
+
+        $this->assertTrue($request->isGet());
     }
 
-    /**
-     * Test HTTP POST method detection
-     */
     public function testIsPost()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'POST',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isPost());
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'originalMethod');
+        $prop->setAccessible(true);
+        $prop->setValue($request, 'POST');
+
+        $this->assertTrue($request->isPost());
     }
 
-    /**
-     * Test HTTP PUT method detection
-     */
     public function testIsPut()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'PUT',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isPut());
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'originalMethod');
+        $prop->setAccessible(true);
+        $prop->setValue($request, 'PUT');
+
+        $this->assertTrue($request->isPut());
     }
 
-    /**
-     * Test HTTP DELETE method detection
-     */
-    public function testIsDelete()
-    {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'DELETE',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isDelete());
-    }
-
-    /**
-     * Test HTTP OPTIONS method detection
-     */
-    public function testIsOptions()
-    {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'OPTIONS',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isOptions());
-    }
-
-    /**
-     * Test HTTP HEAD method detection
-     */
-    public function testIsHead()
-    {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'HEAD',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isHead());
-    }
-
-    /**
-     * Test HTTP PATCH method detection
-     */
     public function testIsPatch()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'PATCH',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isPatch());
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'originalMethod');
+        $prop->setAccessible(true);
+        $prop->setValue($request, 'PATCH');
+
+        $this->assertTrue($request->isPatch());
     }
 
-    /**
-     * Test AJAX method detection w/ header
-     */
-    public function testIsAjaxWithHeader()
+    public function testIsDelete()
     {
-        $env = \Slim\Environment::mock(array(
-            'X_REQUESTED_WITH' => 'XMLHttpRequest'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isAjax());
-        $this->assertTrue($req->isXhr());
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'originalMethod');
+        $prop->setAccessible(true);
+        $prop->setValue($request, 'DELETE');
+
+        $this->assertTrue($request->isDelete());
     }
 
-    /**
-     * Test AJAX method detection w/ query parameter
-     */
-    public function testIsAjaxWithQueryParameter()
+    public function testIsHead()
     {
-        $env = \Slim\Environment::mock(array(
-            'QUERY_STRING' => 'isajax=1',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isAjax());
-        $this->assertTrue($req->isXhr());
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'originalMethod');
+        $prop->setAccessible(true);
+        $prop->setValue($request, 'HEAD');
+
+        $this->assertTrue($request->isHead());
     }
 
-    /**
-     * Test AJAX method detection without header or query parameter
-     */
-    public function testIsAjaxWithoutHeaderOrQueryParameter()
+    public function testIsOptions()
     {
-        $env = \Slim\Environment::mock();
-        $req = new \Slim\Http\Request($env);
-        $this->assertFalse($req->isAjax());
-        $this->assertFalse($req->isXhr());
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'originalMethod');
+        $prop->setAccessible(true);
+        $prop->setValue($request, 'OPTIONS');
+
+        $this->assertTrue($request->isOptions());
     }
 
-    /**
-     * Test AJAX method detection with misspelled header
-     */
-    public function testIsAjaxWithMisspelledHeader()
+    public function testIsXhr()
     {
-        $env = \Slim\Environment::mock(array(
-            'X_REQUESTED_WITH' => 'foo'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertFalse($req->isAjax());
-        $this->assertFalse($req->isXhr());
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers([
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'X-Requested-With' => 'XMLHttpRequest',
+        ]);
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $request = new Request('GET', $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertTrue($request->isXhr());
     }
 
-    /**
-     * Test params from query string
-     */
-    public function testParamsFromQueryString()
+    /*******************************************************************************
+     * URI
+     ******************************************************************************/
+
+    public function testGetRequestTarget()
     {
-        $env = \Slim\Environment::mock(array(
-            'QUERY_STRING' => 'one=1&two=2&three=3'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(3, count($req->params()));
-        $this->assertEquals('1', $req->params('one'));
-        $this->assertNull($req->params('foo'));
-        $this->assertEquals(1, $req->params('foo', 1));
+        $this->assertEquals('/foo/bar?abc=123', $this->requestFactory()->getRequestTarget());
     }
 
-    /**
-     * Test params from request body
-     */
-    public function testParamsFromRequestBody()
+    public function testGetRequestTargetAlreadySet()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'POST',
-            'QUERY_STRING' => 'one=1&two=2&three=3',
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(5, count($req->params())); //Union of GET and POST
-        $this->assertEquals('bar', $req->params('foo'));
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'requestTarget');
+        $prop->setAccessible(true);
+        $prop->setValue($request, '/foo/bar?abc=123');
+
+        $this->assertEquals('/foo/bar?abc=123', $request->getRequestTarget());
     }
 
-    /**
-     * Test fetch GET params
-     */
-    public function testGet()
+    public function testGetRequestTargetIfNoUri()
     {
-        $env = \Slim\Environment::mock(array(
-            'QUERY_STRING' => 'one=1&two=2&three=3'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(3, count($req->get()));
-        $this->assertEquals('1', $req->get('one'));
-        $this->assertNull($req->get('foo'));
-        $this->assertFalse($req->get('foo', false));
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'uri');
+        $prop->setAccessible(true);
+        $prop->setValue($request, null);
+
+        $this->assertEquals('/', $request->getRequestTarget());
     }
 
-    /**
-     * Test fetch GET params without multibyte
-     */
-    public function testGetWithoutMultibyte()
+    public function testWithRequestTarget()
     {
-        $env = \Slim\Environment::mock(array(
-            'QUERY_STRING' => 'one=1&two=2&three=3',
-            'slim.tests.ignore_multibyte' => true
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(3, count($req->get()));
-        $this->assertEquals('1', $req->get('one'));
-        $this->assertNull($req->get('foo'));
-        $this->assertFalse($req->get('foo', false));
+        $clone = $this->requestFactory()->withRequestTarget('/test?user=1');
+
+        $this->assertAttributeEquals('/test?user=1', 'requestTarget', $clone);
     }
 
     /**
-     * Test fetch POST params
+     * @expectedException \InvalidArgumentException
      */
-    public function testPost()
+    public function testWithRequestTargetThatHasSpaces()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'POST',
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(2, count($req->post()));
-        $this->assertEquals('bar', $req->post('foo'));
-        $this->assertNull($req->post('xyz'));
-        $this->assertFalse($req->post('xyz', false));
+        $this->requestFactory()->withRequestTarget('/test/m ore/stuff?user=1');
     }
 
-    /**
-     * Test fetch POST params without multibyte
-     */
-    public function testPostWithoutMultibyte()
+    public function testGetUri()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'POST',
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15,
-            'slim.tests.ignore_multibyte' => true
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(2, count($req->post()));
-        $this->assertEquals('bar', $req->post('foo'));
-        $this->assertNull($req->post('xyz'));
-        $this->assertFalse($req->post('xyz', false));
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers();
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $request = new Request('GET', $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertSame($uri, $request->getUri());
     }
 
-    /**
-     * Test fetch POST without slim.input
-     */
-    public function testPostWithoutInput()
+    public function testWithUri()
     {
-        $this->setExpectedException('RuntimeException');
-        $env = \Slim\Environment::mock();
-        unset($env['slim.input']);
-        $req = new \Slim\Http\Request($env);
-        $req->post('foo');
+        // Uris
+        $uri1 = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $uri2 = Uri::createFromString('https://example2.com:443/test?xyz=123');
+
+        // Request
+        $headers = new Headers();
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $request = new Request('GET', $uri1, $headers, $cookies, $serverParams, $body);
+        $clone = $request->withUri($uri2);
+
+        $this->assertAttributeSame($uri2, 'uri', $clone);
     }
 
-    /**
-     * Test fetch POST params even if multipart/form-data request
-     */
-    public function testPostWithMultipartRequest()
+    public function testGetContentType()
     {
-        $_POST = array('foo' => 'bar'); //<-- Set by PHP
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'POST',
-            'slim.input' => '', //<-- "php://input" is empty for multipart/form-data requests
-            'CONTENT_TYPE' => 'multipart/form-data',
-            'CONTENT_LENGTH' => 0
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(1, count($req->post()));
-        $this->assertEquals('bar', $req->post('foo'));
-        $this->assertNull($req->post('xyz'));
+        $headers = new Headers([
+            'Content-Type' => ['application/json;charset=utf8'],
+        ]);
+        $request = $this->requestFactory();
+        $headersProp = new ReflectionProperty($request, 'headers');
+        $headersProp->setAccessible(true);
+        $headersProp->setValue($request, $headers);
+
+        $this->assertEquals('application/json;charset=utf8', $request->getContentType());
     }
 
-    /**
-     * Test fetch PUT params
-     */
-    public function testPut()
+    public function testGetContentTypeEmpty()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'PUT',
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(2, count($req->put()));
-        $this->assertEquals('bar', $req->put('foo'));
-        $this->assertEquals('bar', $req->params('foo'));
-        $this->assertNull($req->put('xyz'));
-        $this->assertFalse($req->put('xyz', false));
+        $request = $this->requestFactory();
+
+        $this->assertNull($request->getContentType());
     }
 
-    /**
-     * Test fetch PATCH params
-     */
-    public function testPatch()
+    public function testGetMediaType()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'PATCH',
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(2, count($req->patch()));
-        $this->assertEquals('bar', $req->patch('foo'));
-        $this->assertEquals('bar', $req->params('foo'));
-        $this->assertNull($req->patch('xyz'));
-        $this->assertFalse($req->patch('xyz', false));
+        $headers = new Headers([
+            'Content-Type' => ['application/json;charset=utf8'],
+        ]);
+        $request = $this->requestFactory();
+        $headersProp = new ReflectionProperty($request, 'headers');
+        $headersProp->setAccessible(true);
+        $headersProp->setValue($request, $headers);
+
+        $this->assertEquals('application/json', $request->getMediaType());
     }
 
-    /**
-     * Test fetch DELETE params
-     */
-    public function testDelete()
+    public function testGetMediaTypeEmpty()
     {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'DELETE',
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(2, count($req->delete()));
-        $this->assertEquals('bar', $req->delete('foo'));
-        $this->assertEquals('bar', $req->params('foo'));
-        $this->assertNull($req->delete('xyz'));
-        $this->assertFalse($req->delete('xyz', false));
+        $request = $this->requestFactory();
+
+        $this->assertNull($request->getMediaType());
     }
 
-    /**
-     * Test fetch COOKIE params
-     */
-    public function testCookies()
-    {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_COOKIE' => 'foo=bar; abc=123'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(2, count($req->cookies()));
-        $this->assertEquals('bar', $req->cookies('foo'));
-        $this->assertNull($req->cookies('xyz'));
-    }
-
-    /**
-     * Test is form data
-     */
-    public function testIsFormDataContentFormUrlencoded()
-    {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'PUT',
-            'slim.input' => '',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isFormData());
-    }
-
-    /**
-     * Test is form data
-     */
-    public function testIsFormDataPostContentUnknown()
-    {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'POST',
-            'slim.input' => '',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isFormData());
-    }
-
-    /**
-     * Test is form data
-     */
-    public function testIsFormDataPostContentUnknownWithMethodOverride()
-    {
-        $env = \Slim\Environment::mock(array(
-            'REQUEST_METHOD' => 'PUT',
-        ));
-        $env['slim.method_override.original_method'] = 'POST';
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue($req->isPut());
-        $this->assertTrue($req->isFormData());
-    }
-
-    /**
-     * Test is not form data
-     */
-    public function testIsNotFormData()
-    {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-            'CONTENT_TYPE' => 'application/json'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertFalse($req->isFormData());
-    }
-
-    /**
-     * Test headers
-     */
-    public function testHeaders()
-    {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_ACCEPT_ENCODING' => 'gzip'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $headers = $req->headers();
-        $this->assertInstanceOf('\Slim\Http\Headers', $headers);
-        $this->assertEquals('gzip', $req->headers('HTTP_ACCEPT_ENCODING'));
-        $this->assertEquals('gzip', $req->headers('HTTP-ACCEPT-ENCODING'));
-        $this->assertEquals('gzip', $req->headers('http_accept_encoding'));
-        $this->assertEquals('gzip', $req->headers('http-accept-encoding'));
-        $this->assertEquals('gzip', $req->headers('ACCEPT_ENCODING'));
-        $this->assertEquals('gzip', $req->headers('ACCEPT-ENCODING'));
-        $this->assertEquals('gzip', $req->headers('accept_encoding'));
-        $this->assertEquals('gzip', $req->headers('accept-encoding'));
-        $this->assertNull($req->headers('foo'));
-    }
-
-    /**
-     * Test accurately removes HTTP_ prefix from input header name
-     */
-    public function testHeaderRemovesHttpPrefix()
-    {
-        $env = \Slim\Environment::mock(array(
-            'X_HTTP_METHOD_OVERRIDE' => 'PUT',
-            'CONTENT_TYPE' => 'application/json'
-        ));
-        //fwrite(fopen('php://stdout', 'w'), print_r($env, true));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('PUT', $req->headers('X_HTTP_METHOD_OVERRIDE'));
-        $this->assertNull($req->headers('X_METHOD_OVERRIDE')); //<-- Ensures `HTTP_` is not removed if not prefix
-        $this->assertEquals('application/json', $req->headers('HTTP_CONTENT_TYPE')); //<-- Ensures `HTTP_` is removed if prefix
-    }
-
-    /**
-     * Test get body
-     */
-    public function testGetBodyWhenExists()
-    {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('foo=bar&abc=123', $req->getBody());
-    }
-
-    /**
-     * Test get body
-     */
-    public function testGetBodyWhenNotExists()
-    {
-        $env = \Slim\Environment::mock();
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('', $req->getBody());
-    }
-
-    /**
-     * Test get content type
-     */
-    public function testGetContentTypeWhenExists()
-    {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-            'CONTENT_TYPE' => 'application/json; charset=ISO-8859-4'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('application/json; charset=ISO-8859-4', $req->getContentType());
-    }
-
-    /**
-     * Test get content type for built-in PHP server
-     */
-    public function testGetContentTypeForBuiltInServer()
-    {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-            'HTTP_CONTENT_TYPE' => 'application/json; charset=ISO-8859-4'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('application/json; charset=ISO-8859-4', $req->getContentType());
-    }
-
-    /**
-     * Test get content type
-     */
-    public function testGetContentTypeWhenNotExists()
-    {
-        $env = \Slim\Environment::mock();
-        $req = new \Slim\Http\Request($env);
-        $this->assertNull($req->getContentType());
-    }
-
-    /**
-     * Test get content type with built-in server
-     */
-    public function testGetContentTypeWithBuiltInServer()
-    {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-            'HTTP_CONTENT_TYPE' => 'application/json; charset=ISO-8859-4'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('application/json; charset=ISO-8859-4', $req->getContentType());
-    }
-
-    /**
-     * Test get media type
-     */
-    public function testGetMediaTypeWhenExists()
-    {
-        $env = \Slim\Environment::mock(array(
-            'CONTENT_TYPE' => 'application/json;charset=utf-8'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('application/json', $req->getMediaType());
-    }
-
-    /**
-     * Test get media type
-     */
-    public function testGetMediaTypeWhenNotExists()
-    {
-        $env = \Slim\Environment::mock();
-        $req = new \Slim\Http\Request($env);
-        $this->assertNull($req->getMediaType());
-    }
-
-    /**
-     * Test get media type
-     */
-    public function testGetMediaTypeWhenNoParamsExist()
-    {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-            'CONTENT_TYPE' => 'application/json'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('application/json', $req->getMediaType());
-    }
-
-    /**
-     * Test get media type params
-     */
     public function testGetMediaTypeParams()
     {
-        $env = \Slim\Environment::mock(array(
-            'CONTENT_TYPE' => 'application/json; charset=ISO-8859-4'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $params = $req->getMediaTypeParams();
-        $this->assertEquals(1, count($params));
-        $this->assertArrayHasKey('charset', $params);
-        $this->assertEquals('ISO-8859-4', $params['charset']);
+        $headers = new Headers([
+            'Content-Type' => ['application/json;charset=utf8;foo=bar'],
+        ]);
+        $request = $this->requestFactory();
+        $headersProp = new ReflectionProperty($request, 'headers');
+        $headersProp->setAccessible(true);
+        $headersProp->setValue($request, $headers);
+
+        $this->assertEquals(['charset' => 'utf8', 'foo' => 'bar'], $request->getMediaTypeParams());
     }
 
-    /**
-     * Test get media type params
-     */
-    public function testGetMediaTypeParamsWhenNotExists()
+    public function testGetMediaTypeParamsEmpty()
     {
-        $env = \Slim\Environment::mock();
-        $req = new \Slim\Http\Request($env);
-        $params = $req->getMediaTypeParams();
-        $this->assertTrue(is_array($params));
-        $this->assertEquals(0, count($params));
+        $headers = new Headers([
+            'Content-Type' => ['application/json'],
+        ]);
+        $request = $this->requestFactory();
+        $headersProp = new ReflectionProperty($request, 'headers');
+        $headersProp->setAccessible(true);
+        $headersProp->setValue($request, $headers);
+
+        $this->assertEquals([], $request->getMediaTypeParams());
     }
 
-    /**
-     * Test get content charset
-     */
+    public function testGetMediaTypeParamsWithoutHeader()
+    {
+        $request = $this->requestFactory();
+
+        $this->assertEquals([], $request->getMediaTypeParams());
+    }
+
     public function testGetContentCharset()
     {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-            'CONTENT_TYPE' => 'application/json; charset=ISO-8859-4'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('ISO-8859-4', $req->getContentCharset());
+        $headers = new Headers([
+            'Content-Type' => ['application/json;charset=utf8'],
+        ]);
+        $request = $this->requestFactory();
+        $headersProp = new ReflectionProperty($request, 'headers');
+        $headersProp->setAccessible(true);
+        $headersProp->setValue($request, $headers);
+
+        $this->assertEquals('utf8', $request->getContentCharset());
     }
 
-    /**
-     * Test get content charset
-     */
-    public function testGetContentCharsetWhenNotExists()
+    public function testGetContentCharsetEmpty()
     {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-            'CONTENT_TYPE' => 'application/json'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertNull($req->getContentCharset());
+        $headers = new Headers([
+            'Content-Type' => ['application/json'],
+        ]);
+        $request = $this->requestFactory();
+        $headersProp = new ReflectionProperty($request, 'headers');
+        $headersProp->setAccessible(true);
+        $headersProp->setValue($request, $headers);
+
+        $this->assertNull($request->getContentCharset());
     }
 
-    /**
-     * Test get content length
-     */
+    public function testGetContentCharsetWithoutHeader()
+    {
+        $request = $this->requestFactory();
+
+        $this->assertNull($request->getContentCharset());
+    }
+
     public function testGetContentLength()
     {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => 'foo=bar&abc=123',
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'CONTENT_LENGTH' => 15
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(15, $req->getContentLength());
+        $headers = new Headers([
+            'Content-Length' => '150', // <-- Note we define as a string
+        ]);
+        $request = $this->requestFactory();
+        $headersProp = new ReflectionProperty($request, 'headers');
+        $headersProp->setAccessible(true);
+        $headersProp->setValue($request, $headers);
+
+        $this->assertEquals(150, $request->getContentLength());
+    }
+
+    public function testGetContentLengthWithoutHeader()
+    {
+        $request = $this->requestFactory();
+
+        $this->assertNull($request->getContentLength());
+    }
+
+    /*******************************************************************************
+     * Cookies
+     ******************************************************************************/
+
+    public function testGetCookieParams()
+    {
+        $shouldBe = [
+            'user' => 'john',
+            'id' => '123',
+        ];
+
+        $this->assertEquals($shouldBe, $this->requestFactory()->getCookieParams());
+    }
+
+    public function testWithCookieParams()
+    {
+        $request = $this->requestFactory();
+        $clone = $request->withCookieParams(['type' => 'framework']);
+
+        $this->assertEquals(['type' => 'framework'], $clone->getCookieParams());
+    }
+
+    /*******************************************************************************
+     * Query Params
+     ******************************************************************************/
+
+    public function testGetQueryParams()
+    {
+        $this->assertEquals(['abc' => '123'], $this->requestFactory()->getQueryParams());
+    }
+
+    public function testGetQueryParamsAlreadySet()
+    {
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'queryParams');
+        $prop->setAccessible(true);
+        $prop->setValue($request, ['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $request->getQueryParams());
+    }
+
+    public function testWithQueryParams()
+    {
+        $request = $this->requestFactory();
+        $clone = $request->withQueryParams(['foo' => 'bar']);
+        $cloneUri = $clone->getUri();
+
+        $this->assertEquals('abc=123', $cloneUri->getQuery()); // <-- Unchanged
+        $this->assertEquals(['foo' => 'bar'], $clone->getQueryParams()); // <-- Changed
+    }
+
+    public function testWithQueryParamsEmptyArray()
+    {
+        $request = $this->requestFactory();
+        $clone = $request->withQueryParams([]);
+        $cloneUri = $clone->getUri();
+
+        $this->assertEquals('abc=123', $cloneUri->getQuery()); // <-- Unchanged
+        $this->assertEquals([], $clone->getQueryParams()); // <-- Changed
+    }
+
+    public function testGetQueryParamsWithoutUri()
+    {
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'uri');
+        $prop->setAccessible(true);
+        $prop->setValue($request, null);
+
+        $this->assertEquals([], $request->getQueryParams());
+    }
+
+    /*******************************************************************************
+     * Uploaded files
+     ******************************************************************************/
+
+    /**
+     * @covers Slim\Http\Request::withUploadedFiles
+     * @covers Slim\Http\Request::getUploadedFiles
+     */
+    public function testWithUploadedFiles()
+    {
+        $files = [new UploadedFile('foo.txt'), new UploadedFile('bar.txt')];
+
+        $request = $this->requestFactory();
+        $clone = $request->withUploadedFiles($files);
+
+        $this->assertEquals([], $request->getUploadedFiles());
+        $this->assertEquals($files, $clone->getUploadedFiles());
+    }
+
+    /*******************************************************************************
+     * Server Params
+     ******************************************************************************/
+
+    public function testGetServerParams()
+    {
+        $mockEnv = Environment::mock(["HTTP_AUTHORIZATION" => "test"]);
+        $request = $this->requestFactory(["HTTP_AUTHORIZATION" => "test"]);
+
+        $serverParams = $request->getServerParams();
+        foreach ($serverParams as $key => $value) {
+            if ($key == 'REQUEST_TIME' || $key == 'REQUEST_TIME_FLOAT') {
+                $this->assertGreaterThanOrEqual(
+                    $mockEnv[$key],
+                    $value,
+                    sprintf("%s value of %s was less than expected value of %s", $key, $value, $mockEnv[$key])
+                );
+            } else {
+                $this->assertEquals(
+                    $mockEnv[$key],
+                    $value,
+                    sprintf("%s value of %s did not equal expected value of %s", $key, $value, $mockEnv[$key])
+                );
+            }
+        }
+    }
+
+    /*******************************************************************************
+     * File Params
+     ******************************************************************************/
+
+    /*******************************************************************************
+     * Attributes
+     ******************************************************************************/
+
+    public function testGetAttributes()
+    {
+        $request = $this->requestFactory();
+        $attrProp = new ReflectionProperty($request, 'attributes');
+        $attrProp->setAccessible(true);
+        $attrProp->setValue($request, new Collection(['foo' => 'bar']));
+
+        $this->assertEquals(['foo' => 'bar'], $request->getAttributes());
+    }
+
+    public function testGetAttribute()
+    {
+        $request = $this->requestFactory();
+        $attrProp = new ReflectionProperty($request, 'attributes');
+        $attrProp->setAccessible(true);
+        $attrProp->setValue($request, new Collection(['foo' => 'bar']));
+
+        $this->assertEquals('bar', $request->getAttribute('foo'));
+        $this->assertNull($request->getAttribute('bar'));
+        $this->assertEquals(2, $request->getAttribute('bar', 2));
+    }
+
+    public function testWithAttribute()
+    {
+        $request = $this->requestFactory();
+        $attrProp = new ReflectionProperty($request, 'attributes');
+        $attrProp->setAccessible(true);
+        $attrProp->setValue($request, new Collection(['foo' => 'bar']));
+        $clone = $request->withAttribute('test', '123');
+
+        $this->assertEquals('123', $clone->getAttribute('test'));
+    }
+
+    public function testWithAttributes()
+    {
+        $request = $this->requestFactory();
+        $attrProp = new ReflectionProperty($request, 'attributes');
+        $attrProp->setAccessible(true);
+        $attrProp->setValue($request, new Collection(['foo' => 'bar']));
+        $clone = $request->withAttributes(['test' => '123']);
+
+        $this->assertNull($clone->getAttribute('foo'));
+        $this->assertEquals('123', $clone->getAttribute('test'));
+    }
+
+    public function testWithoutAttribute()
+    {
+        $request = $this->requestFactory();
+        $attrProp = new ReflectionProperty($request, 'attributes');
+        $attrProp->setAccessible(true);
+        $attrProp->setValue($request, new Collection(['foo' => 'bar']));
+        $clone = $request->withoutAttribute('foo');
+
+        $this->assertNull($clone->getAttribute('foo'));
+    }
+
+    /*******************************************************************************
+     * Body
+     ******************************************************************************/
+
+    public function testGetParsedBodyForm()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/x-www-form-urlencoded;charset=utf8');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('foo=bar');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+        $this->assertEquals(['foo' => 'bar'], $request->getParsedBody());
+    }
+
+    public function testGetParsedBodyJson()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/json;charset=utf8');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('{"foo":"bar"}');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals(['foo' => 'bar'], $request->getParsedBody());
+    }
+
+    public function testGetParsedBodyWithJsonStructuredSuffix()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/vnd.api+json;charset=utf8');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('{"foo":"bar"}');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals(['foo' => 'bar'], $request->getParsedBody());
+    }
+
+    public function testGetParsedBodyXml()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/xml;charset=utf8');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('<person><name>Josh</name></person>');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals('Josh', $request->getParsedBody()->name);
+    }
+
+    public function testGetParsedBodyWithXmlStructuredSuffix()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/hal+xml;charset=utf8');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('<person><name>Josh</name></person>');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals('Josh', $request->getParsedBody()->name);
+    }
+
+    public function testGetParsedBodyXmlWithTextXMLMediaType()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'text/xml');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('<person><name>Josh</name></person>');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals('Josh', $request->getParsedBody()->name);
+    }
+
+    public function testGetParsedBodyWhenAlreadyParsed()
+    {
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'bodyParsed');
+        $prop->setAccessible(true);
+        $prop->setValue($request, ['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $request->getParsedBody());
+    }
+
+    public function testGetParsedBodyWhenBodyDoesNotExist()
+    {
+        $request = $this->requestFactory();
+        $prop = new ReflectionProperty($request, 'body');
+        $prop->setAccessible(true);
+        $prop->setValue($request, null);
+
+        $this->assertNull($request->getParsedBody());
+    }
+
+    public function testGetParsedBodyAfterCallReparseBody()
+    {
+        $uri = Uri::createFromString('https://example.com:443/?one=1');
+        $headers = new Headers([
+            'Content-Type' => 'application/x-www-form-urlencoded;charset=utf8',
+        ]);
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('foo=bar');
+        $body->rewind();
+        $request = new Request('POST', $uri, $headers, $cookies, $serverParams, $body);
+
+        $this->assertEquals(['foo' => 'bar'], $request->getParsedBody());
+
+        $newBody = new RequestBody();
+        $newBody->write('abc=123');
+        $newBody->rewind();
+        $request = $request->withBody($newBody);
+        $request->reparseBody();
+
+        $this->assertEquals(['abc' => '123'], $request->getParsedBody());
     }
 
     /**
-     * Test get content length
+     * @expectedException \RuntimeException
      */
-    public function testGetContentLengthWhenNotExists()
+    public function testGetParsedBodyAsArray()
     {
-        $env = \Slim\Environment::mock(array(
-            'slim.input' => '',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals(0, $req->getContentLength());
+        $uri = Uri::createFromString('https://example.com:443/foo/bar?abc=123');
+        $headers = new Headers([
+            'Content-Type' => 'application/json;charset=utf8',
+        ]);
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('{"foo": "bar"}');
+        $body->rewind();
+        $request = new Request('POST', $uri, $headers, $cookies, $serverParams, $body);
+        $request->registerMediaTypeParser('application/json', function ($input) {
+            return 10; // <-- Return invalid body value
+        });
+        $request->getParsedBody(); // <-- Triggers exception
+    }
+
+    public function testWithParsedBody()
+    {
+        $clone = $this->requestFactory()->withParsedBody(['xyz' => '123']);
+
+        $this->assertEquals(['xyz' => '123'], $clone->getParsedBody());
+    }
+
+    public function testWithParsedBodyEmptyArray()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/x-www-form-urlencoded;charset=utf8');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('foo=bar');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+
+
+        $clone = $request->withParsedBody([]);
+
+        $this->assertEquals([], $clone->getParsedBody());
+    }
+
+    public function testWithParsedBodyNull()
+    {
+        $method = 'GET';
+        $uri = new Uri('https', 'example.com', 443, '/foo/bar', 'abc=123', '', '');
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/x-www-form-urlencoded;charset=utf8');
+        $cookies = [];
+        $serverParams = [];
+        $body = new RequestBody();
+        $body->write('foo=bar');
+        $request = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+
+
+        $clone = $request->withParsedBody(null);
+
+        $this->assertNull($clone->getParsedBody());
+    }
+
+    public function testGetParsedBodyReturnsNullWhenThereIsNoBodyData()
+    {
+        $request = $this->requestFactory(['REQUEST_METHOD' => 'POST']);
+
+        $this->assertNull($request->getParsedBody());
+    }
+
+    public function testGetParsedBodyReturnsNullWhenThereIsNoMediaTypeParserRegistered()
+    {
+        $request = $this->requestFactory([
+            'REQUEST_METHOD' => 'POST',
+            'CONTENT_TYPE' => 'text/csv',
+        ]);
+        $request->getBody()->write('foo,bar,baz');
+
+        $this->assertNull($request->getParsedBody());
     }
 
     /**
-     * Test get host
+     * @expectedException \InvalidArgumentException
      */
-    public function testGetHost()
+    public function testWithParsedBodyInvalid()
     {
-        $env = \Slim\Environment::mock(array(
-            'SERVER_NAME' => 'slim',
-            'HTTP_HOST' => 'slimframework.com'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('slimframework.com', $req->getHost()); //Uses HTTP_HOST if available
+        $this->requestFactory()->withParsedBody(2);
     }
 
     /**
-     * Test get host when it has a port number
+     * @expectedException \InvalidArgumentException
      */
-    public function testGetHostAndStripPort()
+    public function testWithParsedBodyInvalidFalseValue()
     {
-        $env = \Slim\Environment::mock(array(
-            'SERVER_NAME' => 'slim',
-            'HTTP_HOST' => 'slimframework.com:80'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('slimframework.com', $req->getHost()); //Uses HTTP_HOST if available
+        $this->requestFactory()->withParsedBody(false);
     }
 
-    /**
-     * Test get host
-     */
-    public function testGetHostWhenNotExists()
+    /*******************************************************************************
+     * Parameters
+     ******************************************************************************/
+
+    public function testGetParameterFromBody()
     {
-        $env = \Slim\Environment::mock(array(
-            'SERVER_NAME' => 'slim',
-            'HTTP_HOST' => 'slimframework.com'
-        ));
-        unset($env['HTTP_HOST']);
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('slim', $req->getHost()); //Uses SERVER_NAME as backup
+        $body = new RequestBody();
+        $body->write('foo=bar');
+        $body->rewind();
+        $request = $this->requestFactory()
+                   ->withBody($body)
+                   ->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        $this->assertEquals('bar', $request->getParam('foo'));
     }
 
-    /**
-     * Test get host with port
-     */
-    public function testGetHostWithPort()
+    public function testGetParameterFromBodyWithBodyParemeterHelper()
     {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_HOST' => 'slimframework.com',
-            'SERVER_NAME' => 'slim',
-            'SERVER_PORT' => 80,
-            'slim.url_scheme' => 'http'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('slimframework.com:80', $req->getHostWithPort());
+        $body = new RequestBody();
+        $body->write('foo=bar');
+        $body->rewind();
+        $request = $this->requestFactory()
+            ->withBody($body)
+            ->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        $this->assertEquals('bar', $request->getParsedBodyParam('foo'));
     }
 
-    /**
-     * Test get host with port doesn't duplicate port numbers
-     */
-    public function testGetHostDoesntDuplicatePort()
+    public function testGetParameterFromQuery()
     {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_HOST' => 'slimframework.com:80',
-            'SERVER_NAME' => 'slim',
-            'SERVER_PORT' => 80,
-            'slim.url_scheme' => 'http'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('slimframework.com:80', $req->getHostWithPort());
+        $request = $this->requestFactory()->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        $this->assertEquals('123', $request->getParam('abc'));
     }
 
-    /**
-     * Test get port
-     */
-    public function testGetPort()
+    public function testGetParameterFromQueryWithQueryParemeterHelper()
     {
-        $env = \Slim\Environment::mock(array(
-            'SERVER_PORT' => 80
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertTrue(is_integer($req->getPort()));
-        $this->assertEquals(80, $req->getPort());
+        $request = $this->requestFactory()->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        $this->assertEquals('123', $request->getQueryParam('abc'));
     }
 
-    /**
-     * Test get scheme
-     */
-    public function testGetSchemeIfHttp()
+    public function testGetParameterFromBodyOverQuery()
     {
-        $env = \Slim\Environment::mock(array(
-            'slim.url_scheme' => 'http'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('http', $req->getScheme());
+        $body = new RequestBody();
+        $body->write('abc=xyz');
+        $body->rewind();
+        $request = $this->requestFactory()
+                   ->withBody($body)
+                   ->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+        $this->assertEquals('xyz', $request->getParam('abc'));
     }
 
-    /**
-     * Test get scheme
-     */
-    public function testGetSchemeIfHttps()
+    public function testGetParameterWithDefaultFromBodyOverQuery()
     {
-        $env = \Slim\Environment::mock(array(
-            'slim.url_scheme' => 'https',
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('https', $req->getScheme());
+        $body = new RequestBody();
+        $body->write('abc=xyz');
+        $body->rewind();
+        $request = $this->requestFactory()
+                   ->withBody($body)
+                   ->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+        $this->assertEquals('xyz', $request->getParam('abc'));
+        $this->assertEquals('bar', $request->getParam('foo', 'bar'));
     }
 
-    /**
-     * Test get [script name, root uri, path, path info, resource uri] in subdirectory without htaccess
-     */
-    public function testAppPathsInSubdirectoryWithoutHtaccess()
+    public function testGetParameters()
     {
-        $env = \Slim\Environment::mock(array(
-            'SCRIPT_NAME' => '/foo/index.php', //<-- Physical
-            'PATH_INFO' => '/bar/xyz', //<-- Virtual
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('/foo/index.php', $req->getScriptName());
-        $this->assertEquals('/foo/index.php', $req->getRootUri());
-        $this->assertEquals('/foo/index.php/bar/xyz', $req->getPath());
-        $this->assertEquals('/bar/xyz', $req->getPathInfo());
-        $this->assertEquals('/bar/xyz', $req->getResourceUri());
+        $body = new RequestBody();
+        $body->write('foo=bar');
+        $body->rewind();
+        $request = $this->requestFactory()
+                   ->withBody($body)
+                   ->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        $this->assertEquals(['abc' => '123', 'foo' => 'bar'], $request->getParams());
     }
 
-    /**
-     * Test get [script name, root uri, path, path info, resource uri] in subdirectory with htaccess
-     */
-    public function testAppPathsInSubdirectoryWithHtaccess()
+    public function testGetParametersWithBodyPriority()
     {
-        $env = \Slim\Environment::mock(array(
-            'SCRIPT_NAME' => '/foo', //<-- Physical
-            'PATH_INFO' => '/bar/xyz', //<-- Virtual
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('/foo', $req->getScriptName());
-        $this->assertEquals('/foo', $req->getRootUri());
-        $this->assertEquals('/foo/bar/xyz', $req->getPath());
-        $this->assertEquals('/bar/xyz', $req->getPathInfo());
-        $this->assertEquals('/bar/xyz', $req->getResourceUri());
+        $body = new RequestBody();
+        $body->write('foo=bar&abc=xyz');
+        $body->rewind();
+        $request = $this->requestFactory()
+                   ->withBody($body)
+                   ->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        $this->assertEquals(['abc' => 'xyz', 'foo' => 'bar'], $request->getParams());
     }
 
-    /**
-     * Test get [script name, root uri, path, path info, resource uri] in root directory without htaccess
-     */
-    public function testAppPathsInRootDirectoryWithoutHtaccess()
-    {
-        $env = \Slim\Environment::mock(array(
-            'SCRIPT_NAME' => '/index.php', //<-- Physical
-            'PATH_INFO' => '/bar/xyz', //<-- Virtual
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('/index.php', $req->getScriptName());
-        $this->assertEquals('/index.php', $req->getRootUri());
-        $this->assertEquals('/index.php/bar/xyz', $req->getPath());
-        $this->assertEquals('/bar/xyz', $req->getPathInfo());
-        $this->assertEquals('/bar/xyz', $req->getResourceUri());
-    }
+    /*******************************************************************************
+     * Protocol
+     ******************************************************************************/
 
-    /**
-     * Test get [script name, root uri, path, path info, resource uri] in root directory with htaccess
-     */
-    public function testAppPathsInRootDirectoryWithHtaccess()
+    public function testGetProtocolVersion()
     {
-        $env = \Slim\Environment::mock(array(
-            'SCRIPT_NAME' => '', //<-- Physical
-            'PATH_INFO' => '/bar/xyz', //<-- Virtual
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('', $req->getScriptName());
-        $this->assertEquals('', $req->getRootUri());
-        $this->assertEquals('/bar/xyz', $req->getPath());
-        $this->assertEquals('/bar/xyz', $req->getPathInfo());
-        $this->assertEquals('/bar/xyz', $req->getResourceUri());
-    }
+        $env = Environment::mock(['SERVER_PROTOCOL' => 'HTTP/1.0']);
+        $request = Request::createFromEnvironment($env);
 
-    /**
-     * Test get URL
-     */
-    public function testGetUrl()
-    {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_HOST' => 'slimframework.com',
-            'SERVER_NAME' => 'slim',
-            'SERVER_PORT' => 80,
-            'slim.url_scheme' => 'http'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('http://slimframework.com', $req->getUrl());
-    }
-
-    /**
-     * Test get URL
-     */
-    public function testGetUrlWithCustomPort()
-    {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_HOST' => 'slimframework.com',
-            'SERVER_NAME' => 'slim',
-            'SERVER_PORT' => 8080,
-            'slim.url_scheme' => 'http'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('http://slimframework.com:8080', $req->getUrl());
-    }
-
-    /**
-     * Test get URL
-     */
-    public function testGetUrlWithHttps()
-    {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_HOST' => 'slimframework.com',
-            'SERVER_NAME' => 'slim',
-            'SERVER_PORT' => 443,
-            'slim.url_scheme' => 'https'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('https://slimframework.com', $req->getUrl());
-    }
-
-    /**
-     * Test get IP
-     *  @dataProvider dataTestIp
-     */
-    public function testGetIp(array $server, $expected)
-    {
-        $env = \Slim\Environment::mock($server);
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals($expected, $req->getIp());
-    }
-
-    public function dataTestIp()
-    {
-        return array(
-                array(array('REMOTE_ADDR' => '127.0.0.1'), '127.0.0.1'),
-                array(array('REMOTE_ADDR' => '127.0.0.1', 'CLIENT_IP' => '127.0.0.2'), '127.0.0.2'),
-                array(array('REMOTE_ADDR' => '127.0.0.1', 'CLIENT_IP' => '127.0.0.2', 'X_FORWARDED_FOR' => '127.0.0.3'), '127.0.0.3'),
-                array(array('REMOTE_ADDR' => '127.0.0.1', 'CLIENT_IP' => '127.0.0.2', 'HTTP_X_FORWARDED_FOR' => '127.0.0.4'), '127.0.0.4'),
-                array(array('REMOTE_ADDR' => '127.0.0.1', 'CLIENT_IP' => '127.0.0.2', 'X_FORWARDED_FOR' => '127.0.0.3', 'HTTP_X_FORWARDED_FOR' => '127.0.0.4'), '127.0.0.3'),
-        );
-    }
-
-    /**
-     * Test get referer
-     */
-    public function testGetReferrer()
-    {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_REFERER' => 'http://foo.com'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('http://foo.com', $req->getReferrer());
-        $this->assertEquals('http://foo.com', $req->getReferer());
-    }
-
-    /**
-     * Test get referer
-     */
-    public function testGetReferrerWhenNotExists()
-    {
-        $env = \Slim\Environment::mock();
-        $req = new \Slim\Http\Request($env);
-        $this->assertNull($req->getReferrer());
-        $this->assertNull($req->getReferer());
-    }
-
-    /**
-     * Test get user agent string
-     */
-    public function testGetUserAgent()
-    {
-        $env = \Slim\Environment::mock(array(
-            'HTTP_USER_AGENT' => 'user-agent-string'
-        ));
-        $req = new \Slim\Http\Request($env);
-        $this->assertEquals('user-agent-string', $req->getUserAgent());
-    }
-
-    /**
-     * Test get user agent string when not set
-     */
-    public function testGetUserAgentWhenNotExists()
-    {
-        $env = \Slim\Environment::mock();
-        unset($env['HTTP_USER_AGENT']);
-        $req = new \Slim\Http\Request($env);
-        $this->assertNull($req->getUserAgent());
+        $this->assertEquals('1.0', $request->getProtocolVersion());
     }
 }

@@ -1,0 +1,102 @@
+{
+    "user_name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 50,
+                "message" : "ACCOUNT_USER_CHAR_LIMIT"
+            },
+            "no_leading_whitespace" : {
+                "message" : "'{{self}}' must not contain leading whitespace."
+            },
+            "no_trailing_whitespace" : {
+                "message" : "'{{self}}' must not contain trailing whitespace."
+            },
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_USERNAME"
+            }
+        }
+    },
+    "display_name" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 50,
+                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
+            },
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_DISPLAY_NAME"
+            }
+        }
+    },
+    "secret" : {
+        "validators" : {
+            "length" : {
+                "min" : 1,
+                "max" : 100,
+                "message" : "Secret must be between {{ min }} and {{ max }} characters long.",
+                "domain" : "client"
+            },
+            "numeric" : {},
+            "required" : {
+                "message" : "Secret must be specified.",
+                "domain" : "server"
+            }
+        }
+    },
+    "puppies" : {
+        "validators" : {
+            "member_of" : {
+                "values" : [
+                    "0", "1"
+                ],
+                "message" : "The value for '{{self}}' must be '0' or '1'."
+            }
+        },
+        "transformations" : ["purify", "trim"]
+    },
+    "email" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_EMAIL"
+            },
+            "length" : {
+                "min" : 1,
+                "max" : 150,
+                "message" : "ACCOUNT_EMAIL_CHAR_LIMIT"
+            },
+            "email" : {
+                "message" : "ACCOUNT_INVALID_EMAIL"
+            }
+        },
+        "default" : "butts@buttland.com"
+    },
+    "password" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_PASSWORD"
+            },
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        } 
+    },
+    "passwordc" : {
+        "validators" : {
+            "required" : {
+                "message" : "ACCOUNT_SPECIFY_PASSWORD"
+            },
+            "matches" : {
+                "field" : "password",
+                "message" : "ACCOUNT_PASS_MISMATCH"
+            },
+            "length" : {
+                "min" : 8,
+                "max" : 50,
+                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+            }
+        }
+    }
+}

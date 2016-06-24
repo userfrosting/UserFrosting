@@ -8,7 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Valitron' => array($vendorDir . '/vlucas/valitron/src'),
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
-    'Slim' => array($vendorDir . '/slim/slim'),
+    'Pimple' => array($vendorDir . '/pimple/pimple/src'),
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
 );

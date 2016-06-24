@@ -1,0 +1,40 @@
+rules:
+  name:
+    pattern: '[A-Z][a-z]+'
+    min: 3
+    max: 15
+form:
+  validation: loose
+  fields:
+    text:
+      type: text
+      label: Text
+      placeholder: 'Enter your text'
+      name: text
+    enabled:
+      type: select
+      label: Enabled
+      default: true
+      data-options@: blueprint_data_option_test
+      name: enabled
+    user.name:
+      type: name
+      label: Name
+      default: John
+      validate:
+        type: name
+      name: user.name
+    user.country:
+      type: select
+      label: Enabled
+      default: fi
+      data-options@:
+        - blueprint_data_option_test
+        - { us: 'United States', fi: Finland, po: Poland }
+        - true
+      name: user.country
+    undefined:
+      type: select
+      label: Undefined
+      data-options@: undefined_function
+      name: undefined

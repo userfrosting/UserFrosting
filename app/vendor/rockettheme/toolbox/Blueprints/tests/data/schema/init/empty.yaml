@@ -1,0 +1,11 @@
+items:
+  '':
+    form: {  }
+    type: _root
+    form_field: false
+rules: {  }
+nested:
+  '': ''
+dynamic: {  }
+filter:
+  validation: true

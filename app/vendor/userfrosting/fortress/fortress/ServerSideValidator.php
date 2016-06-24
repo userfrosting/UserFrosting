@@ -1,46 +1,42 @@
 <?php
 
-namespace Fortress;
-
-interface ServerSideValidatorInterface {
-    public function setSchema($schema);
-    public function validate($data);
-    public function data();
-    public function errors();    
-}
-
 /**
  * ServerSideValidator Class
  *
  * Loads validation rules from a schema and validates a target array of data.
  *
- * @package Fortress
+ * @package userfrosting/fortress
  * @author Alex Weissman
- * @link http://alexanderweissman.com
+ * @link https://alexanderweissman.com
+ * @license MIT
  */
-class ServerSideValidator extends \Valitron\Validator implements ServerSideValidatorInterface {
+namespace UserFrosting\Fortress;
+
+class ServerSideValidator extends \Valitron\Validator implements ServerSideValidatorInterface
+{
 
     /**
      * @var RequestSchema
      */  
-    protected $_schema;
+    protected $schema;
 
     /**
      * @var MessageTranslatorInterface
      */     
-    protected $_translator;
+    protected $translator;
     
     /** Create a new server-side validator.
      *
      * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
      * @param MessageTranslator $translator A MessageTranslator to be used to translate message ids found in the schema.
      */    
-    public function __construct($schema, $translator) {        
+    public function __construct($schema, $translator)
+    {        
         // Set schema
         $this->setSchema($schema);
         
         // Set translator
-        $this->_translator = $translator;
+        $this->setTranslator($translator);
         // TODO: use locale of translator to determine Valitron language?
         
         // Construct the parent with an empty data array.
@@ -52,8 +48,19 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
      *
      * @param RequestSchema $schema A RequestSchema object, containing the validation rules.
      */
-    public function setSchema($schema){
-        $this->_schema = $schema;
+    public function setSchema($schema)
+    {
+        $this->schema = $schema;
+    }
+
+    /**
+     * Set the translator for this validator, as a valid MessageTranslator object.
+     *
+     * @param MessageTranslator $translator A MessageTranslator to be used to translate message ids found in the schema.
+     */
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
     }
     
     /**
@@ -62,7 +69,8 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
      * @param array $data An array of data, mapping field names to field values.
      * @return boolean True if the data was successfully validated, false otherwise.
      */
-    public function validate($data = []){
+    public function validate($data = [])
+    {
         $this->_fields = $data;         // Setting the parent class Validator's field data.
         $this->generateSchemaRules();   // Build Validator rules from the schema.
         return parent::validate();      // Validate!
@@ -70,8 +78,12 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
     
     /**
      * Add a rule to the validator, along with a specified error message if that rule is failed by the data.
+     *
+     * @param string $rule The name of the validation rule.
+     * @param string $message_set The message to display when validation against this rule fails.
      */
-    private function ruleWithMessage($rule, $message_set) {
+    private function ruleWithMessage($rule, $message_set)
+    {
         // Weird way to adapt with Valitron's funky interface
         $params = array_merge([$rule], array_slice(func_get_args(), 2));
         call_user_func_array([$this,"rule"], $params);
@@ -83,20 +95,26 @@ class ServerSideValidator extends \Valitron\Validator implements ServerSideValid
     }
     
     /**
-     *
-     * Generate and add rules from the schema
+     * Generate and add rules from the schema.
      */
-    private function generateSchemaRules(){
-        foreach ($this->_schema->getSchema() as $field_name => $field){
+    private function generateSchemaRules()
+    {
+        foreach ($this->schema->getSchema() as $field_name => $field){
             if (!isset($field['validators']))
                 continue;
             $validators = $field['validators'];
             foreach ($validators as $validator_name => $validator){
+                // Skip messages that are for client-side use only
+                if (isset($validator['domain']) && $validator['domain'] == "client")
+                    continue;
+                    
+                // Generate translated message
                 if (isset($validator['message'])){
                     $params = array_merge(["self" => $field_name], $validator);
-                    $message_set = $this->_translator->translate($validator['message'], $params);
-                }else
+                    $message_set = $this->translator->translate($validator['message'], $params);
+                } else
                     $message_set = null;
+                
                 // Required validator
                 if ($validator_name == "required"){
                     $this->ruleWithMessage("required", $message_set, $field_name);

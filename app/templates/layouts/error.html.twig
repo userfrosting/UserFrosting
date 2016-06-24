@@ -1,0 +1,15 @@
+{# This is the layout template for error pages.  Note that there is no navigation bar. #}
+{% extends "layouts/basic.html.twig" %}
+
+{% block body %}
+<body id="page-top" class="index">  
+    
+    <!-- Main content of page -->
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    
+    {% include "components/footer.html.twig" %}
+
+</body>
+{% endblock %}

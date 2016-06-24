@@ -1,250 +1,440 @@
 <?php
 /**
- * Slim - a micro PHP 5 framework
+ * Slim Framework (http://slimframework.com)
  *
- * @author      Josh Lockhart <info@slimframework.com>
- * @copyright   2011 Josh Lockhart
- * @link        http://www.slimframework.com
- * @license     http://www.slimframework.com/license
- * @version     2.6.1
- *
- * MIT LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * @link      https://github.com/slimphp/Slim
+ * @copyright Copyright (c) 2011-2016 Josh Lockhart
+ * @license   https://github.com/slimphp/Slim/blob/master/LICENSE.md (MIT License)
  */
+namespace Slim\Tests;
 
-class RouterTest extends PHPUnit_Framework_TestCase
+use Slim\Router;
+
+class RouterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Constructor should initialize routes as empty array
-     */
-    public function testConstruct()
-    {
-        $router = new \Slim\Router();
+    /** @var Router */
+    protected $router;
 
-        $this->assertAttributeEquals(array(), 'routes', $router);
+    public function setUp()
+    {
+        $this->router = new Router;
     }
 
-    /**
-     * Map should set and return instance of \Slim\Route
-     */
     public function testMap()
     {
-        $router = new \Slim\Router();
-        $route = new \Slim\Route('/foo', function() {});
-        $router->map($route);
+        $methods = ['GET'];
+        $pattern = '/hello/{first}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
 
-        $this->assertAttributeContains($route, 'routes', $router);
+        $this->assertInstanceOf('\Slim\Interfaces\RouteInterface', $route);
+        $this->assertAttributeContains($route, 'routes', $this->router);
+    }
+
+    public function testMapPrependsGroupPattern()
+    {
+        $methods = ['GET'];
+        $pattern = '/hello/{first}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+
+        $this->router->pushGroup('/prefix', function () {
+
+        });
+        $route = $this->router->map($methods, $pattern, $callable);
+        $this->router->popGroup();
+
+        $this->assertAttributeEquals('/prefix/hello/{first}/{last}', 'pattern', $route);
     }
 
     /**
-     * Named route should be added and indexed by name
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Route pattern must be a string
      */
-    public function testAddNamedRoute()
+    public function testMapWithInvalidPatternType()
     {
-        $router = new \Slim\Router();
-        $route = new \Slim\Route('/foo', function () {});
-        $router->addNamedRoute('foo', $route);
+        $methods = ['GET'];
+        $pattern = ['foo'];
+        $callable = function ($request, $response, $args) {
 
-        $property = new \ReflectionProperty($router, 'namedRoutes');
+        };
+
+        $this->router->map($methods, $pattern, $callable);
+    }
+
+    /**
+     * Base path is ignored by relativePathFor()
+     *
+     */
+    public function testRelativePathFor()
+    {
+        $this->router->setBasePath('/base/path');
+
+        $methods = ['GET'];
+        $pattern = '/hello/{first:\w+}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $this->assertEquals(
+            '/hello/josh/lockhart',
+            $this->router->relativePathFor('foo', ['first' => 'josh', 'last' => 'lockhart'])
+        );
+    }
+
+    public function testPathForWithNoBasePath()
+    {
+        $this->router->setBasePath('');
+
+        $methods = ['GET'];
+        $pattern = '/hello/{first:\w+}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $this->assertEquals(
+            '/hello/josh/lockhart',
+            $this->router->pathFor('foo', ['first' => 'josh', 'last' => 'lockhart'])
+        );
+    }
+
+    public function testPathForWithBasePath()
+    {
+        $methods = ['GET'];
+        $pattern = '/hello/{first:\w+}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+        $this->router->setBasePath('/base/path');
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $this->assertEquals(
+            '/base/path/hello/josh/lockhart',
+            $this->router->pathFor('foo', ['first' => 'josh', 'last' => 'lockhart'])
+        );
+    }
+
+    public function testPathForWithOptionalParameters()
+    {
+        $methods = ['GET'];
+        $pattern = '/archive/{year}[/{month:[\d:{2}]}[/d/{day}]]';
+        $callable = function ($request, $response, $args) {
+            return $response;
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $this->assertEquals(
+            '/archive/2015',
+            $this->router->pathFor('foo', ['year' => '2015'])
+        );
+        $this->assertEquals(
+            '/archive/2015/07',
+            $this->router->pathFor('foo', ['year' => '2015', 'month' => '07'])
+        );
+        $this->assertEquals(
+            '/archive/2015/07/d/19',
+            $this->router->pathFor('foo', ['year' => '2015', 'month' => '07', 'day' => '19'])
+        );
+    }
+
+    public function testPathForWithQueryParameters()
+    {
+        $methods = ['GET'];
+        $pattern = '/hello/{name}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s', $args['name']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $this->assertEquals(
+            '/hello/josh?a=b&c=d',
+            $this->router->pathFor('foo', ['name' => 'josh'], ['a' => 'b', 'c' => 'd'])
+        );
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testPathForWithMissingSegmentData()
+    {
+        $methods = ['GET'];
+        $pattern = '/hello/{first}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $this->router->pathFor('foo', ['last' => 'lockhart']);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testPathForRouteNotExists()
+    {
+        $methods = ['GET'];
+        $pattern = '/hello/{first}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $this->router->pathFor('bar', ['first' => 'josh', 'last' => 'lockhart']);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testSettingInvalidBasePath()
+    {
+        $this->router->setBasePath(['invalid']);
+    }
+
+    public function testCreateDispatcher()
+    {
+        $class = new \ReflectionClass($this->router);
+        $method = $class->getMethod('createDispatcher');
+        $method->setAccessible(true);
+        $this->assertInstanceOf('\FastRoute\Dispatcher', $method->invoke($this->router));
+    }
+
+    public function testSetDispatcher()
+    {
+        $this->router->setDispatcher(\FastRoute\simpleDispatcher(function ($r) {
+            $r->addRoute('GET', '/', function () {
+            });
+        }));
+        $class = new \ReflectionClass($this->router);
+        $prop = $class->getProperty('dispatcher');
+        $prop->setAccessible(true);
+        $this->assertInstanceOf('\FastRoute\Dispatcher', $prop->getValue($this->router));
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testRemoveRoute()
+    {
+        $methods = ['GET'];
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello ignore me');
+        };
+
+        $this->router->setBasePath('/base/path');
+
+        $route1 = $this->router->map($methods, '/foo', $callable);
+        $route1->setName('foo');
+
+        $route2 = $this->router->map($methods, '/bar', $callable);
+        $route2->setName('bar');
+
+        $route3 = $this->router->map($methods, '/fizz', $callable);
+        $route3->setName('fizz');
+
+        $route4 = $this->router->map($methods, '/buzz', $callable);
+        $route4->setName('buzz');
+
+        $routeToRemove = $this->router->getNamedRoute('fizz');
+
+        $routeCountBefore = count($this->router->getRoutes());
+        $this->router->removeNamedRoute($routeToRemove->getName());
+        $routeCountAfter = count($this->router->getRoutes());
+
+        // Assert number of routes is now less by 1
+        $this->assertEquals(
+            ($routeCountBefore - 1),
+            $routeCountAfter
+        );
+
+        // Simple test that the correct route was removed
+        $this->assertEquals(
+            $this->router->getNamedRoute('foo')->getName(),
+            'foo'
+        );
+
+        $this->assertEquals(
+            $this->router->getNamedRoute('bar')->getName(),
+            'bar'
+        );
+
+        $this->assertEquals(
+            $this->router->getNamedRoute('buzz')->getName(),
+            'buzz'
+        );
+
+        // Exception thrown here, route no longer exists
+        $this->router->getNamedRoute($routeToRemove->getName());
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testRouteRemovalNotExists()
+    {
+        $this->router->setBasePath('/base/path');
+        $this->router->removeNamedRoute('non-existing-route-name');
+    }
+
+    public function testPathForWithModifiedRoutePattern()
+    {
+        $this->router->setBasePath('/base/path');
+
+        $methods = ['GET'];
+        $pattern = '/hello/{first:\w+}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['voornaam'], $args['achternaam']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable);
+        $route->setName('foo');
+
+        $route->setPattern('/hallo/{voornaam:\w+}/{achternaam}');
+
+        $this->assertEquals(
+            '/hallo/josh/lockhart',
+            $this->router->relativePathFor('foo', ['voornaam' => 'josh', 'achternaam' => 'lockhart'])
+        );
+    }
+
+    /**
+     * Test cacheFile may be set to false
+     */
+    public function testSettingCacheFileToFalse()
+    {
+        $this->router->setCacheFile(false);
+
+        $class = new \ReflectionClass($this->router);
+        $property = $class->getProperty('cacheFile');
         $property->setAccessible(true);
 
-		$rV = $property->getValue($router);
-        $this->assertSame($route, $rV['foo']);
+        $this->assertFalse($property->getValue($this->router));
     }
 
     /**
-     * Named route should have unique name
+     * Test cacheFile should be a string or false
      */
-    public function testAddNamedRouteWithDuplicateKey()
+    public function testSettingInvalidCacheFileValue()
     {
-        $this->setExpectedException('RuntimeException');
-
-        $router = new \Slim\Router();
-        $route = new \Slim\Route('/foo', function () {});
-        $router->addNamedRoute('foo', $route);
-        $router->addNamedRoute('foo', $route);
+        $this->setExpectedException(
+            '\InvalidArgumentException',
+            'Router cacheFile must be a string'
+        );
+        $this->router->setCacheFile(['invalid']);
     }
 
     /**
-     * Router should return named route by name, or null if not found
+     * Test if cacheFile is not a writable directory
      */
-    public function testGetNamedRoute()
+    public function testSettingInvalidCacheFileNotExisting()
     {
-        $router = new \Slim\Router();
-        $route = new \Slim\Route('/foo', function () {});
+        $this->setExpectedException(
+            '\RuntimeException',
+            'Router cacheFile directory must be writable'
+        );
 
-        $property = new \ReflectionProperty($router, 'namedRoutes');
-        $property->setAccessible(true);
-        $property->setValue($router, array('foo' => $route));
-
-        $this->assertSame($route, $router->getNamedRoute('foo'));
-        $this->assertNull($router->getNamedRoute('bar'));
+        $this->router->setCacheFile(
+            dirname(__FILE__) . uniqid(microtime(true)) . '/' . uniqid(microtime(true))
+        );
     }
 
     /**
-     * Router should determine named routes and cache results
+     * Test cached routes file is created & that it holds our routes.
      */
-    public function testGetNamedRoutes()
+    public function testRouteCacheFileCanBeDispatched()
     {
-        $router = new \Slim\Router();
-        $route1 = new \Slim\Route('/foo', function () {});
-        $route2 = new \Slim\Route('/bar', function () {});
+        $methods = ['GET'];
+        $pattern = '/hello/{first}/{last}';
+        $callable = function ($request, $response, $args) {
+            echo sprintf('Hello %s %s', $args['first'], $args['last']);
+        };
+        $route = $this->router->map($methods, $pattern, $callable)->setName('foo');
 
-        // Init router routes to array
-        $propertyRouterRoutes = new \ReflectionProperty($router, 'routes');
-        $propertyRouterRoutes->setAccessible(true);
-        $propertyRouterRoutes->setValue($router, array($route1, $route2));
+        $cacheFile = dirname(__FILE__) . '/' . uniqid(microtime(true));
+        $this->router->setCacheFile($cacheFile);
+        $class = new \ReflectionClass($this->router);
+        $method = $class->getMethod('createDispatcher');
+        $method->setAccessible(true);
 
-        // Init router named routes to null
-        $propertyRouterNamedRoutes = new \ReflectionProperty($router, 'namedRoutes');
-        $propertyRouterNamedRoutes->setAccessible(true);
-        $propertyRouterNamedRoutes->setValue($router, null);
+        $dispatcher = $method->invoke($this->router);
+        $this->assertInstanceOf('\FastRoute\Dispatcher', $dispatcher);
+        $this->assertFileExists($cacheFile, 'cache file was not created');
 
-        // Init route name
-        $propertyRouteName = new \ReflectionProperty($route2, 'name');
-        $propertyRouteName->setAccessible(true);
-        $propertyRouteName->setValue($route2, 'bar');
+        // instantiate a new router & load the cached routes file & see if
+        // we can dispatch to the route we cached.
+        $router2 = new Router();
+        $router2->setCacheFile($cacheFile);
 
-        $namedRoutes = $router->getNamedRoutes();
-        $this->assertCount(1, $namedRoutes);
-        $this->assertSame($route2, $namedRoutes['bar']);
+        $class = new \ReflectionClass($router2);
+        $method = $class->getMethod('createDispatcher');
+        $method->setAccessible(true);
+
+        $dispatcher2 = $method->invoke($this->router);
+        $result = $dispatcher2->dispatch('GET', '/hello/josh/lockhart');
+        $this->assertSame(\FastRoute\Dispatcher::FOUND, $result[0]);
+
+        unlink($cacheFile);
     }
 
     /**
-     * Router should detect presence of a named route by name
+     * Calling createDispatcher as second time should give you back the same
+     * dispatcher as when you called it the first time.
      */
-    public function testHasNamedRoute()
+    public function testCreateDispatcherReturnsSameDispatcherASecondTime()
     {
-        $router = new \Slim\Router();
-        $route = new \Slim\Route('/foo', function () {});
+        $class = new \ReflectionClass($this->router);
+        $method = $class->getMethod('createDispatcher');
+        $method->setAccessible(true);
 
-        $property = new \ReflectionProperty($router, 'namedRoutes');
-        $property->setAccessible(true);
-        $property->setValue($router, array('foo' => $route));
-
-        $this->assertTrue($router->hasNamedRoute('foo'));
-        $this->assertFalse($router->hasNamedRoute('bar'));
+        $dispatcher = $method->invoke($this->router);
+        $dispatcher2 = $method->invoke($this->router);
+        $this->assertSame($dispatcher2, $dispatcher);
     }
 
     /**
-     * Router should return current route if set during iteration
+     * Test that the router urlFor will proxy into a pathFor method, and trigger
+     * the user deprecated warning
      */
-    public function testGetCurrentRoute()
+    public function testUrlForAliasesPathFor()
     {
-        $router = new \Slim\Router();
-        $route = new \Slim\Route('/foo', function () {});
+        //create a temporary error handler, store the error str in this value
+        $errorString = null;
 
-        $property = new \ReflectionProperty($router, 'currentRoute');
-        $property->setAccessible(true);
-        $property->setValue($router, $route);
+        set_error_handler(function ($no, $str) use (&$errorString) {
+            $errorString = $str;
+        }, E_USER_DEPRECATED);
 
-        $this->assertSame($route, $router->getCurrentRoute());
+        //create the parameters we expect
+        $name = 'foo';
+        $data = ['name' => 'josh'];
+        $queryParams = ['a' => 'b', 'c' => 'd'];
+
+        //create a router that mocks the pathFor with expected args
+        $router = $this->getMock('\Slim\Router', ['pathFor']);
+        $router->expects($this->once())->method('pathFor')->with($name, $data, $queryParams);
+        $router->urlFor($name, $data, $queryParams);
+
+        //check that our error was triggered
+        $this->assertEquals($errorString, 'urlFor() is deprecated. Use pathFor() instead.');
+
+        restore_error_handler();
     }
 
     /**
-     * Router should return first matching route if current route not set yet by iteration
+     * @expectedException \RuntimeException
      */
-    public function testGetCurrentRouteIfMatchedRoutes()
+    public function testLookupRouteThrowsExceptionIfRouteNotFound()
     {
-        $router = new \Slim\Router();
-        $route = new \Slim\Route('/foo', function () {});
-
-        $propertyMatchedRoutes = new \ReflectionProperty($router, 'matchedRoutes');
-        $propertyMatchedRoutes->setAccessible(true);
-        $propertyMatchedRoutes->setValue($router, array($route));
-
-        $propertyCurrentRoute = new \ReflectionProperty($router, 'currentRoute');
-        $propertyCurrentRoute->setAccessible(true);
-        $propertyCurrentRoute->setValue($router, null);
-
-        $this->assertSame($route, $router->getCurrentRoute());
-    }
-
-    /**
-     * Router should return `null` if current route not set yet and there are no matching routes
-     */
-    public function testGetCurrentRouteIfNoMatchedRoutes()
-    {
-        $router = new \Slim\Router();
-
-        $propertyMatchedRoutes = new \ReflectionProperty($router, 'matchedRoutes');
-        $propertyMatchedRoutes->setAccessible(true);
-        $propertyMatchedRoutes->setValue($router, array());
-
-        $propertyCurrentRoute = new \ReflectionProperty($router, 'currentRoute');
-        $propertyCurrentRoute->setAccessible(true);
-        $propertyCurrentRoute->setValue($router, null);
-
-        $this->assertNull($router->getCurrentRoute());
-    }
-
-    public function testGetMatchedRoutes()
-    {
-        $router = new \Slim\Router();
-
-        $route1 = new \Slim\Route('/foo', function () {});
-		$route1 = $route1->via('GET');
-
-        $route2 = new \Slim\Route('/foo', function () {});
-		$route2 = $route2->via('POST');
-
-        $route3 = new \Slim\Route('/bar', function () {});
-		$route3 = $route3->via('PUT');
-
-        $routes = new \ReflectionProperty($router, 'routes');
-        $routes->setAccessible(true);
-        $routes->setValue($router, array($route1, $route2, $route3));
-
-        $matchedRoutes = $router->getMatchedRoutes('GET', '/foo');
-        $this->assertSame($route1, $matchedRoutes[0]);
-    }
-
-    // Test url for named route
-
-    public function testUrlFor()
-    {
-        $router = new \Slim\Router();
-
-        $route1 = new \Slim\Route('/hello/:first/:last', function () {});
-        $route1 = $route1->via('GET')->name('hello');
-
-        $route2 = new \Slim\Route('/path/(:foo\.:bar)', function () {});
-        $route2 = $route2->via('GET')->name('regexRoute');
-
-        $routes = new \ReflectionProperty($router, 'namedRoutes');
-        $routes->setAccessible(true);
-        $routes->setValue($router, array(
-            'hello' => $route1,
-            'regexRoute' => $route2
-        ));
-
-        $this->assertEquals('/hello/Josh/Lockhart', $router->urlFor('hello', array('first' => 'Josh', 'last' => 'Lockhart')));
-        $this->assertEquals('/path/Hello.Josh', $router->urlFor('regexRoute', array('foo' => 'Hello', 'bar' => 'Josh')));
-    }
-
-    public function testUrlForIfNoSuchRoute()
-    {
-        $this->setExpectedException('RuntimeException');
-
-        $router = new \Slim\Router();
-        $router->urlFor('foo', array('abc' => '123'));
+        $this->router->lookupRoute("thisIsMissing");
     }
 }

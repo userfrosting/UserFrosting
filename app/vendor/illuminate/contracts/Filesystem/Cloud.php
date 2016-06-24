@@ -1,3 +1,8 @@
-<?php namespace Illuminate\Contracts\Filesystem;
+<?php
 
-interface Cloud extends Filesystem {}
+namespace Illuminate\Contracts\Filesystem;
+
+interface Cloud extends Filesystem
+{
+    //
+}

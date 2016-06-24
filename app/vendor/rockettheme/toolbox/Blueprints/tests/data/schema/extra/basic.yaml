@@ -1,0 +1,8 @@
+some:
+  random: false
+  variables:
+    - true
+    - false
+just: for
+fun:
+user.extra: data...

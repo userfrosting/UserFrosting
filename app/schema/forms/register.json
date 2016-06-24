@@ -54,10 +54,7 @@
                 "max" : 50,
                 "message" : "ACCOUNT_PASS_CHAR_LIMIT"
             }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
+        }  
     },
     "passwordc" : {
         "validators" : {
@@ -73,10 +70,7 @@
                 "max" : 50,
                 "message" : "ACCOUNT_PASS_CHAR_LIMIT"
             }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
+        }  
     },
     "captcha" : {
         "validators" : {

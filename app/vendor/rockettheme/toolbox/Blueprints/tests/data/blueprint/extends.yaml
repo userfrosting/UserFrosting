@@ -1,0 +1,17 @@
+extends@: parent@
+
+form:
+  fields:
+    enabled:
+      default: false
+
+    text:
+      default: My text
+      ordering@: enabled
+
+    user.name:
+      default: Joe
+      unset-validate@: true
+
+    undefined:
+      unset@: true

@@ -1,0 +1,29 @@
+{# This is the base layout template for "jumbotron" style pages (unauthenticated account-related pages). #}
+{% extends "layouts/basic.html.twig" %}
+{% set page_active = "" %}
+
+{% block page_title %}Account{% endblock %}
+{% block page_description %}Account action{% endblock %}
+
+{% block head %}
+    {% set uf_page = uf_page | merge({
+        'title'      : block('page_title'),
+        'description': block('page_description')
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <body>
+    <div class="container">
+      <div class="jumbotron">
+        {% block content %}{% endblock %}
+      </div>	
+    </div> <!-- /container -->
+    
+    {% include "components/footer.html.twig" %}
+
+    {# This block allows you to create page-specific Javascript in a child template #}
+    {% block page_scripts %}{% endblock %}   
+</body>
+{% endblock %}

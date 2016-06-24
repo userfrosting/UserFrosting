@@ -1,5 +1,5 @@
+_meta/
 vendor/
 *.komodoproject
-_meta/
-
 composer.lock
+test/cache

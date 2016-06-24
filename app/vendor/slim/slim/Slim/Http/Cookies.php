@@ -1,91 +1,195 @@
 <?php
 /**
- * Slim - a micro PHP 5 framework
+ * Slim Framework (http://slimframework.com)
  *
- * @author      Josh Lockhart <info@slimframework.com>
- * @copyright   2011 Josh Lockhart
- * @link        http://www.slimframework.com
- * @license     http://www.slimframework.com/license
- * @version     2.6.1
- * @package     Slim
- *
- * MIT LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * @link      https://github.com/slimphp/Slim
+ * @copyright Copyright (c) 2011-2016 Josh Lockhart
+ * @license   https://github.com/slimphp/Slim/blob/3.x/LICENSE.md (MIT License)
  */
 namespace Slim\Http;
 
-class Cookies extends \Slim\Helper\Set
+use InvalidArgumentException;
+use Slim\Interfaces\Http\CookiesInterface;
+
+/**
+ * Cookie helper
+ */
+class Cookies implements CookiesInterface
 {
     /**
-     * Default cookie settings
+     * Cookies from HTTP request
+     *
      * @var array
      */
-    protected $defaults = array(
+    protected $requestCookies = [];
+
+    /**
+     * Cookies for HTTP response
+     *
+     * @var array
+     */
+    protected $responseCookies = [];
+
+    /**
+     * Default cookie properties
+     *
+     * @var array
+     */
+    protected $defaults = [
         'value' => '',
         'domain' => null,
+        'hostonly' => null,
         'path' => null,
         'expires' => null,
         'secure' => false,
         'httponly' => false
-    );
+    ];
 
     /**
-     * Set cookie
+     * Create new cookies helper
      *
-     * The second argument may be a single scalar value, in which case
-     * it will be merged with the default settings and considered the `value`
-     * of the merged result.
-     *
-     * The second argument may also be an array containing any or all of
-     * the keys shown in the default settings above. This array will be
-     * merged with the defaults shown above.
-     *
-     * @param string $key   Cookie name
-     * @param mixed  $value Cookie settings
+     * @param array $cookies
      */
-    public function set($key, $value)
+    public function __construct(array $cookies = [])
     {
-        if (is_array($value)) {
-            $cookieSettings = array_replace($this->defaults, $value);
-        } else {
-            $cookieSettings = array_replace($this->defaults, array('value' => $value));
-        }
-        parent::set($key, $cookieSettings);
+        $this->requestCookies = $cookies;
     }
 
     /**
-     * Remove cookie
+     * Set default cookie properties
      *
-     * Unlike \Slim\Helper\Set, this will actually *set* a cookie with
-     * an expiration date in the past. This expiration date will force
-     * the client-side cache to remove its cookie with the given name
-     * and settings.
-     *
-     * @param  string $key      Cookie name
-     * @param  array  $settings Optional cookie settings
+     * @param array $settings
      */
-    public function remove($key, $settings = array())
+    public function setDefaults(array $settings)
     {
-        $settings['value'] = '';
-        $settings['expires'] = time() - 86400;
-        $this->set($key, array_replace($this->defaults, $settings));
+        $this->defaults = array_replace($this->defaults, $settings);
+    }
+
+    /**
+     * Get request cookie
+     *
+     * @param  string $name    Cookie name
+     * @param  mixed  $default Cookie default value
+     *
+     * @return mixed Cookie value if present, else default
+     */
+    public function get($name, $default = null)
+    {
+        return isset($this->requestCookies[$name]) ? $this->requestCookies[$name] : $default;
+    }
+
+    /**
+     * Set response cookie
+     *
+     * @param string       $name  Cookie name
+     * @param string|array $value Cookie value, or cookie properties
+     */
+    public function set($name, $value)
+    {
+        if (!is_array($value)) {
+            $value = ['value' => (string)$value];
+        }
+        $this->responseCookies[$name] = array_replace($this->defaults, $value);
+    }
+
+    /**
+     * Convert to `Set-Cookie` headers
+     *
+     * @return string[]
+     */
+    public function toHeaders()
+    {
+        $headers = [];
+        foreach ($this->responseCookies as $name => $properties) {
+            $headers[] = $this->toHeader($name, $properties);
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Convert to `Set-Cookie` header
+     *
+     * @param  string $name       Cookie name
+     * @param  array  $properties Cookie properties
+     *
+     * @return string
+     */
+    protected function toHeader($name, array $properties)
+    {
+        $result = urlencode($name) . '=' . urlencode($properties['value']);
+
+        if (isset($properties['domain'])) {
+            $result .= '; domain=' . $properties['domain'];
+        }
+
+        if (isset($properties['path'])) {
+            $result .= '; path=' . $properties['path'];
+        }
+
+        if (isset($properties['expires'])) {
+            if (is_string($properties['expires'])) {
+                $timestamp = strtotime($properties['expires']);
+            } else {
+                $timestamp = (int)$properties['expires'];
+            }
+            if ($timestamp !== 0) {
+                $result .= '; expires=' . gmdate('D, d-M-Y H:i:s e', $timestamp);
+            }
+        }
+
+        if (isset($properties['secure']) && $properties['secure']) {
+            $result .= '; secure';
+        }
+        
+        if (isset($properties['hostonly']) && $properties['hostonly']) {
+            $result .= '; HostOnly';
+        }
+
+        if (isset($properties['httponly']) && $properties['httponly']) {
+            $result .= '; HttpOnly';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Parse HTTP request `Cookie:` header and extract
+     * into a PHP associative array.
+     *
+     * @param  string $header The raw HTTP request `Cookie:` header
+     *
+     * @return array Associative array of cookie names and values
+     *
+     * @throws InvalidArgumentException if the cookie data cannot be parsed
+     */
+    public static function parseHeader($header)
+    {
+        if (is_array($header) === true) {
+            $header = isset($header[0]) ? $header[0] : '';
+        }
+
+        if (is_string($header) === false) {
+            throw new InvalidArgumentException('Cannot parse Cookie data. Header value must be a string.');
+        }
+
+        $header = rtrim($header, "\r\n");
+        $pieces = preg_split('@\s*[;,]\s*@', $header);
+        $cookies = [];
+
+        foreach ($pieces as $cookie) {
+            $cookie = explode('=', $cookie, 2);
+
+            if (count($cookie) === 2) {
+                $key = urldecode($cookie[0]);
+                $value = urldecode($cookie[1]);
+
+                if (!isset($cookies[$key])) {
+                    $cookies[$key] = $value;
+                }
+            }
+        }
+
+        return $cookies;
     }
 }

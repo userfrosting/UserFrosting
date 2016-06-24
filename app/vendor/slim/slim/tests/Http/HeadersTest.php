@@ -1,59 +1,227 @@
 <?php
 /**
- * Slim - a micro PHP 5 framework
+ * Slim Framework (http://slimframework.com)
  *
- * @author      Josh Lockhart <info@slimframework.com>
- * @copyright   2011 Josh Lockhart
- * @link        http://www.slimframework.com
- * @license     http://www.slimframework.com/license
- * @version     2.6.1
- *
- * MIT LICENSE
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * @link      https://github.com/slimphp/Slim
+ * @copyright Copyright (c) 2011-2016 Josh Lockhart
+ * @license   https://github.com/slimphp/Slim/blob/master/LICENSE.md (MIT License)
  */
+namespace Slim\Tests\Http;
 
-class HeadersTest extends PHPUnit_Framework_TestCase
+use ReflectionProperty;
+use Slim\Http\Environment;
+use Slim\Http\Headers;
+
+class HeadersTest extends \PHPUnit_Framework_TestCase
 {
-    public function testNormalizesKey()
+    public function testCreateFromEnvironment()
     {
-        $h = new \Slim\Http\Headers();
-        $h->set('Http_Content_Type', 'text/html');
-        $prop = new \ReflectionProperty($h, 'data');
+        $e = Environment::mock([
+            'HTTP_ACCEPT' => 'application/json',
+        ]);
+        $h = Headers::createFromEnvironment($e);
+        $prop = new ReflectionProperty($h, 'data');
         $prop->setAccessible(true);
-        $this->assertArrayHasKey('Content-Type', $prop->getValue($h));
+
+        $this->assertTrue(is_array($prop->getValue($h)['accept']));
+        $this->assertEquals('application/json', $prop->getValue($h)['accept']['value'][0]);
     }
 
-    public function testExtractHeaders()
+    public function testCreateFromEnvironmentWithSpecialHeaders()
     {
-        $test = array(
-            'HTTP_HOST' => 'foo.com',
-            'SERVER_NAME' => 'foo',
-            'CONTENT_TYPE' => 'text/html',
-            'X_FORWARDED_FOR' => '127.0.0.1'
-        );
-        $results = \Slim\Http\Headers::extract($test);
-        $this->assertEquals(array(
-            'HTTP_HOST' => 'foo.com',
-            'CONTENT_TYPE' => 'text/html',
-            'X_FORWARDED_FOR' => '127.0.0.1'
-        ), $results);
+        $e = Environment::mock([
+            'CONTENT_TYPE' => 'application/json',
+        ]);
+        $h = Headers::createFromEnvironment($e);
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertTrue(is_array($prop->getValue($h)['content-type']));
+        $this->assertEquals('application/json', $prop->getValue($h)['content-type']['value'][0]);
+    }
+
+    public function testCreateFromEnvironmentIgnoresHeaders()
+    {
+        $e = Environment::mock([
+            'CONTENT_TYPE' => 'text/csv',
+            'HTTP_CONTENT_LENGTH' => 1230, // <-- Ignored
+        ]);
+        $h = Headers::createFromEnvironment($e);
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertNotContains('content-length', $prop->getValue($h));
+    }
+
+    public function testConstructor()
+    {
+        $h = new Headers([
+            'Content-Length' => 100,
+        ]);
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertTrue(is_array($prop->getValue($h)['content-length']));
+        $this->assertEquals(100, $prop->getValue($h)['content-length']['value'][0]);
+    }
+
+    public function testSetSingleValue()
+    {
+        $h = new Headers();
+        $h->set('Content-Length', 100);
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertTrue(is_array($prop->getValue($h)['content-length']));
+        $this->assertEquals(100, $prop->getValue($h)['content-length']['value'][0]);
+    }
+
+    public function testSetArrayValue()
+    {
+        $h = new Headers();
+        $h->set('Allow', ['GET', 'POST']);
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertTrue(is_array($prop->getValue($h)['allow']));
+        $this->assertEquals(['GET', 'POST'], $prop->getValue($h)['allow']['value']);
+    }
+
+    public function testGet()
+    {
+        $h = new Headers();
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+        $prop->setValue($h, [
+            'allow' => [
+                'value' => ['GET', 'POST'],
+                'originalKey' => 'Allow'
+            ]
+        ]);
+
+        $this->assertEquals(['GET', 'POST'], $h->get('Allow'));
+    }
+
+    public function testGetOriginalKey()
+    {
+        $h = new Headers();
+        $h->set('http-test_key', 'testValue');
+        $h->get('test-key');
+
+        $value = $h->get('test-key');
+
+        $this->assertEquals('testValue', reset($value));
+        $this->assertEquals('http-test_key', $h->getOriginalKey('test-key'));
+        $this->assertNull($h->getOriginalKey('test-non-existing'));
+    }
+
+    public function testGetNotExists()
+    {
+        $h = new Headers();
+
+        $this->assertNull($h->get('Foo'));
+    }
+
+    public function testAddNewValue()
+    {
+        $h = new Headers();
+        $h->add('Foo', 'Bar');
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertTrue(is_array($prop->getValue($h)['foo']));
+        $this->assertEquals(['Bar'], $prop->getValue($h)['foo']['value']);
+    }
+
+    public function testAddAnotherValue()
+    {
+        $h = new Headers();
+        $h->add('Foo', 'Bar');
+        $h->add('Foo', 'Xyz');
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertTrue(is_array($prop->getValue($h)['foo']));
+        $this->assertEquals(['Bar', 'Xyz'], $prop->getValue($h)['foo']['value']);
+    }
+
+    public function testAddArrayValue()
+    {
+        $h = new Headers();
+        $h->add('Foo', 'Bar');
+        $h->add('Foo', ['Xyz', '123']);
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+
+        $this->assertTrue(is_array($prop->getValue($h)['foo']));
+        $this->assertEquals(['Bar', 'Xyz', '123'], $prop->getValue($h)['foo']['value']);
+    }
+
+    public function testHas()
+    {
+        $h = new Headers();
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+        $prop->setValue($h, [
+            'allow' => [
+                'value' => ['GET', 'POST'],
+                'originalKey' => 'Allow'
+            ]
+        ]);
+        $this->assertTrue($h->has('allow'));
+        $this->assertFalse($h->has('foo'));
+    }
+
+    public function testRemove()
+    {
+        $h = new Headers();
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+        $prop->setValue($h, [
+            'Allow' => [
+                'value' => ['GET', 'POST'],
+                'originalKey' => 'Allow'
+            ]
+        ]);
+        $h->remove('Allow');
+
+        $this->assertNotContains('Allow', $prop->getValue($h));
+    }
+
+    public function testOriginalKeys()
+    {
+        $h = new Headers();
+        $prop = new ReflectionProperty($h, 'data');
+        $prop->setAccessible(true);
+        $prop->setValue($h, [
+            'Allow' => [
+                'value' => ['GET', 'POST'],
+                'originalKey' => 'ALLOW'
+            ]
+        ]);
+        $all = $h->all();
+
+        $this->assertArrayHasKey('ALLOW', $all);
+    }
+
+    public function testNormalizeKey()
+    {
+        $h = new Headers();
+        $this->assertEquals('foo-bar', $h->normalizeKey('HTTP_FOO_BAR'));
+        $this->assertEquals('foo-bar', $h->normalizeKey('HTTP-FOO-BAR'));
+        $this->assertEquals('foo-bar', $h->normalizeKey('Http-Foo-Bar'));
+        $this->assertEquals('foo-bar', $h->normalizeKey('Http_Foo_Bar'));
+        $this->assertEquals('foo-bar', $h->normalizeKey('http_foo_bar'));
+        $this->assertEquals('foo-bar', $h->normalizeKey('http-foo-bar'));
+    }
+
+    public function testDetermineAuthorization()
+    {
+        $e = Environment::mock([]);
+        $en = Headers::determineAuthorization($e);
+        $h = Headers::createFromEnvironment($e);
+
+        $this->assertEquals('electrolytes', $en->get('HTTP_AUTHORIZATION'));
+        $this->assertEquals(['electrolytes'], $h->get('Authorization'));
     }
 }

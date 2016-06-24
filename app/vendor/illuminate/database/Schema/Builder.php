@@ -1,242 +1,281 @@
-<?php namespace Illuminate\Database\Schema;
+<?php
+
+namespace Illuminate\Database\Schema;
 
 use Closure;
 use Illuminate\Database\Connection;
 
-class Builder {
+class Builder
+{
+    /**
+     * The database connection instance.
+     *
+     * @var \Illuminate\Database\Connection
+     */
+    protected $connection;
 
-	/**
-	 * The database connection instance.
-	 *
-	 * @var \Illuminate\Database\Connection
-	 */
-	protected $connection;
+    /**
+     * The schema grammar instance.
+     *
+     * @var \Illuminate\Database\Schema\Grammars\Grammar
+     */
+    protected $grammar;
 
-	/**
-	 * The schema grammar instance.
-	 *
-	 * @var \Illuminate\Database\Schema\Grammars\Grammar
-	 */
-	protected $grammar;
+    /**
+     * The Blueprint resolver callback.
+     *
+     * @var \Closure
+     */
+    protected $resolver;
 
-	/**
-	 * The Blueprint resolver callback.
-	 *
-	 * @var \Closure
-	 */
-	protected $resolver;
+    /**
+     * Create a new database Schema manager.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return void
+     */
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+        $this->grammar = $connection->getSchemaGrammar();
+    }
 
-	/**
-	 * Create a new database Schema manager.
-	 *
-	 * @param  \Illuminate\Database\Connection  $connection
-	 * @return void
-	 */
-	public function __construct(Connection $connection)
-	{
-		$this->connection = $connection;
-		$this->grammar = $connection->getSchemaGrammar();
-	}
+    /**
+     * Determine if the given table exists.
+     *
+     * @param  string  $table
+     * @return bool
+     */
+    public function hasTable($table)
+    {
+        $sql = $this->grammar->compileTableExists();
 
-	/**
-	 * Determine if the given table exists.
-	 *
-	 * @param  string  $table
-	 * @return bool
-	 */
-	public function hasTable($table)
-	{
-		$sql = $this->grammar->compileTableExists();
+        $table = $this->connection->getTablePrefix().$table;
 
-		$table = $this->connection->getTablePrefix().$table;
+        return count($this->connection->select($sql, [$table])) > 0;
+    }
 
-		return count($this->connection->select($sql, array($table))) > 0;
-	}
+    /**
+     * Determine if the given table has a given column.
+     *
+     * @param  string  $table
+     * @param  string  $column
+     * @return bool
+     */
+    public function hasColumn($table, $column)
+    {
+        $column = strtolower($column);
 
-	/**
-	 * Determine if the given table has a given column.
-	 *
-	 * @param  string  $table
-	 * @param  string  $column
-	 * @return bool
-	 */
-	public function hasColumn($table, $column)
-	{
-		$column = strtolower($column);
+        return in_array($column, array_map('strtolower', $this->getColumnListing($table)));
+    }
 
-		return in_array($column, array_map('strtolower', $this->getColumnListing($table)));
-	}
+    /**
+     * Determine if the given table has given columns.
+     *
+     * @param  string  $table
+     * @param  array   $columns
+     * @return bool
+     */
+    public function hasColumns($table, array $columns)
+    {
+        $tableColumns = array_map('strtolower', $this->getColumnListing($table));
 
-	/**
-	 * Determine if the given table has given columns.
-	 *
-	 * @param  string  $table
-	 * @param  array   $columns
-	 * @return bool
-	 */
-	public function hasColumns($table, array $columns)
-	{
-		$tableColumns = array_map('strtolower', $this->getColumnListing($table));
+        foreach ($columns as $column) {
+            if (! in_array(strtolower($column), $tableColumns)) {
+                return false;
+            }
+        }
 
-		foreach ($columns as $column)
-		{
-			if ( ! in_array(strtolower($column), $tableColumns)) return false;
-		}
+        return true;
+    }
 
-		return true;
-	}
+    /**
+     * Get the data type for the given column name.
+     *
+     * @param  string  $table
+     * @param  string  $column
+     * @return string
+     */
+    public function getColumnType($table, $column)
+    {
+        $table = $this->connection->getTablePrefix().$table;
 
-	/**
-	 * Get the column listing for a given table.
-	 *
-	 * @param  string  $table
-	 * @return array
-	 */
-	public function getColumnListing($table)
-	{
-		$table = $this->connection->getTablePrefix().$table;
+        return $this->connection->getDoctrineColumn($table, $column)->getType()->getName();
+    }
 
-		$results = $this->connection->select($this->grammar->compileColumnExists($table));
+    /**
+     * Get the column listing for a given table.
+     *
+     * @param  string  $table
+     * @return array
+     */
+    public function getColumnListing($table)
+    {
+        $table = $this->connection->getTablePrefix().$table;
 
-		return $this->connection->getPostProcessor()->processColumnListing($results);
-	}
+        $results = $this->connection->select($this->grammar->compileColumnExists($table));
 
-	/**
-	 * Modify a table on the schema.
-	 *
-	 * @param  string    $table
-	 * @param  \Closure  $callback
-	 * @return \Illuminate\Database\Schema\Blueprint
-	 */
-	public function table($table, Closure $callback)
-	{
-		$this->build($this->createBlueprint($table, $callback));
-	}
+        return $this->connection->getPostProcessor()->processColumnListing($results);
+    }
 
-	/**
-	 * Create a new table on the schema.
-	 *
-	 * @param  string    $table
-	 * @param  \Closure  $callback
-	 * @return \Illuminate\Database\Schema\Blueprint
-	 */
-	public function create($table, Closure $callback)
-	{
-		$blueprint = $this->createBlueprint($table);
+    /**
+     * Modify a table on the schema.
+     *
+     * @param  string    $table
+     * @param  \Closure  $callback
+     * @return \Illuminate\Database\Schema\Blueprint
+     */
+    public function table($table, Closure $callback)
+    {
+        $this->build($this->createBlueprint($table, $callback));
+    }
 
-		$blueprint->create();
+    /**
+     * Create a new table on the schema.
+     *
+     * @param  string    $table
+     * @param  \Closure  $callback
+     * @return \Illuminate\Database\Schema\Blueprint
+     */
+    public function create($table, Closure $callback)
+    {
+        $blueprint = $this->createBlueprint($table);
 
-		$callback($blueprint);
+        $blueprint->create();
 
-		$this->build($blueprint);
-	}
+        $callback($blueprint);
 
-	/**
-	 * Drop a table from the schema.
-	 *
-	 * @param  string  $table
-	 * @return \Illuminate\Database\Schema\Blueprint
-	 */
-	public function drop($table)
-	{
-		$blueprint = $this->createBlueprint($table);
+        $this->build($blueprint);
+    }
 
-		$blueprint->drop();
+    /**
+     * Drop a table from the schema.
+     *
+     * @param  string  $table
+     * @return \Illuminate\Database\Schema\Blueprint
+     */
+    public function drop($table)
+    {
+        $blueprint = $this->createBlueprint($table);
 
-		$this->build($blueprint);
-	}
+        $blueprint->drop();
 
-	/**
-	 * Drop a table from the schema if it exists.
-	 *
-	 * @param  string  $table
-	 * @return \Illuminate\Database\Schema\Blueprint
-	 */
-	public function dropIfExists($table)
-	{
-		$blueprint = $this->createBlueprint($table);
+        $this->build($blueprint);
+    }
 
-		$blueprint->dropIfExists();
+    /**
+     * Drop a table from the schema if it exists.
+     *
+     * @param  string  $table
+     * @return \Illuminate\Database\Schema\Blueprint
+     */
+    public function dropIfExists($table)
+    {
+        $blueprint = $this->createBlueprint($table);
 
-		$this->build($blueprint);
-	}
+        $blueprint->dropIfExists();
 
-	/**
-	 * Rename a table on the schema.
-	 *
-	 * @param  string  $from
-	 * @param  string  $to
-	 * @return \Illuminate\Database\Schema\Blueprint
-	 */
-	public function rename($from, $to)
-	{
-		$blueprint = $this->createBlueprint($from);
+        $this->build($blueprint);
+    }
 
-		$blueprint->rename($to);
+    /**
+     * Rename a table on the schema.
+     *
+     * @param  string  $from
+     * @param  string  $to
+     * @return \Illuminate\Database\Schema\Blueprint
+     */
+    public function rename($from, $to)
+    {
+        $blueprint = $this->createBlueprint($from);
 
-		$this->build($blueprint);
-	}
+        $blueprint->rename($to);
 
-	/**
-	 * Execute the blueprint to build / modify the table.
-	 *
-	 * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-	 * @return void
-	 */
-	protected function build(Blueprint $blueprint)
-	{
-		$blueprint->build($this->connection, $this->grammar);
-	}
+        $this->build($blueprint);
+    }
 
-	/**
-	 * Create a new command set with a Closure.
-	 *
-	 * @param  string  $table
-	 * @param  \Closure|null  $callback
-	 * @return \Illuminate\Database\Schema\Blueprint
-	 */
-	protected function createBlueprint($table, Closure $callback = null)
-	{
-		if (isset($this->resolver))
-		{
-			return call_user_func($this->resolver, $table, $callback);
-		}
+    /**
+     * Enable foreign key constraints.
+     *
+     * @return bool
+     */
+    public function enableForeignKeyConstraints()
+    {
+        return $this->connection->statement(
+            $this->grammar->compileEnableForeignKeyConstraints()
+        );
+    }
 
-		return new Blueprint($table, $callback);
-	}
+    /**
+     * Disable foreign key constraints.
+     *
+     * @return bool
+     */
+    public function disableForeignKeyConstraints()
+    {
+        return $this->connection->statement(
+            $this->grammar->compileDisableForeignKeyConstraints()
+        );
+    }
 
-	/**
-	 * Get the database connection instance.
-	 *
-	 * @return \Illuminate\Database\Connection
-	 */
-	public function getConnection()
-	{
-		return $this->connection;
-	}
+    /**
+     * Execute the blueprint to build / modify the table.
+     *
+     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
+     * @return void
+     */
+    protected function build(Blueprint $blueprint)
+    {
+        $blueprint->build($this->connection, $this->grammar);
+    }
 
-	/**
-	 * Set the database connection instance.
-	 *
-	 * @param  \Illuminate\Database\Connection
-	 * @return $this
-	 */
-	public function setConnection(Connection $connection)
-	{
-		$this->connection = $connection;
+    /**
+     * Create a new command set with a Closure.
+     *
+     * @param  string  $table
+     * @param  \Closure|null  $callback
+     * @return \Illuminate\Database\Schema\Blueprint
+     */
+    protected function createBlueprint($table, Closure $callback = null)
+    {
+        if (isset($this->resolver)) {
+            return call_user_func($this->resolver, $table, $callback);
+        }
 
-		return $this;
-	}
+        return new Blueprint($table, $callback);
+    }
 
-	/**
-	 * Set the Schema Blueprint resolver callback.
-	 *
-	 * @param  \Closure  $resolver
-	 * @return void
-	 */
-	public function blueprintResolver(Closure $resolver)
-	{
-		$this->resolver = $resolver;
-	}
+    /**
+     * Get the database connection instance.
+     *
+     * @return \Illuminate\Database\Connection
+     */
+    public function getConnection()
+    {
+        return $this->connection;
+    }
 
+    /**
+     * Set the database connection instance.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return $this
+     */
+    public function setConnection(Connection $connection)
+    {
+        $this->connection = $connection;
+
+        return $this;
+    }
+
+    /**
+     * Set the Schema Blueprint resolver callback.
+     *
+     * @param  \Closure  $resolver
+     * @return void
+     */
+    public function blueprintResolver(Closure $resolver)
+    {
+        $this->resolver = $resolver;
+    }
 }

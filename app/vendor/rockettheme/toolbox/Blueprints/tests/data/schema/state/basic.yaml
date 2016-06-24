@@ -1,0 +1,81 @@
+items:
+  '':
+    form:
+      validation: loose
+    type: _root
+    form_field: false
+  text:
+    type: text
+    label: Text
+    placeholder: 'Enter your text'
+    validation: loose
+    name: text
+  enabled:
+    type: select
+    label: Enabled
+    default: true
+    data-options@: blueprint_data_option_test
+    validation: loose
+    name: enabled
+  user:
+    type: _parent
+    name: user
+    form_field: false
+  user.name:
+    type: name
+    label: Name
+    default: John
+    validate:
+      type: name
+    validation: loose
+    name: user.name
+  user.country:
+    type: select
+    label: Enabled
+    default: fi
+    data-options@:
+      - blueprint_data_option_test
+      -
+        us: 'United States'
+        fi: Finland
+        po: Poland
+      - true
+    validation: loose
+    name: user.country
+  undefined:
+    type: select
+    label: Undefined
+    data-options@: undefined_function
+    validation: loose
+    name: undefined
+rules:
+  name:
+    pattern: '[A-Z][a-z]+'
+    min: 3
+    max: 15
+nested:
+  '': ''
+  text: text
+  enabled: enabled
+  user:
+    name: user.name
+    country: user.country
+  undefined: undefined
+dynamic:
+  enabled:
+    options:
+      action: data
+      params: blueprint_data_option_test
+  user.country:
+    options:
+      action: data
+      params:
+        - blueprint_data_option_test
+        - { us: 'United States', fi: Finland, po: Poland }
+        - true
+  undefined:
+    options:
+      action: data
+      params: undefined_function
+filter:
+  validation: true

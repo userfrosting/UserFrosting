@@ -1,0 +1,36 @@
+{% extends "layouts/error.html.twig" %}
+{% set page_group = "error" %}
+
+{% set page_active = "" %}
+
+{% block page_title %}Disturbance in the Force{% endblock %}
+{% block page_description %}We've sensed a great disturbance in the Force.{% endblock %}
+
+{% block head %}
+    {% set uf_page = uf_page | merge({
+        'title'      : block('page_title'),
+        'description': block('page_description')
+    }) %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="text-center">
+            <h1>
+                {% block heading %}
+                    Uhhh...something happened.  We don't know what.
+                {% endblock %}
+            </h1>
+                
+            <br><br>
+            <p class="lead">Here's what we got:</p>
+        </div>
+        
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ translate(message.message, message.parameters) }}</div> 
+        {% endfor %}
+        
+        <p class="lead">Click <a href="{{site.uri.public}}">here</a> to return to the front page.</p>
+    </div> <!-- /container -->
+{% endblock %}

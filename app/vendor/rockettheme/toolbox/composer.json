@@ -1,0 +1,29 @@
+{
+    "name": "rockettheme/toolbox",
+    "type": "library",
+    "description": "RocketTheme Toolbox Library",
+    "keywords": ["rockettheme", "php"],
+    "homepage": "http://www.rockettheme.com",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4.0",
+        "pimple/pimple": "~3.0",
+        "symfony/yaml": ">2.5",
+        "symfony/event-dispatcher": ">2.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "RocketTheme\\Toolbox\\ArrayTraits\\": "ArrayTraits/src",
+            "RocketTheme\\Toolbox\\Blueprints\\": "Blueprints/src",
+            "RocketTheme\\Toolbox\\DI\\": "DI/src",
+            "RocketTheme\\Toolbox\\Event\\": "Event/src",
+            "RocketTheme\\Toolbox\\File\\": "File/src",
+            "RocketTheme\\Toolbox\\ResourceLocator\\": "ResourceLocator/src",
+            "RocketTheme\\Toolbox\\Session\\": "Session/src",
+            "RocketTheme\\Toolbox\\StreamWrapper\\": "StreamWrapper/src"
+        }
+    }
+}

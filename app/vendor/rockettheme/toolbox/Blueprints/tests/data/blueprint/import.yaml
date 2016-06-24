@@ -1,0 +1,4 @@
+form:
+  fields:
+    address:
+      import@: partials/address

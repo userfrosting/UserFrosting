@@ -1,0 +1,12 @@
+text: Testing...
+user:
+  name: Igor
+  extra: data...
+
+some:
+  random: false
+  variables:
+    - true
+    - false
+just: for
+fun:

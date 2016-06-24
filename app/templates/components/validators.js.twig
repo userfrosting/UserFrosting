@@ -1,0 +1,6 @@
+{# Configuration variables needed by client-side code (Javascript). #}
+{% autoescape 'js' %}
+    var page = {
+        "validators": {{ page.validators | raw }}
+    };
+{% endautoescape %}
