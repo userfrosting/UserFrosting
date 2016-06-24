@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting;
+namespace UserFrosting\Authorize;
 
 use PhpParser\Node;
 

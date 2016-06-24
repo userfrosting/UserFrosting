@@ -1,5 +1,7 @@
 <?php
 
+namespace UserFrosting\Authorize;
+
 /**
  * AccessCondition class
  *
