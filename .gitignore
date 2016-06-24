@@ -7,15 +7,25 @@
 # Ignore developer resources
 _meta/*
 
-# Ignore personal config files (v0.3.1)
-userfrosting/config-userfrosting.php
+# Ignore personal config files (dev)
+app/.env
 
-# Ignore minified assets
+# Ignore composer-generated files
+app/composer.lock
+app/composer.phar
+
+# Ignore error log
+app/logs/errors.log
+
+# Ignore node modules
+build/node_modules/*
+
+# Ignore compiled assets (dev)
+public/assets/*
+
+# Ignore minified assets (v0.3.x)
 public/js/min/*
 public/css/min/*
 
-# Ignore personal config files (dev)
-app/config/development.php
-
-# Ignore composer.lock
-userfrosting/composer.lock
+# Ignore personal config files (v0.3.x)
+app/config-userfrosting.php
