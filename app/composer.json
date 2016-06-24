@@ -1,14 +1,17 @@
 {
-    "name": "userfrosting/bones",
-    "version": "1.0.0",
-    "description": "basic skeleton for next generation of UF",
+    "name": "userfrosting/UserFrosting",
     "type": "project",
+    "description": "A secure, modern user management system for PHP.",
+    "keywords": ["php user management", "usercake", "bootstrap"],
+    "homepage": "https://github.com/userfrosting/UserFrosting",
+    "license" : "MIT",
     "authors" : [
         {
             "name": "Alexander Weissman",
             "homepage": "https://alexanderweissman.com"
         }
-    ],   
+    ],
+    "version": "4.0.0", 
     "require": {
         "cartalyst/sentinel" : "2.0.*",
         "illuminate/database" : "~5.0",
