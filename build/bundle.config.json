@@ -2,10 +2,11 @@
   "bundle": {
     "js/main": {
         "scripts": [
-            "js/bootstrap-3.3.1.js",
-            "vendor/jQueryValidation/jquery.validate.js",
-            "vendor/jQueryValidation/additional-methods.js",
-            "vendor/jQueryValidation/jqueryvalidation-methods-fortress.js",
+            "vendor/bootstrap-3.3.6/js/bootstrap.js",
+            "vendor/jQueryValidation-1.14.0/jquery.validate.js",
+            "vendor/jQueryValidation-1.14.0/additional-methods.js",
+            "js/fortress-jqueryvalidation-methods.js",
+            "js/uf-jqueryvalidation-config.js",
             "js/uf-alerts.js",
             "js/uf-form.js"
         ],
@@ -32,8 +33,8 @@
     "css/main": {
         "styles": [
             "vendor/font-awesome-4.5.0/css/font-awesome.css",
-            "css/bootstrap-3.3.1.css",
-            "css/modern-business.css"
+            "vendor/bootstrap-3.3.6/css/bootstrap.css",
+            "vendor/start-bootstrap/css/modern-business.css"
         ],
         "options": {
             "result": {
