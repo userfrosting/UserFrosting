@@ -17,6 +17,10 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
     );
 
     public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'Wikimedia\\Composer\\' => 19,
+        ),
         'U' => 
         array (
             'UserFrosting\\Support\\' => 21,
@@ -93,6 +97,10 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
     );
 
     public static $prefixDirsPsr4 = array (
+        'Wikimedia\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wikimedia/composer-merge-plugin/src',
+        ),
         'UserFrosting\\Support\\' => 
         array (
             0 => __DIR__ . '/..' . '/userfrosting/support/Support',
@@ -119,7 +127,9 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         ),
         'UserFrosting\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/system',
+            0 => __DIR__ . '/../..' . '/core/src',
+            1 => __DIR__ . '/../..' . '/sprinkles/account/src',
+            2 => __DIR__ . '/../..' . '/sprinkles/admin/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (

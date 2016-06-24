@@ -32,12 +32,24 @@
         "userfrosting/i18n": "1.0",
         "userfrosting/session" : "dev-master",
         "userfrosting/support": "1.0",
-        "vlucas/phpdotenv" : "2.*"    
+        "vlucas/phpdotenv" : "2.*",
+        "wikimedia/composer-merge-plugin": "~1"
     },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "sprinkles/*/composer.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "merge-dev": true,
+            "merge-extra": false
+        }
+    }, 
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "UserFrosting\\": "system/"
+            "UserFrosting\\": "core/src/"
         },
         "files" : [
             "defines.php"

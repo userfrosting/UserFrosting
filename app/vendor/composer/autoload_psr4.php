@@ -6,13 +6,14 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Wikimedia\\Composer\\' => array($vendorDir . '/wikimedia/composer-merge-plugin/src'),
     'UserFrosting\\Support\\' => array($vendorDir . '/userfrosting/support/Support'),
     'UserFrosting\\Session\\' => array($vendorDir . '/userfrosting/session/Session'),
     'UserFrosting\\I18n\\' => array($vendorDir . '/userfrosting/i18n/I18n'),
     'UserFrosting\\Fortress\\' => array($vendorDir . '/userfrosting/fortress/Fortress'),
     'UserFrosting\\Config\\' => array($vendorDir . '/userfrosting/config/Config'),
     'UserFrosting\\Assets\\' => array($vendorDir . '/userfrosting/assets/Assets'),
-    'UserFrosting\\' => array($baseDir . '/system'),
+    'UserFrosting\\' => array($baseDir . '/core/src', $baseDir . '/sprinkles/account/src', $baseDir . '/sprinkles/admin/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
