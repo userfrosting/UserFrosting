@@ -227,18 +227,30 @@ $event = $event-&gt;fresh(['users']));</code></pre>
         <h3 id="toc_5">Modifying Relationships</h3>
         
         <p>Ok, so we've seen how to get the related users for an event, but how do we add and remove related users?  To do this, we can use the <code>attach</code> and <code>detach</code> methods:</p>
-        
-        <pre><code>// Fetch user 1
+
+        <pre><code>// Fetch user 1 into $user
 $user = User::find(1);
 
 // Fetch event 1
 $event = StaffEvent::find(1);
 
-// Associate user 1 with event 1
-$event-&gt;users()-&gt;attach(1);
+// Associate $user with event 1
+$event-&gt;users()-&gt;attach($user->id);
 
-// De-associate user 1 with event 1
-$event-&gt;users()-&gt;detach(1);
+// De-associate $user with event 1
+$event-&gt;users()-&gt;detach($user->id);
+</code></pre>
+
+        <p>And if we wanted to use the current user logged into our app instead?</p>
+        
+        <pre><code>// Fetch event 1
+$event = StaffEvent::find(1);
+
+// Associate current user with event 1
+$event-&gt;users()-&gt;attach($app->user->id);
+
+// De-associate current user with event 1
+$event-&gt;users()-&gt;detach($app->user->id);
 </code></pre>
         
         <p>We might want to automatically delete any relationships when we delete a particular object.  So, we will overload the <code>delete</code> method in <code>StaffEvent</code>:</p>
