@@ -9,12 +9,13 @@
  * @link http://www.userfrosting.com/components/#i18n
  * @author Ulysse Ramage
  */
- 
+
 /*
-{{name}} - Dynamic markers which are replaced at run time by the relevant index.
+{{name}} - Dymamic markers which are replaced at run time by the relevant index.
 */
 
 $lang = array();
+
 // Site Content
 $lang = array_merge($lang, [
 	"REGISTER_WELCOME" => "L'inscription est simple et rapide.",
@@ -24,6 +25,7 @@ $lang = array_merge($lang, [
 	"MENU_GROUPS" => "Groupes",
 	"HEADER_MESSAGE_ROOT" => "VOUS ÊTES CONNECTÉ EN TANT QU'ADMINISTRATEUR ROOT"
 ]);
+
 // Installer
 $lang = array_merge($lang,array(
 	"INSTALLER_INCOMPLETE" => "Vous ne pouvez pas créer de compte root tant que l'installation n'est pas terminée !",
@@ -31,6 +33,7 @@ $lang = array_merge($lang,array(
 	"MASTER_ACCOUNT_NOT_EXISTS" => "Vous ne pouvez pas créer de compte tant que le compte principal n'a pas été enregistré !",
 	"CONFIG_TOKEN_MISMATCH" => "Désolé, ce jeton de configuration est incorrect."
 ));
+
 // Account
 $lang = array_merge($lang,array(
 	"ACCOUNT_SPECIFY_USERNAME" => "Veuillez entrer votre nom d'utilisateur.",
@@ -46,10 +49,14 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_USER_OR_PASS_INVALID" => "Le nom d'utilisateur ou le mot de passe est invalide.",
 	"ACCOUNT_ALREADY_ACTIVE" => "Votre compte est déjà activé.",
 	"ACCOUNT_REGISTRATION_DISABLED" => "Désolé, l'inscription est désactivée.",
+	"ACCOUNT_REGISTRATION_BROKEN" => "Désolé, il y a un problème avec le processus d'inscriptiion.  Contactez-nous pour plus d'informations.",
 	"ACCOUNT_REGISTRATION_LOGOUT" => "Désolé, vous ne pouvez pas vous inscrire en étant connecté. Merci de bien vouloir vous déconnecter.",
 	"ACCOUNT_INACTIVE" => "Votre compte est inactif. Veuillez regarder dans le dossier spam de votre boîte mail pour trouver le mail d'activation.",
 	"ACCOUNT_DISABLED" => "Ce compte a été désactivé. Contactez-nous pour plus d'informations.",
 	"ACCOUNT_USER_CHAR_LIMIT" => "Le nom d'utilisateur doit faire entre {{min}} et {{max}} caractères.",
+	"ACCOUNT_USER_INVALID_CHARACTERS" => "Le nom d'utilisateur doit contenir seulement des caractères alphanumériques",
+    "ACCOUNT_USER_NO_LEAD_WS" => "Le nom d'utilisateur ne peut débuter par un espace",
+    "ACCOUNT_USER_NO_TRAIL_WS" => "Le nom d'utilisateur ne peut se terminer par un espace",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "Le nom public doit faire entre {{min}} et {{max}} caractères.",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "Le mot de passe doit faire entre {{min}} et {{max}} caractères.",
 	"ACCOUNT_EMAIL_CHAR_LIMIT" => "L'adresse e-mail doit faire entre {{min}} et {{max}} caractères.",
@@ -76,7 +83,6 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PASSWORD_UPDATED" => "Le mot de passe du compte a été mis à jour",
 	"ACCOUNT_EMAIL_UPDATED" => "L'adresse e-mail du compte a été mise à jour",
 	"ACCOUNT_TOKEN_NOT_FOUND" => "Ce jeton n'existe pas / Le compte est déjà activé",
-	"ACCOUNT_USER_INVALID_CHARACTERS" => "Le nom d'utilisateur doit contenir seulement des caractères alphanumériques",
 	"ACCOUNT_DELETE_MASTER" => "Vous ne pouvez pas supprimer le compte principal !",
 	"ACCOUNT_DISABLE_MASTER" => "Vous ne pouvez pas désativer le compte principal !",
 	"ACCOUNT_DISABLE_SUCCESSFUL" => "Le compte de l'utilisateur '{{user_name}}' a été désactivé avec succès.",
@@ -92,13 +98,17 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PRIMARY_GROUP_SET" => "Le groupe principal du compte '{{user_name}}' a été changé avec succès.",
 	"ACCOUNT_WELCOME" => "Bonjour, {{display_name}}"
 ));
+
 // Generic validation
 $lang = array_merge($lang, array(
 	"VALIDATE_REQUIRED" => "Le champ '{{self}}' doit être rempli.",
 	"VALIDATE_BOOLEAN" => "La valeur de '{{self}}' doit être '0' ou '1'.",
 	"VALIDATE_INTEGER" => "La valeur de '{{self}}' doit être un nombre entier.",
-	"VALIDATE_ARRAY" => "Les valeurs de '{{self}}' doivent être dans un tableau."
+	"VALIDATE_ARRAY" => "Les valeurs de '{{self}}' doivent être dans un tableau.",
+    "VALIDATE_NO_LEAD_WS" => "Les valeurs de '{{self}}' ne peuvent pas débuter par un espace ou une tabultation",
+    "VALIDATE_NO_TRAIL_WS" => "Les valeurs de '{{self}}' ne peuvent pas terminer par un espace ou une tabultation"
 ));
+
 // Configuration
 $lang = array_merge($lang,array(
 	"CONFIG_PLUGIN_INVALID" => "Vous essayez de changer la configuration du plugin '{{plugin}}', mais il n'existe pas.",
@@ -114,20 +124,23 @@ $lang = array_merge($lang,array(
 	"CONFIG_UPDATE_SUCCESSFUL" => "La configuration du site a été mise à jour.",
 	"MINIFICATION_SUCCESS" => "Le code CSS et JS a été compressé avec succès."
 ));
+
 // Forgot Password
 $lang = array_merge($lang,array(
 	"FORGOTPASS_INVALID_TOKEN" => "Le jeton d'activation est invalide",
 	"FORGOTPASS_OLD_TOKEN" => "Le jeton spécifié a expiré",
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Impossible de mettre à jour le mot de passe",
-	"FORGOTPASS_NEW_PASS_EMAIL" => "Un e-mail contenant votre nouveau mot de passe vous a été envoyé",
 	"FORGOTPASS_REQUEST_CANNED" => "Votre demande de mot de passe a été annulée",
 	"FORGOTPASS_REQUEST_EXISTS" => "Il existe déjà une demande de mot de passe pour ce compte",
+	"FORGOTPASS_REQUEST_SENT" => "Un e-mail contenant un lien pour réinitialiser le mot de passe a été envoyé à l'adresse associé à '{{user_name}}'",
 	"FORGOTPASS_REQUEST_SUCCESS" => "Un e-mail contenant les instructions de réinitialisation de votre mot de passe vous a été envoyé"
 ));
+
 // Mail
 $lang = array_merge($lang,array(
 	"MAIL_ERROR" => "Une erreur est survenue lors de l'envoi de l'e-mail, merci de nous contacter si le problème persiste",
 ));
+
 // Miscellaneous
 $lang = array_merge($lang,array(
 	"PASSWORD_HASH_FAILED" => "Le cryptage du mot de passe a échoué. Merci de nous contacter si le problème persiste.",
@@ -145,20 +158,23 @@ $lang = array_merge($lang,array(
 	"LOGIN_REQUIRED" => "Désolé, vous devez être connecté pour accéder à ce contenu.",
 	"LOGIN_ALREADY_COMPLETE" => "Vous êtes déjà connecté !"
 ));
+
 // Permissions
 $lang = array_merge($lang,array(
-		"GROUP_INVALID_ID" => "Le groupe demandé n'existe pas",
-		"GROUP_NAME_CHAR_LIMIT" => "Le nom des groupes doit faire entre {{min}} et {{max}} caractères",
+	"GROUP_INVALID_ID" => "Le groupe demandé n'existe pas",
+	"GROUP_NAME_CHAR_LIMIT" => "Le nom des groupes doit faire entre {{min}} et {{max}} caractères",
 	"AUTH_HOOK_CHAR_LIMIT" => "Le nom des hooks d'autorisation doivent faire entre {{min}} et {{max}} caractères",
-		"GROUP_NAME_IN_USE" => "Le nom de groupe '{{name}}' est déjà pris",
-		"GROUP_DELETION_SUCCESSFUL" => "Le groupe '{{name}}' a été supprimé avec succès",
-		"GROUP_CREATION_SUCCESSFUL" => "Le groupe '{{name}}' a été créé avec succès",
-		"GROUP_UPDATE" => "Les détails du groupe '{{name}}' ont été mis à jour avec succès.",
-		"CANNOT_DELETE_GROUP" => "Le groupe '{{name}}' ne peut pas être supprimé",
-		"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Le groupe '{{name}}' ne peut pas être supprimé car il correspond au groupe par défaut des nouveaux utilisateurs.",
+	"GROUP_NAME_IN_USE" => "Le nom de groupe '{{name}}' est déjà pris",
+	"GROUP_DELETION_SUCCESSFUL" => "Le groupe '{{name}}' a été supprimé avec succès",
+	"GROUP_CREATION_SUCCESSFUL" => "Le groupe '{{name}}' a été créé avec succès",
+	"GROUP_UPDATE" => "Les détails du groupe '{{name}}' ont été mis à jour avec succès.",
+	"CANNOT_DELETE_GROUP" => "Le groupe '{{name}}' ne peut pas être supprimé",
+	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Le groupe '{{name}}' ne peut pas être supprimé car il correspond au groupe par défaut des nouveaux utilisateurs.",
 	"GROUP_AUTH_EXISTS" => "Le groupe '{{name}}' a déjà une règle configurée pour le hook '{{hook}}'.",
     "GROUP_AUTH_CREATION_SUCCESSFUL" => "La règle du hook '{{hook}}' a été créée pour le groupe '{{name}}'.",
     "GROUP_AUTH_UPDATE_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été mise à jour avec succès.",
-    "GROUP_AUTH_DELETION_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été supprimée avec succès."
+    "GROUP_AUTH_DELETION_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été supprimée avec succès.",
+    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "Vous ne pouvez pas créer de nouvel utilisateur parce qu'il y a aucun groupe par défaut de défini. Veuillez vérifier vos paramètres de groupes."
 ));
+
 return $lang;
