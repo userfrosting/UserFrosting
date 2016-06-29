@@ -13,7 +13,7 @@ namespace UserFrosting;
  * @property \UserFrosting\SiteSettings $site
  * @property \UserFrosting\User $user
  * @property \UserFrosting\PageSchema $schema
- * @property \UserFrosting\JqueryValidationAdapter $jsValidator
+ * @property \Fortress\JqueryValidationAdapter $jsValidator
  */
 class UserFrosting extends \Slim\Slim {
     

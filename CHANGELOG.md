@@ -2,7 +2,7 @@
 
 ## v0.3.1.16
 
-
+- Fixed comment reference to \Fortress\JqueryValidationAdaptor
 
 ## v0.3.1.15
 
