@@ -1,20 +1,48 @@
 # Change Log
 
-## v1.1.3.11
+## v0.3.1.15
+
+- Fix unattached submitHandler bug in Group and Auth edit interfaces (#465)
+- Remove references to nonexistent `formUserView` and `formGroupView` (#478)
+- Gracefully handle session destruction due to missing or disabled accounts (#510)
+- Add `attributeExists` and `relationExists` for models (#520)
+
+## v0.3.1.14
+
+- Stop reading entire log files to avoid out-of-memory errors (#497)
+- Deploy [league/csv](https://github.com/thephpleague/csv) to properly generate CSV files (#557)
+- Fix typos in language files
+
+## v0.3.1.13
+
+- Bump dependencies
+- userfrosting/fortress now has a release version
+
+## v0.3.1.12
+
+- Add sendmail support in Notification class
+- Fixed problem with strict comparison in Handlebars templates and inconsistent data types among different database technologies
+- Overrided paths to font files for Bootstrap Glyphicons to support the UserFrosting directory structure
+- Added missing lines of Thai language (popiazaza)
+- Fixed a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
+- Added option for HTTPS in `.htaccess`, commented out by default
+- Minor syntax fixes in `public/js/userfrosting.js`, `widget-auth.js`, `widget-groups.js`, and `widget-users.js`
+
+## v0.3.1.11
 
 - Composer can now include composer.json files from plugin folders (added "wikimedia/composer-merge-plugin" to composer)
 
-## v0.1.3.10
+## v0.3.1.10
 
 - Select correct versions (PHP 5.x compatible) of packages in `composer.json`
 - Turkish language translation
 - Return `User` object created in `AccountController::register`
 
-## v0.1.3.9
+## v0.3.1.9
 
 - Revert to loose comparison for `user_id`s because of issues with Ubuntu's PDO driver (see http://stackoverflow.com/questions/5323146/mysql-integer-field-is-returned-as-string-in-php#comment41836471_5323169)
 
-## v0.1.3.8
+## v0.3.1.8
 
 - Finish replacing all usages of `*Loader` classes with Eloquent syntax
 - Installer warning for missing `imagepng`

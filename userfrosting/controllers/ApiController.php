@@ -3,6 +3,7 @@
 namespace UserFrosting;
 
 use \Illuminate\Database\Capsule\Manager as Capsule;
+use \League\Csv\Writer;
 
 /**
  * ApiController Class
@@ -33,13 +34,8 @@ class ApiController extends \UserFrosting\BaseController {
      */
     public function listUsers(){
         $get = $this->_app->request->get();
-
-        $size = isset($get['size']) ? $get['size'] : null;
-        $page = isset($get['page']) ? $get['page'] : null;
-        $sort_field = isset($get['sort_field']) ? $get['sort_field'] : "user_name";
-        $sort_order = isset($get['sort_order']) ? $get['sort_order'] : "asc";
+        
         $filters = isset($get['filters']) ? $get['filters'] : [];
-        $format = isset($get['format']) ? $get['format'] : "json";
         $primary_group_name = isset($get['primary_group']) ? $get['primary_group'] : null;
 
         // Optional filtering by primary group
@@ -72,9 +68,7 @@ class ApiController extends \UserFrosting\BaseController {
         // Exclude fields
         $userQuery = $userQuery
                 ->exclude(['password', 'secret_token']);
-
-        //Capsule::connection()->enableQueryLog();
-
+                
         // Get unfiltered, unsorted, unpaginated collection
         $user_collection = $userQuery->get();
 
@@ -94,45 +88,89 @@ class ApiController extends \UserFrosting\BaseController {
                 $user_collection = $user_collection->filterTextField($name, $value);
             }
         }
-
+        
+        // Render
+        $this->sortPaginateRender($user_collection, $total, 'users');
+    }
+    
+    /**
+     * Sorts, paginates, and renders a collection according to the GET parameters (so, JSON or CSV)
+     *
+     * @param Collection $collection The Eloquent collection to be rendered.
+     * @param int $total The total number of records in the collection, before pagination and filtering.
+     * @param string $csv_type A string representing the object type, to be added to the filename when generating a CSV.
+     * @param callable $csv_callback A callback to apply to the collection before rendering as CSV.  Useful for flattening data.
+     */
+    private function sortPaginateRender($collection, $total, $csv_type, $csv_callback = null)
+    {
+        $get = $this->_app->request->get();
+        
+        $size = isset($get['size']) ? $get['size'] : null;
+        $page = isset($get['page']) ? $get['page'] : null;
+        $sort_field = isset($get['sort_field']) ? $get['sort_field'] : "user_name";
+        $sort_order = isset($get['sort_order']) ? $get['sort_order'] : "asc";
+        
         // Count filtered results
-        $total_filtered = count($user_collection);
-
+        $total_filtered = count($collection);
+        
         // Sort
         if ($sort_order == "desc")
-            $user_collection = $user_collection->sortByDesc($sort_field, SORT_NATURAL|SORT_FLAG_CASE);
-        else
-            $user_collection = $user_collection->sortBy($sort_field, SORT_NATURAL|SORT_FLAG_CASE);
-
+            $collection = $collection->sortByDesc($sort_field, SORT_NATURAL|SORT_FLAG_CASE);
+        else        
+            $collection = $collection->sortBy($sort_field, SORT_NATURAL|SORT_FLAG_CASE);
+            
         // Paginate
         if ( ($page !== null) && ($size !== null) ){
             $offset = $size*$page;
-            $user_collection = $user_collection->slice($offset, $size);
+            $collection = $collection->slice($offset, $size);
         }
-
-        $result = [
-            "count" => $total,
-            "rows" => $user_collection->values()->toArray(),
-            "count_filtered" => $total_filtered
-        ];
-
-        //$query = Capsule::getQueryLog();
-
+        
+        $this->render($collection, $total, $total_filtered, $csv_type, $csv_callback);
+    }
+    
+    /**
+     * Renders a collection according to the GET parameters (so, JSON or CSV)
+     *
+     * @param Collection $collection The Eloquent collection to be rendered.
+     * @param int $total The total number of records in the collection, before pagination and filtering.
+     * @param int $total_filtered The total number of records in the collection, after filtering (but before pagination).
+     * @param string $csv_type A string representing the object type, to be added to the filename when generating a CSV.
+     * @param callable $csv_callback A callback to apply to the collection before rendering as CSV.  Useful for flattening data.
+     */    
+    private function render($collection, $total, $total_filtered, $csv_type, $csv_callback = null)
+    {
+        $get = $this->_app->request->get();
+        $format = isset($get['format']) ? $get['format'] : "json";
+    
         if ($format == "csv"){
             $settings = http_build_query($get);
             $date = date("Ymd");
-            $this->_app->response->headers->set('Content-Disposition', "attachment;filename=$date-users-$settings.csv");
+            $this->_app->response->headers->set('Content-Disposition', "attachment;filename=$date-$csv_type-$settings.csv");
             $this->_app->response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-            $keys = $user_collection->keys()->toArray();
-            echo implode(array_keys($result['rows'][0]), ",") . "\r\n";
-            foreach ($result['rows'] as $row){
-                echo implode($row, ",") . "\r\n";
+            
+            if ($csv_callback){
+                $collection = $csv_callback($collection);
             }
+            
+            $csv = Writer::createFromFileObject(new \SplTempFileObject());
+            $columnNames = array_keys($collection->values()->toArray()[0]);
+            $csv->insertOne($columnNames);
+            $collection->each(function ($item) use ($csv) {
+                $csv->insertOne($item->getAttributes());
+            });
+            
+            echo (string) $csv;
         } else {
+            $result = [
+                "count" => $total,
+                "rows" => $collection->values()->toArray(),
+                "count_filtered" => $total_filtered
+            ];
+        
             // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
             // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
             $this->_app->response->headers->set('Content-Type', 'application/json; charset=utf-8');
             echo json_encode($result, JSON_PRETTY_PRINT);
         }
-    }
+    }      
 }

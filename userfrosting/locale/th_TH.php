@@ -11,7 +11,7 @@
  */
 
 /*
-{{name}} - Dymamic markers which are replaced at run time by the relevant index.
+{{name}} - Dynamic markers which are replaced at run time by the relevant index.
 */
 
 $lang = array();
@@ -54,6 +54,9 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_INACTIVE" => "บัญชีของคุณยังไม่ถูกเปิดใช้งาน กรุณาตรวจสอบอีเมล และกล่องจดหมายขยะของคุณเพื่อเปิดใช้งานบัญชี",
 	"ACCOUNT_DISABLED" => "บัญชีนี้ถูกปิดการใช้งานไปแล้ว กรุณาติดต่อเราเพื่อขอข้อมูลเพิ่มเติม",
 	"ACCOUNT_USER_CHAR_LIMIT" => "ชื่อผู้ใช้ของคุณต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
+	"ACCOUNT_USER_INVALID_CHARACTERS" => "ชื่อผู้ใช้สามารถใส่ได้แค่ตัวอักษรกับตัวเลขเท่านั้น",
+	"ACCOUNT_USER_NO_LEAD_WS" => "ชื่อผู้ใช้ต้องไม่ขึ้นต้นด้วยช่องว่าง",
+	"ACCOUNT_USER_NO_TRAIL_WS" => "ชื่อผู้ใช้ต้องไม่ลงท้ายด้วยช่องว่าง",
 	"ACCOUNT_DISPLAY_CHAR_LIMIT" => "ชื่อแสดงของคุณต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
 	"ACCOUNT_PASS_CHAR_LIMIT" => "รหัสผ่านของคุณต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
 	"ACCOUNT_EMAIL_CHAR_LIMIT" => "อีเมลต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
@@ -102,7 +105,9 @@ $lang = array_merge($lang, array(
 	"VALIDATE_REQUIRED" => "ต้องระบุฟิลด์ '{{self}}'",
 	"VALIDATE_BOOLEAN" => "ค่าของ '{{self}}' ต้องเป็น '0' หรือ '1'",
 	"VALIDATE_INTEGER" => "ค่าของ '{{self}}' ต้องอยู่ในรูปแบบตัวเลข (integer)",
-	"VALIDATE_ARRAY" => "ค่าของ '{{self}}' ต้องอยู่ในรูปแบบแถว (array)"
+	"VALIDATE_ARRAY" => "ค่าของ '{{self}}' ต้องอยู่ในรูปแบบแถว (array)",
+	"VALIDATE_NO_LEAD_WS" => "ค่าของ '{{self}}' ต้องไม่ขึ้นต้นด้วยเว้นวรรค ย่อหน้า หรือช่องว่างอื่นๆ",
+	"VALIDATE_NO_TRAIL_WS" => "ค่าของ '{{self}}' ต้องไม่ลงท้ายด้วยเว้นวรรค ย่อหน้า หรือช่องว่างอื่นๆ"
 ));
 
 // Configuration
@@ -167,10 +172,10 @@ $lang = array_merge($lang,array(
 	"CANNOT_DELETE_GROUP" => "คุณไม่สามารถลบกลุ่ม '{{name}}' ได้",
 	"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "ไม่สามารถลบกลุ่ม '{{name}}' ได้เนื่องจากมันถูกตั้งให้เป็นกลุ่มเริ่มต้นสำหรับผู้ใช้ใหม่ กรุณาเลือกกลุ่มอื่นให้เป็นกลุ่มเริ่มต้นก่อน",
 	"GROUP_AUTH_EXISTS" => "กฎของกลุ่ม '{{name}}' ถูกตั้งสำหรับ hook '{{hook}}' ไปแล้ว",
-    "GROUP_AUTH_CREATION_SUCCESSFUL" => "สร้างกฎของ '{{hook}}' ขึ้นสำหรับกลุ่ม '{{name}}' เรียบร้อยแล้ว",
-    "GROUP_AUTH_UPDATE_SUCCESSFUL" => "ลบกฎการเข้าถึงของกลุ่ม '{{name}}' สำหรับ '{{hook}}' เรียบร้อยแล้ว",
-    "GROUP_AUTH_DELETION_SUCCESSFUL" => "ลบกฎการเข้าถึงของกลุ่ม '{{name}}' สำหรับ '{{hook}}' เรียบร้อยแล้ว",
-    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "คุณไม่สามารถสร้างผู้ใช้ใหม่ได้ เนื่องจากไม่ได้ตั้งกลุ่มเริ่มต้น กรุณาตรวจสอบการตั้งค่ากลุ่มของคุณ"
+	"GROUP_AUTH_CREATION_SUCCESSFUL" => "สร้างกฎของ '{{hook}}' ขึ้นสำหรับกลุ่ม '{{name}}' เรียบร้อยแล้ว",
+	"GROUP_AUTH_UPDATE_SUCCESSFUL" => "ลบกฎการเข้าถึงของกลุ่ม '{{name}}' สำหรับ '{{hook}}' เรียบร้อยแล้ว",
+	"GROUP_AUTH_DELETION_SUCCESSFUL" => "ลบกฎการเข้าถึงของกลุ่ม '{{name}}' สำหรับ '{{hook}}' เรียบร้อยแล้ว",
+	"GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "คุณไม่สามารถสร้างผู้ใช้ใหม่ได้ เนื่องจากไม่ได้ตั้งกลุ่มเริ่มต้น กรุณาตรวจสอบการตั้งค่ากลุ่มของคุณ"
 ));
 
 return $lang;

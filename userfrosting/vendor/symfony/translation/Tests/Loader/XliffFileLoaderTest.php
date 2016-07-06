@@ -46,6 +46,20 @@ class XliffFileLoaderTest extends \PHPUnit_Framework_TestCase
         libxml_use_internal_errors($internalErrors);
     }
 
+    public function testLoadWithExternalEntitiesDisabled()
+    {
+        $disableEntities = libxml_disable_entity_loader(true);
+
+        $loader = new XliffFileLoader();
+        $resource = __DIR__.'/../fixtures/resources.xlf';
+        $catalogue = $loader->load($resource, 'en', 'domain1');
+
+        libxml_disable_entity_loader($disableEntities);
+
+        $this->assertEquals('en', $catalogue->getLocale());
+        $this->assertEquals(array(new FileResource($resource)), $catalogue->getResources());
+    }
+
     public function testLoadWithResname()
     {
         $loader = new XliffFileLoader();
@@ -69,7 +83,7 @@ class XliffFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(utf8_decode('föö'), $catalogue->get('bar', 'domain1'));
         $this->assertEquals(utf8_decode('bär'), $catalogue->get('foo', 'domain1'));
-        $this->assertEquals(array('notes' => array(array('content' => utf8_decode('bäz')))), $catalogue->getMetadata('foo', 'domain1'));
+        $this->assertEquals(array('notes' => array(array('content' => utf8_decode('bäz'))), 'id' => '1'), $catalogue->getMetadata('foo', 'domain1'));
     }
 
     public function testTargetAttributesAreStoredCorrectly()
@@ -142,11 +156,11 @@ class XliffFileLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = new XliffFileLoader();
         $catalogue = $loader->load(__DIR__.'/../fixtures/withnote.xlf', 'en', 'domain1');
 
-        $this->assertEquals(array('notes' => array(array('priority' => 1, 'content' => 'foo'))), $catalogue->getMetadata('foo', 'domain1'));
+        $this->assertEquals(array('notes' => array(array('priority' => 1, 'content' => 'foo')), 'id' => '1'), $catalogue->getMetadata('foo', 'domain1'));
         // message without target
-        $this->assertEquals(array('notes' => array(array('content' => 'bar', 'from' => 'foo'))), $catalogue->getMetadata('extra', 'domain1'));
+        $this->assertEquals(array('notes' => array(array('content' => 'bar', 'from' => 'foo')), 'id' => '2'), $catalogue->getMetadata('extra', 'domain1'));
         // message with empty target
-        $this->assertEquals(array('notes' => array(array('content' => 'baz'), array('priority' => 2, 'from' => 'bar', 'content' => 'qux'))), $catalogue->getMetadata('key', 'domain1'));
+        $this->assertEquals(array('notes' => array(array('content' => 'baz'), array('priority' => 2, 'from' => 'bar', 'content' => 'qux')), 'id' => '123'), $catalogue->getMetadata('key', 'domain1'));
     }
 
     public function testLoadVersion2()

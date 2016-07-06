@@ -373,7 +373,7 @@ class Twig_ExpressionParser
                 $arg = new Twig_Node_Expression_Constant($token->getValue(), $lineno);
 
                 if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-                    $type = Twig_TemplateInterface::METHOD_CALL;
+                    $type = Twig_Template::METHOD_CALL;
                     foreach ($this->parseArguments() as $n) {
                         $arguments->addElement($n);
                     }
@@ -539,10 +539,11 @@ class Twig_ExpressionParser
         $targets = array();
         while (true) {
             $token = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE, null, 'Only variables can be assigned to');
-            if (in_array($token->getValue(), array('true', 'false', 'none'))) {
-                throw new Twig_Error_Syntax(sprintf('You cannot assign a value to "%s".', $token->getValue()), $token->getLine(), $this->parser->getFilename());
+            $value = $token->getValue();
+            if (in_array(strtolower($value), array('true', 'false', 'none', 'null'))) {
+                throw new Twig_Error_Syntax(sprintf('You cannot assign a value to "%s"', $value), $token->getLine(), $this->parser->getFilename());
             }
-            $targets[] = new Twig_Node_Expression_AssignName($token->getValue(), $token->getLine());
+            $targets[] = new Twig_Node_Expression_AssignName($value, $token->getLine());
 
             if (!$this->parser->getStream()->nextIf(Twig_Token::PUNCTUATION_TYPE, ',')) {
                 break;
@@ -578,6 +579,9 @@ class Twig_ExpressionParser
 
         if ($function instanceof Twig_SimpleFunction && $function->isDeprecated()) {
             $message = sprintf('Twig Function "%s" is deprecated', $function->getName());
+            if (!is_bool($function->getDeprecatedVersion())) {
+                $message .= sprintf(' since version %s', $function->getDeprecatedVersion());
+            }
             if ($function->getAlternative()) {
                 $message .= sprintf('. Use "%s" instead', $function->getAlternative());
             }
@@ -606,6 +610,9 @@ class Twig_ExpressionParser
 
         if ($filter instanceof Twig_SimpleFilter && $filter->isDeprecated()) {
             $message = sprintf('Twig Filter "%s" is deprecated', $filter->getName());
+            if (!is_bool($filter->getDeprecatedVersion())) {
+                $message .= sprintf(' since version %s', $filter->getDeprecatedVersion());
+            }
             if ($filter->getAlternative()) {
                 $message .= sprintf('. Use "%s" instead', $filter->getAlternative());
             }

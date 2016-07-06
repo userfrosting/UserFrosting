@@ -1,7 +1,10 @@
 <meta charset="utf-8">
 <?php
 
-require_once("fortress/config-fortress.php");
+require_once("../vendor/autoload.php");
+
+\Valitron\Validator::langDir("../vendor/vlucas/valitron/lang");
+    
 
 /******** Do this in a project-wide config file ********/
 // Start the session
@@ -15,8 +18,8 @@ $ms = $_SESSION['Fortress']['alerts'];
 // Create a message translator
 $translator = new Fortress\MessageTranslator();
 // Set the translation paths
-$translator->setTranslationTable("fortress/locale/en_US.php");
-$translator->setDefaultTable("fortress/locale/en_US.php");
+$translator->setTranslationTable("../fortress/locale/en_US.php");
+$translator->setDefaultTable("../fortress/locale/en_US.php");
 // Set translator for message streams
 \Fortress\MessageStream::setTranslator($translator);
 
@@ -30,7 +33,7 @@ echo "</pre>";
 $ms->resetMessageStream();
 
 // Load the request schema
-$schema = new Fortress\RequestSchema("fortress/schema/forms/register.json");
+$schema = new Fortress\RequestSchema("../fortress/schema/forms/register.json");
 
 $schema->addValidator("puppies", "required");
 
@@ -82,4 +85,3 @@ if (!yourFunctionHere($data)){
 }
 
 // If we've made it this far, success!
-?>

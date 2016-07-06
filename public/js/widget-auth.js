@@ -46,19 +46,14 @@ function authForm(box_id, options) {
 		$('#' + box_id).remove();
 	}
     
-    // If we are updating an existing auth rule
-    if (options['auth_id']) {
-        var data = {
-            box_id: box_id,
-            mode: "update"
-        };
+    var data = {
+        box_id: box_id
+    };
         
+    // Creating vs updating an existing auth rule
+    if (options['auth_id']) {
         var url = site['uri']['public'] + "/forms/groups/auth/a/" + options['auth_id'];
     } else {
-        var data = {
-            box_id: box_id
-        };
-        
         var url = site['uri']['public'] + "/forms/groups/g/" + options['owner_id'] + "/auth";  
     }
     
@@ -83,7 +78,7 @@ function authForm(box_id, options) {
         
 		// Link submission buttons
         ufFormSubmit(
-            $("form[name='auth']"),
+            $('#' + box_id).find("form"),
             validators,
             $("#form-alerts"),
             function(data, statusText, jqXHR) {
@@ -107,7 +102,7 @@ function deleteAuthDialog(box_id, rule_id, owner, hook){
 		box_title: "Delete Group Auth Rule",
 		confirm_message: "Are you sure you want to delete the rule for hook '" + hook + "' for group '" + owner + "'?",
 		confirm_button: "Yes, delete rule"
-	}
+	};
 	
 	// Generate the form
 	$.ajax({  
@@ -130,7 +125,7 @@ function deleteAuthDialog(box_id, rule_id, owner, hook){
             csrf_token = $("meta[name=csrf_token]").attr("content");
             var data = {
                 csrf_token: csrf_token
-            }
+            };
             
             $.ajax({  
               type: "POST",  

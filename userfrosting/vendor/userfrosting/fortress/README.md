@@ -2,9 +2,9 @@
 
 ### By Alex Weissman
 
-Copyright (c) 2015
+Copyright (c) 2015-2016
 
-A schema-driven system for whitelisting, sanitizing, and validating raw user input.
+A schema-driven system for whitelisting and validating raw user input.
 
 ## Introduction
 

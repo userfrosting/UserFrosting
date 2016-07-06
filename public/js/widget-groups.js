@@ -53,8 +53,7 @@ function groupForm(box_id, group_id) {
     if (group_id) {
         data = {
             box_id: box_id,
-            render: 'modal',
-            mode: "update"
+            render: 'modal'
         };
         
         url = site['uri']['public'] + "/forms/groups/g/" + group_id;
@@ -90,7 +89,7 @@ function groupForm(box_id, group_id) {
         
 		// Link submission buttons
         ufFormSubmit(
-            $("form[name='group']"),
+            $('#' + box_id).find("form"),
             validators,
             $("#form-alerts"),
             function(data, statusText, jqXHR) {
@@ -114,7 +113,7 @@ function deleteGroupDialog(box_id, group_id, name){
 		box_title: "Delete Group",
 		confirm_message: "Are you sure you want to delete the group " + name + "?",
 		confirm_button: "Yes, delete group"
-	}
+	};
 	
 	// Generate the form
 	$.ajax({  
@@ -138,7 +137,7 @@ function deleteGroupDialog(box_id, group_id, name){
             var data = {
                 group_id: group_id,
                 csrf_token: csrf_token
-            }
+            };
             
             $.ajax({  
               type: "POST",  

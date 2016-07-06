@@ -6,11 +6,19 @@
 
 There are a few common stumbling blocks that new users face when setting up UserFrosting for the first time.  If you are new to the current version of UserFrosting, please first look at the [troubleshooting page](http://www.userfrosting.com/troubleshooting).
 
-If you don't find what you're looking for in the troubleshooting page, then please check [existing issues](https://github.com/alexweissman/UserFrosting/issues?utf8=%E2%9C%93&q=is%3Aissue), both opened and closed.  Your question may have already been asked and answered before!
+If you don't find what you're looking for in the troubleshooting page, then please check the [wiki](https://github.com/userfrosting/UserFrosting/wiki) and [existing issues](https://github.com/alexweissman/UserFrosting/issues?utf8=%E2%9C%93&q=is%3Aissue), both opened and closed.  Your question may have already been asked and answered before!
 
-## Opening Issues
+You can also search for help on Stack Overflow.  In addition to the tags for the components that UF builds upon, such as [Slim](http://stackoverflow.com/questions/tagged/slim), [Twig](http://stackoverflow.com/questions/tagged/twig), [Eloquent](http://stackoverflow.com/questions/tagged/eloquent), [jQuery Validate](http://stackoverflow.com/questions/tagged/jquery-validate), [Select2](http://stackoverflow.com/questions/tagged/jquery-select2), there is now a [UserFrosting tag](http://stackoverflow.com/questions/tagged/userfrosting) as well.
 
-If you can't find what you need in the troubleshooting page, or in the existing issues, then you may open a new issue.  But first, please read the following:
+There are also tags for the utilities upon which UserFrosting depends, such as [Composer](http://stackoverflow.com/questions/tagged/composer-php) and [Git](http://stackoverflow.com/questions/tagged/git).
+
+## Asking for Help
+
+In general, the Github issue tracker should only be used for bug reports and feature requests.  If you're just having trouble getting something to work, you should ask on Stack Overflow instead. Tag your question with the `userfrosting` tag, and optionally with any tags specific to the relevant underlying technologies, such as `slim`, `twig`, `eloquent`, `composer`, etc.  You should also mention the version of UserFrosting that you are using.
+
+After posting a question on Stack Overflow, please [link to it in chat](https://gitter.im/userfrosting/UserFrosting).  This will ensure that more people see it, and provide a place where we can discuss and help clarify your question.
+
+On Github, Gitter, and Stack Overflow, please keep in mind the following:
 
 1. Remember that courtesy and proper grammar go a long way. Please take the time to craft a **precise, polite issue**. We will do our best to help, but remember that this is an open-source project - none of us are getting paid a salary to develop this project, or act as your personal support hotline :wink:
 

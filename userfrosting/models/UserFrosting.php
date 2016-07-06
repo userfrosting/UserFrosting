@@ -79,9 +79,24 @@ class UserFrosting extends \Slim\Slim {
                 return $this->logout(true);
             }
             
+            if ($e instanceof AccountDisabledException) {
+                $this->logout(false);
+                // Create a new session to store alerts
+                $this->startSession();
+                // Seems to be needed to create a new session as per http://stackoverflow.com/questions/19738422/destroying-old-session-making-new-but-php-still-refers-to-old-session
+                session_regenerate_id(true);
+                $this->setupServices($this->site->default_locale);
+                $this->alerts->addMessageTranslated('danger','ACCOUNT_DISABLED');
+                $this->redirect($this->urlFor('uri_home'));
+            }
+            
             if ($e instanceof AccountInvalidException) {
-                $controller = new AccountController($this);
-                return $this->logout(false);
+                $this->logout(false);
+                $this->startSession();
+                session_regenerate_id(true);
+                $this->setupServices($this->site->default_locale);                
+                $this->alerts->addMessageTranslated('danger','ACCOUNT_INVALID');
+                $this->redirect($this->urlFor('uri_home'));
             }
             
             if ($e instanceof AuthCompromisedException) {

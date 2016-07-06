@@ -170,6 +170,12 @@ class Notification {
                 $mail->Password =   $config['pass'];
             }
             
+            // Send mail as sendmail, if desired
+            if (static::$app->config('mail') == 'sendmail'){
+                $config = static::$app->config('sendmail');
+                $mail->isSendmail(true);
+            }
+            
             // Try to send the mail.  Will throw an exception on failure.
             $mail->send();
             

@@ -576,13 +576,13 @@ class UserController extends \UserFrosting\BaseController {
 
         // Check authorization for submitted fields, if the value has been changed
         foreach ($post as $name => $value) {
-            if ($name == "groups" || (isset($target_user->$name) && $post[$name] != $target_user->$name)){
+            if ($name == "groups" || ($target_user->attributeExists($name) && $post[$name] != $target_user->$name)){
                 // Check authorization
                 if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $target_user, 'property' => $name])){
                     $ms->addMessageTranslated("danger", "ACCESS_DENIED");
                     $this->_app->halt(403);
                 }
-            } else if (!isset($target_user->$name)) {
+            } else if (!$target_user->attributeExists($name)) {
                 $ms->addMessageTranslated("danger", "NO_DATA");
                 $this->_app->halt(400);
             }

@@ -10,7 +10,11 @@ SetEnv SERVER_TYPE Apache
     SetEnv HTTP_MOD_REWRITE On
 
     RewriteEngine On
-    
+
+    # Uncomment the next two lines to forward all HTTP to HTTPS
+    #RewriteCond %{HTTPS} !=on
+    #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
     # Forward all www. to non-www.  Remove this rule if you want both available.
     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
     RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
