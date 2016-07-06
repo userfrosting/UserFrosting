@@ -35,7 +35,9 @@ class BaseController {
      * Request type: GET
      */
     public function page404(){
-        $this->_app->render('errors/404.twig');
+		$twig = $this->_app->view()->getEnvironment(); 
+		$this->_app->applyHook("UF.BaseController.page404"); 
+        $this->_app->halt(404,$twig->render('errors/404.twig', $twig->getGlobals())); 
     }
 
     /**
