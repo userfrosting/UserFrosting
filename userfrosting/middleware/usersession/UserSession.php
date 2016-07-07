@@ -91,6 +91,8 @@ class UserSession extends \Slim\Middleware {
             // If we can't connect to the DB, then we can't create an authenticated user.  That's ok if we're in installation mode.
             error_log("Unable to authenticate user because the database is not yet initialized, invalid, or inaccessible.  Falling back to guest user.");
             error_log($e->getTraceAsString());
+            $controller = new AccountController($this->app);
+            return $controller->pageDatabaseError();
         }
     }
 }
