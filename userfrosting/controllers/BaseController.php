@@ -48,7 +48,7 @@ class BaseController {
      */
     public function pageDatabaseError(){
 		$twig = $this->_app->view()->getEnvironment();
-		$this->_app->halt(500,$twig->render('errors/database.twig', $twig->getGlobals()));
+		$this->_app->halt(503,$twig->render('errors/database.twig', $twig->getGlobals()));
     }
 
     /**
