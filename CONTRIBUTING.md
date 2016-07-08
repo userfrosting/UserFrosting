@@ -31,3 +31,13 @@ On Github, Gitter, and Stack Overflow, please keep in mind the following:
 - Frontend (Javascript-related) errors: in your browser's Javascript console. This can be accessed from "Tools->Web Developer" menu in Firefox, or "More tools->Javascript Console" in Chrome. For help with other browsers, please Google "where is the javascript console in ____".
 
 You should also try testing your code in a local development environment, to separate **code-related** issues from **server** issues.  In general, we recommend that you install a local development server on your computer, rather than [testing your code directly on the production server](https://pbs.twimg.com/media/BxfENwpIYAAcHqQ.png).  This means you can test your code directly on your own computer, making development faster and without the risk of exposing sensitive information to the public.  We recommend installing [XAMPP](https://www.apachefriends.org) if you don't already have a local server set up.
+
+# Guidelines for Contributing to UserFrosting
+
+## Pull Requests
+
+When making a pull request, set your "base branch" to the latest hotfix branch being worked on. This will allow us to keep track of which version every change belongs to, which is useful when tracking down other users' issues.
+
+## ChangeLog
+
+When submitting code, make sure to add feature/major changes to `README.md` and **all** changes to `CHANGELOG.md`.

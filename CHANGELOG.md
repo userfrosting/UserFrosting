@@ -3,6 +3,8 @@
 ## v0.3.1.16
 
 - Fixed comment reference to \Fortress\JqueryValidationAdaptor
+- CONTRIBUTING.md - Added note about proper Pull Requests
+- French language file fixes (#565) (@lcharette)
 
 ## v0.3.1.15
 
