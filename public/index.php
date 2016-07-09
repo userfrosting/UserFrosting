@@ -413,4 +413,7 @@
         }
     });
     
+    /********** HOOKS **********/
+    $app->applyHook("defineRoutes");
+    
     $app->run();

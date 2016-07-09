@@ -272,10 +272,18 @@ $app->hook('includes.js.register', function () use ($app){
 }, 1);
 
 /** Plugins */
-// Run initialization scripts for plugins
+// Run initialization scripts for plugins and define hook for routes
 $var_plugins = $app->site->getPlugins();
 foreach($var_plugins as $var_plugin) {
     require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
+
+	//Setup routes
+    $app->hook('defineRoutes', function () use ($app, $var_plugin){
+	    $routes = glob($app->config('plugins.path')."/".$var_plugin."/routes/*.php");
+        foreach ($routes as $route){
+            include_once($app->config('plugins.path')."/".$var_plugin."/routes/".basename($route));
+        }
+	}, 1);
 }
 
 // Hook for core and plugins to register includes

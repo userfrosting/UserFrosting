@@ -26,6 +26,7 @@ class UserFrosting extends \Slim\Slim {
         $this->user->id = $this->config('user_id_guest');
         $this->setupServices($this->site->default_locale);
         $this->setupErrorHandling();
+        $this->applyHook("setupGuestEnvironment");
     }
         
     /**
@@ -35,6 +36,7 @@ class UserFrosting extends \Slim\Slim {
         //error_log("Setting up authenticated user environment");
         $this->setupServices($this->user->locale);
         $this->setupTwigUserVariables();
+        $this->applyHook("setupAuthenticatedEnvironment");
     }
     
     /**
@@ -59,7 +61,9 @@ class UserFrosting extends \Slim\Slim {
         \Fortress\MessageStream::setTranslator($this->translator);
         
         // Once we have the translator, we can set up the client-side validation adapter too
-        $this->jsValidator = new \Fortress\JqueryValidationAdapter($this->translator);        
+        $this->jsValidator = new \Fortress\JqueryValidationAdapter($this->translator);
+        
+        $this->applyHook("setupServices");        
     }
     
     /**
