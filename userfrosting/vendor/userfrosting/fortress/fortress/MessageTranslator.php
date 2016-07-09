@@ -29,7 +29,7 @@ class MessageTranslator {
      * @param string $path The full path to the translation file.
      */
     public function setTranslationTable($path){
-        $this->_translation_table = include($path);
+        $this->_translation_table = array_merge($this->_translation_table, include($path));
     }
 
     /**
