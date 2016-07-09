@@ -1,5 +1,13 @@
 # Change Log
 
+## v0.3.1.16
+
+- Fixed comment reference to \Fortress\JqueryValidationAdaptor
+- CONTRIBUTING.md - Added note about proper Pull Requests
+- French language file fixes (#565) (lcharette)
+- Added HTTP status codes to 404 errors and database errors (frostbitten)
+- Changed database errors to use BaseController instead of DatabaseController (frostbitten)
+
 ## v0.3.1.15
 
 - Fix unattached submitHandler bug in Group and Auth edit interfaces (#465)
