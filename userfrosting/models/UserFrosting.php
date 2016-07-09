@@ -204,6 +204,12 @@ class UserFrosting extends \Slim\Slim {
         
         $twig->addFunction($function_include_top_js);
         
+        $function_apply_hook = new \Twig_SimpleFunction('applyHook', function ($hook) {
+           // Return array of template file to include at this hook
+           return $this->schema->getTwigHook($hook);
+        });
+        $twig->addFunction($function_apply_hook);
+        
         /* TODO: enable Twig caching?
         $view = $app->view();
         $view->parserOptions = array(

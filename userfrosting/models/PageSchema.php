@@ -106,6 +106,30 @@ class PageSchema {
             throw new \Exception("'position' must be either 'top' or 'bottom'.");
         }
     }
+    
+    /**
+     * Register a template file to include at a specific hook location.
+     *
+     * The path should be the relative path of the file with respect to the theme directory of your website / plugin.
+     * You should use a group name of "common" if you wish to register the JS resource for all page groups.
+     * @param string $hook the name of the hook to register this resource with.
+     * @param string $path the path, relative to the theme directory of your website / plugin, where the file is located.
+     * @throws Exception 'hook' undefined.
+     * @return void
+     */
+    public function registerTwigHook($hook = "", $path = ""){
+       	if ($hook == "")
+	    	throw new \Exception("'hook' undefined.");
+	    	
+	    if ($path == "")
+	    	throw new \Exception("'path' must be defined.");
+	    
+        if (!isset($this->_twig_hook[$hook]))
+            $this->_twig_hook[$hook] = [];
+        
+        if (!in_array($path, $this->_twig_hook[$hook]))
+            $this->_twig_hook[$hook][] = $path;
+    } 
 
     /**
      * Get an array containing the full paths to all CSS includes to be used for a specified page group.
@@ -200,6 +224,25 @@ class PageSchema {
             }
         }
         return $includes_parsed;
+    }
+
+    /**
+     * Get an array containing the full paths to all template includes to be included for a specified hook.
+     *
+     * @param string $hook the name of the hook to register this resource with. Will automatically include any files that were assigned for this hook.  Defaults to "".
+     * @return array an array containing the full paths of the template files to be included.
+     */    
+    public function getTwigHook($hook = "") {
+       	if ($hook == "")
+	    	return [];
+       
+        // Check if the specified group actually exists, otherwise use nothing.
+        if (isset($this->_twig_hook[$hook]))
+            $return = $this->_twig_hook[$hook];
+        else {
+            $return = [];
+        }
+        return $return;
     }
     
     /**

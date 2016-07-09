@@ -51,9 +51,12 @@
         <div id="wrapper">
             {% include 'components/dashboard/nav-account.twig' %}
             <div id="page-wrapper">
+                {% for item in applyHook("content_before") %}{% include item %}{% endfor %}
                 {% include 'components/common/alerts.twig' %}
                 
                 {% block content %}{% endblock %}
+                
+                {% for item in applyHook("content_after") %}{% include item %}{% endfor %}
                 
                 <footer>
                   <div class="container-fluid">
