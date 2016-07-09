@@ -142,6 +142,9 @@ class UserFrosting extends \Slim\Slim {
             // Set path to user's theme, prioritizing over any other themes.
             $loader = $twig->getLoader();
             $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());
+            
+            //Apply hook for plugin template
+            $this->applyHook("setupThemePathUser");
         }
     }
     
