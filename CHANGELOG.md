@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.1.17
+
+- 
+
 ## v0.3.1.16
 
 - Fixed comment reference to \Fortress\JqueryValidationAdaptor
