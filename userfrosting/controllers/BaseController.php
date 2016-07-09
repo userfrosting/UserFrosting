@@ -36,7 +36,7 @@ class BaseController {
      */
     public function page404(){
 		$twig = $this->_app->view()->getEnvironment();
-		$this->_app->halt(404,$twig->render('errors/404.twig', $twig->getGlobals())); 
+		$this->_app->halt(404,$twig->render('errors/404.twig'));
     }
 
     /**
@@ -48,7 +48,7 @@ class BaseController {
      */
     public function pageDatabaseError(){
 		$twig = $this->_app->view()->getEnvironment();
-		$this->_app->halt(503,$twig->render('errors/database.twig', $twig->getGlobals()));
+		$this->_app->halt(503,$twig->render('errors/database.twig'));
     }
 
     /**
