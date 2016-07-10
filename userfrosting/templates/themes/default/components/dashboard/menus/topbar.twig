@@ -195,6 +195,7 @@
             <i class="{{user.icon}} fa-fw"></i> {{user.user_name}} <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
+            {% for item in applyHook("nav_userdropdown") %}{% include item %}{% endfor %}
             <li><a href="{{site.uri.public}}/account/settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
             </li>
             <li class="divider"></li>
