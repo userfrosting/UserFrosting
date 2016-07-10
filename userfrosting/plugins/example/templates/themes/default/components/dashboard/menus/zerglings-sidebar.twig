@@ -1,0 +1,5 @@
+{% if checkAccess('uri_group_users', { ('primary_group_id') : 4 }) %}
+<li>
+    <a href="{{site.uri.public}}/users/zerglings"><i class="sc sc-zergling fa-fw"></i> Zerglings</a>
+</li>
+{% endif %}
