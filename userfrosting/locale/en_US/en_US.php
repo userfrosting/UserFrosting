@@ -11,7 +11,7 @@
  */
 
 /*
-{{name}} - Dymamic markers which are replaced at run time by the relevant index.
+{{name}} - Dynamic markers which are replaced at run time by the relevant index.
 */
 
 $lang = array();
@@ -52,7 +52,8 @@ $lang = array_merge($lang,array(
     "ACCOUNT_REGISTRATION_BROKEN" => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
 	"ACCOUNT_REGISTRATION_LOGOUT" => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
 	"ACCOUNT_INACTIVE" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
-	"ACCOUNT_DISABLED" => "This account has been disabled. Please contact us for more information.",
+	"ACCOUNT_INVALID" => "This account does not exist. It may have been deleted.  Please contact us for more information.",
+    "ACCOUNT_DISABLED" => "This account has been disabled. Please contact us for more information.",
 	"ACCOUNT_USER_CHAR_LIMIT" => "Your username must be between {{min}} and {{max}} characters in length.",
 	"ACCOUNT_USER_INVALID_CHARACTERS" => "Username can only include alpha-numeric characters",
     "ACCOUNT_USER_NO_LEAD_WS" => "Username cannot begin with whitespace",
@@ -132,8 +133,8 @@ $lang = array_merge($lang,array(
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Couldn't update password",
 	"FORGOTPASS_REQUEST_CANNED" => "Lost password request cancelled",
 	"FORGOTPASS_REQUEST_EXISTS" => "There is already an outstanding lost password request on this account",
-	"FORGOTPASS_REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",
-	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"
+	"FORGOTPASS_REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",     
+	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"   
 ));
 
 // Mail
