@@ -14,8 +14,9 @@ userfrosting/config-userfrosting.php
 public/js/min/*
 public/css/min/*
 
-# Ignore personal config files (dev)
-app/config/development.php
+# Ignore v4 directories in v0.3.x
+app/*
+build/*
 
 # Ignore composer.lock
 userfrosting/composer.lock
