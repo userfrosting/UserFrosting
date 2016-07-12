@@ -16,9 +16,9 @@ There are also tags for the utilities upon which UserFrosting depends, such as [
 
 In general, the Github issue tracker should only be used for bug reports and feature requests.  If you're just having trouble getting something to work, you should ask on Stack Overflow instead. Tag your question with the `userfrosting` tag, and optionally with any tags specific to the relevant underlying technologies, such as `slim`, `twig`, `eloquent`, `composer`, etc.  You should also mention the version of UserFrosting that you are using.
 
-After posting a question on Stack Overflow, please [link to it in chat](https://gitter.im/userfrosting/UserFrosting).  This will ensure that more people see it, and provide a place where we can discuss and help clarify your question.
+After posting a question on Stack Overflow, please [link to it in chat](https://chat.userfrosting.com/).  This will ensure that more people see it, and provide a place where we can discuss and help clarify your question.
 
-On Github, Gitter, and Stack Overflow, please keep in mind the following:
+On Github, UserFrosting Chat, and Stack Overflow, please keep in mind the following:
 
 1. Remember that courtesy and proper grammar go a long way. Please take the time to craft a **precise, polite issue**. We will do our best to help, but remember that this is an open-source project - none of us are getting paid a salary to develop this project, or act as your personal support hotline :wink:
 
