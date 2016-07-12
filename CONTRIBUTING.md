@@ -36,7 +36,7 @@ You should also try testing your code in a local development environment, to sep
 
 ## Pull Requests
 
-When making a pull request, set your "base branch" to the latest hotfix branch being worked on. This will allow us to keep track of which version every change belongs to, which is useful when tracking down other users' issues.
+When making a pull request, set your "base branch" to the `hotfix-development` branch. Accepted pull requests will be merged into `master` in batches with a new hotfix number as needed. This will allow us to keep track of which version number every change belongs to, which is useful when tracking down other users' issues.
 
 ## ChangeLog
 
