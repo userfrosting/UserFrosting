@@ -25,10 +25,10 @@
                 {% for plugin_name, plugin in settings %}
                     {% for name, setting in plugin %} 
                         <div class="form-group">
-                            <label for="input_{{name}}" class="col-sm-2 control-label">{{setting.label}}</label>
-                            <div class="col-sm-10">
+                            <label for="input_{{name}}" class="col-xs-4 col-sm-3 col-lg-2 control-label">{{setting.label}}</label>
+                            <div class="col-xs-8 col-sm-9 col-lg-10">
                                 {% if (setting.type == 'text') %}
-                                    <input type='text' id="input_{{name}}" class="form-control" name="{{plugin_name}}[{{name}}]" value='{{setting.value}}' style="width: 50%;"/>
+                                    <input type='text' id="input_{{name}}" class="form-control" name="{{plugin_name}}[{{name}}]" value='{{setting.value}}'>
                                 {% elseif (setting.type == 'select') %}
                                     <select id="input_{{name}}" class='form-control select2' name="{{plugin_name}}[{{name}}]">
                                         {% for option, label in setting.options %}
@@ -56,10 +56,8 @@
                 </div>
                 <div class='panel-body'>
                     {% for name, value in info %}
-                        <p class="h6">{{name}}</p>                  
-                        <div class="well well-sm">
-                            {{value}}
-                        </div>
+                        <p class="h6">{{name}}</p>
+                            <pre><code>{{value}}</code></pre>
                     {% endfor %}
                 </div>
                 <div class="panel-footer">
