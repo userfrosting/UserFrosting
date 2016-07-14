@@ -2,8 +2,8 @@
 
 {# Set page properties (page.*) here. #}
 {% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template,
+    but BEFORE the page itself is rendered. #}
     {% set page = page | merge({
         "title"       : "Installation | Register Master Account",
         "description" : "Set up the master account for your installation of UserFrosting"
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-            </div>		  
+            </div>
             <div class="row">
                 <div class="col-xs-12">
                     <div class="form-group">
@@ -104,15 +104,15 @@
             <div class="collapse">
               <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
               <input name="spiderbro" id="spiderbro" value="http://"/>
-            </div>          
+            </div>
         </form>
-      </div>	
+      </div>
     </div> <!-- /container -->
 {% endblock %}
 {% block page_scripts %}
     <script>
-        $(document).ready(function() {           
-            // Process form 
+        $(document).ready(function() {
+            // Process form
             ufFormSubmit(
                 $("form[name='register']"),
                 {{ validators | raw }},
@@ -122,6 +122,6 @@
                     window.location.replace(site['uri']['public'] + "/account/login");
                 }
             );
-        });     
+        });
     </script>
 {% endblock %}
