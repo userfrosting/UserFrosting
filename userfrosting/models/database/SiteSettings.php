@@ -407,6 +407,9 @@ class SiteSettings extends UFModel {
             if (!ini_get("log_errors")){
                 $path = ini_get('error_log');
                 $messages = ["Error logging appears to be disabled.  Please check your php.ini file."];
+            } else if (!file_exists(ini_get('error_log'))){
+                $path = ini_get('error_log');
+                $messages = ["Log file not found. If you haven't generated any errors, this is fine. If you were expecting to see errors here, please check your php.ini file."];
             } else {
                 $path = ini_get('error_log');
                 @$file = file($path);
