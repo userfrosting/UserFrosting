@@ -2,7 +2,7 @@
 
 ## v0.3.1.18
 
--
+- Add check for logging being enabled but log file not existing yet
 
 ## v0.3.1.17
 
