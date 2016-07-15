@@ -3,6 +3,10 @@
 ## v0.3.1.17
 
 - Fix occasional bug when end-of-file is reached on log file before requested number of lines is reached
+- Roll back database connection checking to fix installer routines (frostbitten)
+- UI fixes for smaller screens (frostbitten)
+- Update Gitter references to Rocket.chat
+- Clarify hotfix branch procedure for contributions
 
 ## v0.3.1.16
 
