@@ -11,6 +11,7 @@ require_once 'models/auth/password.php';
 
 // This if-block just checks that config-userfrosting.php exists
 if (!file_exists(__DIR__ . "/config-userfrosting.php")){
+	http_response_code(503);
     echo "<h2>We can't seem to find config-userfrosting.php!  You should rename the file config-userfrosting-example.php to config-userfrosting.php, and then fill in the configuration details for your database and server.  For more information, please see the <a href='http://www.userfrosting.com/installation/#install-userfrosting'>installation instructions</a>.</h2><br>";
     exit;
 }
@@ -146,7 +147,7 @@ $setting_values = [
         'guest_theme' => 'default',
         'minify_css' => '0',
         'minify_js' => '0',
-        'version' => '0.3.1.16',
+        'version' => '0.3.1.17',
         'author' => 'Alex Weissman',
         'show_terms_on_register' => '1',
         'site_location' => 'The State of Indiana'

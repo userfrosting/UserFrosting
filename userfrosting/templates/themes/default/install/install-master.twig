@@ -2,8 +2,8 @@
 
 {# Set page properties (page.*) here. #}
 {% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template,
+    but BEFORE the page itself is rendered. #}
     {% set page = page | merge({
         "title"       : "Installation | Register Master Account",
         "description" : "Set up the master account for your installation of UserFrosting"
@@ -21,7 +21,7 @@
         </div>
         <form name="register" method="post" action="{{site.uri.public}}/install/master" class="form-horizontal">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="form-group">
                         <label class="control-label  col-sm-4">Username</label>
                         <div class="col-sm-8">
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="form-group">
                         <label class="control-label col-sm-4">Display Name</label>
                         <div class="col-sm-8">
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="form-group">
                         <label class="control-label col-sm-4">Email</label>
                         <div class="col-sm-8">
@@ -58,9 +58,9 @@
                         </div>
                     </div>
                 </div>
-            </div>		  
+            </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="form-group">
                         <label class="control-label col-sm-4">Password</label>
                         <div class="col-sm-8">
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="form-group">
                         <label class="control-label col-sm-4">Confirm password</label>
                         <div class="col-sm-8">
@@ -86,7 +86,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-xs-12">
                     <div class="form-group">
                         <label class="control-label col-sm-4">Configuration Token</label>
                         <div class="col-sm-8">
@@ -104,15 +104,15 @@
             <div class="collapse">
               <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
               <input name="spiderbro" id="spiderbro" value="http://"/>
-            </div>          
+            </div>
         </form>
-      </div>	
+      </div>
     </div> <!-- /container -->
 {% endblock %}
 {% block page_scripts %}
     <script>
-        $(document).ready(function() {           
-            // Process form 
+        $(document).ready(function() {
+            // Process form
             ufFormSubmit(
                 $("form[name='register']"),
                 {{ validators | raw }},
@@ -122,6 +122,6 @@
                     window.location.replace(site['uri']['public'] + "/account/login");
                 }
             );
-        });     
+        });
     </script>
 {% endblock %}
