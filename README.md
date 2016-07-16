@@ -21,4 +21,4 @@ To build the API documentation, install [ApiGen]() globally and then run:
 
 `apigen generate --source userfrosting --destination api --exclude *vendor*,*models/auth/password.php* --template-theme "bootstrap"`
 
-from inside the main `userfrosting` project directory.
+from inside the main `userfrosting` project directory. 
