@@ -19,6 +19,9 @@
     $ufServicesProvider = new UserFrostingServicesProvider();
     $ufServicesProvider->register($container);
     
+    // Set up the locator
+    $locator = $container->get('locator');
+    
     // Feel free to register any additional services here
     
     $config = $container->get('config');
@@ -29,7 +32,8 @@
     $container['db'];
     
     // Finally, include all defined routes in route directory
-    $route_files = glob(UserFrosting\APP_DIR . '/' . UserFrosting\CORE_DIR_NAME . '/' . UserFrosting\ROUTE_DIR_NAME . "/*.php");
+    $coreRoutesDir = $locator->findResource('routes://core', true, true);
+    $route_files = glob($coreRoutesDir . '/*.php');
     foreach ($route_files as $route_file){
         require_once $route_file;
     }

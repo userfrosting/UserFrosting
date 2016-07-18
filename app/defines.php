@@ -20,10 +20,12 @@ define('UserFrosting\ROOT_DIR', realpath(__DIR__ . '/..'));
 // Composer's vendor directory
 define('UserFrosting\VENDOR_DIR', APP_DIR . '/vendor');
 
+define('UserFrosting\APP_DIR_NAME', basename(__DIR__));
 define('UserFrosting\ASSET_DIR_NAME', 'assets');
 define('UserFrosting\BUILD_DIR_NAME', 'build');
 define('UserFrosting\CORE_DIR_NAME', 'core');
 define('UserFrosting\CACHE_DIR_NAME', 'cache');
+define('UserFrosting\SESSION_DIR_NAME', 'sessions');
 define('UserFrosting\CONFIG_DIR_NAME', 'config');
 define('UserFrosting\LOCALE_DIR_NAME', 'locale');
 define('UserFrosting\LOG_DIR_NAME', 'logs');

@@ -17,14 +17,17 @@ class CheckEnvironment
 {
 
     protected $view;
+    
+    protected $locator;
 
     protected $results = array();
 
     protected $check;
 
-    public function __construct($view)
+    public function __construct($view, $locator)
     {
         $this->view = $view;
+        $this->locator = $locator;
     }
     
     /**
@@ -216,9 +219,9 @@ class CheckEnvironment
         $problemsFound = false;
     
         $shouldBeWriteable = [
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\CACHE_DIR_NAME => true,
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\LOG_DIR_NAME => true,
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME => false,
+            $this->locator->findResource('cache://') => true,
+            $this->locator->findResource('log://') => true,
+            $this->locator->findResource('core://') => false,
             \UserFrosting\VENDOR_DIR => false
         ];    
 

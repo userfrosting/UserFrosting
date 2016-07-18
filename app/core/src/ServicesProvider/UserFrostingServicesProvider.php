@@ -71,7 +71,7 @@ class UserFrostingServicesProvider
             
                 // TODO: add search paths for config files in third-party packages
                 $config->setPaths([
-                    \UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\CONFIG_DIR_NAME
+                    'config://core'
                 ]);
                 
                 // Get configuration mode from environment
@@ -120,7 +120,7 @@ class UserFrostingServicesProvider
                 
                 
                 //$fs = new FileSystem;
-                //$handler = new FileSessionHandler($fs, \UserFrosting\APP_DIR . "/sessions");
+                //$handler = new FileSessionHandler($fs, 'session://');
                 
                 
                 $connection = $c->get('db')->connection();
@@ -163,8 +163,8 @@ class UserFrostingServicesProvider
                 
                 // Load asset schema
                 $as = new AssetBundleSchema();
-                $as->loadRawSchemaFile(\UserFrosting\ROOT_DIR . '/' . \UserFrosting\BUILD_DIR_NAME . '/bundle.config.json');
-                $as->loadCompiledSchemaFile(\UserFrosting\ROOT_DIR . '/' . \UserFrosting\BUILD_DIR_NAME . '/bundle.result.json');
+                $as->loadRawSchemaFile($c->get('locator')->findResource('build://bundle.config.json', true, true));
+                $as->loadCompiledSchemaFile($c->get('locator')->findResource('build://bundle.result.json', true, true));
                 
                 $am->setBundleSchema($as);
                 
@@ -209,9 +209,9 @@ class UserFrostingServicesProvider
                 $translator = new MessageTranslator();
                 
                 // Set the translation path and default language path.
-                // TODO: we should rewrite MessageTranslator for extendability.  So, we would set a default translation table and then recursively merge in the target language table.
-                $translator->setTranslationTable(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\LOCALE_DIR_NAME . "/en_US.php");
-                $translator->setDefaultTable(\UserFrosting\APP_DIR . '/' .  \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\LOCALE_DIR_NAME . "/en_US.php");
+                // TODO: we should rewrite MessageTranslator for extendability.  So, we would set a default translation table and then recursively merge in the target language table using something like `addTranslationTable`.
+                $translator->setTranslationTable('locale://core/en_US.php');
+                $translator->setDefaultTable('locale://core/en_US.php');
                 
                 // Register translator with MessageStream
                 \UserFrosting\MessageStream::setTranslator($translator);
@@ -223,19 +223,41 @@ class UserFrostingServicesProvider
         if (!isset($container['locator'])){        
             // Initialize locator
             $container['locator'] = function ($c) {
-                $locator = new UniformResourceLocator(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME);
-                
+                $locator = new UniformResourceLocator(\UserFrosting\ROOT_DIR);
+                    
                 // TODO: set in config or defines.php
-                $locator->addPath('core', '', '');                
-                $locator->addPath('assets', '', \UserFrosting\ASSET_DIR_NAME);
-                $locator->addPath('schema', '', \UserFrosting\SCHEMA_DIR_NAME);
+                $locator->addPath('build', '', \UserFrosting\BUILD_DIR_NAME);
+                $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);    
+                $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
+                $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
+                
+                $coreDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CORE_DIR_NAME;         
+                
+                $locator->addPath('core', '', $coreDirFragment);
+                $locator->addPath('assets', '', $coreDirFragment . '/' . \UserFrosting\ASSET_DIR_NAME);
+                $locator->addPath('schema', '', $coreDirFragment . '/' . \UserFrosting\SCHEMA_DIR_NAME);
+                
+                // These are streams that can be subnavigated to core or specific sprinkles (e.g. "templates://core/")
+                $locator->addPath('templates', 'core', $coreDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
+                $locator->addPath('locale', 'core', $coreDirFragment . '/' . \UserFrosting\LOCALE_DIR_NAME);
+                $locator->addPath('config', 'core', $coreDirFragment . '/' . \UserFrosting\CONFIG_DIR_NAME);
+                $locator->addPath('routes', 'core', $coreDirFragment . '/' . \UserFrosting\ROUTE_DIR_NAME);
+                
                 
                 // Use locator to initialize streams
                 ReadOnlyStream::setLocator($locator);
                 $sb = new StreamBuilder([
+                    'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
                     'core' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                    'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                    'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                    'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
                     'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                    'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
+                    'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                    'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                    'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                    'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                    'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
                 ]);
                 
                 return $locator;
@@ -245,7 +267,7 @@ class UserFrostingServicesProvider
         if (!isset($container['view'])){        
             // Register Twig component on Slim container
             $container['view'] = function ($container) {
-                $view = new \Slim\Views\Twig(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\TEMPLATE_DIR_NAME, [
+                $view = new \Slim\Views\Twig('templates://core', [
                     //'cache' => ''
                 ]);
                 
@@ -300,14 +322,17 @@ class UserFrostingServicesProvider
         // Error logging with Monolog
         $container['errorLogger'] = function ($c) {
             $log = new Logger('errors');
-            $handler = new StreamHandler(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME . '/errors.log', Logger::WARNING);
+            
+            $log_file = $c->get('locator')->findResource('log://errors.log', true, true);
+            
+            $handler = new StreamHandler($log_file, Logger::WARNING);
             $log->pushHandler($handler);
             return $log;
         };
         
         // Check environment middleware
         $container['checkEnvironment'] = function ($c) {
-            $checkEnvironment = new CheckEnvironment($c->get('view'));
+            $checkEnvironment = new CheckEnvironment($c->get('view'), $c->get('locator'));
             return $checkEnvironment;
         };        
     }
