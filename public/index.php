@@ -32,10 +32,12 @@
     $container['db'];
     
     // Finally, include all defined routes in route directory
-    $coreRoutesDir = $locator->findResource('routes://core', true, true);
-    $route_files = glob($coreRoutesDir . '/*.php');
-    foreach ($route_files as $route_file){
-        require_once $route_file;
+    $routePaths = $locator->findResources('routes://', true, true);
+    foreach ($routePaths as $path) {
+        $routeFiles = glob($path . '/*.php');
+        foreach ($routeFiles as $routeFile){
+            require_once $routeFile;
+        }
     }
     
     $app->run();

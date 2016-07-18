@@ -33,3 +33,4 @@ define('UserFrosting\ROUTE_DIR_NAME', 'routes');
 define('UserFrosting\SCHEMA_DIR_NAME', 'schema');
 define('UserFrosting\SRC_DIR_NAME', 'src');
 define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');
+define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
