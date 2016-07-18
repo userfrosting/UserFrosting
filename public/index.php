@@ -31,8 +31,8 @@
     
     $container['db'];
     
-    // Finally, include all defined routes in route directory
-    $routePaths = $locator->findResources('routes://', true, true);
+    // Finally, include all defined routes in route directory.  Include them in reverse order to allow higher priority routes to override lower priority.
+    $routePaths = array_reverse($locator->findResources('routes://', true, true));
     foreach ($routePaths as $path) {
         $routeFiles = glob($path . '/*.php');
         foreach ($routeFiles as $routeFile){

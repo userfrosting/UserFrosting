@@ -19,7 +19,7 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 
 /**
  * A simple API extension for DateInterval.
- * The implemenation provides helpers to handle weeks but only days are saved.
+ * The implementation provides helpers to handle weeks but only days are saved.
  * Weeks are calculated based on the total days of the current instance.
  *
  * @property int $years Total years of the current interval.
@@ -29,9 +29,8 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
  * @property int $hours Total hours of the current interval.
  * @property int $minutes Total minutes of the current interval.
  * @property int $seconds Total seconds of the current interval.
- *
- * @property-read integer $dayzExcludeWeeks Total days remaining in the final week of the current instance (days % 7).
- * @property-read integer $daysExcludeWeeks alias of dayzExcludeWeeks
+ * @property-read int $dayzExcludeWeeks Total days remaining in the final week of the current instance (days % 7).
+ * @property-read int $daysExcludeWeeks alias of dayzExcludeWeeks
  *
  * @method static CarbonInterval years($years = 1) Create instance specifying a number of years.
  * @method static CarbonInterval year($years = 1) Alias for years()
@@ -81,7 +80,7 @@ class CarbonInterval extends DateInterval
     /**
      * A translator to ... er ... translate stuff
      *
-     * @var TranslatorInterface
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected static $translator;
 
@@ -221,14 +220,14 @@ class CarbonInterval extends DateInterval
      *
      * @param DateInterval $di
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return static
      */
     public static function instance(DateInterval $di)
     {
         if (static::wasCreatedFromDiff($di)) {
-            throw new InvalidArgumentException("Can not instance a DateInterval object created from DateTime::diff().");
+            throw new InvalidArgumentException('Can not instance a DateInterval object created from DateTime::diff().');
         }
 
         $instance = new static($di->y, $di->m, 0, $di->d, $di->h, $di->i, $di->s);
@@ -243,9 +242,9 @@ class CarbonInterval extends DateInterval
     ///////////////////////////////////////////////////////////////////
 
     /**
-     * Intialize the translator instance if necessary.
+     * Initialize the translator instance if necessary.
      *
-     * @return TranslatorInterface
+     * @return \Symfony\Component\Translation\TranslatorInterface
      */
     protected static function translator()
     {
@@ -261,7 +260,7 @@ class CarbonInterval extends DateInterval
     /**
      * Get the translator instance in use
      *
-     * @return TranslatorInterface
+     * @return \Symfony\Component\Translation\TranslatorInterface
      */
     public static function getTranslator()
     {
@@ -310,7 +309,7 @@ class CarbonInterval extends DateInterval
      *
      * @param string $name
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      *
      * @return int
      */
@@ -336,7 +335,7 @@ class CarbonInterval extends DateInterval
                 return $this->s;
 
             case 'weeks':
-                return (int)floor($this->d / Carbon::DAYS_PER_WEEK);
+                return (int) floor($this->d / Carbon::DAYS_PER_WEEK);
 
             case 'daysExcludeWeeks':
             case 'dayzExcludeWeeks':
@@ -353,7 +352,7 @@ class CarbonInterval extends DateInterval
      * @param string $name
      * @param int    $val
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __set($name, $val)
     {
@@ -508,16 +507,51 @@ class CarbonInterval extends DateInterval
         $sign = $interval->invert === 1 ? -1 : 1;
 
         if (static::wasCreatedFromDiff($interval)) {
-            $this->dayz = $this->dayz + $interval->days * $sign;
+            $this->dayz += $interval->days * $sign;
         } else {
-            $this->years = $this->years + $interval->y * $sign;
-            $this->months = $this->months + $interval->m * $sign;
-            $this->dayz = $this->dayz + $interval->d * $sign;
-            $this->hours = $this->hours + $interval->h * $sign;
-            $this->minutes = $this->minutes + $interval->i * $sign;
-            $this->seconds = $this->seconds + $interval->s * $sign;
+            $this->years += $interval->y * $sign;
+            $this->months += $interval->m * $sign;
+            $this->dayz += $interval->d * $sign;
+            $this->hours += $interval->h * $sign;
+            $this->minutes += $interval->i * $sign;
+            $this->seconds += $interval->s * $sign;
         }
 
         return $this;
+    }
+
+    /**
+     * Get the interval_spec string
+     *
+     * @return string
+     */
+    public function spec()
+    {
+        $date = array_filter(array(
+            static::PERIOD_YEARS => $this->y,
+            static::PERIOD_MONTHS => $this->m,
+            static::PERIOD_DAYS => $this->d,
+        ));
+
+        $time = array_filter(array(
+            static::PERIOD_HOURS => $this->h,
+            static::PERIOD_MINUTES => $this->i,
+            static::PERIOD_SECONDS => $this->s,
+        ));
+
+        $specString = static::PERIOD_PREFIX;
+
+        foreach ($date as $key => $value) {
+            $specString .= $value.$key;
+        }
+
+        if (count($time) > 0) {
+            $specString .= static::PERIOD_TIME_PREFIX;
+            foreach ($time as $key => $value) {
+                $specString .= $value.$key;
+            }
+        }
+
+        return $specString === static::PERIOD_PREFIX ? 'PT0S' : $specString;
     }
 }

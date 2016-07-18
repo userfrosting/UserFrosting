@@ -54,6 +54,18 @@ class UserFrostingServicesProvider
      */
     public function register($container)
     {
+        /*
+         * Override Slim's default router with the UF router.
+         */
+        $container['router'] = function ($c) {
+            $routerCacheFile = false;
+            if (isset($c->get('settings')['routerCacheFile'])) {
+                $routerCacheFile = $c->get('settings')['routerCacheFile'];
+            }
+            
+            return (new \UserFrosting\Router)->setCacheFile($routerCacheFile);
+        };  
+    
         // Site config object (separate from Slim settings)
         if (!isset($container['config'])){
             $container['config'] = function ($c) {
@@ -236,13 +248,18 @@ class UserFrostingServicesProvider
                 $locator->addPath('core', '', $coreDirFragment);
                 $locator->addPath('assets', '', $coreDirFragment . '/' . \UserFrosting\ASSET_DIR_NAME);
                 $locator->addPath('schema', '', $coreDirFragment . '/' . \UserFrosting\SCHEMA_DIR_NAME);
-                
                 $locator->addPath('templates', '', $coreDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
                 $locator->addPath('locale', '', $coreDirFragment . '/' . \UserFrosting\LOCALE_DIR_NAME);
                 $locator->addPath('config', '', $coreDirFragment . '/' . \UserFrosting\CONFIG_DIR_NAME);
                 $locator->addPath('routes', '', $coreDirFragment . '/' . \UserFrosting\ROUTE_DIR_NAME);
                 
                 // TODO: Add paths for each sprinkle
+                $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME;
+                
+                $locator->addPath('routes', '', $sprinklesDirFragment . '/account/' . \UserFrosting\ROUTE_DIR_NAME);
+                $locator->addPath('schema', '', $sprinklesDirFragment . '/account/' . \UserFrosting\SCHEMA_DIR_NAME);
+                $locator->addPath('templates', '', $sprinklesDirFragment . '/account/' . \UserFrosting\TEMPLATE_DIR_NAME);
+                $locator->addPath('locale', '', $sprinklesDirFragment . '/account/' . \UserFrosting\LOCALE_DIR_NAME);
                 
                 /* These are streams that can be subnavigated to core or specific sprinkles (e.g. "templates://core/")
                    This would allow specifically selecting core or a particular sprinkle.  Not sure if we need this.

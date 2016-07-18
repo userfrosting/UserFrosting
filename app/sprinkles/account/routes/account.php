@@ -22,10 +22,10 @@
             
             // Load validation rules
             $locator = $this->locator;
-            $schema = new RequestSchema("schema://forms/register.json");
+            $schema = new RequestSchema("schema://register.json");
             $validator = new JqueryValidationAdapter($schema, $this->translator);
             
-            return $this->view->render($response, 'pages/account/register.html.twig', [
+            return $this->view->render($response, 'pages/register.html.twig', [
                 "page" => [
                     "validators" => $validator->rules()
                 ]

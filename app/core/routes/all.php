@@ -18,6 +18,13 @@
         return $this->view->render($response, 'pages/index.html.twig');
     })->add($checkEnvironment);
 
+    $app->group('/account', function () use ($checkEnvironment) {
+        $this->get('/register', function (Request $request, Response $response, $args) {
+            
+            return "Nothing";   
+        })->add($checkEnvironment);
+    });
+    
     $app->get('/install', function (Request $request, Response $response, $args) {
         $this->db;
         $schema = Capsule::schema();
