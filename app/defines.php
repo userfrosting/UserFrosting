@@ -22,11 +22,12 @@ define('UserFrosting\VENDOR_DIR', APP_DIR . '/vendor');
 
 define('UserFrosting\ASSET_DIR_NAME', 'assets');
 define('UserFrosting\BUILD_DIR_NAME', 'build');
+define('UserFrosting\CORE_DIR_NAME', 'core');
 define('UserFrosting\CACHE_DIR_NAME', 'cache');
 define('UserFrosting\CONFIG_DIR_NAME', 'config');
 define('UserFrosting\LOCALE_DIR_NAME', 'locale');
 define('UserFrosting\LOG_DIR_NAME', 'logs');
 define('UserFrosting\ROUTE_DIR_NAME', 'routes');
 define('UserFrosting\SCHEMA_DIR_NAME', 'schema');
-define('UserFrosting\SYSTEM_DIR_NAME', 'system');
+define('UserFrosting\SRC_DIR_NAME', 'src');
 define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');

@@ -29,7 +29,7 @@
     $container['db'];
     
     // Finally, include all defined routes in route directory
-    $route_files = glob(UserFrosting\APP_DIR . '/' . UserFrosting\ROUTE_DIR_NAME . "/*.php");
+    $route_files = glob(UserFrosting\APP_DIR . '/' . UserFrosting\CORE_DIR_NAME . '/' . UserFrosting\ROUTE_DIR_NAME . "/*.php");
     foreach ($route_files as $route_file){
         require_once $route_file;
     }

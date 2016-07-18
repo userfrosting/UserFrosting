@@ -71,7 +71,7 @@ class UserFrostingServicesProvider
             
                 // TODO: add search paths for config files in third-party packages
                 $config->setPaths([
-                    \UserFrosting\APP_DIR . '/' . \UserFrosting\CONFIG_DIR_NAME
+                    \UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\CONFIG_DIR_NAME
                 ]);
                 
                 // Get configuration mode from environment
@@ -126,7 +126,7 @@ class UserFrostingServicesProvider
                 $connection = $c->get('db')->connection();
                 $table = 'session';
                 // Table must exist, otherwise an exception will be thrown
-                $handler = new DatabaseSessionHandler($connection, $table);
+                $handler = new DatabaseSessionHandler($connection, $table, $config['session.minutes']);
                 
                 // Create and return a new wrapper for $_SESSION
                 return new Session($handler, $config['session']);
@@ -209,8 +209,9 @@ class UserFrostingServicesProvider
                 $translator = new MessageTranslator();
                 
                 // Set the translation path and default language path.
-                $translator->setTranslationTable(\UserFrosting\APP_DIR . '/' . \UserFrosting\LOCALE_DIR_NAME . "/en_US.php");
-                $translator->setDefaultTable(\UserFrosting\APP_DIR . '/' . \UserFrosting\LOCALE_DIR_NAME . "/en_US.php");
+                // TODO: we should rewrite MessageTranslator for extendability.  So, we would set a default translation table and then recursively merge in the target language table.
+                $translator->setTranslationTable(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\LOCALE_DIR_NAME . "/en_US.php");
+                $translator->setDefaultTable(\UserFrosting\APP_DIR . '/' .  \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\LOCALE_DIR_NAME . "/en_US.php");
                 
                 // Register translator with MessageStream
                 \UserFrosting\MessageStream::setTranslator($translator);
@@ -222,15 +223,17 @@ class UserFrostingServicesProvider
         if (!isset($container['locator'])){        
             // Initialize locator
             $container['locator'] = function ($c) {
-                $locator = new UniformResourceLocator(\UserFrosting\APP_DIR);
+                $locator = new UniformResourceLocator(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME);
                 
                 // TODO: set in config or defines.php
+                $locator->addPath('core', '', '');                
                 $locator->addPath('assets', '', \UserFrosting\ASSET_DIR_NAME);
                 $locator->addPath('schema', '', \UserFrosting\SCHEMA_DIR_NAME);
                 
                 // Use locator to initialize streams
                 ReadOnlyStream::setLocator($locator);
                 $sb = new StreamBuilder([
+                    'core' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                     'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                     'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
                 ]);
@@ -242,7 +245,7 @@ class UserFrostingServicesProvider
         if (!isset($container['view'])){        
             // Register Twig component on Slim container
             $container['view'] = function ($container) {
-                $view = new \Slim\Views\Twig(\UserFrosting\APP_DIR . '/' . \UserFrosting\TEMPLATE_DIR_NAME, [
+                $view = new \Slim\Views\Twig(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\TEMPLATE_DIR_NAME, [
                     //'cache' => ''
                 ]);
                 
@@ -297,7 +300,7 @@ class UserFrostingServicesProvider
         // Error logging with Monolog
         $container['errorLogger'] = function ($c) {
             $log = new Logger('errors');
-            $handler = new StreamHandler(\UserFrosting\APP_DIR . '/' . \UserFrosting\LOG_DIR_NAME . '/errors.log', Logger::WARNING);
+            $handler = new StreamHandler(\UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME . '/errors.log', Logger::WARNING);
             $log->pushHandler($handler);
             return $log;
         };

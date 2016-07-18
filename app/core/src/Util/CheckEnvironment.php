@@ -216,14 +216,9 @@ class CheckEnvironment
         $problemsFound = false;
     
         $shouldBeWriteable = [
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\ASSET_DIR_NAME => false,
             \UserFrosting\APP_DIR . '/' . \UserFrosting\CACHE_DIR_NAME => true,
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\CONFIG_DIR_NAME => false,
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\LOCALE_DIR_NAME => false,
             \UserFrosting\APP_DIR . '/' . \UserFrosting\LOG_DIR_NAME => true,
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\ROUTE_DIR_NAME => false,
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\SCHEMA_DIR_NAME => false,
-            \UserFrosting\APP_DIR . '/' . \UserFrosting\TEMPLATE_DIR_NAME => false,
+            \UserFrosting\APP_DIR . '/' . \UserFrosting\CORE_DIR_NAME => false,
             \UserFrosting\VENDOR_DIR => false
         ];    
 
