@@ -11,14 +11,8 @@
     use UserFrosting\Fortress\RequestSchema;
     use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 
-    global $app;
-
-    // Environment check middleware
-    $checkEnvironment = $app->getContainer()['checkEnvironment'];
-    
-    $app->group('/account', function () use ($checkEnvironment) {
+    $app->group('/account', function () {
         $this->get('/register', function (Request $request, Response $response, $args) {
-            
             
             // Load validation rules
             $locator = $this->locator;
@@ -30,7 +24,7 @@
                     "validators" => $validator->rules()
                 ]
             ]);     
-        })->add($checkEnvironment);
+        })->add($this->getContainer()['checkEnvironment']);
         
         $this->get('/logout', function (Request $request, Response $response, $args) {
             $this->session->destroy();
@@ -44,11 +38,6 @@
             $e->addUserMessage("Something bad!");
             throw $e;
             
-            // Register a new user
-            Sentinel::register([
-                'email'    => 'test@example.com',
-                'password' => 'foobar',
-            ]);
         });
     });
     
