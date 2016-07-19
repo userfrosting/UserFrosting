@@ -15,7 +15,6 @@
         $this->get('/register', function (Request $request, Response $response, $args) {
             
             // Load validation rules
-            $locator = $this->locator;
             $schema = new RequestSchema("schema://register.json");
             $validator = new JqueryValidationAdapter($schema, $this->translator);
             
@@ -24,7 +23,7 @@
                     "validators" => $validator->rules()
                 ]
             ]);     
-        })->add($this->getContainer()['checkEnvironment']);
+        })->add('checkEnvironment');
         
         $this->get('/logout', function (Request $request, Response $response, $args) {
             $this->session->destroy();
