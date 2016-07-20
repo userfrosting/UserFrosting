@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.1.19
+
+-
+
 ## v0.3.1.18
 
 - Add check for logging being enabled but log file not existing yet
