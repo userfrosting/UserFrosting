@@ -47,15 +47,5 @@
     "css/theme/nyx" : {
     
     }
-  },
-  "copy": [
-    {
-        "src": "images/**/*",
-        "base": "."
-    },
-    {
-        "src": "vendor/font-awesome-4.5.0/fonts/**/*",
-        "base": "vendor/font-awesome-4.5.0/"
-    }
-  ]
+  }
 }
