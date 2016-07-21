@@ -127,9 +127,9 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         ),
         'UserFrosting\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/core/src',
-            1 => __DIR__ . '/../..' . '/sprinkles/account/src',
-            2 => __DIR__ . '/../..' . '/sprinkles/admin/src',
+            0 => __DIR__ . '/../..' . '/sprinkles/account/src',
+            1 => __DIR__ . '/../..' . '/sprinkles/admin/src',
+            2 => __DIR__ . '/../..' . '/sprinkles/core/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (

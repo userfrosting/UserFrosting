@@ -242,8 +242,10 @@ class UserFrostingServicesProvider
                 $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);    
                 $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
                 $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
+                $locator->addPath('sprinkles', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME);
                 
-                $coreDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CORE_DIR_NAME;         
+                // Core sprinkle
+                $coreDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . '/core';      
                 
                 $locator->addPath('core', '', $coreDirFragment);
                 $locator->addPath('assets', '', $coreDirFragment . '/' . \UserFrosting\ASSET_DIR_NAME);
@@ -256,6 +258,7 @@ class UserFrostingServicesProvider
                 // TODO: Add paths for each sprinkle
                 $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME;
                 
+                $locator->addPath('assets', '', $sprinklesDirFragment . '/account/' . \UserFrosting\ASSET_DIR_NAME);
                 $locator->addPath('routes', '', $sprinklesDirFragment . '/account/' . \UserFrosting\ROUTE_DIR_NAME);
                 $locator->addPath('schema', '', $sprinklesDirFragment . '/account/' . \UserFrosting\SCHEMA_DIR_NAME);
                 $locator->addPath('templates', '', $sprinklesDirFragment . '/account/' . \UserFrosting\TEMPLATE_DIR_NAME);
@@ -273,7 +276,7 @@ class UserFrostingServicesProvider
                     'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
                     'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
                     'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                    'core' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                    'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                     'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                     'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                     'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',

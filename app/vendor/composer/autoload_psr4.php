@@ -13,7 +13,7 @@ return array(
     'UserFrosting\\Fortress\\' => array($vendorDir . '/userfrosting/fortress/Fortress'),
     'UserFrosting\\Config\\' => array($vendorDir . '/userfrosting/config/Config'),
     'UserFrosting\\Assets\\' => array($vendorDir . '/userfrosting/assets/Assets'),
-    'UserFrosting\\' => array($baseDir . '/core/src', $baseDir . '/sprinkles/account/src', $baseDir . '/sprinkles/admin/src'),
+    'UserFrosting\\' => array($baseDir . '/sprinkles/account/src', $baseDir . '/sprinkles/admin/src', $baseDir . '/sprinkles/core/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),

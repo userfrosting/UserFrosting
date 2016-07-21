@@ -219,9 +219,9 @@ class CheckEnvironment
         $problemsFound = false;
     
         $shouldBeWriteable = [
+            $this->locator->findResource('log://') => true,        
             $this->locator->findResource('cache://') => true,
-            $this->locator->findResource('log://') => true,
-            $this->locator->findResource('core://') => false,
+            $this->locator->findResource('sprinkles://') => false,
             \UserFrosting\VENDOR_DIR => false
         ];    
 
