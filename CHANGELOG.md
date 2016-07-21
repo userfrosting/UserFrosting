@@ -2,7 +2,7 @@
 
 ## v0.3.1.19
 
--
+- Fixed some minor error screen layout issues
 
 ## v0.3.1.18
 
