@@ -48,6 +48,7 @@
                     'port'              => null,
                     'path'              => trim(dirname($_SERVER['SCRIPT_NAME']), '/')
                 ],
+                'author'            => "https://alexanderweissman.com",
                 'assets-raw'        => "assets-raw",
                 'assets'            => "assets"
             ]          

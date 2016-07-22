@@ -44,7 +44,7 @@
             {% endblock %}
         
             <!-- Author link -->
-            <link href="https://alexanderweissman.com" rel="author" />        
+            <link href="{% block page_author_link %}{{ site.uri.author }}{% endblock %}" rel="author" />        
         
             <!-- Canonical link -->
             <link href="{{site.uri.base.scheme}}://{% block page_canonical %}{% endblock %}" rel="canonical" />
@@ -77,9 +77,9 @@
                 {# Override this block in a child layout template or page template to override site-level scripts. #}
                 {% block scripts_site %}
                     <!-- Load jQuery -->
-                    <script src="//code.jquery.com/jquery-2.1.1.min.js" ></script>
+                    <script src="//code.jquery.com/jquery-2.2.4.min.js" ></script>
                     <!-- Fallback if CDN is unavailable -->
-                    <script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.1.1/jquery.js', true) }}"><\/script>')</script>
+                    <script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.2.4/jquery.min.js', true) }}"><\/script>')</script>
                         
                     {{ assets.js() | raw }}
                 {% endblock %}
