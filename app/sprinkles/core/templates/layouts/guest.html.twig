@@ -1,0 +1,24 @@
+{% extends "layouts/basic.html.twig" %}
+
+{% block stylesheets %}   
+    <!-- Include main CSS asset bundle -->
+    {{ assets.css() | raw }}
+    
+    <!-- Page-specific CSS asset bundle -->
+    {{ assets.css('css/guest') | raw }}
+{% endblock %}
+
+{% block body_attributes %}
+    id="page-top" data-target=".navbar-fixed-top"
+{% endblock %}
+
+{% block content %}
+    {% include "components/main-nav.html.twig" %}
+    
+    {% block header %}{% endblock %}
+
+    <div class="container">
+        {% block body_matter %}{% endblock %}
+    </div>
+{% endblock %}
+

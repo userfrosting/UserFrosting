@@ -1,0 +1,178 @@
+{% extends "layouts/basic.html.twig" %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}Sign in or Register{% endblock %}
+
+{% block page_description %}Sign in to your UserFrosting account, or register for a new account.{% endblock %}
+
+{% block stylesheets %}
+    <!-- Google Font - use remote for now -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+    
+    <!-- Include main CSS asset bundle -->
+    {{ assets.css() | raw }}
+    
+    <!-- Page-specific CSS asset bundle -->
+    {{ assets.css('css/pages/sign-in-or-register') | raw }}
+{% endblock %}
+
+{% block content %}
+    <!-- Top content -->
+    <div class="top-content">
+        <div class="container">
+                
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 text">
+                    <h1>Bootstrap Login &amp; Register Forms</h1>
+                    <div class="description">
+                        <p>
+                            Free responsive template made with Bootstrap. 
+                            Download it on <a href="http://azmind.com" target="_blank">AZMIND</a>, 
+                            customize and use it as you like!
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 show-forms">
+                    <span class="show-register-form active">Register</span> 
+                    <span class="show-forms-divider">/</span> 
+                    <span class="show-login-form">Login</span>
+                </div>
+            </div>
+            
+            <div class="row register-form">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <form role="form" action="" method="post" class="r-form">
+                        <div class="form-group">
+                            <label class="sr-only" for="r-form-first-name">First name</label>
+                            <input type="text" name="r-form-first-name" placeholder="First name..." class="r-form-first-name form-control" id="r-form-first-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="r-form-last-name">Last name</label>
+                            <input type="text" name="r-form-last-name" placeholder="Last name..." class="r-form-last-name form-control" id="r-form-last-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="r-form-email">Email</label>
+                            <input type="text" name="r-form-email" placeholder="Email..." class="r-form-email form-control" id="r-form-email">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="r-form-about-yourself">About yourself</label>
+                            <textarea name="r-form-about-yourself" placeholder="About yourself..." 
+                                        class="r-form-about-yourself form-control" id="r-form-about-yourself"></textarea>
+                        </div>
+                        <button type="submit" class="btn">Sign me up!</button>
+                    </form>
+                </div>
+                <div class="col-sm-6 forms-right-icons">
+                    <div class="row">
+                        <div class="col-sm-2 icon"><i class="fa fa-pencil"></i></div>
+                        <div class="col-sm-10">
+                            <h3>Beautiful Forms</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 icon"><i class="fa fa-commenting"></i></div>
+                        <div class="col-sm-10">
+                            <h3>Awesome Login</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 icon"><i class="fa fa-magic"></i></div>
+                        <div class="col-sm-10">
+                            <h3>Great Registration</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row login-form">
+                <div class="col-sm-4 col-sm-offset-1">
+                    <form role="form" action="" method="post" class="l-form">
+                        <div class="form-group">
+                            <label class="sr-only" for="l-form-username">Username</label>
+                            <input type="text" name="l-form-username" placeholder="Username..." class="l-form-username form-control" id="l-form-username">
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="l-form-password">Password</label>
+                            <input type="password" name="l-form-password" placeholder="Password..." class="l-form-password form-control" id="l-form-password">
+                        </div>
+                        <button type="submit" class="btn">Sign in!</button>
+                    </form>
+                    <div class="social-login">
+                        <p>Or login with:</p>
+                        <div class="social-login-buttons">
+                            <a class="btn btn-link-1" href="#"><i class="fa fa-facebook"></i></a>
+                            <a class="btn btn-link-1" href="#"><i class="fa fa-twitter"></i></a>
+                            <a class="btn btn-link-1" href="#"><i class="fa fa-google-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 forms-right-icons">
+                    <div class="row">
+                        <div class="col-sm-2 icon"><i class="fa fa-user"></i></div>
+                        <div class="col-sm-10">
+                            <h3>New Features</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 icon"><i class="fa fa-eye"></i></div>
+                        <div class="col-sm-10">
+                            <h3>Easy To Use</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2 icon"><i class="fa fa-twitter"></i></div>
+                        <div class="col-sm-10">
+                            <h3>Social Integrated</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Load jQuery -->
+    <script src="//code.jquery.com/jquery-2.1.1.min.js" ></script>
+    <!-- Fallback if CDN is unavailable -->
+    <script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.1.1/jquery.js', true) }}"><\/script>')</script>
+    
+    {{ assets.js() | raw }}
+
+    <!-- Add URL for background image to JS 'site' variable -->
+    <script>
+    site = $.extend(
+        true,               // deep extend
+        {   
+            "uri": {
+                "images": {
+                    "background" : "{{ assets.url('assets://vendor/azmind/images/login-background.jpg') | raw }}"
+                }
+            }
+        },
+        site
+    );
+    </script>
+    
+    <!-- Include validation rules -->
+    <script>
+    {% include "components/validators.js.twig" %}
+    </script>
+    
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/sign-in-or-register') | raw }}
+    
+    <!--[if lt IE 10]>
+        <script src="{{ assets.url('assets://vendor/azmind/js/placeholder.js') | raw }}"></script>
+    <![endif]-->
+{% endblock %}

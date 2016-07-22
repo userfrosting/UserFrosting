@@ -23,69 +23,28 @@ class AccountController
     /**
      * Create a new AccountController object.
      *
-     * @param UserFrosting $app The main UserFrosting app.
+     * @param ContainerInterface $ci The global container object, which holds all your services.
      */
     public function __construct(ContainerInterface $ci) {
         $this->ci = $ci;
     }
 
     /**
-     * Renders the default home page for UserFrosting.
-     *
-     * By default, this is the page that non-authenticated users will first see when they navigate to your website's root.
-     * Request type: GET
-     */
-    public function pageHome(){
-        $this->_app->render('home.twig');
-    }
-
-    /**
-     * Renders the login page for UserFrosting.
-     * By definition, this is a "public page" (does not require authentication).
-     * Request type: GET
-     */
-    public function pageLogin(){
-        // Forward to home page if user is already logged in
-        if (!$this->_app->user->isGuest()){
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('account/login.twig', [
-            'validators' => $this->_app->jsValidator->rules()
-        ]);
-    }
-
-    /**
-     * Attempts to render the account registration page for UserFrosting.
+     * Render the account registration/sign-in page for UserFrosting.
      *
      * This allows new (non-authenticated) users to create a new account for themselves on your website.
+     * By definition, this is a "public page" (does not require authentication).     
      * Request type: GET
      * @param bool $can_register Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page.
      */
-    public function pageRegister($request, $response, $args){
-        // Load validation rules
-        $schema = new RequestSchema("schema://register.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);
-        
-        return $this->ci['view']->render($response, 'pages/register.html.twig', [
-            "page" => [
-                "validators" => $validator->rules()
-            ]
-        ]);
-    }
-     
-     
-    /*
-    public function pageRegister($can_register = false){
+    public function pageSignInOrRegister($request, $response, $args)
+    {
+        /*
         // Get the alert message stream
         $ms = $this->_app->alerts;
 
-        // Prevent the user from registering if he/she is already logged in
-        if(!$this->_app->user->isGuest()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_LOGOUT");
+        // Forward to home page if user is already logged in
+        if (!$this->_app->user->isGuest()){
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
 
@@ -110,8 +69,21 @@ class AccountController
             'captcha_image' =>  $this->generateCaptcha(),
             'validators' => $this->_app->jsValidator->rules()
         ]);
+        */
+        
+        // Load validation rules
+        $schema = new RequestSchema("schema://register.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);
+        
+        return $this->ci['view']->render($response, 'pages/sign-in-or-register.html.twig', [
+            "page" => [
+                "validators" => $validator->rules()
+            ]
+        ]);
     }
-    */
+     
+     
+
     
     /**
      * Render the "forgot password" page.

@@ -18,9 +18,23 @@
             }
         }
     },
-    "js/pages/register" : {
+    "js/pages/sign-in-or-register" : {
         "scripts": [
-            "js/pages/register.js"
+            "vendor/jquery-backstretch/jquery.backstretch.js",
+            "js/pages/sign-in-or-register.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },    
+    "css/pages/sign-in-or-register" : {
+        "styles": [
+            "vendor/azmind/css/form-elements.css",
+            "vendor/azmind/css/styles.css"
         ],
         "options": {
             "result": {
@@ -33,8 +47,7 @@
     "css/main": {
         "styles": [
             "vendor/font-awesome-4.5.0/css/font-awesome.css",
-            "vendor/bootstrap-3.3.6/css/bootstrap.css",
-            "vendor/start-bootstrap/css/modern-business.css"
+            "vendor/bootstrap-3.3.6/css/bootstrap.css"
         ],
         "options": {
             "result": {
@@ -44,6 +57,19 @@
             }
         }
     },
+    "css/guest": {
+        "styles": [
+            "vendor/start-bootstrap/css/modern-business.css",
+            "css/guest.css"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "styles": "plain"
+                }
+            }
+        }
+    },    
     "css/theme/nyx" : {
     
     }

@@ -17,9 +17,6 @@
             "required" : {
                 "message" : "ACCOUNT_SPECIFY_PASSWORD"
             }
-        },
-        "sanitizers" : {
-            "raw" : {}
         }
     },
     "rememberme" : {}

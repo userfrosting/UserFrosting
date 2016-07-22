@@ -1,18 +1,13 @@
-{% extends "layouts/basic.html.twig" %}
-{% set page_group = "index" %}
+{% extends "layouts/guest.html.twig" %}
 
 {% set page_active = "about" %}
 
-{% block head %}
-    {% set uf_page = uf_page | merge({
-        'title'      : "About",
-        'description': "All about my UserFrosting website.",
-        'canonical'  : "example.com/about"
-    }) %}
-    {{ parent() }}
-{% endblock %}
+{# Overrides blocks in head of base template #}
+{% block page_title %}About{% endblock %}
 
-{% block content %}
+{% block page_description %}All about my UserFrosting website.{% endblock %}
+
+{% block body_matter %}
     <!-- Page Heading/Breadcrumbs -->
     <div class="row">
         <div class="col-lg-12">
@@ -20,7 +15,7 @@
                 <small>Subheading</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="index.html">Home</a>
+                <li><a href="{{ site.uri.public }}">Home</a>
                 </li>
                 <li class="active">About</li>
             </ol>

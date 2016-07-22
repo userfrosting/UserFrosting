@@ -9,7 +9,7 @@
     use \Psr\Http\Message\ServerRequestInterface as Request;
     
     $app->group('/account', function () {
-        $this->get('/register', 'UserFrosting\Controller\AccountController:pageRegister')->add('checkEnvironment');
+        $this->get('/sign-in-or-register', 'UserFrosting\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
         
         $this->get('/logout', function (Request $request, Response $response, $args) {
             $this->session->destroy();

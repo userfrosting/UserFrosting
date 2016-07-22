@@ -1,64 +1,77 @@
 {# This is the base layout template for all pages.  #}
 
-{# Default page properties.  You can override these in the `page` block of your child templates. #}
-{% set uf_page = uf_page | default({}) | merge({
-    "title"       : "New Page",
-    "description" : "This page has not yet been configured.",
-    "author"      : site.author,
-    "alerts"      : getAlerts()
-}) %}
-
 {% block page %}
 <!DOCTYPE html>
 <html lang="en-US">
-    <head>
-        {% block head %}
+    {% block head %}
+        <head>
             <meta charset="utf-8">
             <meta http-equiv="content-type" content="text/html; charset=UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="generator" content="UserFrosting" />
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-            <meta name="description" content="{{uf_page.description}}">
-            <meta name="author" content="{{uf_page.author}}">
+            <meta name="description" content="{% block page_description %}This page has not yet been configured.{% endblock %}">
+            <meta name="author" content="{% block page_author %}{{ site.author }}{% endblock %}">
         
-            <title>{{site.title}} | {{uf_page.title}}</title>
+            <title>{{ site.title }} | {% block page_title %}New Page{% endblock %}</title>
         
-            <!-- Favicon -->
-            <link rel="icon" type="image/x-icon" href="{{ assets.url('assets://images/favicon.ico') }}" />
+            <!-- Favicon and touch icons  -->
+            <link rel="shortcut icon" type="image/x-icon" href="{{ assets.url('assets://images/favicon.ico') }}" />
+            <!-- 
             
-            <!-- Include main CSS asset bundle -->
-            {{ assets.css() | raw }}            
+            TODO
+            
+            <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+            <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+            <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+            <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">            
+            -->
+            
+            {% block stylesheets %}
+                <!-- Include main CSS asset bundle -->
+                {{ assets.css() | raw }}
+            {% endblock %}
         
             <!-- Author link -->
             <link href="https://alexanderweissman.com" rel="author" />        
         
             <!-- Canonical link -->
-            <link href="{{site.uri.base.scheme}}://{{uf_page.canonical}}" rel="canonical" />
+            <link href="{{site.uri.base.scheme}}://{% block page_canonical %}{% endblock %}" rel="canonical" />
       
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
             <!--[if lt IE 9]>
                 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
                 <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-            <![endif]-->  
-            
-        {% endblock %}
-    </head>
+            <![endif]-->
+        </head>         
+    {% endblock %}
     
     {% block body %}
-        <body id="page-top" data-target=".navbar-fixed-top">
-            {% include "components/main-nav.html.twig" %}
-            
-            {% block header %}{% endblock %}
-            
+        <body {% block body_attributes %}{% endblock %}>            
             <!-- Page Content -->
-            <div class="container">
-                {% block content %}{% endblock %}
-                {% include "components/footer.html.twig" %}
-            </div>
+            {% block content %}{% endblock %}
             
-            {# This block allows you to create page-specific Javascript in a child template #}
-            {% block page_scripts %}{% endblock %}   
+            <!-- Footer -->
+            {% block footer %}
+                {% include "components/footer.html.twig" %}
+            {% endblock %}
+            
+            <!-- Javascript configuration -->
+            <script>
+            {% include "components/config.js.twig" %}
+            </script>
+            
+            {# Override this block in a child layout template or page template to add custom Javascript bundles and blocks. #}
+            {% block scripts %}
+                <!-- Load jQuery -->
+                <script src="//code.jquery.com/jquery-2.1.1.min.js" ></script>
+                <!-- Fallback if CDN is unavailable -->
+                <script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.1.1/jquery.js', true) }}"><\/script>')</script>
+                
+                {{ assets.js() | raw }}
+            {% endblock %}
+
         </body>
     {% endblock %}
 </html>

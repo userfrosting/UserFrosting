@@ -1,8 +1,8 @@
 {# Configuration variables needed by client-side code (Javascript). #}
 {% autoescape 'js' %}
     var site = {
-    "uri": {
-        "public": "{{ site.uri.public | raw }}"
-    }
-};
+        "uri": {
+            "public": "{{ site.uri.public | raw }}"
+        }
+    };
 {% endautoescape %}

@@ -29,6 +29,16 @@ class BaseController {
     }
 
     /**
+     * Renders the default home page for UserFrosting.
+     *
+     * By default, this is the page that non-authenticated users will first see when they navigate to your website's root.
+     * Request type: GET
+     */
+    public function pageHome(){
+        $this->_app->render('home.twig');
+    }    
+    
+    /**
      * Renders the 404 error page.
      *
      * This page shows the 404 "page not found" page.

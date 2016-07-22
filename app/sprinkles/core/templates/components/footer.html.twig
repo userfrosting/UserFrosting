@@ -10,18 +10,3 @@
       </div>
     </div>
 </footer>
-
-<!-- Javascript configuration -->
-<script>
-{% include "components/config.js.twig" %}
-</script>
-
-<!-- Load jQuery -->
-<script src="//code.jquery.com/jquery-2.1.1.min.js" ></script>
-<!-- Fallback if CDN is unavailable -->
-<script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.1.1/jquery.js', true) }}"><\/script>')</script>
-
-{{ assets.js() | raw }}
-
-{# This block allows you to create page-specific Javascript in a child template #}
-{% block page_scripts %}{% endblock %}
