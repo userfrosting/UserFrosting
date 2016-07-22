@@ -32,8 +32,7 @@
         "userfrosting/i18n": "1.0",
         "userfrosting/session" : "dev-master",
         "userfrosting/support": "1.0",
-        "vlucas/phpdotenv" : "2.*",
-        "wikimedia/composer-merge-plugin": "~1"
+        "vlucas/phpdotenv" : "2.*"
     },
     "minimum-stability": "dev",
     "autoload": {
