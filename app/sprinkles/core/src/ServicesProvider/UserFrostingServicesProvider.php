@@ -128,17 +128,17 @@ class UserFrostingServicesProvider
                 $config = $c->get('config');
                 
                 // Create appropriate handler based on config
-                
-                
-                
-                //$fs = new FileSystem;
-                //$handler = new FileSessionHandler($fs, 'session://');
-                
-                
-                $connection = $c->get('db')->connection();
-                $table = 'session';
-                // Table must exist, otherwise an exception will be thrown
-                $handler = new DatabaseSessionHandler($connection, $table, $config['session.minutes']);
+                if ($config['session.handler'] == 'file') {
+                    $fs = new FileSystem;
+                    $handler = new FileSessionHandler($fs, $c->get('locator')->findResource('session://'), $config['session.minutes']);
+                } else if ($config['session.handler'] == 'database') {
+                    $connection = $c->get('db')->connection();
+                    $table = 'session';
+                    // Table must exist, otherwise an exception will be thrown
+                    $handler = new DatabaseSessionHandler($connection, $table, $config['session.minutes']);
+                } else {
+                    throw new \Exception("Bad session handler type '{$config['session.handler']}' specified in configuration file.");
+                }
                 
                 // Create and return a new wrapper for $_SESSION
                 return new Session($handler, $config['session']);

@@ -13,7 +13,7 @@
     ],
     "version": "4.0.0", 
     "require": {
-            "wikimedia/composer-merge-plugin": "~1"
+        "wikimedia/composer-merge-plugin": "~1"
 	},
     "extra": {
         "merge-plugin": {

@@ -29,7 +29,7 @@
     // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
     $container['shutdownHandler'];     
     
-    $container['db'];
+    //$container['db'];
     
     // Finally, include all defined routes in route directory.  Include them in reverse order to allow higher priority routes to override lower priority.
     $routePaths = array_reverse($locator->findResources('routes://', true, true));
