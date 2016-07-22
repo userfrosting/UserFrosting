@@ -1,10 +1,7 @@
 {% extends "layouts/basic.html.twig" %}
 
-{% block stylesheets %}   
-    <!-- Include main CSS asset bundle -->
-    {{ assets.css() | raw }}
-    
-    <!-- Page-specific CSS asset bundle -->
+{% block stylesheets_page_group %}      
+    <!-- Page-group-specific CSS asset bundle -->
     {{ assets.css('css/guest') | raw }}
 {% endblock %}
 

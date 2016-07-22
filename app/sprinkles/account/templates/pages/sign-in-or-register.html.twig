@@ -5,13 +5,16 @@
 
 {% block page_description %}Sign in to your UserFrosting account, or register for a new account.{% endblock %}
 
-{% block stylesheets %}
+{# This is an example of when we might want to override the site-level stylesheets for a particular page or page group. #}
+{% block stylesheets_site %}
     <!-- Google Font - use remote for now -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
     
     <!-- Include main CSS asset bundle -->
     {{ assets.css() | raw }}
+{% endblock %}
     
+{% block stylesheets_page %}
     <!-- Page-specific CSS asset bundle -->
     {{ assets.css('css/pages/sign-in-or-register') | raw }}
 {% endblock %}
@@ -19,8 +22,7 @@
 {% block content %}
     <!-- Top content -->
     <div class="top-content">
-        <div class="container">
-                
+        <div class="container">  
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
                     <h1>Bootstrap Login &amp; Register Forms</h1>
@@ -135,20 +137,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
-                
+            </div> 
         </div>
     </div>
 {% endblock %}
 
-{% block scripts %}
-    <!-- Load jQuery -->
-    <script src="//code.jquery.com/jquery-2.1.1.min.js" ></script>
-    <!-- Fallback if CDN is unavailable -->
-    <script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.1.1/jquery.js', true) }}"><\/script>')</script>
-    
-    {{ assets.js() | raw }}
-
+{% block scripts_page_group %}
     <!-- Add URL for background image to JS 'site' variable -->
     <script>
     site = $.extend(
@@ -164,6 +158,12 @@
     );
     </script>
     
+    <!--[if lt IE 10]>
+        <script src="{{ assets.url('assets://vendor/azmind/js/placeholder.js') | raw }}"></script>
+    <![endif]-->
+{% endblock %}
+
+{% block scripts_page %}
     <!-- Include validation rules -->
     <script>
     {% include "components/validators.js.twig" %}
@@ -172,7 +172,4 @@
     <!-- Include page-specific JS -->
     {{ assets.js('js/pages/sign-in-or-register') | raw }}
     
-    <!--[if lt IE 10]>
-        <script src="{{ assets.url('assets://vendor/azmind/js/placeholder.js') | raw }}"></script>
-    <![endif]-->
 {% endblock %}

@@ -25,11 +25,22 @@
             <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
             <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
             <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">            
-            -->
+            -->                
             
             {% block stylesheets %}
-                <!-- Include main CSS asset bundle -->
-                {{ assets.css() | raw }}
+                {# Override this block in a child layout template or page template to override site-level stylesheets. #}
+                {% block stylesheets_site %}
+                    <!-- Include main CSS asset bundle -->
+                    {{ assets.css() | raw }}
+                {% endblock %}
+                
+                {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}
+                {% block stylesheets_page_group %}
+                {% endblock %}
+            
+                {# Override this block in a child layout template or page template to specify or override page-level stylesheets. #}
+                {% block stylesheets_page %}
+                {% endblock %}                
             {% endblock %}
         
             <!-- Author link -->
@@ -62,14 +73,24 @@
             {% include "components/config.js.twig" %}
             </script>
             
-            {# Override this block in a child layout template or page template to add custom Javascript bundles and blocks. #}
             {% block scripts %}
-                <!-- Load jQuery -->
-                <script src="//code.jquery.com/jquery-2.1.1.min.js" ></script>
-                <!-- Fallback if CDN is unavailable -->
-                <script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.1.1/jquery.js', true) }}"><\/script>')</script>
-                
-                {{ assets.js() | raw }}
+                {# Override this block in a child layout template or page template to override site-level scripts. #}
+                {% block scripts_site %}
+                    <!-- Load jQuery -->
+                    <script src="//code.jquery.com/jquery-2.1.1.min.js" ></script>
+                    <!-- Fallback if CDN is unavailable -->
+                    <script>window.jQuery || document.write('<script src="{{ assets.url('assets://jquery-2.1.1/jquery.js', true) }}"><\/script>')</script>
+                        
+                    {{ assets.js() | raw }}
+                {% endblock %}
+            
+                {# Override this block in a child layout template or page template to specify or override scripts for groups of similar pages. #}
+                {% block scripts_page_group %}
+                {% endblock %}
+
+                {# Override this block in a child layout template or page template to specify or override page-level scripts. #}
+                {% block scripts_page %}
+                {% endblock %}                
             {% endblock %}
 
         </body>
