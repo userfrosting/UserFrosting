@@ -306,6 +306,14 @@ class UserFrostingServicesProvider
                 
                 $twig = $view->getEnvironment();
                 
+                /* TODO: enable Twig caching?
+                $view = $app->view();
+                $view->parserOptions = array(
+                    'debug' => true,
+                    'cache' => 'cache://twig'
+                );
+                */
+                
                 // Register the UserFrosting extension with Twig  
                 $twig_extension = new UserFrostingExtension($c);
                 $twig->addExtension($twig_extension);   

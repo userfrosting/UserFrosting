@@ -160,53 +160,6 @@ class UserFrosting extends \Slim\Slim {
         });
         
         $twig->addFunction($function_check_access);    
-        
-        // Add Twig function for translating message hooks
-        $function_translate = new \Twig_SimpleFunction('translate', function ($hook, $params = []) {
-            return $this->translator->translate($hook, $params);
-        });
-        
-        $twig->addFunction($function_translate);
-
-        // Add Twig function for fetching alerts
-        $function_alerts = new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
-            if ($clear)
-                return $this->alerts->getAndClearMessages();
-            else
-                return $this->alerts->messages();
-        });
-        
-        $twig->addFunction($function_alerts);
-        
-        // Add Twig functions for including CSS and JS scripts from schema
-        $function_include_css = new \Twig_SimpleFunction('includeCSS', function ($group_name = "common") {
-            // Return array of CSS includes
-            return $this->schema->getCSSIncludes($group_name, $this->site->minify_css);
-        });
-        
-        $twig->addFunction($function_include_css);
-        
-        $function_include_bottom_js = new \Twig_SimpleFunction('includeJSBottom', function ($group_name = "common") {    
-            // Return array of JS includes
-            return $this->schema->getJSBottomIncludes($group_name, $this->site->minify_js);
-        });
-        
-        $twig->addFunction($function_include_bottom_js);
-        
-        $function_include_top_js = new \Twig_SimpleFunction('includeJSTop', function ($group_name = "common") {    
-            // Return array of JS includes
-            return $this->schema->getJSTopIncludes($group_name, $this->site->minify_js);
-        });
-        
-        $twig->addFunction($function_include_top_js);
-        
-        /* TODO: enable Twig caching?
-        $view = $app->view();
-        $view->parserOptions = array(
-            'debug' => true,
-            'cache' => dirname(__FILE__) . '/cache'
-        );
-        */
     }
     
     /**
@@ -275,25 +228,5 @@ class UserFrosting extends \Slim\Slim {
         session_destroy();   
     }
     
-    /**
-     * Set up the fatal error handler, so that we get a clean error message and alert instead of a WSOD.
-     */     
-    public function fatalHandler() {
-        $error = error_get_last();
-      
-        // Handle fatal errors
-        if( $error !== NULL && $error['type'] == E_ERROR) {
-            $errno   = $error["type"];
-            $errfile = $error["file"];
-            $errline = $error["line"];
-            $errstr  = $error["message"];
-            // Inform the client of a fatal error
-            if ($this->alerts && is_object($this->alerts) && $this->translator)
-                $this->alerts->addMessageTranslated("danger", "SERVER_ERROR");
-            error_log("Fatal error ($errno) in $errfile on line $errline: $errstr");
-            header("HTTP/1.1 500 Internal Server Error");
-            exit();
-        }
-    }
 
 }

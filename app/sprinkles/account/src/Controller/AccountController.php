@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting;
+namespace UserFrosting\Controller;
 
 /**
  * AccountController Class
@@ -11,15 +11,22 @@ namespace UserFrosting;
  * @author Alex Weissman
  * @link http://www.userfrosting.com/navigating/#structure
  */
-class AccountController extends \UserFrosting\BaseController {
-
+use Interop\Container\ContainerInterface;
+use UserFrosting\Fortress\RequestSchema;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+    
+class AccountController
+{
+    
+    protected $ci;
+    
     /**
      * Create a new AccountController object.
      *
      * @param UserFrosting $app The main UserFrosting app.
      */
-    public function __construct($app){
-        $this->_app = $app;
+    public function __construct(ContainerInterface $ci) {
+        $this->ci = $ci;
     }
 
     /**
@@ -58,6 +65,20 @@ class AccountController extends \UserFrosting\BaseController {
      * Request type: GET
      * @param bool $can_register Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page.
      */
+    public function pageRegister($request, $response, $args){
+        // Load validation rules
+        $schema = new RequestSchema("schema://register.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);
+        
+        return $this->ci['view']->render($response, 'pages/register.html.twig', [
+            "page" => [
+                "validators" => $validator->rules()
+            ]
+        ]);
+    }
+     
+     
+    /*
     public function pageRegister($can_register = false){
         // Get the alert message stream
         $ms = $this->_app->alerts;
@@ -90,7 +111,8 @@ class AccountController extends \UserFrosting\BaseController {
             'validators' => $this->_app->jsValidator->rules()
         ]);
     }
-
+    */
+    
     /**
      * Render the "forgot password" page.
      *

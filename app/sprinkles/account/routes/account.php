@@ -8,22 +8,8 @@
     use \Psr\Http\Message\ResponseInterface as Response;
     use \Psr\Http\Message\ServerRequestInterface as Request;
     
-    use UserFrosting\Fortress\RequestSchema;
-    use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-
     $app->group('/account', function () {
-        $this->get('/register', function (Request $request, Response $response, $args) {
-            
-            // Load validation rules
-            $schema = new RequestSchema("schema://register.json");
-            $validator = new JqueryValidationAdapter($schema, $this->translator);
-            
-            return $this->view->render($response, 'pages/register.html.twig', [
-                "page" => [
-                    "validators" => $validator->rules()
-                ]
-            ]);     
-        })->add('checkEnvironment');
+        $this->get('/register', 'UserFrosting\Controller\AccountController:pageRegister')->add('checkEnvironment');
         
         $this->get('/logout', function (Request $request, Response $response, $args) {
             $this->session->destroy();
