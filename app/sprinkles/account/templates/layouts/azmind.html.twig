@@ -1,0 +1,31 @@
+{% extends "layouts/basic.html.twig" %}
+
+{# This is an example of when we might want to override the site-level stylesheets for a particular page or page group. #}
+{% block stylesheets_site %}
+    <!-- Google Font - use remote for now -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+    
+    <!-- Include main CSS asset bundle -->
+    {{ assets.css() | raw }}
+{% endblock %}
+
+{% block scripts_page_group %}
+    <!-- Add URL for background image to JS 'site' variable -->
+    <script>
+    site = $.extend(
+        true,               // deep extend
+        {   
+            "uri": {
+                "images": {
+                    "background" : "{{ assets.url('assets://vendor/azmind/images/login-background.jpg') | raw }}"
+                }
+            }
+        },
+        site
+    );
+    </script>
+    
+    <!--[if lt IE 10]>
+        <script src="{{ assets.url('assets://vendor/azmind/js/placeholder.js') | raw }}"></script>
+    <![endif]-->
+{% endblock %}

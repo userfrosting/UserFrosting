@@ -34,7 +34,8 @@
     "css/pages/sign-in-or-register" : {
         "styles": [
             "vendor/azmind/css/form-elements.css",
-            "vendor/azmind/css/styles.css"
+            "vendor/azmind/css/styles.css",
+            "css/azmind-custom.css"
         ],
         "options": {
             "result": {
