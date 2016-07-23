@@ -9,6 +9,27 @@
     {{ assets.css() | raw }}
 {% endblock %}
 
+{% block footer %}
+<footer>
+    <div class="container">
+      <div class="row">
+          <div class="col-sm-6 text-left">
+              <p>
+                Built with <a href="http://www.userfrosting.com">UserFrosting</a>.
+              </p>
+              <p>
+                &copy; <a href="{{site.uri.public}}">{{site.title}}</a>, {{ "now"|date("Y") }}
+              </p>
+          </div>
+          <div class="col-sm-6 text-left">
+              <p> Design and styling for this page based on <a href="http://azmind.com/2016/07/19/bootstrap-login-register-template/">Bootstrap Login/Register template</a> by <a href="http://azmind.com" target="_blank">AZMIND</a>.
+              </p>
+          </div>        
+      </div>
+    </div>
+</footer>
+{% endblock %}    
+
 {% block scripts_page_group %}
     <!-- Add URL for background image to JS 'site' variable -->
     <script>

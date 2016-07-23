@@ -1,15 +1,8 @@
 {% extends "layouts/error.html.twig" %}
-{% set page_group = "error" %}
 
-{% set page_active = "" %}
+{% block page_title %}Error 404: Page not found{% endblock %}
 
-{% block head %}
-    {% set uf_page = uf_page | merge({
-        'title'      : "404 Error",
-        'description': "We couldn't deliver.  We're sorry."
-    }) %}
-    {{ parent() }}
-{% endblock %}
+{% block page_description %}We can't seem to find what you're looking for.{% endblock %}
 
 {% block content %}
     <div class="container text-center">
