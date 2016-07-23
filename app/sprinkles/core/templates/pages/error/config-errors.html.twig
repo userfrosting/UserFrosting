@@ -1,12 +1,8 @@
-{% extends "layouts/basic.html.twig" %}
-{% set page_group = "index" %}
+{% extends "layouts/error.html.twig" %}
 
-{% block head %}
-    {% set uf_page = uf_page | merge({
-        'title'      : "UserFrosting Configuration Issue!"
-    }) %}
-    {{ parent() }}
-{% endblock %}
+{% block page_title %}UserFrosting Configuration Issue!{% endblock %}
+
+{% block page_description %}Some UserFrosting configuration requirements have not been met.{% endblock %}
 
 {% block content %}
     <div class="container">
