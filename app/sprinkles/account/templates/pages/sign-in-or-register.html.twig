@@ -35,30 +35,30 @@
             
             <div class="row register-form">
                 <div class="col-sm-4 col-sm-offset-1">
-                    <form id="register" role="form" action="" method="post" class="r-form">
+                    <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
                         <div class="form-group">
-                            <label class="sr-only" for="user_name">User name</label>
-                            <input type="text" name="user_name" placeholder="A unique name to identify yourself." class="form-control">
+                            <label class="sr-only" for="r-form-username">User name</label>
+                            <input type="text" name="user_name" placeholder="A unique name to identify yourself." class="form-control" id="r-form-username">
                         </div>
                         <div class="form-group">
-                            <label class="sr-only" for="first_name">First name</label>
-                            <input type="text" name="first_name" placeholder="First name" class="form-control">
+                            <label class="sr-only" for="r-form-first-name">First name</label>
+                            <input type="text" name="first_name" placeholder="First name" class="form-control" id="r-form-first-name">
                         </div>
                         <div class="form-group">
-                            <label class="sr-only" for="last_name">Last name</label>
-                            <input type="text" name="last_name" placeholder="Last name" class="form-control">
+                            <label class="sr-only" for="r-form-last-name">Last name</label>
+                            <input type="text" name="last_name" placeholder="Last name" class="form-control" id="r-form-last-name">
                         </div>
                         <div class="form-group">
-                            <label class="sr-only" for="email">Email</label>
-                            <input type="text" name="email" placeholder="Email address" class="form-control">
+                            <label class="sr-only" for="r-form-email">Email</label>
+                            <input type="text" name="email" placeholder="Email address" class="form-control" id="r-form-email">
                         </div>
                         <div class="form-group">
-                            <label class="sr-only" for="password">Password</label>
-                            <input type="text" name="password" placeholder="12-100 characters" class="form-control">
+                            <label class="sr-only" for="r-form-password">Password</label>
+                            <input type="password" name="password" placeholder="12-100 characters" class="form-control" id="r-form-password">
                         </div>
                         <div class="form-group">
-                            <label class="sr-only" for="passwordc">Confirm password</label>
-                            <input type="text" name="passwordc" placeholder="Re-enter your password" class="form-control">
+                            <label class="sr-only" for="r-form-passwordc">Confirm password</label>
+                            <input type="password" name="passwordc" placeholder="Re-enter your password" class="form-control" id="r-form-passwordc">
                         </div>                        
                         <button type="submit" class="btn">Sign me up!</button>
                     </form>
@@ -90,14 +90,14 @@
             
             <div class="row login-form">
                 <div class="col-sm-4 col-sm-offset-1">
-                    <form id="sign-in" role="form" action="" method="post" class="l-form">
+                    <form id="sign-in" role="form" action="{{site.uri.public}}/account/login" method="post" class="l-form">
                         <div class="form-group">
-                            <label class="sr-only" for="l-form-username">Username</label>
-                            <input type="text" name="l-form-username" placeholder="Username..." class="l-form-username form-control" id="l-form-username">
+                            <label class="sr-only" for="l-form-username">User name</label>
+                            <input type="text" name="user_name" placeholder="User name" class="form-control" id="l-form-username">
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="l-form-password">Password</label>
-                            <input type="password" name="l-form-password" placeholder="Password..." class="l-form-password form-control" id="l-form-password">
+                            <input type="password" name="password" placeholder="Password" class="form-control" id="l-form-password">
                         </div>
                         <button type="submit" class="btn">Sign in!</button>
                     </form>

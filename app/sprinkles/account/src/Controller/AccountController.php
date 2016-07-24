@@ -72,12 +72,18 @@ class AccountController
         */
         
         // Load validation rules
+        $schema = new RequestSchema("schema://login.json");
+        $validatorLogin = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        
         $schema = new RequestSchema("schema://register.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);
+        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci['translator']);
         
         return $this->ci['view']->render($response, 'pages/sign-in-or-register.html.twig', [
             "page" => [
-                "validators" => $validator->rules()
+                "validators" => [
+                    "login"    => $validatorLogin->rules('json', false),
+                    "register" => $validatorRegister->rules('json', false)
+                ]
             ]
         ]);
     }

@@ -16,6 +16,7 @@ app/composer.phar
 
 # Ignore error log
 app/logs/errors.log
+app/sessions/*
 
 # Ignore node modules
 build/node_modules/*

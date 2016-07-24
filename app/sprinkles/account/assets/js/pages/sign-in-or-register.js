@@ -38,7 +38,7 @@ $(document).ready(function() {
 
     // TODO: Process form 
     $("#register").ufForm({
-        validators: page.validators,
+        validators: page.validators.register,
         msgTarget: $("#userfrosting-alerts")
     }).on("submitSuccess", function() {
         // Forward to login page on success
@@ -49,13 +49,10 @@ $(document).ready(function() {
     });
     
     $("#sign-in").ufForm({
-        validators: page.validators,
+        validators: page.validators.login,
         msgTarget: $("#userfrosting-alerts")
     }).on("submitSuccess", function() {
         // Forward to login page on success
-        window.location.replace(site.uri.public + "/account/login");
-    }).on("submitError", function() {
-        // Reload captcha
-        //$("#captcha").captcha();
+        window.location.replace(site.uri.public + "/account");
     });    
 });
