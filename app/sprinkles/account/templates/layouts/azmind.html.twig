@@ -9,6 +9,21 @@
     {{ assets.css() | raw }}
 {% endblock %}
 
+{% block stylesheets_page_group %}
+    <!-- Page-group-specific CSS asset bundle -->
+    {{ assets.css('css/azmind') | raw }}
+{% endblock %}
+
+{% block content %}
+    <!-- Top content -->
+    <div class="top-content">
+        <div class="container">
+            {% block body_matter %}{% endblock %}
+        </div>
+    </div>
+        
+{% endblock %}
+        
 {% block footer %}
 <footer>
     <div class="container">

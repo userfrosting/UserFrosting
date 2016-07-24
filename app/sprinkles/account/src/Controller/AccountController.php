@@ -87,9 +87,6 @@ class AccountController
             ]
         ]);
     }
-     
-     
-
     
     /**
      * Render the "forgot password" page.
@@ -98,13 +95,18 @@ class AccountController
      * By default, this is a "public page" (does not require authentication).
      * Request type: GET
      */
-    public function pageForgotPassword(){
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('account/forgot-password.twig', [
-            'validators' => $this->_app->jsValidator->rules()
+    public function pageForgotPassword($request, $response, $args)
+    {
+        // Load validation rules
+        $schema = new RequestSchema("schema://forgot-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        
+        return $this->ci['view']->render($response, 'pages/forgot-password.html.twig', [
+            "page" => [
+                "validators" => [
+                    "forgot-password"    => $validator->rules('json', false)
+                ]
+            ]
         ]);
     }
 

@@ -9,6 +9,8 @@
     use \Psr\Http\Message\ServerRequestInterface as Request;
     
     $app->group('/account', function () {
+        $this->get('/forgot-password', 'UserFrosting\Controller\AccountController:pageForgotPassword')->add('checkEnvironment');
+        
         $this->get('/sign-in-or-register', 'UserFrosting\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
         
         $this->get('/logout', function (Request $request, Response $response, $args) {
