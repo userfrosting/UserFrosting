@@ -3,6 +3,7 @@
 ## v0.3.1.19
 
 - Fixed some minor error screen layout issues
+- Make User::fresh() compatible with Eloquent\Model v5.2.40+
 
 ## v0.3.1.18
 

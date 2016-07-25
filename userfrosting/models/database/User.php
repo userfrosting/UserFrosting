@@ -89,7 +89,7 @@ class User extends UFModel {
      *
      * @see http://stackoverflow.com/a/27748794/2970321
      */
-    public function fresh(array $options = []){
+    public function fresh($options = []){
         // TODO: Update table and column info, in case it has changed?
         $user = parent::fresh($options);
         $user->getGroupIds();
