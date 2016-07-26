@@ -30,7 +30,6 @@ return array(
     'RocketTheme\\Toolbox\\DI\\' => array($vendorDir . '/rockettheme/toolbox/DI/src'),
     'RocketTheme\\Toolbox\\Blueprints\\' => array($vendorDir . '/rockettheme/toolbox/Blueprints/src'),
     'RocketTheme\\Toolbox\\ArrayTraits\\' => array($vendorDir . '/rockettheme/toolbox/ArrayTraits/src'),
-    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'League\\Csv\\' => array($vendorDir . '/league/csv/src'),

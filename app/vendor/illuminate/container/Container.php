@@ -190,8 +190,8 @@ class Container implements ArrayAccess, ContainerContract
         }
 
         // If no concrete type was given, we will simply set the concrete type to the
-        // abstract type. After that, the concrete type to be registered as shared
-        // without being forced to state their classes in both of the parameters.
+        // abstract type. This will allow concrete type to be registered as shared
+        // without being forced to state their classes in both of the parameter.
         $this->dropStaleInstances($abstract);
 
         if (is_null($concrete)) {
@@ -1073,11 +1073,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function getAlias($abstract)
     {
-        if (! isset($this->aliases[$abstract])) {
-            return $abstract;
-        }
-
-        return $this->getAlias($this->aliases[$abstract]);
+        return isset($this->aliases[$abstract]) ? $this->aliases[$abstract] : $abstract;
     }
 
     /**

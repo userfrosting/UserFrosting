@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Carbon;
+
 /*
  * This file is part of the Carbon package.
  *
@@ -9,10 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Carbon;
-
 use Carbon\Carbon;
-use DateTimeZone;
 use InvalidArgumentException;
 use Tests\AbstractTestCase;
 
@@ -101,10 +100,10 @@ class SettersTest extends AbstractTestCase
     {
         $d = Carbon::now();
         $d->setTime(2, 2, 2)->setTime(1, 1, 1);
-        $this->assertInstanceOfCarbon($d);
+        $this->assertInstanceOf('Carbon\Carbon', $d);
         $this->assertSame(1, $d->second);
         $d->setTime(2, 2, 2)->setTime(1, 1);
-        $this->assertInstanceOfCarbon($d);
+        $this->assertInstanceOf('Carbon\Carbon', $d);
         $this->assertSame(0, $d->second);
     }
 
@@ -133,21 +132,10 @@ class SettersTest extends AbstractTestCase
     {
         $d = Carbon::now();
         $d->setDateTime(2013, 9, 24, 17, 4, 29);
-        $this->assertInstanceOfCarbon($d);
+        $this->assertInstanceOf('Carbon\Carbon', $d);
         $d->setDateTime(2014, 10, 25, 18, 5, 30);
-        $this->assertInstanceOfCarbon($d);
+        $this->assertInstanceOf('Carbon\Carbon', $d);
         $this->assertCarbon($d, 2014, 10, 25, 18, 5, 30);
-    }
-
-    /**
-     * @link https://github.com/briannesbitt/Carbon/issues/539
-     */
-    public function testSetDateAfterStringCreation()
-    {
-        $d = new Carbon('first day of this month');
-        $this->assertSame(1, $d->day);
-        $d->setDate($d->year, $d->month, 12);
-        $this->assertSame(12, $d->day);
     }
 
     public function testSecondSetterWithWrap()
@@ -167,11 +155,9 @@ class SettersTest extends AbstractTestCase
         $this->assertSame(11, $d->timestamp);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSetTimezoneWithInvalidTimezone()
     {
+        $this->setExpectedException('InvalidArgumentException');
         $d = Carbon::now();
         $d->setTimezone('sdf');
     }
@@ -182,37 +168,32 @@ class SettersTest extends AbstractTestCase
 
         try {
             $d->timezone = 'sdf';
-            $this->fail('InvalidArgumentException has not been raised.');
+            $this->fail('InvalidArgumentException was not been raised.');
         } catch (InvalidArgumentException $expected) {
         }
 
         try {
             $d->timezone('sdf');
-            $this->fail('InvalidArgumentException has not been raised.');
+            $this->fail('InvalidArgumentException was not been raised.');
         } catch (InvalidArgumentException $expected) {
-            //
         }
     }
-
     public function testTzWithInvalidTimezone()
     {
         $d = Carbon::now();
 
         try {
             $d->tz = 'sdf';
-            $this->fail('InvalidArgumentException has not been raised.');
+            $this->fail('InvalidArgumentException was not been raised.');
         } catch (InvalidArgumentException $expected) {
-            //
         }
 
         try {
             $d->tz('sdf');
-            $this->fail('InvalidArgumentException has not been raised.');
+            $this->fail('InvalidArgumentException was not been raised.');
         } catch (InvalidArgumentException $expected) {
-            //
         }
     }
-
     public function testSetTimezoneUsingString()
     {
         $d = Carbon::now();
@@ -243,61 +224,45 @@ class SettersTest extends AbstractTestCase
     public function testSetTimezoneUsingDateTimeZone()
     {
         $d = Carbon::now();
-        $d->setTimezone(new DateTimeZone('America/Toronto'));
+        $d->setTimezone(new \DateTimeZone('America/Toronto'));
         $this->assertSame('America/Toronto', $d->tzName);
     }
 
     public function testTimezoneUsingDateTimeZone()
     {
         $d = Carbon::now();
-        $d->timezone = new DateTimeZone('America/Toronto');
+        $d->timezone = new \DateTimeZone('America/Toronto');
         $this->assertSame('America/Toronto', $d->tzName);
 
-        $d->timezone(new DateTimeZone('America/Vancouver'));
+        $d->timezone(new \DateTimeZone('America/Vancouver'));
         $this->assertSame('America/Vancouver', $d->tzName);
     }
 
     public function testTzUsingDateTimeZone()
     {
         $d = Carbon::now();
-        $d->tz = new DateTimeZone('America/Toronto');
+        $d->tz = new \DateTimeZone('America/Toronto');
         $this->assertSame('America/Toronto', $d->tzName);
 
-        $d->tz(new DateTimeZone('America/Vancouver'));
+        $d->tz(new \DateTimeZone('America/Vancouver'));
         $this->assertSame('America/Vancouver', $d->tzName);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testInvalidSetter()
     {
+        $this->setExpectedException('InvalidArgumentException');
         $d = Carbon::now();
         $d->doesNotExit = 'bb';
     }
 
-    /**
-     * @dataProvider \Tests\Carbon\SettersTest::dataProviderTestSetTimeFromTimeString
-     *
-     * @param int    $hour
-     * @param int    $minute
-     * @param int    $second
-     * @param string $time
-     */
-    public function testSetTimeFromTimeString($hour, $minute, $second, $time)
+    public function testSetTimeFromTimeString()
     {
-        Carbon::setTestNow(Carbon::create(2016, 2, 12, 1, 2, 3));
-        $d = Carbon::now()->setTimeFromTimeString($time);
-        $this->assertCarbon($d, 2016, 2, 12, $hour, $minute, $second);
-        Carbon::setTestNow();
-    }
+        $d = Carbon::now();
 
-    public function dataProviderTestSetTimeFromTimeString()
-    {
-        return array(
-            array(9, 15, 30, '09:15:30'),
-            array(9, 15, 0, '09:15'),
-            array(9, 0, 0, '09'),
-        );
+        $d->setTimeFromTimeString('09:15:30');
+
+        $this->assertSame(9, $d->hour);
+        $this->assertSame(15, $d->minute);
+        $this->assertSame(30, $d->second);
     }
 }

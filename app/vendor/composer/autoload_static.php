@@ -55,7 +55,6 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         ),
         'P' => 
         array (
-            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
         ),
         'M' => 
@@ -195,10 +194,6 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         array (
             0 => __DIR__ . '/..' . '/rockettheme/toolbox/ArrayTraits/src',
         ),
-        'Psr\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
-        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
@@ -282,6 +277,10 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/psr/log',
+            ),
             'Pimple' => 
             array (
                 0 => __DIR__ . '/..' . '/pimple/pimple/src',

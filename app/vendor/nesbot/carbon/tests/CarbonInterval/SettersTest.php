@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\CarbonInterval;
+
 /*
  * This file is part of the Carbon package.
  *
@@ -9,8 +11,6 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\CarbonInterval;
-
 use Carbon\CarbonInterval;
 use Tests\AbstractTestCase;
 
@@ -18,54 +18,54 @@ class SettersTest extends AbstractTestCase
 {
     public function testYearsSetter()
     {
-        $ci = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
-        $ci->years = 2;
-        $this->assertSame(2, $ci->years);
+        $d = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
+        $d->years = 2;
+        $this->assertSame(2, $d->years);
     }
 
     public function testMonthsSetter()
     {
-        $ci = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
-        $ci->months = 11;
-        $this->assertSame(11, $ci->months);
+        $d = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
+        $d->months = 11;
+        $this->assertSame(11, $d->months);
     }
 
     public function testWeeksSetter()
     {
-        $ci = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
-        $ci->weeks = 11;
-        $this->assertSame(11, $ci->weeks);
-        $this->assertSame(7 * 11, $ci->dayz);
+        $d = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
+        $d->weeks = 11;
+        $this->assertSame(11, $d->weeks);
+        $this->assertSame(7 * 11, $d->dayz);
     }
 
     public function testDayzSetter()
     {
-        $ci = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
-        $ci->dayz = 11;
-        $this->assertSame(11, $ci->dayz);
-        $this->assertSame(1, $ci->weeks);
-        $this->assertSame(4, $ci->dayzExcludeWeeks);
+        $d = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
+        $d->dayz = 11;
+        $this->assertSame(11, $d->dayz);
+        $this->assertSame(1, $d->weeks);
+        $this->assertSame(4, $d->dayzExcludeWeeks);
     }
 
     public function testHoursSetter()
     {
-        $ci = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
-        $ci->hours = 12;
-        $this->assertSame(12, $ci->hours);
+        $d = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
+        $d->hours = 12;
+        $this->assertSame(12, $d->hours);
     }
 
     public function testMinutesSetter()
     {
-        $ci = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
-        $ci->minutes = 11;
-        $this->assertSame(11, $ci->minutes);
+        $d = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
+        $d->minutes = 11;
+        $this->assertSame(11, $d->minutes);
     }
 
     public function testSecondsSetter()
     {
-        $ci = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
-        $ci->seconds = 34;
-        $this->assertSame(34, $ci->seconds);
+        $d = CarbonInterval::create(4, 5, 6, 5, 8, 9, 10);
+        $d->seconds = 34;
+        $this->assertSame(34, $d->seconds);
     }
 
     public function testFluentSetters()

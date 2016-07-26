@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 /*
  * This file is part of the Carbon package.
  *
@@ -8,8 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Tests;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
@@ -31,39 +31,25 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         date_default_timezone_set($this->saveTz);
-        Carbon::setTestNow();
     }
 
     protected function assertCarbon(Carbon $d, $year, $month, $day, $hour = null, $minute = null, $second = null)
     {
-        $actual = array(
-            'years' => $year,
-            'months' => $month,
-            'day' => $day,
-        );
-
-        $expected = array(
-            'years' => $d->year,
-            'months' => $d->month,
-            'day' => $d->day,
-        );
+        $this->assertSame($year, $d->year, 'Carbon->year');
+        $this->assertSame($month, $d->month, 'Carbon->month');
+        $this->assertSame($day, $d->day, 'Carbon->day');
 
         if ($hour !== null) {
-            $expected['hours'] = $d->hour;
-            $actual['hours'] = $hour;
+            $this->assertSame($hour, $d->hour, 'Carbon->hour');
         }
 
         if ($minute !== null) {
-            $expected['minutes'] = $d->minute;
-            $actual['minutes'] = $minute;
+            $this->assertSame($minute, $d->minute, 'Carbon->minute');
         }
 
         if ($second !== null) {
-            $expected['seconds'] = $d->second;
-            $actual['seconds'] = $second;
+            $this->assertSame($second, $d->second, 'Carbon->second');
         }
-
-        $this->assertSame($expected, $actual);
     }
 
     protected function assertInstanceOfCarbon($d)
@@ -73,36 +59,27 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase
 
     protected function assertCarbonInterval(CarbonInterval $ci, $years, $months = null, $days = null, $hours = null, $minutes = null, $seconds = null)
     {
-        $expected = array('years' => $ci->years);
-
-        $actual = array('years' => $years);
+        $this->assertSame($years, $ci->years, 'CarbonInterval->years');
 
         if ($months !== null) {
-            $expected['months'] = $ci->months;
-            $actual['months'] = $months;
+            $this->assertSame($months, $ci->months, 'CarbonInterval->months');
         }
 
         if ($days !== null) {
-            $expected['days'] = $ci->dayz;
-            $actual['days'] = $days;
+            $this->assertSame($days, $ci->dayz, 'CarbonInterval->dayz');
         }
 
         if ($hours !== null) {
-            $expected['hours'] = $ci->hours;
-            $actual['hours'] = $hours;
+            $this->assertSame($hours, $ci->hours, 'CarbonInterval->hours');
         }
 
         if ($minutes !== null) {
-            $expected['minutes'] = $ci->minutes;
-            $actual['minutes'] = $minutes;
+            $this->assertSame($minutes, $ci->minutes, 'CarbonInterval->minutes');
         }
 
         if ($seconds !== null) {
-            $expected['seconds'] = $ci->seconds;
-            $actual['seconds'] = $seconds;
+            $this->assertSame($seconds, $ci->seconds, 'CarbonInterval->seconds');
         }
-
-        $this->assertSame($expected, $actual);
     }
 
     protected function assertInstanceOfCarbonInterval($d)
@@ -112,7 +89,7 @@ abstract class AbstractTestCase extends PHPUnit_Framework_TestCase
 
     protected function wrapWithTestNow(Closure $func, Carbon $dt = null)
     {
-        Carbon::setTestNow($dt ?: Carbon::now());
+        Carbon::setTestNow(($dt === null) ? Carbon::now() : $dt);
         $func();
         Carbon::setTestNow();
     }

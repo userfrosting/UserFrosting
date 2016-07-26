@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Carbon;
+
 /*
  * This file is part of the Carbon package.
  *
@@ -9,10 +11,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Carbon;
-
 use Carbon\Carbon;
-use DateTimeZone;
 use Tests\AbstractTestCase;
 
 class CreateTest extends AbstractTestCase
@@ -20,7 +19,7 @@ class CreateTest extends AbstractTestCase
     public function testCreateReturnsDatingInstance()
     {
         $d = Carbon::create();
-        $this->assertInstanceOfCarbon($d);
+        $this->assertTrue($d instanceof Carbon);
     }
 
     public function testCreateWithDefaults()
@@ -35,22 +34,10 @@ class CreateTest extends AbstractTestCase
         $this->assertSame(2012, $d->year);
     }
 
-    public function testCreateHandlesNegativeYear()
+    public function testCreateWithInvalidYear()
     {
-        $c = Carbon::create(-1, 10, 12, 1, 2, 3);
-        $this->assertCarbon($c, -1, 10, 12, 1, 2, 3);
-    }
-
-    public function testCreateHandlesFiveDigitsPositiveYears()
-    {
-        $c = Carbon::create(999999999, 10, 12, 1, 2, 3);
-        $this->assertCarbon($c, 999999999, 10, 12, 1, 2, 3);
-    }
-
-    public function testCreateHandlesFiveDigitsNegativeYears()
-    {
-        $c = Carbon::create(-999999999, 10, 12, 1, 2, 3);
-        $this->assertCarbon($c, -999999999, 10, 12, 1, 2, 3);
+        $this->setExpectedException('InvalidArgumentException');
+        $d = Carbon::create(-3);
     }
 
     public function testCreateWithMonth()
@@ -59,12 +46,10 @@ class CreateTest extends AbstractTestCase
         $this->assertSame(3, $d->month);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testCreateWithInvalidMonth()
     {
-        Carbon::create(null, -5);
+        $this->setExpectedException('InvalidArgumentException');
+        $d = Carbon::create(null, -5);
     }
 
     public function testCreateMonthWraps()
@@ -79,14 +64,11 @@ class CreateTest extends AbstractTestCase
         $this->assertSame(21, $d->day);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testCreateWithInvalidDay()
     {
-        Carbon::create(null, null, -4);
+        $this->setExpectedException('InvalidArgumentException');
+        $d = Carbon::create(null, null, -4);
     }
-
     public function testCreateDayWraps()
     {
         $d = Carbon::create(2011, 1, 40, 0, 0, 0);
@@ -101,12 +83,10 @@ class CreateTest extends AbstractTestCase
         $this->assertSame(0, $d->second);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testCreateWithInvalidHour()
     {
-        Carbon::create(null, null, null, -1);
+        $this->setExpectedException('InvalidArgumentException');
+        $d = Carbon::create(null, null, null, -1);
     }
 
     public function testCreateHourWraps()
@@ -121,14 +101,11 @@ class CreateTest extends AbstractTestCase
         $this->assertSame(58, $d->minute);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testCreateWithInvalidMinute()
     {
-        Carbon::create(2011, 1, 1, 0, -2, 0);
+        $this->setExpectedException('InvalidArgumentException');
+        $d = Carbon::create(2011, 1, 1, 0, -2, 0);
     }
-
     public function testCreateMinuteWraps()
     {
         $d = Carbon::create(2011, 1, 1, 0, 62, 0);
@@ -141,14 +118,11 @@ class CreateTest extends AbstractTestCase
         $this->assertSame(59, $d->second);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testCreateWithInvalidSecond()
     {
-        Carbon::create(null, null, null, null, null, -2);
+        $this->setExpectedException('InvalidArgumentException');
+        $d = Carbon::create(null, null, null, null, null, -2);
     }
-
     public function testCreateSecondsWrap()
     {
         $d = Carbon::create(2012, 1, 1, 0, 0, 61);
@@ -157,7 +131,7 @@ class CreateTest extends AbstractTestCase
 
     public function testCreateWithDateTimeZone()
     {
-        $d = Carbon::create(2012, 1, 1, 0, 0, 0, new DateTimeZone('Europe/London'));
+        $d = Carbon::create(2012, 1, 1, 0, 0, 0, new \DateTimeZone('Europe/London'));
         $this->assertCarbon($d, 2012, 1, 1, 0, 0, 0);
         $this->assertSame('Europe/London', $d->tzName);
     }
@@ -167,19 +141,5 @@ class CreateTest extends AbstractTestCase
         $d = Carbon::create(2012, 1, 1, 0, 0, 0, 'Europe/London');
         $this->assertCarbon($d, 2012, 1, 1, 0, 0, 0);
         $this->assertSame('Europe/London', $d->tzName);
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testCreateWithInvalidTimezoneOffset()
-    {
-        Carbon::createFromDate(2000, 1, 1, -28236);
-    }
-
-    public function testCreateWithValidTimezoneOffset()
-    {
-        $dt = Carbon::createFromDate(2000, 1, 1, -4);
-        $this->assertSame('America/New_York', $dt->tzName);
     }
 }

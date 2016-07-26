@@ -123,6 +123,9 @@ class UserFrostingServicesProvider
             };
         }
         
+        /**
+         * Start the PHP session, with the name and parameters specified in the configuration file.
+         */         
         if (!isset($container['session'])){         
             $container['session'] = function ($c) {
                 $config = $c->get('config');

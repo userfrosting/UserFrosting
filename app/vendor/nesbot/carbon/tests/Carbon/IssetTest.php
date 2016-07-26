@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Carbon;
+
 /*
  * This file is part of the Carbon package.
  *
@@ -8,8 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Tests\Carbon;
 
 use Carbon\Carbon;
 use Tests\AbstractTestCase;
@@ -21,43 +21,32 @@ class IssetTest extends AbstractTestCase
         $this->assertFalse(isset(Carbon::create(1234, 5, 6, 7, 8, 9)->sdfsdfss));
     }
 
-    public function providerTestIssetReturnTrueForProperties()
+    public function testIssetReturnTrueForProperties()
     {
-        return array(
-            array('age'),
-            array('day'),
-            array('dayOfWeek'),
-            array('dayOfYear'),
-            array('daysInMonth'),
-            array('dst'),
-            array('hour'),
-            array('local'),
-            array('micro'),
-            array('minute'),
-            array('month'),
-            array('offset'),
-            array('offsetHours'),
-            array('quarter'),
-            array('second'),
-            array('timestamp'),
-            array('timezone'),
-            array('timezoneName'),
-            array('tz'),
-            array('tzName'),
-            array('utc'),
-            array('weekOfMonth'),
-            array('weekOfYear'),
-            array('year'),
+        $properties = array(
+            'year',
+            'month',
+            'day',
+            'hour',
+            'minute',
+            'second',
+            'dayOfWeek',
+            'dayOfYear',
+            'daysInMonth',
+            'timestamp',
+            'age',
+            'quarter',
+            'dst',
+            'offset',
+            'offsetHours',
+            'timezone',
+            'timezoneName',
+            'tz',
+            'tzName',
         );
-    }
 
-    /**
-     * @dataProvider \Tests\Carbon\IssetTest::providerTestIssetReturnTrueForProperties
-     *
-     * @param string $property
-     */
-    public function testIssetReturnTrueForProperties($property)
-    {
-        $this->assertTrue(isset(Carbon::now()->$property));
+        foreach ($properties as $property) {
+            $this->assertTrue(isset(Carbon::create(1234, 5, 6, 7, 8, 9)->$property));
+        }
     }
 }

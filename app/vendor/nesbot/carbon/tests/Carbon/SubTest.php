@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Carbon;
+
 /*
  * This file is part of the Carbon package.
  *
@@ -8,8 +10,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Tests\Carbon;
 
 use Carbon\Carbon;
 use Tests\AbstractTestCase;
@@ -181,9 +181,8 @@ class SubTest extends AbstractTestCase
         $this->assertSame(59, Carbon::createFromTime(0, 0, 0)->subSecond()->second);
     }
 
-    /**
-     * Test non plural methods with non default args.
-     */
+    /***** Test non plural methods with non default args *****/
+
     public function testSubYearPassingArg()
     {
         $this->assertSame(1973, Carbon::createFromDate(1975)->subYear(2)->year);

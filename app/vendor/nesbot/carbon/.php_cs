@@ -1,28 +1,11 @@
 <?php
 
-use Symfony\CS\Config\Config;
-use Symfony\CS\Finder\DefaultFinder;
-use Symfony\CS\Fixer\Contrib\HeaderCommentFixer;
-
-$finder = DefaultFinder::create()
+$finder = Symfony\CS\Finder\DefaultFinder::create()
     ->in(__DIR__);
-
-$header = <<< EOF
-This file is part of the Carbon package.
-
-(c) Brian Nesbitt <brian@nesbot.com>
-
-For the full copyright and license information, please view the LICENSE
-file that was distributed with this source code.
-EOF;
-
-HeaderCommentFixer::setHeader($header);
 
 $fixers = array(
     '-psr0',
-    'concat_without_spaces',
     'extra_empty_lines',
-    'header_comment',
     'long_array_syntax',
     'no_empty_lines_after_phpdocs',
     'phpdoc_align',
@@ -39,15 +22,9 @@ $fixers = array(
     'phpdoc_types',
     'phpdoc_var_without_name',
     'return',
-    'single_quote',
-    'spaces_cast',
-    'unalign_double_arrow',
-    'unalign_equals',
-    'unused_use',
-    'whitespacy_lines',
 );
 
-return Config::create()
+return Symfony\CS\Config\Config::create()
     ->finder($finder)
     ->fixers($fixers)
     ->level(Symfony\CS\FixerInterface::PSR2_LEVEL)

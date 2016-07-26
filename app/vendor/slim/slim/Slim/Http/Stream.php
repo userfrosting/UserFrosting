@@ -20,13 +20,6 @@ use RuntimeException;
 class Stream implements StreamInterface
 {
     /**
-     * Bit mask to determine if the stream is a pipe
-     *
-     * This is octal as per header stat.h
-     */
-    const FSTAT_MODE_S_IFIFO = 0010000;
-
-    /**
      * Resource modes
      *
      * @var  array
@@ -78,13 +71,6 @@ class Stream implements StreamInterface
      * @var null|int
      */
     protected $size;
-
-    /**
-     * Is this stream a pipe?
-     *
-     * @var bool
-     */
-    protected $isPipe;
 
     /**
      * Create a new Stream.
@@ -172,7 +158,6 @@ class Stream implements StreamInterface
         $this->writable = null;
         $this->seekable = null;
         $this->size = null;
-        $this->isPipe = null;
 
         return $oldResource;
     }
@@ -211,11 +196,7 @@ class Stream implements StreamInterface
     public function close()
     {
         if ($this->isAttached() === true) {
-            if ($this->isPipe()) {
-                pclose($this->stream);
-            } else {
-                fclose($this->stream);
-            }
+            fclose($this->stream);
         }
 
         $this->detach();
@@ -230,7 +211,7 @@ class Stream implements StreamInterface
     {
         if (!$this->size && $this->isAttached() === true) {
             $stats = fstat($this->stream);
-            $this->size = isset($stats['size']) && !$this->isPipe() ? $stats['size'] : null;
+            $this->size = isset($stats['size']) ? $stats['size'] : null;
         }
 
         return $this->size;
@@ -245,7 +226,7 @@ class Stream implements StreamInterface
      */
     public function tell()
     {
-        if (!$this->isAttached() || ($position = ftell($this->stream)) === false || $this->isPipe()) {
+        if (!$this->isAttached() || ($position = ftell($this->stream)) === false) {
             throw new RuntimeException('Could not get the position of the pointer in stream');
         }
 
@@ -270,17 +251,13 @@ class Stream implements StreamInterface
     public function isReadable()
     {
         if ($this->readable === null) {
-            if ($this->isPipe()) {
-                $this->readable = true;
-            } else {
-                $this->readable = false;
-                if ($this->isAttached()) {
-                    $meta = $this->getMetadata();
-                    foreach (self::$modes['readable'] as $mode) {
-                        if (strpos($meta['mode'], $mode) === 0) {
-                            $this->readable = true;
-                            break;
-                        }
+            $this->readable = false;
+            if ($this->isAttached()) {
+                $meta = $this->getMetadata();
+                foreach (self::$modes['readable'] as $mode) {
+                    if (strpos($meta['mode'], $mode) === 0) {
+                        $this->readable = true;
+                        break;
                     }
                 }
             }
@@ -323,7 +300,7 @@ class Stream implements StreamInterface
             $this->seekable = false;
             if ($this->isAttached()) {
                 $meta = $this->getMetadata();
-                $this->seekable = !$this->isPipe() && $meta['seekable'];
+                $this->seekable = $meta['seekable'];
             }
         }
 
@@ -428,23 +405,5 @@ class Stream implements StreamInterface
         }
 
         return $contents;
-    }
-
-    /**
-     * Returns whether or not the stream is a pipe.
-     *
-     * @return bool
-     */
-    public function isPipe()
-    {
-        if ($this->isPipe === null) {
-            $this->isPipe = false;
-            if ($this->isAttached()) {
-                $mode = fstat($this->stream)['mode'];
-                $this->isPipe = ($mode & self::FSTAT_MODE_S_IFIFO) !== 0;
-            }
-        }
-
-        return $this->isPipe;
     }
 }

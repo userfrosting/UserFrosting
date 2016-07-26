@@ -1,7 +1,5 @@
 <?php
 
-namespace UserFrosting\Controller;
-
 /**
  * AccountController Class
  *
@@ -11,12 +9,16 @@ namespace UserFrosting\Controller;
  * @author Alex Weissman
  * @link http://www.userfrosting.com/navigating/#structure
  */
+namespace UserFrosting\Controller;
+
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-    
+//use UserFrosting\Support\Exception\
+
+
 class AccountController
 {
     
@@ -27,64 +29,38 @@ class AccountController
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci) {
+    public function __construct(ContainerInterface $ci)
+    {
         $this->ci = $ci;
     }
 
+    
     /**
-     * Render the account registration/sign-in page for UserFrosting.
+     * Account settings page.
      *
-     * This allows new (non-authenticated) users to create a new account for themselves on your website.
-     * By definition, this is a "public page" (does not require authentication).     
+     * Provides a form for users to modify various properties of their account, such as name, email, locale, etc.
+     * Any fields that the user does not have permission to modify will be automatically disabled.
+     * This page requires authentication.
      * Request type: GET
-     * @param bool $can_register Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page.
      */
-    public function pageSignInOrRegister($request, $response, $args)
+    public function pageAccountSettings($request, $response, $args)
     {
-        /*
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Forward to home page if user is already logged in
-        if (!$this->_app->user->isGuest()){
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        // Security measure: do not allow registering new users until the master account has been created.
-        if (!User::find($this->_app->config('user_id_master'))){
-            $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
-            $this->_app->redirect($this->_app->urlFor('uri_install'));
-        }
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $settings = $this->_app->site;
-
-        // If registration is disabled, send them back to the login page with an error message
-        if (!$settings->can_register){
-            $this->_app->alerts->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
-            $this->_app->redirect('login');
-        }
-
-        $this->_app->render('account/register.twig', [
-            'captcha_image' =>  $this->generateCaptcha(),
-            'validators' => $this->_app->jsValidator->rules()
-        ]);
-        */
+        $currentUser = $this->ci['currentUser'];
         
+        // Access-controlled page
+        if (!$currentUser->checkAccess('uri_account_settings')){
+            // Throw some kind of exception
+        }
+
         // Load validation rules
-        $schema = new RequestSchema("schema://login.json");
-        $validatorLogin = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        $schema = new RequestSchema("schema://account-settings.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
         
-        $schema = new RequestSchema("schema://register.json");
-        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci['translator']);
-        
-        return $this->ci['view']->render($response, 'pages/sign-in-or-register.html.twig', [
+        return $this->ci['view']->render($response, 'pages/account-settings.html.twig', [
             "page" => [
+                "locales" => [], //$site->getLocales(),
                 "validators" => [
-                    "login"    => $validatorLogin->rules('json', false),
-                    "register" => $validatorRegister->rules('json', false)
+                    "forgot_password"    => $validator->rules('json', false)
                 ]
             ]
         ]);
@@ -160,30 +136,63 @@ class AccountController
             'validators' => $this->_app->jsValidator->rules()
         ]);
     }
-    
+
     /**
-     * Account settings page.
+     * Render the account registration/sign-in page for UserFrosting.
      *
-     * Provides a form for users to modify various properties of their account, such as display name, email, locale, etc.
-     * Any fields that the user does not have permission to modify will be automatically disabled.
-     * This page requires authentication.
+     * This allows new (non-authenticated) users to create a new account for themselves on your website.
+     * By definition, this is a "public page" (does not require authentication).     
      * Request type: GET
+     * @param bool $can_register Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page.
      */
-    public function pageAccountSettings(){
-        // Access-controlled page
-        if (!$this->_app->user->checkAccess('uri_account_settings')){
-            $this->_app->notFound();
+    public function pageSignInOrRegister($request, $response, $args)
+    {
+        /*
+        // Get the alert message stream
+        $ms = $this->_app->alerts;
+
+        // Forward to home page if user is already logged in
+        if (!$this->_app->user->isGuest()){
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
 
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
-        $this->_app->jsValidator->setSchema($schema);
+        // Security measure: do not allow registering new users until the master account has been created.
+        if (!User::find($this->_app->config('user_id_master'))){
+            $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
+            $this->_app->redirect($this->_app->urlFor('uri_install'));
+        }
+        
+        $settings = $this->_app->site;
 
-        $this->_app->render('account/account-settings.twig', [
-            "locales" => $this->_app->site->getLocales(),
-            "validators" => $this->_app->jsValidator->rules()
+        // If registration is disabled, send them back to the login page with an error message
+        if (!$settings->can_register){
+            $this->_app->alerts->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
+            $this->_app->redirect('login');
+        }
+
+        $this->_app->render('account/register.twig', [
+            'captcha_image' =>  $this->generateCaptcha(),
+            'validators' => $this->_app->jsValidator->rules()
         ]);
-    }
-
+        */
+        
+        // Load validation rules
+        $schema = new RequestSchema("schema://login.json");
+        $validatorLogin = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        
+        $schema = new RequestSchema("schema://register.json");
+        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci['translator']);
+        
+        return $this->ci['view']->render($response, 'pages/sign-in-or-register.html.twig', [
+            "page" => [
+                "validators" => [
+                    "login"    => $validatorLogin->rules('json', false),
+                    "register" => $validatorRegister->rules('json', false)
+                ]
+            ]
+        ]);
+    }    
+    
     /**
      * Account compromised page.
      *
