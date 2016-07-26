@@ -13,3 +13,21 @@
     border-radius: 4px;
     background-color:rgba(66, 197, 234, .9);
 }
+
+a
+{
+    color: #fff;
+    border-bottom: 1px dotted #fff;
+}
+
+a:hover, footer a:focus
+{
+    color: #fff;
+    border: 0;
+}
+
+.registration-links
+{
+    padding-top: 10px;
+    text-align: left;
+}

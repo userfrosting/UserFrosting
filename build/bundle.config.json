@@ -18,6 +18,32 @@
             }
         }
     },
+    "js/pages/forgot-password" : {
+        "scripts": [
+            "vendor/jquery-backstretch/jquery.backstretch.js",
+            "js/pages/forgot-password.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/resend-verification" : {
+        "scripts": [
+            "vendor/jquery-backstretch/jquery.backstretch.js",
+            "js/pages/resend-verification.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
     "js/pages/sign-in-or-register" : {
         "scripts": [
             "vendor/jquery-backstretch/jquery.backstretch.js",
@@ -30,7 +56,7 @@
                 }
             }
         }
-    },    
+    },     
     "css/azmind" : {
         "styles": [
             "vendor/azmind/css/form-elements.css",

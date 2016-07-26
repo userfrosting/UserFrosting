@@ -93,6 +93,12 @@
                 </div>
                 <button type="submit" class="btn">Sign in!</button>
             </form>
+            <div class="registration-links">
+                <a href="{{site.uri.public}}/account/forgot-password">I forgot my password</a>
+                <br>
+                {# TODO: hide this link if public registration is turned off? #}
+                <a href="{{site.uri.public}}/account/resend-verification">Resend verification email</a>
+            </div>            
             <div class="social-login">
                 <p>Or login with:</p>
                 <div class="social-login-buttons">

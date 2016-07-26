@@ -11,6 +11,8 @@ namespace UserFrosting\Controller;
  * @author Alex Weissman
  * @link http://www.userfrosting.com/navigating/#structure
  */
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
@@ -104,12 +106,34 @@ class AccountController
         return $this->ci['view']->render($response, 'pages/forgot-password.html.twig', [
             "page" => [
                 "validators" => [
-                    "forgot-password"    => $validator->rules('json', false)
+                    "forgot_password"    => $validator->rules('json', false)
                 ]
             ]
         ]);
     }
 
+    /**
+     * Render the "resend verification email" page.
+     *
+     * This is a form that allows users who lost their account verification link to have the link resent to their email address.
+     * By default, this is a "public page" (does not require authentication).
+     * Request type: GET
+     */
+    public function pageResendVerification($request, $response, $args)
+    {
+        // Load validation rules
+        $schema = new RequestSchema("schema://resend-verification.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        
+        return $this->ci['view']->render($response, 'pages/resend-verification.html.twig', [
+            "page" => [
+                "validators" => [
+                    "resend_verification"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+    
     /**
      * Render the "set password" page.
      *
@@ -136,24 +160,7 @@ class AccountController
             'validators' => $this->_app->jsValidator->rules()
         ]);
     }
-
-    /**
-     * Render the "resend account activation link" page.
-     *
-     * This is a form that allows users who lost their account activation link to have the link resent to their email address.
-     * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
-     */
-    public function pageResendActivation(){
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('account/resend-activation.twig', [
-            'validators' => $this->_app->jsValidator->rules()
-        ]);
-    }
-
+    
     /**
      * Account settings page.
      *

@@ -1,15 +1,12 @@
 <?php
     
-    use Cartalyst\Sentinel\Native\Facades\Sentinel;
-
-    use Illuminate\Database\Capsule\Manager as Capsule;
-    use Illuminate\Database\Schema\Blueprint;
-
     use \Psr\Http\Message\ResponseInterface as Response;
     use \Psr\Http\Message\ServerRequestInterface as Request;
     
     $app->group('/account', function () {
-        $this->get('/forgot-password', 'UserFrosting\Controller\AccountController:pageForgotPassword')->add('checkEnvironment');
+        $this->get('/forgot-password', 'UserFrosting\Controller\AccountController:pageForgotPassword');
+        
+        $this->get('/resend-verification', 'UserFrosting\Controller\AccountController:pageResendVerification');
         
         $this->get('/sign-in-or-register', 'UserFrosting\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
         
