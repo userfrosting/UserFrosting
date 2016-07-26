@@ -9,10 +9,12 @@
  * @author Alex Weissman
  * @see http://www.userfrosting.com/components/#authentication
  */
- 
-namespace UserFrosting\Authenticate;
+namespace UserFrosting\Account\Authenticate;
 
-class Authenticate {
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+class Authenticate
+{
     
     /**
      * Create a new Authentication object.
@@ -66,7 +68,7 @@ class Authenticate {
     {
         if ($complete){
             $storage = new \Birke\Rememberme\Storage\PDO($this->remember_me_table);
-            $storage->setConnection(\Illuminate\Database\Capsule\Manager::connection()->getPdo());
+            $storage->setConnection(Capsule::connection()->getPdo());
             $storage->cleanAllTriplets($this->user->id);
         }        
         // Change cookie path

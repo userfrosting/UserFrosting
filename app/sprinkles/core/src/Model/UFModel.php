@@ -1,10 +1,9 @@
 <?php
 
-namespace UserFrosting;
+namespace UserFrosting\Core\Model;
 
 use Illuminate\Database\Eloquent\Model;
-
-use \Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * UFModel Class

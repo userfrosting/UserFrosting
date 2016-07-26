@@ -1,8 +1,8 @@
 <?php
 
-namespace UserFrosting\Model;
+namespace UserFrosting\Account\Model;
 
-use \Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * Group Class

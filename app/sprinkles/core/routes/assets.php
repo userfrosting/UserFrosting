@@ -1,8 +1,9 @@
 <?php
 
-    use \Psr\Http\Message\ServerRequestInterface as Request;
-    use \Psr\Http\Message\ResponseInterface as Response;
-    use \Slim\Exception\NotFoundException as NotFoundException;
+    use Psr\Http\Message\ResponseInterface as Response;
+    use Psr\Http\Message\ServerRequestInterface as Request;
+    use Slim\Exception\NotFoundException as NotFoundException;
+    use UserFrosting\Core\Util\MimeType;
     
     global $app;
     $config = $app->getContainer()->get('config');
@@ -30,7 +31,7 @@
         }
         
         $content = file_get_contents($abspath);
-        $type = UserFrosting\Util\MimeType::detectByFilename($url);
+        $type = MimeType::detectByFilename($url);
         $length = filesize($abspath);
         
         return $response

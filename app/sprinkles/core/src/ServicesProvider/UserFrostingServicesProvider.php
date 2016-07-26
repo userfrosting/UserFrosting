@@ -7,7 +7,7 @@
  * @author    Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\ServicesProvider;
+namespace UserFrosting\Core\ServicesProvider;
 
 use Cartalyst\Sentinel\Native\Facades\Sentinel;
 
@@ -28,15 +28,16 @@ use Slim\Http\Uri;
 
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\AssetBundleSchema;
-use UserFrosting\Util\CheckEnvironment;
-
-use UserFrosting\Extension\UserFrostingExtension as UserFrostingExtension;
-
+use UserFrosting\Core\Extension\UserFrostingExtension;
+use UserFrosting\Core\Handler\ShutdownHandler;
+use UserFrosting\Core\Handler\UserFrostingErrorHandler;
+use UserFrosting\Core\MessageStream;
+use UserFrosting\Core\Util\CheckEnvironment;
 use UserFrosting\I18n\MessageTranslator;
 
 // For sessions
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
-use \Illuminate\Filesystem\Filesystem;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\FileSessionHandler;
 use Illuminate\Session\DatabaseSessionHandler;
 
@@ -63,7 +64,7 @@ class UserFrostingServicesProvider
                 $routerCacheFile = $c->get('settings')['routerCacheFile'];
             }
             
-            return (new \UserFrosting\Router)->setCacheFile($routerCacheFile);
+            return (new \UserFrosting\Core\Router)->setCacheFile($routerCacheFile);
         };  
     
         // Site config object (separate from Slim settings)
@@ -157,7 +158,7 @@ class UserFrostingServicesProvider
                 $session = $c->get('session');
                 
                 if (!$session['site.alerts'])
-                    $session['site.alerts'] = new \UserFrosting\MessageStream();
+                    $session['site.alerts'] = new \UserFrosting\Core\MessageStream();
                     
                 return $session['site.alerts'];
             };
@@ -229,7 +230,7 @@ class UserFrostingServicesProvider
                 $translator->setDefaultTable('locale://en_US.php');
                 
                 // Register translator with MessageStream
-                \UserFrosting\MessageStream::setTranslator($translator);
+                MessageStream::setTranslator($translator);
                 
                 return $translator;
             };
@@ -333,7 +334,7 @@ class UserFrostingServicesProvider
                 $request = $c->get('request');
                 $response = $c->get('response');
                 
-                return new \UserFrosting\Handler\ShutdownHandler($request, $response, $alerts, $translator);
+                return new ShutdownHandler($request, $response, $alerts, $translator);
             };
         }
         
@@ -345,7 +346,7 @@ class UserFrostingServicesProvider
             $settings = $c->get('settings');
             $errorLogger = $c->get('errorLogger');
                
-            return new \UserFrosting\Handler\UserFrostingErrorHandler($config, $alerts, $view, $errorLogger, $settings['displayErrorDetails']);
+            return new UserFrostingErrorHandler($config, $alerts, $view, $errorLogger, $settings['displayErrorDetails']);
         };        
     
         // Custom 404 handler.  TODO: handle xhr case, just like errorHandler

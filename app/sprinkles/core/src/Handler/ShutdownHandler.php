@@ -1,12 +1,13 @@
 <?php
 
-namespace UserFrosting\Handler;
+namespace UserFrosting\Core\Handler;
 
 /**
  * Registers a handler to be invoked whenever the application shuts down.
  * If it shut down due to a fatal error, will generate a clean error message.
  */ 
-class ShutdownHandler {
+class ShutdownHandler
+{
 
     protected $request;
     protected $response;

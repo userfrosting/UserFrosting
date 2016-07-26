@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting;
+namespace UserFrosting\Core\Model;
 
 use \Illuminate\Database\Capsule\Manager as Capsule;
 

@@ -5,7 +5,7 @@
  *
  */
 
-namespace UserFrosting\Util;
+namespace UserFrosting\Core\Util;
 
 class MimeType
 {

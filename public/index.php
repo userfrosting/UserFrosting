@@ -1,6 +1,6 @@
 <?php
 
-    use UserFrosting\ServicesProvider\UserFrostingServicesProvider as UserFrostingServicesProvider;
+    use UserFrosting\Core\ServicesProvider\UserFrostingServicesProvider;
     
     // First off, we'll grab the Composer dependencies
     require_once '../app/vendor/autoload.php';
@@ -30,7 +30,7 @@
     $container['shutdownHandler'];     
     
     // Load the account sprinkle.  This should be moved to a sprinkle manager class, which will automatically run init for all these classes.
-    $accountSprinkle = new \UserFrosting\Sprinkle\Account($container);
+    $accountSprinkle = new \UserFrosting\Account\Account($container);
     $accountSprinkle->init();
     
     //$container['db'];

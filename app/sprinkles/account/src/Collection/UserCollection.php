@@ -10,7 +10,7 @@
  * @link http://www.userfrosting.com/navigating/#structure
  */
  
-namespace UserFrosting\Collection;
+namespace UserFrosting\Account\Collection;
 
 class UserCollection extends \Illuminate\Database\Eloquent\Collection {
     

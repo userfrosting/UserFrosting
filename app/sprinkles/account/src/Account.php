@@ -8,9 +8,10 @@
  * @link http://www.userfrosting.com
  */
  
-namespace UserFrosting\Sprinkle;
+namespace UserFrosting\Account;
 
-use UserFrosting\ServicesProvider\AccountServicesProvider;
+use UserFrosting\Account\ServicesProvider\AccountServicesProvider;
+use UserFrosting\Core\Sprinkle\Sprinkle;
 
 class Account extends Sprinkle
 {

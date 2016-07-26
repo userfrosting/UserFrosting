@@ -27,8 +27,10 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
             'UserFrosting\\Session\\' => 21,
             'UserFrosting\\I18n\\' => 18,
             'UserFrosting\\Fortress\\' => 22,
+            'UserFrosting\\Core\\' => 18,
             'UserFrosting\\Config\\' => 20,
             'UserFrosting\\Assets\\' => 20,
+            'UserFrosting\\Account\\' => 21,
             'UserFrosting\\' => 13,
         ),
         'S' => 
@@ -116,6 +118,10 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         array (
             0 => __DIR__ . '/..' . '/userfrosting/fortress/Fortress',
         ),
+        'UserFrosting\\Core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/sprinkles/core/src',
+        ),
         'UserFrosting\\Config\\' => 
         array (
             0 => __DIR__ . '/..' . '/userfrosting/config/Config',
@@ -124,11 +130,13 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         array (
             0 => __DIR__ . '/..' . '/userfrosting/assets/Assets',
         ),
-        'UserFrosting\\' => 
+        'UserFrosting\\Account\\' => 
         array (
             0 => __DIR__ . '/../..' . '/sprinkles/account/src',
-            1 => __DIR__ . '/../..' . '/sprinkles/admin/src',
-            2 => __DIR__ . '/../..' . '/sprinkles/core/src',
+        ),
+        'UserFrosting\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/sprinkles/admin/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (

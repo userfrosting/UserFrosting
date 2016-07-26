@@ -9,11 +9,12 @@
  * @author Alex Weissman
  * @link http://www.userfrosting.com
  */
-namespace UserFrosting\Sprinkle;
+namespace UserFrosting\Core\Sprinkle;
 
 use Interop\Container\ContainerInterface;
 
-abstract class Sprinkle {
+abstract class Sprinkle
+{
 
     protected $ci;
     

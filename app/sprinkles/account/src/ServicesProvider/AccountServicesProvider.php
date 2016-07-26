@@ -7,10 +7,10 @@
  * @author    Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\ServicesProvider;
+namespace UserFrosting\Account\ServicesProvider;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Model\User;
+use UserFrosting\Account\Model\User;
 
 /**
  * Registers services for the account sprinkle, such as currentUser, etc
