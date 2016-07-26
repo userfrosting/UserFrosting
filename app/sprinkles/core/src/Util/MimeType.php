@@ -5,7 +5,7 @@
  *
  */
 
-namespace UserFrosting\Core\Util;
+namespace UserFrosting\Sprinkle\Core\Util;
 
 class MimeType
 {

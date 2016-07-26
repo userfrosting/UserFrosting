@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "UserFrosting\\Account\\": "src/"
+            "UserFrosting\\Sprinkle\\Account\\": "src/"
         }
     }
 }

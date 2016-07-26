@@ -9,7 +9,7 @@
  * @author Alex Weissman
  * @link http://www.userfrosting.com
  */
-namespace UserFrosting\Core\Sprinkle;
+namespace UserFrosting\Sprinkle\Core\Initialize;
 
 use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
@@ -38,12 +38,12 @@ class SprinkleManager
     public function setSprinkles($sprinkles)
     {
         // Create core sprinkle
-        $this->sprinkles['core'] = new \UserFrosting\Core\Core($this->ci);
+        $this->sprinkles['core'] = new \UserFrosting\Sprinkle\Core\Core($this->ci);
     
         // Create other sprinkle objects
         foreach ($sprinkles as $name) {
             $className = ucfirst($name);
-            $fullClassName = "UserFrosting\\$className\\$className";
+            $fullClassName = "UserFrosting\\Sprinkle\\$className\\$className";
             // TODO: check that class exists
             
             $this->sprinkles[$name] = new $fullClassName($this->ci);

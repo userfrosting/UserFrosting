@@ -7,7 +7,7 @@
  * @author    Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Core\ServicesProvider;
+namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use Cartalyst\Sentinel\Native\Facades\Sentinel;
 
@@ -24,11 +24,11 @@ use Slim\Http\Uri;
 
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\AssetBundleSchema;
-use UserFrosting\Core\Extension\UserFrostingExtension;
-use UserFrosting\Core\Handler\ShutdownHandler;
-use UserFrosting\Core\Handler\UserFrostingErrorHandler;
-use UserFrosting\Core\MessageStream;
-use UserFrosting\Core\Util\CheckEnvironment;
+use UserFrosting\Sprinkle\Core\Extension\UserFrostingExtension;
+use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
+use UserFrosting\Sprinkle\Core\Handler\UserFrostingErrorHandler;
+use UserFrosting\Sprinkle\Core\MessageStream;
+use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\I18n\MessageTranslator;
 
 // For sessions
@@ -60,7 +60,7 @@ class UserFrostingServicesProvider
                 $routerCacheFile = $c->get('settings')['routerCacheFile'];
             }
             
-            return (new \UserFrosting\Core\Router)->setCacheFile($routerCacheFile);
+            return (new \UserFrosting\Sprinkle\Core\Router)->setCacheFile($routerCacheFile);
         };  
     
         // Site config object (separate from Slim settings)
@@ -140,7 +140,7 @@ class UserFrostingServicesProvider
                 $session = $c->get('session');
                 
                 if (!$session['site.alerts'])
-                    $session['site.alerts'] = new \UserFrosting\Core\MessageStream();
+                    $session['site.alerts'] = new \UserFrosting\Sprinkle\Core\MessageStream();
                     
                 return $session['site.alerts'];
             };

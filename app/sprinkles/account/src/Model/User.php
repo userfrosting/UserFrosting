@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting\Account\Model;
+namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 

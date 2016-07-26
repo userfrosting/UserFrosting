@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting\Core;
+namespace UserFrosting\Sprinkle\Core;
 
 /**
  * MessageStream Class

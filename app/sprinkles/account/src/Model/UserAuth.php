@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting\Account\Model;
+namespace UserFrosting\Sprinkle\Account\Model;
 
 /**
  * A static class responsible for retrieving user authorization object(s) from the database.

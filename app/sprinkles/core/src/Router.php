@@ -7,7 +7,7 @@
  * @author    Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Core;
+namespace UserFrosting\Sprinkle\Core;
 
 use FastRoute\Dispatcher;
 use InvalidArgumentException;

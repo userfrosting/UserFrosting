@@ -4,11 +4,11 @@
     use \Psr\Http\Message\ServerRequestInterface as Request;
     
     $app->group('/account', function () {
-        $this->get('/forgot-password', 'UserFrosting\Account\Controller\AccountController:pageForgotPassword');
+        $this->get('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageForgotPassword');
         
-        $this->get('/resend-verification', 'UserFrosting\Account\Controller\AccountController:pageResendVerification');
+        $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
         
-        $this->get('/sign-in-or-register', 'UserFrosting\Account\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
+        $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
         
         $this->get('/logout', function (Request $request, Response $response, $args) {
             $this->session->destroy();

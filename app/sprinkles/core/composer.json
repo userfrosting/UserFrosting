@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "UserFrosting\\Core\\": "src/"
+            "UserFrosting\\Sprinkle\\Core\\": "src/"
         }
     }
 }

@@ -8,10 +8,10 @@
  * @link http://www.userfrosting.com
  */
  
-namespace UserFrosting\Core;
+namespace UserFrosting\Sprinkle\Core;
 
-use UserFrosting\Core\ServicesProvider\UserFrostingServicesProvider;
-use UserFrosting\Core\Sprinkle\Sprinkle;
+use UserFrosting\Sprinkle\Core\ServicesProvider\UserFrostingServicesProvider;
+use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
 
 class Core extends Sprinkle
 {

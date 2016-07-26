@@ -3,7 +3,7 @@
     use Psr\Http\Message\ResponseInterface as Response;
     use Psr\Http\Message\ServerRequestInterface as Request;
     use Slim\Exception\NotFoundException as NotFoundException;
-    use UserFrosting\Core\Util\MimeType;
+    use UserFrosting\Sprinkle\Core\Util\MimeType;
     
     global $app;
     $config = $app->getContainer()->get('config');

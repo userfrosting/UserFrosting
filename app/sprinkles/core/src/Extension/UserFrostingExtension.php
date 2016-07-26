@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting\Core\Extension;
+namespace UserFrosting\Sprinkle\Core\Extension;
 
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use Slim\Http\Uri;

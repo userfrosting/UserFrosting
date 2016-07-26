@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting\Core\Handler;
+namespace UserFrosting\Sprinkle\Core\Handler;
 
 /**
  * Registers a handler to be invoked whenever the application shuts down.

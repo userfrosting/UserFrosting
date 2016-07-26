@@ -466,7 +466,6 @@ class UriTest extends \PHPUnit_Framework_TestCase
         ]);
         $uri = Uri::createFromEnvironment($environment);
         $this->assertEquals('http://example.com/foo/', (string) $uri);
-
     }
 
     /**
@@ -632,5 +631,17 @@ class UriTest extends \PHPUnit_Framework_TestCase
             )
         );
         $this->assertSame('/foo/index.php', $uri->getBasePath());
+    }
+
+    public function testRequestURICanContainParams()
+    {
+        $uri = Uri::createFromEnvironment(
+            Environment::mock(
+                [
+                    'REQUEST_URI' => '/foo?abc=123',
+                ]
+            )
+        );
+        $this->assertEquals('abc=123', $uri->getQuery());
     }
 }

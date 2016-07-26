@@ -9,7 +9,7 @@
  * @author Alex Weissman
  * @see http://www.userfrosting.com/components/#authentication
  */
-namespace UserFrosting\Account\Authenticate;
+namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 

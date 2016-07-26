@@ -9,7 +9,7 @@
  * @author Alex Weissman
  * @link http://www.userfrosting.com
  */
-namespace UserFrosting\Core\Sprinkle;
+namespace UserFrosting\Sprinkle\Core\Initialize;
 
 use Interop\Container\ContainerInterface;
 

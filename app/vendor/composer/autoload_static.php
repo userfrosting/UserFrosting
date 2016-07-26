@@ -24,13 +24,13 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         'U' => 
         array (
             'UserFrosting\\Support\\' => 21,
+            'UserFrosting\\Sprinkle\\Core\\' => 27,
+            'UserFrosting\\Sprinkle\\Account\\' => 30,
             'UserFrosting\\Session\\' => 21,
             'UserFrosting\\I18n\\' => 18,
             'UserFrosting\\Fortress\\' => 22,
-            'UserFrosting\\Core\\' => 18,
             'UserFrosting\\Config\\' => 20,
             'UserFrosting\\Assets\\' => 20,
-            'UserFrosting\\Account\\' => 21,
             'UserFrosting\\' => 13,
         ),
         'S' => 
@@ -106,6 +106,14 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         array (
             0 => __DIR__ . '/..' . '/userfrosting/support/Support',
         ),
+        'UserFrosting\\Sprinkle\\Core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/sprinkles/core/src',
+        ),
+        'UserFrosting\\Sprinkle\\Account\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/sprinkles/account/src',
+        ),
         'UserFrosting\\Session\\' => 
         array (
             0 => __DIR__ . '/..' . '/userfrosting/session/Session',
@@ -118,10 +126,6 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         array (
             0 => __DIR__ . '/..' . '/userfrosting/fortress/Fortress',
         ),
-        'UserFrosting\\Core\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/sprinkles/core/src',
-        ),
         'UserFrosting\\Config\\' => 
         array (
             0 => __DIR__ . '/..' . '/userfrosting/config/Config',
@@ -129,10 +133,6 @@ class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
         'UserFrosting\\Assets\\' => 
         array (
             0 => __DIR__ . '/..' . '/userfrosting/assets/Assets',
-        ),
-        'UserFrosting\\Account\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/sprinkles/account/src',
         ),
         'UserFrosting\\' => 
         array (
