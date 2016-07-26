@@ -10,7 +10,7 @@
  
 namespace UserFrosting\Sprinkle\Core;
 
-use UserFrosting\Sprinkle\Core\ServicesProvider\UserFrostingServicesProvider;
+use UserFrosting\Sprinkle\Core\ServicesProvider\CoreServicesProvider;
 use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
 
 class Core extends Sprinkle
@@ -19,7 +19,7 @@ class Core extends Sprinkle
     public function init()
     { 
         // Register default UserFrosting services
-        $serviceProvider = new UserFrostingServicesProvider();
+        $serviceProvider = new CoreServicesProvider();
         $serviceProvider->register($this->ci);
     }
 }
