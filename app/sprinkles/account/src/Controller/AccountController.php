@@ -43,20 +43,22 @@ class AccountController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageAccountSettings($request, $response, $args)
+    public function pageSettings($request, $response, $args)
     {
         $currentUser = $this->ci['currentUser'];
         
         // Access-controlled page
+        /*
         if (!$currentUser->checkAccess('uri_account_settings')){
             // Throw some kind of exception
         }
-
+        */
+        
         // Load validation rules
         $schema = new RequestSchema("schema://account-settings.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
         
-        return $this->ci['view']->render($response, 'pages/account-settings.html.twig', [
+        return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             "page" => [
                 "locales" => [], //$site->getLocales(),
                 "validators" => [

@@ -1,12 +1,14 @@
 <?php
     
-    use \Psr\Http\Message\ResponseInterface as Response;
-    use \Psr\Http\Message\ServerRequestInterface as Request;
+    use Psr\Http\Message\ResponseInterface as Response;
+    use Psr\Http\Message\ServerRequestInterface as Request;
     
     $app->group('/account', function () {
         $this->get('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageForgotPassword');
         
         $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
+        
+        $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings');
         
         $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
         

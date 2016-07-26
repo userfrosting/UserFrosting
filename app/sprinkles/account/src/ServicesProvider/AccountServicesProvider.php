@@ -10,6 +10,7 @@
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use UserFrosting\Sprinkle\Account\Extension\AccountExtension;
 use UserFrosting\Sprinkle\Account\Model\User;
 
 /**
@@ -24,6 +25,20 @@ class AccountServicesProvider
      */
     public function register($container)
     {
+    
+        /**
+         * Extends the 'view' service with the AccountExtension for Twig.
+         *
+         * Adds account-specific functions, globals, filters, etc to Twig.
+         */
+        $container->extend('view', function ($view, $c) {
+            $twig = $view->getEnvironment(); 
+            $extension = new AccountExtension($c);
+            $twig->addExtension($extension);
+            
+            return $view;
+        });
+    
         /**
          * Loads the User object for the currently logged-in user.
          *
@@ -33,7 +48,14 @@ class AccountServicesProvider
         $container['currentUser'] = function ($c) {
             $config = $c->get('config');
             $session = $c->get('session');
+            // Force database connection to boot up
+            $c->get('db');
             
+            // By default, create a guest user
+            $currentUser = new User();
+            $currentUser->id = $config['reserved_user_ids.guest'];
+            
+            // Now, check to see if we have a user in session or rememberMe cookie
             try {
                 $rememberMe = $c->get('rememberMe');
                 
@@ -74,30 +96,36 @@ class AccountServicesProvider
                         }
                     }
                 }
-                // Now we have an authenticated user, setup their environment
-                
-                // TODO: setup user locale in translator
-                
-                // TODO: Add user to Twig globals
-                /*
-                $twig->addGlobal("user", $this->user);
-                */
-                
-                /*
-                // TODO: Set user theme in Twig
-                // Set path to user's theme, prioritizing over any other themes.
-                $loader = $twig->getLoader();
-                $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());
-                */
             } catch (\PDOException $e){
-                // If we can't connect to the DB, then we can't create an authenticated user.  That's ok if we're in installation mode.
-                return null;
+                // If we can't connect to the DB, then we can't create an authenticated user.
+                // That's ok if we're in installation mode. We'll use the guest user instead.
             }
+            
+            // If we have an authenticated user, setup their environment
+            
+            // TODO: Add user locale in translator
+            
+            // TODO: Add user to Twig globals
+            /*
+            $twig->addGlobal("user", $this->user);
+            */
+            
+            /*
+            // TODO: Set user theme in Twig
+            // Set path to user's theme, prioritizing over any other themes.
+            $loader = $twig->getLoader();
+            $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());
+            */            
+            
+            return $currentUser;
+            
         };
         
         $container['rememberMe'] = function ($c) {
             $config = $c->get('config');
             $session = $c->get('session');        
+            // Force database connection to boot up
+            $c->get('db');            
             
             // Initialize RememberMe
             $storage = new \Birke\Rememberme\Storage\PDO($config['remember_me_table']);

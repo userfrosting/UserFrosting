@@ -1,8 +1,9 @@
 <?php
 
 /**
- * UserFrosting (http://www.userfrosting.com)
+ * UserFrosting core services provider.
  *
+ * Registers core services for UserFrosting, such as config, database, asset manager, translator, etc.
  * @link      https://github.com/userfrosting/UserFrosting
  * @author    Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
@@ -16,6 +17,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
+use Interop\Container\ContainerInterface;
 
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
@@ -33,19 +35,17 @@ use UserFrosting\Sprinkle\Core\Extension\UserFrostingExtension;
 use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
 use UserFrosting\Sprinkle\Core\Handler\UserFrostingErrorHandler;
 use UserFrosting\Sprinkle\Core\MessageStream;
+use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 
-/**
- * Registers core services for UserFrosting, such as config, database, asset manager, translator, etc.
- */
 class CoreServicesProvider
 {
     /**
      * Register UserFrosting's core services.
      *
-     * @param Container $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
      */
-    public function register($container)
+    public function register(ContainerInterface $container)
     {
         /**
          * Override Slim's default router with the UF router.
@@ -65,7 +65,6 @@ class CoreServicesProvider
          * Will attempt to automatically determine which config file(s) to use based on the value of the UF_MODE environment variable.
          */
         $container['config'] = function ($c) {
-        
             // Grab any relevant dotenv variables from the .env file
             try {
                 $dotenv = new Dotenv(\UserFrosting\APP_DIR);
@@ -197,6 +196,9 @@ class CoreServicesProvider
             
             // Start Eloquent
             $capsule->bootEloquent();
+            
+            // Set container for data model
+            UFModel::$ci = $c;
             
             return $capsule;
         };

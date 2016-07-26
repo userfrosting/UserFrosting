@@ -1,17 +1,11 @@
-{% extends "layouts/layout-dashboard.twig" %}
+{% extends "layouts/sb-admin-2.html.twig" %}
 
-{# Set page properties (page.*) here. #}
-{% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
-    {% set page = page | merge({
-        "title"       : "Account Settings",
-        "description" : "Update your account settings, including email, display name, and password."
-    }) %}
-    {{ parent() }}
-{% endblock %}
+{# Overrides blocks in head of base template #}
+{% block page_title %}Account Settings{% endblock %}
 
-{% block content %}
+{% block page_description %}Update your account settings, including email, display name, and password.{% endblock %}
+
+{% block body_matter %}
     <div class="row">
         <div class="col-lg-6">
             <div class='panel panel-primary'>
@@ -86,16 +80,12 @@
         </div>
     </div>
 {% endblock %}
-{% block page_scripts %}
+{% block scripts_page %}
+    <!-- Include validation rules -->
     <script>
-        $(document).ready(function() {           
-            // Process form 
-            ufFormSubmit($("form[name='settings']"), {{ validators | raw }}, $("#userfrosting-alerts"),
-                function(data, statusText, jqXHR) {
-                    // Reload the page
-                    window.location.reload();
-                }
-            );
-        });
+    {% include "components/validators.js.twig" %}
     </script>
+    
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/account-settings') | raw }}
 {% endblock %}

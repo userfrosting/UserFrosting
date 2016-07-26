@@ -1,10 +1,5 @@
 <?php
 
-namespace UserFrosting\Sprinkle\Core\Model;
-
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Capsule\Manager as Capsule;
-
 /**
  * UFModel Class
  *
@@ -13,37 +8,23 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  * @package UserFrosting
  * @author Alex Weissman
  */
+namespace UserFrosting\Sprinkle\Core\Model;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 abstract class UFModel extends Model
 {
     
     /**
-     * @var Slim The Slim app, containing configuration info
+     * @var ContainerInterface The DI container for your application.
      */
-    public static $app;
-    
-    /**
-     * @var string The id of the table for the current model.  Must be overridden in child class.
-     */ 
-    protected static $_table_id = "";
-    
+    public static $ci;
+        
     /**
      * @var bool Disable timestamps for now.
      */ 
     public $timestamps = false;
-    
-    /**
-     * Create a new object, initializing the table name and whitelisted columns.
-     *
-     */
-    public function __construct($properties = [])
-    {    
-        $table_schema = Database::getSchemaTable(static::$_table_id);
-        $this->table = $table_schema->name;
-        $this->fillable = $table_schema->columns;
-        if (!static::$app)
-            static::$app = UserFrosting::getInstance();        
-        parent::__construct($properties);
-    }
     
     /**
      * Determine if an attribute exists on the model - even if it is null.

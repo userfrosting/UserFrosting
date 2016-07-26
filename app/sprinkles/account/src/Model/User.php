@@ -1,9 +1,5 @@
 <?php
 
-namespace UserFrosting\Sprinkle\Account\Model;
-
-use Illuminate\Database\Capsule\Manager as Capsule;
-
 /**
  * User Class
  *
@@ -28,12 +24,35 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  * @property timestamp updated_at
  * @property string password
  */
-class User extends UFModel {
+namespace UserFrosting\Sprinkle\Account\Model;
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+use UserFrosting\Sprinkle\Core\Model\UFModel;
+
+class User extends UFModel
+{
     
     /**
-     * @var string The id of the table for the current model.
+     * @var string The name of the table for the current model.
      */ 
-    protected static $_table_id = "user";    
+    protected $table = "user";
+    
+    protected $fillable = [
+        "user_name",
+        "display_name",
+        "email",
+        "title",
+        "locale",
+        "primary_group_id",
+        "secret_token",
+        "flag_verified",
+        "flag_enabled",
+        "flag_password_reset",
+        "created_at",
+        "updated_at",
+        "password"    
+    ];
+    
     /**
      * @var int[] An array of group_ids to which this user belongs. An empty array means that the user's groups have not been loaded yet.
      */
@@ -59,8 +78,8 @@ class User extends UFModel {
      */
     public function __construct($properties = []) {    
         // Set default locale, if not specified
-        if (!isset($properties['locale']))
-            $properties['locale'] = static::$app->site->default_locale;
+        //if (!isset($properties['locale']))
+        //    $properties['locale'] = static::$app->site->default_locale;
             
         parent::__construct($properties);
     }
@@ -70,8 +89,9 @@ class User extends UFModel {
      *
      * @return boolean True if the user is a guest, false otherwise.
      */ 
-    public function isGuest(){
-        if (!isset($this->id) || $this->id == static::$app->config('user_id_guest'))   // Need to use loose comparison for now, because some DBs return `id` as a string
+    public function isGuest()
+    {
+        if (!isset($this->id) || $this->id == static::$ci->config['reserved_user_ids.guest'])   // Need to use loose comparison for now, because some DBs return `id` as a string
             return true;
         else
             return false;
@@ -89,7 +109,7 @@ class User extends UFModel {
      *
      * @see http://stackoverflow.com/a/27748794/2970321
      */
-    public function fresh(array $options = []){
+    public function fresh($options = []){
         // TODO: Update table and column info, in case it has changed?
         $user = parent::fresh($options);
         $user->getGroupIds();
@@ -465,7 +485,7 @@ class User extends UFModel {
         }
     
         // The master (root) account has access to everything.
-        if ($this->id == static::$app->config('user_id_master'))  // Need to use loose comparison for now, because some DBs return `id` as a string
+        if ($this->id == $this->ci->config['reserved_user_ids.master'])  // Need to use loose comparison for now, because some DBs return `id` as a string.
             return true;
              
         // Try to find an authorization rule for $hook that matches the currently logged-in user, or one of their groups.

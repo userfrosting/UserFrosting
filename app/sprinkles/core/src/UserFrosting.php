@@ -18,17 +18,6 @@ namespace UserFrosting;
 class UserFrosting extends \Slim\Slim {
     
     /**
-     * Sets up a guest environment, before we can authenticate a real user
-     */
-    public function setupGuestEnvironment(){
-        //error_log("Current user id is guest");
-        $this->user = new User([]);
-        $this->user->id = $this->config('user_id_guest');
-        $this->setupServices($this->site->default_locale);
-        $this->setupErrorHandling();
-    }
-        
-    /**
      * Sets up the environment for the current logged-in user, along with translation and error-handlers
      */    
     public function setupAuthenticatedEnvironment(){
@@ -124,26 +113,4 @@ class UserFrosting extends \Slim\Slim {
         // Also handle fatal errors
         register_shutdown_function( [$this, "fatalHandler"] );     
     }
-        
-    /**
-     * Sets up the Twig environment and custom functions
-     */
-    public function setupTwig(){
-        //error_log("Setting up twig environment");
-        /* Import UserFrosting variables as global Twig variables */    
-        $twig = $this->view()->getEnvironment();   
-        $twig->addGlobal("site", $this->site);
-        
-        // Set path to base theme, overwriting any other paths that have been added at this point.  The user theme will get set in setupTwigUserVariables().
-        $loader = $twig->getLoader();
-        $loader->setPaths($this->config('themes.path') . "/" . $this->config('theme-base'));
-        
-        // Add Twig function for checking permissions during dynamic menu rendering
-        $function_check_access = new \Twig_SimpleFunction('checkAccess', function ($hook, $params = []) {
-            return $this->user->checkAccess($hook, $params);
-        });
-        
-        $twig->addFunction($function_check_access);    
-    }
-
 }

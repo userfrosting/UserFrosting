@@ -1,9 +1,8 @@
 <?php
 
     /**
-     * Default configuration file for project.  This is the base config file, which all other config files must override.
+     * Core configuration file for UserFrosting.  You must override/extend this in your site's configuration file.
      *
-     * For example, you can override values in this config file by creating your own `development.php` config file in this same directory.
      */
      
     return [      
