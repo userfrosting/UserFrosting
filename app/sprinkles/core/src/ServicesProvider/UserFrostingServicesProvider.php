@@ -20,10 +20,6 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\ErrorLogHandler;
 
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
-use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
-use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
-
 use Slim\Http\Uri;
 
 use UserFrosting\Assets\AssetManager;
@@ -82,7 +78,7 @@ class UserFrostingServicesProvider
                 // Create and inject new config item
                 $config = new \UserFrosting\Config\Config();
             
-                // TODO: add search paths for config files in third-party packages
+                // Add search paths for all config files
                 $configPaths = $c->get('locator')->findResources('config://', true, true);
                 
                 $config->setPaths($configPaths);
@@ -90,20 +86,6 @@ class UserFrostingServicesProvider
                 // Get configuration mode from environment
                 $mode = getenv("UF_MODE") ?: "";
                 $config->loadConfigurationFiles($mode);
-                
-                // Set some PHP parameters, if specified in config
-                
-                // Determines if uncatchable errors will be rendered in the response
-                if (isset($config['display_errors']))
-                    ini_set("display_errors", $config['display_errors']);
-                
-                // Configure error-reporting
-                if (isset($config['error_reporting']))
-                    error_reporting($config['error_reporting']);
-                
-                // Configure time zone
-                if (isset($config['timezone']))
-                    date_default_timezone_set($config['timezone']);
                     
                 // Construct base url from components, if not explicitly specified
                 if (!isset($config['site.uri.public'])) {
@@ -233,63 +215,6 @@ class UserFrostingServicesProvider
                 MessageStream::setTranslator($translator);
                 
                 return $translator;
-            };
-        }
-        
-        if (!isset($container['locator'])){        
-            // Initialize locator
-            $container['locator'] = function ($c) {
-                $locator = new UniformResourceLocator(\UserFrosting\ROOT_DIR);
-                    
-                // TODO: set in config or defines.php
-                $locator->addPath('build', '', \UserFrosting\BUILD_DIR_NAME);
-                $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);    
-                $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
-                $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
-                $locator->addPath('sprinkles', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME);
-                
-                // Core sprinkle
-                $coreDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . '/core';      
-                
-                $locator->addPath('core', '', $coreDirFragment);
-                $locator->addPath('assets', '', $coreDirFragment . '/' . \UserFrosting\ASSET_DIR_NAME);
-                $locator->addPath('schema', '', $coreDirFragment . '/' . \UserFrosting\SCHEMA_DIR_NAME);
-                $locator->addPath('templates', '', $coreDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
-                $locator->addPath('locale', '', $coreDirFragment . '/' . \UserFrosting\LOCALE_DIR_NAME);
-                $locator->addPath('config', '', $coreDirFragment . '/' . \UserFrosting\CONFIG_DIR_NAME);
-                $locator->addPath('routes', '', $coreDirFragment . '/' . \UserFrosting\ROUTE_DIR_NAME);
-                
-                // TODO: Add paths for each sprinkle
-                $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME;
-                
-                $locator->addPath('assets', '', $sprinklesDirFragment . '/account/' . \UserFrosting\ASSET_DIR_NAME);
-                $locator->addPath('routes', '', $sprinklesDirFragment . '/account/' . \UserFrosting\ROUTE_DIR_NAME);
-                $locator->addPath('schema', '', $sprinklesDirFragment . '/account/' . \UserFrosting\SCHEMA_DIR_NAME);
-                $locator->addPath('templates', '', $sprinklesDirFragment . '/account/' . \UserFrosting\TEMPLATE_DIR_NAME);
-                $locator->addPath('locale', '', $sprinklesDirFragment . '/account/' . \UserFrosting\LOCALE_DIR_NAME);
-                
-                /* These are streams that can be subnavigated to core or specific sprinkles (e.g. "templates://core/")
-                   This would allow specifically selecting core or a particular sprinkle.  Not sure if we need this.
-                   $locator->addPath('templates', 'core', $coreDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
-                */
-                
-                // Use locator to initialize streams
-                ReadOnlyStream::setLocator($locator);
-                $sb = new StreamBuilder([
-                    'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                    'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                    'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                    'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                    'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                    'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                    'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                    'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                    'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                    'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                    'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
-                ]);
-                
-                return $locator;
             };
         }
         
