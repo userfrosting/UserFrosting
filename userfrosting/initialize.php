@@ -271,6 +271,10 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("auth", "widget-auth.js");
 }, 1);
 
+// Hook for core and plugins to register includes
+$app->applyHook("includes.css.register");
+$app->applyHook("includes.js.register");
+
 /** Plugins */
 // Run initialization scripts for plugins and define hook for routes
 $var_plugins = $app->site->getPlugins();
@@ -303,7 +307,3 @@ foreach($var_plugins as $var_plugin) {
 		}
 	}, 1);
 }
-
-// Hook for core and plugins to register includes
-$app->applyHook("includes.css.register");
-$app->applyHook("includes.js.register");
