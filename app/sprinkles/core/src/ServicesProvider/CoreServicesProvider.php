@@ -31,9 +31,9 @@ use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\AssetBundleSchema;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
-use UserFrosting\Sprinkle\Core\Extension\CoreExtension;
+use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
-use UserFrosting\Sprinkle\Core\Handler\UserFrostingErrorHandler;
+use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
@@ -277,7 +277,7 @@ class CoreServicesProvider
             $settings = $c->get('settings');
             $errorLogger = $c->get('errorLogger');
                
-            return new UserFrostingErrorHandler($config, $alerts, $view, $errorLogger, $settings['displayErrorDetails']);
+            return new CoreErrorHandler($config, $alerts, $view, $errorLogger, $settings['displayErrorDetails']);
         };        
     
         /**

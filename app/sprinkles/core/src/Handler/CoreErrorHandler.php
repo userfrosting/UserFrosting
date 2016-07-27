@@ -19,7 +19,7 @@ use UserFrosting\Support\Message\UserMessage;
  * It outputs the error message and diagnostic information in either JSON, XML, or HTML based on the Accept header.
  * @author Alex Weissman (https://alexanderweissman.com) 
  */
-class UserFrostingErrorHandler extends \Slim\Handlers\Error
+class CoreErrorHandler extends \Slim\Handlers\Error
 {
 
     protected $config;

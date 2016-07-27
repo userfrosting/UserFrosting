@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Extension;
+namespace UserFrosting\Sprinkle\Account\Twig;
 
 use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
