@@ -1,18 +1,22 @@
 <?php
-
 /**
- * UFModel Class
+ * UserFrosting (http://www.userfrosting.com)
  *
- * The base Eloquent data model, from which all UserFrosting data classes extend.
- *
- * @package UserFrosting
- * @author Alex Weissman
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+/**
+ * UFModel Class
+ *
+ * The base Eloquent data model, from which all UserFrosting data classes extend.
+ * @author Alex Weissman (https://alexanderweissman.com)
+ */
 abstract class UFModel extends Model
 {
     

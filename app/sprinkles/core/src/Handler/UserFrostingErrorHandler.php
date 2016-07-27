@@ -1,10 +1,9 @@
 <?php
-
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @author    Alexander Weissman
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Handler;
@@ -12,14 +11,13 @@ namespace UserFrosting\Sprinkle\Core\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
-
 use UserFrosting\Support\Message\UserMessage;
 
 /**
  * Default UserFrosting application error handler
  *
- * It outputs the error message and diagnostic information in either JSON, XML,
- * or HTML based on the Accept header.
+ * It outputs the error message and diagnostic information in either JSON, XML, or HTML based on the Accept header.
+ * @author Alex Weissman (https://alexanderweissman.com) 
  */
 class UserFrostingErrorHandler extends \Slim\Handlers\Error
 {

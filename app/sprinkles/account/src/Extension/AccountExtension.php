@@ -1,11 +1,22 @@
 <?php
-
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 namespace UserFrosting\Sprinkle\Account\Extension;
 
 use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use Slim\Http\Uri;
 
+/**
+ * Extends Twig functionality for the Account sprinkle.
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ */
 class AccountExtension extends \Twig_Extension
 {
 

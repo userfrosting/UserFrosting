@@ -1,11 +1,22 @@
 <?php
-
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 namespace UserFrosting\Sprinkle\Core\Extension;
 
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use Slim\Http\Uri;
 
-class UserFrostingExtension extends \Twig_Extension
+/**
+ * Extends Twig functionality for the Core sprinkle.
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ */
+class CoreExtension extends \Twig_Extension
 {
 
     protected $services;
@@ -19,7 +30,7 @@ class UserFrostingExtension extends \Twig_Extension
 
     public function getName()
     {
-        return 'userfrosting';
+        return 'userfrosting/core';
     }
     
     public function getFunctions()

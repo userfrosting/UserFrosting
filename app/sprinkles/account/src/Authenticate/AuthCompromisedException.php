@@ -1,5 +1,4 @@
 <?php
- 
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -14,7 +13,7 @@ use UserFrosting\Support\Exception\ForbiddenException;
 /**
  * Compromised authentication exception.  Used when we suspect theft of the rememberMe cookie.
  *
- * @author Alexander Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AuthCompromisedException extends ForbiddenException
 {

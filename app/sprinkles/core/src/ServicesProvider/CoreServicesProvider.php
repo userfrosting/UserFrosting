@@ -31,7 +31,7 @@ use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\AssetBundleSchema;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
-use UserFrosting\Sprinkle\Core\Extension\UserFrostingExtension;
+use UserFrosting\Sprinkle\Core\Extension\CoreExtension;
 use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
 use UserFrosting\Sprinkle\Core\Handler\UserFrostingErrorHandler;
 use UserFrosting\Sprinkle\Core\MessageStream;
@@ -249,7 +249,7 @@ class CoreServicesProvider
             */
             
             // Register the UserFrosting extension with Twig  
-            $twig_extension = new UserFrostingExtension($c);
+            $twig_extension = new CoreExtension($c);
             $twig->addExtension($twig_extension);   
                 
             return $view;

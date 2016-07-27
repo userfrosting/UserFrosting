@@ -1,5 +1,4 @@
 <?php
- 
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -14,7 +13,7 @@ use UserFrosting\Support\Exception\ForbiddenException;
 /**
  * Invalid database exception.  Used when the database cannot be accessed.
  *
- * @author Alexander Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class DatabaseInvalidException extends ForbiddenException
 {

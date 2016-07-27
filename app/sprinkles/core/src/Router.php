@@ -1,10 +1,9 @@
 <?php
-
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @author    Alexander Weissman
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core;
@@ -25,6 +24,7 @@ use Slim\Interfaces\RouteInterface;
  * Router
  *
  * This class extends Slim's router, to permit overriding of routes with the same signature.
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Router extends \Slim\Router implements RouterInterface
 {

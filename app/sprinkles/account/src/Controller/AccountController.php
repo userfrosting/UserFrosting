@@ -1,14 +1,11 @@
 <?php
-
 /**
- * AccountController Class
+ * UserFrosting (http://www.userfrosting.com)
  *
- * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
- *
- * @package UserFrosting
- * @author Alex Weissman
- * @link http://www.userfrosting.com/navigating/#structure
- */
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */ 
 namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -18,7 +15,12 @@ use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 //use UserFrosting\Support\Exception\
 
-
+/**
+ * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see http://www.userfrosting.com/navigating/#structure
+ */
 class AccountController
 {
     
@@ -33,7 +35,6 @@ class AccountController
     {
         $this->ci = $ci;
     }
-
     
     /**
      * Account settings page.

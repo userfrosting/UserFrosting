@@ -1,13 +1,10 @@
 <?php
-
 /**
- * Sprinkle manager class.
+ * UserFrosting (http://www.userfrosting.com)
  *
- * Loads a series of sprinkles, running their bootstrapping code and including their routes.
- *
- * @package UserFrosting
- * @author Alex Weissman
- * @link http://www.userfrosting.com
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Initialize;
 
@@ -16,6 +13,12 @@ use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
 use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
 
+/**
+ * Sprinkle manager class.
+ *
+ * Loads a series of sprinkles, running their bootstrapping code and including their routes.
+ * @author Alex Weissman (https://alexanderweissman.com)
+ */
 class SprinkleManager
 {
 

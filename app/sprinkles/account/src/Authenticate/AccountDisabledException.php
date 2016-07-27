@@ -1,5 +1,4 @@
 <?php
- 
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -14,7 +13,7 @@ use UserFrosting\Support\Exception\ForbiddenException;
 /**
  * Disabled account exception.  Used when an account has been disabled during an active session.
  *
- * @author Alexander Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AccountDisabledException extends ForbiddenException
 {

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -16,7 +15,7 @@ use UserFrosting\Sprinkle\Account\Model\User;
 /**
  * Registers services for the account sprinkle, such as currentUser, etc.
  *
- * @author Alexander Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AccountServicesProvider
 {

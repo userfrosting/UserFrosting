@@ -1,5 +1,4 @@
 <?php
- 
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -14,7 +13,7 @@ use UserFrosting\Support\Exception\ForbiddenException;
 /**
  * Expired authentication exception.  Used when the user's session has expired due to an expired rememberMe cookie.
  *
- * @author Alexander Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AuthExpiredException extends ForbiddenException
 {
