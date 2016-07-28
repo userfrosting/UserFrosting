@@ -16,10 +16,16 @@ use UserFrosting\Support\Message\UserMessage;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class ExceptionHandler
+class ExceptionHandler implements ExceptionHandlerInterface
 {
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $ci;
     
+    /**
+     * @var bool Specifies whether or not the error handler should log the Exception's message.
+     */    
     protected $logFlag = true;
     
     /**
@@ -36,6 +42,12 @@ class ExceptionHandler
      * Called when an exception is raised during AJAX requests.
      *
      * Adds a generic error to the message stream, and respond with a 500 status code.
+     *
+     * @param ServerRequestInterface $request   The most recent Request object
+     * @param ResponseInterface      $response  The most recent Response object
+     * @param Exception              $exception The caught Exception object
+     *
+     * @return ResponseInterface     
      */
     public function ajaxHandler($request, $response, $exception)
     {        
@@ -50,22 +62,28 @@ class ExceptionHandler
      * Handler for exceptions raised during "standard" requests.
      *
      * Modifies the response, attempting to render an error page with status code 500.
+     *
+     * @param ServerRequestInterface $request   The most recent Request object
+     * @param ResponseInterface      $response  The most recent Response object
+     * @param Exception              $exception The caught Exception object
+     *
+     * @return ResponseInterface     
      */
     public function standardHandler($request, $response, $exception)
     {
         $messages = [
             new UserMessage("SERVER_ERROR")
         ];
-        $http_code = 500;
+        $httpCode = 500;
     
         // Render a custom error page, if it exists
         try {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$http_code.html.twig");
+            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
         } catch (\Twig_Error_Loader $e) {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
         }
         
-        return $response->withStatus($http_code)
+        return $response->withStatus($httpCode)
                         ->withHeader('Content-Type', 'text/html')
                         ->write($template->render([
                             "messages" => $messages

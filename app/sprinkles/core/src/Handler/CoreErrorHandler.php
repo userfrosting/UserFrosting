@@ -8,6 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Core\Handler;
 
+use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
@@ -20,27 +21,41 @@ use Slim\Http\Body;
  */
 class CoreErrorHandler extends \Slim\Handlers\Error
 {
-
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $ci;
     
     /**
-     * @var array[] An array that maps Exception types to callbacks, for special processing of certain types of errors.
+     * @var array[string] An array that maps Exception types to callbacks, for special processing of certain types of errors.
      */
     protected $exceptionHandlers = [];
     
     /**
      * Constructor
      *
+     * @param ContainerInterface $ci The global container object, which holds all your services.
      * @param boolean $displayErrorDetails Set to true to display full details
      */
-    public function __construct($ci, $displayErrorDetails = false)
+    public function __construct(ContainerInterface $ci, $displayErrorDetails = false)
     {
         $this->ci = $ci;
         $this->displayErrorDetails = (bool)$displayErrorDetails;
     }
     
+    /**
+     * Register an exception handler for a specified exception class.
+     *
+     * The exception handler must implement \UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface.
+     *
+     * @param string $exceptionClass The fully qualified class name of the exception to handle.
+     * @param string $handlerClass The fully qualified class name of the assigned handler.
+     */
     public function registerHandler($exceptionClass, $handlerClass)
     {
+        if (!is_a($handlerClass, '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface', true))
+            throw new \InvalidArgumentException("Registered exception handler must implement ExceptionHandlerInterface!");
+        
         $this->exceptionHandlers[$exceptionClass] = $handlerClass;
     }
     
