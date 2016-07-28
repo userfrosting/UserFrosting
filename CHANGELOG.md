@@ -5,6 +5,7 @@
 - Fixed some minor error screen layout issues
 - Make User::fresh() compatible with Eloquent\Model v5.2.40+
 - Update composer require to allow for Fortress 1.x bugfixes
+- Allow database port definitions in config-userfrosting.php
 
 ## v0.3.1.18
 
