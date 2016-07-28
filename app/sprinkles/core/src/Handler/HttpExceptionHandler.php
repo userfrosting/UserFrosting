@@ -36,10 +36,16 @@ class HttpExceptionHandler extends ExceptionHandler
      * Adds any user messages from the exception to the message stream, and respond with the exception's status code.
      */    
     public function ajaxHandler($request, $response, $exception)
-    {
+    { 
         $messages = $exception->getUserMessages();
         $http_code = $exception->getHttpErrorCode();
-        
+    
+        // If the status code is 500, log the exception's message
+        if ($http_code == 500)
+            $this->logFlag = true;
+        else
+            $this->logFlag = false;
+            
         foreach ($messages as $message){
             $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
         }
@@ -56,6 +62,12 @@ class HttpExceptionHandler extends ExceptionHandler
     {
         $messages = $exception->getUserMessages();
         $http_code = $exception->getHttpErrorCode();
+        
+        // If the status code is 500, log the exception's message
+        if ($http_code == 500)
+            $this->logFlag = true;
+        else
+            $this->logFlag = false;        
         
         // Render a custom error page, if it exists
         try {

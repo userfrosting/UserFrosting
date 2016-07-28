@@ -20,6 +20,8 @@ class ExceptionHandler
 {
     protected $ci;
     
+    protected $logFlag = true;
+    
     /**
      * Create a new ExceptionHandler object.
      *
@@ -36,7 +38,7 @@ class ExceptionHandler
      * Adds a generic error to the message stream, and respond with a 500 status code.
      */
     public function ajaxHandler($request, $response, $exception)
-    {
+    {        
         $message = new UserMessage("SERVER_ERROR");
     
         $this->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
@@ -68,6 +70,16 @@ class ExceptionHandler
                         ->write($template->render([
                             "messages" => $messages
                         ]));
-    }    
+    }
+    
+    /**
+     * Gets the logging flag for this handler.
+     *
+     * @return bool
+     */
+    public function getLogFlag()
+    {
+        return $this->logFlag;
+    }     
     
 }

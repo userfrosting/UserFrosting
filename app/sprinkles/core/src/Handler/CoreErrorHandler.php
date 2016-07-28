@@ -69,14 +69,14 @@ class CoreErrorHandler extends \Slim\Handlers\Error
         
         // Run either the ajaxHandler or standardHandler, depending on the request type
         if ($request->isXhr())
-            return $handler->ajaxHandler($request, $response, $exception);
+            $response = $handler->ajaxHandler($request, $response, $exception);
         else
-            return $handler->standardHandler($request, $response, $exception);
+            $response = $handler->standardHandler($request, $response, $exception);
         
-        // If the status code is 500, log the exception's message
-        if ($response->getStatusCode() == 500)
+        // Write exception to log, if enabled by the handler
+        if ($handler->getLogFlag())
             $this->writeToErrorLog($exception);
-            
+         
         return $response;
     }
     
@@ -87,6 +87,6 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      */
     protected function logError($message)
     {
-        $this->errorLogger->error($message);
+        $this->ci->errorLogger->error($message);
     }    
 }
