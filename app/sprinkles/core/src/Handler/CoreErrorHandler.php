@@ -26,7 +26,7 @@ class CoreErrorHandler extends \Slim\Handlers\Error
     /**
      * @var array[] An array that maps Exception types to callbacks, for special processing of certain types of errors.
      */
-    protected $exceptionHandlers;
+    protected $exceptionHandlers = [];
     
     /**
      * Constructor
@@ -37,6 +37,11 @@ class CoreErrorHandler extends \Slim\Handlers\Error
     {
         $this->ci = $ci;
         $this->displayErrorDetails = (bool)$displayErrorDetails;
+    }
+    
+    public function registerHandler($exceptionClass, $handlerClass)
+    {
+        $this->exceptionHandlers[$exceptionClass] = $handlerClass;
     }
     
     /**
@@ -52,11 +57,15 @@ class CoreErrorHandler extends \Slim\Handlers\Error
     {
         // TODO: log server-side error messages if displayErrorDetails is false, otherwise render them
         
-        $handler = new \UserFrosting\Sprinkle\Core\Handler\ExceptionHandler($this->ci);
+        // Default exception handler class
+        $handlerClass = '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandler';
         
-        // TODO: Instead of this one check, we'll loop through the list of registered handlers, and instantiate the last one that matches
-        if ($exception instanceof \UserFrosting\Support\Exception\HttpException)
-            $handler = new \UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler($this->ci);
+        // Get the last matching registered handler class, and instantiate it
+        foreach ($this->exceptionHandlers as $exceptionClass => $matchedHandlerClass)
+            if ($exception instanceof $exceptionClass)
+                $handlerClass = $matchedHandlerClass;
+        
+        $handler = new $handlerClass($this->ci);
         
         // Run either the ajaxHandler or standardHandler, depending on the request type
         if ($request->isXhr())

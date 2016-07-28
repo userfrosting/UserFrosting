@@ -273,7 +273,12 @@ class CoreServicesProvider
         $container['errorHandler'] = function ($c) {
             $settings = $c->get('settings');
             
-            return new CoreErrorHandler($c, $settings['displayErrorDetails']);
+            $handler = new CoreErrorHandler($c, $settings['displayErrorDetails']);
+            
+            // Register the HttpExceptionHandler.
+            $handler->registerHandler('\UserFrosting\Support\Exception\HttpException', '\UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler');
+            
+            return $handler;
         };        
     
         /**
