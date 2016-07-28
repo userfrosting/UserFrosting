@@ -67,7 +67,7 @@ class AccessConditionExpression {
         $params['self'] = $this->_app->user->export();
         
         $route = $this->_app->router()->getCurrentRoute();
-        $params['route'] = $route->getParams();
+        $params['route'] = (is_null($route) ? [] : $route->getParams());
         
         /* Traverse the parse tree, and execute all function calls as methods of class AccessCondition.
            Replace the function node with the return value of the method.

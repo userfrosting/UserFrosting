@@ -40,7 +40,7 @@ $capsule = new Capsule;
 
 $dbx = $app->config('db');
 
-$capsule->addConnection([
+$connection_array = [
     'driver'    => 'mysql',
     'host'      => $dbx['db_host'],
     'database'  => $dbx['db_name'],
@@ -49,7 +49,15 @@ $capsule->addConnection([
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix'    => ''
-]);
+];
+
+// This is for backwards compatibility. Pre-0.3.1.19 configuration files won't have $dbx['db_port'] defined at all.
+if (isset($dbx['db_port']))
+{
+    $connection_array['port'] = $dbx['db_port'];
+}
+
+$capsule->addConnection($connection_array);
 
 // Register as global connection
 $capsule->setAsGlobal();
@@ -147,7 +155,7 @@ $setting_values = [
         'guest_theme' => 'default',
         'minify_css' => '0',
         'minify_js' => '0',
-        'version' => '0.3.1.18',
+        'version' => '0.3.1.19',
         'author' => 'Alex Weissman',
         'show_terms_on_register' => '1',
         'site_location' => 'The State of Indiana'

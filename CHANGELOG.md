@@ -1,5 +1,13 @@
 # Change Log
 
+## v0.3.1.19
+
+- Fix some minor error screen layout issues
+- Make User::fresh() compatible with Eloquent\Model v5.2.40+
+- Update composer require to allow for Fortress 1.x bugfixes
+- Allow database port definitions in config-userfrosting.php
+- Fix fatal error when evaluateCondition is called before the router populates current route information
+
 ## v0.3.1.18
 
 - Add check for logging being enabled but log file not existing yet

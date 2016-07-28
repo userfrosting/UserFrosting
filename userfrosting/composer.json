@@ -21,7 +21,7 @@
         "twig/twig" : "~1.0",
         "slim/slim" : "2.*",
         "slim/views" : "0.1.3",
-        "userfrosting/fortress" : "1.0",
+        "userfrosting/fortress" : "1.*",
         "wikimedia/composer-merge-plugin": "~1"
     },
     "extra": {
