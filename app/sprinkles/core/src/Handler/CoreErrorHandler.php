@@ -11,7 +11,6 @@ namespace UserFrosting\Sprinkle\Core\Handler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
-use UserFrosting\Support\Message\UserMessage;
 
 /**
  * Default UserFrosting application error handler
@@ -22,25 +21,21 @@ use UserFrosting\Support\Message\UserMessage;
 class CoreErrorHandler extends \Slim\Handlers\Error
 {
 
-    protected $config;
+    protected $ci;
     
-    protected $alerts;
-
-    protected $view;
-    
-    protected $errorLogger;
+    /**
+     * @var array[] An array that maps Exception types to callbacks, for special processing of certain types of errors.
+     */
+    protected $exceptionHandlers;
     
     /**
      * Constructor
      *
      * @param boolean $displayErrorDetails Set to true to display full details
      */
-    public function __construct($config, $alerts, $view, $errorLogger, $displayErrorDetails = false)
+    public function __construct($ci, $displayErrorDetails = false)
     {
-        $this->alerts = $alerts;
-        $this->config = $config;
-        $this->view = $view;
-        $this->errorLogger = $errorLogger;
+        $this->ci = $ci;
         $this->displayErrorDetails = (bool)$displayErrorDetails;
     }
     
@@ -55,61 +50,25 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception)
     {
-        // Log the error message, if displayErrorDetails is false   
+        // TODO: log server-side error messages if displayErrorDetails is false, otherwise render them
         
-        // Get client messages and an appropriate HTTP error code
-        if ($exception instanceof \UserFrosting\Support\Exception\HttpException) {
-            $messages = $exception->getUserMessages();
-            $http_code = $exception->getHttpErrorCode();
-        } else {
-            $messages = [
-                new UserMessage("SERVER_ERROR")
-            ];
-            $http_code = 500;
-        }
+        $handler = new \UserFrosting\Sprinkle\Core\Handler\ExceptionHandler($this->ci);
         
-        // For 500 errors (server errors), log them
-        if ($http_code == 500)
-            $this->writeToErrorLog($exception);  
+        // TODO: Instead of this one check, we'll loop through the list of registered handlers, and instantiate the last one that matches
+        if ($exception instanceof \UserFrosting\Support\Exception\HttpException)
+            $handler = new \UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler($this->ci);
         
-        // TODO: render server-side error messages if displayErrorDetails is set to true
+        // Run either the ajaxHandler or standardHandler, depending on the request type
+        if ($request->isXhr())
+            return $handler->ajaxHandler($request, $response, $exception);
+        else
+            return $handler->standardHandler($request, $response, $exception);
         
-        // For errors raised in AJAX requests, add messages to alert stream and return error code
-        if ($request->isXhr()){
-            // Add any special handling for specific error codes here
-            foreach ($messages as $message){
-                $this->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
-            }
+        // If the status code is 500, log the exception's message
+        if ($response->getStatusCode() == 500)
+            $this->writeToErrorLog($exception);
             
-            return $response->withStatus($http_code);
-        } else {
-            
-            /**
-             * Invalid access token: write all error messages to alert stream, and then redirect to front page.
-             */
-            if ($exception instanceof \UserFrosting\Support\Exception\InvalidAccessTokenException) {
-                foreach ($messages as $message){
-                    $this->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
-                }
-                return $response->withStatus(302)
-                                ->withHeader('Location', $this->config['site.uri.public']);
-            
-            // ...add any special handling for specific types of exceptions here
-            } else {
-                // Render a custom error page, if it exists
-                try {
-                    $template = $this->view->getEnvironment()->loadTemplate("pages/error/$http_code.html.twig");
-                } catch (\Twig_Error_Loader $e) {
-                    $template = $this->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
-                }
-                
-                return $response->withStatus($http_code)
-                                ->withHeader('Content-Type', 'text/html')
-                                ->write($template->render([
-                                    "messages" => $messages
-                                ]));
-            }
-        }
+        return $response;
     }
     
     /**

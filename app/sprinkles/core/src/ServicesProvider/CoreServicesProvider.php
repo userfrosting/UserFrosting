@@ -271,13 +271,9 @@ class CoreServicesProvider
          * Custom error-handler for recoverable errors.
          */
         $container['errorHandler'] = function ($c) {
-            $alerts = $c->get('alerts');
-            $config = $c->get('config');
-            $view = $c->get('view');
             $settings = $c->get('settings');
-            $errorLogger = $c->get('errorLogger');
-               
-            return new CoreErrorHandler($config, $alerts, $view, $errorLogger, $settings['displayErrorDetails']);
+            
+            return new CoreErrorHandler($c, $settings['displayErrorDetails']);
         };        
     
         /**

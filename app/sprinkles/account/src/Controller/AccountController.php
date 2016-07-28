@@ -13,7 +13,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-//use UserFrosting\Support\Exception\
+use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -49,11 +49,9 @@ class AccountController
         $currentUser = $this->ci['currentUser'];
         
         // Access-controlled page
-        /*
         if (!$currentUser->checkAccess('uri_account_settings')){
-            // Throw some kind of exception
+            throw new ForbiddenException();
         }
-        */
         
         // Load validation rules
         $schema = new RequestSchema("schema://account-settings.json");
