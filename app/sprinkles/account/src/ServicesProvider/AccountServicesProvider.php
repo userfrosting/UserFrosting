@@ -41,6 +41,18 @@ class AccountServicesProvider
         });
     
         /**
+         * Extends the 'errorHandler' service with custom exception handlers.
+         *
+         * Adds account-specific functions, globals, filters, etc to Twig.
+         */
+        $container->extend('errorHandler', function ($handler, $c) {
+            // Register the ForbiddenExceptionHandler.
+            $handler->registerHandler('\UserFrosting\Support\Exception\ForbiddenException', '\UserFrosting\Sprinkle\Account\Handler\ForbiddenExceptionHandler');
+            
+            return $handler;
+        });
+        
+        /**
          * Loads the User object for the currently logged-in user.
          *
          * Tries to re-establish a session for "remember-me" users who have been logged out, or creates a guest user object if no one is logged in.
