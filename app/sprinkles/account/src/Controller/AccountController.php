@@ -13,6 +13,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+use UserFrosting\Sprinkle\Account\Captcha\Captcha;
 use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
@@ -37,6 +38,21 @@ class AccountController
     {
         $this->ci = $ci;
     }
+    
+    /**
+     * Generate a random captcha, store it to the session, and return the captcha image.
+     *
+     * Request type: GET
+     */
+    public function imageCaptcha($request, $response, $args)
+    {
+        $captcha = new Captcha($this->ci->session, 'site.captcha');
+        $captcha->generateRandomCode();
+        
+        return $response->withStatus(200)
+                    ->withHeader('Content-Type', 'image/png;base64')
+                    ->write($captcha->getImage());
+    }    
     
     /**
      * Render the "forgot password" page.
@@ -917,15 +933,5 @@ class AccountController
         $this->_app->user->store();
 
         $ms->addMessageTranslated("success", "ACCOUNT_SETTINGS_UPDATED");
-    }
-
-    /**
-     * Generates a new captcha.
-     *
-     * Wrapper for UserFrosting::generateCaptcha()
-     * Request type: GET
-     */
-    public function captcha(){
-        echo $this->generateCaptcha();
     }
 }

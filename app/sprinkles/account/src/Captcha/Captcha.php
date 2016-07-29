@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account;
+namespace UserFrosting\Sprinkle\Account\Captcha;
 
 use UserFrosting\Session\Session;
 
@@ -27,7 +27,7 @@ class Captcha
     protected $code;
 
     /**
-     * @var string The captcha image, represented as a base 64 string.
+     * @var string The captcha image, represented as a binary string.
      */
     protected $image;
     
@@ -103,7 +103,7 @@ class Captcha
     /**
      * Generate the image for the current captcha.
      *
-     * This generates an image as a base 64 string, to be placed inside the src attribute of an html image tag.
+     * This generates an image as a binary string.
      */    
     protected function generateImage()
     {       
@@ -153,9 +153,7 @@ class Captcha
         imagepng($image);
 
         //get binary image data
-        $data = ob_get_clean();
-        //return the base64 encoded image.
-        $this->image = 'data:image/png;base64,'.chunk_split(base64_encode($data));
+        $this->image = ob_get_clean();
         
         return $this->image;
     } 

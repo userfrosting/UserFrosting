@@ -4,6 +4,8 @@
     use Psr\Http\Message\ServerRequestInterface as Request;
     
     $app->group('/account', function () {
+        $this->get('/captcha', 'UserFrosting\Sprinkle\Account\Controller\AccountController:imageCaptcha');
+        
         $this->get('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageForgotPassword');
         
         $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
