@@ -1,9 +1,30 @@
 {
-  "js/pages/register": {
-    "scripts": "js/pages/register-b1668410f1.js"
+  "js/pages/account-settings": {
+    "scripts": "js/pages/account-settings-78b8c3d0c5.js"
+  },
+  "js/sb-admin-2": {
+    "scripts": "js/sb-admin-2-d41b851f1d.js"
+  },
+  "js/pages/forgot-password": {
+    "scripts": "js/pages/forgot-password-03ae33136c.js"
+  },
+  "js/pages/resend-verification": {
+    "scripts": "js/pages/resend-verification-3ca2ba30e0.js"
+  },
+  "js/pages/sign-in-or-register": {
+    "scripts": "js/pages/sign-in-or-register-6524619e0b.js"
+  },
+  "css/sb-admin-2": {
+    "styles": "css/sb-admin-2-6d3bc51edc.css"
+  },
+  "css/guest": {
+    "styles": "css/guest-5a16771b5a.css"
   },
   "css/main": {
-    "styles": "css/main-7d5f4cdc0b.css"
+    "styles": "css/main-0518f1367b.css"
+  },
+  "css/azmind": {
+    "styles": "css/azmind-c589f57892.css"
   },
   "js/main": {
     "scripts": "js/main-b6b7e2aa7d.js"

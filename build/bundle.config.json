@@ -103,7 +103,7 @@
         "options": {
             "result": {
                 "type": {
-                  "scripts": "plain"
+                  "styles": "plain"
                 }
             }
         }
@@ -117,7 +117,7 @@
         "options": {
             "result": {
                 "type": {
-                  "scripts": "plain"
+                  "styles": "plain"
                 }
             }
         }

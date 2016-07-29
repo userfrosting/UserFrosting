@@ -26,6 +26,10 @@ gulp.task('copy', function () {
     gulp.src('../app/sprinkles/core/assets/images/**/*')
     .pipe(gulp.dest(destDirectory + 'images/'));
 
+    // Copy azmind images
+    gulp.src('../app/sprinkles/account/assets/vendor/azmind/images/**/*')
+    .pipe(gulp.dest(destDirectory + 'vendor/azmind/images/'));
+    
     // Copy font-awesome font files from core.  Obviously we will want to find all sprinkles automatically, rather than having to explicitly define them here.
     gulp.src('../app/sprinkles/core/assets/vendor/font-awesome-4.5.0/fonts/**/*')
     .pipe(gulp.dest(destDirectory + 'fonts/'));
