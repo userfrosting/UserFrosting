@@ -30,7 +30,19 @@
                 }
             }
         }
-    },      
+    },
+    "js/azmind" : {
+        "scripts": [
+            "vendor/jquery-backstretch/jquery.backstretch.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },    
     "js/pages/account-settings" : {
         "scripts": [
             "js/pages/account-settings.js"
@@ -45,7 +57,6 @@
     },
     "js/pages/forgot-password" : {
         "scripts": [
-            "vendor/jquery-backstretch/jquery.backstretch.js",
             "js/pages/forgot-password.js"
         ],
         "options": {
@@ -58,8 +69,19 @@
     },
     "js/pages/resend-verification" : {
         "scripts": [
-            "vendor/jquery-backstretch/jquery.backstretch.js",
             "js/pages/resend-verification.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/set-or-reset-password" : {
+        "scripts": [
+            "js/pages/set-or-reset-password.js"
         ],
         "options": {
             "result": {
@@ -71,7 +93,6 @@
     },
     "js/pages/sign-in-or-register" : {
         "scripts": [
-            "vendor/jquery-backstretch/jquery.backstretch.js",
             "js/pages/sign-in-or-register.js"
         ],
         "options": {

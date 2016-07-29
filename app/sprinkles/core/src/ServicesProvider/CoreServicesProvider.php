@@ -48,19 +48,54 @@ class CoreServicesProvider
      * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
      */
     public function register(ContainerInterface $container)
-    {
+    { 
         /**
-         * Override Slim's default router with the UF router.
+         * Flash messaging service.
+         *
+         * Persists error/success messages between requests in the session.
          */
-        $container['router'] = function ($c) {
-            $routerCacheFile = false;
-            if (isset($c->get('settings')['routerCacheFile'])) {
-                $routerCacheFile = $c->get('settings')['routerCacheFile'];
-            }
-            
-            return (new \UserFrosting\Sprinkle\Core\Router)->setCacheFile($routerCacheFile);
-        };  
+        $container['alerts'] = function ($c) {
+            return new \UserFrosting\Sprinkle\Core\MessageStream($c->get('session'), 'site.alerts', $c->get('translator'));
+        };       
     
+        /**
+         * Asset manager service.
+         *
+         * Loads raw or compiled asset information from your bundle.config.json schema file.
+         * Assets are Javascript, CSS, image, and other files used by your site.
+         */
+        $container['assets'] = function ($c) {
+            $config = $c->get('config');
+            
+            // TODO: map stream identifier ("asset://") to desired relative URLs?
+            $base_url = $config['site.uri.public'];
+            $raw_assets_path = $config['site.uri.assets-raw'];
+            $use_raw_assets = $config['use_raw_assets'];
+            
+            $am = new AssetManager($base_url, $use_raw_assets);
+            $am->setRawAssetsPath($raw_assets_path);
+            $am->setCompiledAssetsPath($config['site.uri.assets']);
+            
+            // Load asset schema
+            $as = new AssetBundleSchema();
+            $as->loadRawSchemaFile($c->get('locator')->findResource('build://bundle.config.json', true, true));
+            $as->loadCompiledSchemaFile($c->get('locator')->findResource('build://bundle.result.json', true, true));
+            
+            $am->setBundleSchema($as);
+            
+            return $am;
+        };
+        
+        /**
+         * Middleware to check environment.
+         *
+         * @todo We should cache the results of this, the first time that it succeeds.
+         */
+        $container['checkEnvironment'] = function ($c) {
+            $checkEnvironment = new CheckEnvironment($c->get('view'), $c->get('locator'));
+            return $checkEnvironment;
+        };
+        
         /**
          * Site config service (separate from Slim settings).
          *
@@ -117,6 +152,65 @@ class CoreServicesProvider
         };
         
         /**
+         * Initialize Eloquent Capsule, which provides the database layer for UF.
+         *
+         * @todo construct the individual objects rather than using the facade
+         */
+        $container['db'] = function ($c) {
+            $config = $c->get('config');
+            
+            $capsule = new Capsule;
+            $capsule->addConnection([
+                'driver'    => $config['db.driver'],
+                'host'      => $config['db.host'],
+                'database'  => $config['db.database'],
+                'username'  => $config['db.username'],
+                'password'  => $config['db.password'],
+                'charset'   => $config['db.charset'],
+                'collation' => $config['db.collation'],
+                'prefix'    => $config['db.prefix']
+            ]);
+            
+            // Register as global connection
+            $capsule->setAsGlobal();
+            
+            // Start Eloquent
+            $capsule->bootEloquent();
+            
+            // Set container for data model
+            UFModel::$ci = $c;
+            
+            return $capsule;
+        };
+        
+        /**
+         * Custom error-handler for recoverable errors.
+         */
+        $container['errorHandler'] = function ($c) {
+            $settings = $c->get('settings');
+            
+            $handler = new CoreErrorHandler($c, $settings['displayErrorDetails']);
+            
+            // Register the HttpExceptionHandler.
+            $handler->registerHandler('\UserFrosting\Support\Exception\HttpException', '\UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler');
+            
+            return $handler;
+        };
+        
+        /**
+         * Error logging with Monolog.
+         */
+        $container['errorLogger'] = function ($c) {
+            $log = new Logger('errors');
+            
+            $logFile = $c->get('locator')->findResource('log://errors.log', true, true);
+            
+            $handler = new StreamHandler($logFile, Logger::WARNING);
+            $log->pushHandler($handler);
+            return $log;
+        };
+        
+        /**
          * Path/file locator service.
          *
          * Register custom streams for the application, and add paths for app-level streams.
@@ -152,6 +246,31 @@ class CoreServicesProvider
         };        
         
         /**
+         * Custom 404 handler.
+         *
+         * @todo Handle xhr case, just like we do in errorHandler
+         */
+        $container['notFoundHandler'] = function ($c) {
+            return function ($request, $response) use ($c) {
+                return $c->view->render($response, 'pages/error/404.html.twig') 
+                    ->withStatus(404)
+                    ->withHeader('Content-Type', 'text/html');
+            };
+        };
+        
+        /**
+         * Override Slim's default router with the UF router.
+         */
+        $container['router'] = function ($c) {
+            $routerCacheFile = false;
+            if (isset($c->get('settings')['routerCacheFile'])) {
+                $routerCacheFile = $c->get('settings')['routerCacheFile'];
+            }
+            
+            return (new \UserFrosting\Sprinkle\Core\Router)->setCacheFile($routerCacheFile);
+        };
+        
+        /**
          * Start the PHP session, with the name and parameters specified in the configuration file.
          */                
         $container['session'] = function ($c) {
@@ -172,75 +291,18 @@ class CoreServicesProvider
             
             // Create and return a new wrapper for $_SESSION
             return new Session($handler, $config['session']);
-        };      
+        };    
         
         /**
-         * Flash messaging service.
-         *
-         * Persists error/success messages between requests in the session.
+         * Custom shutdown handler, for dealing with fatal errors.
          */
-        $container['alerts'] = function ($c) {
-            return new \UserFrosting\Sprinkle\Core\MessageStream($c->get('session'), 'site.alerts', $c->get('translator'));
-        };       
-        
-        /**
-         * Asset manager service.
-         *
-         * Loads raw or compiled asset information from your bundle.config.json schema file.
-         * Assets are Javascript, CSS, image, and other files used by your site.
-         */
-        $container['assets'] = function ($c) {
-            $config = $c->get('config');
+        $container['shutdownHandler'] = function ($c) {
+            $alerts = $c->get('alerts');
+            $translator = $c->get('translator');
+            $request = $c->get('request');
+            $response = $c->get('response');
             
-            // TODO: map stream identifier ("asset://") to desired relative URLs?
-            $base_url = $config['site.uri.public'];
-            $raw_assets_path = $config['site.uri.assets-raw'];
-            $use_raw_assets = $config['use_raw_assets'];
-            
-            $am = new AssetManager($base_url, $use_raw_assets);
-            $am->setRawAssetsPath($raw_assets_path);
-            $am->setCompiledAssetsPath($config['site.uri.assets']);
-            
-            // Load asset schema
-            $as = new AssetBundleSchema();
-            $as->loadRawSchemaFile($c->get('locator')->findResource('build://bundle.config.json', true, true));
-            $as->loadCompiledSchemaFile($c->get('locator')->findResource('build://bundle.result.json', true, true));
-            
-            $am->setBundleSchema($as);
-            
-            return $am;
-        };
-            
-        /**
-         * Initialize Eloquent Capsule, which provides the database layer for UF.
-         *
-         * @todo construct the individual objects rather than using the facade
-         */
-        $container['db'] = function ($c) {
-            $config = $c->get('config');
-            
-            $capsule = new Capsule;
-            $capsule->addConnection([
-                'driver'    => $config['db.driver'],
-                'host'      => $config['db.host'],
-                'database'  => $config['db.database'],
-                'username'  => $config['db.username'],
-                'password'  => $config['db.password'],
-                'charset'   => $config['db.charset'],
-                'collation' => $config['db.collation'],
-                'prefix'    => $config['db.prefix']
-            ]);
-            
-            // Register as global connection
-            $capsule->setAsGlobal();
-            
-            // Start Eloquent
-            $capsule->bootEloquent();
-            
-            // Set container for data model
-            UFModel::$ci = $c;
-            
-            return $capsule;
+            return new ShutdownHandler($request, $response, $alerts, $translator);
         };
         
         /**
@@ -265,91 +327,29 @@ class CoreServicesProvider
         $container['view'] = function ($c) {
             $templatePaths = $c->locator->findResources('templates://', true, true);
             
-            $view = new \Slim\Views\Twig($templatePaths, [
-                'cache' => $c->locator->findResource('cache://twig', true, true)
-            ]);
+            $view = new \Slim\Views\Twig($templatePaths);
             
-            /* TODO: passthrough debug settings
-            $view->parserOptions = array(
-                'debug' => true
-            );
-            */            
+            $twig = $view->getEnvironment();
+            
+            if ($c->config['cache.twig']) {
+                $twig->setCache($c->locator->findResource('cache://twig', true, true));
+            }
+            
+            if ($c->config['debug.twig']) {
+                $twig->enableDebug();
+            }    
             
             // Register Twig as a view extension
             $view->addExtension(new \Slim\Views\TwigExtension(
                 $c['router'],
                 $c['request']->getUri()
             ));
-            
-            $twig = $view->getEnvironment();
                 
-            // Register the UserFrosting extension with Twig  
-            $twig_extension = new CoreExtension($c);
-            $twig->addExtension($twig_extension);   
+            // Register the core UF extension with Twig  
+            $coreExtension = new CoreExtension($c);
+            $view->addExtension($coreExtension);   
                 
             return $view;
         };
-        
-        /**
-         * Custom shutdown handler, for dealing with fatal errors.
-         */
-        $container['shutdownHandler'] = function ($c) {
-            $alerts = $c->get('alerts');
-            $translator = $c->get('translator');
-            $request = $c->get('request');
-            $response = $c->get('response');
-            
-            return new ShutdownHandler($request, $response, $alerts, $translator);
-        };
-        
-        /**
-         * Custom error-handler for recoverable errors.
-         */
-        $container['errorHandler'] = function ($c) {
-            $settings = $c->get('settings');
-            
-            $handler = new CoreErrorHandler($c, $settings['displayErrorDetails']);
-            
-            // Register the HttpExceptionHandler.
-            $handler->registerHandler('\UserFrosting\Support\Exception\HttpException', '\UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler');
-            
-            return $handler;
-        };        
-    
-        /**
-         * Custom 404 handler.
-         *
-         * @todo Handle xhr case, just like we do in errorHandler
-         */
-        $container['notFoundHandler'] = function ($c) {
-            return function ($request, $response) use ($c) {
-                return $c->view->render($response, 'pages/error/404.html.twig') 
-                    ->withStatus(404)
-                    ->withHeader('Content-Type', 'text/html');
-            };
-        };
-        
-        /**
-         * Error logging with Monolog.
-         */
-        $container['errorLogger'] = function ($c) {
-            $log = new Logger('errors');
-            
-            $logFile = $c->get('locator')->findResource('log://errors.log', true, true);
-            
-            $handler = new StreamHandler($logFile, Logger::WARNING);
-            $log->pushHandler($handler);
-            return $log;
-        };
-        
-        /**
-         * Middleware to check environment.
-         *
-         * @todo We should cache the results of this, the first time that it succeeds.
-         */
-        $container['checkEnvironment'] = function ($c) {
-            $checkEnvironment = new CheckEnvironment($c->get('view'), $c->get('locator'));
-            return $checkEnvironment;
-        };        
     }
 }

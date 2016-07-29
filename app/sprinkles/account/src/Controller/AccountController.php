@@ -101,30 +101,54 @@ class AccountController
     /**
      * Render the "set password" page.
      *
-     * If $flag_new_user is set to true, this renders the page where new users who have had accounts created
-     * for them by another user, can set their password.  If set to false, this renders the new password page for password reset requests.
+     * Renders the page where new users who have had accounts created for them by another user, can set their password. 
      * By default, this is a "public page" (does not require authentication).
      * Request type: GET
-     * @param bool $flag_new_user Set to true if this is for a new user who doesn't yet have a password.
      */
-    public function pageSetPassword($flag_new_user = false){
-        // Look up the user for the secret token
-        $token = $this->_app->request->get()['secret_token'];
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/set-password.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        if ($flag_new_user)
-            $template = 'account/create-password.twig';
-        else
-            $template = 'account/reset-password.twig';
-
-        $this->_app->render($template, [
-            'secret_token' => $token,
-            'validators' => $this->_app->jsValidator->rules()
+    public function pageSetPassword($request, $response, $args)
+    {
+        // Insert the user's secret token from the link into the password set form
+        $params = $request->getQueryParams();
+        
+        // Load validation rules
+        $schema = new RequestSchema("schema://set-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/set-password.html.twig', [
+            "page" => [
+                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
+                "validators" => [
+                    "set_password"    => $validator->rules('json', false)
+                ]
+            ]
         ]);
     }
 
+    /**
+     * Reset password page.
+     *
+     * Renders the new password page for password reset requests. 
+     * Request type: GET
+     */
+    public function pageResetPassword($request, $response, $args)
+    {
+        // Insert the user's secret token from the link into the password reset form
+        $params = $request->getQueryParams();
+        
+        // Load validation rules - note this uses the same schema as "set password"
+        $schema = new RequestSchema("schema://set-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
+            "page" => [
+                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
+                "validators" => [
+                    "set_password"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+    
     /**
      * Account settings page.
      *
@@ -150,7 +174,7 @@ class AccountController
             "page" => [
                 "locales" => [], //$site->getLocales(),
                 "validators" => [
-                    "forgot_password"    => $validator->rules('json', false)
+                    "account_settings"    => $validator->rules('json', false)
                 ]
             ]
         ]);

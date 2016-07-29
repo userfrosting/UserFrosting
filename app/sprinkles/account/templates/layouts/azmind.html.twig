@@ -64,4 +64,7 @@
     <!--[if lt IE 10]>
         <script src="{{ assets.url('assets://vendor/azmind/js/placeholder.js') | raw }}"></script>
     <![endif]-->
+    
+    <!-- Page-group-specific JS asset bundle -->
+    {{ assets.js('js/azmind') | raw }}    
 {% endblock %}

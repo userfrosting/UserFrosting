@@ -10,8 +10,12 @@
         
         $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
         
-        $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings');
+        $this->get('/reset-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResetPassword');
         
+        $this->get('/set-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSetPassword');
+        
+        $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings');
+           
         $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
         
         $this->get('/logout', function (Request $request, Response $response, $args) {
