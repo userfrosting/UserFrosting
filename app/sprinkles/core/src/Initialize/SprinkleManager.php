@@ -8,10 +8,9 @@
  */
 namespace UserFrosting\Sprinkle\Core\Initialize;
 
+use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
-use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
-use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
+use UserFrosting\Sprinkle\Core\ServicesProvider\CoreServicesProvider;
 
 /**
  * Sprinkle manager class.
@@ -26,8 +25,11 @@ class SprinkleManager
      */
     protected $ci;
     
+    /**
+     * @var array[null|UserFrosting\Sprinkle\Core\Initialize\Sprinkle] An array of sprinkle initialization objects.
+     */
     protected $sprinkles;
-    
+        
     /**
      * Create a new SprinkleManager object.
      *
@@ -36,105 +38,48 @@ class SprinkleManager
     public function __construct(ContainerInterface $ci, $sprinkles = [])
     {
         $this->ci = $ci;
-        $this->setupLocator();
         $this->setSprinkles($sprinkles);
     }
-   
-    public function setSprinkles($sprinkles)
-    {
-        // Create core sprinkle
-        $this->sprinkles['core'] = new \UserFrosting\Sprinkle\Core\Core($this->ci);
     
-        // Create other sprinkle objects
-        foreach ($sprinkles as $name) {
-            $className = ucfirst($name);
-            $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
-            // Check that class exists.  If not, set to null
-            if (class_exists($fullClassName))
-                $this->sprinkles[$name] = new $fullClassName($this->ci);
-            else
-                $this->sprinkles[$name] = null;
-        }
-    }
-    
-    public function setupLocator()
-    {
-        // Initialize locator
-        $this->ci['locator'] = function ($c) {
-            $locator = new UniformResourceLocator(\UserFrosting\ROOT_DIR);
-            
-            $locator->addPath('build', '', \UserFrosting\BUILD_DIR_NAME);
-            $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);    
-            $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
-            $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
-            $locator->addPath('sprinkles', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME);
-            
-            // Use locator to initialize streams
-            ReadOnlyStream::setLocator($locator);
-            $sb = new StreamBuilder([
-                'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
-            ]);
-            
-            return $locator;
-        };
-    }
-    
+    /**
+     * Initialize the application.  Register core services and resources, load all sprinkles, and include route files.
+     */
     public function init()
     {
-        $locator = $this->ci['locator'];
+        // Register core services
+        $serviceProvider = new CoreServicesProvider();
+        $serviceProvider->register($this->ci);
         
+        // Register core resources
+        $this->registerSprinkleResources('core');
+        
+        // For each sprinkle (other than Core), register its resources and then run its initializer
         foreach ($this->sprinkles as $name => $sprinkle) {        
-            // Add locator services for each sprinkle
-            
-            $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
-            
-            $locator->addPath('assets', '', $sprinklesDirFragment . \UserFrosting\ASSET_DIR_NAME);
-            $locator->addPath('schema', '', $sprinklesDirFragment . \UserFrosting\SCHEMA_DIR_NAME);
-            $locator->addPath('templates', '', $sprinklesDirFragment . \UserFrosting\TEMPLATE_DIR_NAME);
-            $locator->addPath('locale', '', $sprinklesDirFragment . \UserFrosting\LOCALE_DIR_NAME);
-            $locator->addPath('config', '', $sprinklesDirFragment . \UserFrosting\CONFIG_DIR_NAME);
-            $locator->addPath('routes', '', $sprinklesDirFragment . \UserFrosting\ROUTE_DIR_NAME);
-                
-            /* These are streams that can be subnavigated to core or specific sprinkles (e.g. "templates://core/")
-               This would allow specifically selecting core or a particular sprinkle.  Not sure if we need this.
-               $locator->addPath('templates', 'core', $coreDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
-            */
+            $this->registerSprinkleResources($name);
             
             // Initialize the sprinkle
             if ($sprinkle)
                 $sprinkle->init();            
         }
         
-        // Set some PHP parameters, if specified in config
-        $config = $this->ci['config'];
-        
-        if (isset($config['display_errors']))
-            ini_set("display_errors", $config['display_errors']);
-        
-        // Configure error-reporting
-        if (isset($config['error_reporting']))
-            error_reporting($config['error_reporting']);
-        
-        // Configure time zone
-        if (isset($config['timezone']))
-            date_default_timezone_set($config['timezone']);
+        // Boot the config service manually
+        $this->ci['config'];
         
         // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
         $this->ci['shutdownHandler'];         
         
-        // Finally, include all defined routes in route directory.  Include them in reverse order to allow higher priority routes to override lower priority.
+        $this->loadRoutes();
+    }
+    
+    /**
+     * Include all defined routes in route stream.
+     *
+     * Include them in reverse order to allow higher priority routes to override lower priority.
+     */
+    public function loadRoutes()
+    {
         global $app;
-        $routePaths = array_reverse($locator->findResources('routes://', true, true));
+        $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
         foreach ($routePaths as $path) {
             $routeFiles = glob($path . '/*.php');
             foreach ($routeFiles as $routeFile){
@@ -142,4 +87,47 @@ class SprinkleManager
             }
         }
     }
+    
+    /**
+     * Register resource streams for a specified sprinkle.
+     */
+    public function registerSprinkleResources($name)
+    {
+        $locator = $this->ci['locator'];
+        
+        $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
+        
+        $locator->addPath('assets', '', $sprinklesDirFragment . \UserFrosting\ASSET_DIR_NAME);
+        $locator->addPath('schema', '', $sprinklesDirFragment . \UserFrosting\SCHEMA_DIR_NAME);
+        $locator->addPath('templates', '', $sprinklesDirFragment . \UserFrosting\TEMPLATE_DIR_NAME);
+        $locator->addPath('locale', '', $sprinklesDirFragment . \UserFrosting\LOCALE_DIR_NAME);
+        $locator->addPath('config', '', $sprinklesDirFragment . \UserFrosting\CONFIG_DIR_NAME);
+        $locator->addPath('routes', '', $sprinklesDirFragment . \UserFrosting\ROUTE_DIR_NAME);
+            
+        /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
+           Not sure if we need this.
+           $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
+         */
+    }   
+   
+    /**
+     * Takes a list of sprinkle names, and creates a new sprinkle initializer object for each one (if defined).
+     *
+     * Creates an object of a subclass of UserFrosting\Sprinkle\Core\Initialize\Sprinkle if defined for the sprinkle (converting to StudlyCase).
+     * Otherwise, sets the entry to null in $this->sprinkles.
+     * @param array[string] An array of sprinkle names.
+     */
+    public function setSprinkles($sprinkles)
+    {
+        // Create other sprinkle objects
+        foreach ($sprinkles as $name) {
+            $className = Str::studly($name);
+            $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
+            // Check that class exists.  If not, set to null
+            if (class_exists($fullClassName))
+                $this->sprinkles[$name] = new $fullClassName($this->ci);
+            else
+                $this->sprinkles[$name] = null;
+        }
+    }    
 }

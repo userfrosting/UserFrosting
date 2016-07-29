@@ -12,21 +12,19 @@ namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
-
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
 use Interop\Container\ContainerInterface;
-
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-
+use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
+use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
+use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
 use Slim\Http\Uri;
-
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
-
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\AssetBundleSchema;
 use UserFrosting\I18n\MessageTranslator;
@@ -100,8 +98,54 @@ class CoreServicesProvider
                 $config['site.uri.public'] = trim($public, '/');
             }
             
+            if (isset($config['display_errors']))
+                ini_set("display_errors", $config['display_errors']);
+            
+            // Configure error-reporting
+            if (isset($config['error_reporting']))
+                error_reporting($config['error_reporting']);
+            
+            // Configure time zone
+            if (isset($config['timezone']))
+                date_default_timezone_set($config['timezone']);
+            
             return $config;
         };
+        
+        /**
+         * Path/file locator service.
+         *
+         * Register custom streams for the application, and add paths for app-level streams.
+         */
+        $container['locator'] = function ($c) {
+           
+            $locator = new UniformResourceLocator(\UserFrosting\ROOT_DIR);
+            
+            $locator->addPath('build', '', \UserFrosting\BUILD_DIR_NAME);
+            $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);    
+            $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
+            $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
+            $locator->addPath('sprinkles', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME);
+            
+            // Use locator to initialize streams
+            ReadOnlyStream::setLocator($locator);
+            
+            $sb = new StreamBuilder([
+                'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
+                'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
+            ]);
+            
+            return $locator;
+        };        
         
         /**
          * Start the PHP session, with the name and parameters specified in the configuration file.
