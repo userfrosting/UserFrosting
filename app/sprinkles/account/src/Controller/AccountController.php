@@ -23,7 +23,9 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AccountController
 {
-    
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $ci;
     
     /**
@@ -37,37 +39,6 @@ class AccountController
     }
     
     /**
-     * Account settings page.
-     *
-     * Provides a form for users to modify various properties of their account, such as name, email, locale, etc.
-     * Any fields that the user does not have permission to modify will be automatically disabled.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function pageSettings($request, $response, $args)
-    {
-        $currentUser = $this->ci['currentUser'];
-        
-        // Access-controlled page
-        if (!$currentUser->checkAccess('uri_account_settings')){
-            throw new \Exception();
-        }
-        
-        // Load validation rules
-        $schema = new RequestSchema("schema://account-settings.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
-        
-        return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
-            "page" => [
-                "locales" => [], //$site->getLocales(),
-                "validators" => [
-                    "forgot_password"    => $validator->rules('json', false)
-                ]
-            ]
-        ]);
-    }
-    
-    /**
      * Render the "forgot password" page.
      *
      * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
@@ -78,9 +49,9 @@ class AccountController
     {
         // Load validation rules
         $schema = new RequestSchema("schema://forgot-password.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
         
-        return $this->ci['view']->render($response, 'pages/forgot-password.html.twig', [
+        return $this->ci->view->render($response, 'pages/forgot-password.html.twig', [
             "page" => [
                 "validators" => [
                     "forgot_password"    => $validator->rules('json', false)
@@ -100,9 +71,9 @@ class AccountController
     {
         // Load validation rules
         $schema = new RequestSchema("schema://resend-verification.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
         
-        return $this->ci['view']->render($response, 'pages/resend-verification.html.twig', [
+        return $this->ci->view->render($response, 'pages/resend-verification.html.twig', [
             "page" => [
                 "validators" => [
                     "resend_verification"    => $validator->rules('json', false)
@@ -138,6 +109,37 @@ class AccountController
         ]);
     }
 
+    /**
+     * Account settings page.
+     *
+     * Provides a form for users to modify various properties of their account, such as name, email, locale, etc.
+     * Any fields that the user does not have permission to modify will be automatically disabled.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function pageSettings($request, $response, $args)
+    {
+        $currentUser = $this->ci->currentUser;
+        
+        // Access-controlled page
+        if (!$currentUser->checkAccess('uri_account_settings')){
+            throw new \Exception();
+        }
+        
+        // Load validation rules
+        $schema = new RequestSchema("schema://account-settings.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        
+        return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
+            "page" => [
+                "locales" => [], //$site->getLocales(),
+                "validators" => [
+                    "forgot_password"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+    
     /**
      * Render the account registration/sign-in page for UserFrosting.
      *
@@ -181,12 +183,12 @@ class AccountController
         
         // Load validation rules
         $schema = new RequestSchema("schema://login.json");
-        $validatorLogin = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        $validatorLogin = new JqueryValidationAdapter($schema, $this->ci->translator);
         
         $schema = new RequestSchema("schema://register.json");
-        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci['translator']);
+        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
         
-        return $this->ci['view']->render($response, 'pages/sign-in-or-register.html.twig', [
+        return $this->ci->view->render($response, 'pages/sign-in-or-register.html.twig', [
             "page" => [
                 "validators" => [
                     "login"    => $validatorLogin->rules('json', false),
@@ -194,17 +196,6 @@ class AccountController
                 ]
             ]
         ]);
-    }    
-    
-    /**
-     * Account compromised page.
-     *
-     * Warns the user that their account may have been compromised due to a stolen "remember me" cookie.
-     * This page is "public access".
-     * Request type: GET
-     */
-    public function pageAccountCompromised(){
-        $this->_app->render('errors/compromised.twig');
     }
 
     /**

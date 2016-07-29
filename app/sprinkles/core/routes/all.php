@@ -1,36 +1,14 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 
-    use Illuminate\Database\Capsule\Manager as Capsule;
-    use Illuminate\Database\Schema\Blueprint;
+$app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')->add('checkEnvironment');
 
-    use \Psr\Http\Message\ServerRequestInterface as Request;
-    use \Psr\Http\Message\ResponseInterface as Response;
+$app->get('/about','UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
 
-    // Front page
-    $app->get('/', function (Request $request, Response $response, $args) {
-        $config = $this->config;
-        
-        return $this->view->render($response, 'pages/index.html.twig');
-    })->add('checkEnvironment');
-
-    $app->group('/account', function () {
-        $this->get('/register', function (Request $request, Response $response, $args) {
-            
-            return "Nothing";   
-        })->add('checkEnvironment');
-    });
-    
-    $app->get('/install', function (Request $request, Response $response, $args) {
-
-    });
-    
-    // About page
-    $app->get('/about', function (Request $request, Response $response, $args) {
-        return $this->view->render($response, 'pages/about.html.twig');     
-    })->add('checkEnvironment');      
-    
-    // Flash alert stream
-    $app->get('/alerts', function (Request $request, Response $response, $args) {
-        return $response->withJson($this->alerts->getAndClearMessages());
-    });   
-    
+$app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts');

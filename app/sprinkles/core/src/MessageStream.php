@@ -32,7 +32,7 @@ class MessageStream
     protected $messagesKey;
     
     /**
-     * @var MessageTranslator
+     * @var UserFrosting\I18n\MessageTranslator|null
      */    
     protected $messageTranslator = null;
 
@@ -54,7 +54,7 @@ class MessageStream
     /**
      * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
-     * @param MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
+     * @param UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
      */    
     public function setTranslator($translator)
     {
