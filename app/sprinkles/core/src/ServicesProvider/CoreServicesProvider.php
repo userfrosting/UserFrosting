@@ -76,8 +76,8 @@ class CoreServicesProvider
             // Create and inject new config item
             $config = new \UserFrosting\Config\Config();
         
-            // Add search paths for all config files
-            $configPaths = $c->get('locator')->findResources('config://', true, true);
+            // Add search paths for all config files.  Include them in reverse order to allow config files added later to override earlier files.
+            $configPaths = array_reverse($c->get('locator')->findResources('config://', true, true));
             
             $config->setPaths($configPaths);
             

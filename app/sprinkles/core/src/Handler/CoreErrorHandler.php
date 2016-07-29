@@ -42,23 +42,7 @@ class CoreErrorHandler extends \Slim\Handlers\Error
         $this->ci = $ci;
         $this->displayErrorDetails = (bool)$displayErrorDetails;
     }
-    
-    /**
-     * Register an exception handler for a specified exception class.
-     *
-     * The exception handler must implement \UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface.
-     *
-     * @param string $exceptionClass The fully qualified class name of the exception to handle.
-     * @param string $handlerClass The fully qualified class name of the assigned handler.
-     */
-    public function registerHandler($exceptionClass, $handlerClass)
-    {
-        if (!is_a($handlerClass, '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface', true))
-            throw new \InvalidArgumentException("Registered exception handler must implement ExceptionHandlerInterface!");
         
-        $this->exceptionHandlers[$exceptionClass] = $handlerClass;
-    }
-    
     /**
      * Invoke error handler
      *
@@ -94,6 +78,23 @@ class CoreErrorHandler extends \Slim\Handlers\Error
          
         return $response;
     }
+    
+    /**
+     * Register an exception handler for a specified exception class.
+     *
+     * The exception handler must implement \UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface.
+     *
+     * @param string $exceptionClass The fully qualified class name of the exception to handle.
+     * @param string $handlerClass The fully qualified class name of the assigned handler.
+     * @throws InvalidArgumentException If the registered handler fails to implement ExceptionHandlerInterface
+     */
+    public function registerHandler($exceptionClass, $handlerClass)
+    {
+        if (!is_a($handlerClass, '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface', true))
+            throw new \InvalidArgumentException("Registered exception handler must implement ExceptionHandlerInterface!");
+        
+        $this->exceptionHandlers[$exceptionClass] = $handlerClass;
+    }    
     
     /**
      * Alternative logging for errors

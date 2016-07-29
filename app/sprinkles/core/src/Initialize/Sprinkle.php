@@ -19,7 +19,9 @@ use Interop\Container\ContainerInterface;
  */
 abstract class Sprinkle
 {
-
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $ci;
     
     /**

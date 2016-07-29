@@ -21,7 +21,9 @@ use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
  */
 class SprinkleManager
 {
-
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $ci;
     
     protected $sprinkles;
@@ -46,10 +48,12 @@ class SprinkleManager
         // Create other sprinkle objects
         foreach ($sprinkles as $name) {
             $className = ucfirst($name);
-            $fullClassName = "UserFrosting\\Sprinkle\\$className\\$className";
-            // TODO: check that class exists
-            
-            $this->sprinkles[$name] = new $fullClassName($this->ci);
+            $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
+            // Check that class exists.  If not, set to null
+            if (class_exists($fullClassName))
+                $this->sprinkles[$name] = new $fullClassName($this->ci);
+            else
+                $this->sprinkles[$name] = null;
         }
     }
     
@@ -107,7 +111,8 @@ class SprinkleManager
             */
             
             // Initialize the sprinkle
-            $sprinkle->init();            
+            if ($sprinkle)
+                $sprinkle->init();            
         }
         
         // Set some PHP parameters, if specified in config
