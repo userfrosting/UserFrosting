@@ -28,6 +28,7 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 
 class User extends UFModel
 {
@@ -361,7 +362,7 @@ class User extends UFModel
         if (!isset($this->primary_group_id)){
             throw new \Exception("This user does not appear to have a primary group id set.");
         }
-        return $this->belongsTo('UserFrosting\Group', 'primary_group_id')->getEager()->first();
+        return $this->belongsTo('UserFrosting\Sprinkle\Account\Model\Group', 'primary_group_id')->getEager()->first();
     }
     
     /**

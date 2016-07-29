@@ -47,7 +47,7 @@ class AccountExtension extends \Twig_Extension
     public function getGlobals()
     {
         return array(
-            'currentUser'   => $this->services['currentUser']
+            'current_user'   => $this->services['currentUser']
         );
     }
 

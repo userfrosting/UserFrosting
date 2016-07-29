@@ -1,5 +1,4 @@
 <?php
-
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
@@ -15,11 +14,10 @@ use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
 /**
  * Bootstrapper class for the 'account' sprinkle.
  *
- * @author Alexander Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Account extends Sprinkle
 {
-
     public function init()
     {
         $serviceProvider = new AccountServicesProvider();

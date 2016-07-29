@@ -43,7 +43,7 @@ class AccountServicesProvider
         /**
          * Extends the 'errorHandler' service with custom exception handlers.
          *
-         * Adds account-specific functions, globals, filters, etc to Twig.
+         * Custom handlers added: ForbiddenExceptionHandler
          */
         $container->extend('errorHandler', function ($handler, $c) {
             // Register the ForbiddenExceptionHandler.
@@ -117,11 +117,6 @@ class AccountServicesProvider
             // If we have an authenticated user, setup their environment
             
             // TODO: Add user locale in translator
-            
-            // TODO: Add user to Twig globals
-            /*
-            $twig->addGlobal("user", $this->user);
-            */
             
             /*
             // TODO: Set user theme in Twig

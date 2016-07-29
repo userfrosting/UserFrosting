@@ -25,7 +25,8 @@
     
     // Now, run the sprinkle manager to boot up all our sprinkles - core is implied
     $sm = new SprinkleManager($container, [
-        "account"
+        "account",
+        "site"
     ]);
     
     $sm->init();
