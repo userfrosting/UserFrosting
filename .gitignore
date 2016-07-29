@@ -15,6 +15,7 @@ app/composer.lock
 app/composer.phar
 
 # Ignore error log
+app/cache/*
 app/logs/errors.log
 app/sessions/*
 

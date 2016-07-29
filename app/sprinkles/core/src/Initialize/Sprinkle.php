@@ -34,6 +34,8 @@ abstract class Sprinkle
         $this->ci = $ci;
     }
 
-    abstract public function init();
-
+    /**
+     * Initialization function for the sprinkle.
+     */
+    public abstract function init();
 }

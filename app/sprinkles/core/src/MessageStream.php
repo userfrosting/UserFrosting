@@ -1,43 +1,65 @@
 <?php
-
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 namespace UserFrosting\Sprinkle\Core;
+
+use UserFrosting\Session\Session;
 
 /**
  * MessageStream Class
  *
  * Implements a message stream for use between HTTP requests, with i18n support via the MessageTranslator class
  *
- * @author Alex Weissman
- * @link https://alexanderweissman.com
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see http://www.userfrosting.com/components/#messages
  */
 class MessageStream
 {
 
     /**
-     * @var array
+     * @var UserFrosting\Session\Session We use the session object so that added messages will automatically appear in the session.
      */
-    protected $_messages = [];
+    protected $session;
+    
+    /**
+     * @var string
+     */
+    protected $messagesKey;
     
     /**
      * @var MessageTranslator
      */    
-    protected static $_message_translator = null;
+    protected $messageTranslator = null;
 
-    /** Create a new message stream.
-     *
+    /** 
+     * Create a new message stream.
      */
-    public function __construct(){
-
+    public function __construct($session, $messagesKey, $translator = null)
+    {
+        $this->session = $session;
+        $this->messagesKey = $messagesKey;
+    
+        if (!$this->session->has($messagesKey)) {
+            $this->session[$messagesKey] = array();
+        }
+        
+        $this->setTranslator($translator);
     }
 
     /**
      * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
      * @param MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
-     * @return MessageStream this MessageStream object. 
      */    
-    public static function setTranslator($translator){
-        static::$_message_translator = $translator;
+    public function setTranslator($translator)
+    {
+        $this->messageTranslator = $translator;
+        return $this;
     }
     
     /**
@@ -47,12 +69,14 @@ class MessageStream
      * @param string $message The message to be added to the message stream.
      * @return MessageStream this MessageStream object. 
      */
-    public function addMessage($type, $message){
-        $alert = [
+    public function addMessage($type, $message)
+    {
+        $messages = $this->session[$this->messagesKey];
+        $messages[] = array(
             "type" => $type,
             "message" => $message
-        ];
-        $this->_messages[] = $alert;
+        );
+        $this->session[$this->messagesKey] = $messages;
         return $this;
     }
 
@@ -60,15 +84,16 @@ class MessageStream
      * Adds a text message to the session message stream, translated into the currently selected language.
      *
      * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
-     * @param string $message The message id for the message to be added to the message stream.
-     * @param array $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
+     * @param string $messageId The message id for the message to be added to the message stream.
+     * @param array[string] $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
      * @return MessageStream this MessageStream object.
      */
-    public function addMessageTranslated($type, $message_id, $placeholders = []){
-        if (!static::$_message_translator){
-            throw new \Exception("No translator has been set!  Please call MessageStream::setTranslator first.");
+    public function addMessageTranslated($type, $messageId, $placeholders = array())
+    {
+        if (!$this->messageTranslator){
+            throw new \RuntimeException("No translator has been set!  Please call MessageStream::setTranslator first.");
         }
-        $message = static::$_message_translator->translate($message_id, $placeholders);
+        $message = $this->$messageTranslator->translate($messageId, $placeholders);
         return $this->addMessage($type, $message);
     }    
     
@@ -77,8 +102,9 @@ class MessageStream
      *
      * @return array An array of messages, each of which is itself an array containing "type" and "message" fields.
      */
-    public function messages(){
-        return $this->_messages;
+    public function messages()
+    {
+        return $this->session[$this->messagesKey];
     }
 
     /**
@@ -86,18 +112,18 @@ class MessageStream
      *
      * @return MessageTranslator The translator for this message stream.
      */
-    public function translator(){
-        if (!static::$_message_translator){
-            throw new \Exception("No translator has been set!  Please call MessageStream::setTranslator first.");
-        }    
-        return static::$_message_translator;
+    public function translator()
+    {
+        return $this->messageTranslator;
     }
     
     /**
      * Clear all messages from this message stream.
      */
-    public function resetMessageStream(){
-        $this->_messages = [];
+    public function resetMessageStream()
+    {
+        error_log("Clearing messages");
+        $this->session[$this->messagesKey] = array();
     }
     
     /**
@@ -107,8 +133,9 @@ class MessageStream
      *
      * @return array An array of messages, each of which is itself an array containing "type" and "message" fields.
      */
-    public function getAndClearMessages(){
-        $messages = $this->_messages;
+    public function getAndClearMessages()
+    {
+        $messages = $this->session[$this->messagesKey];
         $this->resetMessageStream();
         return $messages;
     }

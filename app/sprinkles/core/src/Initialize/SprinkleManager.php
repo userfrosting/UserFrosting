@@ -82,7 +82,7 @@ class SprinkleManager
         $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
         foreach ($routePaths as $path) {
             $routeFiles = glob($path . '/*.php');
-            foreach ($routeFiles as $routeFile){
+            foreach ($routeFiles as $routeFile) {
                 require_once $routeFile;
             }
         }
@@ -124,10 +124,11 @@ class SprinkleManager
             $className = Str::studly($name);
             $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
             // Check that class exists.  If not, set to null
-            if (class_exists($fullClassName))
+            if (class_exists($fullClassName)) {
                 $this->sprinkles[$name] = new $fullClassName($this->ci);
-            else
+            } else {
                 $this->sprinkles[$name] = null;
+            }
         }
     }    
 }

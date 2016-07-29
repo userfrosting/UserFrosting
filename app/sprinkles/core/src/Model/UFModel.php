@@ -8,9 +8,9 @@
  */
 namespace UserFrosting\Sprinkle\Core\Model;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
-
+use Illuminate\Database\Eloquent\Model;
+    
 /**
  * UFModel Class
  *
@@ -38,7 +38,29 @@ abstract class UFModel extends Model
      */    
     public function attributeExists($key)
     {
-        return array_key_exists($key, $this->attributes);            
+        return array_key_exists($key, $this->attributes);
+    }
+    
+    /**
+     * Get the properties of this object as an associative array.  Alias for toArray().
+     *
+     * @return array
+     */      
+    public function export()
+    {
+        return $this->toArray();
+    }
+    
+    /**
+     * For raw array fetching.  Must be static, otherwise PHP gets confused about where to find $table.
+     *
+     * @todo Is this the right way to implement this?  can we just make it a query scope?
+     */
+    public static function queryBuilder()
+    {
+        // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
+        Capsule::connection()->setFetchMode(\PDO::FETCH_ASSOC);
+        return Capsule::table(static::$table);
     }
     
     /**
@@ -53,12 +75,50 @@ abstract class UFModel extends Model
     }    
     
     /**
-     * For excluding certain columns in a query.
+     * Perform a "begins with" pattern match on a specified column in a query.
+     *
+     * @param $query
+     * @param $field string The column to match
+     * @param $value string The value to match    
      */
-    public function scopeExclude($query, $value = [])
+    public function scopeBeginsWith($query, $field, $value)
     {
-        $columns = array_merge(['id'], Database::getSchemaTable(static::$_table_id)->columns);
+        return $query->where($field, 'LIKE', "$value%");
+    }
+
+    /**
+     * Perform an "ends with" pattern match on a specified column in a query.
+     *
+     * @param $query
+     * @param $field string The column to match
+     * @param $value string The value to match    
+     */
+    public function scopeEndsWith($query, $field, $value)
+    {
+        return $query->where($field, 'LIKE', "%$value");
+    }
+    
+    /**
+     * Excluding certain columns in a query.
+     *
+     * @param $query
+     * @param $value array|string The column(s) to exclude
+     */
+    public function scopeExclude($query, $value = array())
+    {
+        $columns = Capsule::schema()->getColumnListing($this->table);
         return $query->select( array_diff( $columns,(array) $value) );
+    }
+    
+    /**
+     * Perform a pattern match on a specified column in a query.
+     * @param $query
+     * @param $field string The column to match
+     * @param $value string The value to match    
+     */
+    public function scopeLike($query, $field, $value)
+    {
+        return $query->where($field, 'LIKE', "%$value%");
     }
     
     /**
@@ -73,26 +133,5 @@ abstract class UFModel extends Model
         
         // Store function should always return the id of the object
         return $this->id;        
-    }
-    
-    /**
-     * Get the properties of this object as an associative array.  Alias for toArray().
-     *
-     * @return array
-     */      
-    public function export()
-    {
-        return $this->toArray();
-    }
-    
-    /**
-     * For raw array fetching.  Must be static, otherwise PHP gets confused about where to find the table_id.
-     */
-    public static function queryBuilder()
-    {
-        // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
-        Capsule::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-        $table = Database::getSchemaTable(static::$_table_id)->name;
-        return Capsule::table($table);
     }    
 }

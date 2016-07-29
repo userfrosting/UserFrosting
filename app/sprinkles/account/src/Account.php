@@ -18,6 +18,9 @@ use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
  */
 class Account extends Sprinkle
 {
+    /**
+     * Register Account services.
+     */
     public function init()
     {
         $serviceProvider = new AccountServicesProvider();

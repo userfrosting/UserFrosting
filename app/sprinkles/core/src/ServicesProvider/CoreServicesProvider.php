@@ -1,11 +1,9 @@
 <?php
-
 /**
- * UserFrosting core services provider.
+ * UserFrosting (http://www.userfrosting.com)
  *
- * Registers core services for UserFrosting, such as config, database, asset manager, translator, etc.
  * @link      https://github.com/userfrosting/UserFrosting
- * @author    Alexander Weissman
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\ServicesProvider;
@@ -36,6 +34,12 @@ use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 
+/**
+ * UserFrosting core services provider.
+ *
+ * Registers core services for UserFrosting, such as config, database, asset manager, translator, etc.
+ * @author Alex Weissman (https://alexanderweissman.com)
+ */
 class CoreServicesProvider
 {
     /**
@@ -67,7 +71,7 @@ class CoreServicesProvider
             try {
                 $dotenv = new Dotenv(\UserFrosting\APP_DIR);
                 $dotenv->load();
-            } catch (InvalidPathException $e){
+            } catch (InvalidPathException $e) {
                 // Skip loading the environment config file if it doesn't exist.
             }
             
@@ -176,15 +180,7 @@ class CoreServicesProvider
          * Persists error/success messages between requests in the session.
          */
         $container['alerts'] = function ($c) {
-            // Message stream depends on translator.  TODO: inject as dependency into MessageStream
-            $c->get('translator');
-            
-            $session = $c->get('session');
-            
-            if (!$session['site.alerts'])
-                $session['site.alerts'] = new \UserFrosting\Sprinkle\Core\MessageStream();
-                
-            return $session['site.alerts'];
+            return new \UserFrosting\Sprinkle\Core\MessageStream($c->get('session'), 'site.alerts', $c->get('translator'));
         };       
         
         /**
@@ -250,17 +246,14 @@ class CoreServicesProvider
         /**
          * Translation service, for translating message tokens.
          */
-        $container['translator'] = function ($container) {
+        $container['translator'] = function ($c) {
             $translator = new MessageTranslator();
             
             // Set the translation path and default language path.
             // TODO: we should rewrite MessageTranslator for extendability.  So, we would set a default translation table and then recursively merge in the target language table using something like `addTranslationTable`.
             $translator->setTranslationTable('locale://en_US.php');
             $translator->setDefaultTable('locale://en_US.php');
-            
-            // Register translator with MessageStream
-            MessageStream::setTranslator($translator);
-            
+                
             return $translator;
         };
         
@@ -270,11 +263,17 @@ class CoreServicesProvider
          * Also adds the UserFrosting core Twig extension, which provides additional functions, filters, global variables, etc.
          */
         $container['view'] = function ($c) {
-            $templatePaths = $c->get('locator')->findResources('templates://', true, true);
+            $templatePaths = $c->locator->findResources('templates://', true, true);
             
             $view = new \Slim\Views\Twig($templatePaths, [
-                //'cache' => ''
+                'cache' => $c->locator->findResource('cache://twig', true, true)
             ]);
+            
+            /* TODO: passthrough debug settings
+            $view->parserOptions = array(
+                'debug' => true
+            );
+            */            
             
             // Register Twig as a view extension
             $view->addExtension(new \Slim\Views\TwigExtension(
@@ -283,15 +282,7 @@ class CoreServicesProvider
             ));
             
             $twig = $view->getEnvironment();
-            
-            /* TODO: enable Twig caching?
-            $view = $app->view();
-            $view->parserOptions = array(
-                'debug' => true,
-                'cache' => 'cache://twig'
-            );
-            */
-            
+                
             // Register the UserFrosting extension with Twig  
             $twig_extension = new CoreExtension($c);
             $twig->addExtension($twig_extension);   

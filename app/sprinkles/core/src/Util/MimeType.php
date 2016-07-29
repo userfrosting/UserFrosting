@@ -1,12 +1,20 @@
 <?php
-
 /**
- * Adapted from https://github.com/thephpleague/flysystem
+ * UserFrosting (http://www.userfrosting.com)
  *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-
 namespace UserFrosting\Sprinkle\Core\Util;
 
+/**
+ * Maps file extensions to MIME types.  Adapted from thephpleague/flysystem
+ *
+ * @author The PHP League (http://thephpleague.com/)  
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see https://github.com/thephpleague/flysystem
+ */
 class MimeType
 {
     /**

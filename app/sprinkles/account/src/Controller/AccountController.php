@@ -50,7 +50,7 @@ class AccountController
         
         // Access-controlled page
         if (!$currentUser->checkAccess('uri_account_settings')){
-            throw new ForbiddenException();
+            throw new \Exception();
         }
         
         // Load validation rules
@@ -148,6 +148,8 @@ class AccountController
      */
     public function pageSignInOrRegister($request, $response, $args)
     {
+        //$this->ci->alerts->addMessage("danger", "Will Robinson");
+        
         /*
         // Get the alert message stream
         $ms = $this->_app->alerts;

@@ -29,7 +29,9 @@ class ForbiddenExceptionHandler extends ExceptionHandler
      * @return ResponseInterface     
      */   
     public function ajaxHandler($request, $response, $exception)
-    { 
+    {
+        $this->logFlag = false;
+    
         $this->ci->alerts->addMessageTranslated("danger", "Resource not found.");
         
         return $response->withStatus($httpCode);
@@ -48,6 +50,8 @@ class ForbiddenExceptionHandler extends ExceptionHandler
      */
     public function standardHandler($request, $response, $exception)
     {
+        $this->logFlag = false;
+        
         // Render a custom error page, if it exists
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");

@@ -8,6 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Core\Twig;
 
+use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use Slim\Http\Uri;
 
@@ -19,36 +20,58 @@ use Slim\Http\Uri;
 class CoreExtension extends \Twig_Extension
 {
 
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $services;
-    protected $config;
-
-    public function __construct(\Slim\Container $services)
+    
+    /**
+     * Constructor.
+     *
+     * @param ContainerInterface $services The global container object, which holds all your services.
+     */
+    public function __construct(ContainerInterface $services)
     {
         $this->services = $services;
-        $this->config = $services->get('config');
     }
 
+    /**
+     * Get the name of this extension.
+     *
+     * @return string
+     */
     public function getName()
     {
         return 'userfrosting/core';
     }
     
+    /**
+     * Adds Twig functions `getAlerts` and `translate`.
+     *
+     * @return array[\Twig_SimpleFunction]
+     */
     public function getFunctions()
     {        
         return array(
             // Add Twig function for fetching alerts
             new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
-                if ($clear)
+                if ($clear) {
                     return $this->services['alerts']->getAndClearMessages();
-                else
+                } else {
                     return $this->services['alerts']->messages();
+                }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = []) {
+            new \Twig_SimpleFunction('translate', function ($hook, $params = array()) {
                 return $this->services['translator']->translate($hook, $params);
             })
         );
     }
     
+    /**
+     * Adds Twig filters `unescape`.
+     *
+     * @return array[\Twig_SimpleFilter]
+     */    
     public function getFilters()
     {
         return array(
@@ -58,12 +81,16 @@ class CoreExtension extends \Twig_Extension
         );
     }
     
+    /**
+     * Adds Twig global variables `site` and `assets`.
+     *
+     * @return array[mixed]
+     */   
     public function getGlobals()
     {
         return array(
-            'site'   => $this->config['site'],
-            'assets' => $this->services->get('assets')
+            'site'   => $this->services->config['site'],
+            'assets' => $this->services->assets
         );
     }
-
 }

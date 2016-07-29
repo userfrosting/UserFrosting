@@ -1,10 +1,9 @@
 <?php
-
 /**
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @author    Alexander Weissman
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Util;
@@ -13,17 +12,34 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
 
+/**
+ * Performs pre-flight tests on your server environment to check that it meets the requirements. 
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ */
 class CheckEnvironment
 {
-
-    protected $view;
-    
+    /**
+     * @var \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator Locator service for stream resources.
+     */   
     protected $locator;
 
+    /**
+     * @var array The results of any checks performed.
+     */
     protected $results = array();
 
-    protected $check;
-
+    /**
+     * @var \Slim\Views\Twig The view object, needed for rendering error page.
+     */
+    protected $view;    
+    
+    /**
+     * Constructor.
+     *
+     * @param $view \Slim\Views\Twig The view object, needed for rendering error page.
+     * @param $locator \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator Locator service for stream resources.
+     */
     public function __construct($view, $locator)
     {
         $this->view = $view;
@@ -31,7 +47,7 @@ class CheckEnvironment
     }
     
     /**
-     * Example middleware invokable class
+     * Invoke the CheckEnvironment middleware, performing all pre-flight checks and returning an error page if problems were found.
      *
      * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
      * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
@@ -54,6 +70,9 @@ class CheckEnvironment
         return $response;
     }
     
+    /**
+     * Run through all pre-flight checks.
+     */     
     public function checkAll()
     {
         $problemsFound = false;
@@ -73,6 +92,9 @@ class CheckEnvironment
         return $problemsFound;
     }
     
+    /**
+     * For Apache environments, check that required Apache modules are installed.
+     */    
     public function checkApache()
     {
         $problemsFound = false;
@@ -105,55 +127,7 @@ class CheckEnvironment
         
         return $problemsFound;
     }
-    
-    public function checkPhp()
-    {
-        $problemsFound = false;
-    
-        // Check PHP version
-        if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $problemsFound = true;
-            $this->results['phpVersion'] = [
-                "title" => "<i class='fa fa-code fa-fw'></i> You need to upgrade your PHP installation.",
-                "message" => "I'm sorry, UserFrosting requires version " . \UserFrosting\PHP_MIN_VERSION . " or greater.  Please upgrade your version of PHP, or contact your web hosting service and ask them to upgrade it for you.",
-                "success" => false
-            ];
-        } else {
-            $this->results['phpVersion'] = [
-                "title" => "<i class='fa fa-code fa-fw'></i> PHP version checks out!",
-                "message" => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . ".  Great!",
-                "success" => true
-            ];
-        }
-        
-        return $problemsFound;
-    }
-    
-    /**
-     * Check that PDO is installed and enabled.
-     */
-    public function checkPdo()
-    {
-        $problemsFound = false;
-        
-        if (!class_exists('PDO')){
-            $problemsFound = true;
-            $this->results['pdo'] = [
-                "title" => "<i class='fa fa-database fa-fw'></i> PDO is not installed.",
-                "message" => "I'm sorry, you must have PDO installed and enabled in order for UserFrosting to access the database.  If you don't know what PDO is, please see <a href='http://php.net/manual/en/book.pdo.php'>http://php.net/manual/en/book.pdo.php</a>.",
-                "success" => false
-            ];
-        } else {
-            $this->results['pdo'] = [
-                "title" => "<i class='fa fa-database fa-fw'></i> PDO is installed!",
-                "message" => "You've got PDO installed.  Good job!",
-                "success" => true
-            ];
-        }
-        
-        return $problemsFound;
-    }
-    
+
     /**
      * Check for GD library (required for Captcha).
      */
@@ -179,6 +153,11 @@ class CheckEnvironment
         return $problemsFound;  
     }
     
+    /**
+     * Check that all image* functions used by Captcha exist.
+     *
+     * Some versions of GD are missing one or more of these functions, thus why we check for them explicitly.
+     */    
     public function checkImageFunctions()
     {
         $problemsFound = false;
@@ -214,6 +193,34 @@ class CheckEnvironment
         return $problemsFound;
     }
 
+    /**
+     * Check that PDO is installed and enabled.
+     */
+    public function checkPdo()
+    {
+        $problemsFound = false;
+        
+        if (!class_exists('PDO')) {
+            $problemsFound = true;
+            $this->results['pdo'] = [
+                "title" => "<i class='fa fa-database fa-fw'></i> PDO is not installed.",
+                "message" => "I'm sorry, you must have PDO installed and enabled in order for UserFrosting to access the database.  If you don't know what PDO is, please see <a href='http://php.net/manual/en/book.pdo.php'>http://php.net/manual/en/book.pdo.php</a>.",
+                "success" => false
+            ];
+        } else {
+            $this->results['pdo'] = [
+                "title" => "<i class='fa fa-database fa-fw'></i> PDO is installed!",
+                "message" => "You've got PDO installed.  Good job!",
+                "success" => true
+            ];
+        }
+        
+        return $problemsFound;
+    }
+        
+    /**
+     * Check that log, cache, and session directories are writable, and that other directories are non-writable. 
+     */    
     function checkPermissions()
     {
         $problemsFound = false;
@@ -265,23 +272,29 @@ class CheckEnvironment
         return $problemsFound;     
     }
     
-    /*
-        // 3. Check database connection
-        if (!Database::testConnection()){
-            $messages[] = [
-                "title" => "We couldn't connect to your database.",
-                "message" => "Make sure that your database is properly configured in <code>config-userfrosting.php</code>, and that you have selected the correct configuration mode ('dev' or 'production').  Also, make sure that your database user has the proper privileges to connect to the database."
+    /**
+     * Check that PHP meets the minimum required version.
+     */    
+    public function checkPhp()
+    {
+        $problemsFound = false;
+    
+        // Check PHP version
+        if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
+            $problemsFound = true;
+            $this->results['phpVersion'] = [
+                "title" => "<i class='fa fa-code fa-fw'></i> You need to upgrade your PHP installation.",
+                "message" => "I'm sorry, UserFrosting requires version " . \UserFrosting\PHP_MIN_VERSION . " or greater.  Please upgrade your version of PHP, or contact your web hosting service and ask them to upgrade it for you.",
+                "success" => false
+            ];
+        } else {
+            $this->results['phpVersion'] = [
+                "title" => "<i class='fa fa-code fa-fw'></i> PHP version checks out!",
+                "message" => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . ".  Great!",
+                "success" => true
             ];
         }
         
-        $tables = Database::getCreatedTables();
-        if (count($tables) > 0){
-            $messages[] = [
-                "title" => "One or more tables already exist.",
-                "message" => "The following tables already exist in the database: <strong>" . implode(", ", $tables) . "</strong>.  Do you already have another installation of UserFrosting in this database?  Please either create a new database (recommended), or change the table prefix in <code>config-userfrosting.php</code> if you cannot create a new database."
-            ];
-        }
-        error_log("Done with checks");
-        */
-
+        return $problemsFound;
+    }
 }
