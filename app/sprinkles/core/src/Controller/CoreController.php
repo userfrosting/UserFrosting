@@ -11,6 +11,8 @@ namespace UserFrosting\Sprinkle\Core\Controller;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Exception\NotFoundException as NotFoundException;
+use UserFrosting\Sprinkle\Core\Util\MimeType;
     
 /**
  * CoreController Class
@@ -66,5 +68,36 @@ class CoreController
     public function jsonAlerts($request, $response, $args)
     {
         return $response->withJson($this->ci->alerts->getAndClearMessages());
+    }
+    
+    /**
+     * Handle all requests for raw assets.
+     * Request type: GET     
+     */    
+    public function getAsset($request, $response, $args)
+    {
+        $url = $args['url'];
+        
+        $config = $this->ci->config;
+        
+        // Remove any query string
+        $url = preg_replace('/\?.*/', '', $url);
+        
+        // Find file
+        $abspath = "assets://" . $url;
+        
+        // Return 404 if file does not exist
+        if (!file_exists($abspath)) {
+            throw new NotFoundException($request, $response);
+        }
+        
+        $content = file_get_contents($abspath);
+        $type = MimeType::detectByFilename($url);
+        $length = filesize($abspath);
+        
+        return $response
+            ->withHeader('Content-Type', $type)
+            ->withHeader('Content-Length', $length)
+            ->write($content);    
     }
 }
