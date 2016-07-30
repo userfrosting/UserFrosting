@@ -24,9 +24,11 @@
             <span class="show-login-form">Sign In</span>
         </div>
     </div>
-    
     <div class="row register-form">
         <div class="col-sm-4 col-sm-offset-1">
+            <div id="alerts-register">
+            
+            </div>
             <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
                 <div class="form-group">
                     <label class="sr-only" for="r-form-username">User name</label>
@@ -82,6 +84,9 @@
     
     <div class="row login-form">
         <div class="col-sm-4 col-sm-offset-1">
+            <div id="alerts-login">
+            
+            </div>        
             <form id="sign-in" role="form" action="{{site.uri.public}}/account/login" method="post" class="l-form">
                 <div class="form-group">
                     <label class="sr-only" for="l-form-username">User name</label>

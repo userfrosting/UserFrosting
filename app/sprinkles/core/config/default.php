@@ -43,8 +43,8 @@
             'pass' => getenv('SMTP_PASSWORD'),
         ],
         'site' => [
-            'title'     =>      "UserFrosting",
-            'author'    =>      "Alex Weissman",
+            'title'     =>      'UserFrosting',
+            'author'    =>      'Author',
             // URLs
             'uri' => [
                 'base' => [
@@ -53,14 +53,14 @@
                     'port'              => null,
                     'path'              => trim(dirname($_SERVER['SCRIPT_NAME']), '/')
                 ],
-                'author'            => "https://alexanderweissman.com",
-                'assets-raw'        => "assets-raw",
-                'assets'            => "assets"
+                'author'            => 'http://www.userfrosting.com',
+                'assets-raw'        => 'assets-raw',
+                'assets'            => 'assets'
             ]          
         ],   
         'timezone' => 'America/New_York',
         'error_reporting' => E_ALL,  // Development - report all errors and suggestions
-        'display_errors'  => "off",
+        'display_errors'  => 'off',
         'use_raw_assets'  => true
     ];
     

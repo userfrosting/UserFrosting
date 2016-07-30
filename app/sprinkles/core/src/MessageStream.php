@@ -8,6 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Core;
 
+use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Session\Session;
 
 /**
@@ -95,7 +96,21 @@ class MessageStream
         }
         $message = $this->$messageTranslator->translate($messageId, $placeholders);
         return $this->addMessage($type, $message);
-    }    
+    }
+    
+    /**
+     * Add error messages from a ServerSideValidator object to the message stream.
+     *
+     * @param ServerSideValidator $validator
+     */
+    public function addValidationErrors(ServerSideValidator $validator)
+    {
+        foreach ($validator->errors() as $idx => $field) {
+            foreach($field as $eidx => $error) {
+                $this->addMessage("danger", $error);
+            }
+        }    
+    }
     
     /**
      * Get the messages from this message stream.

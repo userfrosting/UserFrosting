@@ -160,7 +160,8 @@ class CoreServicesProvider
             $config = $c->get('config');
             
             $capsule = new Capsule;
-            $capsule->addConnection([
+            
+            $dbConfig = array(
                 'driver'    => $config['db.driver'],
                 'host'      => $config['db.host'],
                 'database'  => $config['db.database'],
@@ -169,7 +170,12 @@ class CoreServicesProvider
                 'charset'   => $config['db.charset'],
                 'collation' => $config['db.collation'],
                 'prefix'    => $config['db.prefix']
-            ]);
+            );
+            
+            if (isset($config['db.port']))
+                $dbConfig['port'] = $config['db.port'];
+            
+            $capsule->addConnection($dbConfig);
             
             // Register as global connection
             $capsule->setAsGlobal();

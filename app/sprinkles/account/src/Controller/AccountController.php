@@ -11,7 +11,11 @@ namespace UserFrosting\Sprinkle\Account\Controller;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
+use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Captcha\Captcha;
 use UserFrosting\Support\Exception\ForbiddenException;
@@ -52,6 +56,21 @@ class AccountController
         return $response->withStatus(200)
                     ->withHeader('Content-Type', 'image/png;base64')
                     ->write($captcha->getImage());
+    }    
+    
+    /**
+     * Log the user out completely, including destroying any "remember me" token.
+     *
+     * Request type: GET
+     */    
+    public function logout(Request $request, Response $response, $args)
+    {
+        // Destroy the session
+        $this->ci->session->destroy();
+        
+        // Return to home page
+        $config = $this->ci->config;
+        return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
     }    
     
     /**
@@ -231,7 +250,7 @@ class AccountController
         return $this->ci->view->render($response, 'pages/sign-in-or-register.html.twig', [
             "page" => [
                 "validators" => [
-                    "login"    => $validatorLogin->rules('json', false),
+                    "login"    => [], //$validatorLogin->rules('json', false),
                     "register" => $validatorRegister->rules('json', false)
                 ]
             ]
@@ -250,40 +269,41 @@ class AccountController
      * This route, by definition, is "public access".
      * Request type: POST
      */
-    public function login(){
+    public function login($request, $response, $args)
+    {
+        $ms = $this->ci->alerts;
+        $config = $this->ci->config;
+        
+        // Get POST parameters
+        $params = $request->getParsedBody();
+        
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Forward the user to their default page if he/she is already logged in
-        if(!$this->_app->user->isGuest()) {
+        $schema = new RequestSchema("schema://login.json");
+        
+        // Return 200 success if user is already logged in
+        if (!$this->ci->currentUser->isGuest()) {
             $ms->addMessageTranslated("warning", "LOGIN_ALREADY_COMPLETE");
-            $this->_app->halt(200);
+            return $response->withStatus(200);
         }
-
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $this->_app->request->post());
-
-        // Sanitize data
-        $rf->sanitize();
-
+        
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+        
         // Validate, and halt on validation errors.
-        if (!$rf->validate(true)) {
-            $this->_app->halt(400);
+        $validator = new ServerSideValidator($schema, $this->ci->translator);        
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            return $response->withStatus(400);
         }
-
-        // Get the filtered data
-        $data = $rf->data();
-
+        
         // Determine whether we are trying to log in with an email address or a username
         $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
-
+        
         // If it's an email address, but email login is not enabled, raise an error.
-        if ($isEmail && !$this->_app->site->email_login){
+        if ($isEmail && !$config['site.setting.email_login']) {
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-            $this->_app->halt(403);
+            return $response->withStatus(403);
         }
 
         // Load user by email address
@@ -331,19 +351,7 @@ class AccountController
         }
 
     }
-
-    /**
-     * Processes an account logout request.
-     *
-     * Logs out the currently logged in user.
-     * This route is "public access".
-     * Request type: POST
-     */
-    public function logout($complete = false){
-        $this->_app->logout($complete);
-        $this->_app->redirect($this->_app->site->uri['public']);
-    }
-
+    
     /**
      * Processes an new account registration request.
      *
@@ -360,7 +368,9 @@ class AccountController
      * Request type: POST
      * Returns the User Object for the user record that was created.
      */
-    public function register(){
+    public function register(Request $request, Response $response, $args)
+    {        
+        /*
         // POST: user_name, display_name, email, title, password, passwordc, captcha, spiderbro, csrf_token
         $post = $this->_app->request->post();
 
@@ -503,6 +513,11 @@ class AccountController
 
         // Return the user object to the calling program
         return $user;
+        */
+        
+        $e = new \UserFrosting\Support\Exception\BadRequestException();
+        $e->addUserMessage("Something bad!");
+        throw $e;
     }
 
     /**

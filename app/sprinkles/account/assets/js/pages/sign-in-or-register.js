@@ -39,7 +39,7 @@ $(document).ready(function() {
     // TODO: Process form 
     $("#register").ufForm({
         validators: page.validators.register,
-        msgTarget: $("#userfrosting-alerts")
+        msgTarget: $("#alerts-register")
     }).on("submitSuccess", function() {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account/login");
@@ -50,7 +50,7 @@ $(document).ready(function() {
     
     $("#sign-in").ufForm({
         validators: page.validators.login,
-        msgTarget: $("#userfrosting-alerts")
+        msgTarget: $("#alerts-login")
     }).on("submitSuccess", function() {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account");

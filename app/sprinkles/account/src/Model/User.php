@@ -1,12 +1,23 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
+namespace UserFrosting\Sprinkle\Account\Model;
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 
 /**
  * User Class
  *
  * Represents a User object as stored in the database.
  *
- * @package UserFrosting
- * @author Alex Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
  * @property int id
@@ -24,12 +35,6 @@
  * @property timestamp updated_at
  * @property string password
  */
-namespace UserFrosting\Sprinkle\Account\Model;
-
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Model\UFModel;
-use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
-
 class User extends UFModel
 {
     
