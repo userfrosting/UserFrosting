@@ -1,0 +1,151 @@
+{% extends "layouts/azmind.html.twig" %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}Sign in or Register{% endblock %}
+
+{% block page_description %}Sign in to your UserFrosting account, or register for a new account.{% endblock %}
+
+{% block body_matter %}
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text">
+            <h1>Let's get started!</h1>
+            <div class="description">
+                <p>
+                    Register for free, or sign in with an existing account.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 show-forms">
+            <span class="show-register-form active">Register</span> 
+            <span class="show-forms-divider">/</span> 
+            <span class="show-login-form">Sign In</span>
+        </div>
+    </div>
+    <div class="row register-form">
+        <div class="col-sm-4 col-sm-offset-1">
+            <div id="alerts-register">
+            
+            </div>
+            <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-username">User name</label>
+                    <input type="text" name="user_name" placeholder="A unique name to identify yourself." class="form-control" id="r-form-username">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-first-name">First name</label>
+                    <input type="text" name="first_name" placeholder="First name" class="form-control" id="r-form-first-name">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-last-name">Last name</label>
+                    <input type="text" name="last_name" placeholder="Last name" class="form-control" id="r-form-last-name">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-email">Email</label>
+                    <input type="text" name="email" placeholder="Email address" class="form-control" id="r-form-email">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-password">Password</label>
+                    <input type="password" name="password" placeholder="12-100 characters" class="form-control" id="r-form-password">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-passwordc">Confirm password</label>
+                    <input type="password" name="passwordc" placeholder="Re-enter your password" class="form-control" id="r-form-passwordc">
+                </div>                        
+                <button type="submit" class="btn">Sign me up!</button>
+            </form>
+        </div>
+        <div class="col-sm-6 forms-right-icons">
+            <div class="row">
+                <div class="col-sm-2 icon"><i class="fa fa-pencil"></i></div>
+                <div class="col-sm-10">
+                    <h3>Beautiful Forms</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2 icon"><i class="fa fa-commenting"></i></div>
+                <div class="col-sm-10">
+                    <h3>Awesome Login</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2 icon"><i class="fa fa-magic"></i></div>
+                <div class="col-sm-10">
+                    <h3>Great Registration</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row login-form">
+        <div class="col-sm-4 col-sm-offset-1">
+            <div id="alerts-login">
+            
+            </div>        
+            <form id="sign-in" role="form" action="{{site.uri.public}}/account/login" method="post" class="l-form">
+                <div class="form-group">
+                    <label class="sr-only" for="l-form-username">User name</label>
+                    <input type="text" name="user_name" placeholder="User name" class="form-control" id="l-form-username">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="l-form-password">Password</label>
+                    <input type="password" name="password" placeholder="Password" class="form-control" id="l-form-password">
+                </div>
+                <button type="submit" class="btn">Sign in!</button>
+            </form>
+            <div class="registration-links">
+                <a href="{{site.uri.public}}/account/forgot-password">I forgot my password</a>
+                <br>
+                {# TODO: hide this link if public registration is turned off? #}
+                <a href="{{site.uri.public}}/account/resend-verification">Resend verification email</a>
+            </div>            
+            <div class="social-login">
+                <p>Or login with:</p>
+                <div class="social-login-buttons">
+                    <a class="btn btn-link-1" href="#"><i class="fa fa-facebook"></i></a>
+                    <a class="btn btn-link-1" href="#"><i class="fa fa-twitter"></i></a>
+                    <a class="btn btn-link-1" href="#"><i class="fa fa-google-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 forms-right-icons">
+            <div class="row">
+                <div class="col-sm-2 icon"><i class="fa fa-user"></i></div>
+                <div class="col-sm-10">
+                    <h3>New Features</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2 icon"><i class="fa fa-eye"></i></div>
+                <div class="col-sm-10">
+                    <h3>Easy To Use</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2 icon"><i class="fa fa-twitter"></i></div>
+                <div class="col-sm-10">
+                    <h3>Social Integrated</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+
+{% block scripts_page %}
+    <!-- Include validation rules -->
+    <script>
+    {% include "components/validators.js.twig" %}
+    </script>
+    
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/sign-in-or-register') | raw }}
+    
+{% endblock %}

@@ -1,70 +1,222 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */ 
+namespace UserFrosting\Sprinkle\Account\Controller;
 
-namespace UserFrosting;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\RequestDataTransformer;
+use UserFrosting\Fortress\RequestSchema;
+use UserFrosting\Fortress\ServerSideValidator;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+use UserFrosting\Sprinkle\Account\Captcha\Captcha;
+use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
- * AccountController Class
- *
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
  *
- * @package UserFrosting
- * @author Alex Weissman
- * @link http://www.userfrosting.com/navigating/#structure
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see http://www.userfrosting.com/navigating/#structure
  */
-class AccountController extends \UserFrosting\BaseController {
-
+class AccountController
+{
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
+    protected $ci;
+    
     /**
      * Create a new AccountController object.
      *
-     * @param UserFrosting $app The main UserFrosting app.
+     * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct($app){
-        $this->_app = $app;
+    public function __construct(ContainerInterface $ci)
+    {
+        $this->ci = $ci;
     }
-
+    
     /**
-     * Renders the default home page for UserFrosting.
+     * Generate a random captcha, store it to the session, and return the captcha image.
      *
-     * By default, this is the page that non-authenticated users will first see when they navigate to your website's root.
      * Request type: GET
      */
-    public function pageHome(){
-        $this->_app->render('home.twig');
-    }
-
+    public function imageCaptcha($request, $response, $args)
+    {
+        $captcha = new Captcha($this->ci->session, 'site.captcha');
+        $captcha->generateRandomCode();
+        
+        return $response->withStatus(200)
+                    ->withHeader('Content-Type', 'image/png;base64')
+                    ->write($captcha->getImage());
+    }    
+    
     /**
-     * Renders the login page for UserFrosting.
-     * By definition, this is a "public page" (does not require authentication).
+     * Log the user out completely, including destroying any "remember me" token.
+     *
+     * Request type: GET
+     */    
+    public function logout(Request $request, Response $response, $args)
+    {
+        // Destroy the session
+        $this->ci->session->destroy();
+        
+        // Return to home page
+        $config = $this->ci->config;
+        return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
+    }    
+    
+    /**
+     * Render the "forgot password" page.
+     *
+     * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
+     * By default, this is a "public page" (does not require authentication).
      * Request type: GET
      */
-    public function pageLogin(){
-        // Forward to home page if user is already logged in
-        if (!$this->_app->user->isGuest()){
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('account/login.twig', [
-            'validators' => $this->_app->jsValidator->rules()
+    public function pageForgotPassword($request, $response, $args)
+    {
+        // Load validation rules
+        $schema = new RequestSchema("schema://forgot-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/forgot-password.html.twig', [
+            "page" => [
+                "validators" => [
+                    "forgot_password"    => $validator->rules('json', false)
+                ]
+            ]
         ]);
     }
 
     /**
-     * Attempts to render the account registration page for UserFrosting.
+     * Render the "resend verification email" page.
+     *
+     * This is a form that allows users who lost their account verification link to have the link resent to their email address.
+     * By default, this is a "public page" (does not require authentication).
+     * Request type: GET
+     */
+    public function pageResendVerification($request, $response, $args)
+    {
+        // Load validation rules
+        $schema = new RequestSchema("schema://resend-verification.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/resend-verification.html.twig', [
+            "page" => [
+                "validators" => [
+                    "resend_verification"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+    
+    /**
+     * Render the "set password" page.
+     *
+     * Renders the page where new users who have had accounts created for them by another user, can set their password. 
+     * By default, this is a "public page" (does not require authentication).
+     * Request type: GET
+     */
+    public function pageSetPassword($request, $response, $args)
+    {
+        // Insert the user's secret token from the link into the password set form
+        $params = $request->getQueryParams();
+        
+        // Load validation rules
+        $schema = new RequestSchema("schema://set-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/set-password.html.twig', [
+            "page" => [
+                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
+                "validators" => [
+                    "set_password"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * Reset password page.
+     *
+     * Renders the new password page for password reset requests. 
+     * Request type: GET
+     */
+    public function pageResetPassword($request, $response, $args)
+    {
+        // Insert the user's secret token from the link into the password reset form
+        $params = $request->getQueryParams();
+        
+        // Load validation rules - note this uses the same schema as "set password"
+        $schema = new RequestSchema("schema://set-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
+            "page" => [
+                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
+                "validators" => [
+                    "set_password"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+    
+    /**
+     * Account settings page.
+     *
+     * Provides a form for users to modify various properties of their account, such as name, email, locale, etc.
+     * Any fields that the user does not have permission to modify will be automatically disabled.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function pageSettings($request, $response, $args)
+    {
+        $currentUser = $this->ci->currentUser;
+        
+        // Access-controlled page
+        if (!$currentUser->checkAccess('uri_account_settings')){
+            throw new \Exception();
+        }
+        
+        // Load validation rules
+        $schema = new RequestSchema("schema://account-settings.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
+        
+        return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
+            "page" => [
+                "locales" => [], //$site->getLocales(),
+                "validators" => [
+                    "account_settings"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+    
+    /**
+     * Render the account registration/sign-in page for UserFrosting.
      *
      * This allows new (non-authenticated) users to create a new account for themselves on your website.
+     * By definition, this is a "public page" (does not require authentication).     
      * Request type: GET
      * @param bool $can_register Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page.
      */
-    public function pageRegister($can_register = false){
+    public function pageSignInOrRegister($request, $response, $args)
+    {
+        //$this->ci->alerts->addMessage("danger", "Will Robinson");
+        
+        /*
         // Get the alert message stream
         $ms = $this->_app->alerts;
 
-        // Prevent the user from registering if he/she is already logged in
-        if(!$this->_app->user->isGuest()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_LOGOUT");
+        // Forward to home page if user is already logged in
+        if (!$this->_app->user->isGuest()){
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
 
@@ -73,10 +225,7 @@ class AccountController extends \UserFrosting\BaseController {
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
             $this->_app->redirect($this->_app->urlFor('uri_install'));
         }
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
-        $this->_app->jsValidator->setSchema($schema);
-
+        
         $settings = $this->_app->site;
 
         // If registration is disabled, send them back to the login page with an error message
@@ -89,101 +238,23 @@ class AccountController extends \UserFrosting\BaseController {
             'captcha_image' =>  $this->generateCaptcha(),
             'validators' => $this->_app->jsValidator->rules()
         ]);
-    }
-
-    /**
-     * Render the "forgot password" page.
-     *
-     * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
-     * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
-     */
-    public function pageForgotPassword(){
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('account/forgot-password.twig', [
-            'validators' => $this->_app->jsValidator->rules()
+        */
+        
+        // Load validation rules
+        $schema = new RequestSchema("schema://login.json");
+        $validatorLogin = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        $schema = new RequestSchema("schema://register.json");
+        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/sign-in-or-register.html.twig', [
+            "page" => [
+                "validators" => [
+                    "login"    => [], //$validatorLogin->rules('json', false),
+                    "register" => $validatorRegister->rules('json', false)
+                ]
+            ]
         ]);
-    }
-
-    /**
-     * Render the "set password" page.
-     *
-     * If $flag_new_user is set to true, this renders the page where new users who have had accounts created
-     * for them by another user, can set their password.  If set to false, this renders the new password page for password reset requests.
-     * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
-     * @param bool $flag_new_user Set to true if this is for a new user who doesn't yet have a password.
-     */
-    public function pageSetPassword($flag_new_user = false){
-        // Look up the user for the secret token
-        $token = $this->_app->request->get()['secret_token'];
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/set-password.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        if ($flag_new_user)
-            $template = 'account/create-password.twig';
-        else
-            $template = 'account/reset-password.twig';
-
-        $this->_app->render($template, [
-            'secret_token' => $token,
-            'validators' => $this->_app->jsValidator->rules()
-        ]);
-    }
-
-    /**
-     * Render the "resend account activation link" page.
-     *
-     * This is a form that allows users who lost their account activation link to have the link resent to their email address.
-     * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
-     */
-    public function pageResendActivation(){
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('account/resend-activation.twig', [
-            'validators' => $this->_app->jsValidator->rules()
-        ]);
-    }
-
-    /**
-     * Account settings page.
-     *
-     * Provides a form for users to modify various properties of their account, such as display name, email, locale, etc.
-     * Any fields that the user does not have permission to modify will be automatically disabled.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function pageAccountSettings(){
-        // Access-controlled page
-        if (!$this->_app->user->checkAccess('uri_account_settings')){
-            $this->_app->notFound();
-        }
-
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('account/account-settings.twig', [
-            "locales" => $this->_app->site->getLocales(),
-            "validators" => $this->_app->jsValidator->rules()
-        ]);
-    }
-
-    /**
-     * Account compromised page.
-     *
-     * Warns the user that their account may have been compromised due to a stolen "remember me" cookie.
-     * This page is "public access".
-     * Request type: GET
-     */
-    public function pageAccountCompromised(){
-        $this->_app->render('errors/compromised.twig');
     }
 
     /**
@@ -198,40 +269,41 @@ class AccountController extends \UserFrosting\BaseController {
      * This route, by definition, is "public access".
      * Request type: POST
      */
-    public function login(){
+    public function login($request, $response, $args)
+    {
+        $ms = $this->ci->alerts;
+        $config = $this->ci->config;
+        
+        // Get POST parameters
+        $params = $request->getParsedBody();
+        
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/login.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Forward the user to their default page if he/she is already logged in
-        if(!$this->_app->user->isGuest()) {
+        $schema = new RequestSchema("schema://login.json");
+        
+        // Return 200 success if user is already logged in
+        if (!$this->ci->currentUser->isGuest()) {
             $ms->addMessageTranslated("warning", "LOGIN_ALREADY_COMPLETE");
-            $this->_app->halt(200);
+            return $response->withStatus(200);
         }
-
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $this->_app->request->post());
-
-        // Sanitize data
-        $rf->sanitize();
-
+        
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+        
         // Validate, and halt on validation errors.
-        if (!$rf->validate(true)) {
-            $this->_app->halt(400);
+        $validator = new ServerSideValidator($schema, $this->ci->translator);        
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            return $response->withStatus(400);
         }
-
-        // Get the filtered data
-        $data = $rf->data();
-
+        
         // Determine whether we are trying to log in with an email address or a username
         $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
-
+        
         // If it's an email address, but email login is not enabled, raise an error.
-        if ($isEmail && !$this->_app->site->email_login){
+        if ($isEmail && !$config['site.setting.email_login']) {
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-            $this->_app->halt(403);
+            return $response->withStatus(403);
         }
 
         // Load user by email address
@@ -279,19 +351,7 @@ class AccountController extends \UserFrosting\BaseController {
         }
 
     }
-
-    /**
-     * Processes an account logout request.
-     *
-     * Logs out the currently logged in user.
-     * This route is "public access".
-     * Request type: POST
-     */
-    public function logout($complete = false){
-        $this->_app->logout($complete);
-        $this->_app->redirect($this->_app->site->uri['public']);
-    }
-
+    
     /**
      * Processes an new account registration request.
      *
@@ -308,7 +368,9 @@ class AccountController extends \UserFrosting\BaseController {
      * Request type: POST
      * Returns the User Object for the user record that was created.
      */
-    public function register(){
+    public function register(Request $request, Response $response, $args)
+    {        
+        /*
         // POST: user_name, display_name, email, title, password, passwordc, captcha, spiderbro, csrf_token
         $post = $this->_app->request->post();
 
@@ -451,6 +513,11 @@ class AccountController extends \UserFrosting\BaseController {
 
         // Return the user object to the calling program
         return $user;
+        */
+        
+        $e = new \UserFrosting\Support\Exception\BadRequestException();
+        $e->addUserMessage("Something bad!");
+        throw $e;
     }
 
     /**
@@ -905,15 +972,5 @@ class AccountController extends \UserFrosting\BaseController {
         $this->_app->user->store();
 
         $ms->addMessageTranslated("success", "ACCOUNT_SETTINGS_UPDATED");
-    }
-
-    /**
-     * Generates a new captcha.
-     *
-     * Wrapper for UserFrosting::generateCaptcha()
-     * Request type: GET
-     */
-    public function captcha(){
-        echo $this->generateCaptcha();
     }
 }

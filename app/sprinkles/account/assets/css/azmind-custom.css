@@ -1,0 +1,33 @@
+/**
+ * Overrides styles in vendor/azmind/css/styles.css.
+ *
+ * Applies a background to the register/sign-in buttons, so it is more obvious that they are clickables.
+ */
+.show-register-form, .show-login-form
+{
+    padding: 7px 15px;
+}
+
+.show-register-form:hover, .show-login-form:hover
+{
+    border-radius: 4px;
+    background-color:rgba(66, 197, 234, .9);
+}
+
+a
+{
+    color: #fff;
+    border-bottom: 1px dotted #fff;
+}
+
+a:hover, footer a:focus
+{
+    color: #fff;
+    border: 0;
+}
+
+.registration-links
+{
+    padding-top: 10px;
+    text-align: left;
+}

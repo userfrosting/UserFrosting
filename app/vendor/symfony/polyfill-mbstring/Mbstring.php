@@ -333,11 +333,7 @@ final class Mbstring
 
     public static function mb_strlen($s, $encoding = null)
     {
-        switch ($encoding = self::getEncoding($encoding)) {
-            case 'ASCII':
-            case 'CP850':
-                return strlen($s);
-        }
+        $encoding = self::getEncoding($encoding);
 
         return iconv_strlen($s, $encoding);
     }

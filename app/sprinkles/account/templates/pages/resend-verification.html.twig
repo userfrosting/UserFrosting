@@ -1,0 +1,46 @@
+{% extends "layouts/azmind.html.twig" %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}Resend Verification Email{% endblock %}
+
+{% block page_description %}Resend the verification email for your new UserFrosting account.{% endblock %}
+    
+{% block body_matter %}
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text">
+            <h1>Resend Verification Email</h1>
+            <div class="description">
+                <p>
+                    Please enter your username and the email address you used to sign up, and your verification email will be resent.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row register-form">
+        <div class="col-sm-6 col-sm-offset-3">
+            <form id="request-verification-email" role="form" action="{{site.uri.public}}/account/resend-verification" method="post" class="r-form">
+                <div class="form-group">
+                    <label class="sr-only" for="verification-form-username">User name</label>
+                    <input type="text" name="user_name" placeholder="User name" class="form-control" id="verification-form-username">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="verification-form-email">Email</label>
+                    <input type="text" name="email" placeholder="The email address you used to register" class="form-control" id="verification-form-email">
+                </div>                   
+                <button type="submit" class="btn">Email Account Verification Link</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts_page %}
+    <!-- Include validation rules -->
+    <script>
+    {% include "components/validators.js.twig" %}
+    </script>
+    
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/resend-verification') | raw }}
+    
+{% endblock %}

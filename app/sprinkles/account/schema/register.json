@@ -50,8 +50,8 @@
                 "message" : "ACCOUNT_SPECIFY_PASSWORD"
             },
             "length" : {
-                "min" : 8,
-                "max" : 50,
+                "min" : 12,
+                "max" : 100,
                 "message" : "ACCOUNT_PASS_CHAR_LIMIT"
             }
         }  
@@ -66,8 +66,8 @@
                 "message" : "ACCOUNT_PASS_MISMATCH"
             },
             "length" : {
-                "min" : 8,
-                "max" : 50,
+                "min" : 12,
+                "max" : 100,
                 "message" : "ACCOUNT_PASS_CHAR_LIMIT"
             }
         }  

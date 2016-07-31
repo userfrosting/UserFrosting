@@ -1,38 +1,40 @@
 <?php
+    
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */    
+    
+/**
+ * Entry point for the /public site.
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ */
+ 
+// First off, we'll grab the Composer dependencies
+require_once '../app/vendor/autoload.php';
 
-    use UserFrosting\ServicesProvider\UserFrostingServicesProvider as UserFrostingServicesProvider;
-    
-    // First off, we'll grab the Composer dependencies
-    require_once '../app/vendor/autoload.php';
-    
-    // Now, we'll instantiate the application
-    $app = new \Slim\App([
-        'settings' => [
-            'displayErrorDetails' => false
-        ]
-    ]);       
-    
-    // Now, we build all of our app dependencies and inject them into the DI container
-    $container = $app->getContainer();
-    
-    // Register default UserFrosting services
-    $ufServicesProvider = new UserFrostingServicesProvider();
-    $ufServicesProvider->register($container);
-    
-    // Feel free to register any additional services here
-    
-    $config = $container->get('config');
-    
-    // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
-    $container['shutdownHandler'];     
-    
-    $container['db'];
-    
-    // Finally, include all defined routes in route directory
-    $route_files = glob(UserFrosting\APP_DIR . '/' . UserFrosting\ROUTE_DIR_NAME . "/*.php");
-    foreach ($route_files as $route_file){
-        require_once $route_file;
-    }
-    
-    $app->run();
-    
+use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
+
+// Now, we'll instantiate the application
+$app = new \Slim\App([
+    'settings' => [
+        'displayErrorDetails' => false
+    ]
+]);       
+
+// Now, we build all of our app dependencies and inject them into the DI container
+$container = $app->getContainer();
+
+// Now, run the sprinkle manager to boot up all our sprinkles - core is implied
+$sm = new SprinkleManager($container, [
+    "account",
+    "site"
+]);
+
+$sm->init();
+
+$app->run();

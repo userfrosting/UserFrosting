@@ -18,9 +18,82 @@
             }
         }
     },
-    "js/pages/register" : {
+    "js/sb-admin-2" : {
         "scripts": [
-            "js/pages/register.js"
+            "vendor/metismenu-1.1.3/js/metisMenu.js",
+            "vendor/start-bootstrap/js/sb-admin-2.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/azmind" : {
+        "scripts": [
+            "vendor/jquery-backstretch/jquery.backstretch.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },    
+    "js/pages/account-settings" : {
+        "scripts": [
+            "js/pages/account-settings.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/forgot-password" : {
+        "scripts": [
+            "js/pages/forgot-password.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/resend-verification" : {
+        "scripts": [
+            "js/pages/resend-verification.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/set-or-reset-password" : {
+        "scripts": [
+            "js/pages/set-or-reset-password.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/sign-in-or-register" : {
+        "scripts": [
+            "js/pages/sign-in-or-register.js"
         ],
         "options": {
             "result": {
@@ -33,8 +106,7 @@
     "css/main": {
         "styles": [
             "vendor/font-awesome-4.5.0/css/font-awesome.css",
-            "vendor/bootstrap-3.3.6/css/bootstrap.css",
-            "vendor/start-bootstrap/css/modern-business.css"
+            "vendor/bootstrap-3.3.6/css/bootstrap.css"
         ],
         "options": {
             "result": {
@@ -43,16 +115,49 @@
                 }
             }
         }
-    }
-  },
-  "copy": [
-    {
-        "src": "images/**/*",
-        "base": "."
+    },    
+    "css/sb-admin-2" : {
+        "styles": [
+            "vendor/metismenu-1.1.3/css/metisMenu.css",
+            "vendor/start-bootstrap/css/sb-admin-2.css"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "styles": "plain"
+                }
+            }
+        }
+    },    
+    "css/azmind" : {
+        "styles": [
+            "vendor/azmind/css/form-elements.css",
+            "vendor/azmind/css/styles.css",
+            "css/azmind-custom.css"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "styles": "plain"
+                }
+            }
+        }
     },
-    {
-        "src": "vendor/font-awesome-4.5.0/fonts/**/*",
-        "base": "vendor/font-awesome-4.5.0/"
+    "css/guest": {
+        "styles": [
+            "vendor/start-bootstrap/css/modern-business.css",
+            "css/guest.css"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "styles": "plain"
+                }
+            }
+        }
+    },    
+    "css/theme/nyx" : {
+    
     }
-  ]
+  }
 }

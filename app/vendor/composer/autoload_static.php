@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
+class ComposerStaticInit9f42070b1ad76d052273ab22c697d41c
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
@@ -24,6 +24,8 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         'U' => 
         array (
             'UserFrosting\\Support\\' => 21,
+            'UserFrosting\\Sprinkle\\Core\\' => 27,
+            'UserFrosting\\Sprinkle\\Account\\' => 30,
             'UserFrosting\\Session\\' => 21,
             'UserFrosting\\I18n\\' => 18,
             'UserFrosting\\Fortress\\' => 22,
@@ -55,7 +57,6 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         ),
         'P' => 
         array (
-            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
         ),
         'M' => 
@@ -105,6 +106,14 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         array (
             0 => __DIR__ . '/..' . '/userfrosting/support/Support',
         ),
+        'UserFrosting\\Sprinkle\\Core\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/sprinkles/core/src',
+        ),
+        'UserFrosting\\Sprinkle\\Account\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/sprinkles/account/src',
+        ),
         'UserFrosting\\Session\\' => 
         array (
             0 => __DIR__ . '/..' . '/userfrosting/session/Session',
@@ -127,9 +136,7 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         ),
         'UserFrosting\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/core/src',
-            1 => __DIR__ . '/../..' . '/sprinkles/account/src',
-            2 => __DIR__ . '/../..' . '/sprinkles/admin/src',
+            0 => __DIR__ . '/../..' . '/sprinkles/admin/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -194,10 +201,6 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         'RocketTheme\\Toolbox\\ArrayTraits\\' => 
         array (
             0 => __DIR__ . '/..' . '/rockettheme/toolbox/ArrayTraits/src',
-        ),
-        'Psr\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -282,6 +285,10 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/psr/log',
+            ),
             'Pimple' => 
             array (
                 0 => __DIR__ . '/..' . '/pimple/pimple/src',
@@ -315,10 +322,10 @@ class ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0fbf62143f2d3c28ae1a0ab6f981e09e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9f42070b1ad76d052273ab22c697d41c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9f42070b1ad76d052273ab22c697d41c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit9f42070b1ad76d052273ab22c697d41c::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit9f42070b1ad76d052273ab22c697d41c::$classMap;
 
         }, null, ClassLoader::class);
     }

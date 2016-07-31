@@ -583,7 +583,7 @@ class Connection implements ConnectionInterface
             $this->getPdo()->commit();
         }
 
-        $this->transactions = max(0, $this->transactions - 1);
+        --$this->transactions;
 
         $this->fireConnectionEvent('committed');
     }

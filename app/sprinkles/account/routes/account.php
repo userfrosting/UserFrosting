@@ -1,54 +1,30 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
     
-    use Cartalyst\Sentinel\Native\Facades\Sentinel;
-
-    use Illuminate\Database\Capsule\Manager as Capsule;
-    use Illuminate\Database\Schema\Blueprint;
-
-    use \Psr\Http\Message\ResponseInterface as Response;
-    use \Psr\Http\Message\ServerRequestInterface as Request;
+$app->group('/account', function () {
+    $this->get('/captcha', 'UserFrosting\Sprinkle\Account\Controller\AccountController:imageCaptcha');
     
-    use UserFrosting\Fortress\RequestSchema;
-    use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-
-    global $app;
-
-    // Environment check middleware
-    $checkEnvironment = $app->getContainer()['checkEnvironment'];
+    $this->get('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageForgotPassword');
     
-    $app->group('/account', function () use ($checkEnvironment) {
-        $this->get('/register', function (Request $request, Response $response, $args) {
-            
-            
-            // Load validation rules
-            $locator = $this->locator;
-            $schema = new RequestSchema("schema://forms/register.json");
-            $validator = new JqueryValidationAdapter($schema, $this->translator);
-            
-            return $this->view->render($response, 'pages/account/register.html.twig', [
-                "page" => [
-                    "validators" => $validator->rules()
-                ]
-            ]);     
-        })->add($checkEnvironment);
-        
-        $this->get('/logout', function (Request $request, Response $response, $args) {
-            $this->session->destroy();
-            $config = $this->config;
-            return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
-        });
-        
-        $this->post('/register', function (Request $request, Response $response, $args) {            
-               
-            $e = new \UserFrosting\Support\Exception\BadRequestException();
-            $e->addUserMessage("Something bad!");
-            throw $e;
-            
-            // Register a new user
-            Sentinel::register([
-                'email'    => 'test@example.com',
-                'password' => 'foobar',
-            ]);
-        });
-    });
+    $this->get('/logout', 'UserFrosting\Sprinkle\Account\Controller\AccountController:logout');       
     
+    $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
+    
+    $this->get('/reset-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResetPassword');
+    
+    $this->get('/set-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSetPassword');
+    
+    $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings');
+       
+    $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
+    
+    $this->post('/login', 'UserFrosting\Sprinkle\Account\Controller\AccountController:login');    
+    
+    $this->post('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:register');
+});

@@ -1,0 +1,26 @@
+{% extends "layouts/error.html.twig" %}
+
+{% block page_title %}UserFrosting Configuration Issue!{% endblock %}
+
+{% block page_description %}Some UserFrosting configuration requirements have not been met.{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Something's not right here.</h1>
+        <h2>Please fix the following errors, then <a href="{{site.uri.public}}/install">reload</a>.</h2>
+        <p>
+            <img src="{{ assets.url('assets://images/stuck.jpg') }}">
+        </p>
+         
+        {% autoescape false %}
+        {% for message in messages %}
+            <div class="list-group">
+              <div class="list-group-item {% if message.success %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
+                <h4 class="list-group-item-heading">{{message.title}}</h4>
+                <p class="list-group-item-text">{{message.message | raw}}</p>
+              </div>
+            </div>
+        {% endfor %}
+        {% endautoescape %}
+    </div> <!-- /container -->
+{% endblock %}

@@ -14,13 +14,12 @@
     "version": "4.0.0", 
     "require": {
         "birke/rememberme" : "1.0.4",    
-        "nikic/php-parser" : "~1",        
+        "nikic/php-parser" : "^1",        
         "php": ">=5.5.9"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "UserFrosting\\": "src/"
+            "UserFrosting\\Sprinkle\\Account\\": "src/"
         }
     }
 }

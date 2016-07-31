@@ -1,11 +1,6 @@
 CHANGELOG
 =========
 
-3.2.0
------
-
- * Added support for escaping `|` in plural translations with double pipe.
-
 3.1.0
 -----
 

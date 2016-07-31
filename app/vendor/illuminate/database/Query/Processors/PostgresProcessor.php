@@ -17,11 +17,13 @@ class PostgresProcessor extends Processor
      */
     public function processInsertGetId(Builder $query, $sql, $values, $sequence = null)
     {
-        $result = $query->getConnection()->selectFromWriteConnection($sql, $values)[0];
+        $results = $query->getConnection()->selectFromWriteConnection($sql, $values);
 
         $sequence = $sequence ?: 'id';
 
-        $id = is_object($result) ? $result->$sequence : $result[$sequence];
+        $result = (array) $results[0];
+
+        $id = $result[$sequence];
 
         return is_numeric($id) ? (int) $id : $id;
     }

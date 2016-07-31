@@ -4,7 +4,7 @@ namespace UserFrosting;
 
 // Some standard defines
 define('UserFrosting\DS', '/');
-define('UserFrosting\PHP_MIN_VERSION', '5.5.0');
+define('UserFrosting\PHP_MIN_VERSION', '5.5.9');
 define('UserFrosting\DEBUG_CONFIG', false);
 
 // Directories and Paths
@@ -20,13 +20,16 @@ define('UserFrosting\ROOT_DIR', realpath(__DIR__ . '/..'));
 // Composer's vendor directory
 define('UserFrosting\VENDOR_DIR', APP_DIR . '/vendor');
 
+define('UserFrosting\APP_DIR_NAME', basename(__DIR__));
 define('UserFrosting\ASSET_DIR_NAME', 'assets');
 define('UserFrosting\BUILD_DIR_NAME', 'build');
 define('UserFrosting\CACHE_DIR_NAME', 'cache');
+define('UserFrosting\SESSION_DIR_NAME', 'sessions');
 define('UserFrosting\CONFIG_DIR_NAME', 'config');
 define('UserFrosting\LOCALE_DIR_NAME', 'locale');
 define('UserFrosting\LOG_DIR_NAME', 'logs');
 define('UserFrosting\ROUTE_DIR_NAME', 'routes');
 define('UserFrosting\SCHEMA_DIR_NAME', 'schema');
-define('UserFrosting\SYSTEM_DIR_NAME', 'system');
+define('UserFrosting\SRC_DIR_NAME', 'src');
+define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
 define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');
