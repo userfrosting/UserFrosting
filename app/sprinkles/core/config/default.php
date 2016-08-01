@@ -4,7 +4,7 @@
      * Core configuration file for UserFrosting.  You must override/extend this in your site's configuration file.
      *
      */
-     
+
     return [
         'cache' => [
             'twig' => false
@@ -22,7 +22,7 @@
             'name' => 'uf4',
             'minutes' => 120,
             'cache_limiter' => false
-        ],            
+        ],
         'db'      =>  [
             'driver'    => 'mysql',
             'host'      => 'localhost',
@@ -56,11 +56,12 @@
                 'author'            => 'http://www.userfrosting.com',
                 'assets-raw'        => 'assets-raw',
                 'assets'            => 'assets'
-            ]          
-        ],   
+            ],
+            'locale'       =>      'fr_FR',
+            'locale_base'  =>      'en_US',
+        ],
         'timezone' => 'America/New_York',
         'error_reporting' => E_ALL,  // Development - report all errors and suggestions
         'display_errors'  => 'off',
         'use_raw_assets'  => true
     ];
-    
