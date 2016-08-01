@@ -2,7 +2,7 @@
 
 ## v0.3.1.20
 
--
+- Added pushAlert functionality to `public/js/userfrosting.js` and updated flashAlerts to fit the changes 
 
 ## v0.3.1.19
 
