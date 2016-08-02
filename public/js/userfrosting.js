@@ -39,6 +39,13 @@
     
 }( jQuery ));
 
+(function( $ ) {
+    $.fn.clearAlerts = function(){
+        return this.html("");
+    };
+    
+}( jQuery ));
+
 function getAlertHtml(alert_message){
     return getAlertHtml(alert_message['type'], alert_message['message']);
 }
