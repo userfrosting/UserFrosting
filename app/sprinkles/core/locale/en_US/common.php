@@ -17,7 +17,12 @@
 $lang = array();
 
 $lang = array_merge($lang,array(
-	"ABOUT" => "About"
+	"ABOUT" => "About",
+	"NEW_MESSAGE" => array(
+		0 => "No new message",
+		1 => "You have one new message",
+		2 => "You have {{int}} new messages",
+	)
 ));
 
 return $lang;

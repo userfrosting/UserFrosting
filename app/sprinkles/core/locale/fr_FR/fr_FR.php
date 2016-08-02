@@ -15,6 +15,12 @@
 */
 
 $lang = array();
+
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 2
+]);
+
 // Site Content
 $lang = array_merge($lang, [
 	"REGISTER_WELCOME" => "L'inscription est simple et rapide.",

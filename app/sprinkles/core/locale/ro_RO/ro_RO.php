@@ -16,6 +16,11 @@
 
 $lang = array();
 
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 5
+]);
+
 // Site Content
 $lang = array_merge($lang, [
 	"REGISTER_WELCOME" => "Inregistrarea este simpla si rapida.",
@@ -128,8 +133,8 @@ $lang = array_merge($lang,array(
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Nu s-a putut modifica parola",
 	"FORGOTPASS_REQUEST_CANNED" => "Resetarea parolei uitate a fost anulata",
 	"FORGOTPASS_REQUEST_EXISTS" => "A fost deja o cerere de resetare a parolei pentru acest cont",
-	"FORGOTPASS_REQUEST_SENT" => "Un link de resetare a parolei a fost trimis la emailul utilizatorului '{{user_name}}'",     
-	"FORGOTPASS_REQUEST_SUCCESS" => "Ti-am trimis un email cu instructiunile pentru redobandirea accesului la contul tau"   
+	"FORGOTPASS_REQUEST_SENT" => "Un link de resetare a parolei a fost trimis la emailul utilizatorului '{{user_name}}'",
+	"FORGOTPASS_REQUEST_SUCCESS" => "Ti-am trimis un email cu instructiunile pentru redobandirea accesului la contul tau"
 ));
 
 // Mail

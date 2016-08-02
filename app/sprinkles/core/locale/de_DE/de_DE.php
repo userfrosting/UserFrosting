@@ -3,10 +3,10 @@
 /**
  * de_DE
  *
- * German message token translations.  
+ * German message token translations.
  *
  * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n 
+ * @link http://www.userfrosting.com/components/#i18n
  * @author Andreas (@rocketworm)
  * @author @X-Anonymous-Y
  */
@@ -16,6 +16,11 @@
 */
 
 $lang = array();
+
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 1
+]);
 
 // Website-Inhalt
 $lang = array_merge($lang, [
