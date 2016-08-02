@@ -20,14 +20,17 @@
         
 }( jQuery ));
 
-
 (function( $ ) {
     $.fn.pushAlert = function( alert_type, alert_message ){
         var field = $(this);
         if (alert_type && alert_message){
-            var alertHTML = "";
-            alertHTML = getAlertHtml(alert_type, alert_message);
-            field.html(alertHTML);
+            var newAlertHTML = "";            
+            var oldAlertHtml = field.html();
+            if (typeof oldAlertHtml !== 'undefined' && oldAlertHtml !== null) 
+                newAlertHTML += oldAlertHtml;
+           
+            newAlertHTML += getAlertHtml(alert_type, alert_message);
+            field.html(newAlertHTML);
              $("html, body").animate({ scrollTop: 0 }, "fast");		// Scroll back to top of page
         }
         
@@ -51,8 +54,6 @@ function getAlertHtml(alert_type, alert_message){
         return "<div class='alert alert-danger'>" +  alert_message + "</div>";
     }
 }
-
-
 
 /**  format an ISO date using Moment.js
  *  http://momentjs.com/
