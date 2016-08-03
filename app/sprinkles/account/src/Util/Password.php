@@ -54,7 +54,7 @@ class Password
      */   
     public static function verify($password, $hash)
     {
-        if (static::getPasswordHashType($hash) == "sha1") {
+        if (static::getHashType($hash) == "sha1") {
             // Legacy UserCake passwords
             $salt = substr($hash, 0, 25);		// Extract the salt from the hash
             $hashInput = $salt . sha1($salt . $password);
@@ -63,7 +63,7 @@ class Password
             } else {
                 return false;
             }
-        } else if (static::getPasswordHashType($hash) == "legacy") {
+        } else if (static::getHashType($hash) == "legacy") {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.
             $cost = '12'; 
