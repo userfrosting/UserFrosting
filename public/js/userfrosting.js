@@ -1,5 +1,5 @@
 //does the fetching and printing of the server-side stored alerts
-//every object contained content or alert(s) will be removed
+//every object contained content or alert(s) removed
 (function( $ ) {
     $.fn.flashAlerts = function() {
         var field = $(this);
@@ -10,7 +10,7 @@
             var alertHTML = "";
             if (data) {
                 jQuery.each(data, function(alert_idx, alert_message) {
-                    alertHTML += getAlertHtml(alert_message);
+                    alertHTML += getAlertHtml(alert_message['type'], alert_message['message']);
                 });
             }
             field.html(alertHTML);
@@ -23,7 +23,7 @@
 }( jQuery ));
 
 //does the creation of client-side = "pushed"-alerts 
-//any existing alert will be preserved 
+//any existing alert preserved 
 (function( $ ) {
     $.fn.pushAlert = function( alert_type, alert_message ){
         var field = $(this);
@@ -43,17 +43,12 @@
     
 }( jQuery ));
 
-//every object contained content or alert(s) will be removed
+//every object contained content or alert(s) removed
 (function( $ ) {
     $.fn.clearAlerts = function(){
         return this.html("");
     }; 
 }( jQuery ));
-
-//helper function to generate the alert html tags
-function getAlertHtml(alert_message){
-    return getAlertHtml(alert_message['type'], alert_message['message']);
-}
  
 //helper function to generate the alert html tags
 function getAlertHtml(alert_type, alert_message){
