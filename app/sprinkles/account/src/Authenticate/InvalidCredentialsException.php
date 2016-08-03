@@ -11,11 +11,11 @@ namespace UserFrosting\Sprinkle\Account\Authenticate;
 use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
- * Disabled account exception.  Used when an account has been disabled.
+ * Invalid credentials exception.  Used when an account fails authentication for some reason.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountDisabledException extends ForbiddenException
+class InvalidCredentialsException extends ForbiddenException
 {
-    protected $default_message = 'ACCOUNT_DISABLED';
+    protected $default_message = 'ACCOUNT_USER_OR_PASS_INVALID';
 }

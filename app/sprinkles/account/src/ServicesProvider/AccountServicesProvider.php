@@ -60,7 +60,6 @@ class AccountServicesProvider
          */ 
         $container['currentUser'] = function ($c) {
             $config = $c->get('config');
-            $session = $c->get('session');
             // Force database connection to boot up
             $c->get('db');
             
@@ -69,50 +68,7 @@ class AccountServicesProvider
             $currentUser->id = $config['reserved_user_ids.guest'];
             
             // Now, check to see if we have a user in session or rememberMe cookie
-            try {
-                $rememberMe = $c->get('rememberMe');
-                
-                // Determine if we are already logged in (user exists in the session variable)
-                if($session->has('user_id') && ($session['user_id'] != null)) {       
-                    $currentUser = User::find($session['user_id']);
-                    
-                    // Load the user.  If they don't exist any more, throw an exception.
-                    if (!$currentUser)
-                        throw new AccountInvalidException();
-                        
-                    if (!$currentUser->flag_enabled)
-                        throw new AccountDisabledException();
-                    
-                    // Check, if the Rememberme cookie exists and is still valid.
-                    // If not, we log out the current session
-                    if(!empty($_COOKIE[$rememberMe->getCookieName()]) && !$rememberMe->cookieIsValid()) {
-                        $rememberMe->clearCookie();
-                        throw new AuthExpiredException();
-                    }
-                // If not, try to login via RememberMe cookie
-                } else {
-                    // Get the user id. If we can present the correct tokens from the cookie, log the user in
-                    $user_id = $rememberMe->login();
-                    
-                    if($user_id) {
-                        // Load the user
-                        return User::find($user_id);
-                        // Update in session
-                        $session['user_id'] = $user_id;
-                        // There is a chance that an attacker has stolen the login token, so we store
-                        // the fact that the user was logged in via RememberMe (instead of login form)
-                        $session['remembered_by_cookie'] = true;
-                    } else {
-                        // If $rememberMe->login() returned false, check if the token was invalid.  This means the cookie was stolen.
-                        if($rememberMe->loginTokenWasInvalid()) {
-                            throw new AuthCompromisedException();
-                        }
-                    }
-                }
-            } catch (\PDOException $e){
-                // If we can't connect to the DB, then we can't create an authenticated user.
-                // That's ok if we're in installation mode. We'll use the guest user instead.
-            }
+            
             
             // If we have an authenticated user, setup their environment
             
@@ -126,33 +82,6 @@ class AccountServicesProvider
             */            
             
             return $currentUser;
-        };
-        
-        /**
-         * "Remember me" service.
-         *
-         * Allows UF to recreate a user's session from a "remember me" cookie.
-         * @throws PDOException
-         */
-        $container['rememberMe'] = function ($c) {
-            $config = $c->get('config');
-            $session = $c->get('session');        
-            // Force database connection to boot up
-            $c->get('db');            
-            
-            // Initialize RememberMe
-            $storage = new \Birke\Rememberme\Storage\PDO($config['remember_me_table']);
-            $storage->setConnection(Capsule::connection()->getPdo());
-            $rememberMe = new \Birke\Rememberme\Authenticator($storage);
-            // Set cookie name
-            $rememberMe->setCookieName($config['session.name'] . '-rememberme');
-            
-            // Change cookie path
-            $cookie = $rememberMe->getCookie();
-            $cookie->setPath("/");
-            $rememberMe->setCookie($cookie);
-            
-            return $rememberMe;
         };
     }
 }

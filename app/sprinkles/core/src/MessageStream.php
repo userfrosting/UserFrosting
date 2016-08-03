@@ -21,7 +21,6 @@ use UserFrosting\Session\Session;
  */
 class MessageStream
 {
-
     /**
      * @var UserFrosting\Session\Session We use the session object so that added messages will automatically appear in the session.
      */
@@ -137,7 +136,6 @@ class MessageStream
      */
     public function resetMessageStream()
     {
-        error_log("Clearing messages");
         $this->session[$this->messagesKey] = array();
     }
     

@@ -17,7 +17,10 @@ use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Captcha\Captcha;
+use UserFrosting\Sprinkle\Account\Model\Group;
+use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
@@ -305,51 +308,18 @@ class AccountController
             $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
             return $response->withStatus(403);
         }
-
-        // Load user by email address
+        
+        // Try to authenticate the user.  Authenticator will throw an exception on failure.
+        $authenticator = new Authenticator();
+        
         if($isEmail){
-            $user = User::where('email', $data['user_name'])->first();
-            if (!$user){
-                $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-                $this->_app->halt(403);
-            }
-        // Load user by user name
+            $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);
         } else {
-            $user = User::where('user_name', $data['user_name'])->first();
-            if (!$user) {
-                $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-                $this->_app->halt(403);
-            }
+            $currentUser = $authenticator->attempt('user_name', $data['user_name'], $data['password'], $data['rememberme']);
         }
-
-        // Check that the user has a password set (so, rule out newly created accounts without a password)
-        if (!$user->password) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-            $this->_app->halt(403);
-        }
-
-        // Check that the user's account is enabled
-        if ($user->flag_enabled == 0){
-            $ms->addMessageTranslated("danger", "ACCOUNT_DISABLED");
-            $this->_app->halt(403);
-        }
-
-        // Check that the user's account is activated
-        if ($user->flag_verified == 0) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_INACTIVE");
-            $this->_app->halt(403);
-        }
-
-        // Here is my password.  May I please assume the identify of this user now?
-        if ($user->verifyPassword($data['password']))  {
-            $this->_app->login($user, !empty($data['rememberme']));
-            $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
-        } else {
-            //Again, we know the password is at fault here, but lets not give away the combination in case of someone bruteforcing
-            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
-            $this->_app->halt(403);
-        }
-
+        
+        $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $currentUser->export());
+        return $response->withStatus(200);
     }
     
     /**

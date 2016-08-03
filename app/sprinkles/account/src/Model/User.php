@@ -11,6 +11,7 @@ namespace UserFrosting\Sprinkle\Account\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
+use UserFrosting\Sprinkle\Account\Util\Password;
 
 /**
  * User Class
@@ -520,56 +521,34 @@ class User extends UFModel
         }
         return $pass;
     }
- 
-    /**
-     * Verify a plaintext password against the user's hashed password.
-     *
-     * @param string $password The plaintext password to verify.
-     * @return boolean True if the password matches, false otherwise.
-     */   
-    public function verifyPassword($password){
-        if (Authentication::getPasswordHashType($this->password) == "sha1"){
-            $salt = substr($this->password, 0, 25);		// Extract the salt from the hash
-            $hash_input = $salt . sha1($salt . $password);
-            if ($hash_input == $this->password){
-                return true;
-            } else {
-                return false;
-            }
-        }	
-        // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
-        else if (Authentication::getPasswordHashType($this->password) == "homegrown"){
-            /*used for manual implementation of bcrypt*/
-            $cost = '12'; 
-            if (substr($this->password, 0, 60) == crypt($password, "$2y$".$cost."$".substr($this->password, 60))){
-                return true;
-            } else {
-                return false;
-            }
-        // Modern implementation
-        } else {
-            return password_verify($password, $this->password);
-        }    
-    }
     
     /**
-     * Log this user in.  This basically updates the user's sign-in time, and updates any old password hashes.
+     * Performs tasks to be done after this user has been successfully authenticated.
      *
-     * You assign this user's id to $_SESSION["userfrosting"]["user_id"] after calling login, so that it will persist in the session.
+     * By default, adds a new sign-in event and updates any legacy hash.
+     * @param mixed[] $params Optional array of parameters used for this event handler.
+     * @todo Introduce a debug logging service
      */
-    public function login(){    
+    public function onLogin($params = array())
+    {
         // Add a sign in event (time is automatically set by database)
         $this->newEventSignIn();
         
         // Update password if we had encountered an outdated hash
-        if (Authentication::getPasswordHashType($this->password) != "modern"){
-            // Hash the user's password and update
-            $password_hash = Authentication::getPasswordHashType($password);
-            if ($password_hash === null){
-                error_log("Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?");
+        $passwordType = Password::getHashType($this->password);
+        
+        if ($passwordType != "modern") {
+            if (!isset($params['password'])) {
+                error_log("Notice: Unhashed password must be supplied to update to modern password hashing.");
             } else {
-                $this->password = $password_hash;
-                error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
+                // Hash the user's password and update
+                $passwordHash = Password::hash($params['password']);
+                if ($passwordHash === null) {
+                    error_log("Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?");
+                } else {
+                    $this->password = $passwordHash;
+                    error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
+                }
             }
         }
         

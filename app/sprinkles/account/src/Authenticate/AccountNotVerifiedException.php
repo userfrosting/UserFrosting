@@ -11,11 +11,11 @@ namespace UserFrosting\Sprinkle\Account\Authenticate;
 use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
- * Disabled account exception.  Used when an account has been disabled.
+ * Unverified account exception.  Used when an account is required to complete email verification, but hasn't done so yet.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountDisabledException extends ForbiddenException
+class AccountNotVerifiedException extends ForbiddenException
 {
-    protected $default_message = 'ACCOUNT_DISABLED';
+    protected $default_message = 'ACCOUNT_INACTIVE';
 }
