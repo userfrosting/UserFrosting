@@ -8,8 +8,12 @@
  */ 
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
+use Birke\Rememberme\Authenticator as RememberMe;
+use Birke\Rememberme\Storage\PDO as RememberMePDO;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
+use UserFrosting\Session\Session;
+use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
 
 /**
@@ -23,16 +27,40 @@ class Authenticator
     /**
      * @var ContainerInterface The global container object, which holds all your services.
      */
-    protected $ci;
+    protected $session;
+    
+    protected $key;
+    
+    protected $config;
+    
+    protected $rememberMeStorage;
+    
+    protected $rememberMe;
     
     /**
      * Create a new Authenticator object.
      *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci)
+    public function __construct(Session $session, $key, $config)
     {
-        $this->ci = $ci;
+        $this->session = $session;
+        $this->key = $key;
+        $this->config = $config;
+            
+        // Force database connection to boot up
+        $c->get('db');            
+        
+        // Initialize RememberMe storage
+        $this->rememberMeStorage = new RememberMePDO($this->config['remember_me_table']);
+        $this->rememberMeStorage->setConnection(Capsule::connection()->getPdo());
+        
+        // Set up RememberMe
+        $this->rememberMe = new RememberMe($this->rememberMeStorage);
+        // Set cookie name
+        $this->rememberMe->setCookieName($this->config['session.name'] . '-rememberme');
+        
+        // Change cookie path
+        $this->rememberMe->getCookie()->setPath('/');
     }
     
     /**
@@ -83,132 +111,97 @@ class Authenticator
      */
     public function login($user, $rememberMe = false)
     {
-        // Set user login events
-        $user->login();
-        session_regenerate_id();
+        $this->session->regenerateId(true);
+        
         // If the user wants to be remembered, create Rememberme cookie
-        // Change cookie path
-        $cookie = $this->remember_me->getCookie();
-        $cookie->setPath("/");
-        $this->remember_me->setCookie($cookie);
-        if($remember) {
+        if($rememberMe) {
             //error_log("Creating user cookie for " . $user->id);
-            $this->remember_me->createCookie($user->id);
+            $this->rememberMe->createCookie($user->id);
         } else {
-            $this->remember_me->clearCookie();
+            $this->rememberMe->clearCookie();
         }            
         // Assume identity
-        $_SESSION["userfrosting"]["user_id"] = $user->id;
+        $this->session[$this->key] = $user->id;
         
-        // Set user in application
-        $this->user = $user;       
-        
-        // Setup logged in user environment
-        $this->setupAuthenticatedEnvironment();  
-    }    
-    
-        /**
-         * "Remember me" service.
-         *
-         * Allows UF to recreate a user's session from a "remember me" cookie.
-         * @throws PDOException
-
-        $container['rememberMe'] = function ($c) {
-            $config = $c->get('config');
-            $session = $c->get('session');        
-            // Force database connection to boot up
-            $c->get('db');            
-            
-            // Initialize RememberMe
-            $storage = new \Birke\Rememberme\Storage\PDO($config['remember_me_table']);
-            $storage->setConnection(Capsule::connection()->getPdo());
-            $rememberMe = new \Birke\Rememberme\Authenticator($storage);
-            // Set cookie name
-            $rememberMe->setCookieName($config['session.name'] . '-rememberme');
-            
-            // Change cookie path
-            $cookie = $rememberMe->getCookie();
-            $cookie->setPath("/");
-            $rememberMe->setCookie($cookie);
-            
-            return $rememberMe;
-        };
-         */        
+        // Set user login events
+        $user->onLogin();
+    }       
         
     /**
      * Try to get the currently authenticated user from the session.
      */
     public function getSessionUser()
     {
-        $session = $c->get('session');
-        try {
-            $rememberMe = $c->get('rememberMe');
+        $currentUserId = null;
+        
+        // Determine if we are already logged in (user id exists in the session variable)
+        if($this->session->has($this->key) && ($this->session[$this->key] != null)) {       
+            $currentUserId = $this->session[$this->key];
             
-            // Determine if we are already logged in (user exists in the session variable)
-            if($session->has('user_id') && ($session['user_id'] != null)) {       
-                $currentUser = User::find($session['user_id']);
-                
-                // Load the user.  If they don't exist any more, throw an exception.
-                if (!$currentUser)
-                    throw new AccountInvalidException();
-                    
-                if (!$currentUser->flag_enabled)
-                    throw new AccountDisabledException();
-                
-                // Check, if the Rememberme cookie exists and is still valid.
-                // If not, we log out the current session
-                if(!empty($_COOKIE[$rememberMe->getCookieName()]) && !$rememberMe->cookieIsValid()) {
-                    $rememberMe->clearCookie();
-                    throw new AuthExpiredException();
-                }
-            // If not, try to login via RememberMe cookie
+            // Check, if the Rememberme cookie exists and is still valid.
+            // If not, we log out the current session
+            if(!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
+                $this->rememberMe->clearCookie();
+                throw new AuthExpiredException();
+            }
+        // If not, try to login via RememberMe cookie
+        } else {
+            // Get the user id. If we can present the correct tokens from the cookie, automatically log the user in
+            $currentUserId = $this->rememberMe->login();
+            
+            if($currentUserId) {
+                // Update in session
+                $this->session[$this->key] = $currentUserId;
+                // There is a chance that an attacker has stolen the login token, so we store
+                // the fact that the user was logged in via RememberMe (instead of login form)
+                $this->session['remembered_by_cookie'] = true;
             } else {
-                // Get the user id. If we can present the correct tokens from the cookie, log the user in
-                $user_id = $rememberMe->login();
-                
-                if($user_id) {
-                    // Load the user
-                    return User::find($user_id);
-                    // Update in session
-                    $session['user_id'] = $user_id;
-                    // There is a chance that an attacker has stolen the login token, so we store
-                    // the fact that the user was logged in via RememberMe (instead of login form)
-                    $session['remembered_by_cookie'] = true;
-                } else {
-                    // If $rememberMe->login() returned false, check if the token was invalid.  This means the cookie was stolen.
-                    if($rememberMe->loginTokenWasInvalid()) {
-                        throw new AuthCompromisedException();
-                    }
+                // If $rememberMe->login() returned false, check if the token was invalid.  This means the cookie was stolen.
+                if($rememberMe->loginTokenWasInvalid()) {
+                    throw new AuthCompromisedException();
                 }
             }
-        } catch (\PDOException $e){
-            // If we can't connect to the DB, then we can't create an authenticated user.
-            // That's ok if we're in installation mode. We'll use the guest user instead.
         }
+        
+        $currentUser = User::find($currentUserId);
+        
+        // Load the user.  If they don't exist any more, throw an exception.
+        if (!$currentUser)
+            throw new AccountInvalidException();
+            
+        if (!$currentUser->flag_enabled)
+            throw new AccountDisabledException();
+            
+        return $currentUser;
     }
     
     /**
      * Processes an account logout request.
      *
-     * Logs the currently authenticated user out, destroying the PHP session and optionally removing persistent sessions
-     * @param bool $complete If set to true, will also clear out any persistent sessions.
+     * Logs the currently authenticated user out, destroying the PHP session and clearing the persistent session.
+     * This can optionally remove persistent sessions across all browsers/devices, since there can be a "RememberMe" cookie
+     * and corresponding database entries in multiple browsers/devices.  See http://jaspan.com/improved_persistent_login_cookie_best_practice.
+     *
+     * @param bool $complete If set to true, will ensure that the user is logged out from *all* browsers on all devices.
      */      
     public function logout($complete = false)
     {
-        if ($complete){
-            $storage = new \Birke\Rememberme\Storage\PDO($this->remember_me_table);
-            $storage->setConnection(Capsule::connection()->getPdo());
-            $storage->cleanAllTriplets($this->user->id);
-        }        
-        // Change cookie path
-        $cookie = $this->remember_me->getCookie();
-        $cookie->setPath("/");
-        $this->remember_me->setCookie($cookie);
+        $currentUserId = $this->session[$this->key];
         
-        if ($this->remember_me->clearCookie())
+        // This removes all of the user's persistent logins from the database
+        if ($complete) {
+            $this->storage->cleanAllTriplets($currentUserId);
+        }
+        
+        // Clear the rememberMe cookie
+        if ($this->rememberMe->clearCookie()) {
             error_log("Cleared cookie");
-            
-        session_regenerate_id(true);
-        session_destroy();   
+        }
+        
+        // Completely destroy the session
+        $this->session->destroy();
+        
+        // Reset the session service
+        $this->session = null;
     }
 }

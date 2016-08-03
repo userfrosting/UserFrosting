@@ -69,7 +69,7 @@ class AccountController
     public function logout(Request $request, Response $response, $args)
     {
         // Destroy the session
-        $this->ci->session->destroy();
+        $this->ci->authenticator->logout();
         
         // Return to home page
         $config = $this->ci->config;
