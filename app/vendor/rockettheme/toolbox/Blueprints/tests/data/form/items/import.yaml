@@ -1,8 +1,0 @@
-form:
-  fields:
-    address:
-      fields:
-        user.address: { type: text, label: Address, name: user.address }
-        user.zip: { type: text, label: 'ZIP code', name: user.zip }
-        user.city: { type: text, label: City, name: user.city }
-        user.country: { type: text, label: Country, name: user.country }
