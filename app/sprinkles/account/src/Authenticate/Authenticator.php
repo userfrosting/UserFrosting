@@ -45,10 +45,7 @@ class Authenticator
     {
         $this->session = $session;
         $this->key = $key;
-        $this->config = $config;
-            
-        // Force database connection to boot up
-        $c->get('db');            
+        $this->config = $config;           
         
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me_table']);
@@ -131,9 +128,7 @@ class Authenticator
      * Try to get the currently authenticated user from the session.
      */
     public function getSessionUser()
-    {
-        $currentUserId = null;
-        
+    {        
         // Determine if we are already logged in (user id exists in the session variable)
         if($this->session->has($this->key) && ($this->session[$this->key] != null)) {       
             $currentUserId = $this->session[$this->key];
@@ -157,21 +152,29 @@ class Authenticator
                 $this->session['remembered_by_cookie'] = true;
             } else {
                 // If $rememberMe->login() returned false, check if the token was invalid.  This means the cookie was stolen.
-                if($rememberMe->loginTokenWasInvalid()) {
+                if($this->rememberMe->loginTokenWasInvalid()) {
                     throw new AuthCompromisedException();
                 }
             }
         }
         
-        $currentUser = User::find($currentUserId);
+        // If a user id was retrieved from the session or rememberMe storage, try to load the user object from the DB
+        if ($currentUserId) {
+            $currentUser = User::find($currentUserId);
+            
+            // If the user doesn't exist any more, throw an exception.
+            if (!$currentUser)
+                throw new AccountInvalidException();
+            
+            // If the user has been disabled since their last request, throw an exception.
+            if (!$currentUser->flag_enabled)
+                throw new AccountDisabledException();
+        } else {
+            // Create a 'guest' user object
+            $currentUser = new User();
+            $currentUser->id = $this->config['reserved_user_ids.guest'];            
+        }
         
-        // Load the user.  If they don't exist any more, throw an exception.
-        if (!$currentUser)
-            throw new AccountInvalidException();
-            
-        if (!$currentUser->flag_enabled)
-            throw new AccountDisabledException();
-            
         return $currentUser;
     }
     

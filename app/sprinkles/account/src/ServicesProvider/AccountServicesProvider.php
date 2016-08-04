@@ -44,7 +44,7 @@ class AccountServicesProvider
          * Extends the 'session' service to store a user id.
          *
          * Without an authenticated user, by default we store the guest user id.
-         */
+
         $container->extend('session', function ($session, $c) {
             $config = $c->get('config');
             
@@ -52,6 +52,7 @@ class AccountServicesProvider
             
             return $session;
         });
+         */        
         
         /**
          * Extends the 'view' service with the AccountExtension for Twig.
@@ -90,15 +91,7 @@ class AccountServicesProvider
             $c->get('db');
             
             // Now, check to see if we have a user in session or rememberMe cookie
-            $authenticatedUser = $authenticator->getSessionUser();
-            
-            if ($authenticatedUser) {
-                $currentUser = $authenticatedUser;
-            } else {
-                // Create a guest user
-                $currentUser = new User();
-                $currentUser->id = $config['reserved_user_ids.guest'];
-            }
+            $currentUser = $authenticator->getSessionUser();
             
             // If we have an authenticated user, setup their environment
             
