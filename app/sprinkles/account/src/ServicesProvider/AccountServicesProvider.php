@@ -38,21 +38,7 @@ class AccountServicesProvider
             $handler->registerHandler('\UserFrosting\Support\Exception\ForbiddenException', '\UserFrosting\Sprinkle\Account\Handler\ForbiddenExceptionHandler');
             
             return $handler;
-        });    
-    
-        /**
-         * Extends the 'session' service to store a user id.
-         *
-         * Without an authenticated user, by default we store the guest user id.
-
-        $container->extend('session', function ($session, $c) {
-            $config = $c->get('config');
-            
-            $session['account.current_user_id'] = $config['reserved_user_ids.guest'];
-            
-            return $session;
         });
-         */        
         
         /**
          * Extends the 'view' service with the AccountExtension for Twig.
@@ -76,7 +62,7 @@ class AccountServicesProvider
             
             $authenticator = new Authenticator($session, $config);
             return $authenticator;
-        };        
+        };
         
         /**
          * Loads the User object for the currently logged-in user.
@@ -93,28 +79,21 @@ class AccountServicesProvider
             // Now, check to see if we have a user in session or rememberMe cookie
             $currentUser = $authenticator->getSessionUser();
             
-            // If we have an authenticated user, setup their environment
+            // If no authenticated user, create a 'guest' user object
+            if (!$currentUser) {
+                $currentUser = new User();
+                $currentUser->id = $config['reserved_user_ids.guest'];
+            }
             
             // TODO: Add user locale in translator
-            
-            /*
             // TODO: Set user theme in Twig
+            /*
             // Set path to user's theme, prioritizing over any other themes.
             $loader = $twig->getLoader();
             $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());
             */            
             
             return $currentUser;
-        };        
-        
-        /**
-         * "Remember me" service.
-         *
-         * Allows UF to recreate a user's session from a "remember me" cookie.
-         * @throws PDOException
-         */
-        $container['rememberMe'] = function ($c) {
-
         };
     }
 }

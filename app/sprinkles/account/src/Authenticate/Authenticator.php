@@ -150,7 +150,7 @@ class Authenticator
             // Get the user id. If we can present the correct tokens from the cookie, automatically log the user in
             $currentUserId = $this->rememberMe->login();
             
-            if($currentUserId) {
+            if ($currentUserId) {
                 // Update in session
                 $this->session[$this->key] = $currentUserId;
                 // There is a chance that an attacker has stolen the login token, so we store
@@ -176,9 +176,7 @@ class Authenticator
             if (!$currentUser->flag_enabled)
                 throw new AccountDisabledException();
         } else {
-            // Create a 'guest' user object
-            $currentUser = new User();
-            $currentUser->id = $this->config['reserved_user_ids.guest'];            
+            return;
         }
         
         return $currentUser;
