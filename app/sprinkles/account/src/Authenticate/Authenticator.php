@@ -24,12 +24,7 @@ use UserFrosting\Sprinkle\Account\Util\Password;
  */
 class Authenticator
 {
-    /**
-     * @var ContainerInterface The global container object, which holds all your services.
-     */
     protected $session;
-    
-    protected $key;
     
     protected $config;
     
@@ -105,7 +100,7 @@ class Authenticator
      *
      * This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.
      * @param User $user The user to log in.
-     * @param bool $remember Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
+     * @param bool $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
      */
     public function login($user, $rememberMe = false)
     {
@@ -147,12 +142,12 @@ class Authenticator
             }
         // If not, try to login via RememberMe cookie
         } else {
-            // Get the user id. If we can present the correct tokens from the cookie, automatically log the user in
+            // Get the user id. If we can present the correct tokens from the cookie, remake the session and automatically log the user in
             $currentUserId = $this->rememberMe->login();
             
             if ($currentUserId) {
                 // Update in session
-                $this->session[$this->key] = $currentUserId;
+                $this->session[$currentUserIdKey] = $currentUserId;
                 // There is a chance that an attacker has stolen the login token, so we store
                 // the fact that the user was logged in via RememberMe (instead of login form)
                 $this->session[$this->config['session.keys.auth_mode']] = 'cookie';
@@ -193,7 +188,8 @@ class Authenticator
      */      
     public function logout($complete = false)
     {
-        $currentUserId = $this->session[$this->key];
+        $currentUserIdKey = $this->config['session.keys.current_user_id'];
+        $currentUserId = $this->session[$currentUserIdKey];
         
         // This removes all of the user's persistent logins from the database
         if ($complete) {
