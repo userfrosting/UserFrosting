@@ -310,7 +310,7 @@ class AccountController
         }
         
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
-        $authenticator = new Authenticator($this->ci->session, $config);
+        $authenticator = $this->ci->authenticator;
         
         if($isEmail){
             $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);

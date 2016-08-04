@@ -60,6 +60,9 @@ class AccountServicesProvider
             // Force database connection to boot up
             $c->get('db');            
             
+            // Fix RememberMe table name
+            $config['remember_me.table.tableName'] = Capsule::connection()->getTablePrefix() . $config['remember_me.table.tableName'];          
+            
             $authenticator = new Authenticator($session, $config);
             return $authenticator;
         };
