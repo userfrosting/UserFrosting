@@ -140,9 +140,10 @@ class MessageTranslator extends Repository {
      * Return the $message_id if not match is found
      * @param string $message_id The id of the message id to translate. can use dot notation for array
      * @param array $placeholders[optional] An optional hash of placeholder names => placeholder values to substitute.
+     * @param string $int_key[optional] The key that associate to the plural in $placeholders
      * @return string The translated message.
      */
-    public function translate($message_id, $placeholders = [])
+    public function translate($message_id, $placeholders = [], $int_key = 'int')
     {
 		// Return if language string does not exist
 		if (!$this->has($message_id)) {
@@ -163,8 +164,9 @@ class MessageTranslator extends Repository {
 			}
 
 			// Ok great. Now get the right plural form.
-			// The `int` placeholder dictate which plural we are using. No Int same as finding no key
-			$plural_key = (isset($placeholders['int']) ? (int) $placeholders['int'] : null);
+			// The `int` placeholder dictate which plural we are using. No Int = same as finding no key
+			// We also allow for a shortcut using the second argument as a numeric value for simple strings.
+			$plural_key = (isset($placeholders[$int_key]) ? (int) $placeholders[$int_key] : (!is_array($placeholders) && is_numeric($placeholders) ? $placeholders : null));
 			$key_found = false;
 
 			if ($plural_key !== null) {
@@ -209,8 +211,12 @@ class MessageTranslator extends Repository {
 		}
 
 		// Make sure $placeholders is an array otherwise foreach will fail
-		if (!is_array($placeholders)) {
+		// We also allow for the plural system shortcut. This shortcut make $placeholders a numeric value
+		// That must be passed back as an array for replacement in the main $message
+		if (!is_array($placeholders) && !is_numeric($placeholders)) {
 			return $message;
+		} else if (is_numeric($placeholders)) {
+			$placeholders = array($int_key => $placeholders);
 		}
 
 		// Interpolate placeholders
@@ -246,7 +252,7 @@ class MessageTranslator extends Repository {
 		}
 
 		/**
-		* The following plural rules are based on a list published by the Mozilla Developer Network
+		* The following plural rules are based on a list published by the Mozilla Developer Network & code from phpBB Group
 		* https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals
 		*/
 		switch ($rule)
