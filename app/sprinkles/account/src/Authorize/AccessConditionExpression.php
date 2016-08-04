@@ -12,7 +12,7 @@
  * @see http://www.userfrosting.com/components/#authorization
  */
  
-namespace UserFrosting\Authorize;
+namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use PhpParser\Node;
 

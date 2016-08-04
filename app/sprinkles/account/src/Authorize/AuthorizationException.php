@@ -10,7 +10,7 @@
  * @see AccessConditionExpression
  */
  
-namespace UserFrosting\Authorize;
+namespace UserFrosting\Sprinkle\Account\Authorize;
 
 class AuthorizationException extends \Exception {
 

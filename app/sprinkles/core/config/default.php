@@ -21,7 +21,11 @@
             'handler' => 'file',
             'name' => 'uf4',
             'minutes' => 120,
-            'cache_limiter' => false
+            'cache_limiter' => false,
+            // Decouples the session keys used to store certain session info
+            'keys' => [
+                'alerts'  => 'site.alerts'    // the key to use to store flash messages
+            ]            
         ],            
         'db'      =>  [
             'driver'    => 'mysql',

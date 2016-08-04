@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting\Authorize;
+namespace UserFrosting\Sprinkle\Account\Authorize;
 
 /**
  * ParserNodeFunctionEvaluator class

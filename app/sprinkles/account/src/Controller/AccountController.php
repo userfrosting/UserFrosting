@@ -53,7 +53,7 @@ class AccountController
      */
     public function imageCaptcha($request, $response, $args)
     {
-        $captcha = new Captcha($this->ci->session, 'site.captcha');
+        $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
         $captcha->generateRandomCode();
         
         return $response->withStatus(200)
@@ -121,6 +121,31 @@ class AccountController
     }
     
     /**
+     * Reset password page.
+     *
+     * Renders the new password page for password reset requests. 
+     * Request type: GET
+     */
+    public function pageResetPassword($request, $response, $args)
+    {
+        // Insert the user's secret token from the link into the password reset form
+        $params = $request->getQueryParams();
+        
+        // Load validation rules - note this uses the same schema as "set password"
+        $schema = new RequestSchema("schema://set-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        
+        return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
+            "page" => [
+                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
+                "validators" => [
+                    "set_password"    => $validator->rules('json', false)
+                ]
+            ]
+        ]);
+    }    
+    
+    /**
      * Render the "set password" page.
      *
      * Renders the page where new users who have had accounts created for them by another user, can set their password. 
@@ -145,31 +170,6 @@ class AccountController
             ]
         ]);
     }
-
-    /**
-     * Reset password page.
-     *
-     * Renders the new password page for password reset requests. 
-     * Request type: GET
-     */
-    public function pageResetPassword($request, $response, $args)
-    {
-        // Insert the user's secret token from the link into the password reset form
-        $params = $request->getQueryParams();
-        
-        // Load validation rules - note this uses the same schema as "set password"
-        $schema = new RequestSchema("schema://set-password.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
-        return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
-            "page" => [
-                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
-                "validators" => [
-                    "set_password"    => $validator->rules('json', false)
-                ]
-            ]
-        ]);
-    }
     
     /**
      * Account settings page.
@@ -185,7 +185,7 @@ class AccountController
         
         // Access-controlled page
         if (!$currentUser->checkAccess('uri_account_settings')){
-            throw new \Exception();
+            throw new ForbiddenException();
         }
         
         // Load validation rules
@@ -310,7 +310,7 @@ class AccountController
         }
         
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
-        $authenticator = new Authenticator();
+        $authenticator = new Authenticator($this->ci->session, $config);
         
         if($isEmail){
             $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);

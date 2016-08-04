@@ -74,7 +74,7 @@ class AccountServicesProvider
             // Force database connection to boot up
             $c->get('db');            
             
-            $authenticator = new Authenticator($session, 'account.current_user_id', $config);
+            $authenticator = new Authenticator($session, $config);
             return $authenticator;
         };        
         

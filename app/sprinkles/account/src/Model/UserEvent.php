@@ -3,6 +3,7 @@
 namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use UserFrosting\Sprinkle\Core\Model\UFModel;
 
 /**
  * UserEvent Class
@@ -10,11 +11,19 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  * Represents a single user event at a specified point in time.
  *
  */
-class UserEvent extends UFModel {    
+class UserEvent extends UFModel
+{    
     /**
-     * @var string The id of the table for the current model.
+     * @var string The name of the table for the current model.
      */ 
-    protected static $_table_id = "user_event";
+    protected $table = "user_event";
+    
+    protected $fillable = [
+        "user_id",
+        "event_type",
+        "occurred_at",
+        "description"
+    ];
     
     /**
      * Add clauses to select the most recent event of each type for each user, to the query.

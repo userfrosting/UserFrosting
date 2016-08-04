@@ -41,23 +41,23 @@ class Authenticator
      * Create a new Authenticator object.
      *
      */
-    public function __construct(Session $session, $key, $config)
+    public function __construct(Session $session, $config)
     {
         $this->session = $session;
-        $this->key = $key;
         $this->config = $config;           
         
         // Initialize RememberMe storage
-        $this->rememberMeStorage = new RememberMePDO($this->config['remember_me_table']);
+        $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
         $this->rememberMeStorage->setConnection(Capsule::connection()->getPdo());
         
         // Set up RememberMe
         $this->rememberMe = new RememberMe($this->rememberMeStorage);
         // Set cookie name
-        $this->rememberMe->setCookieName($this->config['session.name'] . '-rememberme');
+        $cookieName = $this->config['session.name'] . '-' . $this->config['remember_me.cookie.name'];
+        $this->rememberMe->setCookieName($cookieName);
         
         // Change cookie path
-        $this->rememberMe->getCookie()->setPath('/');
+        $this->rememberMe->getCookie()->setPath($this->config['remember_me.session.path']);
     }
     
     /**
@@ -90,11 +90,12 @@ class Authenticator
         }
 
         // Here is my password.  May I please assume the identify of this user now?
-        if (Password::verify($user->password, $password)) {
+        if (Password::verify($password, $user->password)) {
             $this->login($user, $rememberMe);
             return $user;
         } else {
             // We know the password is at fault here (as opposed to the identity), but lets not give away the combination in case of someone bruteforcing
+            error_log("password didn't match");
             throw new InvalidCredentialsException();
         }
     }
@@ -118,7 +119,11 @@ class Authenticator
             $this->rememberMe->clearCookie();
         }            
         // Assume identity
-        $this->session[$this->key] = $user->id;
+        $key = $this->config['session.keys.current_user_id'];
+        $this->session[$key] = $user->id;
+        
+        // Set auth mode
+        $this->session[$this->config['session.keys.auth_mode']] = 'form';
         
         // Set user login events
         $user->onLogin();
@@ -130,8 +135,9 @@ class Authenticator
     public function getSessionUser()
     {        
         // Determine if we are already logged in (user id exists in the session variable)
-        if($this->session->has($this->key) && ($this->session[$this->key] != null)) {       
-            $currentUserId = $this->session[$this->key];
+        $currentUserIdKey = $this->config['session.keys.current_user_id'];
+        if($this->session->has($currentUserIdKey) && ($this->session[$currentUserIdKey] != null)) {       
+            $currentUserId = $this->session[$currentUserIdKey];
             
             // Check, if the Rememberme cookie exists and is still valid.
             // If not, we log out the current session
@@ -149,7 +155,7 @@ class Authenticator
                 $this->session[$this->key] = $currentUserId;
                 // There is a chance that an attacker has stolen the login token, so we store
                 // the fact that the user was logged in via RememberMe (instead of login form)
-                $this->session['remembered_by_cookie'] = true;
+                $this->session[$this->config['session.keys.auth_mode']] = 'cookie';
             } else {
                 // If $rememberMe->login() returned false, check if the token was invalid.  This means the cookie was stolen.
                 if($this->rememberMe->loginTokenWasInvalid()) {

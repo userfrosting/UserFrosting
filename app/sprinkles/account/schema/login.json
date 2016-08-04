@@ -19,5 +19,7 @@
             }
         }
     },
-    "rememberme" : {}
+    "rememberme" : {
+        "default" : false
+    }
 }

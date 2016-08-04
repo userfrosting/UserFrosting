@@ -30,11 +30,11 @@ class ForbiddenExceptionHandler extends ExceptionHandler
      */   
     public function ajaxHandler($request, $response, $exception)
     {
-        $this->logFlag = false;
+        $this->logFlag = true;
     
         $this->ci->alerts->addMessageTranslated("danger", "Resource not found.");
         
-        return $response->withStatus($httpCode);
+        return $response->withStatus(404);
     }
      
     /**

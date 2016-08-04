@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Account\Authorize\AccessConditionExpression;
 use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 use UserFrosting\Sprinkle\Account\Util\Password;
 
@@ -57,7 +58,7 @@ class User extends UFModel
         "flag_password_reset",
         "created_at",
         "updated_at",
-        "password"    
+        "password"
     ];
     
     /**
@@ -192,7 +193,7 @@ class User extends UFModel
      * @todo save events in $new_events as well?
      */    
     public function events(){
-        return $this->hasMany('UserFrosting\UserEvent');
+        return $this->hasMany('UserFrosting\Sprinkle\Account\Model\UserEvent');
     }
     
     /**
@@ -228,9 +229,7 @@ class User extends UFModel
     public function groups(){
         // First, sync any cached groups
         $this->syncCachedGroups();
-            
-        $link_table = Database::getSchemaTable('group_user')->name;
-        return $this->belongsToMany('UserFrosting\Group', $link_table);
+        return $this->belongsToMany('UserFrosting\Group', 'group_user');
     }
     
     /**
@@ -240,8 +239,7 @@ class User extends UFModel
      */
     private function syncCachedGroups(){
         if (isset($this->_groups)) {
-            $link_table = Database::getSchemaTable('group_user')->name;
-            return $this->belongsToMany('UserFrosting\Group', $link_table)->sync($this->_groups);
+            return $this->belongsToMany('UserFrosting\Group', 'group_user')->sync($this->_groups);
         } else
             return false;
     }
@@ -273,9 +271,8 @@ class User extends UFModel
      */    
     public function getGroupIds(){
         // Fetch from database, if not set
-        if (!isset($this->_groups)){    
-            $link_table = Database::getSchemaTable('group_user')->name;
-            $result = Capsule::table($link_table)->select("group_id")->where("user_id", $this->id)->get();
+        if (!isset($this->_groups)){
+            $result = Capsule::table('group_user')->select("group_id")->where("user_id", $this->id)->get();
             
             $this->_groups = [];
             foreach ($result as $group){
@@ -395,7 +392,8 @@ class User extends UFModel
      *
      * @return UserEvent
      */
-    public function newEventSignIn(){    
+    public function newEventSignIn()
+    {    
         $event = new UserEvent([
             "event_type"  => "sign_in",
             "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
@@ -492,7 +490,7 @@ class User extends UFModel
         }
     
         // The master (root) account has access to everything.
-        if ($this->id == $this->ci->config['reserved_user_ids.master'])  // Need to use loose comparison for now, because some DBs return `id` as a string.
+        if ($this->id == static::$ci->config['reserved_user_ids.master'])  // Need to use loose comparison for now, because some DBs return `id` as a string.
             return true;
              
         // Try to find an authorization rule for $hook that matches the currently logged-in user, or one of their groups.
@@ -501,13 +499,13 @@ class User extends UFModel
         if (empty($rule))
             $pass = false;
         else {      
-            $ace = new AccessConditionExpression(static::$app); // TODO: should we have to pass the app in, or just make it available statically?
+            $ace = new AccessConditionExpression(static::$ci); // TODO: figure out how this works, I guess
             $pass = $ace->evaluateCondition($rule['conditions'], $params);
         }
         
         // If no user-specific rule is passed, look for a group-level rule
         if (!$pass){
-            $ace = new AccessConditionExpression(static::$app);
+            $ace = new AccessConditionExpression(static::$ci);
             $groups = $this->getGroupIds();
             foreach ($groups as $group_id){
                 // Try to find an authorization rule for $hook that matches this group

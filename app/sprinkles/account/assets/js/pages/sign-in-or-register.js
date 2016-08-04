@@ -52,7 +52,7 @@ $(document).ready(function() {
         validators: page.validators.login,
         msgTarget: $("#alerts-login")
     }).on("submitSuccess", function() {
-        // Forward to login page on success
-        window.location.replace(site.uri.public + "/account");
+        // Forward to settings page on success
+        window.location.replace(site.uri.public + "/account/settings");
     });    
 });

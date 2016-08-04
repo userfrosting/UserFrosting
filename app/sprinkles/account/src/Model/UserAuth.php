@@ -2,6 +2,7 @@
 
 namespace UserFrosting\Sprinkle\Account\Model;
 
+use UserFrosting\Sprinkle\Core\Model\UFModel;
 /**
  * A static class responsible for retrieving user authorization object(s) from the database.
  *
@@ -12,9 +13,9 @@ namespace UserFrosting\Sprinkle\Account\Model;
 class UserAuth extends UFModel {
 
     /**
-     * @var string The id of the table for the current model.
+     * @var string The name of the table for the current model.
      */ 
-    protected static $_table_id = "authorize_user";
+    protected $table = "authorize_user";
     
     /**
      * Fetch all authorization rules associated directly with a specified User from the database for a given hook.

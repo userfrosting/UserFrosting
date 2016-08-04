@@ -93,7 +93,7 @@ class MessageStream
         if (!$this->messageTranslator){
             throw new \RuntimeException("No translator has been set!  Please call MessageStream::setTranslator first.");
         }
-        $message = $this->$messageTranslator->translate($messageId, $placeholders);
+        $message = $this->messageTranslator->translate($messageId, $placeholders);
         return $this->addMessage($type, $message);
     }
     

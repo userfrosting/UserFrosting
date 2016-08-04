@@ -32,24 +32,25 @@ use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 class Group extends UFModel {
 
     /**
-     * @var string The id of the table for the current model.
+     * @var string The name of the table for the current model.
      */ 
-    protected static $_table_id = "group";
+    protected $table = "group";
     
-    /**
-     * Create a new Group object.
-     *
-     */
-    public function __construct($properties = []) {
-        parent::__construct($properties);
-    }
+    protected $fillable = [
+        "name",
+        "is_default",
+        "can_delete",
+        "theme",
+        "landing_page",
+        "new_user_title",
+        "icon"
+    ];
     
     /**
      * Lazily load a collection of Users which belong to this group.
      */ 
     public function users(){
-        $link_table = Database::getSchemaTable('group_user')->name;
-        return $this->belongsToMany('UserFrosting\User', $link_table);
+        return $this->belongsToMany('UserFrosting\User', 'group_user');
     }
     
     public function save(array $options = []){
@@ -74,14 +75,12 @@ class Group extends UFModel {
         $this->users()->detach();
         
         // Remove all group auth rules
-        $auth_table = Database::getSchemaTable('authorize_group')->name;
-        Capsule::table($auth_table)->where("group_id", $this->id)->delete();
+        Capsule::table('authorize_group')->where("group_id", $this->id)->delete();
          
         // Reassign any primary users to the current default primary group
         $default_primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
         
-        $user_table = Database::getSchemaTable('user')->name;
-        Capsule::table($user_table)->where('primary_group_id', $this->id)->update(["primary_group_id" => $default_primary_group->id]);
+        Capsule::table('user')->where('primary_group_id', $this->id)->update(["primary_group_id" => $default_primary_group->id]);
         
         // TODO: assign user to the default primary group as well?
         

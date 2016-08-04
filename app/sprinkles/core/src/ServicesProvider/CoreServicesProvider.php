@@ -55,7 +55,7 @@ class CoreServicesProvider
          * Persists error/success messages between requests in the session.
          */
         $container['alerts'] = function ($c) {
-            return new \UserFrosting\Sprinkle\Core\MessageStream($c->get('session'), 'site.alerts', $c->get('translator'));
+            return new \UserFrosting\Sprinkle\Core\MessageStream($c->get('session'), $c->get('config')['session.keys.alerts'], $c->get('translator'));
         };       
     
         /**
