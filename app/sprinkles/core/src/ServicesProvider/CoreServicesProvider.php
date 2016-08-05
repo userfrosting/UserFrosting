@@ -200,6 +200,9 @@ class CoreServicesProvider
             // Register the HttpExceptionHandler.
             $handler->registerHandler('\UserFrosting\Support\Exception\HttpException', '\UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler');
             
+            // Register the PDOExceptionHandler.
+            $handler->registerHandler('\PDOException', '\UserFrosting\Sprinkle\Core\Handler\PDOExceptionHandler');
+            
             return $handler;
         };
         

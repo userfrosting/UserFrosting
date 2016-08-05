@@ -79,8 +79,15 @@ class AccountServicesProvider
             // Force database connection to boot up
             $c->get('db');
             
-            // Now, check to see if we have a user in session or rememberMe cookie
-            $currentUser = $authenticator->getSessionUser();
+            // If this throws a PDOException we catch it and generate a guest user rather than allowing the exception to propagate.
+            // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
+            // So, we really don't want this particular service to throw any exceptions.
+            try {
+                // Now, check to see if we have a user in session or rememberMe cookie
+                $currentUser = $authenticator->getSessionUser();
+            } catch (\PDOException $e) {
+                $currentUser = null;
+            }
             
             // If no authenticated user, create a 'guest' user object
             if (!$currentUser) {

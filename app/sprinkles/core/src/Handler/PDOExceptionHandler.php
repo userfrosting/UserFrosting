@@ -8,15 +8,17 @@
  */
 namespace UserFrosting\Sprinkle\Core\Handler;
 
+use UserFrosting\Support\Message\UserMessage;
+
 /**
- * Handler for HttpExceptions.
+ * Handler for PDOExceptions.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class HttpExceptionHandler extends ExceptionHandler
+class PDOExceptionHandler extends ExceptionHandler
 {    
     /**
-     * Called when an exception is raised during AJAX requests.
+     * Called on database errors.
      *
      * Adds any user messages from the exception to the message stream, and respond with the exception's status code.
      *
@@ -28,21 +30,13 @@ class HttpExceptionHandler extends ExceptionHandler
      */   
     public function ajaxHandler($request, $response, $exception)
     { 
-        $messages = $exception->getUserMessages();
-        $httpCode = $exception->getHttpErrorCode();
-    
-        // If the status code is 500, log the exception's message
-        if ($httpCode == 500) {
-            $this->logFlag = true;
-        } else {
-            $this->logFlag = false;
-        }
+        $message = new UserMessage("SERVER_ERROR");
         
-        foreach ($messages as $message) {
-            $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
-        }
+        $this->logFlag = true;
         
-        return $response->withStatus($httpCode);
+        $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
+        
+        return $response->withStatus(500);
     }
      
     /**
@@ -58,28 +52,22 @@ class HttpExceptionHandler extends ExceptionHandler
      */
     public function standardHandler($request, $response, $exception)
     {
-        $messages = $exception->getUserMessages();
-        $httpCode = $exception->getHttpErrorCode();
+        $messages = [
+            new UserMessage("SERVER_ERROR")
+        ];
+        $httpCode = 500;
         
-        // If the status code is 500, log the exception's message
-        if ($httpCode == 500) {
-            $this->logFlag = true;
-        } else {
-            $this->logFlag = false;        
-        }
+        $this->logFlag = true;     
         
-        // Render a custom error page, if it exists
-        try {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
-        } catch (\Twig_Error_Loader $e) {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
-        }
+        $view = $this->ci->view;
         
-        return $response->withStatus($httpCode)
-                        ->withHeader('Content-Type', 'text/html')
-                        ->write($template->render([
+        $response = $view->render($response, 'pages/error/default.html.twig', [
                             "messages" => $messages
-                        ]));
+                        ])
+                        ->withStatus($httpCode)
+                        ->withHeader('Content-Type', 'text/html');
+        
+        return $response;
     }    
     
 }
