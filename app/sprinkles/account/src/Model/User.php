@@ -57,16 +57,7 @@ class User extends UFModel
         "flag_password_reset",
         "password"
     ];
-    
-    /**
-     * @var int[] An array of group_ids to which this user belongs. An empty array means that the user's groups have not been loaded yet.
-     */
-    protected $_groups;
-    /**
-     * @var Group The primary group for the user.  TODO: separate groups from roles
-     */
-    protected $_primary_group;  
-    
+        
     /**
      * @var Activity[] An array of events to be inserted for this User when save is called.
      */
@@ -78,51 +69,6 @@ class User extends UFModel
     public $timestamps = true;    
     
     /**
-     * Create a new User object.
-     *
-     */
-    public function __construct($properties = []) {    
-        // Set default locale, if not specified
-        //if (!isset($properties['locale']))
-        //    $properties['locale'] = static::$app->site->default_locale;
-            
-        parent::__construct($properties);
-    }
-    
-    /**
-     * Determine whether or not this User object is a guest user (id set to `user_id_guest`) or an authenticated user.
-     *
-     * @return boolean True if the user is a guest, false otherwise.
-     */ 
-    public function isGuest()
-    {
-        if (!isset($this->id) || $this->id == static::$ci->config['reserved_user_ids.guest'])   // Need to use loose comparison for now, because some DBs return `id` as a string
-            return true;
-        else
-            return false;
-    }
-    
-    /**
-     * @todo
-     */ 
-    public static function isLoggedIn(){
-        // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
-    }
-    
-    /**
-     * Refresh the User and their associated Groups from the DB.
-     *
-     * @see http://stackoverflow.com/a/27748794/2970321
-     */
-    public function fresh($options = []){
-        // TODO: Update table and column info, in case it has changed?
-        $user = parent::fresh($options);
-        $user->getGroupIds();
-        $user->_primary_group = $user->fetchPrimaryGroup();      
-        return $user;
-    }
-    
-    /**
      * Determine if the property for this object exists. 
      *
      * Every property in __get must also be implemented here for Twig to recognize it.
@@ -131,10 +77,7 @@ class User extends UFModel
      */ 
     public function __isset($name) {
         if (in_array($name, [
-                "primary_group",
-                "theme",
-                "icon",
-                "landing_page",
+                "group",
                 "last_sign_in_event",
                 "last_sign_in_time",
                 "sign_up_time",
@@ -164,312 +107,16 @@ class User extends UFModel
             return $this->lastEventTime('password_reset_request');
         else if ($name == "last_verification_request_time")
             return $this->lastEventTime('verification_request');
-        else if ($name == "primary_group")
-            return $this->getPrimaryGroup();
-        else if ($name == "theme")
-            return $this->getPrimaryGroup()->theme;
-        else if ($name == "icon")
-            return $this->getPrimaryGroup()->icon;
-        else if ($name == "landing_page")
-            return $this->getPrimaryGroup()->landing_page;
         else
             return parent::__get($name);
-    }
+    }    
     
     /**
-     * Extends Eloquent's Collection models.
-     *
-     * @return UserCollection
-     */
-    public function newCollection(array $models = Array()) {
-	    return new UserCollection($models);
-    }
-    
-    /**
-     * Get all events for this user.
-     * @todo save events in $new_events as well?
+     * Get all activities for this user.
      */    
-    public function events(){
+    public function activities()
+    {
         return $this->hasMany('UserFrosting\Sprinkle\Account\Model\Activity');
-    }
-    
-    /**
-     * Get the most recent time for a specified event type for this user.
-     *
-     * @return string|null The last event time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an event of this type doesn't exist.
-     */     
-    public function lastEventTime($type){
-        $result = $this->events()
-        ->where('event_type', $type)
-        ->max('occurred_at');
-        return $result ? $result : null;
-    }
-    
-    /**
-     * Get the most recent event of a specified type for this user.
-     *
-     * @return UserEvent
-     */    
-    public function lastEvent($type) {
-        return $this->events()
-        ->where('event_type', $type)
-        ->orderBy('occurred_at', 'desc')
-        ->first();
-    }    
-     
-    /**
-     * Get an array containing all groups to which this user belongs.
-     *
-     * 
-     * @return Group[] An array of Group objects, indexed by the group id.
-     */       
-    public function groups(){
-        // First, sync any cached groups
-        $this->syncCachedGroups();
-        return $this->belongsToMany('UserFrosting\Group', 'group_user');
-    }
-    
-    /**
-     * Sync the database relations with the Groups in $this->_groups, if it has been set.
-     *
-     * This method DOES modify the database.
-     */
-    private function syncCachedGroups(){
-        if (isset($this->_groups)) {
-            return $this->belongsToMany('UserFrosting\Group', 'group_user')->sync($this->_groups);
-        } else
-            return false;
-    }
-
-    /**
-     * Get the groups to which this User currently belongs, as currently represented in this object.
-     *
-     * This method caches the data after the first time loading from the database.  To force a refresh, use the `fresh` method.
-     * @return array[Group] An array of Group objects, indexed by group_id, to which this User belongs.
-     */
-    public function getGroups(){
-        $this->getGroupIds();
-        
-        // Return the array of group objects
-        $result = Group::find($this->_groups);
-        
-        $groups = [];
-        foreach ($result as $group){
-            $groups[$group->id] = $group;
-        }
-        return $groups;        
-    }
-    
-    /**
-     * Get an array of group_ids to which this User currently belongs, as currently represented in this object.
-     *
-     * This method does NOT modify the database.
-     * @return array[int] An array of group_ids to which this User belongs.
-     */    
-    public function getGroupIds(){
-        // Fetch from database, if not set
-        if (!isset($this->_groups)){
-            $result = Capsule::table('group_user')->select("group_id")->where("user_id", $this->id)->get();
-            
-            $this->_groups = [];
-            foreach ($result as $group){
-                $this->_groups[] = $group['group_id'];
-            }      
-        }
-        
-        return $this->_groups;
-    }
-    
-    /**
-     * Add a group_id to the list of _groups to which this User belongs, checking that the Group exists and the User isn't already a member.
-     *     
-     * This method does NOT modify the database.  Call `store` to persist to database. 
-     * @param int $group_id The id of the group to add the user to.
-     * @throws Exception The specified group does not exist.
-     * @return User this User object.
-     */  
-    public function addGroup($group_id){
-        $this->getGroupIds();
-        
-        // Return if user already in group
-        if (in_array($group_id, $this->_groups))
-            return $this;
-        
-        // Next, check that the requested group actually exists
-        if (!Group::find($group_id))
-            throw new \Exception("The specified group_id ($group_id) does not exist.");
-                
-        // Ok, add to the list of groups
-        $this->_groups[] = $group_id;
-        
-        return $this;        
-    }
-    
-    /**
-     * Remove a group_id from the list of _groups to which this User belongs, checking that the User is already a member.
-     *
-     * This method does NOT modify the database. Call `store` to persist to database.
-     * @param int $group_id The id of the group to remove the user from.
-     * @return User this User object.
-     */   
-    public function removeGroup($group_id){
-        // Fetch from database, if not set
-        $this->getGroupIds();
-        
-        // Check that user not in group     
-        if (($key = array_search($group_id, $this->_groups)) !== false) {
-            unset($this->_groups[$key]);
-        }
-        
-        return $this; 
-    }
-
-    /**
-     * Get the theme for this user.
-     *
-     * The root user gets a special theme.  The theme for guest users is the site guest theme.  Any other users will have their themes determined by their primary group.
-     * @return string The theme for this user.
-     */ 
-    public function getTheme(){
-        if ($this->isGuest())
-            return static::$app->site->guest_theme;
-        else if ($this->id == static::$app->config('user_id_master'))  // Need to use loose comparison for now, because some DBs return `id` as a string
-            return static::$app->config('theme-root');
-        else
-            return $this->getPrimaryGroup()->theme;
-    }
-    
-    /**
-     * Get this user's primary group.
-     *
-     * This method caches the data after the first time loading from the database.  To force a refresh, use the `fresh` method.
-     * @return Group the Group object representing the user's primary group.
-     */  
-    public function getPrimaryGroup(){
-        if (!isset($this->_primary_group)) {
-            $this->_primary_group = $this->fetchPrimaryGroup();
-        }
-        
-        return $this->_primary_group;
-    }
-    
-    /**
-     * Fetch the primary group that this User belongs to from the database
-     *
-     * @return Group|false
-     */
-    private function fetchPrimaryGroup() {
-        if (!isset($this->group_id)){
-            throw new \Exception("This user does not appear to have a primary group id set.");
-        }
-        return $this->belongsTo('UserFrosting\Sprinkle\Account\Model\Group', 'group_id')->getEager()->first();
-    }
-    
-    /**
-     * Create an event saying that this user registered their account, or an account was created for them.
-     * 
-     * @param User $creator optional The User who created this account.  If set, this will be recorded in the event description.
-     * @return Activity     
-     */
-    public function newEventSignUp($creator = null){
-        if ($creator)
-            $description = "User {$this->user_name} was created by {$creator->user_name} on " . date("Y-m-d H:i:s") . ".";
-        else
-            $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
-        $event = new Activity([
-            "event_type"  => "sign_up",
-            "description" => $description
-        ]);
-        $this->new_events[] = $event;
-        return $event;
-    }
-    
-    /**
-     * Create a new user sign-in event.
-     *
-     * @return Activity
-     */
-    public function newEventSignIn()
-    {    
-        $event = new Activity([
-            "event_type"  => "sign_in",
-            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
-        ]);
-        $this->new_events[] = $event;
-        return $event;
-    }
-    
-    /**
-     * Create a new email verification request event.  Also, generates a new secret token.
-     *
-     * @return Activity
-     */
-    public function newEventVerificationRequest(){
-        $this->secret_token = User::generateActivationToken();
-        $event = new Activity([
-            "event_type"  => "verification_request",
-            "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
-        ]);
-        $this->new_events[] = $event;
-        return $event;
-    }    
-    
-    /**
-     * Create a new password reset request event.  Also, generates a new secret token.
-     *
-     * @return Activity
-     */
-    public function newEventPasswordReset(){
-        $this->secret_token = User::generateActivationToken();
-        $this->flag_password_reset = "1";
-        $event = new Activity([
-            "event_type"  => "password_reset_request",
-            "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
-        ]);
-        $this->new_events[] = $event;
-        return $event;
-    } 
-    
-    /**
-     * Store the User to the database, along with any group associations and new events, updating as necessary.
-     *
-     */
-    public function save(array $options = []){       
-        // Update the user record itself
-        $result = parent::save($options);
-        
-        // Synchronize model's group relations with database
-        $this->syncCachedGroups();
-        
-        // Save any new events for this user
-        foreach ($this->new_events as $event){
-            $this->events()->save($event);
-        }
-        
-        return $result;
-    }
-    
-    /**
-     * Delete this user from the database, along with any linked groups and authorization rules
-     *
-     * @return bool true if the deletion was successful, false otherwise.
-     */
-    public function delete(){        
-        // Remove all group associations
-        $this->groups()->detach();
-        
-        // Remove all user auth rules
-        $auth_table = Database::getSchemaTable('authorize_user')->name;
-        Capsule::table($auth_table)->where("user_id", $this->id)->delete();
-        
-        // Remove all user events
-        $event_table = Database::getSchemaTable('user_event')->name;
-        Capsule::table($event_table)->where("user_id", $this->id)->delete();
-        
-        // Delete the user        
-        $result = parent::delete();
-        
-        return $result;
     }
     
     /**
@@ -518,6 +165,153 @@ class User extends UFModel
     }
     
     /**
+     * Delete this user from the database, along with any linked roles and activities.
+     *
+     * @return bool true if the deletion was successful, false otherwise.
+     */
+    public function delete()
+    {
+        // Remove all role associations
+        $this->roles()->detach();
+        
+        // Remove all user activities
+        Activity::where("user_id", $this->id)->delete();
+        
+        // Delete the user
+        $result = parent::delete();
+        
+        return $result;
+    }
+    
+    /**
+     * Return this user's group.
+     */
+    public function group()
+    {
+        return $this->belongsTo('\UserFrosting\Sprinkle\Account\Model\Group', 'group_id');
+    }
+    
+    /**
+     * Determine whether or not this User object is a guest user (id set to `user_id_guest`) or an authenticated user.
+     *
+     * @return boolean True if the user is a guest, false otherwise.
+     */ 
+    public function isGuest()
+    {
+        if (!isset($this->id) || $this->id == static::$ci->config['reserved_user_ids.guest'])   // Need to use loose comparison for now, because some DBs return `id` as a string
+            return true;
+        else
+            return false;
+    }
+    
+    /**
+     * @todo
+     */ 
+    public static function isLoggedIn(){
+        // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
+    }
+       
+    /**
+     * Get the most recent event of a specified type for this user.
+     *
+     * @return UserEvent
+     */    
+    public function lastEvent($type)
+    {
+        return $this->activities()
+            ->where('event_type', $type)
+            ->orderBy('occurred_at', 'desc')
+        ->first();
+    }
+    
+    /**
+     * Get the most recent time for a specified event type for this user.
+     *
+     * @return string|null The last event time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an event of this type doesn't exist.
+     */     
+    public function lastEventTime($type)
+    {
+        $result = $this->activities()
+            ->where('event_type', $type)
+            ->max('occurred_at');
+        return $result ? $result : null;
+    }    
+    
+    /**
+     * Extends Eloquent's Collection models.
+     *
+     * @return UserCollection
+     */
+    public function newCollection(array $models = Array()) {
+	    return new UserCollection($models);
+    }
+    
+    /**
+     * Create a new password reset request event.  Also, generates a new secret token.
+     *
+     * @return Activity
+     */
+    public function newEventPasswordReset(){
+        $this->secret_token = User::generateActivationToken();
+        $this->flag_password_reset = "1";
+        $event = new Activity([
+            "event_type"  => "password_reset_request",
+            "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
+        ]);
+        $this->new_events[] = $event;
+        return $event;
+    }
+        
+    /**
+     * Create a new user sign-in event.
+     *
+     * @return Activity
+     */
+    public function newEventSignIn()
+    {    
+        $event = new Activity([
+            "event_type"  => "sign_in",
+            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
+        ]);
+        $this->new_events[] = $event;
+        return $event;
+    }
+    
+    /**
+     * Create an event saying that this user registered their account, or an account was created for them.
+     * 
+     * @param User $creator optional The User who created this account.  If set, this will be recorded in the event description.
+     * @return Activity     
+     */
+    public function newEventSignUp($creator = null){
+        if ($creator)
+            $description = "User {$this->user_name} was created by {$creator->user_name} on " . date("Y-m-d H:i:s") . ".";
+        else
+            $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
+        $event = new Activity([
+            "event_type"  => "sign_up",
+            "description" => $description
+        ]);
+        $this->new_events[] = $event;
+        return $event;
+    }
+    
+    /**
+     * Create a new email verification request event.  Also, generates a new secret token.
+     *
+     * @return Activity
+     */
+    public function newEventVerificationRequest(){
+        $this->secret_token = User::generateActivationToken();
+        $event = new Activity([
+            "event_type"  => "verification_request",
+            "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
+        ]);
+        $this->new_events[] = $event;
+        return $event;
+    }
+    
+    /**
      * Performs tasks to be done after this user has been successfully authenticated.
      *
      * By default, adds a new sign-in event and updates any legacy hash.
@@ -551,6 +345,31 @@ class User extends UFModel
         $this->save();
         
         return $this;
+    }    
+    
+    /**
+     * Get all roles to which this user belongs.
+     *
+     */       
+    public function roles()
+    {
+        return $this->belongsToMany('UserFrosting\Sprinkle\Account\Model\Role', 'role_users');
+    }
+    
+    /**
+     * Store the User to the database, along with any group associations and new events, updating as necessary.
+     *
+     */
+    public function save(array $options = []){       
+        // Update the user record itself
+        $result = parent::save($options);
+        
+        // Save any new events for this user
+        foreach ($this->new_events as $event){
+            $this->activities()->save($event);
+        }
+        
+        return $result;
     }
     
     /**

@@ -22,8 +22,8 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property string conditions
  * @property string description
  */
-class Permission extends UFModel {
-   
+class Permission extends UFModel
+{
     /**
      * @var string The name of the table for the current model.
      */ 
@@ -35,7 +35,22 @@ class Permission extends UFModel {
         "conditions",
         "description"
     ];    
-   
+
+    /**
+     * Delete this permission from the database, removing associations with roles.
+     *
+     */
+    public function delete()
+    {
+        // Remove all role associations
+        $this->roles()->detach();
+        
+        // Delete the permission        
+        $result = parent::delete();
+        
+        return $result;
+    }
+    
     /**
      * Get a list of roles to which this permission is assigned.
      */   
