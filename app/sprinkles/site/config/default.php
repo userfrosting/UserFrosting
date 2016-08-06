@@ -10,9 +10,9 @@
      */
     return [      
         'db'      =>  [ 
-            'database'  => 'dbslim',
+            'database'  => 'uf4',
             'username'  => 'userfrosting',
-            'prefix'    => 'uf_'
+            'prefix'    => ''
         ],
         'smtp'    => [
             'host' => 'mail.example.com',

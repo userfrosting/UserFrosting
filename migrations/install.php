@@ -151,7 +151,7 @@
             $table->integer('user_id')->unsigned();
             $table->string('token', 40);
             $table->string('persistent_token', 40);
-            $table->dateTime('expires');
+            $table->timestamp('expires_at');
             $table->timestamps();
 
             $table->engine = 'InnoDB';

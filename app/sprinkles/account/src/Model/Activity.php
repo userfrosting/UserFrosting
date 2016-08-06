@@ -6,17 +6,17 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 
 /**
- * UserEvent Class
+ * Activity Class
  *
- * Represents a single user event at a specified point in time.
+ * Represents a single user activity at a specified point in time.
  *
  */
-class UserEvent extends UFModel
+class Activity extends UFModel
 {    
     /**
      * @var string The name of the table for the current model.
      */ 
-    protected $table = "user_event";
+    protected $table = "activities";
     
     protected $fillable = [
         "user_id",

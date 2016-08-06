@@ -20,11 +20,11 @@
         ],
         'remember_me' => [
             'table' => [
-                'tableName' => 'user_rememberme',
+                'tableName' => 'persistences',
                 'credentialColumn' => 'user_id',
                 'tokenColumn' => 'token',
                 'persistentTokenColumn' => 'persistent_token',
-                'expiresColumn' => 'expires'
+                'expiresColumn' => 'expires_at'
             ],
             'session' => [
                 'path' => '/'

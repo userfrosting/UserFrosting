@@ -24,33 +24,29 @@ use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
  * @property string name
  * @property string theme
  * @property string landing_page
- * @property string new_user_title
  * @property string icon
- * @property bool is_default
- * @property bool can_delete
  */
 class Group extends UFModel {
 
     /**
      * @var string The name of the table for the current model.
      */ 
-    protected $table = "group";
+    protected $table = "groups";
     
     protected $fillable = [
         "name",
-        "is_default",
-        "can_delete",
+        "description",
         "theme",
         "landing_page",
-        "new_user_title",
         "icon"
     ];
     
     /**
      * Lazily load a collection of Users which belong to this group.
      */ 
-    public function users(){
-        return $this->belongsToMany('UserFrosting\User', 'group_user');
+    public function users()
+    {
+        return $this->hasMany('\UserFrosting\Sprinkles\Account\Model\User');
     }
     
     public function save(array $options = []){

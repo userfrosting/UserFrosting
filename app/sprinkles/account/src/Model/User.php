@@ -24,11 +24,11 @@ use UserFrosting\Sprinkle\Account\Util\Password;
  *
  * @property int id
  * @property string user_name
- * @property string display_name
+ * @property string first_name
+ * @property string last_name 
  * @property string email
- * @property string title
  * @property string locale
- * @property int primary_group_id
+ * @property int group_id
  * @property int secret_token
  * @property int flag_verified
  * @property int flag_enabled
@@ -43,21 +43,19 @@ class User extends UFModel
     /**
      * @var string The name of the table for the current model.
      */ 
-    protected $table = "user";
+    protected $table = "users";
     
     protected $fillable = [
         "user_name",
-        "display_name",
+        "first_name",
+        "last_name",
         "email",
-        "title",
         "locale",
-        "primary_group_id",
+        "group_id",
         "secret_token",
         "flag_verified",
         "flag_enabled",
         "flag_password_reset",
-        "created_at",
-        "updated_at",
         "password"
     ];
     
@@ -71,7 +69,7 @@ class User extends UFModel
     protected $_primary_group;  
     
     /**
-     * @var UserEvent[] An array of events to be inserted for this User when save is called.
+     * @var Activity[] An array of events to be inserted for this User when save is called.
      */
     protected $new_events = [];
     
@@ -193,7 +191,7 @@ class User extends UFModel
      * @todo save events in $new_events as well?
      */    
     public function events(){
-        return $this->hasMany('UserFrosting\Sprinkle\Account\Model\UserEvent');
+        return $this->hasMany('UserFrosting\Sprinkle\Account\Model\Activity');
     }
     
     /**
@@ -362,24 +360,24 @@ class User extends UFModel
      * @return Group|false
      */
     private function fetchPrimaryGroup() {
-        if (!isset($this->primary_group_id)){
+        if (!isset($this->group_id)){
             throw new \Exception("This user does not appear to have a primary group id set.");
         }
-        return $this->belongsTo('UserFrosting\Sprinkle\Account\Model\Group', 'primary_group_id')->getEager()->first();
+        return $this->belongsTo('UserFrosting\Sprinkle\Account\Model\Group', 'group_id')->getEager()->first();
     }
     
     /**
      * Create an event saying that this user registered their account, or an account was created for them.
      * 
      * @param User $creator optional The User who created this account.  If set, this will be recorded in the event description.
-     * @return UserEvent     
+     * @return Activity     
      */
     public function newEventSignUp($creator = null){
         if ($creator)
             $description = "User {$this->user_name} was created by {$creator->user_name} on " . date("Y-m-d H:i:s") . ".";
         else
             $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
-        $event = new UserEvent([
+        $event = new Activity([
             "event_type"  => "sign_up",
             "description" => $description
         ]);
@@ -390,11 +388,11 @@ class User extends UFModel
     /**
      * Create a new user sign-in event.
      *
-     * @return UserEvent
+     * @return Activity
      */
     public function newEventSignIn()
     {    
-        $event = new UserEvent([
+        $event = new Activity([
             "event_type"  => "sign_in",
             "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
         ]);
@@ -405,11 +403,11 @@ class User extends UFModel
     /**
      * Create a new email verification request event.  Also, generates a new secret token.
      *
-     * @return UserEvent
+     * @return Activity
      */
     public function newEventVerificationRequest(){
         $this->secret_token = User::generateActivationToken();
-        $event = new UserEvent([
+        $event = new Activity([
             "event_type"  => "verification_request",
             "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
         ]);
@@ -420,12 +418,12 @@ class User extends UFModel
     /**
      * Create a new password reset request event.  Also, generates a new secret token.
      *
-     * @return UserEvent
+     * @return Activity
      */
     public function newEventPasswordReset(){
         $this->secret_token = User::generateActivationToken();
         $this->flag_password_reset = "1";
-        $event = new UserEvent([
+        $event = new Activity([
             "event_type"  => "password_reset_request",
             "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
         ]);
@@ -563,7 +561,8 @@ class User extends UFModel
      * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
      * @return string
      */
-    public static function generateActivationToken($gen = null) {
+    public static function generateActivationToken($gen = null)
+    {
         do {
             $gen = md5(uniqid(mt_rand(), false));
         } while(User::where('secret_token', $gen)->first());
