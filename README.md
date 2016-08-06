@@ -64,3 +64,7 @@ Alex is the founder and co-owner of two companies, one that does [math tutoring 
 ### Mike Jacobs
 
 Mike's a programmer and IT specialist for a small business in NH, and works on open source projects when he's not camping or traveling.
+
+### Louis Charette
+
+Louis's a civil engineer who also has a passion for coding. He is one of the main contributors for SimpsonsCity.com and like to share is knowledge by helping other the same way he was helped when he first started coding.
