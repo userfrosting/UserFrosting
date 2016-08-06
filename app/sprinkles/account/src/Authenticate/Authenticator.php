@@ -198,7 +198,7 @@ class Authenticator
         
         // Clear the rememberMe cookie
         if ($this->rememberMe->clearCookie()) {
-            error_log("Cleared cookie");
+            //error_log("Cleared cookie");
         }
         
         // Completely destroy the session

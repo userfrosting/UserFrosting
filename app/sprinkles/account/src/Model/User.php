@@ -59,7 +59,7 @@ class User extends UFModel
     ];
         
     /**
-     * @var Activity[] An array of events to be inserted for this User when save is called.
+     * @var Activity[] An array of activities to be inserted for this User when save is called.
      */
     protected $new_events = [];
     
@@ -69,24 +69,27 @@ class User extends UFModel
     public $timestamps = true;    
     
     /**
-     * Determine if the property for this object exists. 
-     *
+     * Determine if the property for this object exists.
+     * We add relations here so that Twig will be able to find them.
+     * See http://stackoverflow.com/questions/29514081/cannot-access-eloquent-attributes-on-twig/35908957#35908957
      * Every property in __get must also be implemented here for Twig to recognize it.
      * @param string $name the name of the property to check.
      * @return bool true if the property is defined, false otherwise.
      */ 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         if (in_array($name, [
-                "group",
-                "last_sign_in_event",
-                "last_sign_in_time",
-                "sign_up_time",
-                "last_password_reset_time",
-                "last_verification_request_time"
-            ]))
+                'group',
+                'last_sign_in_activity',
+                'last_sign_in_time',
+                'sign_up_time',
+                'last_password_reset_time',
+                'last_verification_request_time'
+            ])) {
             return true;
-        else
+        } else {
             return parent::__isset($name);
+        }
     }
     
     /**
@@ -96,19 +99,21 @@ class User extends UFModel
      * @throws Exception the property does not exist for this object.
      * @return string the associated property.
      */
-    public function __get($name){
-        if ($name == "last_sign_in_event")
-            return $this->lastEvent('sign_in');
-        else if ($name == "last_sign_in_time")
-            return $this->lastEventTime('sign_in');
-        else if ($name == "sign_up_time")
-            return $this->lastEventTime('sign_up');
-        else if ($name == "last_password_reset_time")
-            return $this->lastEventTime('password_reset_request');
-        else if ($name == "last_verification_request_time")
-            return $this->lastEventTime('verification_request');
-        else
+    public function __get($name)
+    {
+        if ($name == 'last_sign_in_activity') {
+            return $this->lastActivity('sign_in');
+        } else if ($name == 'last_sign_in_time') {
+            return $this->lastActivityTime('sign_in');
+        } else if ($name == 'sign_up_time') {
+            return $this->lastActivityTime('sign_up');
+        } else if ($name == 'last_password_reset_time') {
+            return $this->lastActivityTime('password_reset_request');
+        } else if ($name == 'last_verification_request_time') {
+            return $this->lastActivityTime('verification_request');
+        } else {
             return parent::__get($name);
+        }
     }    
     
     /**
@@ -212,27 +217,27 @@ class User extends UFModel
     }
        
     /**
-     * Get the most recent event of a specified type for this user.
+     * Get the most recent activity of a specified type for this user.
      *
-     * @return UserEvent
+     * @return Activity
      */    
-    public function lastEvent($type)
+    public function lastActivity($type)
     {
         return $this->activities()
-            ->where('event_type', $type)
+            ->where('type', $type)
             ->orderBy('occurred_at', 'desc')
         ->first();
     }
     
     /**
-     * Get the most recent time for a specified event type for this user.
+     * Get the most recent time for a specified activity type for this user.
      *
-     * @return string|null The last event time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an event of this type doesn't exist.
+     * @return string|null The last activity time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an activity of this type doesn't exist.
      */     
-    public function lastEventTime($type)
+    public function lastActivityTime($type)
     {
         $result = $this->activities()
-            ->where('event_type', $type)
+            ->where('type', $type)
             ->max('occurred_at');
         return $result ? $result : null;
     }    
@@ -247,81 +252,81 @@ class User extends UFModel
     }
     
     /**
-     * Create a new password reset request event.  Also, generates a new secret token.
+     * Create a new password reset request activity.  Also, generates a new secret token.
      *
      * @return Activity
      */
-    public function newEventPasswordReset(){
+    public function newActivityPasswordReset(){
         $this->secret_token = User::generateActivationToken();
         $this->flag_password_reset = "1";
-        $event = new Activity([
-            "event_type"  => "password_reset_request",
+        $activity = new Activity([
+            "type"  => "password_reset_request",
             "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
         ]);
-        $this->new_events[] = $event;
-        return $event;
+        $this->new_events[] = $activity;
+        return $activity;
     }
         
     /**
-     * Create a new user sign-in event.
+     * Create a new user sign-in activity.
      *
      * @return Activity
      */
-    public function newEventSignIn()
+    public function newActivitySignIn()
     {    
-        $event = new Activity([
-            "event_type"  => "sign_in",
+        $activity = new Activity([
+            "type"  => "sign_in",
             "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
         ]);
-        $this->new_events[] = $event;
-        return $event;
+        $this->new_events[] = $activity;
+        return $activity;
     }
     
     /**
-     * Create an event saying that this user registered their account, or an account was created for them.
+     * Create an activity saying that this user registered their account, or an account was created for them.
      * 
-     * @param User $creator optional The User who created this account.  If set, this will be recorded in the event description.
+     * @param User $creator optional The User who created this account.  If set, this will be recorded in the activity description.
      * @return Activity     
      */
-    public function newEventSignUp($creator = null){
+    public function newActivitySignUp($creator = null){
         if ($creator)
             $description = "User {$this->user_name} was created by {$creator->user_name} on " . date("Y-m-d H:i:s") . ".";
         else
             $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
-        $event = new Activity([
-            "event_type"  => "sign_up",
+        $activity = new Activity([
+            "type"  => "sign_up",
             "description" => $description
         ]);
-        $this->new_events[] = $event;
-        return $event;
+        $this->new_events[] = $activity;
+        return $activity;
     }
     
     /**
-     * Create a new email verification request event.  Also, generates a new secret token.
+     * Create a new email verification request activity.  Also, generates a new secret token.
      *
      * @return Activity
      */
-    public function newEventVerificationRequest(){
+    public function newActivityVerificationRequest(){
         $this->secret_token = User::generateActivationToken();
-        $event = new Activity([
-            "event_type"  => "verification_request",
+        $activity = new Activity([
+            "type"  => "verification_request",
             "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
         ]);
-        $this->new_events[] = $event;
-        return $event;
+        $this->new_events[] = $activity;
+        return $activity;
     }
     
     /**
      * Performs tasks to be done after this user has been successfully authenticated.
      *
-     * By default, adds a new sign-in event and updates any legacy hash.
+     * By default, adds a new sign-in activity and updates any legacy hash.
      * @param mixed[] $params Optional array of parameters used for this event handler.
      * @todo Introduce a debug logging service
      */
     public function onLogin($params = array())
     {
-        // Add a sign in event (time is automatically set by database)
-        $this->newEventSignIn();
+        // Add a sign in activity (time is automatically set by database)
+        $this->newActivitySignIn();
         
         // Update password if we had encountered an outdated hash
         $passwordType = Password::getHashType($this->password);
@@ -357,16 +362,16 @@ class User extends UFModel
     }
     
     /**
-     * Store the User to the database, along with any group associations and new events, updating as necessary.
+     * Store the User to the database, along with any group associations and new activitys, updating as necessary.
      *
      */
     public function save(array $options = []){       
         // Update the user record itself
         $result = parent::save($options);
         
-        // Save any new events for this user
-        foreach ($this->new_events as $event){
-            $this->activities()->save($event);
+        // Save any new activitys for this user
+        foreach ($this->new_events as $activity){
+            $this->activities()->save($activity);
         }
         
         return $result;
