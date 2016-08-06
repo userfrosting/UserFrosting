@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
-use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 
 /**
  * Group Class
@@ -22,6 +21,7 @@ use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
  * @property string name
+ * @property string description
  * @property string theme
  * @property string landing_page
  * @property string icon
@@ -46,7 +46,7 @@ class Group extends UFModel {
      */ 
     public function users()
     {
-        return $this->hasMany('\UserFrosting\Sprinkles\Account\Model\User');
+        return $this->hasMany('\UserFrosting\Sprinkle\Account\Model\User');
     }
     
     public function save(array $options = []){

@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -9,7 +15,11 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * Activity Class
  *
  * Represents a single user activity at a specified point in time.
- *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @property int user_id
+ * @property string event_type
+ * @property datetime occurred_at
+ * @property string description
  */
 class Activity extends UFModel
 {    
@@ -30,10 +40,11 @@ class Activity extends UFModel
      *
      * @return \Illuminate\Database\Query\Builder
      */
-    public function scopeMostRecentEvents($query){
+    public function scopeMostRecentEvents($query)
+    {
         return $query->select('user_id', 'event_type', Capsule::raw('MAX(occurred_at) as occurred_at'))
-        ->groupBy('user_id')
-        ->groupBy('event_type');
+            ->groupBy('user_id')
+            ->groupBy('event_type');
     }
 
     /**
@@ -42,9 +53,17 @@ class Activity extends UFModel
      * @param string $type The type of event, matching the `event_type` field in the user_event table.
      * @return \Illuminate\Database\Query\Builder
      */    
-    public function scopeMostRecentEventsByType($query, $type){
+    public function scopeMostRecentEventsByType($query, $type)
+    {
         return $query->select('user_id', Capsule::raw('MAX(occurred_at) as occurred_at'))
-        ->where('event_type', $type)
-        ->groupBy('user_id');
-    }  
+            ->where('event_type', $type)
+            ->groupBy('user_id');
+    }
+    
+    /**
+     * Get the user associated with this activity.
+     */
+    public function user() {
+        return $this->belongsTo('UserFrosting\Sprinkle\Account\Model\User', 'user_id');
+    }    
 }

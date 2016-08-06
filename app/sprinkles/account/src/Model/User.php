@@ -21,7 +21,6 @@ use UserFrosting\Sprinkle\Account\Util\Password;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
- *
  * @property int id
  * @property string user_name
  * @property string first_name
