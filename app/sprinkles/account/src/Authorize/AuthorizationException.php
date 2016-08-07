@@ -8,6 +8,8 @@
  */
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
+use UserFrosting\Support\Exception\ForbiddenException;
+
 /**
  * AuthorizationException class
  *
