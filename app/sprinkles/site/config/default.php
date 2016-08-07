@@ -8,7 +8,10 @@
      * SMTP server password: SMTP_PASSWORD
      *
      */
-    return [      
+    return [
+        'debug' => [
+            'auth' => false
+        ],
         'db'      =>  [ 
             'database'  => 'uf4',
             'username'  => 'userfrosting',

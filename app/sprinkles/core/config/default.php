@@ -10,7 +10,8 @@
             'twig' => false
         ],
         'debug' => [
-            'twig' => false
+            'twig' => false,
+            'auth' => false
         ],
         // Filesystem paths
         'path'    => [

@@ -133,39 +133,36 @@ class User extends UFModel
      * when determining whether or not this user has access.
      * @return boolean True if the user has access, false otherwise.
      */ 
-    public function checkAccess($hook, $params = []){
-        if ($this->isGuest()){   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?
+    public function checkAccess($hook, $params = [])
+    {
+        if ($this->isGuest()) {   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?
             return false;
         }
     
         // The master (root) account has access to everything.
-        if ($this->id == static::$ci->config['reserved_user_ids.master'])  // Need to use loose comparison for now, because some DBs return `id` as a string.
-            return true;
-             
-        // Try to find an authorization rule for $hook that matches the currently logged-in user, or one of their groups.
-        $rule = UserAuth::fetchUserAuthHook($this->id, $hook);
+        // Need to use loose comparison for now, because some DBs return `id` as a string.
         
-        if (empty($rule))
-            $pass = false;
-        else {      
-            $ace = new AccessConditionExpression(static::$ci); // TODO: figure out how this works, I guess
-            $pass = $ace->evaluateCondition($rule['conditions'], $params);
+        if ($this->id == static::$ci->config['reserved_user_ids.master']) {  
+            return true;
         }
         
-        // If no user-specific rule is passed, look for a group-level rule
-        if (!$pass){
-            $ace = new AccessConditionExpression(static::$ci);
-            $groups = $this->getGroupIds();
-            foreach ($groups as $group_id){
-                // Try to find an authorization rule for $hook that matches this group
-                $rule = GroupAuth::fetchGroupAuthHook($group_id, $hook);
-                if (!$rule)
-                    continue;
-                $pass = $ace->evaluateCondition($rule['conditions'], $params);
-                if ($pass)
-                    break;
+        $pass = false;
+        
+        // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
+        if (!$pass) {
+            $ace = new AccessConditionExpression($this, static::$ci->config['debug.auth']);
+            $permissions = $this->permissions($hook)->get();
+            
+            if (!empty($permissions)) {
+                foreach ($permissions as $permission) {
+                    $pass = $ace->evaluateCondition($permission->conditions, $params);
+                    if ($pass) {
+                        break;
+                    }
+                }
             }
         }
+        
         return $pass;
     }
     
@@ -212,7 +209,8 @@ class User extends UFModel
     /**
      * @todo
      */ 
-    public static function isLoggedIn(){
+    public static function isLoggedIn()
+    {
         // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
     }
        
@@ -247,7 +245,8 @@ class User extends UFModel
      *
      * @return UserCollection
      */
-    public function newCollection(array $models = Array()) {
+    public function newCollection(array $models = Array())
+    {
 	    return new UserCollection($models);
     }
     
@@ -256,7 +255,8 @@ class User extends UFModel
      *
      * @return Activity
      */
-    public function newActivityPasswordReset(){
+    public function newActivityPasswordReset()
+    {
         $this->secret_token = User::generateActivationToken();
         $this->flag_password_reset = "1";
         $activity = new Activity([
@@ -350,6 +350,32 @@ class User extends UFModel
         $this->save();
         
         return $this;
+    }    
+    
+    /**
+     * Get all of the permissions this user has, via its roles.
+     * @todo Turn this into a full-fledged custom relation?
+     */
+    public function permissions($hook = null)
+    {
+        $result = Capsule::table('permissions')
+            ->select(
+                'permissions.id as id',
+                'roles.id as role_id',
+                'permissions.slug as slug',
+                'permissions.name as name',
+                'conditions',
+                'permissions.description as description')
+            ->join('permission_roles', 'permissions.id', '=', 'permission_roles.permission_id')
+            ->join('roles', 'permission_roles.role_id', '=', 'roles.id')
+            ->join('role_users', 'role_users.role_id', '=', 'roles.id')
+            ->where('role_users.user_id', '=', $this->id);
+            
+        if ($hook) {
+            $result = $result->where('permissions.slug', $hook);
+        }
+        
+        return $result;
     }    
     
     /**

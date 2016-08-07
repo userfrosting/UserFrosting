@@ -1,21 +1,27 @@
 <?php
-
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
 namespace UserFrosting\Sprinkle\Account\Authorize;
+ 
+use PhpParser\Node;
+use PhpParser\NodeVisitorAbstract;
+use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 
 /**
  * ParserNodeFunctionEvaluator class
  *
  * This class parses access control condition expressions.
- * DO NOT CHANGE!  This is a core UserFrosting file, and should not need to be changed by developers.
  * 
- * @package UserFrosting
- * @author Alex Weissman
- * @see http://www.userfrosting.com/components/#authentication
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see http://www.userfrosting.com/components/#authorization
  */
- 
-use PhpParser\Node;
-
-class ParserNodeFunctionEvaluator extends PhpParser\NodeVisitorAbstract {
+class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
+{
 
     /**
      * @var ReflectionClass The Reflection object to use for evaluating AccessCondition methods (initialized in the ctor)
@@ -40,30 +46,33 @@ class ParserNodeFunctionEvaluator extends PhpParser\NodeVisitorAbstract {
      * @param array $params The parameters to be used when evaluating the methods in the condition expression, as an array.
      * @param bool $debug Set to true if you want debugging information printed to the error log.
      */    
-    public function __construct($params = [], $debug = false){
-        $this->acReflector = new ReflectionClass('AccessCondition');
-        $this->prettyPrinter = new PhpParser\PrettyPrinter\Standard;
+    public function __construct($params = [], $debug = false)
+    {
+        $this->acReflector = new \ReflectionClass('\UserFrosting\Sprinkle\Account\Authorize\AccessCondition');
+        $this->prettyPrinter = new StandardPrettyPrinter;
         $this->params = $params;
         $this->debug = $debug;
     }
 
-    public function leaveNode(Node $node) {
+    public function leaveNode(Node $node)
+    {
         // Look for function calls
-        if ($node instanceof PhpParser\Node\Expr\FuncCall) {
-            $eval = new Node\Scalar\LNumber;
+        if ($node instanceof \PhpParser\Node\Expr\FuncCall) {
+            $eval = new \PhpParser\Node\Scalar\LNumber;
             
             // Get the method name
             $method = $node->name->toString();
             // Get the method arguments
             $argNodes = $node->args;
+            
             $args = [];
-            foreach ($argNodes as $arg){
+            foreach ($argNodes as $arg) {
                 $arg_string = $this->prettyPrinter->prettyPrintExpr($arg->value);
                 // Resolve variables (placeholders and array paths)
-                if (($arg->value instanceof PhpParser\Node\Expr\BinaryOp\Concat) || ($arg->value instanceof PhpParser\Node\Expr\ConstFetch)) {
+                if (($arg->value instanceof \PhpParser\Node\Expr\BinaryOp\Concat) || ($arg->value instanceof \PhpParser\Node\Expr\ConstFetch)) {
                     $value = $this->resolveParamPath($arg_string);
                 // Resolve arrays
-                } else if ($arg->value instanceof PhpParser\Node\Expr\Array_) {
+                } else if ($arg->value instanceof \PhpParser\Node\Expr\Array_) {
                     $value = $this->resolveArray($arg);
                 } else {
                     $value = $arg_string;
@@ -73,15 +82,15 @@ class ParserNodeFunctionEvaluator extends PhpParser\NodeVisitorAbstract {
             
             if ($this->debug) {
                 //echo "<pre>";
-                error_log("Evaluating method '$method' on \n");            
+                error_log("Evaluating method '$method' on \n");
                 error_log(print_r($args, true));
             }
             
             // Call the specified function with the specified arguments.
-            try{
-                $method_handler = $this->acReflector->getMethod($method);     
-            } catch (Exception $e){
-                throw new UserFrosting\AuthorizationException("Authorization failed: Access condition method '$method' does not exist.");
+            try {
+                $method_handler = $this->acReflector->getMethod($method);
+            } catch (\Exception $e){
+                throw new AuthorizationException("Authorization failed: Access condition method '$method' does not exist.");
             }         
     
             $result = $method_handler->invokeArgs(null, $args);
@@ -91,33 +100,8 @@ class ParserNodeFunctionEvaluator extends PhpParser\NodeVisitorAbstract {
                 //echo "</pre>";
             }
             
-            return new PhpParser\Node\Scalar\LNumber($result ? "1" : "0");
+            return new \PhpParser\Node\Scalar\LNumber($result ? "1" : "0");
         }
-    }
-    
-    /**
-     * Resolve a parameter path (e.g. "user.id", "post", etc) into its value.
-     *
-     * @param string $path the name of the parameter to resolve, based on the parameters set in this object.
-     * @throws Exception the path could not be resolved.  Path is malformed or key does not exist.
-     * @return mixed the value of the specified parameter.
-     */
-    private function resolveParamPath($path){
-        $pathTokens = explode(".", $path);
-        $value = $this->params;
-        foreach ($pathTokens as $token){
-            $token = trim($token);
-            if (is_array($value) && isset($value[$token])){
-                $value = $value[$token];
-                continue;
-            } else if (is_object($value) && isset($value->$token)) {
-                $value = $value->$token;
-                continue;
-            } else {
-                throw new UserFrosting\AuthorizationException("Cannot resolve the path \"$path\".  Error at token \"$token\".");
-            }
-        }
-        return $value;
     }
     
     /**
@@ -126,7 +110,8 @@ class ParserNodeFunctionEvaluator extends PhpParser\NodeVisitorAbstract {
      * @param string $arg the array, represented as a string.
      * @return array[mixed] the array, as a plain ol' PHP array.
      */    
-    private function resolveArray($arg){
+    private function resolveArray($arg)
+    {
         $arr = [];
         $items = (array) $arg->value->items;
         foreach ($items as $item){
@@ -138,4 +123,29 @@ class ParserNodeFunctionEvaluator extends PhpParser\NodeVisitorAbstract {
         return $arr;
     }
     
+    /**
+     * Resolve a parameter path (e.g. "user.id", "post", etc) into its value.
+     *
+     * @param string $path the name of the parameter to resolve, based on the parameters set in this object.
+     * @throws Exception the path could not be resolved.  Path is malformed or key does not exist.
+     * @return mixed the value of the specified parameter.
+     */
+    private function resolveParamPath($path)
+    {
+        $pathTokens = explode(".", $path);
+        $value = $this->params;
+        foreach ($pathTokens as $token){
+            $token = trim($token);
+            if (is_array($value) && isset($value[$token])){
+                $value = $value[$token];
+                continue;
+            } else if (is_object($value) && isset($value->$token)) {
+                $value = $value->$token;
+                continue;
+            } else {
+                throw new AuthorizationException("Cannot resolve the path \"$path\".  Error at token \"$token\".");
+            }
+        }
+        return $value;
+    }
 }
