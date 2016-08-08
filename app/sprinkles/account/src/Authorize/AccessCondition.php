@@ -1,4 +1,12 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
+namespace UserFrosting\Sprinkle\Account\Authorize;
 
 /**
  * AccessCondition class
@@ -7,22 +15,18 @@
  * Here you may add your own methods for use in access hook conditional expressions.
  * Every method of this class MUST be static and return a boolean value.
  *
- * @package UserFrosting
- * @author Alex Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/components/#authorization
  */
- 
-namespace UserFrosting\Authorize;
-
-class AccessCondition {
-
+class AccessCondition
+{
     /**
      * Unconditionally grant permission - use carefully!
      * @return bool returns true no matter what.
      */
-    static function always(){
+    static function always()
+    {
         return true;
-    
     }
 
     /**
@@ -31,7 +35,8 @@ class AccessCondition {
      * @param mixed $val2 the second value to compare.     
      * @return bool true if the values are strictly equal, false otherwise.
      */    
-    static function equals($val1, $val2){
+    static function equals($val1, $val2)
+    {
         return ($val1 === $val2);
     }    
 
@@ -41,12 +46,15 @@ class AccessCondition {
      * @param mixed $val2 the second value to compare.     
      * @return bool true if the values are numeric and equal, false otherwise.
      */     
-    static function equals_num($val1, $val2){
-        if (!is_numeric($val1))
+    static function equals_num($val1, $val2)
+    {
+        if (!is_numeric($val1)) {
             return false;
-        if (!is_numeric($val2))
+        }
+        if (!is_numeric($val2)) {
             return false;
-            
+        }
+        
         return ($val1 == $val2);
     }
     
@@ -58,7 +66,8 @@ class AccessCondition {
      * @param array[mixed] $haystack the array of values to search.    
      * @return bool true if every key in $needle is present in the values of $haystack, false otherwise.
      */      
-    static function subset_keys($needle, $haystack){
+    static function subset_keys($needle, $haystack)
+    {
         return count($needle) == count(array_intersect(array_keys($needle), $haystack));
     }
 
@@ -69,7 +78,8 @@ class AccessCondition {
      * @param array[mixed] $haystack the array of values to search.    
      * @return bool true if every value in $needle is present in the values of $haystack, false otherwise.
      */          
-    static function subset($needle, $haystack){
+    static function subset($needle, $haystack)
+    {
         return count($needle) == count(array_intersect($needle, $haystack));
     }
     
@@ -80,7 +90,8 @@ class AccessCondition {
      * @param array[mixed] $haystack the array of values to search.    
      * @return bool true if $needle is present in the values of $haystack, false otherwise.
      */      
-    static function in($needle, $haystack){
+    static function in($needle, $haystack)
+    {
         return in_array($needle, $haystack);
     }
     
@@ -92,8 +103,7 @@ class AccessCondition {
      * @return bool true if the user is in the group, false otherwise.
      */     
     static function in_group($user_id, $group_id){
-        $user = \UserFrosting\User::find($user_id);
-        $groups = $user->getGroups();
-        return isset($groups[$group_id]);
+        $user = \UserFrosting\Sprinkle\Account\Model\User::find($user_id);
+        return ($user->id == $user_id);
     }
 }

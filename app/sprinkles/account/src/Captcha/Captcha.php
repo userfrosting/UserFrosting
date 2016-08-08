@@ -32,7 +32,7 @@ class Captcha
     protected $image;
     
     /**
-     * @var UserFrosting\Session\Session We use the session object so that added messages will automatically appear in the session.
+     * @var UserFrosting\Session\Session We use the session object so that the hashed captcha token will automatically appear in the session.
      */
     protected $session;
     

@@ -6,21 +6,21 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Handler;
+namespace UserFrosting\Sprinkle\Core\Handler;
 
-use UserFrosting\Sprinkle\Core\Handler\ExceptionHandler;
+use UserFrosting\Support\Message\UserMessage;
 
 /**
- * Handler for ForbiddenExceptionExceptions.
+ * Handler for PDOExceptions.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class ForbiddenExceptionHandler extends ExceptionHandler
+class PDOExceptionHandler extends ExceptionHandler
 {    
     /**
-     * Called when an exception is raised during AJAX requests.
+     * Called on database errors.
      *
-     * Pretend like we couldn't find the requested resource and return 404.
+     * Adds any user messages from the exception to the message stream, and respond with the exception's status code.
      *
      * @param ServerRequestInterface $request   The most recent Request object
      * @param ResponseInterface      $response  The most recent Response object
@@ -29,18 +29,20 @@ class ForbiddenExceptionHandler extends ExceptionHandler
      * @return ResponseInterface     
      */   
     public function ajaxHandler($request, $response, $exception)
-    {
-        $this->logFlag = true;
-    
-        $this->ci->alerts->addMessageTranslated("danger", "Resource not found.");
+    { 
+        $message = new UserMessage("SERVER_ERROR");
         
-        return $response->withStatus(404);
+        $this->logFlag = true;
+        
+        $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
+        
+        return $response->withStatus(500);
     }
      
     /**
      * Handler for exceptions raised during "standard" requests.
      *
-     * Pretend like we couldn't find the requested resource and return 404.
+     * Modifies the response, attempting to render the specific error page for the HttpException's error code.
      *
      * @param ServerRequestInterface $request   The most recent Request object
      * @param ResponseInterface      $response  The most recent Response object
@@ -50,18 +52,22 @@ class ForbiddenExceptionHandler extends ExceptionHandler
      */
     public function standardHandler($request, $response, $exception)
     {
-        $this->logFlag = false;
+        $messages = [
+            new UserMessage("SERVER_ERROR")
+        ];
+        $httpCode = 500;
         
-        // Render a custom error page, if it exists
-        try {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");
-        } catch (\Twig_Error_Loader $e) {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
-        }
+        $this->logFlag = true;     
         
-        return $response->withStatus(404)
-                        ->withHeader('Content-Type', 'text/html')
-                        ->write($template->render([]));
+        $view = $this->ci->view;
+        
+        $response = $view->render($response, 'pages/error/default.html.twig', [
+                            "messages" => $messages
+                        ])
+                        ->withStatus($httpCode)
+                        ->withHeader('Content-Type', 'text/html');
+        
+        return $response;
     }    
     
 }

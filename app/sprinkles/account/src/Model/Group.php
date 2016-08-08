@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
-use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 
 /**
  * Group Class
@@ -22,72 +21,54 @@ use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
  * @property string name
+ * @property string description
  * @property string theme
  * @property string landing_page
- * @property string new_user_title
  * @property string icon
- * @property bool is_default
- * @property bool can_delete
  */
 class Group extends UFModel {
 
     /**
-     * @var string The id of the table for the current model.
+     * @var string The name of the table for the current model.
      */ 
-    protected static $_table_id = "group";
+    protected $table = "groups";
+    
+    protected $fillable = [
+        "name",
+        "description",
+        "theme",
+        "landing_page",
+        "icon"
+    ];
     
     /**
-     * Create a new Group object.
+     * Delete this group from the database, along with any user associations
      *
+     * @todo What do we do with users when their group is deleted?  Reassign them?  Or, can a user be "groupless"?
      */
-    public function __construct($properties = []) {
-        parent::__construct($properties);
+    public function delete()
+    {
+        // Remove all user associations
+        $this->users()->detach();
+        
+        /*
+        // Reassign any primary users to the current default primary group
+        $default_primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
+        
+        Capsule::table('user')->where('primary_group_id', $this->id)->update(["primary_group_id" => $default_primary_group->id]);
+        */
+        
+        // Delete the group        
+        $result = parent::delete();
+        
+        return $result;
     }
     
     /**
      * Lazily load a collection of Users which belong to this group.
      */ 
-    public function users(){
-        $link_table = Database::getSchemaTable('group_user')->name;
-        return $this->belongsToMany('UserFrosting\User', $link_table);
-    }
-    
-    public function save(array $options = []){
-        // If this is being set as the default primary group, then any other group must be demoted to default group
-        if ($this->is_default == GROUP_DEFAULT_PRIMARY){
-            $current_default_primary = static::where('is_default', GROUP_DEFAULT_PRIMARY);
-            // Exclude this object, if it exists in DB
-            if ($this->id)
-                $current_default_primary = $current_default_primary->where('id', '!=', $this->id);
-            $current_default_primary->update(['is_default' => GROUP_DEFAULT]);
-        }
-        
-        return parent::save($options);
-    }
-    
-    /**
-     * Delete this group from the database, along with any linked user and authorization rules
-     *
-     */
-    public function delete(){        
-        // Remove all user associations
-        $this->users()->detach();
-        
-        // Remove all group auth rules
-        $auth_table = Database::getSchemaTable('authorize_group')->name;
-        Capsule::table($auth_table)->where("group_id", $this->id)->delete();
-         
-        // Reassign any primary users to the current default primary group
-        $default_primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
-        
-        $user_table = Database::getSchemaTable('user')->name;
-        Capsule::table($user_table)->where('primary_group_id', $this->id)->update(["primary_group_id" => $default_primary_group->id]);
-        
-        // TODO: assign user to the default primary group as well?
-        
-        // Delete the group        
-        $result = parent::delete();        
-        
-        return $result;
+    public function users()
+    {
+        return $this->hasMany('\UserFrosting\Sprinkle\Account\Model\User');
     }
 }

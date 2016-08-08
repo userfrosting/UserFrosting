@@ -11,7 +11,7 @@ namespace UserFrosting\Sprinkle\Account\Authenticate;
 use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
- * Disabled account exception.  Used when an account has been disabled during an active session.
+ * Disabled account exception.  Used when an account has been disabled.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */

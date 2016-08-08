@@ -14,10 +14,13 @@ app/.env
 app/composer.lock
 app/composer.phar
 
-# Ignore error log
+# Ignore log, cache, and sessions directories
 app/cache/*
-app/logs/errors.log
+app/logs/*
 app/sessions/*
+
+# Ignore vendor (for dev)
+app/vendor/*
 
 # Ignore node modules
 build/node_modules/*

@@ -8,67 +8,69 @@
 {% block body_matter %}
     <div class="row">
         <div class="col-lg-6">
-            <div class='panel panel-primary'>
-                <div class='panel-heading'>
-                    <h3 class='panel-title'><i class='fa fa-gear'></i> Account Settings</h3>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-gear"></i> Account Settings</h3>
                 </div>
-                <div class='panel-body'>
-                    <form class='form-horizontal' role='form' name='settings' action='{{site.uri.public}}/account/settings' method='post'>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="account-settings" role="form" action="{{site.uri.public}}/account/settings" method="post">
                         <!-- Prevent browsers from trying to autofill the password field.  See http://stackoverflow.com/a/23234498/2970321 -->
                         <input type="text" style="display:none">
                         <input type="password" style="display:none">
                         
-                        {% if checkAccess('update_account_setting', {('user'): user, ('property'): 'email'}) %}
+                        {% if checkAccess('update_account_setting', {('user'): current_user, ('property'): 'email'}) %}
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Email Address</label>
+                            <label for="input-email" class="col-sm-4 control-label">Email Address</label>
                             <div class="col-sm-8">
-                                <input type='text' class="form-control" name="email" value='{{user.email}}'>
+                                <input type="text" id="input-email" class="form-control" name="email" value="{{current_user.email}}" placeholder="Email address">
                                 <p class="help-block">Your email address.</p>
                             </div>
                         </div>
                         {% endif %}
-                        {% if checkAccess('update_account_setting', {('user'): user, ('property'): 'display_name'}) %}
+                        {% if checkAccess('update_account_setting', {('user'): current_user, ('property'): 'name'}) %}
                         <div class="form-group">
-                            <label for="input_display_name" class="col-sm-4 control-label">Display Name</label>
-                            <div class="col-sm-8">
-                                <input type='text' id="input_display_name" class="form-control" name="display_name" value='{{user.display_name}}'>
-                                <p class="help-block">The name that will be displayed to other users of this site.</p>
+                            <label for="input-first-name" class="col-sm-4 control-label">Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="input-first-name" class="form-control" name="first_name" value="{{current_user.first_name}}" placeholder="First">
                             </div>
+                            <div class="col-sm-4">
+                                <input type="text" id="input-last-name" class="form-control" name="last_name" value="{{current_user.last_name}}" placeholder="Last">
+                            </div>                            
                         </div>
                         {% endif %}
-                        {% if checkAccess('update_account_setting', {('user'): user, ('property'): 'locale'}) %}
+                        {% if checkAccess('update_account_setting', {('user'): current_user, ('property'): 'locale'}) %}
                         <div class="form-group">
-                            <label for="input_locale" class="col-sm-4 control-label">Locale</label>
+                            <label for="input-locale" class="col-sm-4 control-label">Locale</label>
                             <div class="col-sm-8">
-                                <select id="input_locale" class='form-control select2' name="locale">
+                                <select id="input-locale" class="form-control select2" name="locale">
                                     {% for option, label in locales %}
-                                    <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
+                                    <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
                                     {% endfor %}
                                 </select>
                                 <p class="help-block">The language and locale to use for your account.</p>
                             </div>
                         </div>
                         {% endif %}
-                        {% if checkAccess('update_account_setting', {('user'): user, ('property'): 'password'}) %}
+                        {% if checkAccess('update_account_setting', {('user'): current_user, ('property'): 'password'}) %}
                         <div class="form-group">
-                            <label for="input_password" class="col-sm-4 control-label">New Password</label>
+                            <label for="input-password" class="col-sm-4 control-label">New Password</label>
                             <div class="col-sm-8">
-                                <input type='password' id="input_password" class="form-control" name="password" placeholder="8-50 characters">
+                                <input type="password" id="input-password" class="form-control" name="password" placeholder="12-100 characters">
                                 <p class="help-block">Optional.</p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="input_passwordc" class="col-sm-4 control-label">Confirm New Password</label>
+                            <label for="input-passwordc" class="col-sm-4 control-label">Confirm New Password</label>
                             <div class="col-sm-8">
-                                <input type='password' id="input_passwordc" class="form-control" name="passwordc" placeholder="8-50 characters">
+                                <input type="password" id="input-passwordc" class="form-control" name="passwordc" placeholder="Re-enter your new password">
                                 <p class="help-block">Required only if selecting a new password.</p>
                             </div>
                         </div>
                         {% endif %}
                         <div class="form-group">
-                            <label for="input_passwordcheck" class="col-sm-4 control-label">Current Password</label>
+                            <label for="input-passwordcheck" class="col-sm-4 control-label">Current Password</label>
                             <div class="col-sm-8">
-                                <input type='password' id="input_passwordcheck" class="form-control" name="passwordcheck" placeholder="You must confirm your current password to make changes.">
+                                <input type="password" id="input-passwordcheck" class="form-control" name="passwordcheck" placeholder="You must confirm your current password to make changes.">
                             </div>
                         </div>
                         <div class="form-group text-center">

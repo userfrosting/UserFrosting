@@ -53,7 +53,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     {        
         $message = new UserMessage("SERVER_ERROR");
     
-        $this->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
+        $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
         
         return $response->withStatus(500);
     }

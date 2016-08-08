@@ -1,5 +1,0 @@
-_meta/
-vendor/
-*.komodoproject
-composer.lock
-test/cache

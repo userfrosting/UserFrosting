@@ -32,12 +32,13 @@ class HttpExceptionHandler extends ExceptionHandler
         $httpCode = $exception->getHttpErrorCode();
     
         // If the status code is 500, log the exception's message
-        if ($httpCode == 500)
+        if ($httpCode == 500) {
             $this->logFlag = true;
-        else
+        } else {
             $this->logFlag = false;
-            
-        foreach ($messages as $message){
+        }
+        
+        foreach ($messages as $message) {
             $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
         }
         
@@ -61,10 +62,11 @@ class HttpExceptionHandler extends ExceptionHandler
         $httpCode = $exception->getHttpErrorCode();
         
         // If the status code is 500, log the exception's message
-        if ($httpCode == 500)
+        if ($httpCode == 500) {
             $this->logFlag = true;
-        else
+        } else {
             $this->logFlag = false;        
+        }
         
         // Render a custom error page, if it exists
         try {

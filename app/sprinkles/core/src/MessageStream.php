@@ -21,7 +21,6 @@ use UserFrosting\Session\Session;
  */
 class MessageStream
 {
-
     /**
      * @var UserFrosting\Session\Session We use the session object so that added messages will automatically appear in the session.
      */
@@ -94,7 +93,7 @@ class MessageStream
         if (!$this->messageTranslator){
             throw new \RuntimeException("No translator has been set!  Please call MessageStream::setTranslator first.");
         }
-        $message = $this->$messageTranslator->translate($messageId, $placeholders);
+        $message = $this->messageTranslator->translate($messageId, $placeholders);
         return $this->addMessage($type, $message);
     }
     
@@ -137,7 +136,6 @@ class MessageStream
      */
     public function resetMessageStream()
     {
-        error_log("Clearing messages");
         $this->session[$this->messagesKey] = array();
     }
     
