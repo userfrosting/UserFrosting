@@ -15,6 +15,11 @@
             <a href="{{site.uri.public}}/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
         </li>
         {% for item in applyHook("nav_sidebar") %}{% include item %}{% endfor %}
+        {% if checkAccess('uri_zerg') %}
+        <li>
+            <a href="{{site.uri.public}}/zerg"><i class="sc sc-zerg fa fa-fw"></i> Zerg</a>
+        </li>
+        {% endif %}
         {% if checkAccess('uri_users') %}
         <li>
             <a href="{{site.uri.public}}/users"><i class="fa fa-users fa-fw"></i> {{ translate("MENU_USERS") }}</a>
