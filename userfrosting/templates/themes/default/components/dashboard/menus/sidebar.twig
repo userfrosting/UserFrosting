@@ -20,6 +20,11 @@
             <a href="{{site.uri.public}}/users"><i class="fa fa-users fa-fw"></i> {{ translate("MENU_USERS") }}</a>
         </li>
         {% endif %}
+        {% if checkAccess('uri_group_users', { ('primary_group_id') : 4 }) %}
+        <li>
+            <a href="{{site.uri.public}}/users/zerglings"><i class="sc sc-zergling fa-fw"></i> Zerglings</a>
+        </li>
+        {% endif %}
         {% if checkAccess('uri_site_settings') or checkAccess('uri_manage_groups') %}
         <li>
             <a href="#"><i class="fa fa-wrench fa-fw"></i> {{ translate("MENU_CONFIGURATION") }}<span class="fa arrow"></span></a>
