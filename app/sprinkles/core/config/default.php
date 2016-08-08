@@ -62,7 +62,7 @@
                 'assets-raw'        => 'assets-raw',
                 'assets'            => 'assets'
             ],
-            'locale'       =>      'fr_FR',
+            'locale'       =>      'en_US',
             'locale_base'  =>      'en_US',
         ],
         'timezone' => 'America/New_York',
