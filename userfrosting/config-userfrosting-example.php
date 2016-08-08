@@ -41,6 +41,7 @@
             ],
             'db'            =>  [
                 'db_host'  => 'localhost',
+                'db_port'  => '', // Leave blank to use the default port for your database driver (eg. 3306 for MySQL)
                 'db_name'  => 'userfrosting',
                 'db_user'  => 'admin',
                 'db_pass'  => 'password',
@@ -90,6 +91,7 @@
             ],
             'db'            =>  [
                 'db_host'  => 'localhost',
+                'db_port'  => '', // Leave blank to use the default port for your database driver (eg. 3306 for MySQL)
                 'db_name'  => 'userfrosting',
                 'db_user'  => 'admin',
                 'db_pass'  => 'password',

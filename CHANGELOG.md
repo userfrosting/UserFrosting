@@ -1,12 +1,36 @@
 # Change Log
 
+## v0.3.1.20
+
+-
+
+## v0.3.1.19
+
+- Fix some minor error screen layout issues
+- Make User::fresh() compatible with Eloquent\Model v5.2.40+
+- Update composer require to allow for Fortress 1.x bugfixes
+- Allow database port definitions in config-userfrosting.php
+- Fix fatal error when evaluateCondition is called before the router populates current route information
+
+## v0.3.1.18
+
+- Add check for logging being enabled but log file not existing yet
+
+## v0.3.1.17
+
+- Fix occasional bug when end-of-file is reached on log file before requested number of lines is reached
+- Roll back database connection checking to fix installer routines (frostbitten)
+- UI fixes for smaller screens (frostbitten)
+- Update Gitter references to Rocket.chat
+- Clarify hotfix branch procedure for contributions
+
 ## v0.3.1.16
 
-- Fixed comment reference to \Fortress\JqueryValidationAdaptor
-- CONTRIBUTING.md - Added note about proper Pull Requests
+- Fix comment reference to \Fortress\JqueryValidationAdaptor
+- CONTRIBUTING.md - Add note about proper Pull Requests
 - French language file fixes (#565) (lcharette)
-- Added HTTP status codes to 404 errors and database errors (frostbitten)
-- Changed database errors to use BaseController instead of DatabaseController (frostbitten)
+- Add HTTP status codes to 404 errors and database errors (frostbitten)
+- Change database errors to use BaseController instead of DatabaseController (frostbitten)
 
 ## v0.3.1.15
 
@@ -29,11 +53,11 @@
 ## v0.3.1.12
 
 - Add sendmail support in Notification class
-- Fixed problem with strict comparison in Handlebars templates and inconsistent data types among different database technologies
-- Overrided paths to font files for Bootstrap Glyphicons to support the UserFrosting directory structure
+- Fix problem with strict comparison in Handlebars templates and inconsistent data types among different database technologies
+- Override paths to font files for Bootstrap Glyphicons to support the UserFrosting directory structure
 - Added missing lines of Thai language (popiazaza)
-- Fixed a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
-- Added option for HTTPS in `.htaccess`, commented out by default
+- Fix a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
+- Add option for HTTPS in `.htaccess`, commented out by default
 - Minor syntax fixes in `public/js/userfrosting.js`, `widget-auth.js`, `widget-groups.js`, and `widget-users.js`
 
 ## v0.3.1.11

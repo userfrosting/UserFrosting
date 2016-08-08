@@ -2,8 +2,8 @@
 
 {# Set page properties (page.*) here. #}
 {% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template,
+    but BEFORE the page itself is rendered. #}
     {% set page = page | merge({
         "title"       : "Installation",
         "description" : "Installation page for UserFrosting"
@@ -14,11 +14,11 @@
     <div class="container">
         <h1 class = "text-center">Congratulations.<br><small>UserFrosting is ready to rock.</small></h1>
         <br>
-        <div class="row">
-            <div class="col-lg-6">
-                <img src="{{site.uri.image}}/install-ready.jpg">
+        <div class="row p-b-1">
+            <div  class="col-xs-12 col-sm-4 col-lg-6" >
+                <img class="img-fluid m-b-1 m-x-auto" src="{{site.uri.image}}/install-ready.jpg">
             </div>
-            <div class="col-lg-6">
+            <div class="col-xs-12 col-sm-8 col-lg-6">
                 {% for message in messages %}
                     <div class="list-group">
                       <div class="list-group-item list-group-item-{{message.class}}">

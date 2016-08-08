@@ -407,6 +407,9 @@ class SiteSettings extends UFModel {
             if (!ini_get("log_errors")){
                 $path = ini_get('error_log');
                 $messages = ["Error logging appears to be disabled.  Please check your php.ini file."];
+            } else if (!file_exists(ini_get('error_log'))){
+                $path = ini_get('error_log');
+                $messages = ["Log file not found. If you haven't generated any errors, this is fine. If you were expecting to see errors here, please check your php.ini file."];
             } else {
                 $path = ini_get('error_log');
                 @$file = file($path);
@@ -455,14 +458,15 @@ class SiteSettings extends UFModel {
                         /* If there's no file left to read, return with
                            what we have. If the amount we want to read
                            is more than we have left, just take what's left. */
-                        if ($sizeRemaining == 0){
-                            break 1;
-                        } elseif ($seekLen > $sizeRemaining){
-                            if ($sizeRemaining < 0){
-                                $sizeRemaining = 0;
+                        if ($sizeRemaining <= 0){
+                            if ($remainder != ''){
+                                $messages[] = $remainder;
                             }
-                            $seekLen = $sizeRemaining;
-                            $sizeRemaining = 0;
+                            break 1; // Everything we can read has been read.
+                        }
+                        if ($seekLen > $sizeRemaining){
+                            $seekLen = $sizeRemaining; // Read everything left now
+                            $sizeRemaining = 0; // and mark that nothing is left afterwards.
                         }
                         fseek($fileHandle, -$seekLen, SEEK_CUR); // Seek to the point we want to read from
                         $current = fread($fileHandle, $seekLen) . $remainder; // Attach the remainder from previous loop
