@@ -19,9 +19,13 @@ use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Captcha\Captcha;
+use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Support\Exception\BadRequest;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\HttpException;
+use UserFrosting\Sprinkle\Account\Util\Password;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -339,122 +343,123 @@ class AccountController
      * Returns the User Object for the user record that was created.
      */
     public function register(Request $request, Response $response, $args)
-    {        
-        /*
-        // POST: user_name, display_name, email, title, password, passwordc, captcha, spiderbro, csrf_token
-        $post = $this->_app->request->post();
+    {       
+        // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
+        $params = $request->getParsedBody();
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        // Key services
+        $ms = $this->ci->alerts;
+        $config = $this->ci->config;
+        $this->ci->db;
 
         // Check the honeypot. 'spiderbro' is not a real field, it is hidden on the main page and must be submitted with its default value for this to be processed.
-        if (!$post['spiderbro'] || $post['spiderbro'] != "http://"){
-            error_log("Possible spam received:" . print_r($this->_app->request->post(), true));
-            $ms->addMessage("danger", "Aww hellllls no!");
-            $this->_app->halt(500);     // Don't let on about why the request failed ;-)
+        if (!isset($params['spiderbro']) || $params['spiderbro'] != "http://") {
+            throw new SpammyRequestException("Possible spam received:" . print_r($params, true));
         }
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/register.json");
-
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
-
+        $schema = new RequestSchema("schema://register.json");
+        
         // Security measure: do not allow registering new users until the master account has been created.
-        if (!User::find($this->_app->config('user_id_master'))){
+        if (!User::find($config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
-            $this->_app->halt(403);
+            return $response->withStatus(403);
         }
 
         // Check if registration is currently enabled
-        if (!$this->_app->site->can_register){
+        if (!$config['site.setting.can_register']) {
             $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
-            $this->_app->halt(403);
+            return $response->withStatus(403);
         }
 
         // Prevent the user from registering if he/she is already logged in
-        if(!$this->_app->user->isGuest()) {
+        if(!$this->ci->currentUser->isGuest()) {
             $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_LOGOUT");
-            $this->_app->halt(200);
+            return $response->withStatus(403);
         }
 
-        // Sanitize data
-        $rf->sanitize();
-
-        // Validate, and halt on validation errors.
-        $error = !$rf->validate(true);
-
-        // Get the filtered data
-        $data = $rf->data();
-
-        // Check captcha, if required
-        if ($this->_app->site->enable_captcha == "1"){
-            if (!$data['captcha'] || md5($data['captcha']) != $_SESSION['userfrosting']['captcha']){
-                $ms->addMessageTranslated("danger", "CAPTCHA_FAIL");
-                $error = true;
-            }
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+        
+        $error = false; 
+        
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
         }
-
-        // Remove captcha, password confirmation from object data
-        $rf->removeFields(['captcha', 'passwordc']);
-
-        // Perform desired data transformations.  Is this a feature we could add to Fortress?
-        $data['display_name'] = trim($data['display_name']);
-        $data['locale'] = $this->_app->site->default_locale;
-
-        if ($this->_app->site->require_activation)
-            $data['flag_verified'] = 0;
-        else
-            $data['flag_verified'] = 1;
-
+        
         // Check if username or email already exists
-        if (User::where('user_name', $data['user_name'])->first()){
+        if (User::where('user_name', $data['user_name'])->first()) {
             $ms->addMessageTranslated("danger", "ACCOUNT_USERNAME_IN_USE", $data);
             $error = true;
         }
 
-        if (User::where('email', $data['email'])->first()){
+        if (User::where('email', $data['email'])->first()) {
             $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
             $error = true;
+        }        
+        
+        // Check captcha, if required
+        if ($config['site.setting.enable_captcha']) {
+            if (!$data['captcha'] || md5($data['captcha']) != $_SESSION['userfrosting']['captcha']) {
+                $ms->addMessageTranslated("danger", "CAPTCHA_FAIL");
+                $error = true;
+            }
         }
-
-        // Halt on any validation errors
+        
         if ($error) {
-            $this->_app->halt(400);
+            return $response->withStatus(400);
         }
-
-        // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
-
-        // Check that a default primary group is actually set
+        
+        // Remove captcha, password confirmation from object data after validation
+        unset($data['captcha']);
+        unset($data['passwordc']);
+        
+        if ($config['site.setting.require_activation']) {
+            $data['flag_verified'] = false;
+        } else {
+            $data['flag_verified'] = true;
+        }          
+        // Check that the default group exists
+        /*
         if (!$primaryGroup){
             $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_BROKEN");
             error_log("Account registration is not working because a default primary group has not been set.");
             $this->_app->halt(500);
         }
-
-        $data['primary_group_id'] = $primaryGroup->id;
-        // Set default title for new users
-        $data['title'] = $primaryGroup->new_user_title;
+        */
+        
+        // Set default locale
+        $data['locale'] = $config['site.setting.default_locale'];
+        
+        // Set default group
+        //$data['group_id'] = $primaryGroup->id;
+        
         // Hash password
-        $data['password'] = Authentication::hashPassword($data['password']);
+        $data['password'] = Password::hash($data['password']);
 
         // Create the user
         $user = new User($data);
 
-        // Add user to default groups, including default primary group
+        // Add user to default group and default roles
+        /*
         $defaultGroups = Group::where('is_default', GROUP_DEFAULT)->get();
         $user->addGroup($primaryGroup->id);
         foreach ($defaultGroups as $group)
             $user->addGroup($group->id);
-
+        */
+        
         // Create sign-up event
-        $user->newEventSignUp();
+        $user->newActivitySignUp();
 
         // Store new user to database
         $user->save();
 
-        if ($this->_app->site->require_activation) {
+        // Verification email
+        if ($config['site.setting.require_email_verification']) {
             // Create verification request event
             $user->newEventVerificationRequest();
             $user->save();      // Re-save with verification event
@@ -470,24 +475,19 @@ class AccountController
 
             try {
                 $notification->send();
-            } catch (\phpmailerException $e){
+            } catch (\phpmailerException $e) {
                 $ms->addMessageTranslated("danger", "MAIL_ERROR");
                 error_log('Mailer Error: ' . $e->errorMessage());
                 $this->_app->halt(500);
             }
 
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
-        } else
+        } else {
             // No activation required
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
-
-        // Return the user object to the calling program
-        return $user;
-        */
+        }
         
-        $e = new \UserFrosting\Support\Exception\BadRequestException();
-        $e->addUserMessage("Something bad!");
-        throw $e;
+        return $response->withStatus(200);
     }
 
     /**

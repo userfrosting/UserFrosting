@@ -42,7 +42,7 @@ $(document).ready(function() {
         msgTarget: $("#alerts-register")
     }).on("submitSuccess", function() {
         // Forward to login page on success
-        window.location.replace(site.uri.public + "/account/login");
+        window.location.replace(site.uri.public + "/account/sign-in-or-register");
     }).on("submitError", function() {
         // Reload captcha
         //$("#captcha").captcha();
