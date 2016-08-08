@@ -28,7 +28,8 @@ $lang = array_merge($lang, [
 	"MENU_CONFIGURATION" => "Configuration",
 	"MENU_SITE_SETTINGS" => "Site Settings",
 	"MENU_GROUPS" => "Groups",
-	"HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER"
+	"HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER",
+	"ABOUT" => "About",
 ]);
 
 // Installer

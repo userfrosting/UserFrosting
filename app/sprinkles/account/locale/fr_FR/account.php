@@ -18,7 +18,7 @@ $lang = array();
 
 $lang = array_merge($lang,array(
 	"ACCOUNT" => array(
-		//"SINGUP" => "Se connecter",
+		"SINGUP" => "Se connecter",
 		"REGISTER" => "Inscription"
 	)
 ));

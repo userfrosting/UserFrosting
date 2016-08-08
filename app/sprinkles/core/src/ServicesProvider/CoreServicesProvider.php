@@ -316,17 +316,17 @@ class CoreServicesProvider
          */
         $container['translator'] = function ($c) {
 
-	        // Create and inject new config item
-			$translator = new MessageTranslator();
+            // Create and inject new config item
+            $translator = new MessageTranslator();
 
             // Add search paths for all locale files.  Include them in reverse order to allow locale files added later to override earlier files.
             $localePaths = array_reverse($c->get('locator')->findResources('locale://', true, true));
 
             $translator->setPaths($localePaths);
 
-			// We need the config to get which locale we need
-			// !TODO: User locale... Config is good for default or site wide locale. But when a user login, we may have to load his locale
-			$config = $c->get('config');
+            // We need the config to get which locale we need
+            // !TODO: User locale... Config is good for default or site wide locale. But when a user login, we may have to load his locale
+            $config = $c->get('config');
 
             // Load the locale files based on the base locale and the user locale
             $translator->loadLocaleFiles($config['site.locale_base'], $config['site.locale']);
