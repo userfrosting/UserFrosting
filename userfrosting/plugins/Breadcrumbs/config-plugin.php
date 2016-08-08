@@ -2,7 +2,7 @@
 
 //Hook on the setupServices to add "breadcrumbs" to $app
 $app->hook('setupServices', function () use ($app){
-	$app->breadcrumbs = new \UserFrosting\Breadcrumbs($app);
+    $app->breadcrumbs = new \UserFrosting\Breadcrumbs($app);
 }, 1);
 
 //Setup the Twigg template hook

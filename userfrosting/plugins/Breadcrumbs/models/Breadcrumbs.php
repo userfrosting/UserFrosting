@@ -22,11 +22,11 @@ class Breadcrumbs {
      */
     public function __construct($app) {
 
-		//We need app for translation later
+        //We need app for translation later
         $this->_app = $app;
 
-	    //TODO: Add site setting to enabled this or not
-	    $this->addItem("SITE_INDEX", "/");
+        //TODO: Add site setting to enabled this or not
+        $this->addItem("SITE_INDEX", "/");
     }
 
     /**
@@ -38,24 +38,24 @@ class Breadcrumbs {
      * @param bool $uri optional If this entry is active or not
      * @return null
      */
-	public function addItem($name, $uri = "", $active = true){
+    public function addItem($name, $uri = "", $active = true){
 
-		//Translate the name. Doing this here allow to pass or not translation keys
-		$n = $this->_app->translator->translate($name);
+        //Translate the name. Doing this here allow to pass or not translation keys
+        $n = $this->_app->translator->translate($name);
 
-		//Before we add the new one, any item are not the last one
-		foreach ($this->items as $key => $value) {
-			$this->items[$key]["last"] = false;
-		}
+        //Before we add the new one, any item are not the last one
+        foreach ($this->items as $key => $value) {
+            $this->items[$key]["last"] = false;
+        }
 
-		//Add the item to the array
-		$this->items[] = array(
-			"title" => $n,
-			"uri" => $uri,
-			"active" => $active,
-			"last" => true
-		);
-	}
+        //Add the item to the array
+        $this->items[] = array(
+            "title" => $n,
+            "uri" => $uri,
+            "active" => $active,
+            "last" => true
+        );
+    }
 
     /**
      * Determine if the property for this object exists.
@@ -65,8 +65,8 @@ class Breadcrumbs {
      * @param string $uri optional The uri this entry will point to.
      * @return array[items] Array of all the entry in the Breadcrumbs list
      */
-	public function getItems() {
-		return $this->items;
-	}
+    public function getItems() {
+        return $this->items;
+    }
 
 }

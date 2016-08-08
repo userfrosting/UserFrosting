@@ -118,12 +118,12 @@ class PageSchema {
      * @return void
      */
     public function registerTwigHook($hook = "", $path = ""){
-       	if ($hook == "")
-	    	throw new \Exception("'hook' undefined.");
-	    	
-	    if ($path == "")
-	    	throw new \Exception("'path' must be defined.");
-	    
+           if ($hook == "")
+            throw new \Exception("'hook' undefined.");
+            
+        if ($path == "")
+            throw new \Exception("'path' must be defined.");
+        
         if (!isset($this->_twig_hook[$hook]))
             $this->_twig_hook[$hook] = [];
         
@@ -233,8 +233,8 @@ class PageSchema {
      * @return array an array containing the full paths of the template files to be included.
      */    
     public function getTwigHook($hook = "") {
-       	if ($hook == "")
-	    	return [];
+           if ($hook == "")
+            return [];
        
         // Check if the specified group actually exists, otherwise use nothing.
         if (isset($this->_twig_hook[$hook]))

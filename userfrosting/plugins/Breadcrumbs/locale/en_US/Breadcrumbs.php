@@ -18,7 +18,7 @@ $lang = array();
 
 // Site Content
 $lang = array_merge($lang, [
-	"SITE_INDEX" => "Home",
+    "SITE_INDEX" => "Home",
 ]);
 
 return $lang;
