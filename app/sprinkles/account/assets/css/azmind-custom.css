@@ -37,6 +37,11 @@ a:hover, footer a:focus
     border: 0;
 }
 
+.form-col-captcha
+{
+    padding: 7px 0px;
+}
+
 .registration-links
 {
     padding-top: 10px;
