@@ -33,6 +33,10 @@ class AccessConditionExpression
      */
     protected $user;
     /**
+     * @var ParserNodeFunctionEvaluator The node visitor, which evaluates access condition callbacks used in a permission condition.
+     */
+    protected $nodeVisitor;    
+    /**
      * @var \PhpParser\Parser The PhpParser object to use (initialized in the ctor)
      */
     protected $parser;
@@ -55,11 +59,13 @@ class AccessConditionExpression
      * @param User A user object, which for convenience can be referenced as 'self' in access conditions.
      * @param bool $debug Set to true if you want debugging information printed to the error log.
      */    
-    public function __construct($user, $debug = false)
+    public function __construct($nodeVisitor, $user, $debug = false)
     {
+        $this->nodeVisitor   = $nodeVisitor;
         $this->user          = $user;
         $this->parser        = new Parser(new EmulativeLexer);
         $this->traverser     = new NodeTraverser;
+        $this->traverser->addVisitor($nodeVisitor);
         $this->prettyPrinter = new StandardPrettyPrinter;
         $this->debug = $debug;
     }
@@ -67,8 +73,8 @@ class AccessConditionExpression
     /**
      * Evaluates a condition expression, based on the given parameters.
      *
-     * There are two special parameters, `self` and `route`, which are arrays of the current user's data and the current route data, respectively.
-     * These get included automatically, and do not need to be passed in.
+     * The special parameter `self` is an array of the current user's data.
+     * This get included automatically, and so does not need to be passed in.
      * @param string $condition a boolean expression composed of calls to AccessCondition functions.
      * @param array[mixed] $params the parameters to be used when evaluating the expression.
      * @return bool true if the condition is passed for the given parameters, otherwise returns false.
@@ -80,10 +86,7 @@ class AccessConditionExpression
         // (For example, from an unfiltered request body).
         $params['self'] = $this->user->export();
         
-        // Traverse the parse tree, and execute all function calls as methods of class AccessCondition.
-        // Replace the function node with the return value of the method.
-        $pv = new ParserNodeFunctionEvaluator($params, $this->debug);
-        $this->traverser->addVisitor($pv);
+        $this->nodeVisitor->setParams($params);
         
         $code = "<?php $condition;";
         
@@ -95,6 +98,8 @@ class AccessConditionExpression
             "</pre>");
         }
         
+        // Traverse the parse tree, and execute any callbacks found using the supplied parameters.
+        // Replace the function node with the return value of the callback.        
         try {
             // parse
             $stmts = $this->parser->parse($code);

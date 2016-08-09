@@ -24,9 +24,9 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
 {
 
     /**
-     * @var ReflectionClass The Reflection object to use for evaluating AccessCondition methods (initialized in the ctor)
+     * @var array[callable] An array of callback functions to be used when evaluating a condition expression.
      */ 
-    protected $acReflector;
+    protected $callbacks;
     /**
      * @var \PhpParser\PrettyPrinter\Standard The PrettyPrinter object to use (initialized in the ctor)
      */ 
@@ -46,12 +46,12 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * @param array $params The parameters to be used when evaluating the methods in the condition expression, as an array.
      * @param bool $debug Set to true if you want debugging information printed to the error log.
      */    
-    public function __construct($params = [], $debug = false)
+    public function __construct($callbacks, $debug = false)
     {
-        $this->acReflector = new \ReflectionClass('\UserFrosting\Sprinkle\Account\Authorize\AccessCondition');
+        $this->callbacks = $callbacks;
         $this->prettyPrinter = new StandardPrettyPrinter;
-        $this->params = $params;
         $this->debug = $debug;
+        $this->params = [];
     }
 
     public function leaveNode(Node $node)
@@ -61,7 +61,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             $eval = new \PhpParser\Node\Scalar\LNumber;
             
             // Get the method name
-            $method = $node->name->toString();
+            $callbackName = $node->name->toString();
             // Get the method arguments
             $argNodes = $node->args;
             
@@ -82,26 +82,29 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             
             if ($this->debug) {
                 //echo "<pre>";
-                error_log("Evaluating method '$method' on \n");
+                error_log("Evaluating callback '$callbackName' on \n");
                 error_log(print_r($args, true));
             }
             
-            // Call the specified function with the specified arguments.
-            try {
-                $method_handler = $this->acReflector->getMethod($method);
-            } catch (\Exception $e){
-                throw new AuthorizationException("Authorization failed: Access condition method '$method' does not exist.");
-            }         
-    
-            $result = $method_handler->invokeArgs(null, $args);
+            // Call the specified access condition callback with the specified arguments.
+            if (isset($this->callbacks[$callbackName]) && is_callable($this->callbacks[$callbackName])) {
+                $result = call_user_func_array($this->callbacks[$callbackName], $args);
+            } else {
+                throw new AuthorizationException("Authorization failed: Access condition method '$callbackName' does not exist.");
+            }
             
-            if ($this->debug){
+            if ($this->debug) {
                 error_log("Result: " . ($result ? "1" : "0"));
                 //echo "</pre>";
             }
             
             return new \PhpParser\Node\Scalar\LNumber($result ? "1" : "0");
         }
+    }
+    
+    public function setParams($params)
+    {
+        $this->params = $params;
     }
     
     /**

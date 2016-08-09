@@ -185,10 +185,11 @@ class AccountController
      */
     public function pageSettings($request, $response, $args)
     {
+        $authorizer = $this->ci->authorizer;
         $currentUser = $this->ci->currentUser;
         
         // Access-controlled page
-        if (!$currentUser->checkAccess('uri_account_settings')){
+        if (!$authorizer->checkAccess($currentUser, 'uri_account_settings')) {
             throw new ForbiddenException();
         }
         

@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
-use UserFrosting\Sprinkle\Account\Authorize\AccessConditionExpression;
 use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 use UserFrosting\Sprinkle\Account\Util\Password;
 
@@ -122,48 +121,6 @@ class User extends UFModel
     public function activities()
     {
         return $this->hasMany('UserFrosting\Sprinkle\Account\Model\Activity');
-    }
-    
-    /**
-     * Checks whether or not this user has access for a particular authorization hook.
-     *
-     * Determine if this user has access to the given $hook under the given $params.
-     * @param string $hook The authorization hook to check for access.
-     * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
-     * when determining whether or not this user has access.
-     * @return boolean True if the user has access, false otherwise.
-     */ 
-    public function checkAccess($hook, $params = [])
-    {
-        if ($this->isGuest()) {   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?
-            return false;
-        }
-    
-        // The master (root) account has access to everything.
-        // Need to use loose comparison for now, because some DBs return `id` as a string.
-        
-        if ($this->id == static::$ci->config['reserved_user_ids.master']) {  
-            return true;
-        }
-        
-        $pass = false;
-        
-        // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
-        if (!$pass) {
-            $ace = new AccessConditionExpression($this, static::$ci->config['debug.auth']);
-            $permissions = $this->permissions($hook)->get();
-            
-            if (!empty($permissions)) {
-                foreach ($permissions as $permission) {
-                    $pass = $ace->evaluateCondition($permission->conditions, $params);
-                    if ($pass) {
-                        break;
-                    }
-                }
-            }
-        }
-        
-        return $pass;
     }
     
     /**
