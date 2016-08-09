@@ -32,6 +32,12 @@
             'cookie' => [
                 'name' => 'rememberme'
             ]
+        ],
+        'site' => [
+            'setting' => [
+                'can_register' => true,
+                'default_locale' => 'en_US'
+            ]
         ]
     ];
     

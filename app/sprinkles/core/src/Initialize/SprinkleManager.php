@@ -28,7 +28,7 @@ class SprinkleManager
     /**
      * @var array[null|UserFrosting\Sprinkle\Core\Initialize\Sprinkle] An array of sprinkle initialization objects.
      */
-    protected $sprinkles;
+    protected $sprinkles = [];
         
     /**
      * Create a new SprinkleManager object.

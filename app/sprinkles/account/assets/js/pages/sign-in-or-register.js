@@ -16,21 +16,27 @@ $(document).ready(function() {
     /*
         Forms show / hide
     */
-    $('.show-register-form').on('click', function(){
+    
+    // Show login form if registration is disabled
+    if (!site.setting.can_register) {
+        $('.login-form').show();
+    }
+    
+    $('.show-register-form').on('click', function() {
     	if( ! $(this).hasClass('active') ) {
     		$('.show-login-form').removeClass('active');
     		$(this).addClass('active');
-    		$('.login-form').fadeOut('fast', function(){
+    		$('.login-form').fadeOut('fast', function() {
     			$('.register-form').fadeIn('fast');
     		});
     	}
     });
     // ---
-    $('.show-login-form').on('click', function(){
+    $('.show-login-form').on('click', function() {
     	if( ! $(this).hasClass('active') ) {
     		$('.show-register-form').removeClass('active');
     		$(this).addClass('active');
-    		$('.register-form').fadeOut('fast', function(){
+    		$('.register-form').fadeOut('fast', function() {
     			$('.login-form').fadeIn('fast');
     		});
     	}

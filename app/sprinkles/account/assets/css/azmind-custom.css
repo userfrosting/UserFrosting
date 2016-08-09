@@ -3,7 +3,18 @@
  *
  * Applies a background to the register/sign-in buttons, so it is more obvious that they are clickables.
  */
-.show-register-form, .show-login-form
+
+.login-form
+{
+    display: inherit;
+}
+  
+.register-form
+{
+    display: none;
+}
+
+.show-register-form, .show-login-form, .show-login-form-static
 {
     padding: 7px 15px;
 }

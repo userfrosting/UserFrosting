@@ -29,9 +29,7 @@
             'author'    =>      'Alex Weissman',
             // Site settings
             'setting' => [
-                'email_login' => true,
-                'can_register' => true,
-                'default_locale' => 'en_US'
+                'email_login' => true
             ],
             // URLs
             'uri' => [

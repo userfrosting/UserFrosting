@@ -212,35 +212,18 @@ class AccountController
      * This allows new (non-authenticated) users to create a new account for themselves on your website.
      * By definition, this is a "public page" (does not require authentication).     
      * Request type: GET
-     * @param bool $can_register Specify whether registration is enabled.  If registration is disabled, they will be redirected to the login page.
      */
     public function pageSignInOrRegister($request, $response, $args)
     {
-        //$this->ci->alerts->addMessage("danger", "Will Robinson");
+        $config = $this->ci->config;
+        
+        // Forward to home page if user is already logged in
+        if (!$this->ci->currentUser->isGuest()) {
+            error_log($config['site.uri.public']);
+            return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
+        }
         
         /*
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Forward to home page if user is already logged in
-        if (!$this->_app->user->isGuest()){
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        // Security measure: do not allow registering new users until the master account has been created.
-        if (!User::find($this->_app->config('user_id_master'))){
-            $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
-            $this->_app->redirect($this->_app->urlFor('uri_install'));
-        }
-        
-        $settings = $this->_app->site;
-
-        // If registration is disabled, send them back to the login page with an error message
-        if (!$settings->can_register){
-            $this->_app->alerts->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
-            $this->_app->redirect('login');
-        }
-
         $this->_app->render('account/register.twig', [
             'captcha_image' =>  $this->generateCaptcha(),
             'validators' => $this->_app->jsValidator->rules()
