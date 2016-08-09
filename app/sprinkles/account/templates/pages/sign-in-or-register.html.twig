@@ -36,7 +36,7 @@
                 </div>
                 <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
                     <div class="form-group">
-                        <label class="sr-only" for="r-form-username">User name</label>
+                        <label class="sr-only" for="r-form-username">Username</label>
                         <input type="text" name="user_name" placeholder="Choose a unique username" class="form-control" id="r-form-username">
                     </div>
                     <div class="row">
@@ -61,6 +61,19 @@
                         <label class="sr-only" for="r-form-passwordc">Confirm password</label>
                         <input type="password" name="passwordc" placeholder="Re-enter your password" class="form-control" id="r-form-passwordc">
                     </div>
+                    {% if site.setting.registration_captcha %}
+                        <div class="form-group">
+                            <label class="sr-only" for="r-form-passwordc">Verify the captcha</label>
+                            <div class="row">
+                                <div class="col-sm-6"> 
+                                    <input type="text" name="captcha" placeholder="Enter the text shown" class="form-control" id="r-form-captcha">
+                                </div>
+                                <div class="col-sm-6">
+                                    <img src="{{site.uri.public}}/account/captcha" id="captcha" data-target="#r-form-captcha">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="collapse">
                         <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
                         <input name="spiderbro" id="spiderbro" value="http://"/>
@@ -103,7 +116,7 @@
             </div>        
             <form id="sign-in" role="form" action="{{site.uri.public}}/account/login" method="post" class="l-form">
                 <div class="form-group">
-                    <label class="sr-only" for="l-form-username">User name</label>
+                    <label class="sr-only" for="l-form-username">Username</label>
                     <input type="text" name="user_name" placeholder="User name" class="form-control" id="l-form-username">
                 </div>
                 <div class="form-group">

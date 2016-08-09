@@ -18,10 +18,10 @@ use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
-use UserFrosting\Sprinkle\Account\Captcha\Captcha;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequest;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\HttpException;
@@ -209,7 +209,7 @@ class AccountController
     /**
      * Render the account registration/sign-in page for UserFrosting.
      *
-     * This allows new (non-authenticated) users to create a new account for themselves on your website.
+     * This allows existing users to sign in, and new (non-authenticated) users to create a new account for themselves on your website (if enabled).
      * By definition, this is a "public page" (does not require authentication).     
      * Request type: GET
      */
@@ -223,13 +223,6 @@ class AccountController
             return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
         }
         
-        /*
-        $this->_app->render('account/register.twig', [
-            'captcha_image' =>  $this->generateCaptcha(),
-            'validators' => $this->_app->jsValidator->rules()
-        ]);
-        */
-        
         // Load validation rules
         $schema = new RequestSchema("schema://login.json");
         $validatorLogin = new JqueryValidationAdapter($schema, $this->ci->translator);
@@ -240,7 +233,7 @@ class AccountController
         return $this->ci->view->render($response, 'pages/sign-in-or-register.html.twig', [
             "page" => [
                 "validators" => [
-                    "login"    => [], //$validatorLogin->rules('json', false),
+                    "login"    => $validatorLogin->rules('json', false),
                     "register" => $validatorRegister->rules('json', false)
                 ]
             ]
@@ -386,8 +379,9 @@ class AccountController
         }        
         
         // Check captcha, if required
-        if ($config['site.setting.enable_captcha']) {
-            if (!$data['captcha'] || md5($data['captcha']) != $_SESSION['userfrosting']['captcha']) {
+        if ($config['site.setting.registration_captcha']) {
+            $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
+            if (!$data['captcha'] || !$captcha->verifyCode($data['captcha'])) {
                 $ms->addMessageTranslated("danger", "CAPTCHA_FAIL");
                 $error = true;
             }

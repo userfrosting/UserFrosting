@@ -1,20 +1,13 @@
-// This plugin reloads the captcha in the specified field
+/**
+ * This plugin reloads the captcha in the specified element.
+ */
 (function( $ ) {
     $.fn.captcha = function() {
-        var field = $(this);
-        console.log("Reloading captcha");
+        // Set the new captcha image
+        $(this).attr('src', site.uri.public + "/account/captcha?" + new Date().getTime());
         
-        var img_src = site['uri']['public'] + "/account/captcha?" + new Date().getTime();
-        
-        return $.ajax({  
-          type: "GET",  
-          url: img_src,  
-          dataType: "text"
-        }).then(function(data, statusText, jqXHR) {  // Pass the deferral back
-            field.attr('src', data);
-            var target = field.data('target');
-            $(target).val("");
-            return data;
-        });
+        // Clear whatever the user entered for the captcha value last time        
+        var target = $(this).data('target');
+        $(target).val("");        
     };
-}( jQuery ));  
+}( jQuery ));

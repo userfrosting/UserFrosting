@@ -51,7 +51,7 @@ $(document).ready(function() {
         window.location.replace(site.uri.public + "/account/sign-in-or-register");
     }).on("submitError", function() {
         // Reload captcha
-        //$("#captcha").captcha();
+        $("#captcha").captcha();
     });
     
     $("#sign-in").ufForm({

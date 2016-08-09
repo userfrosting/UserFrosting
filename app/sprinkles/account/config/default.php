@@ -36,6 +36,7 @@
         'site' => [
             'setting' => [
                 'can_register' => true,
+                'registration_captcha' => true,
                 'default_locale' => 'en_US'
             ]
         ]
