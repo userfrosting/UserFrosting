@@ -36,6 +36,11 @@ class Role extends UFModel
     ];    
 
     /**
+     * @var bool Enable timestamps for this class.
+     */ 
+    public $timestamps = true;
+    
+    /**
      * Delete this role from the database, removing associations with permissions and users.
      *
      */

@@ -35,6 +35,7 @@
                 
                 </div>
                 <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
+                    {% include "components/csrf.html.twig" %}
                     <div class="form-group">
                         <label class="sr-only" for="r-form-username">Username</label>
                         <input type="text" name="user_name" placeholder="Choose a unique username" class="form-control" id="r-form-username">
@@ -115,6 +116,7 @@
             
             </div>        
             <form id="sign-in" role="form" action="{{site.uri.public}}/account/login" method="post" class="l-form">
+                {% include "components/csrf.html.twig" %}
                 <div class="form-group">
                     <label class="sr-only" for="l-form-username">Username</label>
                     <input type="text" name="user_name" placeholder="User name" class="form-control" id="l-form-username">

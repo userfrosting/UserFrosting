@@ -37,6 +37,11 @@ class Permission extends UFModel
     ];    
 
     /**
+     * @var bool Enable timestamps for this class.
+     */ 
+    public $timestamps = true;
+    
+    /**
      * Delete this permission from the database, removing associations with roles.
      *
      */

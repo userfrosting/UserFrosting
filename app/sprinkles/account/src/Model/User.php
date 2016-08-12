@@ -56,7 +56,7 @@ class User extends UFModel
         "flag_password_reset",
         "password"
     ];
-        
+    
     /**
      * @var Activity[] An array of activities to be inserted for this User when save is called.
      */

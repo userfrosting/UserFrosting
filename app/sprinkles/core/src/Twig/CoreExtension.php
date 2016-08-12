@@ -88,9 +88,23 @@ class CoreExtension extends \Twig_Extension
      */   
     public function getGlobals()
     {
+        // CSRF token name and value
+        $csrfNameKey = $this->services->csrf->getTokenNameKey();
+        $csrfValueKey = $this->services->csrf->getTokenValueKey();
+        $csrfName = $this->services->request->getAttribute($csrfNameKey);
+        $csrfValue = $this->services->request->getAttribute($csrfValueKey);
+        
         return array(
             'site'   => $this->services->config['site'],
-            'assets' => $this->services->assets
+            'assets' => $this->services->assets,
+            'csrf'   => [
+                'keys' => [
+                    'name'  => $csrfNameKey,
+                    'value' => $csrfValueKey
+                ],
+                'name'  => $csrfName,
+                'value' => $csrfValue
+            ]
         );
     }
 }

@@ -152,6 +152,15 @@ class CoreServicesProvider
         };
         
         /**
+         * Initialize CSRF guard middleware.
+         *
+         * @see https://github.com/slimphp/Slim-Csrf
+         */
+        $container['csrf'] = function ($c) {
+            return new \Slim\Csrf\Guard;
+        };
+        
+        /**
          * Initialize Eloquent Capsule, which provides the database layer for UF.
          *
          * @todo construct the individual objects rather than using the facade
