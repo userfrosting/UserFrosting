@@ -61,7 +61,7 @@ class CoreExtension extends \Twig_Extension
                     return $this->services['alerts']->messages();
                 }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = array(), $int_key = 'int') {
+            new \Twig_SimpleFunction('translate', function ($hook, $params = array(), $int_key = 'plural') {
                 return $this->services['translator']->translate($hook, $params, $int_key);
             })
         );
