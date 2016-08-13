@@ -4,7 +4,7 @@
      * Core configuration file for UserFrosting.  You must override/extend this in your site's configuration file.
      *
      */
-     
+
     return [
         'cache' => [
             'twig' => false
@@ -26,8 +26,8 @@
             // Decouples the session keys used to store certain session info
             'keys' => [
                 'alerts'  => 'site.alerts'    // the key to use to store flash messages
-            ]            
-        ],            
+            ]
+        ],
         'db'      =>  [
             'driver'    => 'mysql',
             'host'      => 'localhost',
@@ -61,11 +61,12 @@
                 'author'            => 'http://www.userfrosting.com',
                 'assets-raw'        => 'assets-raw',
                 'assets'            => 'assets'
-            ]          
-        ],   
+            ],
+            'locale'       =>      'en_US',
+            'locale_base'  =>      'en_US',
+        ],
         'timezone' => 'America/New_York',
         'error_reporting' => E_ALL,  // Development - report all errors and suggestions
         'display_errors'  => 'off',
         'use_raw_assets'  => true
     ];
-    

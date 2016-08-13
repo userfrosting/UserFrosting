@@ -24,7 +24,7 @@ class CoreExtension extends \Twig_Extension
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $services;
-    
+
     /**
      * Constructor.
      *
@@ -44,14 +44,14 @@ class CoreExtension extends \Twig_Extension
     {
         return 'userfrosting/core';
     }
-    
+
     /**
      * Adds Twig functions `getAlerts` and `translate`.
      *
      * @return array[\Twig_SimpleFunction]
      */
     public function getFunctions()
-    {        
+    {
         return array(
             // Add Twig function for fetching alerts
             new \Twig_SimpleFunction('getAlerts', function ($clear = true) {
@@ -61,17 +61,17 @@ class CoreExtension extends \Twig_Extension
                     return $this->services['alerts']->messages();
                 }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = array()) {
-                return $this->services['translator']->translate($hook, $params);
+            new \Twig_SimpleFunction('translate', function ($hook, $params = array(), $int_key = 'plural') {
+                return $this->services['translator']->translate($hook, $params, $int_key);
             })
         );
     }
-    
+
     /**
      * Adds Twig filters `unescape`.
      *
      * @return array[\Twig_SimpleFilter]
-     */    
+     */
     public function getFilters()
     {
         return array(
@@ -80,12 +80,12 @@ class CoreExtension extends \Twig_Extension
             })
         );
     }
-    
+
     /**
      * Adds Twig global variables `site` and `assets`.
      *
      * @return array[mixed]
-     */   
+     */
     public function getGlobals()
     {
         // CSRF token name and value

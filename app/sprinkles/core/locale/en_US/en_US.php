@@ -16,6 +16,11 @@
 
 $lang = array();
 
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 1
+]);
+
 // Site Content
 $lang = array_merge($lang, [
 	"REGISTER_WELCOME" => "Registration is fast and simple.",
@@ -23,7 +28,8 @@ $lang = array_merge($lang, [
 	"MENU_CONFIGURATION" => "Configuration",
 	"MENU_SITE_SETTINGS" => "Site Settings",
 	"MENU_GROUPS" => "Groups",
-	"HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER"
+	"HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER",
+	"ABOUT" => "About",
 ]);
 
 // Installer
@@ -133,8 +139,8 @@ $lang = array_merge($lang,array(
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Couldn't update password",
 	"FORGOTPASS_REQUEST_CANNED" => "Lost password request cancelled",
 	"FORGOTPASS_REQUEST_EXISTS" => "There is already an outstanding lost password request on this account",
-	"FORGOTPASS_REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",     
-	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"   
+	"FORGOTPASS_REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",
+	"FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"
 ));
 
 // Mail

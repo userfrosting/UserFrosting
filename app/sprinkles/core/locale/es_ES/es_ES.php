@@ -6,7 +6,7 @@
  * Spanish (internationalized) message token translations
  *
  * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n 
+ * @link http://www.userfrosting.com/components/#i18n
  * @author @jchorques
  * @author @tyl3r
  */
@@ -16,6 +16,10 @@
 */
 
 $lang = array();
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 1
+]);
 // Site Content
 $lang = array_merge($lang, [
 	"REGISTER_WELCOME" => "El registro es rápido y sencillo.",
@@ -91,7 +95,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_GROUP_NOT_MEMBER" => "El usuario no es miembro del grupo '{{name}}'.",
 	"ACCOUNT_GROUP_ALREADY_MEMBER" => "El usuario ya es miembro del grupo '{{name}}'.",
 	"ACCOUNT_PRIMARY_GROUP_SET" => "Grupo primario fijado correctamente para '{{user_name}}'.",
-	"ACCOUNT_WELCOME" => "Bienvenid@ de nuevo, {{display_name}}"	
+	"ACCOUNT_WELCOME" => "Bienvenid@ de nuevo, {{display_name}}"
 ));
 // Generic validation
 $lang = array_merge($lang, array(

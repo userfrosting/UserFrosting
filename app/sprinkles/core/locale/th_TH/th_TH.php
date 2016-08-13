@@ -6,7 +6,7 @@
  * Thai message token translations
  *
  * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n 
+ * @link http://www.userfrosting.com/components/#i18n
  * @author @popiazaza
  */
 
@@ -15,6 +15,11 @@
 */
 
 $lang = array();
+
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 0
+]);
 
 // Site Content
 $lang = array_merge($lang, [
@@ -68,10 +73,10 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_EMAIL_IN_USE" => "อีเมล '{{email}}' ถูกใช้งานไปแล้ว",
 	"ACCOUNT_LINK_ALREADY_SENT" => "อีเมลการเปิดใช้งานถูกส่งไปยังอีเมลนี้แล้วเมื่อ {{resend_activation_threshold}} วินาทีที่ผ่านมา กรุณาลองใหม่ในภายหลัง",
 	"ACCOUNT_NEW_ACTIVATION_SENT" => "เราได้ส่งอีเมลการเปิดใช้งานให้คุณแล้ว กรุณาตรวจสอบอีเมลของคุณ",
-	"ACCOUNT_SPECIFY_NEW_PASSWORD" => "กรุณากรอกรหัสผ่านใหม่",	
+	"ACCOUNT_SPECIFY_NEW_PASSWORD" => "กรุณากรอกรหัสผ่านใหม่",
 	"ACCOUNT_SPECIFY_CONFIRM_PASSWORD" => "กรุณากรอกรหัสยืนยันใหม่",
-	"ACCOUNT_NEW_PASSWORD_LENGTH" => "รหัสผ่านใหม่ต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",	
-	"ACCOUNT_PASSWORD_INVALID" => "รหัสผ่านปัจจุบันไม่ตรงกับรหัสที่เรามีบันทึกไว้อยู่",	
+	"ACCOUNT_NEW_PASSWORD_LENGTH" => "รหัสผ่านใหม่ต้องมีความยาวระหว่าง {{min}} ถึง {{max}} ตัวอักษร",
+	"ACCOUNT_PASSWORD_INVALID" => "รหัสผ่านปัจจุบันไม่ตรงกับรหัสที่เรามีบันทึกไว้อยู่",
 	"ACCOUNT_DETAILS_UPDATED" => "อัพเดทข้อมูลบัญชีของ '{{user_name}}' แล้ว",
 	"ACCOUNT_CREATION_COMPLETE" => "สร้างบัญชีสำหรับผู้ใช้ '{{user_name}}' ขึ้นแล้ว",
 	"ACCOUNT_ACTIVATION_COMPLETE" => "คุณเปิดใช้งานบัญชีของคุณเรียบร้อยแล้ว คุณสามารถเข้าสู่ระบบได้แล้ว",
