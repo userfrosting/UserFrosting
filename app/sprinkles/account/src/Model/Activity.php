@@ -30,7 +30,7 @@ class Activity extends UFModel
     
     protected $fillable = [
         "user_id",
-        "event_type",
+        "type",
         "occurred_at",
         "description"
     ];
@@ -44,7 +44,7 @@ class Activity extends UFModel
     {
         return $query->select('user_id', 'event_type', Capsule::raw('MAX(occurred_at) as occurred_at'))
             ->groupBy('user_id')
-            ->groupBy('event_type');
+            ->groupBy('type');
     }
 
     /**
@@ -56,7 +56,7 @@ class Activity extends UFModel
     public function scopeMostRecentEventsByType($query, $type)
     {
         return $query->select('user_id', Capsule::raw('MAX(occurred_at) as occurred_at'))
-            ->where('event_type', $type)
+            ->where('type', $type)
             ->groupBy('user_id');
     }
     

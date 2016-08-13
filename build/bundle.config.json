@@ -93,6 +93,7 @@
     },
     "js/pages/sign-in-or-register" : {
         "scripts": [
+            "js/uf-captcha.js",
             "js/pages/sign-in-or-register.js"
         ],
         "options": {

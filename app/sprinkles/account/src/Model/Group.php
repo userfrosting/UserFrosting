@@ -42,6 +42,11 @@ class Group extends UFModel {
     ];
     
     /**
+     * @var bool Enable timestamps for this class.
+     */ 
+    public $timestamps = true;
+    
+    /**
      * Delete this group from the database, along with any user associations
      *
      * @todo What do we do with users when their group is deleted?  Reassign them?  Or, can a user be "groupless"?

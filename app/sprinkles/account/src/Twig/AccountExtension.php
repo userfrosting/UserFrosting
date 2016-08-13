@@ -38,8 +38,11 @@ class AccountExtension extends \Twig_Extension
     {        
         return array(
             // Add Twig function for checking permissions during dynamic menu rendering
-            new \Twig_SimpleFunction('checkAccess', function ($hook, $params = []) {
-                return $this->services['currentUser']->checkAccess($hook, $params);
+            new \Twig_SimpleFunction('checkAccess', function ($slug, $params = []) {
+                $authorizer = $this->services['authorizer'];
+                $currentUser = $this->services['currentUser'];
+                
+                return $authorizer->checkAccess($currentUser, $slug, $params);
             })
         );
     }

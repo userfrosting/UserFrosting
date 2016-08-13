@@ -1,3 +1,5 @@
+{# This overrides the "home page" nav menu in core, adding a sign-up/sign-in or "my account" link. #}
+
 <!-- Navigation -->
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
@@ -14,10 +16,18 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <!-- End test -->
                 <li>
-                    <a href="{{site.uri.public}}/about">{{translate("ABOUT")}}</a>
+                    <a href="{{site.uri.public}}/about">About</a>
                 </li>
+                {% if current_user.isGuest() %}
+                    <li>
+                        <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">Sign In</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{site.uri.public}}/account/settings" class="nav-highlight">My Account</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
         <!-- /.navbar-collapse -->
