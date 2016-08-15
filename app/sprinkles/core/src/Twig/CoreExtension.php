@@ -91,8 +91,8 @@ class CoreExtension extends \Twig_Extension
         // CSRF token name and value
         $csrfNameKey = $this->services->csrf->getTokenNameKey();
         $csrfValueKey = $this->services->csrf->getTokenValueKey();
-        $csrfName = $this->services->request->getAttribute($csrfNameKey);
-        $csrfValue = $this->services->request->getAttribute($csrfValueKey);
+        $csrfName = $this->services->csrf->getTokenName();
+        $csrfValue = $this->services->csrf->getTokenValue();
         
         return array(
             'site'   => $this->services->config['site'],

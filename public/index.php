@@ -26,6 +26,7 @@ $app = new \Slim\App([
     ]
 ]);       
 
+
 // Now, we build all of our app dependencies and inject them into the DI container
 $container = $app->getContainer();
 
@@ -38,6 +39,7 @@ $sm = new SprinkleManager($container, [
 $sm->init();
 
 // Middleware
-// $app->add($container->get('csrf'));
+$app->add($container->get('csrf'));
+
 
 $app->run();

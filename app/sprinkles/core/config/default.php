@@ -25,9 +25,16 @@
             'cache_limiter' => false,
             // Decouples the session keys used to store certain session info
             'keys' => [
-                'alerts'  => 'site.alerts'    // the key to use to store flash messages
+                'alerts'  => 'site.alerts',    // the key to use to store flash messages
+                'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
             ]            
-        ],            
+        ],
+        'csrf' => [
+            'name'  => 'csrf',
+            'storage_limit' => 200,
+            'strength'  => 16,
+            'persistent_token' => true
+        ],
         'db'      =>  [
             'driver'    => 'mysql',
             'host'      => 'localhost',

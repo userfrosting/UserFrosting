@@ -21,6 +21,7 @@ use Monolog\Logger;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
 use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
+use Slim\Csrf\Guard;
 use Slim\Http\Uri;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use UserFrosting\Assets\AssetManager;
@@ -33,6 +34,7 @@ use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
+use UserFrosting\Support\Exception\BadRequestException;
 
 /**
  * UserFrosting core services provider.
@@ -157,7 +159,27 @@ class CoreServicesProvider
          * @see https://github.com/slimphp/Slim-Csrf
          */
         $container['csrf'] = function ($c) {
-            return new \Slim\Csrf\Guard;
+            $csrfKey = $c->config['session.keys.csrf'];
+            
+            // Workaround so that we can pass storage into CSRF guard.
+            // If we tried to directly pass the indexed portion of `session` (for example, $c->session['site.csrf']),
+            // we would get an 'Indirect modification of overloaded element of UserFrosting\Session\Session' error.
+            // If we tried to assign an array and use that, PHP would only modify the local variable, and not the session.
+            // Since ArrayObject is an object, PHP will modify the object itself, allowing it to persist in the session.
+            if (!$c->session->has($csrfKey)) {
+                $c->session[$csrfKey] = new \ArrayObject();
+            }
+            $csrfStorage = $c->session[$csrfKey];
+            
+            $onFailure = function ($request, $response, $next) {
+                $e = new BadRequestException();
+                $e->addUserMessage("Missing CSRF token.  Try refreshing the page and then submitting again?");
+                throw $e;
+                
+                return $next($request, $response);
+            };
+            
+            return new Guard($c->config['csrf.name'], $csrfStorage, $onFailure, $c->config['csrf.storage_limit'], $c->config['csrf.strength'], $c->config['csrf.persistent_token']);
         };
         
         /**
