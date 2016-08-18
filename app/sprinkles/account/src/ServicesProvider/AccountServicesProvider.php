@@ -30,6 +30,16 @@ class AccountServicesProvider
     public function register($container)
     {
         /**
+         * Extend the 'classMapper' service to register model classes.
+         *
+         * Mappings added: User, Group, Permission, Role, Activity
+         */
+        $container->extend('classMapper', function ($classMapper, $c) {
+            $classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Model\User');
+            return $classMapper;
+        });
+        
+        /**
          * Extends the 'errorHandler' service with custom exception handlers.
          *
          * Custom handlers added: ForbiddenExceptionHandler
@@ -55,16 +65,17 @@ class AccountServicesProvider
         });
         
         $container['authenticator'] = function ($c) {
-            $config = $c->get('config');
-            $session = $c->get('session');
-            
+            $classMapper = $c->classMapper;
+            $config = $c->config;
+            $session = $c->session;
+                
             // Force database connection to boot up
-            $c->get('db');            
+            $c->db;            
             
             // Fix RememberMe table name
             $config['remember_me.table.tableName'] = Capsule::connection()->getTablePrefix() . $config['remember_me.table.tableName'];          
             
-            $authenticator = new Authenticator($session, $config);
+            $authenticator = new Authenticator($classMapper, $session, $config);
             return $authenticator;
         };
         
@@ -125,7 +136,7 @@ class AccountServicesProvider
                  * @return bool true if the user is in the group, false otherwise.
                  */     
                 'in_group' => function ($user_id, $group_id) {
-                    $user = \UserFrosting\Sprinkle\Account\Model\User::find($user_id);
+                    $user = User::find($user_id);
                     return ($user->id == $user_id);
                 },
                 
@@ -165,6 +176,7 @@ class AccountServicesProvider
          */ 
         $container['currentUser'] = function ($c) {
             $authenticator = $c->get('authenticator');
+            $classMapper = $c->get('classMapper');
             $config = $c->get('config');
             // Force database connection to boot up
             $c->get('db');
@@ -181,7 +193,7 @@ class AccountServicesProvider
             
             // If no authenticated user, create a 'guest' user object
             if (!$currentUser) {
-                $currentUser = new User();
+                $currentUser = $classMapper->createInstance('user');
                 $currentUser->id = $config['reserved_user_ids.guest'];
             }
             

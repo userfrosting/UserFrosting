@@ -15,6 +15,7 @@ use Interop\Container\ContainerInterface;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
  * Handles authentication tasks.
@@ -24,6 +25,8 @@ use UserFrosting\Sprinkle\Account\Util\Password;
  */
 class Authenticator
 {
+    protected $classMapper;
+
     protected $session;
     
     protected $config;
@@ -36,8 +39,9 @@ class Authenticator
      * Create a new Authenticator object.
      *
      */
-    public function __construct(Session $session, $config)
+    public function __construct(ClassMapper $classMapper, Session $session, $config)
     {
+        $this->classMapper = $classMapper;
         $this->session = $session;
         $this->config = $config;           
         
@@ -63,7 +67,7 @@ class Authenticator
     public function attempt($identityColumn, $identityValue, $password, $rememberMe = false)
     {
         // Try to load the user, using the specified conditions
-        $user = User::where($identityColumn, $identityValue)->first();
+        $user = $this->classMapper->staticMethod('user', 'where', $identityColumn, $identityValue)->first();
         
         if (!$user) {
             throw new InvalidCredentialsException();
@@ -161,7 +165,7 @@ class Authenticator
         
         // If a user id was retrieved from the session or rememberMe storage, try to load the user object from the DB
         if ($currentUserId) {
-            $currentUser = User::find($currentUserId);
+            $currentUser = $this->classMapper->staticMethod('user', 'find', $currentUserId);
             
             // If the user doesn't exist any more, throw an exception.
             if (!$currentUser)

@@ -34,6 +34,7 @@ use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
+use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Exception\BadRequestException;
 
 /**
@@ -97,7 +98,17 @@ class CoreServicesProvider
             $checkEnvironment = new CheckEnvironment($c->get('view'), $c->get('locator'));
             return $checkEnvironment;
         };
-        
+
+        /**
+         * Class mapper.
+         *
+         * Creates an abstraction on top of class names to allow extending them in sprinkles.
+         */
+        $container['classMapper'] = function ($c) {
+            $classMapper = new ClassMapper();
+            return $classMapper;
+        };
+
         /**
          * Site config service (separate from Slim settings).
          *

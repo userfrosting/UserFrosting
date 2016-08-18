@@ -42,7 +42,7 @@ class AuthorizationManager
     public function addCallback($name, $callback)
     {
         $this->callbacks[$name] = $callback;
-    }    
+    }
     
     /**
      * Checks whether or not a user has access on a particular permission slug.

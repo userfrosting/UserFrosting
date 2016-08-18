@@ -326,6 +326,7 @@ class AccountController
 
         // Key services
         $ms = $this->ci->alerts;
+        $classMapper = $this->ci->classMapper;
         $config = $this->ci->config;
         $this->ci->db;
 
@@ -420,7 +421,7 @@ class AccountController
         $data['password'] = Password::hash($data['password']);
 
         // Create the user
-        $user = new User($data);
+        $user = $classMapper->createInstance('user', $data);
 
         // Add user to default group and default roles
         /*
