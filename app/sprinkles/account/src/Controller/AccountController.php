@@ -324,10 +324,15 @@ class AccountController
         // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
         $params = $request->getParsedBody();
 
-        // Key services
+        /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
+        
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
+        
+        /** @var Config $config */
         $config = $this->ci->config;
+        
         $this->ci->db;
 
         // Check the honeypot. 'spiderbro' is not a real field, it is hidden on the main page and must be submitted with its default value for this to be processed.
@@ -339,7 +344,7 @@ class AccountController
         $schema = new RequestSchema("schema://register.json");
         
         // Security measure: do not allow registering new users until the master account has been created.
-        if (!User::find($config['reserved_user_ids.master'])) {
+        if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
             return $response->withStatus(403);
         }
@@ -370,12 +375,12 @@ class AccountController
         }
         
         // Check if username or email already exists
-        if (User::where('user_name', $data['user_name'])->first()) {
+        if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
             $ms->addMessageTranslated("danger", "ACCOUNT_USERNAME_IN_USE", $data);
             $error = true;
         }
 
-        if (User::where('email', $data['email'])->first()) {
+        if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
             $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
             $error = true;
         }        

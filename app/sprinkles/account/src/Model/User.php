@@ -120,7 +120,10 @@ class User extends UFModel
      */    
     public function activities()
     {
-        return $this->hasMany('UserFrosting\Sprinkle\Account\Model\Activity');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;    
+    
+        return $this->hasMany($classMapper->getClassMapping('activity'));
     }
     
     /**
@@ -130,11 +133,14 @@ class User extends UFModel
      */
     public function delete()
     {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+        
         // Remove all role associations
         $this->roles()->detach();
         
         // Remove all user activities
-        Activity::where("user_id", $this->id)->delete();
+        $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
         
         // Delete the user
         $result = parent::delete();
@@ -147,7 +153,10 @@ class User extends UFModel
      */
     public function group()
     {
-        return $this->belongsTo('\UserFrosting\Sprinkle\Account\Model\Group', 'group_id');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;    
+    
+        return $this->belongsTo($classMapper->getClassMapping('group'), 'group_id');
     }
     
     /**
@@ -214,14 +223,13 @@ class User extends UFModel
      */
     public function newActivityPasswordReset()
     {
-        $this->secret_token = User::generateActivationToken();
+        $this->secret_token = $this->generateSecretToken();
         $this->flag_password_reset = "1";
-        $activity = new Activity([
-            "type"  => "password_reset_request",
-            "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
-        ]);
-        $this->new_events[] = $activity;
-        return $activity;
+        
+        return $this->addActivity(
+            'password_reset_request',
+            "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
+        );
     }
         
     /**
@@ -231,12 +239,10 @@ class User extends UFModel
      */
     public function newActivitySignIn()
     {    
-        $activity = new Activity([
-            "type"  => "sign_in",
-            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
-        ]);
-        $this->new_events[] = $activity;
-        return $activity;
+        return $this->addActivity(
+            'sign_in',
+            "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
+        );
     }
     
     /**
@@ -246,16 +252,16 @@ class User extends UFModel
      * @return Activity     
      */
     public function newActivitySignUp($creator = null){
-        if ($creator)
+        if ($creator) {
             $description = "User {$this->user_name} was created by {$creator->user_name} on " . date("Y-m-d H:i:s") . ".";
-        else
+        } else {
             $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
-        $activity = new Activity([
-            "type"  => "sign_up",
-            "description" => $description
-        ]);
-        $this->new_events[] = $activity;
-        return $activity;
+        }
+        
+        return $this->addActivity(
+            'sign_up',
+            $description
+        );
     }
     
     /**
@@ -264,13 +270,12 @@ class User extends UFModel
      * @return Activity
      */
     public function newActivityVerificationRequest(){
-        $this->secret_token = User::generateActivationToken();
-        $activity = new Activity([
-            "type"  => "verification_request",
-            "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
-        ]);
-        $this->new_events[] = $activity;
-        return $activity;
+        $this->secret_token = $this->generateSecretToken();
+
+        return $this->addActivity(
+            "verification_request",
+            "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
+        );
     }
     
     /**
@@ -311,9 +316,11 @@ class User extends UFModel
     
     /**
      * Get all of the permissions this user has, via its roles.
+     *
+     * @param string|null $slug If specified, filters by a specific slug.
      * @todo Turn this into a full-fledged custom relation?
      */
-    public function permissions($hook = null)
+    public function permissions($slug = null)
     {
         $result = Capsule::table('permissions')
             ->select(
@@ -328,8 +335,8 @@ class User extends UFModel
             ->join('role_users', 'role_users.role_id', '=', 'roles.id')
             ->where('role_users.user_id', '=', $this->id);
             
-        if ($hook) {
-            $result = $result->where('permissions.slug', $hook);
+        if ($slug) {
+            $result = $result->where('permissions.slug', $slug);
         }
         
         return $result;
@@ -341,7 +348,10 @@ class User extends UFModel
      */       
     public function roles()
     {
-        return $this->belongsToMany('UserFrosting\Sprinkle\Account\Model\Role', 'role_users');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+    
+        return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users');
     }
     
     /**
@@ -361,18 +371,31 @@ class User extends UFModel
     }
     
     /**
-     * Generate an activation token for a user.
+     * Generate a new secret token for this user.
      *
      * This generates a token to use for activating a new account, resetting a lost password, etc.
      * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
      * @return string
      */
-    public static function generateActivationToken($gen = null)
+    public function generateSecretToken($gen = null)
     {
         do {
             $gen = md5(uniqid(mt_rand(), false));
-        } while(User::where('secret_token', $gen)->first());
+        } while(static::where('secret_token', $gen)->first());
         return $gen;
-    }    
+    }
     
+    protected function addActivity($type, $description)
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+        
+        $activity = $classMapper->createInstance('activity', [
+            'type'  => $type,
+            'description' => $description
+        ]);
+        
+        $this->new_events[] = $activity;
+        return $activity;
+    }    
 }

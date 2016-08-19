@@ -63,7 +63,11 @@ class Activity extends UFModel
     /**
      * Get the user associated with this activity.
      */
-    public function user() {
-        return $this->belongsTo('UserFrosting\Sprinkle\Account\Model\User', 'user_id');
+    public function user()
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+        
+        return $this->belongsTo($classMapper->getClassMapping('user'), 'user_id');
     }    
 }

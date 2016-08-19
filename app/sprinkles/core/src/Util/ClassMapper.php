@@ -10,7 +10,7 @@
 namespace UserFrosting\Sprinkle\Core\Util;
 
 /**
- * UserFrosting model mapper.
+ * UserFrosting class mapper.
  *
  * This creates an abstraction layer for overrideable classes.
  * For example, if we want to replace usages of the User class with MyUser, this abstraction layer handles that.
@@ -20,12 +20,10 @@ namespace UserFrosting\Sprinkle\Core\Util;
  */
 class ClassMapper
 {
-
     /**
      * Mapping of generic class identifiers to specific class names.
      */
-    protected $classMappings;
-    
+    protected $classMappings = [];
     
     /**
      * Creates an instance for a requested class identifier.
@@ -45,6 +43,12 @@ class ClassMapper
         return $reflection->newInstanceArgs($params); 
     }
     
+    /**
+     * Gets the fully qualified class name for a specified class identifier.
+     *
+     * @param string $identifier
+     * @return string
+     */
     public function getClassMapping($identifier)
     {
         if (isset($this->classMappings[$identifier])) {
@@ -55,6 +59,13 @@ class ClassMapper
         }
     }
     
+    /**
+     * Assigns a fully qualified class name to a specified class identifier.
+     *
+     * @param string $identifier
+     * @param string $className     
+     * @return ClassMapper
+     */    
     public function setClassMapping($identifier, $className)
     {
         // Check that class exists
@@ -65,6 +76,8 @@ class ClassMapper
             // Throw exception
             
         }
+
+        return $this;
     }
     
     /**

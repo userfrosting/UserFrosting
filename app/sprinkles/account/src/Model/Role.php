@@ -63,7 +63,10 @@ class Role extends UFModel
      */
     public function permissions()
     {
-        return $this->belongsToMany('UserFrosting\Sprinkle\Account\Model\Permission', 'permission_roles');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+        
+        return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles');
     }
     
     /**
@@ -71,6 +74,9 @@ class Role extends UFModel
      */
     public function users()
     {
-        return $this->belongsToMany('UserFrosting\Sprinkle\Account\Model\User', 'role_users');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;    
+    
+        return $this->belongsToMany($classMapper->getClassMapping('user'), 'role_users');
     }
 }

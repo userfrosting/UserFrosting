@@ -36,6 +36,10 @@ class AccountServicesProvider
          */
         $container->extend('classMapper', function ($classMapper, $c) {
             $classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Model\User');
+            $classMapper->setClassMapping('group', 'UserFrosting\Sprinkle\Account\Model\Group');
+            $classMapper->setClassMapping('role', 'UserFrosting\Sprinkle\Account\Model\Role');
+            $classMapper->setClassMapping('permission', 'UserFrosting\Sprinkle\Account\Model\Permission');
+            $classMapper->setClassMapping('activity', 'UserFrosting\Sprinkle\Account\Model\Activity');
             return $classMapper;
         });
         
@@ -64,6 +68,11 @@ class AccountServicesProvider
             return $view;
         });
         
+        /**
+         * Authentication service.
+         *
+         * Supports logging in users, remembering their sessions, etc.
+         */        
         $container['authenticator'] = function ($c) {
             $classMapper = $c->classMapper;
             $config = $c->config;
@@ -79,6 +88,11 @@ class AccountServicesProvider
             return $authenticator;
         };
         
+        /**
+         * Authorization service.
+         *
+         * Determines permissions for user actions.  Extend this service to add additional access condition callbacks.
+         */         
         $container['authorizer'] = function ($c) {
             // Default access condition callbacks.  Add more in your sprinkle by using $container->extend(...) 
             $callbacks = [

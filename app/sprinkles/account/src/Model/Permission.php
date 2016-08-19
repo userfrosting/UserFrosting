@@ -61,6 +61,9 @@ class Permission extends UFModel
      */   
     public function roles()
     {
-        return $this->belongsToMany('UserFrosting\Sprinkle\Account\Model\Role', 'permission_roles');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;    
+    
+        return $this->belongsToMany($classMapper->getClassMapping('role'), 'permission_roles');
     }
 }

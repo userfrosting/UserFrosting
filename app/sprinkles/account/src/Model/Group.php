@@ -74,6 +74,9 @@ class Group extends UFModel {
      */ 
     public function users()
     {
-        return $this->hasMany('\UserFrosting\Sprinkle\Account\Model\User');
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+    
+        return $this->hasMany($classMapper->getClassMapping('user'));
     }
 }

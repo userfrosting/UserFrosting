@@ -25,19 +25,37 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  */
 class Authenticator
 {
+    /**
+     * @var ClassMapper
+     */
     protected $classMapper;
 
+    /**
+     * @var Session
+     */    
     protected $session;
     
+    /**
+     * @var Config
+     */    
     protected $config;
     
+    /**
+     * @var RememberMePDO
+     */    
     protected $rememberMeStorage;
     
+    /**
+     * @var RememberMe
+     */    
     protected $rememberMe;
     
     /**
      * Create a new Authenticator object.
      *
+     * @param ClassMapper $classMapper Maps generic class identifiers to specific class names.
+     * @param Session $session The session wrapper object that will store the user's id.
+     * @param Config $config Config object that contains authentication settings.
      */
     public function __construct(ClassMapper $classMapper, Session $session, $config)
     {
@@ -94,7 +112,6 @@ class Authenticator
             return $user;
         } else {
             // We know the password is at fault here (as opposed to the identity), but lets not give away the combination in case of someone bruteforcing
-            error_log("password didn't match");
             throw new InvalidCredentialsException();
         }
     }
