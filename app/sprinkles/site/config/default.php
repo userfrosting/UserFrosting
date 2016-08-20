@@ -9,6 +9,12 @@
      *
      */
     return [
+        'address_book' => [
+            'admin' => [
+                'email' => 'test@example.com',
+                'name'  => 'UserFrosting Administrator'
+            ]
+        ],    
         'debug' => [
             'auth' => false
         ],
@@ -17,12 +23,11 @@
             'username'  => 'userfrosting',
             'prefix'    => ''
         ],
-        'smtp'    => [
-            'host' => 'mail.example.com',
-            'port' => 465,
-            'auth' => true,
-            'secure' => 'ssl',
-            'user' => 'relay@example.com'
+        'mail'    => [
+            'host'     => getenv('SMTP_HOST'),
+            'username' => getenv('SMTP_USER'),
+            'port'     => 587,
+            'secure'   => 'tls'
         ],
         'site' => [
             'title'     =>      'UserFrosting',

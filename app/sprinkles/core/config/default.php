@@ -6,33 +6,19 @@
      */
      
     return [
+        'address_book' => [
+            'admin' => [
+                'email' => 'admin@example.com',
+                'name'  => 'Site Administrator'
+            ]
+        ],
         'cache' => [
             'twig' => false
         ],
-        'debug' => [
-            'twig' => false,
-            'auth' => false
-        ],
-        // Filesystem paths
-        'path'    => [
-            'document_root'     => str_replace(DIRECTORY_SEPARATOR, \UserFrosting\DS, $_SERVER['DOCUMENT_ROOT']),
-            'public_relative'   => dirname($_SERVER['SCRIPT_NAME'])      // The location of `index.php` relative to the document root.  Use for sites installed in subdirectories of your web server's document root.
-        ],
-        'session' => [
-            'handler' => 'file',
-            'name' => 'uf4',
-            'minutes' => 120,
-            'cache_limiter' => false,
-            // Decouples the session keys used to store certain session info
-            'keys' => [
-                'alerts'  => 'site.alerts',    // the key to use to store flash messages
-                'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
-            ]            
-        ],
         'csrf' => [
-            'name'  => 'csrf',
-            'storage_limit' => 200,
-            'strength'  => 16,
+            'name'             => 'csrf',
+            'storage_limit'    => 200,
+            'strength'         => 16,
             'persistent_token' => true
         ],
         'db'      =>  [
@@ -45,15 +31,39 @@
             'collation' => 'utf8_unicode_ci',
             'prefix'    => ''
         ],
-        'mail'    => 'smtp',
-        'smtp'    => [
-            'host' => 'mail.example.com',
-            'port' => 465,
-            'auth' => true,
-            'secure' => 'ssl',
-            'user' => 'relay@example.com',
-            'pass' => getenv('SMTP_PASSWORD'),
+        'debug' => [
+            'twig' => false,
+            'auth' => false
+        ],      
+        'mail'    => [
+            'mailer'     => 'smtp',
+            'host'       => 'mail.example.com',
+            'port'       => 465,
+            'auth'       => true,
+            'secure'     => 'ssl',
+            'username'   => 'relay@example.com',
+            'password'   => getenv('SMTP_PASSWORD'),
+            'message_options' => [
+                'isHtml' => true,
+                'Timeout' => 15
+            ]
         ],
+        // Filesystem paths
+        'path'    => [
+            'document_root'     => str_replace(DIRECTORY_SEPARATOR, \UserFrosting\DS, $_SERVER['DOCUMENT_ROOT']),
+            'public_relative'   => dirname($_SERVER['SCRIPT_NAME'])      // The location of `index.php` relative to the document root.  Use for sites installed in subdirectories of your web server's document root.
+        ],         
+        'session' => [
+            'handler' => 'file',
+            'name' => 'uf4',
+            'minutes' => 120,
+            'cache_limiter' => false,
+            // Decouples the session keys used to store certain session info
+            'keys' => [
+                'alerts'  => 'site.alerts',    // the key to use to store flash messages
+                'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
+            ]            
+        ],        
         'site' => [
             'title'     =>      'UserFrosting',
             'author'    =>      'Author',

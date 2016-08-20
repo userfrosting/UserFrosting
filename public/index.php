@@ -41,5 +41,4 @@ $sm->init();
 // Middleware
 $app->add($container->get('csrf'));
 
-
 $app->run();

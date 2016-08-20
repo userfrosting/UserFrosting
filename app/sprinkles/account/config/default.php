@@ -5,7 +5,7 @@
      *
      */
      
-    return [      
+    return [  
         'reserved_user_ids' => [
             'guest'  => -1,
             'master' => 1
@@ -37,6 +37,7 @@
             'setting' => [
                 'can_register' => true,
                 'registration_captcha' => true,
+                'require_email_verification' => true,
                 'default_locale' => 'en_US'
             ]
         ]

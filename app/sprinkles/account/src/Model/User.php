@@ -149,6 +149,16 @@ class User extends UFModel
     }
     
     /**
+     * Allows you to get the full name of the user using `$user->full_name`
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }    
+    
+    /**
      * Return this user's group.
      */
     public function group()

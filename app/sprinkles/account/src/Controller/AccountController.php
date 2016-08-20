@@ -21,6 +21,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequest;
 use UserFrosting\Support\Exception\ForbiddenException;
@@ -425,6 +426,8 @@ class AccountController
         // Hash password
         $data['password'] = Password::hash($data['password']);
 
+        // TODO: "transactionalize" the user creation in database and sending emails
+        
         // Create the user
         $user = $classMapper->createInstance('user', $data);
 
@@ -445,29 +448,22 @@ class AccountController
         // Verification email
         if ($config['site.setting.require_email_verification']) {
             // Create verification request event
-            $user->newEventVerificationRequest();
-            $user->save();      // Re-save with verification event
-
+            $user->newActivityVerificationRequest();
+            $user->save();      // Re-save with verification request event
+            
             // Create and send verification email
-            $twig = $this->_app->view()->getEnvironment();
-            $template = $twig->loadTemplate("mail/activate-new.twig");
-            $notification = new Notification($template);
-            $notification->fromWebsite();      // Automatically sets sender and reply-to
-            $notification->addEmailRecipient($user->email, $user->display_name, [
-                "user" => $user
-            ]);
-
-            try {
-                $notification->send();
-            } catch (\phpmailerException $e) {
-                $ms->addMessageTranslated("danger", "MAIL_ERROR");
-                error_log('Mailer Error: ' . $e->errorMessage());
-                $this->_app->halt(500);
-            }
-
+            $message = new TwigMailMessage($this->ci->view, "mail/verify-account.html.twig");
+            
+            $this->ci->mailer->from($config['address_book.admin'])
+                ->addEmailRecipient($user->email, $user->full_name, [
+                    "user" => $user
+                ]);
+            
+            $this->ci->mailer->send($message);
+            
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
         } else {
-            // No activation required
+            // No verification required
             $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
         }
         

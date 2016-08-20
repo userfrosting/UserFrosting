@@ -31,6 +31,7 @@ use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
 use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
+use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
@@ -244,6 +245,9 @@ class CoreServicesProvider
             
             // Register the PDOExceptionHandler.
             $handler->registerHandler('\PDOException', '\UserFrosting\Sprinkle\Core\Handler\PDOExceptionHandler');
+
+            // Register the PhpMailerExceptionHandler.
+            $handler->registerHandler('\phpmailerException', '\UserFrosting\Sprinkle\Core\Handler\PhpMailerExceptionHandler');
             
             return $handler;
         };
@@ -294,6 +298,10 @@ class CoreServicesProvider
             ]);
             
             return $locator;
+        };        
+        
+        $container['mailer'] = function ($c) {
+            return new Mailer($c->view, $c->config['mail']);
         };        
         
         /**
