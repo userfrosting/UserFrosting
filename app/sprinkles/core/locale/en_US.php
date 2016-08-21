@@ -139,7 +139,7 @@ $lang = array_merge($lang,array(
 
 // Mail
 $lang = array_merge($lang,array(
-	"MAIL_ERROR" => "Fatal error attempting mail, contact your server administrator",
+	"MAIL_ERROR" => "Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UF mail log.",
 ));
 
 // Miscellaneous
@@ -151,7 +151,7 @@ $lang = array_merge($lang,array(
 	"DENY" => "Deny",
 	"SUCCESS" => "Success",
 	"ERROR" => "Error",
-	"SERVER_ERROR" => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP error logs.",
+	"SERVER_ERROR" => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP or UF error logs.",
 	"NOTHING_TO_UPDATE" => "Nothing to update",
 	"SQL_ERROR" => "Fatal SQL error",
 	"FEATURE_DISABLED" => "This feature is currently disabled",

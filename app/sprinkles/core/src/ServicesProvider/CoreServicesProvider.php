@@ -15,6 +15,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
 use Interop\Container\ContainerInterface;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -254,14 +255,21 @@ class CoreServicesProvider
         
         /**
          * Error logging with Monolog.
+         *
+         * Extend this service to push additional handlers onto the 'error' log stack.
          */
         $container['errorLogger'] = function ($c) {
             $log = new Logger('errors');
             
             $logFile = $c->get('locator')->findResource('log://errors.log', true, true);
-            
+
             $handler = new StreamHandler($logFile, Logger::WARNING);
+
+            $formatter = new LineFormatter(null, null, true);
+
+            $handler->setFormatter($formatter);
             $log->pushHandler($handler);
+            
             return $log;
         };
         
@@ -300,8 +308,38 @@ class CoreServicesProvider
             return $locator;
         };        
         
+        /**
+         * Mail service.
+         */
         $container['mailer'] = function ($c) {
-            return new Mailer($c->view, $c->config['mail']);
+            $mailer = new Mailer($c->mailLogger, $c->config['mail']);
+            
+            // Use UF debug settings to override any service-specific log settings.
+            if (!$c->config['debug.smtp']) {
+                $mailer->getPhpMailer()->SMTPDebug = 0;
+            }
+            
+            return $mailer;
+        };        
+        
+        /**
+         * Mail logging service.
+         *
+         * PHPMailer will use this to log SMTP activity.
+         * Extend this service to push additional handlers onto the 'mail' log stack.
+         */
+        $container['mailLogger'] = function ($c) {
+            $log = new Logger('mail');
+
+            $logFile = $c->get('locator')->findResource('log://mail.log', true, true);
+
+            $handler = new StreamHandler($logFile);
+            $formatter = new LineFormatter(null, null, true);
+
+            $handler->setFormatter($formatter);
+            $log->pushHandler($handler);
+
+            return $log;
         };        
         
         /**

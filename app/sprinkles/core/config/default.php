@@ -33,7 +33,8 @@
         ],
         'debug' => [
             'twig' => false,
-            'auth' => false
+            'auth' => false,
+            'smtp' => true
         ],      
         'mail'    => [
             'mailer'     => 'smtp',
@@ -43,6 +44,7 @@
             'secure'     => 'ssl',
             'username'   => 'relay@example.com',
             'password'   => getenv('SMTP_PASSWORD'),
+            'smtp_debug' => 4,
             'message_options' => [
                 'isHtml' => true,
                 'Timeout' => 15

@@ -8,6 +8,8 @@
  */
 namespace UserFrosting\Sprinkle\Core\Mail;
 
+use Monolog\Logger;
+
 /**
  * Mailer Class
  *
@@ -16,7 +18,7 @@ namespace UserFrosting\Sprinkle\Core\Mail;
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Mailer
-{    
+{
     /**
      * @var string The current sender email address.
      */
@@ -25,17 +27,12 @@ class Mailer
     /**
      * @var string The current sender name.
      */    
-    protected $fromName = null; 
+    protected $fromName = null;
     
     /**
-     * @var string The current reply-to email.
-     */    
-    protected $replyEmail = null;
-    
-    /**
-     * @var string The current reply-to name.
-     */       
-    protected $replyName = null;    
+     * @var Logger
+     */
+    protected $logger;
     
     /**
      * @var \PHPMailer
@@ -48,13 +45,23 @@ class Mailer
     protected $recipients = [];
     
     /**
+     * @var string The current reply-to email.
+     */    
+    protected $replyEmail = null;
+    
+    /**
+     * @var string The current reply-to name.
+     */       
+    protected $replyName = null;
+    
+    /**
      * Create a new Mailer instance.
      *
-     * @param Slim\Views\Twig The view object used to render mail templates.
+     * @param 
      */
-    public function __construct($view, $config = [])
+    public function __construct($logger, $config = [])
     {
-        $this->view = $view;
+        $this->logger = $logger;
         
         // 'true' tells PHPMailer to use exceptions instead of error codes
         $this->phpMailer = new \PHPMailer(true);
@@ -73,6 +80,7 @@ class Mailer
                 $this->phpMailer->SMTPSecure = $config['secure'];
                 $this->phpMailer->Username =   $config['username'];
                 $this->phpMailer->Password =   $config['password'];
+                $this->phpMailer->SMTPDebug =  $config['smtp_debug'];
                 
                 if (isset($config['smtp_options'])) {
                     $this->phpMailer->SMTPOptions = $config['smtp_options'];
@@ -85,6 +93,11 @@ class Mailer
                 $this->setOptions($config['message_options']);
             }
         }
+        
+        // Pass logger into phpMailer object
+        $this->phpMailer->Debugoutput = function($message, $level) {
+            $this->logger->debug($message);
+        };
     }
 
     /**
@@ -193,9 +206,6 @@ class Mailer
             
             $this->phpMailer->Subject = $message->renderSubject();
             $this->phpMailer->Body    = $message->renderBody();
-            
-            $this->phpMailer->SMTPDebug = 3;
-            $this->phpMailer->Debugoutput = "error_log";
             
             // Try to send the mail.  Will throw an exception on failure.
             $this->phpMailer->send();
