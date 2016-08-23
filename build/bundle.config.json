@@ -108,7 +108,8 @@
     "css/main": {
         "styles": [
             "vendor/font-awesome-4.5.0/css/font-awesome.css",
-            "vendor/bootstrap-3.3.6/css/bootstrap.css"
+            "vendor/bootstrap-3.3.6/css/bootstrap.css",
+            "css/uf-alerts.css"
         ],
         "options": {
             "result": {

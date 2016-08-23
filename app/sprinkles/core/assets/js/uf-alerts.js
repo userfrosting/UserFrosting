@@ -23,21 +23,24 @@
         this.options= $.extend(
             true,               // deep extend
             {
-                url          : site.uri.public + "/alerts",
-                scrollToTop  : true,
+                url                : site.uri.public + "/alerts",
+                scrollToTop        : true,
+                alertContainerClass: "uf-alerts",
+                agglomerate        : true,
+                alertTemplate      : "<div class=\"alert alert-{{ type }}\">{{ message }}</div>",
                 DEBUG: false
             },
             options
         );      
         
-        this._alert_message_html= "<div class=\"alert alert-{{ type }}\">{{ message }}</div>";
-        this._alert_message_template = Handlebars.compile(this._alert_message_html); 
+        this._alertTypePriorities = {
+            "danger" : 3,
+            "warning": 2,
+            "success": 1,
+            "info"   : 0
+        };
         
-        this._init( target, options );   
-        
-        this.messages = [];
-        
-        var newMessagesPromise = $.Deferred();
+        this._init( target, options );
         
         return this; 
     }
@@ -46,6 +49,12 @@
     Plugin.prototype._init = function ( target, options ) { 
         var base = this;
         var $el = $(target);
+        
+        base.$T.toggleClass(base.options.alertContainerClass);
+        
+        base.messages = [];
+        
+        base._newMessagesPromise = $.Deferred();        
         
         return base.$T;
     };
@@ -59,7 +68,7 @@
         var base = this;
         
         // Set a promise, so that any chained calls after fetch can wait until the messages have been retrieved
-        base.newMessagesPromise = $.getJSON( base.options.url )
+        base._newMessagesPromise = $.getJSON( base.options.url )
         .done(function ( data ) {
             if (data) {
                 base.messages = $.merge(base.messages, data);
@@ -77,13 +86,35 @@
     {
         var base = this;
         
-        $.when(base.newMessagesPromise).then( function () {
+        $.when(base._newMessagesPromise).then( function () {
             // Display alerts
-            var alertHtml = "";
+            var alertHtml = "<ul>";
             
-            jQuery.each(base.messages, function(alert_idx, alert) {
-                alertHtml += base._alert_message_template(alert);
-            });
+            // If agglomeration is enabled, set the container to the highest priority message type
+            if (base.messages.length && base.options.agglomerate) {
+                var alertContainerType = "info";
+                jQuery.each(base.messages, function(alert_idx, alert) {
+                    if (base._alertTypePriorities[alert["type"]] > base._alertTypePriorities[alertContainerType]) {
+                        alertContainerType = alert["type"];
+                    }
+                });
+            
+                base.$T.toggleClass("alert alert-" + alertContainerType, true);
+                
+                var aggTemplate = Handlebars.compile("<li>{{ message }}</li>");
+                jQuery.each(base.messages, function(alert_idx, alert) {
+                    alertHtml += aggTemplate(alert);
+                });
+                alertHtml += "</ul>";
+            } else {
+                alertHtml = "";
+                
+                var alertMessageTemplate = Handlebars.compile(base.options.alertTemplate); 
+                
+                jQuery.each(base.messages, function(alert_idx, alert) {
+                    alertHtml += alertMessageTemplate(alert);
+                });            
+            }
             
             base.$T.html(alertHtml);
             
