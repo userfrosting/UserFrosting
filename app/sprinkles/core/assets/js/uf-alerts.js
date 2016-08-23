@@ -1,5 +1,5 @@
 /**
- * flashAlerts
+ * ufAlerts
  *
  * UF flash alert rendering plugin.
  * jQuery plugin template adapted from https://gist.github.com/Air-Craft/1300890
@@ -27,11 +27,13 @@
                 scrollToTop        : true,
                 alertContainerClass: "uf-alerts",
                 agglomerate        : true,
-                alertTemplate      : "<div class=\"alert alert-{{ type }}\">{{ message }}</div>",
+                alertMessageClass  : "uf-alert-message",
                 DEBUG: false
             },
             options
         );      
+        
+        this._alertMessageTemplateHtml = "<div class=\"" + this.options.alertMessageClass + " alert alert-{{ type }}\">{{ message }}</div>";
         
         this._alertTypePriorities = {
             "danger" : 3,
@@ -60,6 +62,20 @@
     };
 
     /**
+     * Clear all messages from the current uf-alerts collection.
+     *
+     */    
+    Plugin.prototype.clear = function ()
+    {
+        var base = this;
+        
+        // See http://stackoverflow.com/a/1232046/2970321
+        base.messages.length = 0;
+        
+        return base.$T;
+    }
+    
+    /**
      * Fetches messages from the alert stream
      *
      */    
@@ -73,13 +89,31 @@
             if (data) {
                 base.messages = $.merge(base.messages, data);
             }
+            
+            base.$T.trigger("fetch.ufAlerts");
         });
         
         return base.$T;
     }
     
     /**
-     * Renders the messages
+     * Push a given message to the current uf-alerts collection.
+     *
+     */    
+    Plugin.prototype.push = function (type, message)
+    {
+        var base = this;
+        
+        base.messages.push({
+            "type"   : type,
+            "message": message
+        });
+        
+        return base.$T;
+    }
+    
+    /**
+     * Renders the messages.
      *
      */    
     Plugin.prototype.render = function ()
@@ -101,7 +135,7 @@
             
                 base.$T.toggleClass("alert alert-" + alertContainerType, true);
                 
-                var aggTemplate = Handlebars.compile("<li>{{ message }}</li>");
+                var aggTemplate = Handlebars.compile("<li class=" + base.options.alertMessageClass + ">{{ message }}</li>");
                 jQuery.each(base.messages, function(alert_idx, alert) {
                     alertHtml += aggTemplate(alert);
                 });
@@ -109,7 +143,7 @@
             } else {
                 alertHtml = "";
                 
-                var alertMessageTemplate = Handlebars.compile(base.options.alertTemplate); 
+                var alertMessageTemplate = Handlebars.compile(base.alertMessageTemplateHtml); 
                 
                 jQuery.each(base.messages, function(alert_idx, alert) {
                     alertHtml += alertMessageTemplate(alert);
