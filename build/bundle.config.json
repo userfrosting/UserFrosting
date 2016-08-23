@@ -3,6 +3,7 @@
     "js/main": {
         "scripts": [
             "vendor/bootstrap-3.3.6/js/bootstrap.js",
+            "vendor/handlebars-1.2.0/handlebars.js",
             "vendor/jQueryValidation-1.14.0/jquery.validate.js",
             "vendor/jQueryValidation-1.14.0/additional-methods.js",
             "js/fortress-jqueryvalidation-methods.js",

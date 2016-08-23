@@ -163,7 +163,8 @@ jQuery.validator.setDefaults({
                             if (base.options.DEBUG)
                                 console.log("Error (" + data.status + "): " + data.responseText );
                             // Display errors on failure
-                            base.options.msgTarget.flashAlerts().done( function () {
+                            base.options.msgTarget.ufAlerts().ufAlerts('fetch').ufAlerts('render');
+                            base.options.msgTarget.on("render.ufAlerts", function () {
                                 base.$T.trigger('submitError');
                             });
                         }
