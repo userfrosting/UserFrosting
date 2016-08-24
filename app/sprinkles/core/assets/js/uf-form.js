@@ -22,15 +22,13 @@
  *
  * uf-form triggers the following events:
  *
- * `submitSuccess`: triggered when the form is successfully submitted, after re-enabling the submit button.
- * `submitError`: triggered when the form submission (not validation) fails, after re-enabling the submit button
+ * `submitSuccess.ufForm`: triggered when the form is successfully submitted, after re-enabling the submit button.
+ * `submitError.ufForm`: triggered when the form submission (not validation) fails, after re-enabling the submit button
  * and displaying any error messages.
  *
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman https://alexanderweissman.com
  */
-
-
 
 /**
  * This block just sets some jQuery.validate settings for bootstrap integration
@@ -59,8 +57,8 @@ jQuery.validator.setDefaults({
     }
 });
 
-(function( $ ){
-    
+(function( $ )
+{    
     /**
      * The plugin namespace, ie for $('.selector').ufForm(options)
      * 
@@ -68,7 +66,8 @@ jQuery.validator.setDefaults({
      */
     var PLUGIN_NS = 'ufForm';
 
-    var Plugin = function ( target, options )  { 
+    var Plugin = function ( target, options )
+    { 
         this.$T = $(target); 
 
         /** #### OPTIONS #### */
@@ -93,7 +92,8 @@ jQuery.validator.setDefaults({
     }
 
     /** #### INITIALISER #### */
-    Plugin.prototype._init = function ( target, options ) { 
+    Plugin.prototype._init = function ( target, options )
+    { 
         var base = this;
         var $el = $(target);
         
@@ -145,7 +145,7 @@ jQuery.validator.setDefaults({
                             submit_button.html(submit_button_text);
                         }
                         
-                        base.$T.trigger('submitSuccess');
+                        base.$T.trigger('submitSuccess.ufForm');
                         return data;
                     },
                     // Submission failed
@@ -156,16 +156,16 @@ jQuery.validator.setDefaults({
                             submit_button.html(submit_button_text);
                         }
                         // Error messages
-                        if ((typeof site !== "undefined") && site['debug'] == true && jqXHR.status == "500") {
+                        if ((typeof site !== "undefined") && site.debug == true && jqXHR.status == "500") {
                             document.body.innerHTML = data.responseText;
-                            base.$T.trigger('submitError');
+                            base.$T.trigger('submitError.ufForm');
                         } else {
                             if (base.options.DEBUG)
                                 console.log("Error (" + data.status + "): " + data.responseText );
                             // Display errors on failure
                             base.options.msgTarget.ufAlerts().ufAlerts('fetch').ufAlerts('render');
                             base.options.msgTarget.on("render.ufAlerts", function () {
-                                base.$T.trigger('submitError');
+                                base.$T.trigger('submitError.ufForm');
                             });
                         }
                         return data;
@@ -174,10 +174,6 @@ jQuery.validator.setDefaults({
             }
         });
     };
- 
-
-    /** #### PRIVATE METHODS #### */
-
     
     /**
      * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
@@ -206,7 +202,8 @@ jQuery.validator.setDefaults({
      * Notice, myActionMethod mustn't start with an underscore (_) as this is used to
      * indicate private methods on the PLUGIN class.   
      */    
-    $.fn[ PLUGIN_NS ] = function( methodOrOptions ) {
+    $.fn[ PLUGIN_NS ] = function( methodOrOptions )
+    {
         if (!$(this).length) {
             return $(this);
         }

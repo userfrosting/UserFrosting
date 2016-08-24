@@ -17,7 +17,7 @@ $(document).ready(function() {
     $("#request-password-reset").ufForm({
         validators: page.validators.forgot_password,
         msgTarget: $("#userfrosting-alerts")
-    }).on("submitSuccess", function() {
+    }).on("submitSuccess.ufForm", function() {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account/login");
     }); 

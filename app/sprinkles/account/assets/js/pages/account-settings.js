@@ -11,7 +11,7 @@ $(document).ready(function() {
     $("#account-settings").ufForm({
         validators: page.validators.forgot_password,
         msgTarget: $("#userfrosting-alerts")
-    }).on("submitSuccess", function() {
+    }).on("submitSuccess.ufForm", function() {
         // Reload the page on success
         window.location.reload();
     }); 

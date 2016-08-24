@@ -17,7 +17,7 @@ $(document).ready(function() {
     $("#set-or-reset-password").ufForm({
         validators: page.validators.set_password,
         msgTarget: $("#userfrosting-alerts")
-    }).on("submitSuccess", function() {
+    }).on("submitSuccess.ufForm", function() {
         // Forward to home page on success
         window.location.replace(site.uri.public);
     }); 

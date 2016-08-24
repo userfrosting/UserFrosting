@@ -17,7 +17,7 @@ $(document).ready(function() {
     $("#request-verification-email").ufForm({
         validators: page.validators.resend_verification,
         msgTarget: $("#userfrosting-alerts")
-    }).on("submitSuccess", function() {
+    }).on("submitSuccess.ufForm", function() {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account/login");
     }); 

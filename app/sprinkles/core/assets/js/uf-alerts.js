@@ -1,14 +1,43 @@
 /**
- * ufAlerts
+ * ufAlerts plugin.  Fetches and renders alerts from the UF alert stream.
  *
- * UF flash alert rendering plugin.
  * jQuery plugin template adapted from https://gist.github.com/Air-Craft/1300890
+ *
+ * === USAGE ===
+ *
+ * ufAlerts can be initialized on any container element as follows:
+ *
+ * $("#myDiv").ufAlerts(options);
+ *
+ * `options` is an object containing any of the following parameters:
+ * @param {string} url The absolute URL from which to fetch flash alerts.
+ * @param {bool} scrollToTop Whether to automatically scroll back to the top of the page after rendering alerts.
+ * @param {string} alertContainerClass The CSS class(es) to be applied to the container for all alerts.
+ * @param {string} alertMessageClass The CSS class(es) to be applied to each alert message.
+ * @param {bool} agglomerate Set to true to render all alerts together, applying styling for the highest-priority alert being rendered.
+ *
+ * == EVENTS ==
+ *
+ * uf-form triggers the following events:
+ *
+ * `fetch.ufAlerts`: triggered when the alerts have been successfully fetched from the server.
+ * `render.ufAlerts`: triggered when all alerts have been rendered and the call to render() has completed.
+ *
+ * == METHODS ==
+ *
+ * `fetch()`: gets messages from the server.
+ * `push(type, message)`: adds a message of a specified type (danger, warning, info, success) to the internal collection of alerts.
+ * `clear()`: removes all messages from the internal collection.
+ * `render()`: renders the collection of alerts to the container.
+ *
+ * UserFrosting https://www.userfrosting.com
+ * @author Alexander Weissman https://alexanderweissman.com
  */
  
 // if (!window.L) { window.L = function () { console.log(arguments);} } // optional EZ quick logging for debugging
 
-(function( $ ){
-    
+(function( $ )
+{    
     /**
      * The plugin namespace, ie for $('.selector').ufAlerts(options)
      * 
@@ -16,7 +45,8 @@
      */
     var PLUGIN_NS = 'ufAlerts';
 
-    var Plugin = function ( target, options )  { 
+    var Plugin = function ( target, options )
+    { 
         this.$T = $(target); 
 
         /** #### OPTIONS #### */
@@ -48,7 +78,8 @@
     }
 
     /** #### INITIALISER #### */
-    Plugin.prototype._init = function ( target, options ) { 
+    Plugin.prototype._init = function ( target, options )
+    { 
         var base = this;
         var $el = $(target);
         
@@ -194,7 +225,8 @@
      * Notice, myActionMethod mustn't start with an underscore (_) as this is used to
      * indicate private methods on the PLUGIN class.   
      */    
-    $.fn[ PLUGIN_NS ] = function( methodOrOptions ) {
+    $.fn[ PLUGIN_NS ] = function( methodOrOptions )
+    {
         if (!$(this).length) {
             return $(this);
         }

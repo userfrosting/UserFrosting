@@ -46,10 +46,10 @@ $(document).ready(function() {
     $("#register").ufForm({
         validators: page.validators.register,
         msgTarget: $("#alerts-register")
-    }).on("submitSuccess", function() {
+    }).on("submitSuccess.ufForm", function() {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account/sign-in-or-register");
-    }).on("submitError", function() {
+    }).on("submitError.ufForm", function() {
         // Reload captcha
         $("#captcha").captcha();
     });
@@ -57,7 +57,7 @@ $(document).ready(function() {
     $("#sign-in").ufForm({
         validators: page.validators.login,
         msgTarget: $("#alerts-login")
-    }).on("submitSuccess", function() {
+    }).on("submitSuccess.ufForm", function() {
         // Forward to settings page on success
         window.location.replace(site.uri.public + "/account/settings");
     });    
