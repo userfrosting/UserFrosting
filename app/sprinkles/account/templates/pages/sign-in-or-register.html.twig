@@ -1,7 +1,7 @@
 {% extends "layouts/azmind.html.twig" %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Sign in or Register{% endblock %}
+{% block page_title %}{{translate("LOGIN_PAGE")}}{% endblock %}
 
 {% block page_description %}Sign in to your UserFrosting account, or register for a new account.{% endblock %}
 
@@ -16,15 +16,15 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1 show-forms">
             {% if site.setting.can_register %}
-                <span class="show-login-form active">Sign In</span>
+                <span class="show-login-form active">{{translate("SIGN_IN")}}</span>
                 <span class="show-forms-divider">/</span>
-                <span class="show-register-form">Register</span>
+                <span class="show-register-form">{{translate("REGISTER")}}</span>
             {% else %}
-                <span class="show-login-form-static">Sign In</span>
+                <span class="show-login-form-static">{{translate("SIGN_IN")}}</span>
             {% endif %}
         </div>
     </div>
@@ -32,12 +32,12 @@
         <div class="row register-form">
             <div class="col-sm-4 col-sm-offset-1">
                 <div id="alerts-register">
-                
+
                 </div>
                 <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
                     {% include "components/csrf.html.twig" %}
                     <div class="form-group">
-                        <label class="sr-only" for="r-form-username">Username</label>
+                        <label class="sr-only" for="r-form-username">{{ translate("USERNAME") }}</label>
                         <input type="text" name="user_name" placeholder="Choose a unique username" class="form-control" id="r-form-username">
                     </div>
                     <div class="row">
@@ -55,7 +55,7 @@
                         <input type="text" name="email" placeholder="Email address" class="form-control" id="r-form-email">
                     </div>
                     <div class="form-group">
-                        <label class="sr-only" for="r-form-password">Password</label>
+                        <label class="sr-only" for="r-form-password">{{ translate("PASSWORD") }}</label>
                         <input type="password" name="password" placeholder="Password (12-100 characters)" class="form-control" id="r-form-password">
                     </div>
                     <div class="form-group">
@@ -66,7 +66,7 @@
                         <div class="form-group">
                             <label class="sr-only" for="r-form-passwordc">Verify the captcha</label>
                             <div class="row">
-                                <div class="col-md-6"> 
+                                <div class="col-md-6">
                                     <input type="text" name="captcha" placeholder="Enter captcha" class="form-control" id="r-form-captcha">
                                 </div>
                                 <div class="col-md-6 form-col-captcha">
@@ -81,7 +81,7 @@
                     </div>
                     <div class="text-left">
                         By registering an account with {{site.title}}, you accept the <a href="#" data-toggle="modal" data-target="#tos">terms and conditions</a>.
-                    </div>                
+                    </div>
                     <button type="submit" class="btn">Sign me up!</button>
                 </form>
             </div>
@@ -113,33 +113,33 @@
     <div class="row login-form">
         <div class="col-sm-4 col-sm-offset-1">
             <div id="alerts-login">
-            
-            </div>        
+
+            </div>
             <form id="sign-in" role="form" action="{{site.uri.public}}/account/login" method="post" class="l-form">
                 {% include "components/csrf.html.twig" %}
                 <div class="form-group">
-                    <label class="sr-only" for="l-form-username">Username</label>
-                    <input type="text" name="user_name" placeholder="User name" class="form-control" id="l-form-username">
+                    <label class="sr-only" for="l-form-username">{{ translate("USERNAME") }}</label>
+                    <input type="text" name="user_name" placeholder="{{ translate("USERNAME") }}" class="form-control" id="l-form-username">
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="l-form-password">Password</label>
-                    <input type="password" name="password" placeholder="Password" class="form-control" id="l-form-password">
+                    <label class="sr-only" for="l-form-password">{{ translate("PASSWORD") }}</label>
+                    <input type="password" name="password" placeholder="{{ translate("PASSWORD") }}" class="form-control" id="l-form-password">
                 </div>
                 <div class="form-group">
                     <label for="l-form-rememberme">
-                        <input type="checkbox" name="rememberme" id="l-form-rememberme"> Remember me on this computer (not recommended for public computers)
+                        <input type="checkbox" name="rememberme" id="l-form-rememberme"> {{ translate("REMEMBER_ME") }}
                     </label>
-                </div>                
-                <button type="submit" class="btn">Sign in!</button>
+                </div>
+                <button type="submit" class="btn">{{translate("SIGN_IN")}}!</button>
             </form>
             <div class="registration-links">
-                <a href="{{site.uri.public}}/account/forgot-password">I forgot my password</a>
+                <a href="{{site.uri.public}}/account/forgot-password">{{translate("PASSWORD_FORGOT")}}</a>
                 <br>
                 {# TODO: hide this link if public registration is turned off? #}
-                <a href="{{site.uri.public}}/account/resend-verification">Resend verification email</a>
-            </div>            
+                <a href="{{site.uri.public}}/account/resend-verification">{{translate("RESEND_ACTIVATION")}}</a>
+            </div>
             <div class="social-login">
-                <p>Or login with:</p>
+                <p>{{ translate("OR_LOGIN_USING") }}:</p>
                 <div class="social-login-buttons">
                     <a class="btn btn-link-1" href="#"><i class="fa fa-facebook"></i></a>
                     <a class="btn btn-link-1" href="#"><i class="fa fa-twitter"></i></a>
@@ -170,7 +170,7 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 {% endblock %}
 
 {% block scripts_page %}
@@ -178,8 +178,8 @@
     <script>
     {% include "components/validators.js.twig" %}
     </script>
-    
+
     <!-- Include page-specific JS -->
     {{ assets.js('js/pages/sign-in-or-register') | raw }}
-    
+
 {% endblock %}

@@ -17,15 +17,15 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="{{site.uri.public}}/about">About</a>
+                    <a href="{{site.uri.public}}/about">{{translate("ABOUT")}}</a>
                 </li>
                 {% if current_user.isGuest() %}
                     <li>
-                        <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">Sign In</a>
+                        <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">{{translate("SIGN_IN")}}</a>
                     </li>
                 {% else %}
                     <li>
-                        <a href="{{site.uri.public}}/account/settings" class="nav-highlight">My Account</a>
+                        <a href="{{site.uri.public}}/account/settings" class="nav-highlight">{{translate("MY_ACCOUNT")}}</a>
                     </li>
                 {% endif %}
             </ul>

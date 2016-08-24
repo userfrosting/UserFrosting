@@ -30,6 +30,7 @@ $lang = array_merge($lang, [
 	"MENU_GROUPS" => "Groups",
 	"HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER",
 	"ABOUT" => "About",
+	"BUILD_WITH" => "Built with <a href=\"{http://www.userfrosting.com\">UserFrosting</a>"
 ]);
 
 // Installer
@@ -163,7 +164,21 @@ $lang = array_merge($lang,array(
 	"FEATURE_DISABLED" => "This feature is currently disabled",
 	"ACCESS_DENIED" => "Hmm, looks like you don't have permission to do that.",
 	"LOGIN_REQUIRED" => "Sorry, you must be logged in to access this resource.",
-	"LOGIN_ALREADY_COMPLETE" => "You are already logged in!"
+	"LOGIN_ALREADY_COMPLETE" => "You are already logged in!",
+	"ADD" => "Add",
+    "CREATE" => "Create",
+    "DELETE" => "Delete",
+    "DELETE_CONFIRM" => "Are you sure you want to delete?",
+    "DELETE_CONFIRM_YES" => "Yes, delete",
+    "DELETE_NAMED" => "Delete {{name}}",
+    "DELETE_CONFIRM_NAMED" => "Are you sure you want to delete {{name}}?",
+    "DELETE_CONFIRM_YES_NAMED" => "Yes, delete {{name}}",
+    "CANNOT_UNDONE" => "This action cannot be undone",
+    "EDIT" => "Edit",
+    "SAVE" => "Save",
+    "CANCEL" => "Cancel",
+    "ACTIONS" => "Actions",
+    "PRINT" => "Print"
 ));
 
 // Permissions

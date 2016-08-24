@@ -30,7 +30,9 @@ $lang = array_merge($lang, [
 	"MENU_GROUPS" => "Groupes",
 	"HEADER_MESSAGE_ROOT" => "VOUS ÊTES CONNECTÉ EN TANT QU'ADMINISTRATEUR ROOT",
 	"ABOUT" => "À propos",
+	"BUILD_WITH" => "Propulsé par <a href=\"http://www.userfrosting.com\">UserFrosting</a>"
 ]);
+
 // Installer
 $lang = array_merge($lang,array(
 	"INSTALLER_INCOMPLETE" => "Vous ne pouvez pas créer de compte root tant que l'installation n'est pas terminée !",
@@ -38,6 +40,7 @@ $lang = array_merge($lang,array(
 	"MASTER_ACCOUNT_NOT_EXISTS" => "Vous ne pouvez pas créer de compte tant que le compte principal n'a pas été enregistré !",
 	"CONFIG_TOKEN_MISMATCH" => "Désolé, ce jeton de configuration est incorrect."
 ));
+
 // Account
 $lang = array_merge($lang,array(
 	"ACCOUNT_SPECIFY_USERNAME" => "Veuillez entrer votre nom d'utilisateur.",
@@ -99,6 +102,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PRIMARY_GROUP_SET" => "Le groupe principal du compte '{{user_name}}' a été changé avec succès.",
 	"ACCOUNT_WELCOME" => "Bonjour, {{display_name}}"
 ));
+
 // Generic validation
 $lang = array_merge($lang, array(
 	"VALIDATE_REQUIRED" => "Le champ '{{self}}' doit être rempli.",
@@ -106,6 +110,7 @@ $lang = array_merge($lang, array(
 	"VALIDATE_INTEGER" => "La valeur de '{{self}}' doit être un nombre entier.",
 	"VALIDATE_ARRAY" => "Les valeurs de '{{self}}' doivent être dans un tableau."
 ));
+
 // Configuration
 $lang = array_merge($lang,array(
 	"CONFIG_PLUGIN_INVALID" => "Vous essayez de changer la configuration du plugin '{{plugin}}', mais il n'existe pas.",
@@ -121,6 +126,7 @@ $lang = array_merge($lang,array(
 	"CONFIG_UPDATE_SUCCESSFUL" => "La configuration du site a été mise à jour.",
 	"MINIFICATION_SUCCESS" => "Le code CSS et JS a été compressé avec succès."
 ));
+
 // Forgot Password
 $lang = array_merge($lang,array(
 	"FORGOTPASS_INVALID_TOKEN" => "Le jeton d'activation est invalide",
@@ -131,10 +137,12 @@ $lang = array_merge($lang,array(
 	"FORGOTPASS_REQUEST_EXISTS" => "Il existe déjà une demande de mot de passe pour ce compte",
 	"FORGOTPASS_REQUEST_SUCCESS" => "Un e-mail contenant les instructions de réinitialisation de votre mot de passe vous a été envoyé"
 ));
+
 // Mail
 $lang = array_merge($lang,array(
 	"MAIL_ERROR" => "Une erreur est survenue lors de l'envoi de l'e-mail, merci de nous contacter si le problème persiste",
 ));
+
 // Miscellaneous
 $lang = array_merge($lang,array(
 	"PASSWORD_HASH_FAILED" => "Le cryptage du mot de passe a échoué. Merci de nous contacter si le problème persiste.",
@@ -150,8 +158,23 @@ $lang = array_merge($lang,array(
 	"FEATURE_DISABLED" => "Cette fonctionnalité est désactivée",
 	"ACCESS_DENIED" => "Hmm, il semble que vous n'ayez pas le droit de faire ça.",
 	"LOGIN_REQUIRED" => "Désolé, vous devez être connecté pour accéder à ce contenu.",
-	"LOGIN_ALREADY_COMPLETE" => "Vous êtes déjà connecté !"
+	"LOGIN_ALREADY_COMPLETE" => "Vous êtes déjà connecté !",
+	"ADD" => "Ajouter",
+    "CREATE" => "Créer",
+    "DELETE" => "Supprimer",
+    "DELETE_CONFIRM" => "Êtes-vous sûr de vouloir supprimer?",
+    "DELETE_CONFIRM_YES" => "Oui, supprimer",
+    "DELETE_NAMED" => "Supprimer {{name}}",
+    "DELETE_CONFIRM_NAMED" => "Êtes-vous sûr de vouloir supprimer {{name}}?",
+    "DELETE_CONFIRM_YES_NAMED" => "Oui, supprimer {{name}}",
+    "CANNOT_UNDONE" => "Cette action ne peut être annulée.",
+    "EDIT" => "Modifier",
+    "SAVE" => "Enregister",
+    "CANCEL" => "Annuler",
+    "ACTIONS" => "Actions",
+    "PRINT" => "Imprimer"
 ));
+
 // Permissions
 $lang = array_merge($lang,array(
     "GROUP_INVALID_ID" => "Le groupe demandé n'existe pas",
