@@ -2,7 +2,7 @@
 
 ## v0.3.1.20
 
--
+- Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()` 
 
 ## v0.3.1.19
 
