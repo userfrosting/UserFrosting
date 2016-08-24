@@ -87,9 +87,11 @@ class User extends UFModel {
     /**
      * Refresh the User and their associated Groups from the DB.
      *
+     * If you are getting errors here after upgrading Eloquent, remove the word "array" from the function declaration.
+     *
      * @see http://stackoverflow.com/a/27748794/2970321
      */
-    public function fresh($options = []){
+    public function fresh(array $options = []){
         // TODO: Update table and column info, in case it has changed?
         $user = parent::fresh($options);
         $user->getGroupIds();

@@ -3,6 +3,7 @@
 ## v0.3.1.20
 
 - Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()` 
+- Revert changes to User::fresh() but leave comment regarding upgrading Eloquent
 
 ## v0.3.1.19
 
