@@ -16,7 +16,11 @@
         {
             "type": "vcs",
             "url": "https://github.com/alexweissman/Slim-Csrf"
-        }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/userfrosting/i18n"
+        }        
     ], 
     "require": {   
         "illuminate/database": "^5.2",
@@ -33,12 +37,13 @@
         "twig/twig": "^1.18",
         "userfrosting/assets": "1.1",
         "userfrosting/config": "1.1",
-        "userfrosting/fortress": "2.0",
-        "userfrosting/i18n": "1.0",
+        "userfrosting/fortress": "dev-master",
+        "userfrosting/i18n": "1.0.x-dev",
         "userfrosting/session": "1.0",
         "userfrosting/support": "1.0",
         "vlucas/phpdotenv": "^2"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "UserFrosting\\Sprinkle\\Core\\": "src/"

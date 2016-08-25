@@ -267,7 +267,7 @@ class AccountController
         
         // Return 200 success if user is already logged in
         if (!$this->ci->currentUser->isGuest()) {
-            $ms->addMessageTranslated("warning", "LOGIN_ALREADY_COMPLETE");
+            $ms->addMessageTranslated("warning", "ACCOUNT.LOGIN_ALREADY_COMPLETE");
             return $response->withStatus(200);
         }
         
@@ -287,7 +287,7 @@ class AccountController
         
         // If it's an email address, but email login is not enabled, raise an error.
         if ($isEmail && !$config['site.setting.email_login']) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_PASS_INVALID");
+            $ms->addMessageTranslated("danger", "ACCOUNT.USER_OR_PASS_INVALID");
             return $response->withStatus(403);
         }
         
@@ -300,7 +300,7 @@ class AccountController
             $currentUser = $authenticator->attempt('user_name', $data['user_name'], $data['password'], $data['rememberme']);
         }
         
-        $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $currentUser->export());
+        $ms->addMessageTranslated("success", "WELCOME", $currentUser->export());
         return $response->withStatus(200);
     }
     
@@ -346,19 +346,19 @@ class AccountController
         
         // Security measure: do not allow registering new users until the master account has been created.
         if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
-            $ms->addMessageTranslated("danger", "MASTER_ACCOUNT_NOT_EXISTS");
+            $ms->addMessageTranslated("danger", "ACCOUNT.MASTER_ACCOUNT_NOT_EXISTS");
             return $response->withStatus(403);
         }
 
         // Check if registration is currently enabled
         if (!$config['site.setting.can_register']) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_DISABLED");
+            $ms->addMessageTranslated("danger", "ACCOUNT.REGISTRATION_DISABLED");
             return $response->withStatus(403);
         }
 
         // Prevent the user from registering if he/she is already logged in
         if(!$this->ci->currentUser->isGuest()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_LOGOUT");
+            $ms->addMessageTranslated("danger", "ACCOUNT.REGISTRATION_LOGOUT");
             return $response->withStatus(403);
         }
 
@@ -377,12 +377,12 @@ class AccountController
         
         // Check if username or email already exists
         if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_USERNAME_IN_USE", $data);
+            $ms->addMessageTranslated("danger", "ACCOUNT.USERNAME_IN_USE", $data);
             $error = true;
         }
 
         if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
+            $ms->addMessageTranslated("danger", "ACCOUNT.EMAIL_IN_USE", $data);
             $error = true;
         }        
         
@@ -411,7 +411,7 @@ class AccountController
         // Check that the default group exists
         /*
         if (!$primaryGroup){
-            $ms->addMessageTranslated("danger", "ACCOUNT_REGISTRATION_BROKEN");
+            $ms->addMessageTranslated("danger", "ACCOUNT.REGISTRATION_BROKEN");
             error_log("Account registration is not working because a default primary group has not been set.");
             $this->_app->halt(500);
         }
@@ -461,10 +461,10 @@ class AccountController
             
             $this->ci->mailer->send($message);
             
-            $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE2");
+            $ms->addMessageTranslated("success", "ACCOUNT.REGISTRATION_COMPLETE_TYPE2");
         } else {
             // No verification required
-            $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
+            $ms->addMessageTranslated("success", "ACCOUNT.REGISTRATION_COMPLETE_TYPE1");
         }
         
         return $response->withStatus(200);
@@ -501,13 +501,13 @@ class AccountController
                     ->where('flag_verified', '0')->first();
 
         if (!$user){
-            $ms->addMessageTranslated("danger", "ACCOUNT_TOKEN_NOT_FOUND");
+            $ms->addMessageTranslated("danger", "ACCOUNT.TOKEN_NOT_FOUND");
             $this->_app->redirect($this->_app->urlFor('uri_home'));
         }
 
         $user->flag_verified = "1";
         $user->store();
-        $ms->addMessageTranslated("success", "ACCOUNT_ACTIVATION_COMPLETE");
+        $ms->addMessageTranslated("success", "ACCOUNT.ACTIVATION_COMPLETE");
 
         // Forward to login page
         $this->_app->redirect($this->_app->urlFor('uri_home'));
@@ -827,7 +827,7 @@ class AccountController
 
         // Access control for entire page
         if (!$this->_app->user->checkAccess('uri_account_settings')){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+            $ms->addMessageTranslated("danger", "ACCOUNT.ACCESS_DENIED");
             $this->_app->halt(403);
         }
 

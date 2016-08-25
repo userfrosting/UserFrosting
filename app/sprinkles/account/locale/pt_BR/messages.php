@@ -6,7 +6,7 @@
  * Brazilian Portuguese message token translations
  *
  * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n 
+ * @link http://www.userfrosting.com/components/#i18n
  * @author Edu Salgado (@riotbr)
  */
 
@@ -15,6 +15,11 @@
 */
 
 $lang = array();
+
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 2
+]);
 
 // Site Content
 $lang = array_merge($lang, [

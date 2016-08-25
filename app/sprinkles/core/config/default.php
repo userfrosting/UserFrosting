@@ -4,7 +4,7 @@
      * Core configuration file for UserFrosting.  You must override/extend this in your site's configuration file.
      *
      */
-     
+
     return [
         'address_book' => [
             'admin' => [
@@ -65,7 +65,7 @@
                 'alerts'  => 'site.alerts',    // the key to use to store flash messages
                 'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
             ]            
-        ],        
+        ],
         'site' => [
             'title'     =>      'UserFrosting',
             'author'    =>      'Author',
@@ -80,11 +80,12 @@
                 'author'            => 'http://www.userfrosting.com',
                 'assets-raw'        => 'assets-raw',
                 'assets'            => 'assets'
-            ]          
-        ],   
+            ],
+            'locale'       =>      'en_US',
+            'locale_base'  =>      'en_US',
+        ],
         'timezone' => 'America/New_York',
         'error_reporting' => E_ALL,  // Development - report all errors and suggestions
         'display_errors'  => 'off',
         'use_raw_assets'  => true
     ];
-    

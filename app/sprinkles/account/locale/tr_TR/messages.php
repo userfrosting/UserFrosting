@@ -16,6 +16,11 @@
 
 $lang = array();
 
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 0
+]);
+
 // Site Content - Site İçeriği
 $lang = array_merge($lang, [
 	"REGISTER_WELCOME" => "Kayıt olmak hızlı ve basittir.",
@@ -132,8 +137,8 @@ $lang = array_merge($lang,array(
 	"FORGOTPASS_COULD_NOT_UPDATE" => "Şifre güncellenemedi",
 	"FORGOTPASS_REQUEST_CANNED" => "Kayıp şifre talebi iptal edildi",
 	"FORGOTPASS_REQUEST_EXISTS" => "Bu hesap için zaten tamamlanmamış bir kayıp şifre talebi bulunmaktadır",
-	"FORGOTPASS_REQUEST_SENT" => "'{{user_name}}' kullanıcısının dosyasındaki adrese şifre yenileme linki e-posta ile gönderildi",     
-	"FORGOTPASS_REQUEST_SUCCESS" => "Hesabınıza tekrar erişim kazanmak için gerekli talimatları size e-posta ile gönderdik "   
+	"FORGOTPASS_REQUEST_SENT" => "'{{user_name}}' kullanıcısının dosyasındaki adrese şifre yenileme linki e-posta ile gönderildi",
+	"FORGOTPASS_REQUEST_SUCCESS" => "Hesabınıza tekrar erişim kazanmak için gerekli talimatları size e-posta ile gönderdik "
 ));
 
 // Mail - E-posta

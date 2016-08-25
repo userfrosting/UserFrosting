@@ -17,5 +17,5 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AccountDisabledException extends ForbiddenException
 {
-    protected $default_message = 'ACCOUNT_DISABLED';
+    protected $default_message = 'ACCOUNT.ACCOUNT_DISABLED';
 }

@@ -17,6 +17,6 @@ use UserFrosting\Support\Exception\HttpException;
  */
 class InvalidCredentialsException extends HttpException
 {
-    protected $default_message = 'ACCOUNT_USER_OR_PASS_INVALID';
+    protected $default_message = 'ACCOUNT.USER_OR_PASS_INVALID';
     protected $http_error_code = 403;
 }

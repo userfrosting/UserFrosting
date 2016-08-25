@@ -4,16 +4,16 @@
             "length" : {
                 "min" : 1,
                 "max" : 50,
-                "message" : "ACCOUNT_USER_CHAR_LIMIT"
+                "message" : "ACCOUNT.USER_CHAR_LIMIT"
             },
             "no_leading_whitespace" : {
-                "message" : "ACCOUNT_USER_NO_LEAD_WS"
+                "message" : "ACCOUNT.USER_NO_LEAD_WS"
             },
             "no_trailing_whitespace" : {
-                "message" : "ACCOUNT_USER_NO_TRAIL_WS"
+                "message" : "ACCOUNT.USER_NO_TRAIL_WS"
             },            
             "required" : {
-                "message" : "ACCOUNT_SPECIFY_USERNAME"
+                "message" : "ACCOUNT.SPECIFY_USERNAME"
             }
         }
     },
@@ -22,7 +22,7 @@
             "length" : {
                 "min" : 1,
                 "max" : 20,
-                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
+                "message" : "ACCOUNT.DISPLAY_CHAR_LIMIT"
             }
         }
     },
@@ -31,50 +31,50 @@
             "length" : {
                 "min" : 1,
                 "max" : 30,
-                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
+                "message" : "ACCOUNT.DISPLAY_CHAR_LIMIT"
             }
         }
     },    
     "email" : {
         "validators" : {
             "required" : {
-                "message" : "ACCOUNT_SPECIFY_EMAIL"
+                "message" : "ACCOUNT.SPECIFY_EMAIL"
             },
             "length" : {
                 "min" : 1,
                 "max" : 150,
-                "message" : "ACCOUNT_EMAIL_CHAR_LIMIT"
+                "message" : "ACCOUNT.EMAIL_CHAR_LIMIT"
             },
             "email" : {
-                "message" : "ACCOUNT_INVALID_EMAIL"
+                "message" : "ACCOUNT.INVALID_EMAIL"
             }
         }
     },
     "password" : {
         "validators" : {
             "required" : {
-                "message" : "ACCOUNT_SPECIFY_PASSWORD"
+                "message" : "ACCOUNT.SPECIFY_PASSWORD"
             },
             "length" : {
                 "min" : 12,
                 "max" : 100,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+                "message" : "ACCOUNT.PASS_CHAR_LIMIT"
             }
         }  
     },
     "passwordc" : {
         "validators" : {
             "required" : {
-                "message" : "ACCOUNT_SPECIFY_PASSWORD"
+                "message" : "ACCOUNT.SPECIFY_PASSWORD"
             },
             "matches" : {
                 "field" : "password",
-                "message" : "ACCOUNT_PASS_MISMATCH"
+                "message" : "ACCOUNT.PASS_MISMATCH"
             },
             "length" : {
                 "min" : 12,
                 "max" : 100,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+                "message" : "ACCOUNT.PASS_CHAR_LIMIT"
             }
         }  
     },

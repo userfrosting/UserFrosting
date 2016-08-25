@@ -9,12 +9,18 @@
  * @link http://www.userfrosting.com/components/#i18n
  * @author Ulysse Ramage
  */
- 
+
 /*
 {{name}} - Dynamic markers which are replaced at run time by the relevant index.
 */
 
 $lang = array();
+
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 2
+]);
+
 // Site Content
 $lang = array_merge($lang, [
 	"REGISTER_WELCOME" => "L'inscription est simple et rapide.",
@@ -22,7 +28,8 @@ $lang = array_merge($lang, [
 	"MENU_CONFIGURATION" => "Configuration",
 	"MENU_SITE_SETTINGS" => "Préférences du site",
 	"MENU_GROUPS" => "Groupes",
-	"HEADER_MESSAGE_ROOT" => "VOUS ÊTES CONNECTÉ EN TANT QU'ADMINISTRATEUR ROOT"
+	"HEADER_MESSAGE_ROOT" => "VOUS ÊTES CONNECTÉ EN TANT QU'ADMINISTRATEUR ROOT",
+	"ABOUT" => "À propos",
 ]);
 // Installer
 $lang = array_merge($lang,array(
@@ -147,15 +154,15 @@ $lang = array_merge($lang,array(
 ));
 // Permissions
 $lang = array_merge($lang,array(
-		"GROUP_INVALID_ID" => "Le groupe demandé n'existe pas",
-		"GROUP_NAME_CHAR_LIMIT" => "Le nom des groupes doit faire entre {{min}} et {{max}} caractères",
-	"AUTH_HOOK_CHAR_LIMIT" => "Le nom des hooks d'autorisation doivent faire entre {{min}} et {{max}} caractères",
-		"GROUP_NAME_IN_USE" => "Le nom de groupe '{{name}}' est déjà pris",
-		"GROUP_DELETION_SUCCESSFUL" => "Le groupe '{{name}}' a été supprimé avec succès",
-		"GROUP_CREATION_SUCCESSFUL" => "Le groupe '{{name}}' a été créé avec succès",
-		"GROUP_UPDATE" => "Les détails du groupe '{{name}}' ont été mis à jour avec succès.",
-		"CANNOT_DELETE_GROUP" => "Le groupe '{{name}}' ne peut pas être supprimé",
-		"GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Le groupe '{{name}}' ne peut pas être supprimé car il correspond au groupe par défaut des nouveaux utilisateurs.",
+    "GROUP_INVALID_ID" => "Le groupe demandé n'existe pas",
+    "GROUP_NAME_CHAR_LIMIT" => "Le nom des groupes doit faire entre {{min}} et {{max}} caractères",
+    "AUTH_HOOK_CHAR_LIMIT" => "Le nom des hooks d'autorisation doivent faire entre {{min}} et {{max}} caractères",
+    "GROUP_NAME_IN_USE" => "Le nom de groupe '{{name}}' est déjà pris",
+    "GROUP_DELETION_SUCCESSFUL" => "Le groupe '{{name}}' a été supprimé avec succès",
+    "GROUP_CREATION_SUCCESSFUL" => "Le groupe '{{name}}' a été créé avec succès",
+    "GROUP_UPDATE" => "Les détails du groupe '{{name}}' ont été mis à jour avec succès.",
+    "CANNOT_DELETE_GROUP" => "Le groupe '{{name}}' ne peut pas être supprimé",
+    "GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Le groupe '{{name}}' ne peut pas être supprimé car il correspond au groupe par défaut des nouveaux utilisateurs.",
 	"GROUP_AUTH_EXISTS" => "Le groupe '{{name}}' a déjà une règle configurée pour le hook '{{hook}}'.",
     "GROUP_AUTH_CREATION_SUCCESSFUL" => "La règle du hook '{{hook}}' a été créée pour le groupe '{{name}}'.",
     "GROUP_AUTH_UPDATE_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été mise à jour avec succès.",

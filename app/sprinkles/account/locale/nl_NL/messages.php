@@ -6,7 +6,7 @@
  * Dutch message token translations
  *
  * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n 
+ * @link http://www.userfrosting.com/components/#i18n
  * @author Joey (@joey102)
  * @author Andrew (@editandrew)
  */
@@ -16,6 +16,11 @@
 */
 
 $lang = array();
+
+// Locale settings
+$lang = array_merge($lang, [
+	"PLURAL_RULE" => 1
+]);
 
 // Installer
 $lang = array_merge($lang,array(
