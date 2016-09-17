@@ -18,7 +18,7 @@ $lang = array();
 
 // Locale settings
 $lang = array_merge($lang, [
-	"PLURAL_RULE" => 5
+	"@PLURAL_RULE" => 5
 ]);
 
 // Site Content

@@ -4,7 +4,7 @@
 {% block stylesheets_site %}
     <!-- Google Font - use remote for now -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-    
+
     <!-- Include main CSS asset bundle -->
     {{ assets.css() | raw }}
 {% endblock %}
@@ -21,36 +21,35 @@
             {% block body_matter %}{% endblock %}
         </div>
     </div>
-        
+
 {% endblock %}
-        
+
 {% block footer %}
 <footer>
     <div class="container">
       <div class="row">
           <div class="col-sm-6 text-left">
               <p>
-                Built with <a href="http://www.userfrosting.com">UserFrosting</a>.
+                {{translate('BUILT_WITH_UF') | raw}}
               </p>
               <p>
                 &copy; <a href="{{site.uri.public}}">{{site.title}}</a>, {{ "now"|date("Y") }}
               </p>
           </div>
           <div class="col-sm-6 text-left">
-              <p> Design and styling for this page based on <a href="http://azmind.com/2016/07/19/bootstrap-login-register-template/">Bootstrap Login/Register template</a> by <a href="http://azmind.com" target="_blank">AZMIND</a>.
-              </p>
-          </div>        
+              <p>{{translate('AZMIND_STYLE_CREDIT') | raw }}</p>
+          </div>
       </div>
     </div>
 </footer>
-{% endblock %}    
+{% endblock %}
 
 {% block scripts_page_group %}
     <!-- Add URL for background image to JS 'site' variable -->
     <script>
     site = $.extend(
         true,               // deep extend
-        {   
+        {
             "uri": {
                 "images": {
                     "background" : "{{ assets.url('assets://vendor/azmind/images/login-background.jpg') | raw }}"
@@ -63,11 +62,11 @@
         site
     );
     </script>
-    
+
     <!--[if lt IE 10]>
         <script src="{{ assets.url('assets://vendor/azmind/js/placeholder.js') | raw }}"></script>
     <![endif]-->
-    
+
     <!-- Page-group-specific JS asset bundle -->
-    {{ assets.js('js/azmind') | raw }}    
+    {{ assets.js('js/azmind') | raw }}
 {% endblock %}

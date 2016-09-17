@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
- */ 
+ */
 namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Illuminate\Database\Schema\Blueprint;
@@ -40,7 +40,7 @@ class AccountController
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
-    
+
     /**
      * Create a new AccountController object.
      *
@@ -50,7 +50,7 @@ class AccountController
     {
         $this->ci = $ci;
     }
-    
+
     /**
      * Generate a random captcha, store it to the session, and return the captcha image.
      *
@@ -60,27 +60,27 @@ class AccountController
     {
         $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
         $captcha->generateRandomCode();
-        
+
         return $response->withStatus(200)
                     ->withHeader('Content-Type', 'image/png;base64')
                     ->write($captcha->getImage());
-    }    
-    
+    }
+
     /**
      * Log the user out completely, including destroying any "remember me" token.
      *
      * Request type: GET
-     */    
+     */
     public function logout(Request $request, Response $response, $args)
     {
         // Destroy the session
         $this->ci->authenticator->logout();
-        
+
         // Return to home page
         $config = $this->ci->config;
         return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
-    }    
-    
+    }
+
     /**
      * Render the "forgot password" page.
      *
@@ -93,7 +93,7 @@ class AccountController
         // Load validation rules
         $schema = new RequestSchema("schema://forgot-password.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
+
         return $this->ci->view->render($response, 'pages/forgot-password.html.twig', [
             "page" => [
                 "validators" => [
@@ -115,7 +115,7 @@ class AccountController
         // Load validation rules
         $schema = new RequestSchema("schema://resend-verification.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
+
         return $this->ci->view->render($response, 'pages/resend-verification.html.twig', [
             "page" => [
                 "validators" => [
@@ -124,22 +124,22 @@ class AccountController
             ]
         ]);
     }
-    
+
     /**
      * Reset password page.
      *
-     * Renders the new password page for password reset requests. 
+     * Renders the new password page for password reset requests.
      * Request type: GET
      */
     public function pageResetPassword($request, $response, $args)
     {
         // Insert the user's secret token from the link into the password reset form
         $params = $request->getQueryParams();
-        
+
         // Load validation rules - note this uses the same schema as "set password"
         $schema = new RequestSchema("schema://set-password.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
+
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
             "page" => [
                 "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
@@ -148,12 +148,12 @@ class AccountController
                 ]
             ]
         ]);
-    }    
-    
+    }
+
     /**
      * Render the "set password" page.
      *
-     * Renders the page where new users who have had accounts created for them by another user, can set their password. 
+     * Renders the page where new users who have had accounts created for them by another user, can set their password.
      * By default, this is a "public page" (does not require authentication).
      * Request type: GET
      */
@@ -161,11 +161,11 @@ class AccountController
     {
         // Insert the user's secret token from the link into the password set form
         $params = $request->getQueryParams();
-        
+
         // Load validation rules
         $schema = new RequestSchema("schema://set-password.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
+
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
             "page" => [
                 "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
@@ -175,7 +175,7 @@ class AccountController
             ]
         ]);
     }
-    
+
     /**
      * Account settings page.
      *
@@ -188,16 +188,16 @@ class AccountController
     {
         $authorizer = $this->ci->authorizer;
         $currentUser = $this->ci->currentUser;
-        
+
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'uri_account_settings')) {
             throw new ForbiddenException();
         }
-        
+
         // Load validation rules
         $schema = new RequestSchema("schema://account-settings.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);        
-        
+        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);
+
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             "page" => [
                 "locales" => [], //$site->getLocales(),
@@ -207,31 +207,31 @@ class AccountController
             ]
         ]);
     }
-    
+
     /**
      * Render the account registration/sign-in page for UserFrosting.
      *
      * This allows existing users to sign in, and new (non-authenticated) users to create a new account for themselves on your website (if enabled).
-     * By definition, this is a "public page" (does not require authentication).     
+     * By definition, this is a "public page" (does not require authentication).
      * Request type: GET
      */
     public function pageSignInOrRegister($request, $response, $args)
     {
         $config = $this->ci->config;
-        
+
         // Forward to home page if user is already logged in
         if (!$this->ci->currentUser->isGuest()) {
             error_log($config['site.uri.public']);
             return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
         }
-        
+
         // Load validation rules
         $schema = new RequestSchema("schema://login.json");
         $validatorLogin = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
+
         $schema = new RequestSchema("schema://register.json");
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
-        
+
         return $this->ci->view->render($response, 'pages/sign-in-or-register.html.twig', [
             "page" => [
                 "validators" => [
@@ -258,52 +258,52 @@ class AccountController
     {
         $ms = $this->ci->alerts;
         $config = $this->ci->config;
-        
+
         // Get POST parameters
         $params = $request->getParsedBody();
-        
+
         // Load the request schema
         $schema = new RequestSchema("schema://login.json");
-        
+
         // Return 200 success if user is already logged in
         if (!$this->ci->currentUser->isGuest()) {
             $ms->addMessageTranslated("warning", "ACCOUNT.LOGIN_ALREADY_COMPLETE");
             return $response->withStatus(200);
         }
-        
+
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
-        
+
         // Validate, and halt on validation errors.
-        $validator = new ServerSideValidator($schema, $this->ci->translator);        
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
             return $response->withStatus(400);
         }
-        
+
         // Determine whether we are trying to log in with an email address or a username
         $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
-        
+
         // If it's an email address, but email login is not enabled, raise an error.
         if ($isEmail && !$config['site.setting.email_login']) {
             $ms->addMessageTranslated("danger", "ACCOUNT.USER_OR_PASS_INVALID");
             return $response->withStatus(403);
         }
-        
+
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
         $authenticator = $this->ci->authenticator;
-        
+
         if($isEmail){
             $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);
         } else {
             $currentUser = $authenticator->attempt('user_name', $data['user_name'], $data['password'], $data['rememberme']);
         }
-        
+
         $ms->addMessageTranslated("success", "WELCOME", $currentUser->export());
         return $response->withStatus(200);
     }
-    
+
     /**
      * Processes an new account registration request.
      *
@@ -321,19 +321,19 @@ class AccountController
      * Returns the User Object for the user record that was created.
      */
     public function register(Request $request, Response $response, $args)
-    {       
+    {
         // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
         $params = $request->getParsedBody();
 
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
-        
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
-        
+
         /** @var Config $config */
         $config = $this->ci->config;
-        
+
         $this->ci->db;
 
         // Check the honeypot. 'spiderbro' is not a real field, it is hidden on the main page and must be submitted with its default value for this to be processed.
@@ -343,7 +343,7 @@ class AccountController
 
         // Load the request schema
         $schema = new RequestSchema("schema://register.json");
-        
+
         // Security measure: do not allow registering new users until the master account has been created.
         if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated("danger", "ACCOUNT.MASTER_ACCOUNT_NOT_EXISTS");
@@ -365,16 +365,16 @@ class AccountController
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
-        
-        $error = false; 
-        
+
+        $error = false;
+
         // Validate request data
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
             $error = true;
         }
-        
+
         // Check if username or email already exists
         if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
             $ms->addMessageTranslated("danger", "ACCOUNT.USERNAME_IN_USE", $data);
@@ -384,30 +384,30 @@ class AccountController
         if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
             $ms->addMessageTranslated("danger", "ACCOUNT.EMAIL_IN_USE", $data);
             $error = true;
-        }        
-        
+        }
+
         // Check captcha, if required
         if ($config['site.setting.registration_captcha']) {
             $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
             if (!$data['captcha'] || !$captcha->verifyCode($data['captcha'])) {
-                $ms->addMessageTranslated("danger", "CAPTCHA_FAIL");
+                $ms->addMessageTranslated("danger", "CAPTCHA.FAIL");
                 $error = true;
             }
         }
-        
+
         if ($error) {
             return $response->withStatus(400);
         }
-        
+
         // Remove captcha, password confirmation from object data after validation
         unset($data['captcha']);
         unset($data['passwordc']);
-        
+
         if ($config['site.setting.require_activation']) {
             $data['flag_verified'] = false;
         } else {
             $data['flag_verified'] = true;
-        }          
+        }
         // Check that the default group exists
         /*
         if (!$primaryGroup){
@@ -416,18 +416,18 @@ class AccountController
             $this->_app->halt(500);
         }
         */
-        
+
         // Set default locale
         $data['locale'] = $config['site.setting.default_locale'];
-        
+
         // Set default group
         //$data['group_id'] = $primaryGroup->id;
-        
+
         // Hash password
         $data['password'] = Password::hash($data['password']);
 
         // TODO: "transactionalize" the user creation in database and sending emails
-        
+
         // Create the user
         $user = $classMapper->createInstance('user', $data);
 
@@ -438,7 +438,7 @@ class AccountController
         foreach ($defaultGroups as $group)
             $user->addGroup($group->id);
         */
-        
+
         // Create sign-up event
         $user->newActivitySignUp();
 
@@ -450,23 +450,23 @@ class AccountController
             // Create verification request event
             $user->newActivityVerificationRequest();
             $user->save();      // Re-save with verification request event
-            
+
             // Create and send verification email
             $message = new TwigMailMessage($this->ci->view, "mail/verify-account.html.twig");
-            
+
             $this->ci->mailer->from($config['address_book.admin'])
                 ->addEmailRecipient($user->email, $user->full_name, [
                     "user" => $user
                 ]);
-            
+
             $this->ci->mailer->send($message);
-            
+
             $ms->addMessageTranslated("success", "ACCOUNT.REGISTRATION_COMPLETE_TYPE2");
         } else {
             // No verification required
             $ms->addMessageTranslated("success", "ACCOUNT.REGISTRATION_COMPLETE_TYPE1");
         }
-        
+
         return $response->withStatus(200);
     }
 
