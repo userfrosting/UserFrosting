@@ -61,8 +61,8 @@ class CoreExtension extends \Twig_Extension
                     return $this->services['alerts']->messages();
                 }
             }),
-            new \Twig_SimpleFunction('translate', function ($hook, $params = array(), $int_key = 'plural') {
-                return $this->services['translator']->translate($hook, $params, $int_key);
+            new \Twig_SimpleFunction('translate', function ($hook, $params = array()) {
+                return $this->services['translator']->translate($hook, $params);
             })
         );
     }
@@ -93,7 +93,7 @@ class CoreExtension extends \Twig_Extension
         $csrfValueKey = $this->services->csrf->getTokenValueKey();
         $csrfName = $this->services->csrf->getTokenName();
         $csrfValue = $this->services->csrf->getTokenValue();
-        
+
         return array(
             'site'   => $this->services->config['site'],
             'assets' => $this->services->assets,
