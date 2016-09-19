@@ -35,6 +35,15 @@ return [
     "SORT" => "Sort",
     "DENY" => "Deny",
     "CONFIRM" => "Confirm",
+    "CREATE" => "Create",
+    "DELETE_CONFIRM" => "Are you sure you want to delete this?",
+    "DELETE_CONFIRM_YES" => "Yes, delete",
+    "DELETE_NAMED" => "Delete {{name}}",
+    "DELETE_CONFIRM_NAMED" => "Are you sure you want to delete {{name}}?",
+    "DELETE_CONFIRM_YES_NAMED" => "Yes, delete {{name}}",
+    "DELETE_CONFIRM_YES_NAMED" => "This action cannot be undone.",
+    "ACTIONS" => "Actions",
+    "PRINT" => "Print",
 
     // Events / Errors
     "SUCCESS" => "Success",
