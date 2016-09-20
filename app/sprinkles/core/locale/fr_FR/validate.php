@@ -13,12 +13,12 @@
 
 return [
 	"VALIDATE" => [
-        "ARRAY" => "Les valeurs de '{{self}}' doivent être dans un tableau.",
-        "BOOLEAN" => "La valeur de '{{self}}' doit être '0' ou '1'.",
-        "INTEGER" => "La valeur de '{{self}}' doit être un nombre entier.",
+        "ARRAY" => "Les valeurs de '{{label}}' doivent être dans un tableau.",
+        "BOOLEAN" => "La valeur de '{{label}}' doit être '0' ou '1'.",
+        "INTEGER" => "La valeur de '{{label}}' doit être un nombre entier.",
         "LENGTH_RANGE" => "{{label}} doit faire entre {{min}} et {{max}} caractères.",
-        //"NO_LEAD_WS" => "The value for '{{self}}' cannot begin with spaces, tabs, or other whitespace",
-        //"NO_TRAIL_WS" => "The value for '{{self}}' cannot end with spaces, tabs, or other whitespace",        
-        "REQUIRED" => "Le champ '{{self}}' doit être rempli."
+        //"NO_LEAD_WS" => "The value for '{{label}}' cannot begin with spaces, tabs, or other whitespace",
+        //"NO_TRAIL_WS" => "The value for '{{label}}' cannot end with spaces, tabs, or other whitespace",        
+        "REQUIRED" => "Le champ '{{label}}' doit être rempli."
     ]
 ];

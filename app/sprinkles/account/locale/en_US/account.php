@@ -65,10 +65,6 @@ return [
         "ACTIVATION_COMPLETE" => "You have successfully activated your account. You can now login.",
         "ALREADY_ACTIVE" => "Your account is already activated.",
 
-        "DISPLAY_INVALID_CHARACTERS" => "Display name can only include alpha-numeric characters",
-        "DISPLAYNAME_IN_USE" => "Display name '{{display_name}}' is already in use",
-
-        "EMAIL_CHAR_LIMIT" => "Email must be between {{min}} and {{max}} characters in length.",
         "EMAIL_IN_USE" => "Email '{{email}}' is already in use",
         "EMAIL_UPDATED" => "Account email updated",
 
@@ -80,7 +76,6 @@ return [
         "FORGOTPASS_REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",
         "FORGOTPASS_REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account",
 
-        "INVALID_EMAIL" => "Invalid email address",
         "INVALID_USERNAME" => "Invalid username",
         "INVALID_USER_ID" => "The requested user id does not exist.",
 
@@ -95,8 +90,6 @@ return [
 
         "PASSWORD_HASH_FAILED" => "Password hashing failed. Please contact a site administrator.",
         "PASSWORD_INVALID" => "Current password doesn't match the one we have on record",
-        "PASS_CHAR_LIMIT" => "Your password must be between {{min}} and {{max}} characters in length.",
-        "PASS_MISMATCH" => "Your password and confirmation password must match",
         "PASSWORD_UPDATED" => "Account password updated",
         "PASSWORD_NOTHING_TO_UPDATE" => "You cannot update with the same password",
         "PASSWORD_CONFIRM_CURRENT" => "Please confirm your current password",
@@ -116,12 +109,10 @@ return [
         "SPECIFY_NEW_PASSWORD" => "Please enter your new password",
         "SPECIFY_CONFIRM_PASSWORD" => "Please confirm your new password",
 
-        "TITLE_CHAR_LIMIT" => "Titles must be between {{min}} and {{max}} characters in length.",
         "TOKEN_NOT_FOUND" => "Token does not exist / Account is already activated",
 
         "USER_OR_EMAIL_INVALID" => "Username or email address is invalid.",
         "USER_OR_PASS_INVALID" => "Username or password is invalid.",
-        "USER_CHAR_LIMIT" => "Your username must be between {{min}} and {{max}} characters in length.",
         "USER_INVALID_CHARACTERS" => "Username can only include alpha-numeric characters",
         "USER_NO_LEAD_WS" => "Username cannot begin with whitespace",
         "USER_NO_TRAIL_WS" => "Username cannot end with whitespace",

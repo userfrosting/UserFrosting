@@ -3,7 +3,7 @@
 /**
  * en_US
  *
- * US English message token translations for the core sprinkle.
+ * US English generic message translations for the core sprinkle.
  *
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
@@ -12,12 +12,13 @@
 
 return [
 	"VALIDATE" => [
-        "ARRAY" => "The values for '{{self}}' must be in an array.",
-        "BOOLEAN" => "The value for '{{self}}' must be either '0' or '1'.",
-        "INTEGER" => "The value for '{{self}}' must be an integer.",
+        "ARRAY" => "The values for '{{label}}' must be in an array.",
+        "BOOLEAN" => "The value for '{{label}}' must be either '0' or '1'.",
+        "INTEGER" => "The value for '{{label}}' must be an integer.",
+        "INVALID_EMAIL" => "Invalid email address",
         "LENGTH_RANGE" => "{{label}} must be between {{min}} and {{max}} characters in length.",
-        "NO_LEAD_WS" => "The value for '{{self}}' cannot begin with spaces, tabs, or other whitespace",
-        "NO_TRAIL_WS" => "The value for '{{self}}' cannot end with spaces, tabs, or other whitespace",        
-        "REQUIRED" => "The field '{{self}}' must be specified."
+        "NO_LEAD_WS" => "The value for '{{label}}' cannot begin with spaces, tabs, or other whitespace",
+        "NO_TRAIL_WS" => "The value for '{{label}}' cannot end with spaces, tabs, or other whitespace",        
+        "REQUIRED" => "Please specify a value for {{label}}."
     ]
 ];
