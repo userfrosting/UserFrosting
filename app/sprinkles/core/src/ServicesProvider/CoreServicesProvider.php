@@ -173,7 +173,7 @@ class CoreServicesProvider
          */
         $container['csrf'] = function ($c) {
             $csrfKey = $c->config['session.keys.csrf'];
-            
+
             // Workaround so that we can pass storage into CSRF guard.
             // If we tried to directly pass the indexed portion of `session` (for example, $c->session['site.csrf']),
             // we would get an 'Indirect modification of overloaded element of UserFrosting\Session\Session' error.
@@ -183,18 +183,18 @@ class CoreServicesProvider
                 $c->session[$csrfKey] = new \ArrayObject();
             }
             $csrfStorage = $c->session[$csrfKey];
-            
+
             $onFailure = function ($request, $response, $next) {
                 $e = new BadRequestException();
                 $e->addUserMessage("Missing CSRF token.  Try refreshing the page and then submitting again?");
                 throw $e;
-                
+
                 return $next($request, $response);
             };
-            
+
             return new Guard($c->config['csrf.name'], $csrfStorage, $onFailure, $c->config['csrf.storage_limit'], $c->config['csrf.strength'], $c->config['csrf.persistent_token']);
         };
-        
+
         /**
          * Initialize Eloquent Capsule, which provides the database layer for UF.
          *
@@ -249,7 +249,7 @@ class CoreServicesProvider
 
             // Register the PhpMailerExceptionHandler.
             $handler->registerHandler('\phpmailerException', '\UserFrosting\Sprinkle\Core\Handler\PhpMailerExceptionHandler');
-            
+
             return $handler;
         };
 
@@ -269,7 +269,7 @@ class CoreServicesProvider
 
             $handler->setFormatter($formatter);
             $log->pushHandler($handler);
-            
+
             return $log;
         };
 
@@ -313,15 +313,15 @@ class CoreServicesProvider
          */
         $container['mailer'] = function ($c) {
             $mailer = new Mailer($c->mailLogger, $c->config['mail']);
-            
+
             // Use UF debug settings to override any service-specific log settings.
             if (!$c->config['debug.smtp']) {
                 $mailer->getPhpMailer()->SMTPDebug = 0;
             }
-            
+
             return $mailer;
-        };        
-        
+        };
+
         /**
          * Mail logging service.
          *
@@ -340,8 +340,8 @@ class CoreServicesProvider
             $log->pushHandler($handler);
 
             return $log;
-        };        
-        
+        };
+
         /**
          * Custom 404 handler.
          *
@@ -420,7 +420,8 @@ class CoreServicesProvider
             $config = $c->get('config');
 
             // Load the locale files based on the base locale and the user locale
-            $translator->loadLocaleFiles($config['site.locale_base'], $config['site.locale']);
+            $translator->loadLocaleFiles($config['site.locale_base']);
+            $translator->loadLocaleFiles($config['site.locale']);
 
             return $translator;
         };
