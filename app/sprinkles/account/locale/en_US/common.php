@@ -25,5 +25,5 @@ return [
     
     "USERS" => "Users",
     
-    "WELCOME" => "Welcome back, {{display_name}}"
+    "WELCOME" => "Welcome back, {{first_name}}"
 ];

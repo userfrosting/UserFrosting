@@ -1,13 +1,13 @@
 <?php
 
 /**
- * en_US
+ * fr_FR
  *
- * US English message token translations for the core sprinkle.
+ * FR French generic message translations for the core sprinkle.
  *
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
- * @author Alexander Weissman
+ * @author Louis Charette
  */
 
 return [

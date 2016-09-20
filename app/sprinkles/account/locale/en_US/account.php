@@ -65,7 +65,6 @@ return [
         "ACTIVATION_COMPLETE" => "You have successfully activated your account. You can now login.",
         "ALREADY_ACTIVE" => "Your account is already activated.",
 
-        "DISPLAY_CHAR_LIMIT" => "Your display name must be between {{min}} and {{max}} characters in length.",
         "DISPLAY_INVALID_CHARACTERS" => "Display name can only include alpha-numeric characters",
         "DISPLAYNAME_IN_USE" => "Display name '{{display_name}}' is already in use",
 

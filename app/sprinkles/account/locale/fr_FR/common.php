@@ -3,7 +3,7 @@
 /**
  * fr_FR
  *
- * FR French message token translations
+ * FR French generic message translations for the account sprinkle.
  *
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
@@ -99,13 +99,7 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PRIMARY_GROUP_SET" => "Le groupe principal du compte '{{user_name}}' a été changé avec succès.",
 	"ACCOUNT_WELCOME" => "Bonjour, {{display_name}}"
 ));
-// Generic validation
-$lang = array_merge($lang, array(
-	"VALIDATE_REQUIRED" => "Le champ '{{self}}' doit être rempli.",
-	"VALIDATE_BOOLEAN" => "La valeur de '{{self}}' doit être '0' ou '1'.",
-	"VALIDATE_INTEGER" => "La valeur de '{{self}}' doit être un nombre entier.",
-	"VALIDATE_ARRAY" => "Les valeurs de '{{self}}' doivent être dans un tableau."
-));
+
 // Configuration
 $lang = array_merge($lang,array(
 	"CONFIG_PLUGIN_INVALID" => "Vous essayez de changer la configuration du plugin '{{plugin}}', mais il n'existe pas.",

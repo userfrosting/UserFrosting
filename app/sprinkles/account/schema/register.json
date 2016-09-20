@@ -20,9 +20,10 @@
     "first_name" : {
         "validators" : {
             "length" : {
+                "label" : "&FIRST_NAME",
                 "min" : 1,
                 "max" : 20,
-                "message" : "ACCOUNT.DISPLAY_CHAR_LIMIT"
+                "message" : "VALIDATE.LENGTH_RANGE"
             }
         }
     },

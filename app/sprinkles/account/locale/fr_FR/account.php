@@ -3,11 +3,12 @@
 /**
  * fr_FR
  *
- * FR French message token translations
+ * FR French account message translations for the account sprinkle.
  *
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
  * @author Ulysse Ramage
+ * @author Louis Charette
  */
 
 /*
