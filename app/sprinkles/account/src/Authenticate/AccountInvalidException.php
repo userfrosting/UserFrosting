@@ -8,14 +8,15 @@
  */
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
-use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\HttpException;
 
 /**
  * Invalid account exception.  Used when an account has been removed during an active session.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountInvalidException extends ForbiddenException
+class AccountInvalidException extends HttpException
 {
     protected $default_message = 'ACCOUNT.INVALID';
+    protected $http_error_code = 403;    
 }

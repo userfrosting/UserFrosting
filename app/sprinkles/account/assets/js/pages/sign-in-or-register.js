@@ -22,7 +22,12 @@ $(document).ready(function() {
         $('.login-form').show();
     }
     
-    $('.show-register-form').on('click', function() {
+    // Fetch and render any alerts on the login panel
+    // This is needed, for example, when we are redirected from another page.
+    $("#alerts-login").ufAlerts();
+    $("#alerts-login").ufAlerts('fetch').ufAlerts('render');    
+    
+    function toggleRegistrationForm() {
     	if( ! $(this).hasClass('active') ) {
     		$('.show-login-form').removeClass('active');
     		$(this).addClass('active');
@@ -30,9 +35,9 @@ $(document).ready(function() {
     			$('.register-form').fadeIn('fast');
     		});
     	}
-    });
-    // ---
-    $('.show-login-form').on('click', function() {
+    }
+    
+    function toggleLoginForm() {
     	if( ! $(this).hasClass('active') ) {
     		$('.show-register-form').removeClass('active');
     		$(this).addClass('active');
@@ -40,15 +45,28 @@ $(document).ready(function() {
     			$('.login-form').fadeIn('fast');
     		});
     	}
-    });
+    }
+    
+    $('.show-register-form').on('click', toggleRegistrationForm);
+    
+    $('.show-login-form').on('click', toggleLoginForm);
 
     // TODO: Process form 
     $("#register").ufForm({
         validators: page.validators.register,
         msgTarget: $("#alerts-register")
     }).on("submitSuccess.ufForm", function() {
-        // Forward to login page on success
-        window.location.replace(site.uri.public + "/account/sign-in-or-register");
+        // Show login on success
+        toggleLoginForm();
+        // Show success messages
+        // TODO: destroy method for simpler initialization
+        if (!$("#alerts-login").data('ufAlerts')) {
+            $("#alerts-login").ufAlerts();
+        } else {
+            $("#alerts-login").ufAlerts('clear');
+        }
+        
+        $("#alerts-login").ufAlerts('fetch').ufAlerts('render');
     }).on("submitError.ufForm", function() {
         // Reload captcha
         $("#captcha").captcha();

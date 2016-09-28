@@ -221,7 +221,6 @@ class AccountController
 
         // Forward to home page if user is already logged in
         if (!$this->ci->currentUser->isGuest()) {
-            error_log($config['site.uri.public']);
             return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
         }
 
@@ -403,7 +402,7 @@ class AccountController
         unset($data['captcha']);
         unset($data['passwordc']);
 
-        if ($config['site.setting.require_activation']) {
+        if ($config['site.setting.require_email_verification']) {
             $data['flag_verified'] = false;
         } else {
             $data['flag_verified'] = true;
@@ -431,7 +430,7 @@ class AccountController
         // Create the user
         $user = $classMapper->createInstance('user', $data);
 
-        // Add user to default group and default roles
+        // TODO: Add user to default group and default roles
         /*
         $defaultGroups = Group::where('is_default', GROUP_DEFAULT)->get();
         $user->addGroup($primaryGroup->id);
@@ -468,49 +467,6 @@ class AccountController
         }
 
         return $response->withStatus(200);
-    }
-
-    /**
-     * Processes an new email verification request.
-     *
-     * Processes the request from the email verification link that was emailed to the user, checking that:
-     * 1. The token provided matches a user in the database;
-     * 2. The user account is not already verified;
-     * This route is "public access".
-     * Request type: GET
-     */
-    public function activate(){
-        $data = $this->_app->request->get();
-
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-activate.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
-
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        // Ok, try to find an unverified user with the specified secret token
-        $user = User::where('secret_token', $data['secret_token'])
-                    ->where('flag_verified', '0')->first();
-
-        if (!$user){
-            $ms->addMessageTranslated("danger", "ACCOUNT.TOKEN_NOT_FOUND");
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        $user->flag_verified = "1";
-        $user->store();
-        $ms->addMessageTranslated("success", "ACCOUNT.ACTIVATION_COMPLETE");
-
-        // Forward to login page
-        $this->_app->redirect($this->_app->urlFor('uri_home'));
     }
 
     /**
@@ -923,4 +879,64 @@ class AccountController
 
         $ms->addMessageTranslated("success", "ACCOUNT_SETTINGS_UPDATED");
     }
+    
+    /**
+     * Processes an new email verification request.
+     *
+     * Processes the request from the email verification link that was emailed to the user, checking that:
+     * 1. The token provided matches a user in the database;
+     * 2. The user account is not already verified;
+     * This route is "public access".
+     * Request type: GET
+     */
+    public function verify($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        // Load validation rules
+        $schema = new RequestSchema("schema://account-verify.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        $this->ci->db;
+
+        $loginPage = $this->ci->router->pathFor('login');
+        
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and halt on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            // 400 code + redirect is perfectly fine, according to user Dilaz in #laravel
+            return $response->withRedirect($loginPage, 400);
+        }
+
+        // Ok, try to find an unverified user with the specified secret token
+        $user = $this->ci->classMapper->staticMethod('user', 'where', 'secret_token', $data['secret_token'])->where('flag_verified', '0')->first();
+
+        if (!$user) {
+            $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND");
+            return $response->withRedirect($loginPage, 400);
+        }
+
+        $user->flag_verified = "1";
+        $user->save();
+
+        $ms->addMessageTranslated("success", "ACCOUNT.VERIFICATION.COMPLETE");
+
+        // Forward to login page
+        return $response->withRedirect($loginPage);
+    }    
 }

@@ -15,8 +15,6 @@ return [
         "@TRANSLATION" => "Account",
 
         "ACCESS_DENIED" => "Hmm, looks like you don't have permission to do that.",
-        "ACTIVATION_COMPLETE" => "You have successfully activated your account. You can now login.",
-        "ALREADY_ACTIVE" => "Your account is already activated.",
 
         "DISABLED" => "This account has been disabled. Please contact us for more information.",
 
@@ -34,9 +32,11 @@ return [
         "UNVERIFIED" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
 
         "VERIFICATION" => [
+            "ALREADY_COMPLETE" => "Your account is already verified.",
             "LINK_ALREADY_SENT" => "A verification email has already been sent to this email address in the last {{resend_activation_threshold}} second(s). Please try again later.",
             "NEW_LINK_SENT" => "We have emailed you a new verification link, please check your email",
             "RESEND" => "Resend verification email",
+            "COMPLETE" => "You have successfully verified your account. You can now login.",            
             "TOKEN_NOT_FOUND" => "Verification token does not exist / Account is already verified",
         ]
     ],

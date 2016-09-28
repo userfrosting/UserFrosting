@@ -21,9 +21,13 @@ $app->group('/account', function () {
     $this->get('/set-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSetPassword');
     
     $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings');
-       
-    $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')->add('checkEnvironment');
+
+    $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')
+        ->add('checkEnvironment')
+        ->setName('login');
     
+    $this->get('/verify', 'UserFrosting\Sprinkle\Account\Controller\AccountController:verify');
+
     $this->post('/login', 'UserFrosting\Sprinkle\Account\Controller\AccountController:login');    
     
     $this->post('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:register');

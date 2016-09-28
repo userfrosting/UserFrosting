@@ -8,14 +8,15 @@
  */
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
-use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\HttpException;
 
 /**
  * Unverified account exception.  Used when an account is required to complete email verification, but hasn't done so yet.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountNotVerifiedException extends ForbiddenException
+class AccountNotVerifiedException extends HttpException
 {
     protected $default_message = 'ACCOUNT.UNVERIFIED';
+    protected $http_error_code = 403;    
 }

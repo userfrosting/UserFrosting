@@ -14,8 +14,6 @@ return [
     "@PLURAL_RULE" => 1,
 
     "ABOUT" => "About",
-
-    "EMAIL" => "Email",
     
 	"CAPTCHA" => [
 	    "@TRANSLATE" => "Captcha",
@@ -27,8 +25,10 @@ return [
     "CSRF_MISSING" => "Missing CSRF token.  Try refreshing the page and then submitting again?",
 
     "DB_INVALID" => "Cannot connect to the database.  If you are an administrator, please check your error log.",
-    
-	"FEATURE_DISABLED" => "This feature is currently disabled",
+
+    "EMAIL" => "Email",
+
+    "FEATURE_DISABLED" => "This feature is currently disabled",
 
     "MAIL_ERROR" => "Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UF mail log.",
 

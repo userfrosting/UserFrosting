@@ -11,7 +11,7 @@
     return [
         'address_book' => [
             'admin' => [
-                'email' => 'test@example.com',
+                'email' => getenv('SMTP_USER'),
                 'name'  => 'UserFrosting Administrator'
             ]
         ],    

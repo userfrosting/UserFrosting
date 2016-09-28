@@ -103,6 +103,16 @@
         // See http://stackoverflow.com/a/1232046/2970321
         base.messages.length = 0;
         
+        // Also, turn off all alert styling in agglomerate container
+        if (base.options.agglomerate) {
+
+            base.$T.toggleClass("alert", false)
+                .toggleClass("alert-info", false)
+                .toggleClass("alert-success", false)
+                .toggleClass("alert-warning", false)
+                .toggleClass("alert-danger", false);
+        }
+
         return base.$T;
     }
     
