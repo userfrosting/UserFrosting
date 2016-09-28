@@ -79,6 +79,7 @@
                 "message" : "VALIDATE.REQUIRED"
             },
             "matches" : {
+                "field" : "password",
                 "label" : "&PASSWORD.CONFIRM",
                 "message" : "VALIDATE.PASSWORD_MISMATCH"
             },

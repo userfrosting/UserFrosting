@@ -163,7 +163,14 @@ jQuery.validator.setDefaults({
                             if (base.options.DEBUG)
                                 console.log("Error (" + data.status + "): " + data.responseText );
                             // Display errors on failure
-                            base.options.msgTarget.ufAlerts().ufAlerts('fetch').ufAlerts('render');
+                            // TODO: ufAlerts widget should have a 'destroy' method
+                            if (!base.options.msgTarget.data('ufAlerts')) {
+                                base.options.msgTarget.ufAlerts();
+                            } else {
+                                base.options.msgTarget.ufAlerts('clear');
+                            }
+                            
+                            base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
                             base.options.msgTarget.on("render.ufAlerts", function () {
                                 base.$T.trigger('submitError.ufForm');
                             });
