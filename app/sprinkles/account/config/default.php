@@ -31,7 +31,8 @@
             ],
             'cookie' => [
                 'name' => 'rememberme'
-            ]
+            ],
+            'expire_time' => 604800
         ],
         'site' => [
             'setting' => [

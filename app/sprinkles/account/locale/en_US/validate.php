@@ -12,6 +12,6 @@
 
 return [
 	"VALIDATE" => [
-        "PASS_MISMATCH" => "Your password and confirmation password must match"
+        "PASSWORD_MISMATCH" => "Your password and confirmation password must match."
     ]
 ];

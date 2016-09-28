@@ -75,6 +75,11 @@ class Authenticator
         
         // Change cookie path
         $this->rememberMe->getCookie()->setPath($this->config['remember_me.session.path']);
+        
+        // Set expire time, if specified
+        if ($this->config->has('remember_me.expire_time') && ($this->config->has('remember_me.expire_time') != null)) {
+            $this->rememberMe->setExpireTime($this->config->has('remember_me.expire_time'));
+        }
     }
     
     /**

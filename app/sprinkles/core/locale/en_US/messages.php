@@ -15,36 +15,39 @@ return [
 
     "ABOUT" => "About",
 
+    "EMAIL" => "Email",
+    
 	"CAPTCHA" => [
 	    "@TRANSLATE" => "Captcha",
-        "VERIFY" => "Verify the captcha",
+        "FAIL" => "You did not enter the captcha code correctly.",
         "SPECIFY" => "Enter the captcha",
-        "FAIL" => "You did not enter the captcha code correctly."
+        "VERIFY" => "Verify the captcha"
     ],
 
 	"FEATURE_DISABLED" => "This feature is currently disabled",
+
     "MAIL_ERROR" => "Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UF mail log.",
 
     // Actions words
-    "EDIT" => "Edit",
+    "ACTIONS" => "Actions",    
     "ADD" => "Add",
-    "DELETE" => "Delete",
     "CANCEL" => "Cancel",
-    "UPDATE" => "Update",
-    "SAVE" => "Save",
-    "SORT" => "Sort",
-    "DENY" => "Deny",
     "CONFIRM" => "Confirm",
-    "CREATE" => "Create",
+    "CREATE" => "Create",    
+    "DELETE" => "Delete",
     "DELETE_CONFIRM" => "Are you sure you want to delete this?",
     "DELETE_CONFIRM_YES" => "Yes, delete",
-    "DELETE_NAMED" => "Delete {{name}}",
     "DELETE_CONFIRM_NAMED" => "Are you sure you want to delete {{name}}?",
     "DELETE_CONFIRM_YES_NAMED" => "Yes, delete {{name}}",
-    "DELETE_CONFIRM_YES_NAMED" => "This action cannot be undone.",
-    "ACTIONS" => "Actions",
+    "DELETE_CONFIRM_YES_NAMED" => "This action cannot be undone.",    
+    "DELETE_NAMED" => "Delete {{name}}",
+    "DENY" => "Deny",
+    "EDIT" => "Edit",
+    "SAVE" => "Save",
+    "SORT" => "Sort",
     "PRINT" => "Print",
-
+    "UPDATE" => "Update",
+    
     // Events / Errors
     "SUCCESS" => "Success",
     "ERROR" => "Error",

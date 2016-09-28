@@ -75,15 +75,15 @@
     "passwordc" : {
         "validators" : {
             "required" : {
-                "label" : "&PASSWORD",
+                "label" : "&PASSWORD.CONFIRM",
                 "message" : "VALIDATE.REQUIRED"
             },
             "matches" : {
-                "field" : "password",
-                "message" : "VALIDATE.PASS_MISMATCH"
+                "field" : "&PASSWORD.CONFIRM",
+                "message" : "VALIDATE.PASSWORD_MISMATCH"
             },
             "length" : {
-                "label" : "&PASSWORD",
+                "label" : "&PASSWORD.CONFIRM",
                 "min" : 12,
                 "max" : 100,
                 "message" : "VALIDATE.LENGTH_RANGE"

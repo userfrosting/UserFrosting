@@ -1,17 +1,17 @@
 {% extends "layouts/azmind.html.twig" %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}{{translate('ACCOUNT.SIGNIN_OR_REGISTER')}}{% endblock %}
+{% block page_title %}{{translate('SIGNIN_OR_REGISTER')}}{% endblock %}
 
-{% block page_description %}{{translate('ACCOUNT.LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
+{% block page_description %}{{translate('LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
 
 {% block body_matter %}
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2 text">
-            <h1>{{translate('ACCOUNT.PAGE.LOGIN.TITLE')}}</h1>
+            <h1>{{translate('PAGE.LOGIN.TITLE')}}</h1>
             <div class="description">
                 <p>
-                    {{translate('ACCOUNT.PAGE.LOGIN.SUBTITLE')}}
+                    {{translate('PAGE.LOGIN.SUBTITLE')}}
                 </p>
             </div>
         </div>
@@ -20,11 +20,11 @@
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1 show-forms">
             {% if site.setting.can_register %}
-                <span class="show-login-form active">{{translate('ACCOUNT.SIGNIN')}}</span>
+                <span class="show-login-form active">{{translate('SIGNIN')}}</span>
                 <span class="show-forms-divider">/</span>
-                <span class="show-register-form">{{translate('ACCOUNT.REGISTER')}}</span>
+                <span class="show-register-form">{{translate('REGISTER')}}</span>
             {% else %}
-                <span class="show-login-form-static">{{translate('ACCOUNT.SIGNIN')}}</span>
+                <span class="show-login-form-static">{{translate('SIGNIN')}}</span>
             {% endif %}
         </div>
     </div>
@@ -38,7 +38,7 @@
                     {% include "components/csrf.html.twig" %}
                     <div class="form-group">
                         <label class="sr-only" for="r-form-username">{{translate('USERNAME')}}</label>
-                        <input type="text" name="user_name" placeholder="{{translate('ACCOUNT.CHOOSE_USERNAME')}}" class="form-control" id="r-form-username">
+                        <input type="text" name="user_name" placeholder="{{translate('CHOOSE_USERNAME')}}" class="form-control" id="r-form-username">
                     </div>
                     <div class="row">
                         <div class="col-md-6 form-group">
@@ -56,11 +56,11 @@
                     </div>
                     <div class="form-group">
                         <label class="sr-only" for="r-form-password">{{translate('PASSWORD')}}</label>
-                        <input type="password" name="password" placeholder="{{translate('ACCOUNT.PASSWORD_BETWEEN', {min: 12, max: 100})}}" class="form-control" id="r-form-password">
+                        <input type="password" name="password" placeholder="{{translate('PASSWORD.BETWEEN', {min: 12, max: 100})}}" class="form-control" id="r-form-password">
                     </div>
                     <div class="form-group">
-                        <label class="sr-only" for="r-form-passwordc">{{translate('ACCOUNT.PASSWORD_CONFIRM')}}</label>
-                        <input type="password" name="passwordc" placeholder="{{translate('ACCOUNT.PASSWORD_CONFIRM')}}" class="form-control" id="r-form-passwordc">
+                        <label class="sr-only" for="r-form-passwordc">{{translate('PASSWORD.CONFIRM')}}</label>
+                        <input type="password" name="passwordc" placeholder="{{translate('PASSWORD.CONFIRM')}}" class="form-control" id="r-form-passwordc">
                     </div>
                     {% if site.setting.registration_captcha %}
                         <div class="form-group">
@@ -80,13 +80,13 @@
                         <input name="spiderbro" id="spiderbro" value="http://"/>
                     </div>
                     <div class="text-left">
-                        {{translate('ACCOUNT.TOS_AGREEMENT', {
+                        {{translate('TOS_AGREEMENT', {
                             'site_title' : site.title,
                             'url' : '#" data-toggle="modal" data-target="#tos',
-                            'linkText' : '&ACCOUNT.TOS'
+                            'linkText' : '&TOS'
                         }) | raw}}
                     </div>
-                    <button type="submit" class="btn">{{translate('ACCOUNT.REGISTER_ME')}}</button>
+                    <button type="submit" class="btn">{{translate('REGISTER_ME')}}</button>
                 </form>
             </div>
             <div class="col-sm-6 forms-right-icons">
@@ -131,19 +131,19 @@
                 </div>
                 <div class="form-group">
                     <label for="l-form-rememberme">
-                        <input type="checkbox" name="rememberme" id="l-form-rememberme"> {{translate('ACCOUNT.REMEMBER_ME_ON_COMPUTER')}}
+                        <input type="checkbox" name="rememberme" id="l-form-rememberme"> {{translate('REMEMBER_ME_ON_COMPUTER')}}
                     </label>
                 </div>
-                <button type="submit" class="btn">{{translate('ACCOUNT.SIGNIN')}}</button>
+                <button type="submit" class="btn">{{translate('SIGNIN')}}</button>
             </form>
             <div class="registration-links">
-                <a href="{{site.uri.public}}/account/forgot-password">{{translate('ACCOUNT.PASSWORD_FORGET')}}</a>
+                <a href="{{site.uri.public}}/account/forgot-password">{{translate('PASSWORD.FORGET')}}</a>
                 <br>
                 {# TODO: hide this link if public registration is turned off? #}
-                <a href="{{site.uri.public}}/account/resend-verification">{{translate('ACCOUNT.ACTION_SEND_AGAIN')}}</a>
+                <a href="{{site.uri.public}}/account/resend-verification">{{translate('ACCOUNT.VERIFICATION.RESEND')}}</a>
             </div>
             <div class="social-login">
-                <p>{{translate('ACCOUNT.LOGIN_SOCIAL')}}:</p>
+                <p>{{translate('LOGIN.SOCIAL')}}:</p>
                 <div class="social-login-buttons">
                     <a class="btn btn-link-1" href="#"><i class="fa fa-facebook"></i></a>
                     <a class="btn btn-link-1" href="#"><i class="fa fa-twitter"></i></a>
