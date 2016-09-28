@@ -186,7 +186,7 @@ class CoreServicesProvider
 
             $onFailure = function ($request, $response, $next) {
                 $e = new BadRequestException();
-                $e->addUserMessage("Missing CSRF token.  Try refreshing the page and then submitting again?");
+                $e->addUserMessage('CSRF_MISSING');
                 throw $e;
 
                 return $next($request, $response);

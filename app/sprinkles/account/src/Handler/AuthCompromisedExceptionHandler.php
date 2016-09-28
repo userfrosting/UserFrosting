@@ -33,7 +33,7 @@ class AuthCompromisedExceptionHandler extends ExceptionHandler
     {
         $this->logFlag = false;
     
-        $this->ci->alerts->addMessageTranslated("danger", "Your session may have been compromised.");
+        $this->ci->alerts->addMessageTranslated('danger', 'ACCOUNT.SESSION_COMPROMISED');
         
         return $response->withStatus($httpCode);
     }

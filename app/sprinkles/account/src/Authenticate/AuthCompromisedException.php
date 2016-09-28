@@ -17,5 +17,5 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AuthCompromisedException extends ForbiddenException
 {
-    protected $default_message = 'Someone else has used your login information to acccess this page!';
+    protected $default_message = 'ACCOUNT.SESSION_COMPROMISED';
 }

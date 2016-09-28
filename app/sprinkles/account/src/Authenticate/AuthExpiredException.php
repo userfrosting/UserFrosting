@@ -17,5 +17,5 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AuthExpiredException extends ForbiddenException
 {
-    protected $default_message = 'Your session has expired.  Please sign in again.';
+    protected $default_message = 'ACCOUNT.SESSION_EXPIRED';
 }

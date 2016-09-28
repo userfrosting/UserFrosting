@@ -24,6 +24,10 @@ return [
         "VERIFY" => "Verify the captcha"
     ],
 
+    "CSRF_MISSING" => "Missing CSRF token.  Try refreshing the page and then submitting again?",
+
+    "DB_INVALID" => "Cannot connect to the database.  If you are an administrator, please check your error log.",
+    
 	"FEATURE_DISABLED" => "This feature is currently disabled",
 
     "MAIL_ERROR" => "Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UF mail log.",
@@ -53,6 +57,7 @@ return [
     "ERROR" => "Error",
 	"NO_DATA" => "No data/bad data sent",
 	"NOTHING_TO_UPDATE" => "Nothing to update",
+    "RESOURCE_NOT_FOUND" => "Resource not found",
     "SERVER_ERROR" => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP or UF error logs.",
 	"SQL_ERROR" => "Fatal SQL error",
 

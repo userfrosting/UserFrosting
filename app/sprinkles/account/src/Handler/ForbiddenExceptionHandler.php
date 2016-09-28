@@ -32,7 +32,7 @@ class ForbiddenExceptionHandler extends ExceptionHandler
     {
         $this->logFlag = true;
     
-        $this->ci->alerts->addMessageTranslated("danger", "Resource not found.");
+        $this->ci->alerts->addMessageTranslated('danger', 'RESOURCE_NOT_FOUND');
         
         return $response->withStatus(404);
     }

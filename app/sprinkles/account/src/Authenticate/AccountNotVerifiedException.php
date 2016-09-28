@@ -17,5 +17,5 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AccountNotVerifiedException extends ForbiddenException
 {
-    protected $default_message = 'ACCOUNT.ACCOUNT_INACTIVE';
+    protected $default_message = 'ACCOUNT.UNVERIFIED';
 }

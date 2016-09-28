@@ -17,5 +17,5 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class DatabaseInvalidException extends ForbiddenException
 {
-    protected $default_message = 'Cannot connect to the database.  If you are an administrator, please check your error log.';  
+    protected $default_message = 'DB_INVALID';  
 }

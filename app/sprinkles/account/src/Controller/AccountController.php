@@ -267,7 +267,7 @@ class AccountController
 
         // Return 200 success if user is already logged in
         if (!$this->ci->currentUser->isGuest()) {
-            $ms->addMessageTranslated("warning", "ACCOUNT.LOGIN_ALREADY_COMPLETE");
+            $ms->addMessageTranslated("warning", "LOGIN.ALREADY_COMPLETE");
             return $response->withStatus(200);
         }
 
@@ -287,7 +287,7 @@ class AccountController
 
         // If it's an email address, but email login is not enabled, raise an error.
         if ($isEmail && !$config['site.setting.email_login']) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.USER_OR_PASS_INVALID");
+            $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
             return $response->withStatus(403);
         }
 
@@ -346,19 +346,19 @@ class AccountController
 
         // Security measure: do not allow registering new users until the master account has been created.
         if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.MASTER_ACCOUNT_NOT_EXISTS");
+            $ms->addMessageTranslated("danger", "ACCOUNT.MASTER_NOT_EXISTS");
             return $response->withStatus(403);
         }
 
         // Check if registration is currently enabled
         if (!$config['site.setting.can_register']) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.REGISTRATION_DISABLED");
+            $ms->addMessageTranslated("danger", "REGISTRATION.DISABLED");
             return $response->withStatus(403);
         }
 
         // Prevent the user from registering if he/she is already logged in
         if(!$this->ci->currentUser->isGuest()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.REGISTRATION_LOGOUT");
+            $ms->addMessageTranslated("danger", "REGISTRATION.LOGOUT");
             return $response->withStatus(403);
         }
 
@@ -377,12 +377,12 @@ class AccountController
 
         // Check if username or email already exists
         if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.USERNAME_IN_USE", $data);
+            $ms->addMessageTranslated("danger", "USERNAME.IN_USE", $data);
             $error = true;
         }
 
         if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.EMAIL_IN_USE", $data);
+            $ms->addMessageTranslated("danger", "EMAIL_IN_USE", $data);
             $error = true;
         }
 
@@ -461,10 +461,10 @@ class AccountController
 
             $this->ci->mailer->send($message);
 
-            $ms->addMessageTranslated("success", "ACCOUNT.REGISTRATION_COMPLETE_TYPE2");
+            $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE2");
         } else {
             // No verification required
-            $ms->addMessageTranslated("success", "ACCOUNT.REGISTRATION_COMPLETE_TYPE1");
+            $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE1");
         }
 
         return $response->withStatus(200);

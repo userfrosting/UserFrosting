@@ -22,10 +22,16 @@ return [
 
         "EMAIL_UPDATED" => "Account email updated",
 
-        "INACTIVE" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
         "INVALID" => "This account does not exist. It may have been deleted.  Please contact us for more information.",
 
+        "MASTER_NOT_EXISTS" => "You cannot register an account until the master account has been created!",
+
+        "SESSION_COMPROMISED" => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
+        "SESSION_EXPIRED" => "Your session has expired.  Please sign in again.",
+
         "SETTINGS_UPDATED" => "Account settings updated",
+
+        "UNVERIFIED" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
 
         "VERIFICATION" => [
             "LINK_ALREADY_SENT" => "A verification email has already been sent to this email address in the last {{resend_activation_threshold}} second(s). Please try again later.",
@@ -34,8 +40,6 @@ return [
             "TOKEN_NOT_FOUND" => "Verification token does not exist / Account is already verified",
         ]
     ],
-
-    "CHOOSE_USERNAME" => "Choose a unique username",
     
     "EMAIL_IN_USE" => "Email '{{email}}' is already in use",
 
@@ -54,8 +58,6 @@ return [
     ],
     
     "LOGOUT" => "Logout",
-    
-    "MASTER_NOT_EXISTS" => "You cannot register an account until the master account has been created!",
     
     "PAGE" => [
         "LOGIN" => [
@@ -110,9 +112,14 @@ return [
     "TOS" => "terms and conditions",
     "TOS_AGREEMENT" => "By registering an account with {{site_title}}, you accept the {{&_LINK}}.",
 
-    "USERNAME" => "Username",
-    "USERNAME_INVALID" => "Invalid username",
-    "USERNAME_IN_USE" => "Username '{{user_name}}' is already in use.",
+    "USERNAME" => [
+        "@TRANSLATION" => "Username",
+
+        "CHOOSE" => "Choose a unique username",    
+        "INVALID" => "Invalid username",
+        "IN_USE" => "Username '{{user_name}}' is already in use."
+    ],
+
     "USER_ID_INVALID" => "The requested user id does not exist.",
     "USER_OR_EMAIL_INVALID" => "Username or email address is invalid.",
     "USER_OR_PASS_INVALID" => "Username or password is invalid.",
