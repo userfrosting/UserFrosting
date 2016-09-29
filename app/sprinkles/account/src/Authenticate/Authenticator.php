@@ -78,7 +78,7 @@ class Authenticator
         
         // Set expire time, if specified
         if ($this->config->has('remember_me.expire_time') && ($this->config->has('remember_me.expire_time') != null)) {
-            $this->rememberMe->setExpireTime($this->config->has('remember_me.expire_time'));
+            $this->rememberMe->setExpireTime($this->config['remember_me.expire_time']);
         }
     }
     
