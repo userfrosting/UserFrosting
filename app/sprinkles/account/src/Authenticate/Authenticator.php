@@ -161,9 +161,9 @@ class Authenticator
             $currentUserId = $this->session[$currentUserIdKey];
             
             // Check, if the Rememberme cookie exists and is still valid.
-            // If not, we log out the current session
+            // If not, we log out the current session and throw an exception.
             if(!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
-                $this->rememberMe->clearCookie();
+                $this->logout();
                 throw new AuthExpiredException();
             }
         // If not, try to login via RememberMe cookie
