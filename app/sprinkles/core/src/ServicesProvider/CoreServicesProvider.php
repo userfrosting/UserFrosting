@@ -386,8 +386,10 @@ class CoreServicesProvider
                 throw new \Exception("Bad session handler type '{$config['session.handler']}' specified in configuration file.");
             }
 
-            // Create and return a new wrapper for $_SESSION
-            return new Session($handler, $config['session']);
+            // Create, start and return a new wrapper for $_SESSION
+            $session = new Session($handler, $config['session']);
+            $session->start();
+            return $session;
         };
 
         /**

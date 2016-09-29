@@ -184,7 +184,7 @@
             } else {
                 alertHtml = "";
                 
-                var alertMessageTemplate = Handlebars.compile(base.alertMessageTemplateHtml); 
+                var alertMessageTemplate = Handlebars.compile(base._alertMessageTemplateHtml); 
                 
                 jQuery.each(base.messages, function(alert_idx, alert) {
                     alertHtml += alertMessageTemplate(alert);

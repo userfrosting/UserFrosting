@@ -230,7 +230,7 @@ class Authenticator
         // Completely destroy the session
         $this->session->destroy();
         
-        // Reset the session service
-        $this->session = null;
+        // Restart the session service
+        $this->session->start();
     }
 }
