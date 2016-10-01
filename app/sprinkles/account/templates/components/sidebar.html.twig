@@ -20,34 +20,6 @@
             <a href="{{site.uri.public}}/zerg"><i class="sc sc-zerg fa fa-fw"></i> Zerg</a>
         </li>
         {% endif %}
-        {% if checkAccess('uri_users') %}
-        <li>
-            <a href="{{site.uri.public}}/users"><i class="fa fa-users fa-fw"></i> {{ translate("MENU_USERS") }}</a>
-        </li>
-        {% endif %}
-        {% if checkAccess('uri_group_users', { ('primary_group_id') : 4 }) %}
-        <li>
-            <a href="{{site.uri.public}}/users/zerglings"><i class="sc sc-zergling fa-fw"></i> Zerglings</a>
-        </li>
-        {% endif %}
-        {% if checkAccess('uri_site_settings') or checkAccess('uri_manage_groups') %}
-        <li>
-            <a href="#"><i class="fa fa-wrench fa-fw"></i> {{ translate("MENU_CONFIGURATION") }}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-                {% if checkAccess('uri_site_settings') %}
-                <li>
-                    <a href="{{site.uri.public}}/config/settings"><i class="fa fa-globe fa-fw"></i> {{ translate("MENU_SITE_SETTINGS") }}</a>
-                </li>
-                {% endif %}
-                {% if checkAccess('uri_manage_groups') %}
-                <li>
-                    <a href="{{site.uri.public}}/groups"><i class="fa fa-tags fa-fw"></i> {{ translate("MENU_GROUPS") }}</a>
-                </li>
-                {% endif %}
-            </ul>
-            <!-- /.nav-second-level -->
-        </li>
-        {% endif %}
     </ul>
 </div>
 <!-- /.sidebar-collapse -->

@@ -1,70 +1,78 @@
 {
-    "display_name" : {
+    "passwordcheck" : {
         "validators" : {
             "required" : {
-                "message" : "ACCOUNT_SPECIFY_DISPLAY_NAME"
-            },
-            "length" : {
-                "min" : 1,
-                "max" : 50,
-                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
-            }
-        }
-    },          
-    "email" : {
-        "validators" : {
-            "required" : {
-                "message" : "ACCOUNT_SPECIFY_EMAIL"
-            },
-            "length" : {
-                "min" : 1,
-                "max" : 150,
-                "message" : "ACCOUNT_EMAIL_CHAR_LIMIT"
-            },
-            "email" : {
-                "message" : "ACCOUNT_INVALID_EMAIL"
+                "message" : "PASSWORD.CONFIRM_CURRENT"
             }
         }
     },
-    "locale" : {
+    "first_name" : {
+        "validators" : {
+            "length" : {
+                "label" : "&FIRST_NAME",
+                "min" : 1,
+                "max" : 20,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },
+    "last_name" : {
+        "validators" : {
+            "length" : {
+                "label" : "&LAST_NAME",
+                "min" : 1,
+                "max" : 30,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },    
+    "email" : {
         "validators" : {
             "required" : {
-                "message" : "ACCOUNT_SPECIFY_LOCALE"
+                "label" : "&EMAIL",
+                "message" : "VALIDATE.REQUIRED"
+            },
+            "length" : {
+                "label" : "&EMAIL",
+                "min" : 1,
+                "max" : 150,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            },
+            "email" : {
+                "message" : "VALIDATE.INVALID_EMAIL"
             }
         }
     },
     "password" : {
         "validators" : {
             "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+                "label" : "&PASSWORD",
+                "min" : 12,
+                "max" : 100,
+                "message" : "VALIDATE.LENGTH_RANGE"
             }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
+        }  
     },
     "passwordc" : {
         "validators" : {
             "matches" : {
                 "field" : "password",
-                "message" : "ACCOUNT_PASS_MISMATCH"
+                "label" : "&PASSWORD.CONFIRM",
+                "message" : "VALIDATE.PASSWORD_MISMATCH"
             },
             "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
+                "label" : "&PASSWORD.CONFIRM",
+                "min" : 12,
+                "max" : 100,
+                "message" : "VALIDATE.LENGTH_RANGE"
             }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }    
+        }  
     },
-    "passwordcheck" : {
+    "locale" : {
         "validators" : {
             "required" : {
-                "message" : "ACCOUNT_PASSWORD_CONFIRM_CURRENT"
+                "label" : "&LOCALE",
+                "message" : "VALIDATE.REQUIRED"
             }
         }
     }

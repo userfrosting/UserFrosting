@@ -31,4 +31,6 @@ $app->group('/account', function () {
     $this->post('/login', 'UserFrosting\Sprinkle\Account\Controller\AccountController:login');    
     
     $this->post('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:register');
+    
+    $this->post('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:settings');
 });

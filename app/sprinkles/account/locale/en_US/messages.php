@@ -59,6 +59,8 @@ return [
     
     "LOGOUT" => "Logout",
     
+    "NAME" => "Name",
+    
     "PAGE" => [
         "LOGIN" => [
             "DESCRIPTION" => "Sign in to your {{site_name}} account, or register for a new account.",

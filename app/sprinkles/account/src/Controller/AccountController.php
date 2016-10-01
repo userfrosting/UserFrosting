@@ -21,12 +21,12 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequest;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\HttpException;
-use UserFrosting\Sprinkle\Account\Util\Password;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -52,6 +52,116 @@ class AccountController
     }
 
     /**
+     * Processes a request to cancel a password reset request.
+     *
+     * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
+     * Processes the request from the password reset link, checking that:
+     * 1. The provided secret token is associated with an existing user account.
+     * Request type: GET
+     */
+    public function denyResetPassword(){
+        $data = $this->_app->request->get();
+
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/deny-password.json");
+
+        // Get the alert message stream
+        $ms = $this->_app->alerts;
+
+        // Set up Fortress to validate the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+
+        // Validate
+        if (!$rf->validate()) {
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }
+
+        // Fetch the user with the specified secret token and who has a pending password reset request
+        $user = User::where('secret_token', $data['secret_token'])
+                    ->where('flag_password_reset', "1")->first();
+
+        if (!$user){
+            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
+            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        }
+
+        // Reset the password flag
+        $user->flag_password_reset = "0";
+
+        // Store the updated info
+        $user->store();
+        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_CANNED");
+        $this->_app->redirect($this->_app->urlFor('uri_home'));
+    }
+
+    /**
+     * Processes a request to email a forgotten password reset link to the user.
+     *
+     * Processes the request from the form on the "forgot password" page, checking that:
+     * 1. The provided email address belongs to a registered account;
+     * 2. The submitted data is valid.
+     * Note that we have removed the requirement that a password reset request not already be in progress.
+     * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
+     * This route is "public access".
+     * Request type: POST
+     * @todo rate-limit forgotten password requests, to prevent password-reset spamming
+     * @todo require additional user information
+     */
+    public function forgotPassword(){
+        $data = $this->_app->request->post();
+
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
+
+        // Get the alert message stream
+        $ms = $this->_app->alerts;
+
+        // Set up Fortress to validate the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+
+        // Validate
+        if (!$rf->validate()) {
+            $this->_app->halt(400);
+        }
+
+        // Load the user, by the specified email address
+        $user = User::where('email', $data['email'])->first();
+
+        // Check that the email exists.
+        // On failure, we should still pretend like we succeeded, to prevent account enumeration
+        if(!$user) {
+            $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
+            $this->_app->halt(200);
+        }
+
+        // TODO: rate-limit the number of password reset requests for a given user
+
+        // Generate a new password reset request.  This will also generate a new secret token for the user.
+        $user->newEventPasswordReset();
+
+        // Email the user asking to confirm this change password request
+        $twig = $this->_app->view()->getEnvironment();
+        $template = $twig->loadTemplate("mail/password-reset.twig");
+        $notification = new Notification($template);
+        $notification->fromWebsite();      // Automatically sets sender and reply-to
+        $notification->addEmailRecipient($user->email, $user->display_name, [
+            "user" => $user,
+            "request_date" => date("Y-m-d H:i:s")
+        ]);
+
+        try {
+            $notification->send();
+        } catch (\phpmailerException $e){
+            $ms->addMessageTranslated("danger", "MAIL_ERROR");
+            error_log('Mailer Error: ' . $e->errorMessage());
+            $this->_app->halt(500);
+        }
+
+        $user->save();
+        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
+    }
+
+    /**
      * Generate a random captcha, store it to the session, and return the captcha image.
      *
      * Request type: GET
@@ -64,6 +174,68 @@ class AccountController
         return $response->withStatus(200)
                     ->withHeader('Content-Type', 'image/png;base64')
                     ->write($captcha->getImage());
+    }
+
+    /**
+     * Processes an account login request.
+     *
+     * Processes the request from the form on the login page, checking that:
+     * 1. The user is not already logged in.
+     * 2. Email login is enabled, if an email address was used.
+     * 3. The user account exists.
+     * 4. The user account is enabled and active.
+     * 5. The user entered a valid username/email and password.
+     * This route, by definition, is "public access".
+     * Request type: POST
+     */
+    public function login($request, $response, $args)
+    {
+        $ms = $this->ci->alerts;
+        $config = $this->ci->config;
+
+        // Get POST parameters
+        $params = $request->getParsedBody();
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://login.json");
+
+        // Return 200 success if user is already logged in
+        if (!$this->ci->currentUser->isGuest()) {
+            $ms->addMessageTranslated("warning", "LOGIN.ALREADY_COMPLETE");
+            return $response->withStatus(200);
+        }
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and halt on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            return $response->withStatus(400);
+        }
+
+        // Determine whether we are trying to log in with an email address or a username
+        $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
+
+        // If it's an email address, but email login is not enabled, raise an error.
+        if ($isEmail && !$config['site.setting.email_login']) {
+            $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
+            return $response->withStatus(403);
+        }
+
+        // Try to authenticate the user.  Authenticator will throw an exception on failure.
+        $authenticator = $this->ci->authenticator;
+
+        if($isEmail){
+            $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);
+        } else {
+            $currentUser = $authenticator->attempt('user_name', $data['user_name'], $data['password'], $data['rememberme']);
+        }
+
+        $ms->addMessageTranslated("success", "WELCOME", $currentUser->export());
+        return $response->withStatus(200);
     }
 
     /**
@@ -186,7 +358,10 @@ class AccountController
      */
     public function pageSettings($request, $response, $args)
     {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -198,9 +373,11 @@ class AccountController
         $schema = new RequestSchema("schema://account-settings.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);
 
+        $locales = $this->ci->translator->getAvailableLocales();
+
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             "page" => [
-                "locales" => [], //$site->getLocales(),
+                "locales" => $locales,
                 "validators" => [
                     "account_settings"    => $validator->rules('json', false)
                 ]
@@ -239,68 +416,6 @@ class AccountController
                 ]
             ]
         ]);
-    }
-
-    /**
-     * Processes an account login request.
-     *
-     * Processes the request from the form on the login page, checking that:
-     * 1. The user is not already logged in.
-     * 2. Email login is enabled, if an email address was used.
-     * 3. The user account exists.
-     * 4. The user account is enabled and active.
-     * 5. The user entered a valid username/email and password.
-     * This route, by definition, is "public access".
-     * Request type: POST
-     */
-    public function login($request, $response, $args)
-    {
-        $ms = $this->ci->alerts;
-        $config = $this->ci->config;
-
-        // Get POST parameters
-        $params = $request->getParsedBody();
-
-        // Load the request schema
-        $schema = new RequestSchema("schema://login.json");
-
-        // Return 200 success if user is already logged in
-        if (!$this->ci->currentUser->isGuest()) {
-            $ms->addMessageTranslated("warning", "LOGIN.ALREADY_COMPLETE");
-            return $response->withStatus(200);
-        }
-
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        // Validate, and halt on validation errors.
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
-        }
-
-        // Determine whether we are trying to log in with an email address or a username
-        $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
-
-        // If it's an email address, but email login is not enabled, raise an error.
-        if ($isEmail && !$config['site.setting.email_login']) {
-            $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
-            return $response->withStatus(403);
-        }
-
-        // Try to authenticate the user.  Authenticator will throw an exception on failure.
-        $authenticator = $this->ci->authenticator;
-
-        if($isEmail){
-            $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);
-        } else {
-            $currentUser = $authenticator->attempt('user_name', $data['user_name'], $data['password'], $data['rememberme']);
-        }
-
-        $ms->addMessageTranslated("success", "WELCOME", $currentUser->export());
-        return $response->withStatus(200);
     }
 
     /**
@@ -470,23 +585,23 @@ class AccountController
     }
 
     /**
-     * Processes a request to email a forgotten password reset link to the user.
+     * Processes a request to resend the activation email for a new user account.
      *
-     * Processes the request from the form on the "forgot password" page, checking that:
-     * 1. The provided email address belongs to a registered account;
-     * 2. The submitted data is valid.
-     * Note that we have removed the requirement that a password reset request not already be in progress.
-     * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
+     * Processes the request from the resend activation email form, checking that:
+     * 1. The provided username is associated with an existing user account;
+     * 2. The provided email matches the user account;
+     * 3. The user account is not already active;
+     * 4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
+     * 5. The submitted data is valid.
      * This route is "public access".
      * Request type: POST
-     * @todo rate-limit forgotten password requests, to prevent password-reset spamming
-     * @todo require additional user information
+     * @todo Again, just like with password reset - do we really need to get the user's user_name to do this?
      */
-    public function forgotPassword(){
+    public function resendActivation(){
         $data = $this->_app->request->post();
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
 
         // Get the alert message stream
         $ms = $this->_app->alerts;
@@ -499,29 +614,53 @@ class AccountController
             $this->_app->halt(400);
         }
 
-        // Load the user, by the specified email address
-        $user = User::where('email', $data['email'])->first();
+        // Load the user, by username
+        $user = User::where('user_name', $data['user_name'])->first();
 
-        // Check that the email exists.
-        // On failure, we should still pretend like we succeeded, to prevent account enumeration
+        // Check that the username exists
         if(!$user) {
-            $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
-            $this->_app->halt(200);
+            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
+            $this->_app->halt(400);
         }
 
-        // TODO: rate-limit the number of password reset requests for a given user
+        // Check that the specified email is correct
+        if (strtolower($user->email) != strtolower($data['email'])){
+            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
+            $this->_app->halt(400);
+        }
 
-        // Generate a new password reset request.  This will also generate a new secret token for the user.
-        $user->newEventPasswordReset();
+        // Check if user's account is already active
+        if ($user->flag_verified == "1") {
+            $ms->addMessageTranslated("danger", "ACCOUNT_ALREADY_ACTIVE");
+            $this->_app->halt(400);
+        }
 
-        // Email the user asking to confirm this change password request
+        // Get the most recent account verification request time
+        $last_verification_request_time = $user->lastEventTime('verification_request');
+        $last_verification_request_time = $last_verification_request_time ? $last_verification_request_time : "0000-00-00 00:00:00";
+
+        // Check the time since the last activation request
+        $current_time = new \DateTime("now");
+        $last_verification_request_datetime = new \DateTime($last_verification_request_time);
+        $time_since_last_request = $current_time->getTimestamp() - $last_verification_request_datetime->getTimestamp();
+
+        // If an activation request has been sent too recently, they must wait
+        if($time_since_last_request < $this->_app->site->resend_activation_threshold || $time_since_last_request < 0){
+            $ms->addMessageTranslated("danger", "ACCOUNT_LINK_ALREADY_SENT", ["resend_activation_threshold" => $this->_app->site->resend_activation_threshold]);
+            $this->_app->halt(429); // "Too many requests" code (http://tools.ietf.org/html/rfc6585#section-4)
+        }
+
+        // We're good to go - create a new verification request and send the email
+        $user->newEventVerificationRequest();
+
+        // Email the user
         $twig = $this->_app->view()->getEnvironment();
-        $template = $twig->loadTemplate("mail/password-reset.twig");
+        $template = $twig->loadTemplate("mail/resend-activation.twig");
         $notification = new Notification($template);
         $notification->fromWebsite();      // Automatically sets sender and reply-to
         $notification->addEmailRecipient($user->email, $user->display_name, [
             "user" => $user,
-            "request_date" => date("Y-m-d H:i:s")
+            "secret_token" => $user->secret_token
         ]);
 
         try {
@@ -533,9 +672,9 @@ class AccountController
         }
 
         $user->save();
-        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
+        $ms->addMessageTranslated("success", "ACCOUNT_NEW_ACTIVATION_SENT");
     }
-
+    
     /**
      * Processes a request to reset a user's password, or set the password for a new user.
      *
@@ -631,140 +770,6 @@ class AccountController
     }
 
     /**
-     * Processes a request to cancel a password reset request.
-     *
-     * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
-     * Processes the request from the password reset link, checking that:
-     * 1. The provided secret token is associated with an existing user account.
-     * Request type: GET
-     */
-    public function denyResetPassword(){
-        $data = $this->_app->request->get();
-
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/deny-password.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
-
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        // Fetch the user with the specified secret token and who has a pending password reset request
-        $user = User::where('secret_token', $data['secret_token'])
-                    ->where('flag_password_reset', "1")->first();
-
-        if (!$user){
-            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
-        }
-
-        // Reset the password flag
-        $user->flag_password_reset = "0";
-
-        // Store the updated info
-        $user->store();
-        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_CANNED");
-        $this->_app->redirect($this->_app->urlFor('uri_home'));
-    }
-
-    /**
-     * Processes a request to resend the activation email for a new user account.
-     *
-     * Processes the request from the resend activation email form, checking that:
-     * 1. The provided username is associated with an existing user account;
-     * 2. The provided email matches the user account;
-     * 3. The user account is not already active;
-     * 4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
-     * 5. The submitted data is valid.
-     * This route is "public access".
-     * Request type: POST
-     * @todo Again, just like with password reset - do we really need to get the user's user_name to do this?
-     */
-    public function resendActivation(){
-        $data = $this->_app->request->post();
-
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
-
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
-        }
-
-        // Load the user, by username
-        $user = User::where('user_name', $data['user_name'])->first();
-
-        // Check that the username exists
-        if(!$user) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
-            $this->_app->halt(400);
-        }
-
-        // Check that the specified email is correct
-        if (strtolower($user->email) != strtolower($data['email'])){
-            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
-            $this->_app->halt(400);
-        }
-
-        // Check if user's account is already active
-        if ($user->flag_verified == "1") {
-            $ms->addMessageTranslated("danger", "ACCOUNT_ALREADY_ACTIVE");
-            $this->_app->halt(400);
-        }
-
-        // Get the most recent account verification request time
-        $last_verification_request_time = $user->lastEventTime('verification_request');
-        $last_verification_request_time = $last_verification_request_time ? $last_verification_request_time : "0000-00-00 00:00:00";
-
-        // Check the time since the last activation request
-        $current_time = new \DateTime("now");
-        $last_verification_request_datetime = new \DateTime($last_verification_request_time);
-        $time_since_last_request = $current_time->getTimestamp() - $last_verification_request_datetime->getTimestamp();
-
-        // If an activation request has been sent too recently, they must wait
-        if($time_since_last_request < $this->_app->site->resend_activation_threshold || $time_since_last_request < 0){
-            $ms->addMessageTranslated("danger", "ACCOUNT_LINK_ALREADY_SENT", ["resend_activation_threshold" => $this->_app->site->resend_activation_threshold]);
-            $this->_app->halt(429); // "Too many requests" code (http://tools.ietf.org/html/rfc6585#section-4)
-        }
-
-        // We're good to go - create a new verification request and send the email
-        $user->newEventVerificationRequest();
-
-        // Email the user
-        $twig = $this->_app->view()->getEnvironment();
-        $template = $twig->loadTemplate("mail/resend-activation.twig");
-        $notification = new Notification($template);
-        $notification->fromWebsite();      // Automatically sets sender and reply-to
-        $notification->addEmailRecipient($user->email, $user->display_name, [
-            "user" => $user,
-            "secret_token" => $user->secret_token
-        ]);
-
-        try {
-            $notification->send();
-        } catch (\phpmailerException $e){
-            $ms->addMessageTranslated("danger", "MAIL_ERROR");
-            error_log('Mailer Error: ' . $e->errorMessage());
-            $this->_app->halt(500);
-        }
-
-        $user->save();
-        $ms->addMessageTranslated("success", "ACCOUNT_NEW_ACTIVATION_SENT");
-    }
-
-    /**
      * Processes a request to update a user's account information.
      *
      * Processes the request from the user account settings form, checking that:
@@ -774,112 +779,93 @@ class AccountController
      * This route requires authentication.
      * Request type: POST
      */
-    public function accountSettings(){
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/account-settings.json");
+    public function settings($request, $response, $args)
+    {
+        // POST parameters
+        $params = $request->getParsedBody();
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
 
-        // Access control for entire page
-        if (!$this->_app->user->checkAccess('uri_account_settings')){
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access control for entire resource - check that the current user has permission to modify themselves
+        // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
+        if (!$authorizer->checkAccess($currentUser, 'update_account_setting', ['user' => $currentUser])) {
             $ms->addMessageTranslated("danger", "ACCOUNT.ACCESS_DENIED");
-            $this->_app->halt(403);
+            return $response->withStatus(403);
+        }
+        
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        /** @var UserFrosting\Config\Config $config */
+        $config = $this->ci->config;
+
+        $this->ci->db;
+
+        // Load validation rules
+        $schema = new RequestSchema("schema://account-settings.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+        
+        // Validate, and halt on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
         }
 
-        $data = $this->_app->request->post();
-
-        // Remove csrf_token
-        unset($data['csrf_token']);
-
-        // Check current password
-        if (!isset($data['passwordcheck']) || !$this->_app->user->verifyPassword($data['passwordcheck'])){
-            $ms->addMessageTranslated("danger", "ACCOUNT_PASSWORD_INVALID");
-            $this->_app->halt(403);
+        // Confirm current password
+        if (!isset($data['passwordcheck']) || !Password::verify($data['passwordcheck'], $currentUser->password)) {
+            $ms->addMessageTranslated("danger", "PASSWORD.INVALID");
+            $error = true;
         }
 
-        // Validate new email, if specified
-        if (isset($data['email']) && $data['email'] != $this->_app->user->email){
-            // Check authorization
-            if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $this->_app->user, 'property' => 'email'])){
-                $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-                $this->_app->halt(403);
-            }
-            // Check if address is in use
-            if (User::where('email', $data['email'])->first()){
-                $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $data);
-                $this->_app->halt(400);
-            }
-        } else {
-            $data['email'] = $this->_app->user->email;
+        // Remove password check, password confirmation from object data after validation
+        unset($data['passwordcheck']);
+        unset($data['passwordc']);
+
+        // If new email was submitted, check that the email address is not in use
+        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
+            $ms->addMessageTranslated("danger", "EMAIL_IN_USE", $post);
+            $error = true;
         }
 
-        // Validate locale, if specified
-        if (isset($data['locale']) && $data['locale'] != $this->_app->user->locale){
-            // Check authorization
-            if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $this->_app->user, 'property' => 'locale'])){
-                $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-                $this->_app->halt(403);
-            }
-            // Validate locale
-            if (!in_array($data['locale'], $this->_app->site->getLocales())){
-                $ms->addMessageTranslated("danger", "ACCOUNT_SPECIFY_LOCALE");
-                $this->_app->halt(400);
-            }
-        } else {
-            $data['locale'] = $this->_app->user->locale;
+        // TODO: check that new locale exists
+
+
+        if ($error) {
+            return $response->withStatus(400);
         }
 
-        // Validate display_name, if specified
-        if (isset($data['display_name']) && $data['display_name'] != $this->_app->user->display_name){
-            // Check authorization
-            if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $this->_app->user, 'property' => 'display_name'])){
-                $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-                $this->_app->halt(403);
-            }
-        } else {
-            $data['display_name'] = $this->_app->user->display_name;
-        }
-
-        // Validate password, if specified and not empty
-        if (isset($data['password']) && !empty($data['password'])){
-            // Check authorization
-            if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $this->_app->user, 'property' => 'password'])){
-                $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-                $this->_app->halt(403);
-            }
+        // Hash new password, if specified
+        if (isset($data['password']) && !empty($data['password'])) {
+            $data['password'] = Password::hash($data['password']);
         } else {
             // Do not pass to model if no password is specified
             unset($data['password']);
-            unset($data['passwordc']);
         }
-
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
-
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
-        }
-
-        // If a new password was specified, hash it.
-        if (isset($data['password']))
-            $data['password'] = Authentication::hashPassword($data['password']);
-
-        // Remove passwordc, passwordcheck
-        unset($data['passwordc']);
-        unset($data['passwordcheck']);
 
         // Looks good, let's update with new values!
-        foreach ($data as $name => $value){
-            $this->_app->user->$name = $value;
-        }
+        // Note that only fields listed in `account-settings.json` will be permitted in $data, so this prevents the user from updating all columns in the DB
+        $currentUser->fill($data);
 
-        $this->_app->user->store();
+        $currentUser->save();
 
-        $ms->addMessageTranslated("success", "ACCOUNT_SETTINGS_UPDATED");
+        $ms->addMessageTranslated("success", "ACCOUNT.SETTINGS_UPDATED");
+        return $response->withStatus(200);
     }
-    
+
     /**
      * Processes an new email verification request.
      *
@@ -898,13 +884,13 @@ class AccountController
         $schema = new RequestSchema("schema://account-verify.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        /** @var MessageStream $ms */
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var Config $config */
+        /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
         $this->ci->db;
