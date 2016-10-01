@@ -8,7 +8,7 @@
 {% block body_matter %}
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2 text">
-            <h1>Resend Verification Email</h1>
+            <h1>{{translate("ACCOUNT.VERIFICATION.RESEND")}}</h1>
             <div class="description">
                 <p>
                     Please enter your username and the email address you used to sign up, and your verification email will be resent.
@@ -19,7 +19,11 @@
     
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
+            <div id="alerts-page">
+
+            </div>
             <form id="request-verification-email" role="form" action="{{site.uri.public}}/account/resend-verification" method="post" class="r-form">
+                {% include "components/csrf.html.twig" %}
                 <div class="form-group">
                     <label class="sr-only" for="verification-form-username">User name</label>
                     <input type="text" name="user_name" placeholder="User name" class="form-control" id="verification-form-username">

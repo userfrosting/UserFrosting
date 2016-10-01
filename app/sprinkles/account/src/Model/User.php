@@ -8,6 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Model;
 
+use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
@@ -156,7 +157,22 @@ class User extends UFModel
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
-    }    
+    }
+    
+    /**
+     * Get the amount of time, in seconds, that has elapsed since the last activity of a certain time for this user.
+     * 
+     * @param string $type The type of activity to search for.
+     * @return int     
+     */
+    public function getSecondsSinceLastActivity($type)
+    {
+        $time = $this->lastActivityTime($type);
+        $time = $time ? $time : "0000-00-00 00:00:00";
+        $time = new Carbon($time);
+
+        return $time->diffInSeconds();
+    }
     
     /**
      * Return this user's group.

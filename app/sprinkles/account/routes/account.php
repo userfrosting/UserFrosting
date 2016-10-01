@@ -32,5 +32,7 @@ $app->group('/account', function () {
     
     $this->post('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:register');
     
+    $this->post('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:resendVerification');
+
     $this->post('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:settings');
 });

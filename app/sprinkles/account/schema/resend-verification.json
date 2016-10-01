@@ -1,21 +1,25 @@
 {
     "user_name" : {
         "validators" : {
-            "required" : {
-                "message" : "ACCOUNT_SPECIFY_USERNAME"
-            },
             "no_leading_whitespace" : {
-                "message" : "ACCOUNT_USER_NO_LEAD_WS"
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.NO_LEAD_WS"
             },
             "no_trailing_whitespace" : {
-                "message" : "ACCOUNT_USER_NO_TRAIL_WS"
-            }            
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.NO_TRAIL_WS"
+            },            
+            "required" : {
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.REQUIRED"
+            }
         }
-    },  
+    },    
     "email" : {
         "validators" : {
             "required" : {
-                "message" : "ACCOUNT_SPECIFY_EMAIL"
+                "label" : "&EMAIL",
+                "message" : "VALIDATE.REQUIRED"
             }
         }
     }

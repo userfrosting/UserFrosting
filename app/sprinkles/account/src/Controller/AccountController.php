@@ -585,94 +585,90 @@ class AccountController
     }
 
     /**
-     * Processes a request to resend the activation email for a new user account.
+     * Processes a request to resend the verification email for a new user account.
      *
-     * Processes the request from the resend activation email form, checking that:
+     * Processes the request from the resend verification email form, checking that:
      * 1. The provided username is associated with an existing user account;
      * 2. The provided email matches the user account;
-     * 3. The user account is not already active;
-     * 4. A request to resend the activation link wasn't already processed in the last X seconds (specified in site settings)
+     * 3. The user account is not already verified;
+     * 4. A request to resend the verification link wasn't already processed in the last X seconds (specified in site settings)
      * 5. The submitted data is valid.
      * This route is "public access".
      * Request type: POST
      * @todo Again, just like with password reset - do we really need to get the user's user_name to do this?
      */
-    public function resendActivation(){
-        $data = $this->_app->request->post();
+    public function resendVerification($request, $response, $args)
+    {
+        // POST parameters
+        $params = $request->getParsedBody();
 
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/resend-activation.json");
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
+        
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        /** @var UserFrosting\Config\Config $config */
+        $config = $this->ci->config;
 
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        $this->ci->db;
 
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
+        // Load validation rules
+        $schema = new RequestSchema("schema://resend-verification.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Load the user, by email address
+        $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+
+        // Check that the user exists
+        if (!$user) {
+            $ms->addMessageTranslated("danger", "USER_OR_EMAIL_INVALID");
+            return $response->withStatus(400);
         }
 
-        // Load the user, by username
-        $user = User::where('user_name', $data['user_name'])->first();
-
-        // Check that the username exists
-        if(!$user) {
-            $ms->addMessageTranslated("danger", "ACCOUNT_INVALID_USERNAME");
-            $this->_app->halt(400);
-        }
-
-        // Check that the specified email is correct
-        if (strtolower($user->email) != strtolower($data['email'])){
-            $ms->addMessageTranslated("danger", "ACCOUNT_USER_OR_EMAIL_INVALID");
-            $this->_app->halt(400);
+        // Check that the specified username matches
+        if ($user->user_name != $data['user_name']) {
+            $ms->addMessageTranslated("danger", "USER_OR_EMAIL_INVALID");
+            return $response->withStatus(400);
         }
 
         // Check if user's account is already active
         if ($user->flag_verified == "1") {
-            $ms->addMessageTranslated("danger", "ACCOUNT_ALREADY_ACTIVE");
-            $this->_app->halt(400);
+            $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.ALREADY_COMPLETE");
+            return $response->withStatus(400);
         }
 
-        // Get the most recent account verification request time
-        $last_verification_request_time = $user->lastEventTime('verification_request');
-        $last_verification_request_time = $last_verification_request_time ? $last_verification_request_time : "0000-00-00 00:00:00";
+        // Check the time since the last activation request. If an activation request has been sent too recently, they must wait
+        $timeSinceLastRequest = $user->getSecondsSinceLastActivity('verification_request');
 
-        // Check the time since the last activation request
-        $current_time = new \DateTime("now");
-        $last_verification_request_datetime = new \DateTime($last_verification_request_time);
-        $time_since_last_request = $current_time->getTimestamp() - $last_verification_request_datetime->getTimestamp();
-
-        // If an activation request has been sent too recently, they must wait
-        if($time_since_last_request < $this->_app->site->resend_activation_threshold || $time_since_last_request < 0){
-            $ms->addMessageTranslated("danger", "ACCOUNT_LINK_ALREADY_SENT", ["resend_activation_threshold" => $this->_app->site->resend_activation_threshold]);
-            $this->_app->halt(429); // "Too many requests" code (http://tools.ietf.org/html/rfc6585#section-4)
+        if($timeSinceLastRequest < $config['site.setting.resend_activation_threshold'] || $timeSinceLastRequest < 0) {
+            $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.LINK_ALREADY_SENT", ["resend_activation_threshold" => $config['site.setting.resend_activation_threshold']]);
+            return $response->withStatus(429); // "Too many requests" code (http://tools.ietf.org/html/rfc6585#section-4)
         }
 
         // We're good to go - create a new verification request and send the email
-        $user->newEventVerificationRequest();
+        $user->newActivityVerificationRequest();
 
-        // Email the user
-        $twig = $this->_app->view()->getEnvironment();
-        $template = $twig->loadTemplate("mail/resend-activation.twig");
-        $notification = new Notification($template);
-        $notification->fromWebsite();      // Automatically sets sender and reply-to
-        $notification->addEmailRecipient($user->email, $user->display_name, [
-            "user" => $user,
-            "secret_token" => $user->secret_token
-        ]);
+        $user->save();      // Re-save with verification request event
 
-        try {
-            $notification->send();
-        } catch (\phpmailerException $e){
-            $ms->addMessageTranslated("danger", "MAIL_ERROR");
-            error_log('Mailer Error: ' . $e->errorMessage());
-            $this->_app->halt(500);
-        }
+        // Create and send verification email
+        $message = new TwigMailMessage($this->ci->view, "mail/resend-verification.html.twig");
 
-        $user->save();
-        $ms->addMessageTranslated("success", "ACCOUNT_NEW_ACTIVATION_SENT");
+        $this->ci->mailer->from($config['address_book.admin'])
+            ->addEmailRecipient($user->email, $user->full_name, [
+                "user" => $user
+            ]);
+
+        $this->ci->mailer->send($message);
+
+        $ms->addMessageTranslated("success", "ACCOUNT.VERIFICATION.NEW_LINK_SENT");
+        return $response->withStatus(200);
     }
     
     /**
