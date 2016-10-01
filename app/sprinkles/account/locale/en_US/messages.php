@@ -32,9 +32,8 @@ return [
         "UNVERIFIED" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
 
         "VERIFICATION" => [
-            "ALREADY_COMPLETE" => "Your account is already verified.",
             "LINK_ALREADY_SENT" => "A verification email has already been sent to this email address in the last {{resend_activation_threshold}} second(s). Please try again later.",
-            "NEW_LINK_SENT" => "We have emailed you a new verification link, please check your email",
+            "NEW_LINK_SENT" => "We have emailed a new verification link to {{email}}.  Please check your inbox and spam folders for this email.",
             "RESEND" => "Resend verification email",
             "COMPLETE" => "You have successfully verified your account. You can now login.",            
             "TOKEN_NOT_FOUND" => "Verification token does not exist / Account is already verified",
@@ -82,9 +81,7 @@ return [
             "INVALID_TOKEN" => "Your secret token is not valid",
             "OLD_TOKEN" => "Token past expiration time",
             "REQUEST_CANNED" => "Lost password request cancelled",
-            "REQUEST_EXISTS" => "There is already an outstanding lost password request on this account",
-            "REQUEST_SENT" => "A password reset link has been emailed to the address on file for user '{{user_name}}'",
-            "REQUEST_SUCCESS" => "We have emailed you instructions on how to regain access to your account"
+            "REQUEST_SENT" => "A password reset link has been sent to {{email}}."
         ],        
         "HASH_FAILED" => "Password hashing failed. Please contact a site administrator.",
         "INVALID" => "Current password doesn't match the one we have on record",
@@ -97,8 +94,8 @@ return [
 
     "REGISTRATION" => [
         "BROKEN" => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
-        "COMPLETE_TYPE1" => "You have successfully registered. You can now login.",
-        "COMPLETE_TYPE2" => "You have successfully registered. You will soon receive an activation email. You must activate your account before logging in.",
+        "COMPLETE_TYPE1" => "You have successfully registered. You can now sign in.",
+        "COMPLETE_TYPE2" => "You have successfully registered. You will soon receive a verification email containing a link to activate your account.  You will not be able to sign in until you complete this step.",
         "DISABLED" => "We're sorry, account registration has been disabled.",
         "LOGOUT" => "I'm sorry, you cannot register for an account while logged in. Please log out first.",   
         "WELCOME" => "Registration is fast and simple."

@@ -106,59 +106,61 @@ class AccountController
      * Request type: POST
      * @todo rate-limit forgotten password requests, to prevent password-reset spamming
      * @todo require additional user information
+     * @todo prevent password reset requests for root account?
      */
-    public function forgotPassword(){
-        $data = $this->_app->request->post();
+    public function forgotPassword($request, $response, $args)
+    {
+        // POST parameters
+        $params = $request->getParsedBody();
 
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/forgot-password.json");
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
+        
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        /** @var UserFrosting\Config\Config $config */
+        $config = $this->ci->config;
 
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        $this->ci->db;
 
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
-        }
+        // Load validation rules
+        $schema = new RequestSchema("schema://forgot-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        // Load the user, by the specified email address
-        $user = User::where('email', $data['email'])->first();
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Load the user, by email address
+        $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
 
         // Check that the email exists.
         // On failure, we should still pretend like we succeeded, to prevent account enumeration
-        if(!$user) {
-            $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
-            $this->_app->halt(200);
+        if ($user) {
+            // TODO: rate-limit the number of password reset requests for a given user
+    
+            // Generate a new password reset request.  This will also generate a new secret token for the user.
+            $user->newActivityPasswordReset();
+    
+            $user->save();      // Re-save with verification request event
+    
+            // Create and send email
+            $message = new TwigMailMessage($this->ci->view, "mail/password-reset.html.twig");
+    
+            $this->ci->mailer->from($config['address_book.admin'])
+                ->addEmailRecipient($user->email, $user->full_name, [
+                    "user" => $user,
+                    "request_date" => date("Y-m-d H:i:s")
+                ]);
+    
+            $this->ci->mailer->send($message);
         }
 
-        // TODO: rate-limit the number of password reset requests for a given user
-
-        // Generate a new password reset request.  This will also generate a new secret token for the user.
-        $user->newEventPasswordReset();
-
-        // Email the user asking to confirm this change password request
-        $twig = $this->_app->view()->getEnvironment();
-        $template = $twig->loadTemplate("mail/password-reset.twig");
-        $notification = new Notification($template);
-        $notification->fromWebsite();      // Automatically sets sender and reply-to
-        $notification->addEmailRecipient($user->email, $user->display_name, [
-            "user" => $user,
-            "request_date" => date("Y-m-d H:i:s")
-        ]);
-
-        try {
-            $notification->send();
-        } catch (\phpmailerException $e){
-            $ms->addMessageTranslated("danger", "MAIL_ERROR");
-            error_log('Mailer Error: ' . $e->errorMessage());
-            $this->_app->halt(500);
-        }
-
-        $user->save();
-        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SUCCESS");
+        // TODO: commit DB if email was sent successfully
+        
+        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", $user->export());
+        $response->withStatus(200);
     }
 
     /**
@@ -588,14 +590,12 @@ class AccountController
      * Processes a request to resend the verification email for a new user account.
      *
      * Processes the request from the resend verification email form, checking that:
-     * 1. The provided username is associated with an existing user account;
-     * 2. The provided email matches the user account;
-     * 3. The user account is not already verified;
-     * 4. A request to resend the verification link wasn't already processed in the last X seconds (specified in site settings)
-     * 5. The submitted data is valid.
+     * 1. The provided email is associated with an existing user account;
+     * 2. The user account is not already verified;
+     * 3. A request to resend the verification link wasn't already processed in the last X seconds (specified in site settings)
+     * 4. The submitted data is valid.
      * This route is "public access".
      * Request type: POST
-     * @todo Again, just like with password reset - do we really need to get the user's user_name to do this?
      */
     public function resendVerification($request, $response, $args)
     {

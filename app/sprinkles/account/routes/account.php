@@ -28,6 +28,8 @@ $app->group('/account', function () {
     
     $this->get('/verify', 'UserFrosting\Sprinkle\Account\Controller\AccountController:verify');
 
+    $this->post('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:forgotPassword');
+
     $this->post('/login', 'UserFrosting\Sprinkle\Account\Controller\AccountController:login');    
     
     $this->post('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:register');

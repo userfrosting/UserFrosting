@@ -16,9 +16,9 @@ $(document).ready(function() {
     // TODO: Process form 
     $("#request-password-reset").ufForm({
         validators: page.validators.forgot_password,
-        msgTarget: $("#userfrosting-alerts")
+        msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Forward to login page on success
-        window.location.replace(site.uri.public + "/account/login");
+        window.location.replace(site.uri.public + "/account/sign-in-or-register");
     }); 
 });
