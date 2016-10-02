@@ -56,42 +56,55 @@ class AccountController
      *
      * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
      * Processes the request from the password reset link, checking that:
-     * 1. The provided secret token is associated with an existing user account.
+     * 1. The provided secret token is associated with an existing user account, who has a pending password reset request.
      * Request type: GET
      */
-    public function denyResetPassword(){
-        $data = $this->_app->request->get();
+    public function denyResetPassword($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
 
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/deny-password.json");
+        // Load validation rules
+        $schema = new RequestSchema("schema://deny-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
 
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        $this->ci->db;
+
+        $loginPage = $this->ci->router->pathFor('login');
+        
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and halt on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            // 400 code + redirect is perfectly fine, according to user Dilaz in #laravel
+            return $response->withRedirect($loginPage, 400);
         }
 
         // Fetch the user with the specified secret token and who has a pending password reset request
-        $user = User::where('secret_token', $data['secret_token'])
-                    ->where('flag_password_reset', "1")->first();
+        $user = $this->ci->classMapper->staticMethod('user', 'where', 'secret_token', $data['secret_token'])->where('flag_password_reset', '1')->first();
 
-        if (!$user){
-            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
-            $this->_app->redirect($this->_app->urlFor('uri_home'));
+        if (!$user) {
+            $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID");
+            return $response->withRedirect($loginPage, 400);
         }
 
         // Reset the password flag
-        $user->flag_password_reset = "0";
+        $user->flag_password_reset = '0';
 
         // Store the updated info
-        $user->store();
-        $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_CANNED");
-        $this->_app->redirect($this->_app->urlFor('uri_home'));
+        $user->save();
+        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_CANNED");
+        return $response->withRedirect($loginPage);
     }
 
     /**
@@ -157,9 +170,11 @@ class AccountController
             $this->ci->mailer->send($message);
         }
 
+        // TODO: create delay to prevent timing-based attacks
+
         // TODO: commit DB if email was sent successfully
         
-        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", $user->export());
+        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", ['email' => $data['email']]);
         $response->withStatus(200);
     }
 
@@ -228,6 +243,7 @@ class AccountController
         }
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
+        /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
         if($isEmail){
@@ -621,8 +637,6 @@ class AccountController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        $error = false;
-
         // Load the user, by email address
         $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
 
@@ -670,99 +684,121 @@ class AccountController
         $ms->addMessageTranslated("success", "ACCOUNT.VERIFICATION.NEW_LINK_SENT");
         return $response->withStatus(200);
     }
-    
+
     /**
-     * Processes a request to reset a user's password, or set the password for a new user.
+     * Processes a request to reset an existing user's password.
      *
-     * Processes the request from the password create/reset form, which should have the secret token embedded in it, checking that:
+     * Processes the request from the password reset form, which should have the secret token embedded in it, checking that:
      * 1. The provided secret token is associated with an existing user account;
-     * 2. The user has a lost password request in progress;
+     * 2. The user has a password set/reset request in progress;
      * 3. The token has not expired;
      * 4. The submitted data (new password) is valid.
      * This route is "public access".
      * Request type: POST
      */
-    public function setPassword($flag_new_user = false){
-        $data = $this->_app->request->post();
+    public function resetPassword(Request $request, Response $response, $args)
+    {
+        return $this->setPassword($request, $response, $args, false);
+    }
 
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/set-password.json");
+    /**
+     * Processes a request to set the password for a new or current user.
+     *
+     * Processes the request from the password create/reset form, which should have the secret token embedded in it, checking that:
+     * 1. The provided secret token is associated with an existing user account;
+     * 2. The user has a password set/reset request in progress;
+     * 3. The token has not expired;
+     * 4. The submitted data (new password) is valid.
+     * This route is "public access".
+     * Request type: POST
+     */
+    public function setPassword(Request $request, Response $response, $args, $flagNewUser = true)
+    {
+        // POST parameters
+        $params = $request->getParsedBody();
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
+        
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
-        // Set up Fortress to validate the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $data);
+        /** @var UserFrosting\Config\Config $config */
+        $config = $this->ci->config;
 
-        // Validate
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
-        }
+        $this->ci->db;
 
-        // Fetch the user, by looking up the submitted secret token
-        $user = User::where('secret_token', $data['secret_token'])->first();
+        // Load validation rules
+        $schema = new RequestSchema("schema://set-password.json");
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $forgotPasswordPage = $this->ci->router->pathFor('forgot-password');
+
+        // Ok, try to find a user with the specified secret token and an outstanding password request
+        $user = $this->ci->classMapper->staticMethod('user', 'where', 'secret_token', $data['secret_token'])->where('flag_password_reset', '1')->first();
 
         // If no user exists for this token, just say the token is invalid.
-        if (!$user){
-            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
-            $this->_app->halt(400);
+        if (!$user) {
+            $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID", ["url" => $forgotPasswordPage]);
+            return $response->withStatus(400);
         }
 
-        // Get the most recent password reset request time
-        $last_password_reset_time = $user->lastEventTime('password_reset_request');
-
-        // Check that a lost password request is in progress and has not expired
-        if ($user->flag_password_reset == 0 || $last_password_reset_time === null){
-            $ms->addMessageTranslated("danger", "FORGOTPASS_INVALID_TOKEN");
-            $this->_app->halt(400);
-        }
-
-        // Check the time to see if the token is still valid based on the timeout value. If not valid, make the user restart the password request
-        $current_time = new \DateTime("now");
-        $last_password_reset_datetime = new \DateTime($last_password_reset_time);
-        $current_token_life = $current_time->getTimestamp() - $last_password_reset_datetime->getTimestamp();
+        // Get the time since the last password reset request, to see if it has expired
+        $timeSinceLastRequest = $user->getSecondsSinceLastActivity('password_reset_request');
 
         // Compare to appropriate expiration time
-        if ($flag_new_user)
-            $expiration = $this->_app->site->create_password_expiration;
-        else
-            $expiration = $this->_app->site->reset_password_timeout;
+        if ($flagNewUser) {
+            $expiration = $config['site.setting.timeout.create_password'];
+        } else {
+            $expiration = $config['site.setting.timeout.reset_password'];
+        }
 
-        if($current_token_life >= $expiration|| $current_token_life < 0){
+        if($timeSinceLastRequest === null || $timeSinceLastRequest < 0 || $timeSinceLastRequest >= $expiration) {
             // Reset the password reset flag so that they'll be able to submit another request
             $user->flag_password_reset = "0";
-            $user->store();
-            $ms->addMessageTranslated("danger", "FORGOTPASS_OLD_TOKEN");
-            $this->_app->halt(400);
+            $user->save();
+            $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID", ["url" => $forgotPasswordPage]);
+            return $response->withStatus(400);
         }
 
         // Reset the password flag
         $user->flag_password_reset = "0";
 
         // Hash the user's new password and update
-        $user->password = Authentication::hashPassword($data['password']);
+        $user->password = Password::hash($data['password']);
 
-		if (!$user->password){
-			$ms->addMessageTranslated("danger", "PASSWORD_HASH_FAILED");
-            $this->_app->halt(500);
+		if (!$user->password) {
+			$ms->addMessageTranslated("danger", "PASSWORD.HASH_FAILED");
+            return $response->withStatus(500);
 		}
 
         // Store the updated info
-        $user->store();
+        $user->save();
+
+        $ms->addMessageTranslated("success", "PASSWORD.UPDATED");
 
         // Log out any existing user, and create a new session
-        if (!$this->_app->user->isGuest()) {
-            $this->_app->logout(true);
-            // Restart session
-            $this->_app->startSession();
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+        $authenticator = $this->ci->authenticator;
+
+        if (!$currentUser->isGuest()) {
+            $authenticator->logout();
         }
 
-        // Auto-login the user
-        $this->_app->login($user);
+        // Auto-login the user (without "remember me")
+        $authenticator->login($user);
 
-        $ms = $this->_app->alerts;
-        $ms->addMessageTranslated("success", "ACCOUNT_WELCOME", $this->_app->user->export());
-        $ms->addMessageTranslated("success", "ACCOUNT_PASSWORD_UPDATED");
+        $ms->addMessageTranslated("success", "WELCOME", $user->export());
+
+        return $response->withStatus(200);
     }
 
     /**

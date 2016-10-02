@@ -12,13 +12,13 @@ $(document).ready(function() {
         Fullscreen background
     */
     $.backstretch(site.uri.images.background);
-    
-    // TODO: Process form 
+
     $("#set-or-reset-password").ufForm({
         validators: page.validators.set_password,
-        msgTarget: $("#userfrosting-alerts")
+        msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Forward to home page on success
-        window.location.replace(site.uri.public);
+        // TODO: forward to landing/last page
+        window.location.replace(site.uri.public + "/account/sign-in-or-register");
     }); 
 });

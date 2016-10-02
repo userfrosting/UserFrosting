@@ -37,9 +37,14 @@
         'site' => [
             'setting' => [
                 'can_register' => true,
+                'default_locale' => 'en_US',                
                 'registration_captcha' => true,
                 'require_email_verification' => true,
-                'default_locale' => 'en_US'
+                'resend_activation_threshold' => 10000, // TODO: move to throttles
+                'timeout' => [
+                    'create_password' => 86400,
+                    'reset_password' => 10800
+                ]
             ]
         ]
     ];

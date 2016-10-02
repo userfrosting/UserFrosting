@@ -77,10 +77,9 @@ return [
         "FORGET" => [
             "@TRANSLATION" => "I forgot my password",
 
-            "COULD_NOT_UPDATE" => "Couldn't update password",
-            "INVALID_TOKEN" => "Your secret token is not valid",
-            "OLD_TOKEN" => "Token past expiration time",
-            "REQUEST_CANNED" => "Lost password request cancelled",
+            "COULD_NOT_UPDATE" => "Couldn't update password.",
+            "INVALID" => "This password reset request could not be found, or has expired.  Please try <a href=\"{{url}}\">resubmitting your request<a>.",
+            "REQUEST_CANNED" => "Lost password request cancelled.",
             "REQUEST_SENT" => "A password reset link has been sent to {{email}}."
         ],        
         "HASH_FAILED" => "Password hashing failed. Please contact a site administrator.",

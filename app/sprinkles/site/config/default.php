@@ -34,8 +34,7 @@
             'author'    =>      'Alex Weissman',
             // Site settings
             'setting' => [
-                'email_login' => true,
-                'resend_activation_threshold' => 10000
+                'email_login' => true
             ],
             // URLs
             'uri' => [
