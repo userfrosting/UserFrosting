@@ -108,6 +108,7 @@ class CoreServicesProvider
          */
         $container['classMapper'] = function ($c) {
             $classMapper = new ClassMapper();
+            $classMapper->setClassMapping('throttle', 'UserFrosting\Sprinkle\Core\Model\Throttle');
             return $classMapper;
         };
 

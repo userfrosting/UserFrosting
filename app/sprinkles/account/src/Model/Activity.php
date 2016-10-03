@@ -17,7 +17,7 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * Represents a single user activity at a specified point in time.
  * @author Alex Weissman (https://alexanderweissman.com)
  * @property int user_id
- * @property string event_type
+ * @property string type
  * @property datetime occurred_at
  * @property string description
  */

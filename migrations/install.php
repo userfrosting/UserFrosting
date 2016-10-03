@@ -36,6 +36,24 @@
     $schema = Capsule::schema();
     
     /**
+     * Keeps track of throttleable requests.
+     */
+    if (!$schema->hasTable('throttles')) {
+        $schema->create('throttles', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('type');            
+            $table->string('ip')->nullable();
+            $table->text('request_data')->nullable();
+            $table->timestamps();
+
+            $table->engine = 'InnoDB';
+            $table->collation = 'utf8_unicode_ci';
+            $table->charset = 'utf8';            
+            $table->index('type');
+            $table->index('ip');
+        });    
+    
+    /**
      * Removed the 'display_name' and 'title' fields, and added first and last name.
      */
     if (!$schema->hasTable('users')) {
