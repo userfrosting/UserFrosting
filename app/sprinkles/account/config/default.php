@@ -47,7 +47,7 @@
                 ]
             ]
         ],
-        'throttle' => [
+        'throttles' => [
             'sign_in_attempt' => [
                 'method'   => 'ip',
                 'interval' => 3600,

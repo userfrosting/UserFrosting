@@ -100,6 +100,7 @@ return [
         "WELCOME" => "Registration is fast and simple."
     ],
     
+    "RATE_LIMIT_EXCEEDED" => "The rate limit for this action has been exceeded.  You must wait another {{delay}} seconds before you will be allowed to make another attempt.",
     "REMEMBER_ME" => "Remember me!",
     "REMEMBER_ME_ON_COMPUTER" => "Remember me on this computer (not recommended for public computers)",    
 

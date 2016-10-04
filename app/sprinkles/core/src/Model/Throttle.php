@@ -26,10 +26,15 @@ class Throttle extends UFModel
      * @var string The name of the table for the current model.
      */ 
     protected $table = "throttles";
-    
+
     protected $fillable = [
         "type",
         "ip",
         "request_data"
-    ]; 
+    ];
+
+    /**
+     * @var bool Enable timestamps for Throttles.
+     */ 
+    public $timestamps = true;    
 }

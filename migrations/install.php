@@ -52,6 +52,7 @@
             $table->index('type');
             $table->index('ip');
         });    
+    }
     
     /**
      * Removed the 'display_name' and 'title' fields, and added first and last name.

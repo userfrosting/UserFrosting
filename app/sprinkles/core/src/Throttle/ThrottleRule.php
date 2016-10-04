@@ -23,8 +23,9 @@ class ThrottleRule
     protected $interval;
     
     /**
-     * @var int[] A mapping of minimum observation counts to delays, in seconds.
-     * Any 
+     * @var int[] A mapping of minimum observation counts (x) to delays (y), in seconds.
+     * Any throttleable event that has occurred more than x times in this rule's interval,
+     * must wait y seconds after the last occurrence before another attempt is permitted.
      */
     protected $delays;
     
@@ -41,7 +42,8 @@ class ThrottleRule
         $this->interval = $interval;
         
         // Sort the array by key, from highest to lowest value
-        $this->delays = krsort($delays);
+        $this->delays = $delays;
+        krsort($this->delays);
     }
     
     /**
@@ -57,7 +59,7 @@ class ThrottleRule
             return 0;
         }
         
-        foreach (array_reverse($this->delays, true) as $observations => $delay) {
+        foreach ($this->delays as $observations => $delay) {
             // Skip any delay rules for which we haven't met the requisite number of observations
             if ($count < $observations) {
                 continue;
@@ -68,5 +70,15 @@ class ThrottleRule
                 return $lastEventTime->addSeconds($delay)->diffInSeconds();
             }
         }
+    }
+
+    public function getInterval()
+    {
+        return $this->interval;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
     }
 }

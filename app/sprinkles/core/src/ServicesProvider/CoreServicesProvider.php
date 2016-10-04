@@ -35,6 +35,8 @@ use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Core\Throttle\Throttler;
+use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -403,6 +405,26 @@ class CoreServicesProvider
             $response = $c->get('response');
 
             return new ShutdownHandler($request, $response, $alerts, $translator);
+        };
+
+        /**
+         * Request throttler.
+         *
+         * Throttles (rate-limits) requests of a predefined type, with rules defined in site config.
+         */
+        $container['throttler'] = function ($c) {
+            $throttler = new Throttler($c->classMapper);
+ 
+            $config = $c->config;
+
+            if ($config->has('throttles')) {
+                foreach ($config['throttles'] as $type => $rule) {
+                    $throttleRule = new ThrottleRule($rule['method'], $rule['interval'], $rule['delays']);
+                    $throttler->addThrottleRule($type, $throttleRule);
+                }
+            }
+
+            return $throttler;
         };
 
         /**

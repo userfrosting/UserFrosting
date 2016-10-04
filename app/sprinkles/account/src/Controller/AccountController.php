@@ -23,6 +23,7 @@ use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
+use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequest;
 use UserFrosting\Support\Exception\ForbiddenException;
@@ -207,7 +208,19 @@ class AccountController
      */
     public function login($request, $response, $args)
     {
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Return 200 success if user is already logged in
+        if (!$currentUser->isGuest()) {
+            $ms->addMessageTranslated("warning", "LOGIN.ALREADY_COMPLETE");
+            return $response->withStatus(200);
+        }
+
+        /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
         // Get POST parameters
@@ -216,17 +229,11 @@ class AccountController
         // Load the request schema
         $schema = new RequestSchema("schema://login.json");
 
-        // Return 200 success if user is already logged in
-        if (!$this->ci->currentUser->isGuest()) {
-            $ms->addMessageTranslated("warning", "LOGIN.ALREADY_COMPLETE");
-            return $response->withStatus(200);
-        }
-
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        // Validate, and halt on validation errors.
+        // Validate, and halt on validation errors.  Failed validation attempts do not count towards throttling limit.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
@@ -241,6 +248,30 @@ class AccountController
             $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
             return $response->withStatus(403);
         }
+
+        // Throttle requests
+        
+        /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
+        $throttler = $this->ci->throttler;
+        
+        if ($isEmail) {
+            $throttleData = [
+                'email' => $data['email']
+            ];
+        } else {
+            $throttleData = [
+                'user_name' => $data['user_name']
+            ];
+        }
+        
+        $delay = $throttler->getDelay('sign_in_attempt', $throttleData);
+        if ($delay > 0) {
+            $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
+            return $response->withStatus(429);
+        }
+
+        // Log throttleable event
+        $throttler->logEvent('sign_in_attempt', $throttleData);
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */

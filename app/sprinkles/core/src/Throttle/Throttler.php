@@ -23,12 +23,12 @@ class Throttler
      * @var UserFrosting\Sprinkle\Core\Util\ClassMapper
      */
     protected $classMapper;
-    
+
     /**
      * @var ThrottleRule[] An array mapping throttle names to throttle rules.
      */
     protected $throttleRules;
-    
+
     /**
      * Create a new Throttler object.
      *
@@ -38,39 +38,45 @@ class Throttler
     {
         $this->classMapper = $classMapper;
     }
-    
-    public function addThrottleRule($rule)
+
+    /**
+     * Add a throttling rule for a particular throttle event type.
+     *
+     * @param string $type The type of throttle event to check against.
+     * @param ThrottleRule $rule The rule to use when throttling this type of event.
+     */
+    public function addThrottleRule($type, $rule)
     {
-    
+        $this->throttleRules[$type] = $rule;
     }
-    
+
     /**
      * Check the current request against a specified throttle rule.
      *
-     * @param string $ruleName The name of the throttle to check against.
+     * @param string $type The type of throttle event to check against.
      * @param mixed[] $requestData Any additional request parameters to use in checking the throttle.
      * @return bool
      */
-    public function getDelay($ruleName, $requestData = [])
+    public function getDelay($type, $requestData = [])
     {
-        if (!isset($this->throttleRules[$ruleName])) {
+        if (!isset($this->throttleRules[$type])) {
             
         }
-        
-        $throttleRule = $this->throttleRules[$ruleName];
+
+        $throttleRule = $this->throttleRules[$type];
         
         // Get earliest time to start looking for throttleable events
         $startTime = Carbon::now()
-            ->subSeconds($throttleRule->interval);
+            ->subSeconds($throttleRule->getInterval());
         
         // Fetch all throttle events of the specified type, that match the specified rule
-        if ($throttle->method == 'ip') {
-            $events = $this->classMapper->staticMethod('throttle', 'where', 'type', $ruleName)
+        if ($throttleRule->getMethod() == 'ip') {
+            $events = $this->classMapper->staticMethod('throttle', 'where', 'type', $type)
                 ->where('created_at', '>', $startTime)
                 ->where('ip', $_SERVER['REMOTE_ADDR'])
                 ->get();
         } else {
-            $events = $this->classMapper->staticMethod('throttle', 'where', 'type', $ruleName)
+            $events = $this->classMapper->staticMethod('throttle', 'where', 'type', $type)
                 ->where('created_at', '>', $startTime)
                 ->get();
 
@@ -91,13 +97,19 @@ class Throttler
         }
 
         // Check the collection of events against the specified throttle rule.
-        $delay = $this->computeDelay($events, $throttleRule);
+        return $this->computeDelay($events, $throttleRule);
     }
 
-    public function logEvent($ruleName, $requestData = [])
+    /**
+     * Log a throttleable event to the database.
+     *
+     * @param string $type the type of event
+     * @param string[] $requestData an array of field names => values that are relevant to throttling for this event (e.g. username, email, etc).
+     */
+    public function logEvent($type, $requestData = [])
     {
         $event = $this->classMapper->createInstance('throttle', [
-            'type' => $ruleName,
+            'type' => $type,
             'ip' => $_SERVER['REMOTE_ADDR'],
             'request_data' => json_encode($requestData)
         ]);
@@ -121,6 +133,6 @@ class Throttler
 
         // Great, now we compare our delay against the most recent attempt
         $lastEvent = $events->last();
-        return $throttleRule->getDelay($lastEvent->created_at, $events->count);
+        return $throttleRule->getDelay($lastEvent->created_at, $events->count());
     }
 }
