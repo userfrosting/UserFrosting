@@ -29,10 +29,9 @@ return [
 
         "SETTINGS_UPDATED" => "Account settings updated",
 
-        "UNVERIFIED" => "Your account is in-active. Check your emails / spam folder for account activation instructions.",
+        "UNVERIFIED" => "Your account has not yet been verified. Check your emails / spam folder for account activation instructions.",
 
         "VERIFICATION" => [
-            "LINK_ALREADY_SENT" => "A verification email has already been sent to this email address in the last {{resend_activation_threshold}} second(s). Please try again later.",
             "NEW_LINK_SENT" => "We have emailed a new verification link to {{email}}.  Please check your inbox and spam folders for this email.",
             "RESEND" => "Resend verification email",
             "COMPLETE" => "You have successfully verified your account. You can now login.",            
@@ -40,7 +39,10 @@ return [
         ]
     ],
     
-    "EMAIL_IN_USE" => "Email '{{email}}' is already in use",
+    "EMAIL" => [
+        "INVALID" => "There is no account for '{{email}}'.",
+        "IN_USE" => "Email '{{email}}' is already in use."
+    ],        
 
     "FIRST_NAME" => "First name",
     

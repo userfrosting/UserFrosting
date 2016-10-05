@@ -8,7 +8,6 @@
  */
 namespace UserFrosting\Sprinkle\Core\Model;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 
 /**

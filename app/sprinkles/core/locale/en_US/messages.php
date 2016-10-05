@@ -16,7 +16,7 @@ return [
     "ABOUT" => "About",
     
 	"CAPTCHA" => [
-	    "@TRANSLATE" => "Captcha",
+	    "@TRANSLATION" => "Captcha",
         "FAIL" => "You did not enter the captcha code correctly.",
         "SPECIFY" => "Enter the captcha",
         "VERIFY" => "Verify the captcha"
@@ -26,7 +26,9 @@ return [
 
     "DB_INVALID" => "Cannot connect to the database.  If you are an administrator, please check your error log.",
 
-    "EMAIL" => "Email",
+    "EMAIL" => [
+        "@TRANSLATION" => "Email"
+    ],
 
     "FEATURE_DISABLED" => "This feature is currently disabled",
 

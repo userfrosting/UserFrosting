@@ -1,20 +1,4 @@
-{
-    "user_name" : {
-        "validators" : {
-            "no_leading_whitespace" : {
-                "label" : "&USERNAME",
-                "message" : "VALIDATE.NO_LEAD_WS"
-            },
-            "no_trailing_whitespace" : {
-                "label" : "&USERNAME",
-                "message" : "VALIDATE.NO_TRAIL_WS"
-            },            
-            "required" : {
-                "label" : "&USERNAME",
-                "message" : "VALIDATE.REQUIRED"
-            }
-        }
-    },    
+{  
     "email" : {
         "validators" : {
             "required" : {

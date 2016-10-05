@@ -112,13 +112,13 @@ class AccountController
      * Processes a request to email a forgotten password reset link to the user.
      *
      * Processes the request from the form on the "forgot password" page, checking that:
-     * 1. The provided email address belongs to a registered account;
-     * 2. The submitted data is valid.
+     * 1. The rate limit for this type of request is being observed.     
+     * 2. The provided email address belongs to a registered account;
+     * 3. The submitted data is valid.
      * Note that we have removed the requirement that a password reset request not already be in progress.
      * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
      * Request type: POST
-     * @todo rate-limit forgotten password requests, to prevent password-reset spamming
      * @todo require additional user information
      * @todo prevent password reset requests for root account?
      */
@@ -145,6 +145,24 @@ class AccountController
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
+
+        // Throttle requests
+
+        /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
+        $throttler = $this->ci->throttler;
+
+        $throttleData = [
+            'email' => $data['email']
+        ];
+        $delay = $throttler->getDelay('password_reset_request', $throttleData);
+
+        if ($delay > 0) {
+            $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
+            return $response->withStatus(429);
+        }
+
+        // Log throttleable event
+        $throttler->logEvent('password_reset_request', $throttleData);
 
         // Load the user, by email address
         $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
@@ -199,10 +217,11 @@ class AccountController
      *
      * Processes the request from the form on the login page, checking that:
      * 1. The user is not already logged in.
-     * 2. Email login is enabled, if an email address was used.
-     * 3. The user account exists.
-     * 4. The user account is enabled and active.
-     * 5. The user entered a valid username/email and password.
+     * 2. The rate limit for this type of request is being observed.
+     * 3. Email login is enabled, if an email address was used.
+     * 4. The user account exists.
+     * 5. The user account is enabled and verified.
+     * 6. The user entered a valid username/email and password.
      * This route, by definition, is "public access".
      * Request type: POST
      */
@@ -243,12 +262,6 @@ class AccountController
         // Determine whether we are trying to log in with an email address or a username
         $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
 
-        // If it's an email address, but email login is not enabled, raise an error.
-        if ($isEmail && !$config['site.setting.email_login']) {
-            $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
-            return $response->withStatus(403);
-        }
-
         // Throttle requests
         
         /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
@@ -272,6 +285,12 @@ class AccountController
 
         // Log throttleable event
         $throttler->logEvent('sign_in_attempt', $throttleData);
+
+        // If credential is an email address, but email login is not enabled, raise an error.
+        if ($isEmail && !$config['site.setting.email_login']) {
+            $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
+            return $response->withStatus(403);
+        }
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -545,7 +564,7 @@ class AccountController
         }
 
         if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "EMAIL_IN_USE", $data);
+            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
             $error = true;
         }
 
@@ -637,9 +656,9 @@ class AccountController
      * Processes a request to resend the verification email for a new user account.
      *
      * Processes the request from the resend verification email form, checking that:
-     * 1. The provided email is associated with an existing user account;
-     * 2. The user account is not already verified;
-     * 3. A request to resend the verification link wasn't already processed in the last X seconds (specified in site settings)
+     * 1. The rate limit on this type of request is observed;
+     * 2. The provided email is associated with an existing user account;
+     * 3. The user account is not already verified;
      * 4. The submitted data is valid.
      * This route is "public access".
      * Request type: POST
@@ -668,36 +687,40 @@ class AccountController
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
+        // Throttle requests
+
+        /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
+        $throttler = $this->ci->throttler;
+
+        $throttleData = [
+            'email' => $data['email']
+        ];
+        $delay = $throttler->getDelay('verification_request', $throttleData);
+
+        if ($delay > 0) {
+            $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
+            return $response->withStatus(429);
+        }
+
+        // Log throttleable event
+        $throttler->logEvent('verification_request', $throttleData);
+
         // Load the user, by email address
         $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
 
-        // Check that the user exists
+        // Check that the user exists - should we tell the user?  This could be used for account enumeration.
         if (!$user) {
-            $ms->addMessageTranslated("danger", "USER_OR_EMAIL_INVALID");
+            $ms->addMessageTranslated("danger", "EMAIL.INVALID");
             return $response->withStatus(400);
         }
 
-        // Check that the specified username matches
-        if ($user->user_name != $data['user_name']) {
-            $ms->addMessageTranslated("danger", "USER_OR_EMAIL_INVALID");
-            return $response->withStatus(400);
-        }
-
-        // Check if user's account is already active
+        // Check if user's account is already verified - again, should we tell the user?  This could be used for account enumeration.
         if ($user->flag_verified == "1") {
-            $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.ALREADY_COMPLETE");
+            $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND");
             return $response->withStatus(400);
         }
 
-        // Check the time since the last activation request. If an activation request has been sent too recently, they must wait
-        $timeSinceLastRequest = $user->getSecondsSinceLastActivity('verification_request');
-
-        if($timeSinceLastRequest < $config['site.setting.resend_activation_threshold'] || $timeSinceLastRequest < 0) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.LINK_ALREADY_SENT", ["resend_activation_threshold" => $config['site.setting.resend_activation_threshold']]);
-            return $response->withStatus(429); // "Too many requests" code (http://tools.ietf.org/html/rfc6585#section-4)
-        }
-
-        // We're good to go - create a new verification request and send the email
+        // We're good to go - record user activity and send the email
         $user->newActivityVerificationRequest();
 
         $user->save();      // Re-save with verification request event
@@ -712,7 +735,7 @@ class AccountController
 
         $this->ci->mailer->send($message);
 
-        $ms->addMessageTranslated("success", "ACCOUNT.VERIFICATION.NEW_LINK_SENT");
+        $ms->addMessageTranslated("success", "ACCOUNT.VERIFICATION.NEW_LINK_SENT", ['email' => $data['email']]);
         return $response->withStatus(200);
     }
 
@@ -828,7 +851,6 @@ class AccountController
         $authenticator->login($user);
 
         $ms->addMessageTranslated("success", "WELCOME", $user->export());
-
         return $response->withStatus(200);
     }
 
@@ -900,7 +922,7 @@ class AccountController
 
         // If new email was submitted, check that the email address is not in use
         if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "EMAIL_IN_USE", $post);
+            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $post);
             $error = true;
         }
 
