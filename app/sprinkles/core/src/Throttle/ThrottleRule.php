@@ -11,7 +11,7 @@ namespace UserFrosting\Sprinkle\Core\Throttle;
 /**
  * ThrottleRule Class
  *
- * Represents a throttling rule.
+ * Represents a request throttling rule.
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ThrottleRule
@@ -32,18 +32,15 @@ class ThrottleRule
     /**
      * Create a new ThrottleRule object.
      *
-     * @param string $method
-     * @param int $interval
-     * @param int[] $delays
+     * @param string $method Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling.
+     * @param int $interval The amount of time, in seconds, to look back in determining attempts to consider.
+     * @param int[] $delays A mapping of minimum observation counts (x) to delays (y), in seconds.
      */
     public function __construct($method, $interval, $delays)
     {
-        $this->method = $method;
-        $this->interval = $interval;
-        
-        // Sort the array by key, from highest to lowest value
-        $this->delays = $delays;
-        krsort($this->delays);
+        $this->setMethod($method);
+        $this->setInterval($interval);
+        $this->setDelays($delays);
     }
     
     /**
@@ -70,15 +67,75 @@ class ThrottleRule
                 return $lastEventTime->addSeconds($delay)->diffInSeconds();
             }
         }
+
+        return 0;
     }
 
+    /**
+     * Gets the current mapping of attempts (int) to delays (seconds).
+     *
+     * @return int[]
+     */
+    public function getDelays()
+    {
+        return $this->delays;
+    }
+
+    /**
+     * Gets the current throttling interval (seconds).
+     *
+     * @return int
+     */
     public function getInterval()
     {
         return $this->interval;
     }
 
+    /**
+     * Gets the current throttling method ('ip' or 'data').
+     *
+     * @return string
+     */
     public function getMethod()
     {
         return $this->method;
+    }
+
+    /**
+     * Sets the current mapping of attempts (int) to delays (seconds).
+     *
+     * @param int[] A mapping of minimum observation counts (x) to delays (y), in seconds.
+     */
+    public function setDelays($delays)
+    {
+        // Sort the array by key, from highest to lowest value
+        $this->delays = $delays;
+        krsort($this->delays);
+
+        return $this;
+    }
+
+    /**
+     * Sets the current throttling interval (seconds).
+     *
+     * @param int The amount of time, in seconds, to look back in determining attempts to consider.
+     */
+    public function setInterval($interval)
+    {
+        $this->interval = $interval;
+
+        return $this;
+    }
+
+    /**
+     * Sets the current throttling method ('ip' or 'data').
+     *
+     * @param string Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling.
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+
+        return $this;
     }
 }

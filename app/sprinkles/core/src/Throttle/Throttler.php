@@ -9,7 +9,6 @@
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 use Carbon\Carbon;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
@@ -48,6 +47,8 @@ class Throttler
     public function addThrottleRule($type, $rule)
     {
         $this->throttleRules[$type] = $rule;
+
+        return $this;
     }
 
     /**
@@ -60,11 +61,11 @@ class Throttler
     public function getDelay($type, $requestData = [])
     {
         if (!isset($this->throttleRules[$type])) {
-            
+            throw new ThrottlerException("The throttling rule for '$type' could not be found.");
         }
 
         $throttleRule = $this->throttleRules[$type];
-        
+
         // Get earliest time to start looking for throttleable events
         $startTime = Carbon::now()
             ->subSeconds($throttleRule->getInterval());
@@ -101,6 +102,16 @@ class Throttler
     }
 
     /**
+     * Get the current throttling rules.
+     *
+     * @return ThrottleRule[]
+     */
+    public function getThrottleRules()
+    {
+        return $this->throttleRules;
+    }
+
+    /**
      * Log a throttleable event to the database.
      *
      * @param string $type the type of event
@@ -115,6 +126,8 @@ class Throttler
         ]);
         
         $event->save();
+
+        return $this;
     }
     
     /**
