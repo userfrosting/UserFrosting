@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.1.20
+
+- Revert changes to User::fresh() but leave comment regarding upgrading Eloquent
+
 ## v0.3.1.19
 
 - Fix some minor error screen layout issues
