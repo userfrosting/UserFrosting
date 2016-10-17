@@ -465,6 +465,7 @@ class AccountController
         $config = $this->ci->config;
 
         // Forward to home page if user is already logged in
+        // TODO: forward to user's landing page or last visited page
         if (!$this->ci->currentUser->isGuest()) {
             return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
         }

@@ -46,8 +46,9 @@
                 ]
             ]
         ],
+        // See http://security.stackexchange.com/a/59550/74909 for the inspiration for our throttling system
         'throttles' => [
-            'sign_in_attempt' => [
+            'password_reset_request' => [
                 'method'   => 'ip',
                 'interval' => 3600,
                 'delays' => [
@@ -59,7 +60,7 @@
                     7 => 600
                 ]
             ],
-            'password_reset_request' => [
+            'sign_in_attempt' => [
                 'method'   => 'ip',
                 'interval' => 3600,
                 'delays' => [
