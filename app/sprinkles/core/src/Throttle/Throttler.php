@@ -46,6 +46,10 @@ class Throttler
      */
     public function addThrottleRule($type, $rule)
     {
+        if (!($rule instanceof ThrottleRule)) {
+            throw new ThrottlerException('$rule must be of type ThrottleRule.');
+        }
+
         $this->throttleRules[$type] = $rule;
 
         return $this;

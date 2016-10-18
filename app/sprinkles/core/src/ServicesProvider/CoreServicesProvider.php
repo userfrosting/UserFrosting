@@ -419,8 +419,10 @@ class CoreServicesProvider
 
             if ($config->has('throttles')) {
                 foreach ($config['throttles'] as $type => $rule) {
-                    $throttleRule = new ThrottleRule($rule['method'], $rule['interval'], $rule['delays']);
-                    $throttler->addThrottleRule($type, $throttleRule);
+                    if ($rule) {
+                        $throttleRule = new ThrottleRule($rule['method'], $rule['interval'], $rule['delays']);
+                        $throttler->addThrottleRule($type, $throttleRule);
+                    }
                 }
             }
 
