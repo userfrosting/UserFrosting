@@ -10,6 +10,9 @@ namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
+use Illuminate\Cache\CacheManager;
+use Illuminate\Cache\MemcachedConnector;
+use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\DatabaseSessionHandler;
@@ -91,6 +94,34 @@ class CoreServicesProvider
             $am->setBundleSchema($as);
 
             return $am;
+        };
+
+        /**
+         * Cache service.
+         *
+         * @todo Create an option somewhere to flush the cache
+         */
+        $container['cache'] = function ($c) {
+
+            // Create dummy Slim Container
+            $app = new Container();
+
+            $app->singleton('files', function(){
+                return new Filesystem();
+            });
+
+            $app->singleton('memcached.connector', function(){
+                return new MemcachedConnector;
+            });
+
+            $app->singleton('config', function() use ($c){
+                $config = $c->config;
+                $config['cache.stores.file.path'] = $c->locator->findResource('cache://main', true, true);
+                return $config;
+            });
+
+            $cacheManager = new CacheManager($app);
+            return $cacheManager->driver();
         };
 
         /**
@@ -414,7 +445,7 @@ class CoreServicesProvider
          */
         $container['throttler'] = function ($c) {
             $throttler = new Throttler($c->classMapper);
- 
+
             $config = $c->config;
 
             if ($config->has('throttles')) {

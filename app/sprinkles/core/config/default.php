@@ -13,7 +13,25 @@
             ]
         ],
         'cache' => [
-            'twig' => false
+            'twig' => false,
+            'default' => 'file',
+    	    'prefix' => 'uf4',
+
+    	    'stores' => [
+                'file' => [
+                    'driver' => 'file',
+                ],
+                'memcached' => [
+                    'driver' => 'memcached',
+                    'servers' => [
+                        [
+                            'host' => '127.0.0.1',
+                            'port' => 11211,
+                            'weight' => 100,
+                        ],
+                    ],
+                ]
+            ]
         ],
         'csrf' => [
             'name'             => 'csrf',
@@ -35,7 +53,7 @@
             'twig' => false,
             'auth' => false,
             'smtp' => true
-        ],      
+        ],
         'mail'    => [
             'mailer'     => 'smtp',
             'host'       => 'mail.example.com',
@@ -54,7 +72,7 @@
         'path'    => [
             'document_root'     => str_replace(DIRECTORY_SEPARATOR, \UserFrosting\DS, $_SERVER['DOCUMENT_ROOT']),
             'public_relative'   => dirname($_SERVER['SCRIPT_NAME'])      // The location of `index.php` relative to the document root.  Use for sites installed in subdirectories of your web server's document root.
-        ],         
+        ],
         'session' => [
             'handler' => 'file',
             'name' => 'uf4',
@@ -64,7 +82,7 @@
             'keys' => [
                 'alerts'  => 'site.alerts',    // the key to use to store flash messages
                 'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
-            ]            
+            ]
         ],
         'site' => [
             'title'     =>      'UserFrosting',
