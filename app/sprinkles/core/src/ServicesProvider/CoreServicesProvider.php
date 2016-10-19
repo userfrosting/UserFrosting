@@ -103,7 +103,7 @@ class CoreServicesProvider
          */
         $container['cache'] = function ($c) {
 
-            // Create dummy Slim Container
+            // Create dummy Illuminate Container
             $app = new Container();
 
             $app->singleton('files', function(){
@@ -115,8 +115,9 @@ class CoreServicesProvider
             });
 
             $app->singleton('config', function() use ($c){
-                $config = $c->config;
-                $config['cache.stores.file.path'] = $c->locator->findResource('cache://main', true, true);
+                $config = new \UserFrosting\Config\Config();
+                $config['cache'] = $c->config['cache.illuminate'];
+                $config['cache.stores.file.path'] = $c->locator->findResource('cache://illuminate', true, true);
                 return $config;
             });
 

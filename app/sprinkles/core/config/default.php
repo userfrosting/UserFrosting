@@ -14,22 +14,24 @@
         ],
         'cache' => [
             'twig' => false,
-            'default' => 'file',
-    	    'prefix' => 'uf4',
+            'illuminate' => [
+                'default' => 'file',
+        	    'prefix' => 'uf4',
 
-    	    'stores' => [
-                'file' => [
-                    'driver' => 'file',
-                ],
-                'memcached' => [
-                    'driver' => 'memcached',
-                    'servers' => [
-                        [
-                            'host' => '127.0.0.1',
-                            'port' => 11211,
-                            'weight' => 100,
-                        ],
+        	    'stores' => [
+                    'file' => [
+                        'driver' => 'file',
                     ],
+                    'memcached' => [
+                        'driver' => 'memcached',
+                        'servers' => [
+                            [
+                                'host' => '127.0.0.1',
+                                'port' => 11211,
+                                'weight' => 100,
+                            ],
+                        ],
+                    ]
                 ]
             ]
         ],
