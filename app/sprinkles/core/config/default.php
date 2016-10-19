@@ -17,7 +17,6 @@
             'illuminate' => [
                 'default' => 'file',
         	    'prefix' => 'uf4',
-
         	    'stores' => [
                     'file' => [
                         'driver' => 'file',

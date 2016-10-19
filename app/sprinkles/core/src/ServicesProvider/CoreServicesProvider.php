@@ -106,15 +106,15 @@ class CoreServicesProvider
             // Create dummy Illuminate Container
             $app = new Container();
 
-            $app->singleton('files', function(){
+            $app->singleton('files', function() {
                 return new Filesystem();
             });
 
-            $app->singleton('memcached.connector', function(){
+            $app->singleton('memcached.connector', function() {
                 return new MemcachedConnector;
             });
 
-            $app->singleton('config', function() use ($c){
+            $app->singleton('config', function() use ($c) {
                 $config = new \UserFrosting\Config\Config();
                 $config['cache'] = $c->config['cache.illuminate'];
                 $config['cache.stores.file.path'] = $c->locator->findResource('cache://illuminate', true, true);
