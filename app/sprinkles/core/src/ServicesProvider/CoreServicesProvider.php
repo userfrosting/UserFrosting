@@ -35,6 +35,7 @@ use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
 use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
+use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
@@ -266,6 +267,26 @@ class CoreServicesProvider
             UFModel::$ci = $c;
 
             return $capsule;
+        };
+
+        /**
+         * Debug logging with Monolog.
+         *
+         * Extend this service to push additional handlers onto the 'debug' log stack.
+         */
+        $container['debugLogger'] = function ($c) {
+            $logger = new Logger('debug');
+
+            $logFile = $c->get('locator')->findResource('log://debug.log', true, true);
+
+            $handler = new StreamHandler($logFile);
+
+            $formatter = new MixedFormatter(null, null, true);
+
+            $handler->setFormatter($formatter);
+            $logger->pushHandler($handler);
+
+            return $logger;
         };
 
         /**

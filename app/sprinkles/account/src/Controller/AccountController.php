@@ -22,6 +22,7 @@ use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
@@ -263,10 +264,10 @@ class AccountController
         $isEmail = filter_var($data['user_name'], FILTER_VALIDATE_EMAIL);
 
         // Throttle requests
-        
+
         /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
         $throttler = $this->ci->throttler;
-        
+
         if ($isEmail) {
             $throttleData = [
                 'email' => $data['email']
@@ -276,7 +277,7 @@ class AccountController
                 'user_name' => $data['user_name']
             ];
         }
-        
+
         $delay = $throttler->getDelay('sign_in_attempt', $throttleData);
         if ($delay > 0) {
             $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
