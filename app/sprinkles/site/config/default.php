@@ -18,17 +18,6 @@
         'debug' => [
             'auth' => false
         ],
-        'db'      =>  [ 
-            'database'  => 'uf4',
-            'username'  => 'userfrosting',
-            'prefix'    => ''
-        ],
-        'mail'    => [
-            'host'     => getenv('SMTP_HOST'),
-            'username' => getenv('SMTP_USER'),
-            'port'     => 587,
-            'secure'   => 'tls'
-        ],
         'site' => [
             'title'     =>      'UserFrosting',
             'author'    =>      'Alex Weissman',

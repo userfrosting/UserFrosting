@@ -8,7 +8,7 @@
     return [
         'address_book' => [
             'admin' => [
-                'email' => 'admin@example.com',
+                'email' => getenv('SMTP_USER'),
                 'name'  => 'Site Administrator'
             ]
         ],
@@ -44,7 +44,7 @@
             'driver'    => 'mysql',
             'host'      => 'localhost',
             'database'  => 'uf4',
-            'username'  => 'userfrosting',
+            'username'  => getenv('DB_USER'),
             'password'  => getenv('DB_PASSWORD'),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
@@ -56,12 +56,12 @@
             'smtp' => true
         ],
         'mail'    => [
-            'mailer'     => 'smtp',
-            'host'       => 'mail.example.com',
-            'port'       => 465,
+            'mailer'     => 'smtp',     // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
+            'host'       => getenv('SMTP_HOST'),
+            'port'       => 587,
             'auth'       => true,
-            'secure'     => 'ssl',
-            'username'   => 'relay@example.com',
+            'secure'     => 'tls',
+            'username'   => getenv('SMTP_USER'),
             'password'   => getenv('SMTP_PASSWORD'),
             'smtp_debug' => 4,
             'message_options' => [
