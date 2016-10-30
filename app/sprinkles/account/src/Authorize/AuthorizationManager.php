@@ -78,8 +78,8 @@ class AuthorizationManager
         
         // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
         if (!$pass) {
-            $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->config['debug.auth']);
-            $ace = new AccessConditionExpression($nodeVisitor, $user, $this->ci->config['debug.auth']);
+            $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $this->ci->config['debug.auth']);
+            $ace = new AccessConditionExpression($nodeVisitor, $user, $this->ci->authLogger, $this->ci->config['debug.auth']);
             
             $permissions = $user->permissions($slug)->get();
             

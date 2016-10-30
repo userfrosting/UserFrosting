@@ -7,7 +7,8 @@
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Authorize;
- 
+
+use Monolog\Logger;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
@@ -34,9 +35,15 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     /**
      * @var array The parameters to be used when evaluating the methods in the condition expression, as an array.
      */ 
-    protected $params = []; 
+    protected $params = [];
+    
     /**
-     * @var bool Set to true if you want debugging information printed to the error log.
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
+     * @var bool Set to true if you want debugging information printed to the auth log.
      */
     protected $debug;
     
@@ -44,12 +51,14 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * Create a new ParserNodeFunctionEvaluator object.
      *
      * @param array $params The parameters to be used when evaluating the methods in the condition expression, as an array.
-     * @param bool $debug Set to true if you want debugging information printed to the error log.
+     * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.     
+     * @param bool $debug Set to true if you want debugging information printed to the auth log.
      */    
-    public function __construct($callbacks, $debug = false)
+    public function __construct($callbacks, $logger, $debug = false)
     {
         $this->callbacks = $callbacks;
         $this->prettyPrinter = new StandardPrettyPrinter;
+        $this->logger        = $logger;        
         $this->debug = $debug;
         $this->params = [];
     }
@@ -81,9 +90,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             }
             
             if ($this->debug) {
-                //echo "<pre>";
-                error_log("Evaluating callback '$callbackName' on \n");
-                error_log(print_r($args, true));
+                $this->logger->debug("Evaluating callback '$callbackName' on: ", $args);
             }
             
             // Call the specified access condition callback with the specified arguments.
@@ -94,8 +101,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             }
             
             if ($this->debug) {
-                error_log("Result: " . ($result ? "1" : "0"));
-                //echo "</pre>";
+                $this->logger->debug("Result: " . ($result ? "1" : "0"));
             }
             
             return new \PhpParser\Node\Scalar\LNumber($result ? "1" : "0");

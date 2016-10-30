@@ -8,6 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
+use Monolog\Logger;
 use PhpParser\Lexer\Emulative as EmulativeLexer;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
@@ -32,34 +33,45 @@ class AccessConditionExpression
      * @var User A user object, which for convenience can be referenced as 'self' in access conditions.
      */
     protected $user;
+    
     /**
      * @var ParserNodeFunctionEvaluator The node visitor, which evaluates access condition callbacks used in a permission condition.
      */
-    protected $nodeVisitor;    
+    protected $nodeVisitor;
+    
     /**
      * @var \PhpParser\Parser The PhpParser object to use (initialized in the ctor)
      */
     protected $parser;
+    
     /**
      * @var NodeTraverser The NodeTraverser object to use (initialized in the ctor)
      */    
     protected $traverser;
+    
     /**
      * @var StandardPrettyPrinter The PrettyPrinter object to use (initialized in the ctor)
      */ 
     protected $prettyPrinter;
+    
     /**
-     * @var bool Set to true if you want debugging information printed to the error log.
+     * @var Logger
+     */
+    protected $logger;
+    
+    /**
+     * @var bool Set to true if you want debugging information printed to the auth log.
      */ 
     protected $debug;
 
     /**
      * Create a new AccessConditionExpression object.
      *
-     * @param User A user object, which for convenience can be referenced as 'self' in access conditions.
-     * @param bool $debug Set to true if you want debugging information printed to the error log.
+     * @param User $user A user object, which for convenience can be referenced as 'self' in access conditions.
+     * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
+     * @param bool $debug Set to true if you want debugging information printed to the auth log.
      */    
-    public function __construct($nodeVisitor, $user, $debug = false)
+    public function __construct($nodeVisitor, $user, $logger, $debug = false)
     {
         $this->nodeVisitor   = $nodeVisitor;
         $this->user          = $user;
@@ -67,6 +79,7 @@ class AccessConditionExpression
         $this->traverser     = new NodeTraverser;
         $this->traverser->addVisitor($nodeVisitor);
         $this->prettyPrinter = new StandardPrettyPrinter;
+        $this->logger        = $logger;
         $this->debug = $debug;
     }
  
@@ -91,11 +104,7 @@ class AccessConditionExpression
         $code = "<?php $condition;";
         
         if ($this->debug) {
-            error_log("<pre>Evaluating access conditions:\n");
-            error_log($condition. "\n\n".
-            "on params: \n" .
-            print_r($params, true) . "\n" .
-            "</pre>");
+            $this->logger->debug("Evaluating access '$condition' with parameters:", $params);
         }
         
         // Traverse the parse tree, and execute any callbacks found using the supplied parameters.
@@ -113,18 +122,18 @@ class AccessConditionExpression
             $result = eval($expr_eval);
             
             if ($this->debug) {
-                error_log("<pre>\"$expr\" evaluates to " . ($result == true ? "true" : "false") . "</pre>");
+                $this->logger->debug("Expression '$expr' evaluates to " . ($result == true ? "true" : "false"));
             }
             
             return $result;
         } catch (PhpParserException $e) {
             if ($this->debug) {
-                error_log("Error parsing access condition \"$condition\": \n" . $e->getMessage());
+                $this->logger->debug("Error parsing access condition '$condition':" . $e->getMessage());
             }
             return false;   // Access fails if the access condition can't be parsed.
         } catch (AuthorizationException $e) {
             if ($this->debug) {
-                error_log("Error parsing access condition \"$condition\": \n" . $e->getMessage());
+                $this->logger->debug("Error parsing access condition '$condition':" . $e->getMessage());
             }
             return false;
         }

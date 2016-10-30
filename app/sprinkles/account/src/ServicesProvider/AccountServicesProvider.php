@@ -10,10 +10,15 @@ namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
 use Birke\Rememberme\Authenticator as RememberMe;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
+use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 
 /**
  * Registers services for the account sprinkle, such as currentUser, etc.
@@ -86,6 +91,26 @@ class AccountServicesProvider
             
             $authenticator = new Authenticator($classMapper, $session, $config);
             return $authenticator;
+        };
+        
+        /**
+         * Auth logging with Monolog.
+         *
+         * Extend this service to push additional handlers onto the 'auth' log stack.
+         */
+        $container['authLogger'] = function ($c) {
+            $logger = new Logger('auth');
+
+            $logFile = $c->get('locator')->findResource('log://auth.log', true, true);
+
+            $handler = new StreamHandler($logFile);
+
+            $formatter = new MixedFormatter(null, null, true);
+
+            $handler->setFormatter($formatter);
+            $logger->pushHandler($handler);
+
+            return $logger;
         };
         
         /**
