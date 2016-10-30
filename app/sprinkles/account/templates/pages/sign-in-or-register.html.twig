@@ -19,7 +19,7 @@
 
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1 show-forms">
-            {% if site.setting.can_register %}
+            {% if site.registration.enabled %}
                 <span class="show-login-form active">{{translate('SIGNIN')}}</span>
                 <span class="show-forms-divider">/</span>
                 <span class="show-register-form">{{translate('REGISTER')}}</span>
@@ -28,7 +28,7 @@
             {% endif %}
         </div>
     </div>
-    {% if site.setting.can_register %}
+    {% if site.registration.enabled %}
         <div class="row register-form">
             <div class="col-sm-4 col-sm-offset-1">
                 <div id="alerts-register">
@@ -62,7 +62,7 @@
                         <label class="sr-only" for="r-form-passwordc">{{translate('PASSWORD.CONFIRM')}}</label>
                         <input type="password" name="passwordc" placeholder="{{translate('PASSWORD.CONFIRM')}}" class="form-control" id="r-form-passwordc">
                     </div>
-                    {% if site.setting.registration_captcha %}
+                    {% if site.registration.captcha %}
                         <div class="form-group">
                             <label class="sr-only" for="r-form-passwordc">{{translate('CAPTCHA.VERIFY')}}</label>
                             <div class="row">

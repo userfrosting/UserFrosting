@@ -499,9 +499,11 @@ class CoreServicesProvider
             // !TODO: User locale... Config is good for default or site wide locale. But when a user login, we may have to load his locale
             $config = $c->get('config');
 
-            // Load the locale files based on the base locale and the user locale
-            $translator->loadLocaleFiles($config['site.locale_base']);
-            $translator->loadLocaleFiles($config['site.locale']);
+            // Load the base locale file(s) as specified in the configuration
+            $locales = explode(',', $config['site.locales']);
+            foreach ($locales as $locale) {
+                $translator->loadLocaleFiles(trim($locale));
+            }
 
             return $translator;
         };

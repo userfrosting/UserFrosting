@@ -1,6 +1,6 @@
 {% set navigation_bar = [['', 'Home'], ['account/login', 'Login']] %}
-{% set can_register = site.can_register|default(false) %}
-{% if can_register %}
+{% set registration_enabled = site.registration.enabled|default(false) %}
+{% if registration_enabled %}
     {% set navigation_bar = navigation_bar|merge([['account/register', 'Register']])  %}
 {% endif%}
 {% set active_page = page.active_page|default('') %}

@@ -288,7 +288,7 @@ class AccountController
         $throttler->logEvent('sign_in_attempt', $throttleData);
 
         // If credential is an email address, but email login is not enabled, raise an error.
-        if ($isEmail && !$config['site.setting.email_login']) {
+        if ($isEmail && !$config['site.login.enable_email']) {
             $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
             return $response->withStatus(403);
         }
@@ -535,7 +535,7 @@ class AccountController
         }
 
         // Check if registration is currently enabled
-        if (!$config['site.setting.can_register']) {
+        if (!$config['site.registration.enabled']) {
             $ms->addMessageTranslated("danger", "REGISTRATION.DISABLED");
             return $response->withStatus(403);
         }
@@ -571,7 +571,7 @@ class AccountController
         }
 
         // Check captcha, if required
-        if ($config['site.setting.registration_captcha']) {
+        if ($config['site.registration.captcha']) {
             $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
             if (!$data['captcha'] || !$captcha->verifyCode($data['captcha'])) {
                 $ms->addMessageTranslated("danger", "CAPTCHA.FAIL");
@@ -587,7 +587,7 @@ class AccountController
         unset($data['captcha']);
         unset($data['passwordc']);
 
-        if ($config['site.setting.require_email_verification']) {
+        if ($config['site.registration.require_email_verification']) {
             $data['flag_verified'] = false;
         } else {
             $data['flag_verified'] = true;
@@ -602,7 +602,7 @@ class AccountController
         */
 
         // Set default locale
-        $data['locale'] = $config['site.setting.default_locale'];
+        $data['locale'] = $config['site.registration.user_defaults.locale'];
 
         // Set default group
         //$data['group_id'] = $primaryGroup->id;
@@ -630,7 +630,7 @@ class AccountController
         $user->save();
 
         // Verification email
-        if ($config['site.setting.require_email_verification']) {
+        if ($config['site.registration.require_email_verification']) {
             // Create verification request event
             $user->newActivityVerificationRequest();
             $user->save();      // Re-save with verification request event
@@ -808,9 +808,9 @@ class AccountController
 
         // Compare to appropriate expiration time
         if ($flagNewUser) {
-            $expiration = $config['site.setting.timeout.create_password'];
+            $expiration = $config['timeouts.create_password'];
         } else {
-            $expiration = $config['site.setting.timeout.reset_password'];
+            $expiration = $config['timeouts.reset_password'];
         }
 
         if($timeSinceLastRequest === null || $timeSinceLastRequest < 0 || $timeSinceLastRequest >= $expiration) {

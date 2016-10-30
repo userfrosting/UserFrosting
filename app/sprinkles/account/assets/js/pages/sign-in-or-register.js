@@ -18,7 +18,7 @@ $(document).ready(function() {
     */
     
     // Show login form if registration is disabled
-    if (!site.setting.can_register) {
+    if (!site.registration.enabled) {
         $('.login-form').show();
     }
     

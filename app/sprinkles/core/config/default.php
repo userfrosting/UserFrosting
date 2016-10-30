@@ -3,6 +3,9 @@
     /**
      * Core configuration file for UserFrosting.  You must override/extend this in your site's configuration file.
      *
+     * Sensitive credentials should be stored in an environment variable or your .env file.
+     * Database password: DB_PASSWORD
+     * SMTP server password: SMTP_PASSWORD     
      */
 
     return [
@@ -19,7 +22,7 @@
         	    'prefix' => 'uf4',
         	    'stores' => [
                     'file' => [
-                        'driver' => 'file',
+                        'driver' => 'file'
                     ],
                     'memcached' => [
                         'driver' => 'memcached',
@@ -27,9 +30,9 @@
                             [
                                 'host' => '127.0.0.1',
                                 'port' => 11211,
-                                'weight' => 100,
-                            ],
-                        ],
+                                'weight' => 100
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -85,6 +88,7 @@
                 'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
             ]
         ],
+        // "Site" settings that are automatically passed to Twig
         'site' => [
             'title'     =>      'UserFrosting',
             'author'    =>      'Author',
@@ -100,8 +104,7 @@
                 'assets-raw'        => 'assets-raw',
                 'assets'            => 'assets'
             ],
-            'locale'       =>      'en_US',
-            'locale_base'  =>      'en_US',
+            'locales' =>  'en_US'   // This can be a comma-separated list, to load multiple fallback locales
         ],
         'timezone' => 'America/New_York',
         'error_reporting' => E_ALL,  // Development - report all errors and suggestions

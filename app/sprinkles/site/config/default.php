@@ -1,35 +1,27 @@
 <?php
 
     /**
-     * User site configuration file for UserFrosting.  You should definitely set these values!
-     *
-     * Passwords should be stored in an environment variable or your .env file.
-     * Database password: DB_PASSWORD
-     * SMTP server password: SMTP_PASSWORD
+     * Sample site configuration file for UserFrosting.  You should definitely set these values!
      *
      */
     return [
         'address_book' => [
             'admin' => [
-                'email' => getenv('SMTP_USER'),
-                'name'  => 'UserFrosting Administrator'
+                'name'  => 'Squawkbot'
             ]
         ],    
         'debug' => [
-            'auth' => false
+            'auth' => true
         ],
         'site' => [
-            'title'     =>      'UserFrosting',
-            'author'    =>      'Alex Weissman',
-            // Site settings
-            'setting' => [
-                'email_login' => true
-            ],
+            'title'     =>      'Owl Fancy',
+            'author'    =>      'David Attenborough',
+            'locales' => 'en_US',
             // URLs
             'uri' => [
-                'author' => 'https://alexanderweissman.com'
+                'author' => 'https://attenboroughsreef.com'
             ]
         ],   
-        'timezone' => 'America/New_York'        
+        'timezone' => 'Europe/London'        
     ];
     

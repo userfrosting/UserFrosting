@@ -35,14 +35,18 @@
             'expire_time' => 604800
         ],
         'site' => [
-            'setting' => [
-                'can_register' => true,
-                'default_locale' => 'en_US',                
-                'registration_captcha' => true,
+            'login' => [
+                'enable_email' => true
+            ],
+            'registration' => [
+                'enabled' => true,
+                'captcha' => true,
                 'require_email_verification' => true,
-                'timeout' => [
-                    'create_password' => 86400,
-                    'reset_password' => 10800
+                'user_defaults' => [
+                    'locale' => 'en_US',
+                    'group' => 'Users',
+                    // A comma-separated list of default roles for newly registered users
+                    'roles' => ''
                 ]
             ]
         ],
@@ -84,6 +88,10 @@
                     7 => 600
                 ]
             ]
+        ],
+        'timeouts' => [
+            'create_password' => 86400,
+            'reset_password' => 10800
         ]
     ];
     
