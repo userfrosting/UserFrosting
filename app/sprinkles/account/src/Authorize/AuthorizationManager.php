@@ -39,9 +39,17 @@ class AuthorizationManager
         $this->callbacks = $callbacks;
     }
     
+    /**
+     * Register an authorization callback, which can then be used in permission conditions.
+     *
+     * To add additional callbacks, simply extend the `authorizer` service in your Sprinkle's service provider.
+     * @param string $name
+     * @param callable $callback
+     */
     public function addCallback($name, $callback)
     {
         $this->callbacks[$name] = $callback;
+        return $this;
     }
     
     /**

@@ -132,6 +132,20 @@ class AccountServicesProvider
                 },
                 
                 /**
+                 * Check if the specified user (by user_id) has a particular role.
+                 *
+                 * @param int $user_id the id of the user.
+                 * @param int $role_id the id of the role. 
+                 * @return bool true if the user has the role, false otherwise.
+                 */
+                'has_role' => function ($user_id, $role_id) {
+                    return Capsule::table('role_users')
+                        ->where('user_id', $user_id)
+                        ->where('role_id', $role_id)
+                        ->count() > 0;
+                },
+                
+                /**
                  * Check if the specified value $needle is in the values of $haystack.
                  *
                  * @param mixed $needle the value to look for in $haystack
@@ -151,7 +165,7 @@ class AccountServicesProvider
                  */     
                 'in_group' => function ($user_id, $group_id) {
                     $user = User::find($user_id);
-                    return ($user->id == $user_id);
+                    return ($user->group_id == $group_id);
                 },
                 
                 /**
