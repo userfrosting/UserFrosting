@@ -66,7 +66,7 @@ class CoreServicesProvider
          * Persists error/success messages between requests in the session.
          */
         $container['alerts'] = function ($c) {
-            return new \UserFrosting\Sprinkle\Core\MessageStream($c->get('session'), $c->get('config')['session.keys.alerts'], $c->get('translator'));
+            return new \UserFrosting\Sprinkle\Core\MessageStream($c->session, $c->config['session.keys.alerts'], $c->translator);
         };
 
         /**
@@ -76,7 +76,7 @@ class CoreServicesProvider
          * Assets are Javascript, CSS, image, and other files used by your site.
          */
         $container['assets'] = function ($c) {
-            $config = $c->get('config');
+            $config = $c->config;
 
             // TODO: map stream identifier ("asset://") to desired relative URLs?
             $base_url = $config['site.uri.public'];
@@ -89,8 +89,8 @@ class CoreServicesProvider
 
             // Load asset schema
             $as = new AssetBundleSchema();
-            $as->loadRawSchemaFile($c->get('locator')->findResource('build://bundle.config.json', true, true));
-            $as->loadCompiledSchemaFile($c->get('locator')->findResource('build://bundle.result.json', true, true));
+            $as->loadRawSchemaFile($c->locator->findResource('build://bundle.config.json', true, true));
+            $as->loadCompiledSchemaFile($c->locator->findResource('build://bundle.result.json', true, true));
 
             $am->setBundleSchema($as);
 
@@ -132,7 +132,7 @@ class CoreServicesProvider
          * @todo We should cache the results of this, the first time that it succeeds.
          */
         $container['checkEnvironment'] = function ($c) {
-            $checkEnvironment = new CheckEnvironment($c->get('view'), $c->get('locator'));
+            $checkEnvironment = new CheckEnvironment($c->view, $c->locator);
             return $checkEnvironment;
         };
 
@@ -165,7 +165,7 @@ class CoreServicesProvider
             $config = new \UserFrosting\Config\Config();
 
             // Add search paths for all config files.  Include them in reverse order to allow config files added later to override earlier files.
-            $configPaths = array_reverse($c->get('locator')->findResources('config://', true, true));
+            $configPaths = array_reverse($c->locator->findResources('config://', true, true));
 
             $config->setPaths($configPaths);
 
@@ -237,7 +237,7 @@ class CoreServicesProvider
          * @todo construct the individual objects rather than using the facade
          */
         $container['db'] = function ($c) {
-            $config = $c->get('config');
+            $config = $c->config;
 
             $capsule = new Capsule;
 
@@ -277,7 +277,7 @@ class CoreServicesProvider
         $container['debugLogger'] = function ($c) {
             $logger = new Logger('debug');
 
-            $logFile = $c->get('locator')->findResource('log://debug.log', true, true);
+            $logFile = $c->locator->findResource('log://debug.log', true, true);
 
             $handler = new StreamHandler($logFile);
 
@@ -293,7 +293,7 @@ class CoreServicesProvider
          * Custom error-handler for recoverable errors.
          */
         $container['errorHandler'] = function ($c) {
-            $settings = $c->get('settings');
+            $settings = $c->settings;
 
             $handler = new CoreErrorHandler($c, $settings['displayErrorDetails']);
 
@@ -317,7 +317,7 @@ class CoreServicesProvider
         $container['errorLogger'] = function ($c) {
             $log = new Logger('errors');
 
-            $logFile = $c->get('locator')->findResource('log://errors.log', true, true);
+            $logFile = $c->locator->findResource('log://errors.log', true, true);
 
             $handler = new StreamHandler($logFile, Logger::WARNING);
 
@@ -387,7 +387,7 @@ class CoreServicesProvider
         $container['mailLogger'] = function ($c) {
             $log = new Logger('mail');
 
-            $logFile = $c->get('locator')->findResource('log://mail.log', true, true);
+            $logFile = $c->locator->findResource('log://mail.log', true, true);
 
             $handler = new StreamHandler($logFile);
             $formatter = new LineFormatter(null, null, true);
@@ -416,8 +416,8 @@ class CoreServicesProvider
          */
         $container['router'] = function ($c) {
             $routerCacheFile = false;
-            if (isset($c->get('settings')['routerCacheFile'])) {
-                $routerCacheFile = $c->get('settings')['routerCacheFile'];
+            if (isset($c->settings['routerCacheFile'])) {
+                $routerCacheFile = $c->settings['routerCacheFile'];
             }
 
             return (new \UserFrosting\Sprinkle\Core\Router)->setCacheFile($routerCacheFile);
@@ -427,14 +427,14 @@ class CoreServicesProvider
          * Start the PHP session, with the name and parameters specified in the configuration file.
          */
         $container['session'] = function ($c) {
-            $config = $c->get('config');
+            $config = $c->config;
 
             // Create appropriate handler based on config
             if ($config['session.handler'] == 'file') {
                 $fs = new FileSystem;
-                $handler = new FileSessionHandler($fs, $c->get('locator')->findResource('session://'), $config['session.minutes']);
+                $handler = new FileSessionHandler($fs, $c->locator->findResource('session://'), $config['session.minutes']);
             } else if ($config['session.handler'] == 'database') {
-                $connection = $c->get('db')->connection();
+                $connection = $c->db->connection();
                 $table = 'session';
                 // Table must exist, otherwise an exception will be thrown
                 $handler = new DatabaseSessionHandler($connection, $table, $config['session.minutes']);
@@ -452,10 +452,10 @@ class CoreServicesProvider
          * Custom shutdown handler, for dealing with fatal errors.
          */
         $container['shutdownHandler'] = function ($c) {
-            $alerts = $c->get('alerts');
-            $translator = $c->get('translator');
-            $request = $c->get('request');
-            $response = $c->get('response');
+            $alerts = $c->alerts;
+            $translator = $c->translator;
+            $request = $c->request;
+            $response = $c->response;
 
             return new ShutdownHandler($request, $response, $alerts, $translator);
         };
@@ -491,13 +491,13 @@ class CoreServicesProvider
             $translator = new MessageTranslator();
 
             // Add search paths for all locale files.  Include them in reverse order to allow locale files added later to override earlier files.
-            $localePaths = array_reverse($c->get('locator')->findResources('locale://', true, true));
+            $localePaths = array_reverse($c->locator->findResources('locale://', true, true));
 
             $translator->setPaths($localePaths);
 
             // We need the config to get which locale we need
             // !TODO: User locale... Config is good for default or site wide locale. But when a user login, we may have to load his locale
-            $config = $c->get('config');
+            $config = $c->config;
 
             // Load the base locale file(s) as specified in the configuration
             $locales = explode(',', $config['site.locales']);

@@ -234,7 +234,7 @@ class AccountServicesProvider
             $translator = $c->translator;
 
             // Force database connection to boot up
-            $c->get('db');
+            $c->db;
             
             // If this throws a PDOException we catch it and generate a guest user rather than allowing the exception to propagate.
             // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
