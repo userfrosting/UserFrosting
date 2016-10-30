@@ -11,7 +11,7 @@
             ]
         ],    
         'debug' => [
-            'auth' => true
+            'auth' => false
         ],
         'site' => [
             'title'     =>      'Owl Fancy',

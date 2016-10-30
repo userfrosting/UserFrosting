@@ -90,7 +90,11 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             }
             
             if ($this->debug) {
-                $this->logger->debug("Evaluating callback '$callbackName' on: ", $args);
+                if (count($args)) {
+                    $this->logger->debug("Evaluating callback '$callbackName' on: ", $args);
+                } else {
+                    $this->logger->debug("Evaluating callback '$callbackName'...");
+                }
             }
             
             // Call the specified access condition callback with the specified arguments.

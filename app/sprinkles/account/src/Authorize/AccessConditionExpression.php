@@ -104,7 +104,7 @@ class AccessConditionExpression
         $code = "<?php $condition;";
         
         if ($this->debug) {
-            $this->logger->debug("Evaluating access '$condition' with parameters:", $params);
+            $this->logger->debug("Evaluating access condition '$condition' with parameters:", $params);
         }
         
         // Traverse the parse tree, and execute any callbacks found using the supplied parameters.

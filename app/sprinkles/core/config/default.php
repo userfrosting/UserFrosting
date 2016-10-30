@@ -56,7 +56,6 @@
         ],
         'debug' => [
             'twig' => false,
-            'auth' => false,
             'smtp' => true
         ],
         'mail'    => [
