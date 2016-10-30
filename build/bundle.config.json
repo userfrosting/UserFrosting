@@ -135,7 +135,8 @@
     "css/sb-admin-2" : {
         "styles": [
             "vendor/metismenu-1.1.3/css/metisMenu.css",
-            "vendor/start-bootstrap/css/sb-admin-2.css"
+            "vendor/start-bootstrap/css/sb-admin-2.css",
+            "vendor/font-starcraft/font-starcraft.css"
         ],
         "options": {
             "result": {

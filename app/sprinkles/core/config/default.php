@@ -37,6 +37,7 @@
                 ]
             ]
         ],
+        // CSRF middleware settings (see https://github.com/slimphp/Slim-Csrf)
         'csrf' => [
             'name'             => 'csrf',
             'storage_limit'    => 200,
@@ -46,7 +47,7 @@
         'db'      =>  [
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => 'uf4',
+            'database'  => getenv('DB_NAME'),
             'username'  => getenv('DB_USER'),
             'password'  => getenv('DB_PASSWORD'),
             'charset'   => 'utf8',

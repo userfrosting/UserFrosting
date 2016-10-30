@@ -18,6 +18,7 @@
                 'captcha'          => 'account.captcha'     // Key used to store a captcha hash during captcha verification
             ]
         ],
+        // See https://github.com/gbirke/rememberme for an explanation of these settings
         'remember_me' => [
             'table' => [
                 'tableName' => 'persistences',
@@ -34,6 +35,7 @@
             ],
             'expire_time' => 604800
         ],
+        // "Site" settings that are automatically passed to Twig
         'site' => [
             'login' => [
                 'enable_email' => true
@@ -44,9 +46,9 @@
                 'require_email_verification' => true,
                 'user_defaults' => [
                     'locale' => 'en_US',
-                    'group' => 'Users',
+                    'group' => 'terran',
                     // A comma-separated list of default roles for newly registered users
-                    'roles' => ''
+                    'roles' => 'user'
                 ]
             ]
         ],

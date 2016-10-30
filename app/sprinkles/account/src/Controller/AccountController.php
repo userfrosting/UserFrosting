@@ -592,20 +592,22 @@ class AccountController
         } else {
             $data['flag_verified'] = true;
         }
-        // Check that the default group exists
-        /*
-        if (!$primaryGroup){
-            $ms->addMessageTranslated("danger", "ACCOUNT.REGISTRATION_BROKEN");
-            error_log("Account registration is not working because a default primary group has not been set.");
-            $this->_app->halt(500);
+        
+        // Load default group
+        $groupSlug = $config['site.registration.user_defaults.group'];
+        $defaultGroup = $classMapper->staticMethod('group', 'where', 'slug', $groupSlug)->first();
+
+        if (!$defaultGroup) {
+            $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
+            $e->addUserMessage("ACCOUNT.REGISTRATION_BROKEN");
+            throw $e;
         }
-        */
+
+        // Set default group
+        $data['group_id'] = $defaultGroup->id;
 
         // Set default locale
         $data['locale'] = $config['site.registration.user_defaults.locale'];
-
-        // Set default group
-        //$data['group_id'] = $primaryGroup->id;
 
         // Hash password
         $data['password'] = Password::hash($data['password']);
@@ -615,19 +617,19 @@ class AccountController
         // Create the user
         $user = $classMapper->createInstance('user', $data);
 
-        // TODO: Add user to default group and default roles
-        /*
-        $defaultGroups = Group::where('is_default', GROUP_DEFAULT)->get();
-        $user->addGroup($primaryGroup->id);
-        foreach ($defaultGroups as $group)
-            $user->addGroup($group->id);
-        */
-
         // Create sign-up event
         $user->newActivitySignUp();
 
         // Store new user to database
         $user->save();
+
+        // Load default roles
+        $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
+        $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
+        $defaultRoleIds = $defaultRoles->pluck('id')->all();
+
+        // Attach default roles
+        $user->roles()->attach($defaultRoleIds);
 
         // Verification email
         if ($config['site.registration.require_email_verification']) {

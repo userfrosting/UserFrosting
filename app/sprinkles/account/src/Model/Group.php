@@ -20,10 +20,9 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @author Alex Weissman
  * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  *
+ * @property string slug
  * @property string name
  * @property string description
- * @property string theme
- * @property string landing_page
  * @property string icon
  */
 class Group extends UFModel {
@@ -34,10 +33,9 @@ class Group extends UFModel {
     protected $table = "groups";
     
     protected $fillable = [
+        "slug",
         "name",
         "description",
-        "theme",
-        "landing_page",
         "icon"
     ];
     
