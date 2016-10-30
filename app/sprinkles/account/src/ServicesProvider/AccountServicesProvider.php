@@ -189,9 +189,11 @@ class AccountServicesProvider
          * @todo Move some of this logic to the Authenticate class.
          */ 
         $container['currentUser'] = function ($c) {
-            $authenticator = $c->get('authenticator');
-            $classMapper = $c->get('classMapper');
-            $config = $c->get('config');
+            $authenticator = $c->authenticator;
+            $classMapper = $c->classMapper;
+            $config = $c->config;
+            $translator = $c->translator;
+
             // Force database connection to boot up
             $c->get('db');
             
@@ -211,7 +213,9 @@ class AccountServicesProvider
                 $currentUser->id = $config['reserved_user_ids.guest'];
             }
             
-            // TODO: Add user locale in translator
+            // Add user locale to translator service
+            $translator->loadLocaleFiles($currentUser->locale);
+            
             // TODO: Set user theme in Twig
             /*
             // Set path to user's theme, prioritizing over any other themes.
