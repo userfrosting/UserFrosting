@@ -1,6 +1,7 @@
 <?php
     require_once '../app/vendor/autoload.php';    
 
+    use Carbon\Carbon;
     use Dotenv\Dotenv;
     use Dotenv\Exception\InvalidPathException;    
     use Illuminate\Database\Capsule\Manager as Capsule;
@@ -13,6 +14,9 @@
     } catch (InvalidPathException $e) {
         // Skip loading the environment config file if it doesn't exist.
     }    
+    
+    // TODO: make this interactive?
+    date_default_timezone_set('America/New_York');
     
     $capsule = new Capsule;
     
@@ -34,6 +38,8 @@
     $capsule->bootEloquent();
        
     $schema = Capsule::schema();
+    
+    $installTime = Carbon::now();
     
     /**
      * User activity table.  Renames the "user events" table.
@@ -79,21 +85,27 @@
                 'slug' => 'terran',
                 'name' => 'Terran',
                 'description' => 'The terrans are a young species with psionic potential. The terrans of the Koprulu sector descend from the survivors of a disastrous 23rd century colonization mission from Earth.',
-                'icon' => 'sc sc-terran'
+                'icon' => 'sc sc-terran',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'id' => 2,
                 'slug' => 'zerg',
                 'name' => 'Zerg',
                 'description' => 'Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.',
-                'icon' => 'sc sc-zerg'
+                'icon' => 'sc sc-zerg',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'id' => 3,
                 'slug' => 'protoss',
                 'name' => 'Protoss',
                 'description' => 'The protoss, a.k.a. the Firstborn, are a sapient humanoid race native to Aiur. Their advanced technology complements and enhances their psionic mastery.',
-                'icon' => 'sc sc-protoss'
+                'icon' => 'sc sc-protoss',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ]
         ]);
     }
@@ -125,42 +137,54 @@
                 'slug' => 'uri_users',
                 'name' => 'User management page',
                 'conditions' => 'always()',
-                'description' => 'View a page containing a table of users.'
+                'description' => 'View a page containing a table of users.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'id' => 2,
                 'slug' => 'update_account_setting',
                 'name' => 'Edit user',
                 'conditions' => '!has_role(user.id,2)&&in(property,[ "email","password", "name","flag_enabled","flag_password_reset","password","locale","theme"])',
-                'description' => 'Edit users who are not Site Administrators.'
+                'description' => 'Edit users who are not Site Administrators.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],            
             [
                 'id' => 3,
                 'slug' => 'view_account_setting',
                 'name' => 'View user',
                 'conditions' => 'in(property,["user_name","name","email","locale","theme","roles","group_id"])',
-                'description' => 'View certain properties of any user.'
+                'description' => 'View certain properties of any user.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'id' => 4,
                 'slug' => 'delete_account',
                 'name' => 'Delete user',
                 'conditions' => '!has_role(user.id,2)',
-                'description' => 'Delete users who are not Site Administrators.'
+                'description' => 'Delete users who are not Site Administrators.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],            
             [
                 'id' => 5,
                 'slug' => 'create_account',
                 'name' => 'Create user',
                 'conditions' => 'always()',
-                'description' => 'Create a new user and assign default group and roles.'
+                'description' => 'Create a new user and assign default group and roles.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'id' => 6,
                 'slug' => 'uri_account_settings',
                 'name' => 'Account settings page',
                 'conditions' => 'always()',
-                'description' => 'View the account settings page.'
+                'description' => 'View the account settings page.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ]
         ]);
     }
@@ -187,28 +211,40 @@
             // Basic user permissions
             [
                 'role_id' => 1,
-                'permission_id' => 6
+                'permission_id' => 6,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             // Site admin permissions
             [
                 'role_id' => 2,
-                'permission_id' => 1
+                'permission_id' => 1,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'role_id' => 2,
-                'permission_id' => 2
+                'permission_id' => 2,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'role_id' => 2,
-                'permission_id' => 3
+                'permission_id' => 3,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'role_id' => 2,
-                'permission_id' => 4
+                'permission_id' => 4,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'role_id' => 2,
-                'permission_id' => 5
+                'permission_id' => 5,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ]
         ]);
     }
@@ -258,19 +294,25 @@
                 'id' => 1,
                 'slug' => 'user',
                 'name' => 'User',
-                'description' => 'This role provides basic user functionality.'
+                'description' => 'This role provides basic user functionality.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'id' => 2,
                 'slug' => 'site-admin',
                 'name' => 'Site Administrator',
-                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.'
+                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ],
             [
                 'id' => 3,
                 'slug' => 'group-admin',
                 'name' => 'Group Administrator',
-                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their same group, except other administrators of that group.'
+                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their same group, except other administrators of that group.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
             ]
         ]);
     }
