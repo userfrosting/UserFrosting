@@ -152,6 +152,12 @@ class Authenticator
         
     /**
      * Try to get the currently authenticated user from the session.
+     *
+     * @return User|null
+     * @throws AuthExpiredException
+     * @throws AuthCompromisedException
+     * @throws AccountInvalidException
+     * @throws AccountDisabledException
      */
     public function getSessionUser()
     {        

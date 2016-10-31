@@ -16,7 +16,7 @@
             ]
         ],
         'cache' => [
-            'twig' => false,
+            'twig' => true,
             'illuminate' => [
                 'default' => 'file',
         	    'prefix' => 'uf4',
@@ -87,6 +87,10 @@
                 'alerts'  => 'site.alerts',    // the key to use to store flash messages
                 'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
             ]
+        ],
+        // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
+        'settings' => [
+            'routerCacheFile' => \UserFrosting\ROOT_DIR . '/' . \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME . '/' . 'routes.cache'
         ],
         // "Site" settings that are automatically passed to Twig
         'site' => [

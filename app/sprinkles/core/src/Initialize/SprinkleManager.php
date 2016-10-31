@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Core\Initialize;
 
 use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
+use UserFrosting\Sprinkle\Core\Facades\Facade;
 use UserFrosting\Sprinkle\Core\ServicesProvider\CoreServicesProvider;
 
 /**
@@ -42,10 +43,13 @@ class SprinkleManager
     }
     
     /**
-     * Initialize the application.  Register core services and resources, load all sprinkles, and include route files.
+     * Initialize the application.  Register core services and resources and load all sprinkles.
      */
     public function init()
     {
+        // Set up facade reference to container.
+        Facade::setFacadeContainer($this->ci);
+    
         // Register core services
         $serviceProvider = new CoreServicesProvider();
         $serviceProvider->register($this->ci);
@@ -62,13 +66,11 @@ class SprinkleManager
                 $sprinkle->init();            
         }
         
-        // Boot the config service manually
-        $this->ci['config'];
+        // Set the configuration settings for Slim in the 'settings' service
+        $this->ci->settings = $this->ci->config['settings'];
         
         // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
-        $this->ci['shutdownHandler'];         
-        
-        $this->loadRoutes();
+        $this->ci->shutdownHandler;
     }
     
     /**
@@ -76,9 +78,8 @@ class SprinkleManager
      *
      * Include them in reverse order to allow higher priority routes to override lower priority.
      */
-    public function loadRoutes()
+    public function loadRoutes($app)
     {
-        global $app;
         $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
         foreach ($routePaths as $path) {
             $routeFiles = glob($path . '/*.php');
@@ -93,7 +94,7 @@ class SprinkleManager
      */
     public function registerSprinkleResources($name)
     {
-        $locator = $this->ci['locator'];
+        $locator = $this->ci->locator;
         
         $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
         

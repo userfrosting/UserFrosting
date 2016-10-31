@@ -309,7 +309,8 @@ class User extends UFModel
      *
      * By default, adds a new sign-in activity and updates any legacy hash.
      * @param mixed[] $params Optional array of parameters used for this event handler.
-     * @todo Introduce a debug logging service
+     * @todo Use Monolog logging service
+     * @todo Transition to Laravel Event dispatcher to handle this
      */
     public function onLogin($params = array())
     {
