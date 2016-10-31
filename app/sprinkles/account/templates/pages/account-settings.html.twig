@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <label for="input-email" class="col-sm-4 control-label">{{translate("EMAIL")}}</label>
                             <div class="col-sm-8">
-                                <input type="text" id="input-email" class="form-control" name="email" value="{{current_user.email}}" autocomplete="off" placeholder="{{translate("EMAIL")}}">
+                                <input type="text" id="input-email" class="form-control" name="email" value="{{current_user.email}}" autocomplete="off" placeholder="{{translate("EMAIL")}}" {{page.visibility}}>
                                 <p class="help-block">Your email address.</p>
                             </div>
                         </div>
@@ -38,17 +38,17 @@
                         <div class="form-group">
                             <label for="input-first-name" class="col-sm-4 control-label">Name</label>
                             <div class="col-sm-4">
-                                <input type="text" id="input-first-name" class="form-control" name="first_name" value="{{current_user.first_name}}" placeholder="{{translate("FIRST_NAME")}}">
+                                <input type="text" id="input-first-name" class="form-control" name="first_name" value="{{current_user.first_name}}" placeholder="{{translate("FIRST_NAME")}}" {{page.visibility}}>
                             </div>
                             <div class="col-sm-4">
-                                <input type="text" id="input-last-name" class="form-control" name="last_name" value="{{current_user.last_name}}" placeholder="{{translate("LAST_NAME")}}">
+                                <input type="text" id="input-last-name" class="form-control" name="last_name" value="{{current_user.last_name}}" placeholder="{{translate("LAST_NAME")}}" {{page.visibility}}>
                             </div>                            
                         </div>
                         
                         <div class="form-group">
                             <label for="input-locale" class="col-sm-4 control-label">{{translate("LOCALE")}}</label>
                             <div class="col-sm-8">
-                                <select id="input-locale" class="form-control select2" name="locale">
+                                <select id="input-locale" class="form-control select2" name="locale" {{page.visibility}}>
                                     {% for id, option in page.locales %}
                                     <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{option}}</option>
                                     {% endfor %}
@@ -57,29 +57,31 @@
                             </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="input-password" class="col-sm-4 control-label">New Password</label>
-                            <div class="col-sm-8">
-                                <input type="password" id="input-password" class="form-control" name="password" placeholder="12-100 characters">
-                                <p class="help-block">Optional.</p>
+                        {% if page.visibility != "disabled" %}
+                            <div class="form-group">
+                                <label for="input-password" class="col-sm-4 control-label">New Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password" id="input-password" class="form-control" name="password" placeholder="12-100 characters">
+                                    <p class="help-block">Optional.</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-passwordc" class="col-sm-4 control-label">Confirm New Password</label>
-                            <div class="col-sm-8">
-                                <input type="password" id="input-passwordc" class="form-control" name="passwordc" placeholder="Re-enter your new password">
-                                <p class="help-block">Required only if selecting a new password.</p>
+                            <div class="form-group">
+                                <label for="input-passwordc" class="col-sm-4 control-label">Confirm New Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password" id="input-passwordc" class="form-control" name="passwordc" placeholder="Re-enter your new password">
+                                    <p class="help-block">Required only if selecting a new password.</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="input-passwordcheck" class="col-sm-4 control-label">Current Password</label>
-                            <div class="col-sm-8">
-                                <input type="password" id="input-passwordcheck" class="form-control" name="passwordcheck" placeholder="You must confirm your current password to make changes.">
+                            <div class="form-group">
+                                <label for="input-passwordcheck" class="col-sm-4 control-label">Current Password</label>
+                                <div class="col-sm-8">
+                                    <input type="password" id="input-passwordcheck" class="form-control" name="passwordcheck" placeholder="You must confirm your current password to make changes.">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-success text-center">Update Settings</button>
-                        </div>
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-success text-center">Update Settings</button>
+                            </div>
+                        {% endif %}
                     </form>
                 </div>
             </div>

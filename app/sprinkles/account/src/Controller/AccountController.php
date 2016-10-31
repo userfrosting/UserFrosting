@@ -66,10 +66,6 @@ class AccountController
         // GET parameters
         $params = $request->getQueryParams();
 
-        // Load validation rules
-        $schema = new RequestSchema("schema://deny-password.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
 
@@ -80,11 +76,14 @@ class AccountController
 
         $loginPage = $this->ci->router->pathFor('login');
         
+        // Load validation rules
+        $schema = new RequestSchema("schema://deny-password.json");
+
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        // Validate, and halt on validation errors.
+        // Validate, and halt on validation errors.  Since this is a GET request, we need to redirect on failure
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
@@ -125,9 +124,6 @@ class AccountController
      */
     public function forgotPassword($request, $response, $args)
     {
-        // POST parameters
-        $params = $request->getParsedBody();
-
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
         
@@ -139,13 +135,22 @@ class AccountController
 
         $this->ci->db;
 
-        // Load validation rules
+        // Get POST parameters
+        $params = $request->getParsedBody();
+
+        // Load the request schema
         $schema = new RequestSchema("schema://forgot-password.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
+
+        // Validate, and halt on validation errors.  Failed validation attempts do not count towards throttling limit.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            return $response->withStatus(400);
+        }
 
         // Throttle requests
 
@@ -161,38 +166,40 @@ class AccountController
             $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
             return $response->withStatus(429);
         }
+    
+        // All checks passed!  log events/activities, update user, and send email
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
 
-        // Log throttleable event
-        $throttler->logEvent('password_reset_request', $throttleData);
-
-        // Load the user, by email address
-        $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
-
-        // Check that the email exists.
-        // On failure, we should still pretend like we succeeded, to prevent account enumeration
-        if ($user) {
-            // TODO: rate-limit the number of password reset requests for a given user
+            // Log throttleable event
+            $throttler->logEvent('password_reset_request', $throttleData);
     
-            // Generate a new password reset request.  This will also generate a new secret token for the user.
-            $user->newActivityPasswordReset();
+            // Load the user, by email address
+            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
     
-            $user->save();      // Re-save with verification request event
-    
-            // Create and send email
-            $message = new TwigMailMessage($this->ci->view, "mail/password-reset.html.twig");
-    
-            $this->ci->mailer->from($config['address_book.admin'])
-                ->addEmailRecipient($user->email, $user->full_name, [
-                    "user" => $user,
-                    "request_date" => date("Y-m-d H:i:s")
-                ]);
-    
-            $this->ci->mailer->send($message);
-        }
+            // Check that the email exists.
+            // If there is no user with that email address, we should still pretend like we succeeded, to prevent account enumeration
+            if ($user) {
+        
+                // Generate a new password reset request.  This will also generate a new secret token for the user.
+                $user->newActivityPasswordReset();
+        
+                $user->save();      // Re-save with verification request event
+        
+                // Create and send email
+                $message = new TwigMailMessage($this->ci->view, "mail/password-reset.html.twig");
+        
+                $this->ci->mailer->from($config['address_book.admin'])
+                    ->addEmailRecipient($user->email, $user->full_name, [
+                        "user" => $user,
+                        "request_date" => date("Y-m-d H:i:s")
+                    ]);
+        
+                $this->ci->mailer->send($message);
+            }
+        });
 
         // TODO: create delay to prevent timing-based attacks
-
-        // TODO: commit DB if email was sent successfully
         
         $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", ['email' => $data['email']]);
         $response->withStatus(200);
@@ -283,11 +290,12 @@ class AccountController
             $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
             return $response->withStatus(429);
         }
-
+        
         // Log throttleable event
         $throttler->logEvent('sign_in_attempt', $throttleData);
 
         // If credential is an email address, but email login is not enabled, raise an error.
+        // Note that we do this after logging throttle event, so this error counts towards throttling limit.
         if ($isEmail && !$config['site.login.enable_email']) {
             $ms->addMessageTranslated("danger", "USER_OR_PASS_INVALID");
             return $response->withStatus(403);
@@ -440,7 +448,7 @@ class AccountController
 
         // Load validation rules
         $schema = new RequestSchema("schema://account-settings.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci['translator']);
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         $locales = $this->ci->translator->getAvailableLocales();
 
@@ -449,7 +457,8 @@ class AccountController
                 "locales" => $locales,
                 "validators" => [
                     "account_settings"    => $validator->rules('json', false)
-                ]
+                ],
+                "visibility" => ($authorizer->checkAccess($currentUser, "update_account_settings") ? "" : "disabled")
             ]
         ]);
     }
@@ -503,12 +512,10 @@ class AccountController
      * This route is "public access".
      * Request type: POST
      * Returns the User Object for the user record that was created.
+     * @todo we should probably throttle this as well to prevent account enumeration, especially since it needs to divulge when a username/email has been used.
      */
     public function register(Request $request, Response $response, $args)
     {
-        // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
-        $params = $request->getParsedBody();
-
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
@@ -520,13 +527,13 @@ class AccountController
 
         $this->ci->db;
 
+        // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
+        $params = $request->getParsedBody();
+
         // Check the honeypot. 'spiderbro' is not a real field, it is hidden on the main page and must be submitted with its default value for this to be processed.
         if (!isset($params['spiderbro']) || $params['spiderbro'] != "http://") {
             throw new SpammyRequestException("Possible spam received:" . print_r($params, true));
         }
-
-        // Load the request schema
-        $schema = new RequestSchema("schema://register.json");
 
         // Security measure: do not allow registering new users until the master account has been created.
         if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
@@ -545,6 +552,9 @@ class AccountController
             $ms->addMessageTranslated("danger", "REGISTRATION.LOGOUT");
             return $response->withStatus(403);
         }
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://register.json");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -612,46 +622,48 @@ class AccountController
         // Hash password
         $data['password'] = Password::hash($data['password']);
 
-        // TODO: "transactionalize" the user creation in database and sending emails
-
-        // Create the user
-        $user = $classMapper->createInstance('user', $data);
-
-        // Create sign-up event
-        $user->newActivitySignUp();
-
-        // Store new user to database
-        $user->save();
-
-        // Load default roles
-        $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
-        $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
-        $defaultRoleIds = $defaultRoles->pluck('id')->all();
-
-        // Attach default roles
-        $user->roles()->attach($defaultRoleIds);
-
-        // Verification email
-        if ($config['site.registration.require_email_verification']) {
-            // Create verification request event
-            $user->newActivityVerificationRequest();
-            $user->save();      // Re-save with verification request event
-
-            // Create and send verification email
-            $message = new TwigMailMessage($this->ci->view, "mail/verify-account.html.twig");
-
-            $this->ci->mailer->from($config['address_book.admin'])
-                ->addEmailRecipient($user->email, $user->full_name, [
-                    "user" => $user
-                ]);
-
-            $this->ci->mailer->send($message);
-
-            $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE2");
-        } else {
-            // No verification required
-            $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE1");
-        }
+        // All checks passed!  log events/activities, create user, and send verification email (if required)
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($classMapper, $data, $ms, $config) {
+            // Create the user
+            $user = $classMapper->createInstance('user', $data);
+    
+            // Create sign-up event
+            $user->newActivitySignUp();
+    
+            // Store new user to database
+            $user->save();
+    
+            // Load default roles
+            $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
+            $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
+            $defaultRoleIds = $defaultRoles->pluck('id')->all();
+    
+            // Attach default roles
+            $user->roles()->attach($defaultRoleIds);
+    
+            // Verification email
+            if ($config['site.registration.require_email_verification']) {
+                // Create verification request event
+                $user->newActivityVerificationRequest();
+                $user->save();      // Re-save with verification request event
+    
+                // Create and send verification email
+                $message = new TwigMailMessage($this->ci->view, "mail/verify-account.html.twig");
+    
+                $this->ci->mailer->from($config['address_book.admin'])
+                    ->addEmailRecipient($user->email, $user->full_name, [
+                        "user" => $user
+                    ]);
+    
+                $this->ci->mailer->send($message);
+    
+                $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE2");
+            } else {
+                // No verification required
+                $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE1");
+            }
+        });
 
         return $response->withStatus(200);
     }
@@ -669,9 +681,6 @@ class AccountController
      */
     public function resendVerification($request, $response, $args)
     {
-        // POST parameters
-        $params = $request->getParsedBody();
-
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
         
@@ -683,13 +692,22 @@ class AccountController
 
         $this->ci->db;
 
-        // Load validation rules
+        // Get POST parameters
+        $params = $request->getParsedBody();
+
+        // Load the request schema
         $schema = new RequestSchema("schema://resend-verification.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
+
+        // Validate, and halt on validation errors.  Failed validation attempts do not count towards throttling limit.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            return $response->withStatus(400);
+        }
 
         // Throttle requests
 
@@ -706,38 +724,35 @@ class AccountController
             return $response->withStatus(429);
         }
 
-        // Log throttleable event
-        $throttler->logEvent('verification_request', $throttleData);
-
-        // Load the user, by email address
-        $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
-
-        // Check that the user exists - should we tell the user?  This could be used for account enumeration.
-        if (!$user) {
-            $ms->addMessageTranslated("danger", "EMAIL.INVALID");
-            return $response->withStatus(400);
-        }
-
-        // Check if user's account is already verified - again, should we tell the user?  This could be used for account enumeration.
-        if ($user->flag_verified == "1") {
-            $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND");
-            return $response->withStatus(400);
-        }
-
-        // We're good to go - record user activity and send the email
-        $user->newActivityVerificationRequest();
-
-        $user->save();      // Re-save with verification request event
-
-        // Create and send verification email
-        $message = new TwigMailMessage($this->ci->view, "mail/resend-verification.html.twig");
-
-        $this->ci->mailer->from($config['address_book.admin'])
-            ->addEmailRecipient($user->email, $user->full_name, [
-                "user" => $user
-            ]);
-
-        $this->ci->mailer->send($message);
+        // All checks passed!  log events/activities, create user, and send verification email (if required)
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
+            // Log throttleable event
+            $throttler->logEvent('verification_request', $throttleData);
+    
+            // Load the user, by email address
+            $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
+    
+            // Check that the user exists and is not already verified.
+            // If there is no user with that email address, or the user exists and is already verified,
+            // we pretend like we succeeded to prevent account enumeration
+            if ($user && $user->flag_verified != "1") {    
+                // We're good to go - record user activity and send the email
+                $user->newActivityVerificationRequest();
+        
+                $user->save();      // Re-save with verification request event
+        
+                // Create and send verification email
+                $message = new TwigMailMessage($this->ci->view, "mail/resend-verification.html.twig");
+        
+                $this->ci->mailer->from($config['address_book.admin'])
+                    ->addEmailRecipient($user->email, $user->full_name, [
+                        "user" => $user
+                    ]);
+        
+                $this->ci->mailer->send($message);
+            }
+        });
 
         $ms->addMessageTranslated("success", "ACCOUNT.VERIFICATION.NEW_LINK_SENT", ['email' => $data['email']]);
         return $response->withStatus(200);
@@ -772,9 +787,6 @@ class AccountController
      */
     public function setPassword(Request $request, Response $response, $args, $flagNewUser = true)
     {
-        // POST parameters
-        $params = $request->getParsedBody();
-
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
         
@@ -786,20 +798,29 @@ class AccountController
 
         $this->ci->db;
 
-        // Load validation rules
+        // Get POST parameters
+        $params = $request->getParsedBody();
+
+        // Load the request schema
         $schema = new RequestSchema("schema://set-password.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
+
+        // Validate, and halt on validation errors.  Failed validation attempts do not count towards throttling limit.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            return $response->withStatus(400);
+        }
 
         $forgotPasswordPage = $this->ci->router->pathFor('forgot-password');
 
         // Ok, try to find a user with the specified secret token and an outstanding password request
         $user = $this->ci->classMapper->staticMethod('user', 'where', 'secret_token', $data['secret_token'])->where('flag_password_reset', '1')->first();
 
-        // If no user exists for this token, just say the token is invalid.
+        // If no user exists for this token, or they don't have an outstanding password reset request, just say the token is invalid.
         if (!$user) {
             $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID", ["url" => $forgotPasswordPage]);
             return $response->withStatus(400);
@@ -815,16 +836,15 @@ class AccountController
             $expiration = $config['timeouts.reset_password'];
         }
 
+        // Reset the password reset flag so that they'll be able to submit another request.
+        // This needs to be done regardless of whether or not the token has expired.
+        $user->flag_password_reset = "0";
+        $user->save();
+
         if($timeSinceLastRequest === null || $timeSinceLastRequest < 0 || $timeSinceLastRequest >= $expiration) {
-            // Reset the password reset flag so that they'll be able to submit another request
-            $user->flag_password_reset = "0";
-            $user->save();
             $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID", ["url" => $forgotPasswordPage]);
             return $response->withStatus(400);
         }
-
-        // Reset the password flag
-        $user->flag_password_reset = "0";
 
         // Hash the user's new password and update
         $user->password = Password::hash($data['password']);
@@ -870,9 +890,6 @@ class AccountController
      */
     public function settings($request, $response, $args)
     {
-        // POST parameters
-        $params = $request->getParsedBody();
-
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
 
@@ -884,7 +901,7 @@ class AccountController
 
         // Access control for entire resource - check that the current user has permission to modify themselves
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
-        if (!$authorizer->checkAccess($currentUser, 'update_account_setting', ['user' => $currentUser])) {
+        if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
             $ms->addMessageTranslated("danger", "ACCOUNT.ACCESS_DENIED");
             return $response->withStatus(403);
         }
@@ -897,9 +914,11 @@ class AccountController
 
         $this->ci->db;
 
-        // Load validation rules
+        // POST parameters
+        $params = $request->getParsedBody();
+
+        // Load the request schema
         $schema = new RequestSchema("schema://account-settings.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -931,7 +950,6 @@ class AccountController
         }
 
         // TODO: check that new locale exists
-
 
         if ($error) {
             return $response->withStatus(400);
@@ -966,13 +984,6 @@ class AccountController
      */
     public function verify($request, $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        // Load validation rules
-        $schema = new RequestSchema("schema://account-verify.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
 
@@ -986,11 +997,17 @@ class AccountController
 
         $loginPage = $this->ci->router->pathFor('login');
         
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        // Load request schema
+        $schema = new RequestSchema("schema://account-verify.json");
+
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
         $data = $transformer->transform($params);
 
-        // Validate, and halt on validation errors.
+        // Validate, and halt on validation errors.  This is a GET request, so we redirect on validation error.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);

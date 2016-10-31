@@ -418,7 +418,8 @@ class User extends UFModel
         
         $activity = $classMapper->createInstance('activity', [
             'type'  => $type,
-            'description' => $description
+            'description' => $description,
+            'occurred_at' => Carbon::now()
         ]);
         
         $this->new_events[] = $activity;

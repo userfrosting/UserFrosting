@@ -126,8 +126,6 @@
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
-            $table->unique('slug');
-            $table->index('slug');
         });
         
         // Add default permissions
@@ -143,16 +141,16 @@
             ],
             [
                 'id' => 2,
-                'slug' => 'update_account_setting',
+                'slug' => 'update_user_field',
                 'name' => 'Edit user',
-                'conditions' => '!has_role(user.id,2)&&in(property,[ "email","password", "name","flag_enabled","flag_password_reset","password","locale","theme"])',
+                'conditions' => '!has_role(user.id,2)&&in(property,[ "email","name","flag_enabled","flag_password_reset","password","locale","theme"])',
                 'description' => 'Edit users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
             ],            
             [
                 'id' => 3,
-                'slug' => 'view_account_setting',
+                'slug' => 'view_user_field',
                 'name' => 'View user',
                 'conditions' => 'in(property,["user_name","name","email","locale","theme","roles","group_id"])',
                 'description' => 'View certain properties of any user.',
@@ -161,7 +159,7 @@
             ],
             [
                 'id' => 4,
-                'slug' => 'delete_account',
+                'slug' => 'delete_user',
                 'name' => 'Delete user',
                 'conditions' => '!has_role(user.id,2)',
                 'description' => 'Delete users who are not Site Administrators.',
@@ -170,7 +168,7 @@
             ],            
             [
                 'id' => 5,
-                'slug' => 'create_account',
+                'slug' => 'create_user',
                 'name' => 'Create user',
                 'conditions' => 'always()',
                 'description' => 'Create a new user and assign default group and roles.',
@@ -183,6 +181,15 @@
                 'name' => 'Account settings page',
                 'conditions' => 'always()',
                 'description' => 'View the account settings page.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
+            ],
+            [
+                'id' => 7,
+                'slug' => 'update_account_settings',
+                'name' => 'Edit user',
+                'conditions' => 'always()',
+                'description' => 'Edit your own account settings.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
             ]
@@ -212,6 +219,12 @@
             [
                 'role_id' => 1,
                 'permission_id' => 6,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
+            ],
+            [
+                'role_id' => 1,
+                'permission_id' => 7,
                 'created_at' => $installTime,
                 'updated_at' => $installTime
             ],
