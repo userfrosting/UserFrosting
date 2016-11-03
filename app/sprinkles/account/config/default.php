@@ -9,6 +9,14 @@
         'debug' => [
             'auth' => false
         ],
+        // configuration for the 'password reset' feature
+        'password_reset' => [
+            'algorithm' => 'sha512',
+            'timeouts'   => [
+                'create' => 86400,
+                'reset' => 10800
+            ]
+        ],
         'reserved_user_ids' => [
             'guest'  => -1,
             'master' => 1
@@ -93,10 +101,6 @@
                     7 => 600
                 ]
             ]
-        ],
-        'timeouts' => [
-            'create_password' => 86400,
-            'reset_password' => 10800
         ]
     ];
     

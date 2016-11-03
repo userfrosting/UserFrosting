@@ -79,6 +79,30 @@
     }
 
     /**
+     * Manages requests for password resets.
+     */
+    if (!$schema->hasTable('password_resets')) {
+        $schema->create('password_resets', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->string('hash');
+            $table->boolean('completed')->default(0);
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamps();
+
+            $table->engine = 'InnoDB';
+            $table->collation = 'utf8_unicode_ci';
+            $table->charset = 'utf8';
+            $table->index('user_id');
+            $table->index('token');
+        });
+        echo "Created table 'password_resets'..." . PHP_EOL;
+    } else {
+        echo "Table 'password_resets' already exists.  Skipping..." . PHP_EOL;
+    }
+    
+    /**
      * Permissions now replace the 'authorize_group' and 'authorize_user' tables.
      * Also, they now map many-to-many to roles.
      */
@@ -111,7 +135,7 @@
                 'id' => 2,
                 'slug' => 'update_user_field',
                 'name' => 'Edit user',
-                'conditions' => '!has_role(user.id,2)&&in(property,[ "email","name","flag_enabled","flag_password_reset","password","locale","theme"])',
+                'conditions' => '!has_role(user.id,2)&&in(property,[ "email","name","flag_enabled","password","locale","theme"])',
                 'description' => 'Edit users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
@@ -352,9 +376,9 @@
     } else {
         echo "Table 'throttles' already exists.  Skipping..." . PHP_EOL;
     }
-    
+
     /**
-     * Removed the 'display_name' and 'title' fields, and added first and last name.
+     * Removed the 'display_name', 'title', 'secret_token', and 'flag_password_reset' fields, and added first and last name and 'last_activity_at'.
      */
     if (!$schema->hasTable('users')) {
         $schema->create('users', function (Blueprint $table) {
@@ -366,11 +390,10 @@
             $table->string('locale', 10)->default('en_US')->comment('The language and locale to use for this user.');
             $table->string('theme', 100)->default('default')->comment("The user theme.");
             $table->integer('group_id')->unsigned()->default(1)->comment("The id of the user group.");
-            $table->string('secret_token',32)->comment("The current one-time use token for various user activities confirmed via email.");
             $table->boolean('flag_verified')->default(1)->comment("Set to 1 if the user has verified their account via email, 0 otherwise.");
             $table->boolean('flag_enabled')->default(1)->comment("Set to 1 if the user account is currently enabled, 0 otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.");
-            $table->boolean('flag_password_reset')->default(0)->comment("Set to 1 if the user has an outstanding password reset request, 0 otherwise.");
             $table->string('password', 255);
+            $table->timestamp('last_activity_at')->nullable();
             $table->timestamps();
             
             $table->engine = 'InnoDB';
@@ -381,7 +404,6 @@
             $table->unique('email');
             $table->index('email');
             $table->index('group_id');
-            $table->index('secret_token');
         });
         echo "Created table 'users'..." . PHP_EOL;
     } else {

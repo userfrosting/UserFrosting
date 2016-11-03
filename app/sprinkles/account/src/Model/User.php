@@ -28,12 +28,11 @@ use UserFrosting\Sprinkle\Account\Util\Password;
  * @property string email
  * @property string locale
  * @property int group_id
- * @property int secret_token
  * @property int flag_verified
  * @property int flag_enabled
- * @property int flag_password_reset
  * @property timestamp created_at
  * @property timestamp updated_at
+ * @property timestamp last_activity_at 
  * @property string password
  */
 class User extends UFModel
@@ -51,17 +50,11 @@ class User extends UFModel
         "email",
         "locale",
         "group_id",
-        "secret_token",
         "flag_verified",
         "flag_enabled",
-        "flag_password_reset",
-        "password"
+        "password",
+        "last_activity_at"
     ];
-    
-    /**
-     * @var Activity[] An array of activities to be inserted for this User when save is called.
-     */
-    protected $new_events = [];
     
     /**
      * @var bool Enable timestamps for Users.
@@ -243,16 +236,13 @@ class User extends UFModel
     }
     
     /**
-     * Create a new password reset request activity.  Also, generates a new secret token.
+     * Create a new password reset request activity.
      *
      * @return Activity
      */
-    public function newActivityPasswordReset()
-    {
-        $this->secret_token = $this->generateSecretToken();
-        $this->flag_password_reset = "1";
-        
-        return $this->addActivity(
+    public function newActivityPasswordResetRequest()
+    {        
+        return $this->newActivity(
             'password_reset_request',
             "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
         );
@@ -265,7 +255,7 @@ class User extends UFModel
      */
     public function newActivitySignIn()
     {    
-        return $this->addActivity(
+        return $this->newActivity(
             'sign_in',
             "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
         );
@@ -284,7 +274,7 @@ class User extends UFModel
             $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
         }
         
-        return $this->addActivity(
+        return $this->newActivity(
             'sign_up',
             $description
         );
@@ -296,9 +286,8 @@ class User extends UFModel
      * @return Activity
      */
     public function newActivityVerificationRequest(){
-        $this->secret_token = $this->generateSecretToken();
 
-        return $this->addActivity(
+        return $this->newActivity(
             "verification_request",
             "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
         );
@@ -339,8 +328,19 @@ class User extends UFModel
         $this->save();
         
         return $this;
-    }    
+    }
+
+    /**
+     * Get all password reset requests for this user.
+     */    
+    public function passwordResets()
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;    
     
+        return $this->hasMany($classMapper->getClassMapping('password_reset'));
+    }
+
     /**
      * Get all of the permissions this user has, via its roles.
      *
@@ -380,39 +380,8 @@ class User extends UFModel
     
         return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users');
     }
-    
-    /**
-     * Store the User to the database, along with any group associations and new activitys, updating as necessary.
-     *
-     */
-    public function save(array $options = []){       
-        // Update the user record itself
-        $result = parent::save($options);
-        
-        // Save any new activitys for this user
-        foreach ($this->new_events as $activity){
-            $this->activities()->save($activity);
-        }
-        
-        return $result;
-    }
-    
-    /**
-     * Generate a new secret token for this user.
-     *
-     * This generates a token to use for activating a new account, resetting a lost password, etc.
-     * @param string $gen specify an existing token that, if we happen to generate the same value, we should regenerate on.
-     * @return string
-     */
-    public function generateSecretToken($gen = null)
-    {
-        do {
-            $gen = md5(uniqid(mt_rand(), false));
-        } while(static::where('secret_token', $gen)->first());
-        return $gen;
-    }
-    
-    protected function addActivity($type, $description)
+
+    protected function newActivity($type, $description)
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
@@ -423,7 +392,7 @@ class User extends UFModel
             'occurred_at' => Carbon::now()
         ]);
         
-        $this->new_events[] = $activity;
+        $this->activities()->save($activity);
         return $activity;
     }    
 }

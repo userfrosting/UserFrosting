@@ -1,5 +1,5 @@
 {
-    "secret_token" : {
+    "token" : {
         "validators" : {
             "required" : {
                 "label" : "validation token",

@@ -17,11 +17,9 @@ $app->group('/account', function () {
     
     $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
     
-    $this->get('/reset-password/confirm', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResetPassword');
+    $this->get('/set-password/confirm', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResetPassword');
     
-    $this->get('/reset-password/deny', 'UserFrosting\Sprinkle\Account\Controller\AccountController:denyResetPassword');
-
-    $this->get('/set-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSetPassword');
+    $this->get('/set-password/deny', 'UserFrosting\Sprinkle\Account\Controller\AccountController:denyResetPassword');
     
     $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings');
 
@@ -38,8 +36,6 @@ $app->group('/account', function () {
     $this->post('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:register');
     
     $this->post('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:resendVerification');
-
-    $this->post('/reset-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:resetPassword');
 
     $this->post('/set-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:setPassword');
 

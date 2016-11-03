@@ -58,7 +58,7 @@ class AccountController
      *
      * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
      * Processes the request from the password reset link, checking that:
-     * 1. The provided secret token is associated with an existing user account, who has a pending password reset request.
+     * 1. The provided token is associated with an existing user account, who has a pending password reset request.
      * Request type: GET
      */
     public function denyResetPassword($request, $response, $args)
@@ -91,19 +91,13 @@ class AccountController
             return $response->withRedirect($loginPage, 400);
         }
 
-        // Fetch the user with the specified secret token and who has a pending password reset request
-        $user = $this->ci->classMapper->staticMethod('user', 'where', 'secret_token', $data['secret_token'])->where('flag_password_reset', '1')->first();
-
-        if (!$user) {
+        $passwordReset = $this->ci->repoPasswordReset->cancel($data['token']);
+        
+        if (!$passwordReset) {
             $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID");
             return $response->withRedirect($loginPage, 400);
         }
 
-        // Reset the password flag
-        $user->flag_password_reset = '0';
-
-        // Store the updated info
-        $user->save();
         $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_CANNED");
         return $response->withRedirect($loginPage);
     }
@@ -181,10 +175,11 @@ class AccountController
             // If there is no user with that email address, we should still pretend like we succeeded, to prevent account enumeration
             if ($user) {
         
-                // Generate a new password reset request.  This will also generate a new secret token for the user.
-                $user->newActivityPasswordReset();
+                // Try to generate a new password reset request.
+                $passwordReset = $this->ci->repoPasswordReset->create($user, 'reset');
         
-                $user->save();      // Re-save with verification request event
+                // Log activity.
+                $user->newActivityPasswordResetRequest();
         
                 // Create and send email
                 $message = new TwigMailMessage($this->ci->view, "mail/password-reset.html.twig");
@@ -192,6 +187,7 @@ class AccountController
                 $this->ci->mailer->from($config['address_book.admin'])
                     ->addEmailRecipient($user->email, $user->full_name, [
                         "user" => $user,
+                        "token" => $passwordReset->getToken(),
                         "request_date" => date("Y-m-d H:i:s")
                     ]);
         
@@ -391,11 +387,11 @@ class AccountController
 
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
             "page" => [
-                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
                 "validators" => [
                     "set_password"    => $validator->rules('json', false)
                 ]
-            ]
+            ],
+            "token" => isset($params['token']) ? $params['token'] : '',
         ]);
     }
 
@@ -417,11 +413,11 @@ class AccountController
 
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
             "page" => [
-                "secret_token" => isset($params['secret_token']) ? $params['secret_token'] : '',
                 "validators" => [
                     "set_password"    => $validator->rules('json', false)
                 ]
-            ]
+            ],
+            "token" => isset($params['token']) ? $params['token'] : '',
         ]);
     }
 
@@ -644,6 +640,8 @@ class AccountController
     
             // Verification email
             if ($config['site.registration.require_email_verification']) {
+                // TODO: create new verification record
+                
                 // Create verification request event
                 $user->newActivityVerificationRequest();
                 $user->save();      // Re-save with verification request event
@@ -759,22 +757,6 @@ class AccountController
     }
 
     /**
-     * Processes a request to reset an existing user's password.
-     *
-     * Processes the request from the password reset form, which should have the secret token embedded in it, checking that:
-     * 1. The provided secret token is associated with an existing user account;
-     * 2. The user has a password set/reset request in progress;
-     * 3. The token has not expired;
-     * 4. The submitted data (new password) is valid.
-     * This route is "public access".
-     * Request type: POST
-     */
-    public function resetPassword(Request $request, Response $response, $args)
-    {
-        return $this->setPassword($request, $response, $args, false);
-    }
-
-    /**
      * Processes a request to set the password for a new or current user.
      *
      * Processes the request from the password create/reset form, which should have the secret token embedded in it, checking that:
@@ -785,7 +767,7 @@ class AccountController
      * This route is "public access".
      * Request type: POST
      */
-    public function setPassword(Request $request, Response $response, $args, $flagNewUser = true)
+    public function setPassword(Request $request, Response $response, $args)
     {
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
@@ -817,45 +799,13 @@ class AccountController
 
         $forgotPasswordPage = $this->ci->router->pathFor('forgot-password');
 
-        // Ok, try to find a user with the specified secret token and an outstanding password request
-        $user = $this->ci->classMapper->staticMethod('user', 'where', 'secret_token', $data['secret_token'])->where('flag_password_reset', '1')->first();
+        // Ok, try to complete the request with the specified token and new password
+        $passwordReset = $this->ci->repoPasswordReset->complete($data['token'], $data['password']);
 
-        // If no user exists for this token, or they don't have an outstanding password reset request, just say the token is invalid.
-        if (!$user) {
+        if (!$passwordReset) {
             $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID", ["url" => $forgotPasswordPage]);
             return $response->withStatus(400);
         }
-
-        // Get the time since the last password reset request, to see if it has expired
-        $timeSinceLastRequest = $user->getSecondsSinceLastActivity('password_reset_request');
-
-        // Compare to appropriate expiration time
-        if ($flagNewUser) {
-            $expiration = $config['timeouts.create_password'];
-        } else {
-            $expiration = $config['timeouts.reset_password'];
-        }
-
-        // Reset the password reset flag so that they'll be able to submit another request.
-        // This needs to be done regardless of whether or not the token has expired.
-        $user->flag_password_reset = "0";
-        $user->save();
-
-        if($timeSinceLastRequest === null || $timeSinceLastRequest < 0 || $timeSinceLastRequest >= $expiration) {
-            $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID", ["url" => $forgotPasswordPage]);
-            return $response->withStatus(400);
-        }
-
-        // Hash the user's new password and update
-        $user->password = Password::hash($data['password']);
-
-		if (!$user->password) {
-			$ms->addMessageTranslated("danger", "PASSWORD.HASH_FAILED");
-            return $response->withStatus(500);
-		}
-
-        // Store the updated info
-        $user->save();
 
         $ms->addMessageTranslated("success", "PASSWORD.UPDATED");
 
@@ -872,6 +822,7 @@ class AccountController
         }
 
         // Auto-login the user (without "remember me")
+        $user = $passwordReset->user;
         $authenticator->login($user);
 
         $ms->addMessageTranslated("success", "WELCOME", $user->export());

@@ -39,10 +39,17 @@ class Password
      *
      * @param string $password the plaintext password.    
      * @return string the hashed password.
+     * @throws HashFailedException
      */ 
     public static function hash($password)
     {
-        return password_hash($password, PASSWORD_BCRYPT);
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+
+        if (!$hash) {
+            throw new HashFailedException();
+        }
+
+        return $hash;
     }
     
     /**

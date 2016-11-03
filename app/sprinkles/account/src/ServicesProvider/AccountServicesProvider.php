@@ -17,6 +17,7 @@ use Monolog\Logger;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 
@@ -45,6 +46,7 @@ class AccountServicesProvider
             $classMapper->setClassMapping('role', 'UserFrosting\Sprinkle\Account\Model\Role');
             $classMapper->setClassMapping('permission', 'UserFrosting\Sprinkle\Account\Model\Permission');
             $classMapper->setClassMapping('activity', 'UserFrosting\Sprinkle\Account\Model\Activity');
+            $classMapper->setClassMapping('password_reset', 'UserFrosting\Sprinkle\Account\Model\PasswordReset');
             return $classMapper;
         });
         
@@ -263,6 +265,20 @@ class AccountServicesProvider
             */            
             
             return $currentUser;
+        };
+        
+        /**
+         * Repository for password reset requests.
+         */ 
+        $container['repoPasswordReset'] = function ($c) {
+            $classMapper = $c->classMapper;
+            $config = $c->config;
+
+            // Force database connection to boot up
+            $c->db;
+
+            $repoPasswordReset = new PasswordResetRepository($classMapper, $config);
+            return $repoPasswordReset;
         };
     }
 }

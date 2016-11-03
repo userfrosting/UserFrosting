@@ -3,7 +3,7 @@
     /**
      * Reads in a password from standard input, masking typed characters.
      *
-     * @see http://docstore.mik.ua/orelly/webprog/pcook/ch20_05.htm     
+     * @see http://docstore.mik.ua/orelly/webprog/pcook/ch20_05.htm
      * @param string $os The name of the current operating system
      * @return string
      */
@@ -13,6 +13,7 @@
     
         if (strtoupper(substr($os, 0, 3)) === 'WIN') {
             // Windows.  Need to use _getch()
+            // An alternative solution for Windows would be to create a special C program: https://blog.dsl-platform.com/hiding-input-from-console-in-php/
             
             // load the w32api extension and register _getch()
             dl('php_w32api.dll');
