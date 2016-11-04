@@ -9,11 +9,17 @@
 namespace UserFrosting\Sprinkle\Account\Repository;
 
 use Carbon\Carbon;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
+/**
+ * An abstract class for interacting with a repository of time-sensitive user tokens.
+ *
+ * User tokens are used, for example, to perform password resets and new account email verifications.
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see https://learn.userfrosting.com/users/user-accounts
+ */
 abstract class TokenRepository
 {
 
@@ -31,55 +37,25 @@ abstract class TokenRepository
      * @var string
      */
     protected $modelIdentifier;
-    
+
+    /**
+     * Create a new TokenRepository object.
+     *
+     * @param ClassMapper $classMapper Maps generic class identifiers to specific class names.
+     * @param string $algorithm The hashing algorithm to use when storing generated tokens.
+     */
     public function __construct(ClassMapper $classMapper, $algorithm = 'sha512')
     {
         $this->classMapper = $classMapper;
         $this->algorithm = $algorithm;
     }
 
-    public function create(User $user, $timeout)
-    {
-        // Compute expiration time
-        $expiresAt = Carbon::now()->addSeconds($timeout);
-
-        $model = $this->classMapper->createInstance($this->modelIdentifier);
-
-        // Generate a random token
-        $model->setToken($this->generateRandomToken());
-
-        // Hash the password reset token for the stored version
-        $hash = hash($this->algorithm, $model->getToken());
-
-        $model->fill([
-            'hash'       => $hash,
-            'completed'  => false,
-            'expires_at' => $expiresAt
-        ]);
-
-        $model->user_id = $user->id;
-
-        $model->save();
-
-        return $model;
-    }
-
-    public function exists(User $user, $token = null)
-    {
-        $model = $this->classMapper
-            ->staticMethod($this->modelIdentifier, 'where', 'user_id', $user->id)
-            ->where('completed', false)
-            ->where('expires_at', '>', Carbon::now());
-
-        if ($token) {
-            // get token hash
-            $hash = hash($this->algorithm, $token);
-            $model->where('hash', $hash);
-        }
-
-        return $model->first() ?: false;
-    }
-
+    /**
+     * Cancels a specified token by removing it from the database.
+     *
+     * @param int $token The token to remove.
+     * @return UFModel|false
+     */    
     public function cancel($token)
     {
         // Hash the password reset token for the stored version
@@ -100,6 +76,13 @@ abstract class TokenRepository
         return $model;
     }
 
+    /**
+     * Completes a token-based process, invoking updateUser() in the child object to do the actual action.
+     *
+     * @param int $token The token to complete.
+     * @param mixed[] $userParams An optional list of parameters to pass to updateUser().
+     * @return UFModel|false
+     */
     public function complete($token, $userParams = [])
     {
         // Hash the token for the stored version
@@ -135,6 +118,83 @@ abstract class TokenRepository
         return $model;
     }
 
+    /**
+     * Create a new token for a specified user.
+     *
+     * @param User $user The user object to associate with this token.
+     * @param int $timeout The time, in seconds, after which this token should expire.
+     * @return UFModel The model (PasswordReset, Verification, etc) object that stores the token.
+     */
+    public function create(User $user, $timeout)
+    {
+        // Remove any previous tokens for this user
+        $this->removeExisting($user);
+        
+        // Compute expiration time
+        $expiresAt = Carbon::now()->addSeconds($timeout);
+
+        $model = $this->classMapper->createInstance($this->modelIdentifier);
+
+        // Generate a random token
+        $model->setToken($this->generateRandomToken());
+
+        // Hash the password reset token for the stored version
+        $hash = hash($this->algorithm, $model->getToken());
+
+        $model->fill([
+            'hash'       => $hash,
+            'completed'  => false,
+            'expires_at' => $expiresAt
+        ]);
+
+        $model->user_id = $user->id;
+
+        $model->save();
+
+        return $model;
+    }
+
+    /**
+     * Determine if a specified user has an incomplete and unexpired token.
+     *
+     * @param User $user The user object to look up.
+     * @param int $token Optionally, try to match a specific token.
+     * @return UFModel|false
+     */
+    public function exists(User $user, $token = null)
+    {
+        $model = $this->classMapper
+            ->staticMethod($this->modelIdentifier, 'where', 'user_id', $user->id)
+            ->where('completed', false)
+            ->where('expires_at', '>', Carbon::now());
+
+        if ($token) {
+            // get token hash
+            $hash = hash($this->algorithm, $token);
+            $model->where('hash', $hash);
+        }
+
+        return $model->first() ?: false;
+    }
+
+    /**
+     * Delete all existing tokens from the database for a particular user.
+     *
+     * @param  User  $user
+     * @return int
+     */
+    protected function removeExisting(User $user)
+    {
+        return $this->classMapper
+            ->staticMethod($this->modelIdentifier, 'where', 'user_id', $user->id)
+            ->delete();
+    }
+
+    /**
+     * Remove all expired tokens from the database.
+     *
+     * @return bool|null
+     */    
     public function removeExpired()
     {
         return $this->classMapper
@@ -160,5 +220,12 @@ abstract class TokenRepository
         return $gen;
     }
     
+    /**
+     * Modify the user during the token completion process.
+     *
+     * This method is called during complete(), and is a way for concrete implementations to modify the user.
+     * @param User $user the user object to modify.
+     * @return mixed[] $args the list of parameters that were supplied to the call to `complete()`
+     */    
     abstract protected function updateUser($user, $args);
 }

@@ -8,17 +8,24 @@
  */
 namespace UserFrosting\Sprinkle\Account\Repository;
 
-use Carbon\Carbon;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
-use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
+/**
+ * Token repository class for password reset requests.
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see https://learn.userfrosting.com/users/user-accounts
+ */
 class PasswordResetRepository extends TokenRepository
 {
+    /**
+     * {@inheritDoc}
+     */
     protected $modelIdentifier = 'password_reset';
 
+    /**
+     * {@inheritDoc}
+     */
     protected function updateUser($user, $args)
     {
         $user->password = Password::hash($args['password']);

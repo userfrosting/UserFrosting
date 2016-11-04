@@ -8,16 +8,22 @@
  */
 namespace UserFrosting\Sprinkle\Account\Repository;
 
-use Carbon\Carbon;
-use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Account\Model\User;
-use UserFrosting\Sprinkle\Core\Util\ClassMapper;
-
+/**
+ * Token repository class for new account verifications.
+ *
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see https://learn.userfrosting.com/users/user-accounts
+ */
 class VerificationRepository extends TokenRepository
 {
+    /**
+     * {@inheritDoc}
+     */
     protected $modelIdentifier = 'verification';
 
+    /**
+     * {@inheritDoc}
+     */    
     protected function updateUser($user, $args)
     {
         $user->flag_verified = 1;
