@@ -28,11 +28,11 @@ use UserFrosting\Sprinkle\Account\Util\Password;
  * @property string email
  * @property string locale
  * @property int group_id
- * @property int flag_verified
- * @property int flag_enabled
+ * @property bool flag_verified
+ * @property bool flag_enabled
+ * @property int last_activity_id 
  * @property timestamp created_at
  * @property timestamp updated_at
- * @property timestamp last_activity_at 
  * @property string password
  */
 class User extends UFModel
@@ -52,8 +52,8 @@ class User extends UFModel
         "group_id",
         "flag_verified",
         "flag_enabled",
-        "password",
-        "last_activity_at"
+        "last_activity_id",        
+        "password"
     ];
     
     /**
@@ -393,6 +393,10 @@ class User extends UFModel
         ]);
         
         $this->activities()->save($activity);
+        
+        $this->last_activity_id = $activity->id;
+        $this->save();
+        
         return $activity;
     }    
 }

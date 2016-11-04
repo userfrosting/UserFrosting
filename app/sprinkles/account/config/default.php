@@ -101,6 +101,11 @@
                     7 => 600
                 ]
             ]
+        ],
+        // configuration for the 'email verification' feature
+        'verification' => [
+            'algorithm' => 'sha512',
+            'timeout'   => 10800
         ]
     ];
     

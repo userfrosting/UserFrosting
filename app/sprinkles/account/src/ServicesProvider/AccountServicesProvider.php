@@ -18,6 +18,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
+use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 
@@ -47,6 +48,7 @@ class AccountServicesProvider
             $classMapper->setClassMapping('permission', 'UserFrosting\Sprinkle\Account\Model\Permission');
             $classMapper->setClassMapping('activity', 'UserFrosting\Sprinkle\Account\Model\Activity');
             $classMapper->setClassMapping('password_reset', 'UserFrosting\Sprinkle\Account\Model\PasswordReset');
+            $classMapper->setClassMapping('verification', 'UserFrosting\Sprinkle\Account\Model\Verification');
             return $classMapper;
         });
         
@@ -277,8 +279,22 @@ class AccountServicesProvider
             // Force database connection to boot up
             $c->db;
 
-            $repoPasswordReset = new PasswordResetRepository($classMapper, $config);
-            return $repoPasswordReset;
+            $repo = new PasswordResetRepository($classMapper, $config['password_reset.algorithm']);
+            return $repo;
+        };
+        
+        /**
+         * Repository for verification requests.
+         */ 
+        $container['repoVerification'] = function ($c) {
+            $classMapper = $c->classMapper;
+            $config = $c->config;
+
+            // Force database connection to boot up
+            $c->db;
+
+            $repo = new VerificationRepository($classMapper, $config['verification.algorithm']);
+            return $repo;
         };
     }
 }

@@ -17,6 +17,7 @@
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
+            //$table->foreign('user_id')->references('id')->on('users');
             $table->index('user_id');
         });
         echo "Created table 'activities'..." . PHP_EOL;
@@ -94,8 +95,9 @@
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
+            //$table->foreign('user_id')->references('id')->on('users');
             $table->index('user_id');
-            $table->index('token');
+            $table->index('hash');
         });
         echo "Created table 'password_resets'..." . PHP_EOL;
     } else {
@@ -204,6 +206,8 @@
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';            
             $table->primary(['permission_id', 'role_id']);
+            //$table->foreign('permission_id')->references('id')->on('permissions');
+            //$table->foreign('role_id')->references('id')->on('roles');
             $table->index('permission_id');
             $table->index('role_id');
         });
@@ -275,6 +279,7 @@
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
+            //$table->foreign('user_id')->references('id')->on('users');
             $table->index('user_id');
             $table->index('token');
             $table->index('persistent_token');
@@ -347,6 +352,8 @@
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';            
             $table->primary(['user_id', 'role_id']);
+            //$table->foreign('user_id')->references('id')->on('users');
+            //$table->foreign('role_id')->references('id')->on('roles');
             $table->index('user_id');
             $table->index('role_id');
         });
@@ -392,20 +399,48 @@
             $table->integer('group_id')->unsigned()->default(1)->comment("The id of the user group.");
             $table->boolean('flag_verified')->default(1)->comment("Set to 1 if the user has verified their account via email, 0 otherwise.");
             $table->boolean('flag_enabled')->default(1)->comment("Set to 1 if the user account is currently enabled, 0 otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.");
+            $table->integer('last_activity_id')->unsigned()->nullable()->comment("The id of the last activity performed by this user.");
             $table->string('password', 255);
-            $table->timestamp('last_activity_at')->nullable();
             $table->timestamps();
             
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
+            //$table->foreign('group_id')->references('id')->on('groups');
+            //$table->foreign('last_activity_id')->references('id')->on('activities');
             $table->unique('user_name');
             $table->index('user_name');
             $table->unique('email');
             $table->index('email');
             $table->index('group_id');
+            $table->index('last_activity_id');
         });
         echo "Created table 'users'..." . PHP_EOL;
     } else {
         echo "Table 'users' already exists.  Skipping..." . PHP_EOL;
+    }
+
+    /**
+     * Manages requests for email account verification.
+     */
+    if (!$schema->hasTable('verifications')) {
+        $schema->create('verifications', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->string('hash');
+            $table->boolean('completed')->default(0);
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamps();
+
+            $table->engine = 'InnoDB';
+            $table->collation = 'utf8_unicode_ci';
+            $table->charset = 'utf8';
+            //$table->foreign('user_id')->references('id')->on('users');
+            $table->index('user_id');
+            $table->index('hash');
+        });
+        echo "Created table 'verifications'..." . PHP_EOL;
+    } else {
+        echo "Table 'verifications' already exists.  Skipping..." . PHP_EOL;
     }

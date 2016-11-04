@@ -12,17 +12,16 @@ use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Account\Model\User;
-use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
-class PasswordResetRepository extends TokenRepository
+class VerificationRepository extends TokenRepository
 {
-    protected $modelIdentifier = 'password_reset';
+    protected $modelIdentifier = 'verification';
 
     protected function updateUser($user, $args)
     {
-        $user->password = Password::hash($args['password']);
+        $user->flag_verified = 1;
         // TODO: generate user activity? or do this in controller?
         $user->save();    
-    }
+    }    
 }

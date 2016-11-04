@@ -174,9 +174,9 @@ class AccountController
             // Check that the email exists.
             // If there is no user with that email address, we should still pretend like we succeeded, to prevent account enumeration
             if ($user) {
-        
                 // Try to generate a new password reset request.
-                $passwordReset = $this->ci->repoPasswordReset->create($user, 'reset');
+                // Use timeout for "reset password"
+                $passwordReset = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.reset']);
         
                 // Log activity.
                 $user->newActivityPasswordResetRequest();
@@ -624,11 +624,11 @@ class AccountController
             // Create the user
             $user = $classMapper->createInstance('user', $data);
     
-            // Create sign-up event
-            $user->newActivitySignUp();
-    
             // Store new user to database
             $user->save();
+
+            // Create sign-up event
+            $user->newActivitySignUp();
     
             // Load default roles
             $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
@@ -640,18 +640,19 @@ class AccountController
     
             // Verification email
             if ($config['site.registration.require_email_verification']) {
-                // TODO: create new verification record
-                
+                // Try to generate a new verification request
+                $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);
+        
                 // Create verification request event
                 $user->newActivityVerificationRequest();
-                $user->save();      // Re-save with verification request event
     
                 // Create and send verification email
                 $message = new TwigMailMessage($this->ci->view, "mail/verify-account.html.twig");
     
                 $this->ci->mailer->from($config['address_book.admin'])
                     ->addEmailRecipient($user->email, $user->full_name, [
-                        "user" => $user
+                        "user" => $user,
+                        "token" => $verification->getToken()
                     ]);
     
                 $this->ci->mailer->send($message);
@@ -736,16 +737,17 @@ class AccountController
             // we pretend like we succeeded to prevent account enumeration
             if ($user && $user->flag_verified != "1") {    
                 // We're good to go - record user activity and send the email
+                $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);                
+                
                 $user->newActivityVerificationRequest();
-        
-                $user->save();      // Re-save with verification request event
         
                 // Create and send verification email
                 $message = new TwigMailMessage($this->ci->view, "mail/resend-verification.html.twig");
         
                 $this->ci->mailer->from($config['address_book.admin'])
                     ->addEmailRecipient($user->email, $user->full_name, [
-                        "user" => $user
+                        "user" => $user,
+                        "token" => $verification->getToken()
                     ]);
         
                 $this->ci->mailer->send($message);
@@ -800,7 +802,9 @@ class AccountController
         $forgotPasswordPage = $this->ci->router->pathFor('forgot-password');
 
         // Ok, try to complete the request with the specified token and new password
-        $passwordReset = $this->ci->repoPasswordReset->complete($data['token'], $data['password']);
+        $passwordReset = $this->ci->repoPasswordReset->complete($data['token'], [
+            'password' => $data['password']
+        ]);
 
         if (!$passwordReset) {
             $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID", ["url" => $forgotPasswordPage]);
@@ -966,16 +970,12 @@ class AccountController
             return $response->withRedirect($loginPage, 400);
         }
 
-        // Ok, try to find an unverified user with the specified secret token
-        $user = $this->ci->classMapper->staticMethod('user', 'where', 'secret_token', $data['secret_token'])->where('flag_verified', '0')->first();
-
-        if (!$user) {
+        $verification = $this->ci->repoVerification->complete($data['token']);
+        
+        if (!$verification) {
             $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND");
             return $response->withRedirect($loginPage, 400);
         }
-
-        $user->flag_verified = "1";
-        $user->save();
 
         $ms->addMessageTranslated("success", "ACCOUNT.VERIFICATION.COMPLETE");
 
