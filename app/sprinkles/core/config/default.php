@@ -16,7 +16,7 @@
             ]
         ],
         'cache' => [
-            'twig' => true,
+            'twig' => false,
             'illuminate' => [
                 'default' => 'file',
         	    'prefix' => 'uf4',
@@ -90,8 +90,7 @@
         ],
         // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
         'settings' => [
-            'displayErrorDetails' => false,
-            'routerCacheFile' => \UserFrosting\ROOT_DIR . '/' . \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME . '/' . 'routes.cache'
+            'displayErrorDetails' => false
         ],
         // "Site" settings that are automatically passed to Twig
         'site' => [
