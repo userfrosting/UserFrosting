@@ -27,6 +27,8 @@ use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
 use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
 use Slim\Csrf\Guard;
 use Slim\Http\Uri;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\AssetBundleSchema;
@@ -39,6 +41,7 @@ use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
@@ -66,7 +69,7 @@ class CoreServicesProvider
          * Persists error/success messages between requests in the session.
          */
         $container['alerts'] = function ($c) {
-            return new \UserFrosting\Sprinkle\Core\MessageStream($c->session, $c->config['session.keys.alerts'], $c->translator);
+            return new MessageStream($c->session, $c->config['session.keys.alerts'], $c->translator);
         };
 
         /**
@@ -420,7 +423,7 @@ class CoreServicesProvider
                 $routerCacheFile = $c->settings['routerCacheFile'];
             }
 
-            return (new \UserFrosting\Sprinkle\Core\Router)->setCacheFile($routerCacheFile);
+            return (new Router)->setCacheFile($routerCacheFile);
         };
 
         /**
@@ -516,7 +519,7 @@ class CoreServicesProvider
         $container['view'] = function ($c) {
             $templatePaths = $c->locator->findResources('templates://', true, true);
 
-            $view = new \Slim\Views\Twig($templatePaths);
+            $view = new Twig($templatePaths);
 
             $twig = $view->getEnvironment();
 
@@ -529,7 +532,7 @@ class CoreServicesProvider
             }
 
             // Register Twig as a view extension
-            $view->addExtension(new \Slim\Views\TwigExtension(
+            $view->addExtension(new TwigExtension(
                 $c['router'],
                 $c['request']->getUri()
             ));

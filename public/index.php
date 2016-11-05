@@ -24,18 +24,22 @@ use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 // First, we create our DI container
 $container = new Container;
 
-// Now, run the sprinkle manager to boot up all our sprinkles - core is implied
-$sm = new SprinkleManager($container, [
-    "account",
-    "site"
-]);
+// Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
+$container['sprinkleManager'] = function ($c) {
+    return new SprinkleManager($c, [
+        "account",
+        "site"
+    ]);
+};
 
-$sm->init();
+// Now, run the sprinkle manager to boot up all our sprinkles
+$container->sprinkleManager->init();
 
 // Next, we'll instantiate the application.  Note that the application is required for the SprinkleManager to set up routes.
 $app = new App($container);
 
-$sm->loadRoutes($app);
+// Set up all routes
+$container->sprinkleManager->loadRoutes($app);
 
 // Middleware
 $app->add($container->csrf);
