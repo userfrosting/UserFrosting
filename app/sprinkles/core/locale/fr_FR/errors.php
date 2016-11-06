@@ -17,7 +17,7 @@ return [
         "TITLE" => "Bouleversement de la Force",
         "DESCRIPTION" => "Nous avons ressenti un grand bouleversement de la Force.",
         "ENCOUNTERED" => "D'oh! Quelque chose s'est produit. Aucune idée c'est quoi.",
-        "DETAIL" => "Voici les détails",
+        "DETAIL" => "Voici les détails :",
         "RETURN" => 'Cliquez <a href="{{url}}">ici</a> pour retourner à la page d\'accueil.',
 
         "400" => [

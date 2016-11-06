@@ -17,7 +17,7 @@ return [
         "TITLE" => "Disturbance in the Force",
         "DESCRIPTION" => "We've sensed a great disturbance in the Force.",
         "ENCOUNTERED" => "Uhhh...something happened.  We don't know what.",
-        "DETAIL" => "Here's what we got",
+        "DETAIL" => "Here's what we got:",
         "RETURN" => 'Click <a href="{{url}}">here</a> to return to the front page.',
 
         "400" => [
