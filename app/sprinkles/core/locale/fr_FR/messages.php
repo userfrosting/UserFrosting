@@ -45,14 +45,6 @@ return [
     "ACTIONS" => "Actions",
     "PRINT" => "Imprimer",
 
-    // Events / Errors
-    "SUCCESS" => "Success",
-    "ERROR" => "Error",
-	"NO_DATA" => "No data/bad data sent",
-	"NOTHING_TO_UPDATE" => "Nothing to update",
-    "SERVER_ERROR" => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP or UF error logs.",
-	"SQL_ERROR" => "Fatal SQL error",
-
     // Misc.
     "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>.",
 

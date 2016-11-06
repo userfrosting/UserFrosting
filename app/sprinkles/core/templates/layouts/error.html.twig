@@ -2,8 +2,8 @@
 {% extends "layouts/basic.html.twig" %}
 
 {% block body %}
-<body id="page-top" class="index">  
-    
+<body id="page-top" class="index">
+
     <!-- Main content of page -->
     <div id="content">
         {% block content %}
@@ -11,23 +11,23 @@
                 <div class="text-center">
                     <h1>
                         {% block heading %}
-                            Uhhh...something happened.  We don't know what.
+                            {{ translate('ERROR.ENCOUNTERED') }}
                         {% endblock %}
                     </h1>
-                        
+
                     <br><br>
-                    <p class="lead">Here's what we got:</p>
+                    <p class="lead">{{ translate('ERROR.DETAIL') }}:</p>
                 </div>
-                
+
                 {% for message in messages %}
-                    <div class="alert alert-danger">{{ translate(message.message, message.parameters) }}</div> 
+                    <div class="alert alert-danger">{{ translate(message.message, message.parameters) }}</div>
                 {% endfor %}
-                
-                <p class="lead">Click <a href="{{site.uri.public}}">here</a> to return to the front page.</p>
+
+                <p class="lead">{{ translate('ERROR.RETURN', {url : site.uri.public})|raw }}</p>
             </div> <!-- /container -->
         {% endblock %}
     </div>
-    
+
     {% include "components/footer.html.twig" %}
 
 </body>

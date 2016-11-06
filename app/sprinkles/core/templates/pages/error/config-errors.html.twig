@@ -1,17 +1,17 @@
 {% extends "layouts/error.html.twig" %}
 
-{% block page_title %}UserFrosting Configuration Issue!{% endblock %}
+{% block page_title %}{{ translate('ERROR.CONFIG.TITLE') }}{% endblock %}
 
-{% block page_description %}Some UserFrosting configuration requirements have not been met.{% endblock %}
+{% block page_description %}{{ translate('ERROR.CONFIG.DESCRIPTION') }}{% endblock %}
 
 {% block content %}
     <div class="container">
-        <h1 class="text-center">Something's not right here.</h1>
-        <h2>Please fix the following errors, then <a href="{{site.uri.public}}/install">reload</a>.</h2>
+        <h1 class="text-center">{{ translate('ERROR.CONFIG.DETAIL') }}</h1>
+        <h2>{{ translate('ERROR.CONFIG.RETURN', {url: "#{site.uri.public}/install"})|raw }}</h2>
         <p>
             <img src="{{ assets.url('assets://images/stuck.jpg') }}">
         </p>
-         
+
         {% autoescape false %}
         {% for message in messages %}
             <div class="list-group">
