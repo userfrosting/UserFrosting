@@ -22,12 +22,12 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
-    
+
     /**
      * @var bool Specifies whether or not the error handler should log the Exception's message.
-     */    
+     */
     protected $logFlag = true;
-    
+
     /**
      * Create a new ExceptionHandler object.
      *
@@ -37,7 +37,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     {
         $this->ci = $ci;
     }
-    
+
     /**
      * Called when an exception is raised during AJAX requests.
      *
@@ -47,17 +47,17 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
+     * @return ResponseInterface
      */
     public function ajaxHandler($request, $response, $exception)
-    {        
-        $message = new UserMessage("SERVER_ERROR");
-    
+    {
+        $message = new UserMessage("ERROR.SERVER");
+
         $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
-        
+
         return $response->withStatus(500);
     }
-    
+
     /**
      * Handler for exceptions raised during "standard" requests.
      *
@@ -67,29 +67,29 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
+     * @return ResponseInterface
      */
     public function standardHandler($request, $response, $exception)
     {
         $messages = [
-            new UserMessage("SERVER_ERROR")
+            new UserMessage("ERROR.SERVER")
         ];
         $httpCode = 500;
-    
+
         // Render a custom error page, if it exists
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
         } catch (\Twig_Error_Loader $e) {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
         }
-        
+
         return $response->withStatus($httpCode)
                         ->withHeader('Content-Type', 'text/html')
                         ->write($template->render([
                             "messages" => $messages
                         ]));
     }
-    
+
     /**
      * Gets the logging flag for this handler.
      *
@@ -98,6 +98,6 @@ class ExceptionHandler implements ExceptionHandlerInterface
     public function getLogFlag()
     {
         return $this->logFlag;
-    }     
-    
+    }
+
 }

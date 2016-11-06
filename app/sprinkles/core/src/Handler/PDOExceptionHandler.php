@@ -16,7 +16,7 @@ use UserFrosting\Support\Message\UserMessage;
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class PDOExceptionHandler extends ExceptionHandler
-{    
+{
     /**
      * Called on database errors.
      *
@@ -26,19 +26,19 @@ class PDOExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
-     */   
+     * @return ResponseInterface
+     */
     public function ajaxHandler($request, $response, $exception)
-    { 
-        $message = new UserMessage("SERVER_ERROR");
-        
+    {
+        $message = new UserMessage("ERROR.SERVER");
+
         $this->logFlag = true;
-        
+
         $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
-        
+
         return $response->withStatus(500);
     }
-     
+
     /**
      * Handler for exceptions raised during "standard" requests.
      *
@@ -48,26 +48,26 @@ class PDOExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
+     * @return ResponseInterface
      */
     public function standardHandler($request, $response, $exception)
     {
         $messages = [
-            new UserMessage("SERVER_ERROR")
+            new UserMessage("ERROR.SERVER")
         ];
         $httpCode = 500;
-        
-        $this->logFlag = true;     
-        
+
+        $this->logFlag = true;
+
         $view = $this->ci->view;
-        
+
         $response = $view->render($response, 'pages/error/default.html.twig', [
                             "messages" => $messages
                         ])
                         ->withStatus($httpCode)
                         ->withHeader('Content-Type', 'text/html');
-        
+
         return $response;
-    }    
-    
+    }
+
 }
