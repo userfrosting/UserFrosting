@@ -20,7 +20,7 @@ return [
         "DETAIL" => "Here's what we got:",
         "RETURN" => 'Click <a href="{{url}}">here</a> to return to the front page.',
 
-        "SERVER" => "Oops, il semblerait que le serveur a gaffé. Si vous êtes administrateur, s-v-p vérifier les logs d'erreurs PHP ou ceux de UserFrosting.",
+        "SERVER" => "Oops, looks like our server might have goofed. If you're an admin, please check the PHP or UF error logs.",
 
         "400" => [
             "TITLE" => "Error 400: Bad Request",
