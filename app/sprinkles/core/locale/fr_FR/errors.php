@@ -7,7 +7,8 @@
  *
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
- * @author Louis Charette
+ * @author Alexander Weissman
+ * @translator Louis Charette
  */
 
 return [

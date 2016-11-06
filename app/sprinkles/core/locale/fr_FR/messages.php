@@ -7,7 +7,8 @@
  *
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
- * @author Louis Charette
+ * @author Alexander Weissman
+ * @translator Louis Charette
  */
 
 return [
@@ -22,31 +23,42 @@ return [
         "FAIL" => "La valeur du captcha n'a pas été entrée correctement."
     ],
 
+    "CSRF_MISSING" => "Jeton CSRF manquant. Essayez de rafraîchir la page et de soumettre de nouveau?",
+
+    "DB_INVALID" => "Impossible de se connecter à la base de données. Si vous êtes un administrateur, vérifiez votre journal d'erreurs.",
+
+    "EMAIL" => [
+        "@TRANSLATION" => "Email"
+    ],
+
 	"FEATURE_DISABLED" => "Cette fonction est présentement désactivée",
-    "MAIL_ERROR" => "Erreur fatale lors de l'envoie du courriel. Contactez votre adminsitrateur. Si vous être administrateur, consultez les logs.",
+
+    "LOCALE" => "Langue",
+
+    "MAIL_ERROR" => "Erreur fatale lors de l'envoie du courriel. Contactez votre administrateur. Si vous être administrateur, consultez les logs.",
 
     // Actions words
-    "EDIT" => "Modifier",
+    "ACTIONS" => "Actions",
     "ADD" => "Ajouter",
-    "DELETE" => "Supprimer",
     "CANCEL" => "Annuler",
-    "UPDATE" => "Mettre à jour",
-    "SAVE" => "Sauvegarder",
-    "SORT" => "Trier",
-    "DENY" => "Refuser",
     "CONFIRM" => "Confirmer",
     "CREATE" => "Créer",
-    "DELETE_CONFIRM" => "Êtes-vous sûr de vouloir supprimer?",
+    "DELETE" => "Supprimer",
+    "DELETE_CONFIRM" => "Êtes-vous sûr de vouloir supprimer ceci?",
     "DELETE_CONFIRM_YES" => "Oui, supprimer",
-    "DELETE_NAMED" => "Supprimer {{name}}",
     "DELETE_CONFIRM_NAMED" => "Êtes-vous sûr de vouloir supprimer {{name}}?",
     "DELETE_CONFIRM_YES_NAMED" => "Oui, supprimer {{name}}",
     "DELETE_CANNOT_UNDONE" => "Cette action ne peut être annulée.", //This action cannot be undone
-    "ACTIONS" => "Actions",
+    "DELETE_NAMED" => "Supprimer {{name}}",
+    "DENY" => "Refuser",
+    "EDIT" => "Modifier",
+    "SAVE" => "Sauvegarder",
+    "SORT" => "Trier",
     "PRINT" => "Imprimer",
+    "UPDATE" => "Mettre à jour",
 
     // Misc.
-    "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>.",
+    "BUILT_WITH_UF" => "Créé avec <a href=\"http://www.userfrosting.com\">UserFrosting</a>.",
 
     // TOOLS
     "_LINK" => "<a href=\"{{url}}\">{{linkText}}<a>"

@@ -21,11 +21,11 @@
                 </li>
                 {% if current_user.isGuest() %}
                     <li>
-                        <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">Sign In</a>
+                        <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">{{translate("SIGNIN")}}</a>
                     </li>
                 {% else %}
                     <li>
-                        <a href="{{site.uri.public}}/account/settings" class="nav-highlight">My Account</a>
+                        <a href="{{site.uri.public}}/account/settings" class="nav-highlight">{{translate("ACCOUNT.MY")}}</a>
                     </li>
                 {% endif %}
             </ul>

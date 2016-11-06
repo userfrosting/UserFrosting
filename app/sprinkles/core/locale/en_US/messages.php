@@ -47,7 +47,7 @@ return [
     "DELETE_CONFIRM_YES" => "Yes, delete",
     "DELETE_CONFIRM_NAMED" => "Are you sure you want to delete {{name}}?",
     "DELETE_CONFIRM_YES_NAMED" => "Yes, delete {{name}}",
-    "DELETE_CONFIRM_YES_NAMED" => "This action cannot be undone.",
+    "DELETE_CANNOT_UNDONE" => "This action cannot be undone.",
     "DELETE_NAMED" => "Delete {{name}}",
     "DENY" => "Deny",
     "EDIT" => "Edit",
