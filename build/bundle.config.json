@@ -145,7 +145,22 @@
                 }
             }
         }
-    },    
+    },
+    "css/sb-admin-2-root" : {
+        "styles": [
+            "vendor/metismenu-1.1.3/css/metisMenu.css",
+            "vendor/start-bootstrap/css/sb-admin-2.css",
+            "css/sb-admin-2-red.css",
+            "vendor/font-starcraft/font-starcraft.css"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "styles": "plain"
+                }
+            }
+        }
+    },
     "css/azmind" : {
         "styles": [
             "vendor/azmind/css/form-elements.css",

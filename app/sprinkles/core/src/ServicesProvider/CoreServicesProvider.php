@@ -519,6 +519,7 @@ class CoreServicesProvider
         $container['view'] = function ($c) {
             $templatePaths = $c->locator->findResources('templates://', true, true);
 
+            // TODO: maybe these paths should be directly loaded by the SprinkleManager?
             $view = new Twig($templatePaths);
 
             $twig = $view->getEnvironment();
@@ -531,11 +532,12 @@ class CoreServicesProvider
                 $twig->enableDebug();
             }
 
-            // Register Twig as a view extension
-            $view->addExtension(new TwigExtension(
+            // Register the Slim extension with Twig
+            $slimExtension = new TwigExtension(
                 $c['router'],
                 $c['request']->getUri()
-            ));
+            );
+            $view->addExtension($slimExtension);
 
             // Register the core UF extension with Twig
             $coreExtension = new CoreExtension($c);

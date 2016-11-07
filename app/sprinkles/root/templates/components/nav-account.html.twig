@@ -7,16 +7,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{{site.uri.public}}">{{site.site_title}}</a>
+        <a class="navbar-brand" href="{{site.uri.public}}">{{site.title}}</a>
     </div>
     <!-- /.navbar-header -->
     <p class="navbar-text navbar-alert">
         {{ translate("HEADER_MESSAGE_ROOT") | upper }}
     </p>
-    {% include 'components/dashboard/menus/topbar.twig' %}
+    {% include 'components/topbar.html.twig' %}
     <div class="sidebar-wrapper">
         <div class="navbar-default navbar-userfrosting sidebar" role="navigation">
-            {% include 'components/dashboard/menus/sidebar.twig' %}
+            {% include 'components/sidebar.html.twig' %}
         </div>
         <!-- /.navbar-static-side -->        
     </div>
