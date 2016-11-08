@@ -61,6 +61,6 @@ class AssetLoader
     
     public function getType()
     {
-        $type = MimeType::detectByFilename($this->fullPath);
+        return MimeType::detectByFilename($this->fullPath);
     }
 }
