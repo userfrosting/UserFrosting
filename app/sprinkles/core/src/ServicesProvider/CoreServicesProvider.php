@@ -44,6 +44,7 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
+use UserFrosting\Sprinkle\Core\Util\AssetLoader;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -72,6 +73,17 @@ class CoreServicesProvider
             return new MessageStream($c->session, $c->config['session.keys.alerts'], $c->translator);
         };
 
+        /**
+         * Asset loader service.
+         *
+         * Loads assets from a specified relative location.
+         * Assets are Javascript, CSS, image, and other files used by your site.
+         */
+        $container['assetLoader'] = function ($c) {
+            $al = new AssetLoader('assets://');
+            return $al;
+        };
+        
         /**
          * Asset manager service.
          *
@@ -519,7 +531,6 @@ class CoreServicesProvider
         $container['view'] = function ($c) {
             $templatePaths = $c->locator->findResources('templates://', true, true);
 
-            // TODO: maybe these paths should be directly loaded by the SprinkleManager?
             $view = new Twig($templatePaths);
 
             $twig = $view->getEnvironment();

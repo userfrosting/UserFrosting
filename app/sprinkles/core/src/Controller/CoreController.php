@@ -12,7 +12,6 @@ use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\NotFoundException as NotFoundException;
-use UserFrosting\Sprinkle\Core\Util\MimeType;
     
 /**
  * CoreController Class
@@ -72,32 +71,22 @@ class CoreController
     
     /**
      * Handle all requests for raw assets.
-     * Request type: GET     
+     * Request type: GET
      */    
     public function getAsset($request, $response, $args)
     {
-        $url = $args['url'];
-        
+        // By starting this service, we ensure that the timezone gets set.
         $config = $this->ci->config;
-        
-        // Remove any query string
-        $url = preg_replace('/\?.*/', '', $url);
-        
-        // Find file
-        $abspath = "assets://" . $url;
-        
-        // Return 404 if file does not exist
-        if (!file_exists($abspath)) {
+
+        $assetLoader = $this->ci->assetLoader;
+
+        if (!$assetLoader->loadAsset($args['url'])) {
             throw new NotFoundException($request, $response);
         }
-        
-        $content = file_get_contents($abspath);
-        $type = MimeType::detectByFilename($url);
-        $length = filesize($abspath);
-        
+
         return $response
-            ->withHeader('Content-Type', $type)
-            ->withHeader('Content-Length', $length)
-            ->write($content);    
+            ->withHeader('Content-Type', $assetLoader->getType())
+            ->withHeader('Content-Length', $assetLoader->getLength())
+            ->write($assetLoader->getContent());
     }
 }

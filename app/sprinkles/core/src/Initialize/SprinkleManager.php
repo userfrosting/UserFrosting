@@ -88,7 +88,27 @@ class SprinkleManager
             }
         }
     }
-    
+
+    public function registerAssets($name)
+    {
+        $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
+        $path = $sprinklesDirFragment . \UserFrosting\ASSET_DIR_NAME;
+
+        $this->ci->locator->addPath('assets', '', $path);
+
+        return $this->ci->locator->getBase() . $path;
+    }
+
+    public function registerTemplates($name)
+    {
+        $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
+        $path = $sprinklesDirFragment . \UserFrosting\TEMPLATE_DIR_NAME;
+
+        $this->ci->locator->addPath('templates', '', $path);
+
+        return $this->ci->locator->getBase() . DIRECTORY_SEPARATOR . $path;
+    }
+
     /**
      * Register resource streams for a specified sprinkle.
      */
@@ -98,18 +118,19 @@ class SprinkleManager
         
         $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
         
-        $locator->addPath('assets', '', $sprinklesDirFragment . \UserFrosting\ASSET_DIR_NAME);
         $locator->addPath('schema', '', $sprinklesDirFragment . \UserFrosting\SCHEMA_DIR_NAME);
-        $locator->addPath('templates', '', $sprinklesDirFragment . \UserFrosting\TEMPLATE_DIR_NAME);
         $locator->addPath('locale', '', $sprinklesDirFragment . \UserFrosting\LOCALE_DIR_NAME);
         $locator->addPath('config', '', $sprinklesDirFragment . \UserFrosting\CONFIG_DIR_NAME);
         $locator->addPath('routes', '', $sprinklesDirFragment . \UserFrosting\ROUTE_DIR_NAME);
-            
+
+        $this->registerAssets($name);
+        $this->registerTemplates($name);
+
         /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
            Not sure if we need this.
            $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
          */
-    }   
+    }
    
     /**
      * Takes a list of sprinkle names, and creates a new sprinkle initializer object for each one (if defined).

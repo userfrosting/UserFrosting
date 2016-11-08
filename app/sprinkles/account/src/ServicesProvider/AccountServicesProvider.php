@@ -38,6 +38,20 @@ class AccountServicesProvider
     public function register($container)
     {
         /**
+         * Extends the 'assetLoader' service to add paths for user themes.
+         */
+        $container->extend('assetLoader', function ($assetLoader, $c) {
+            // Register paths for user theme, if a user is logged in
+            $currentUser = $c->currentUser;
+            if (!$currentUser->isGuest()) {
+                Debug::debug("Loading theme assets for " . $currentUser->theme);
+                $c->sprinkleManager->registerAssets($currentUser->theme);
+            }            
+            
+            return $assetLoader;
+        });    
+    
+        /**
          * Extend the 'classMapper' service to register model classes.
          *
          * Mappings added: User, Group, Permission, Role, Activity
@@ -75,6 +89,15 @@ class AccountServicesProvider
             $extension = new AccountExtension($c);
             $twig->addExtension($extension);
             
+            // Add paths for user theme, if a user is logged in
+            $currentUser = $c->currentUser;
+            if (!$currentUser->isGuest()) {
+                Debug::debug("Loading theme template path for " . $currentUser->theme);
+                $themePath = $c->sprinkleManager->registerTemplates($currentUser->theme);
+                $loader = $twig->getLoader();
+                $loader->prependPath($themePath);
+            }
+
             return $view;
         });
         
@@ -240,7 +263,7 @@ class AccountServicesProvider
 
             // Force database connection to boot up
             $c->db;
-            
+
             // If this throws a PDOException we catch it and generate a guest user rather than allowing the exception to propagate.
             // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
             // So, we really don't want this particular service to throw any exceptions.
@@ -250,20 +273,16 @@ class AccountServicesProvider
             } catch (\PDOException $e) {
                 $currentUser = null;
             }
-            
+
             // If no authenticated user, create a 'guest' user object
             if (!$currentUser) {
                 $currentUser = $classMapper->createInstance('user');
                 $currentUser->id = $config['reserved_user_ids.guest'];
             }
-            
+
             // Add user locale to translator service
             $translator->loadLocaleFiles($currentUser->locale);
-            
-            // Add paths for user theme in Twig
-            Debug::debug("Loading theme " . $currentUser->theme);
-            $c->sprinkleManager->registerSprinkleResources($currentUser->theme);        
-            
+
             return $currentUser;
         };
         
