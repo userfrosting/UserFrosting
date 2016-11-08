@@ -80,7 +80,7 @@ class CoreServicesProvider
          * Assets are Javascript, CSS, image, and other files used by your site.
          */
         $container['assetLoader'] = function ($c) {
-            $al = new AssetLoader('assets://');
+            $al = new AssetLoader();
             return $al;
         };
         
@@ -510,8 +510,6 @@ class CoreServicesProvider
 
             $translator->setPaths($localePaths);
 
-            // We need the config to get which locale we need
-            // !TODO: User locale... Config is good for default or site wide locale. But when a user login, we may have to load his locale
             $config = $c->config;
 
             // Load the base locale file(s) as specified in the configuration

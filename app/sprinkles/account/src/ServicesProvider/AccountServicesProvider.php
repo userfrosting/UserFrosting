@@ -44,8 +44,7 @@ class AccountServicesProvider
             // Register paths for user theme, if a user is logged in
             $currentUser = $c->currentUser;
             if (!$currentUser->isGuest()) {
-                Debug::debug("Loading theme assets for " . $currentUser->theme);
-                $c->sprinkleManager->registerAssets($currentUser->theme);
+                $c->sprinkleManager->addAssets($currentUser->theme);
             }            
             
             return $assetLoader;
@@ -80,9 +79,32 @@ class AccountServicesProvider
         });
         
         /**
+         * Extends the 'translator' service, adding any locale files from the user theme.
+         *
+         * Also loads the actual translations for the user's locale.
+         */
+        $container->extend('translator', function ($translator, $c) {
+            // Add paths for user theme, if a user is logged in
+            $currentUser = $c->currentUser;
+
+            if (!$currentUser->isGuest()) {
+                $themePath = $c->sprinkleManager->addLocale($currentUser->theme);
+                if ($themePath) {
+                    // Add paths to locale files for user theme
+                    $translator->addPath($themePath);
+
+                    // Add user locale to translator service
+                    $translator->loadLocaleFiles($currentUser->locale);
+                }
+            }
+
+            return $translator;
+        });
+
+        /**
          * Extends the 'view' service with the AccountExtension for Twig.
          *
-         * Adds account-specific functions, globals, filters, etc to Twig.
+         * Adds account-specific functions, globals, filters, etc to Twig, and the path to templates for the user theme.
          */
         $container->extend('view', function ($view, $c) {
             $twig = $view->getEnvironment(); 
@@ -92,9 +114,8 @@ class AccountServicesProvider
             // Add paths for user theme, if a user is logged in
             $currentUser = $c->currentUser;
             if (!$currentUser->isGuest()) {
-                $themePath = $c->sprinkleManager->registerTemplates($currentUser->theme);
+                $themePath = $c->sprinkleManager->addTemplates($currentUser->theme);
                 if ($themePath) {
-                    Debug::debug("Template path for '" . $currentUser->theme . "': " . $themePath);
                     $loader = $twig->getLoader();
                     $loader->prependPath($themePath);
                 }
@@ -261,7 +282,6 @@ class AccountServicesProvider
             $authenticator = $c->authenticator;
             $classMapper = $c->classMapper;
             $config = $c->config;
-            $translator = $c->translator;
 
             // Force database connection to boot up
             $c->db;
@@ -281,9 +301,6 @@ class AccountServicesProvider
                 $currentUser = $classMapper->createInstance('user');
                 $currentUser->id = $config['reserved_user_ids.guest'];
             }
-
-            // Add user locale to translator service
-            $translator->loadLocaleFiles($currentUser->locale);
 
             return $currentUser;
         };

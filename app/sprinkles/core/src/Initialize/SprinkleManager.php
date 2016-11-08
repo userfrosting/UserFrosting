@@ -27,14 +27,20 @@ class SprinkleManager
     protected $ci;
     
     /**
-     * @var array[null|UserFrosting\Sprinkle\Core\Initialize\Sprinkle] An array of sprinkle initialization objects.
+     * @var string[] An array of sprinkle names.
      */
     protected $sprinkles = [];
-        
+    
+    /**
+     * @var string The full absolute base path to the sprinkles directory.
+     */    
+    protected $sprinklesPath = \UserFrosting\APP_DIR_NAME . DIRECTORY_SEPARATOR . \UserFrosting\SPRINKLES_DIR_NAME . DIRECTORY_SEPARATOR;
+    
     /**
      * Create a new SprinkleManager object.
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
+     * @param string[] $sprinkles An array of sprinkle names.
      */
     public function __construct(ContainerInterface $ci, $sprinkles = [])
     {
@@ -55,15 +61,14 @@ class SprinkleManager
         $serviceProvider->register($this->ci);
         
         // Register core resources
-        $this->registerSprinkleResources('core');
+        $this->addSprinkleResources('core');
         
         // For each sprinkle (other than Core), register its resources and then run its initializer
-        foreach ($this->sprinkles as $name => $sprinkle) {        
-            $this->registerSprinkleResources($name);
+        foreach ($this->sprinkles as $name) {        
+            $this->addSprinkleResources($name);
             
             // Initialize the sprinkle
-            if ($sprinkle)
-                $sprinkle->init();            
+            $sprinkle = $this->initializeSprinkle($name);
         }
         
         // Set the configuration settings for Slim in the 'settings' service
@@ -72,7 +77,115 @@ class SprinkleManager
         // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
         $this->ci->shutdownHandler;
     }
-    
+
+    /**
+     * Adds assets for a specified Sprinkle to the assets (assets://) stream.
+     *
+     * @param string $name
+     * @return string|bool The full path to the Sprinkle's assets (if found).
+     */
+    public function addAssets($name)
+    {
+        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\ASSET_DIR_NAME;
+
+        $this->ci->locator->addPath('assets', '', $path);
+
+        return $this->ci->locator->findResource('assets://', true, false);
+    }
+
+    /**
+     * Adds config for a specified Sprinkle to the config (config://) stream.
+     *
+     * @param string $name
+     * @return string|bool The full path to the Sprinkle's config (if found).
+     */
+    public function addConfig($name)
+    {
+        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\CONFIG_DIR_NAME;
+
+        $this->ci->locator->addPath('config', '', $path);
+
+        return $this->ci->locator->findResource('config://', true, false);
+    }
+
+    /**
+     * Adds locales for a specified Sprinkle to the locale (locale://) stream.
+     *
+     * @param string $name
+     * @return string|bool The full path to the Sprinkle's locales (if found).
+     */    
+    public function addLocale($name)
+    {
+        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\LOCALE_DIR_NAME;
+
+        $this->ci->locator->addPath('locale', '', $path);
+
+        return $this->ci->locator->findResource('locale://', true, false);
+    }
+
+    /**
+     * Adds paths to routes for a specified Sprinkle to the routes (routes://) stream.
+     *
+     * @param string $name
+     * @return string|bool The full path to the Sprinkle's routes (if found).
+     */    
+    public function addRoutes($name)
+    {
+        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\ROUTE_DIR_NAME;
+
+        $this->ci->locator->addPath('routes', '', $path);
+
+        return $this->ci->locator->findResource('routes://', true, false);
+    }
+
+    /**
+     * Adds Fortress schema for a specified Sprinkle to the schema (schema://) stream.
+     *
+     * @param string $name
+     * @return string|bool The full path to the Sprinkle's schema (if found).
+     */    
+    public function addSchema($name)
+    {
+        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\SCHEMA_DIR_NAME;
+
+        $this->ci->locator->addPath('schema', '', $path);
+
+        return $this->ci->locator->findResource('schema://', true, false);
+    }
+
+    /**
+     * Adds templates for a specified Sprinkle to the templates (templates://) stream.
+     *
+     * @param string $name
+     * @return string|bool The full path to the Sprinkle's templates (if found).
+     */    
+    public function addTemplates($name)
+    {
+        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\TEMPLATE_DIR_NAME;
+
+        $this->ci->locator->addPath('templates', '', $path);
+
+        return $this->ci->locator->findResource('templates://', true, false);
+    }
+
+    /**
+     * Register resource streams for a specified sprinkle.
+     */
+    public function addSprinkleResources($name)
+    {
+        $this->addConfig($name);
+        $this->addAssets($name);
+        $this->addLocale($name);
+        $this->addRoutes($name);
+        $this->addSchema($name);
+        $this->addTemplates($name);
+
+        /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
+           Not sure if we need this.
+           $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
+         */
+    }
+
     /**
      * Include all defined routes in route stream.
      *
@@ -89,68 +202,36 @@ class SprinkleManager
         }
     }
 
-    public function registerAssets($name)
-    {
-        $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
-        $path = $sprinklesDirFragment . \UserFrosting\ASSET_DIR_NAME;
-
-        $this->ci->locator->addPath('assets', '', $path);
-
-        return $this->ci->locator->getBase() . $path;
-    }
-
-    public function registerTemplates($name)
-    {
-        $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
-        $path = $sprinklesDirFragment . \UserFrosting\TEMPLATE_DIR_NAME;
-
-        $this->ci->locator->addPath('templates', '', $path);
-
-        return $this->ci->locator->findResource('templates://', true, false);
-    }
-
     /**
-     * Register resource streams for a specified sprinkle.
-     */
-    public function registerSprinkleResources($name)
-    {
-        $locator = $this->ci->locator;
-        
-        $sprinklesDirFragment = \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/$name/";
-        
-        $locator->addPath('schema', '', $sprinklesDirFragment . \UserFrosting\SCHEMA_DIR_NAME);
-        $locator->addPath('locale', '', $sprinklesDirFragment . \UserFrosting\LOCALE_DIR_NAME);
-        $locator->addPath('config', '', $sprinklesDirFragment . \UserFrosting\CONFIG_DIR_NAME);
-        $locator->addPath('routes', '', $sprinklesDirFragment . \UserFrosting\ROUTE_DIR_NAME);
-
-        $this->registerAssets($name);
-        $this->registerTemplates($name);
-
-        /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
-           Not sure if we need this.
-           $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
-         */
-    }
-   
-    /**
-     * Takes a list of sprinkle names, and creates a new sprinkle initializer object for each one (if defined).
+     * Sets the list of sprinkles.
      *
-     * Creates an object of a subclass of UserFrosting\Sprinkle\Core\Initialize\Sprinkle if defined for the sprinkle (converting to StudlyCase).
-     * Otherwise, sets the entry to null in $this->sprinkles.
-     * @param array[string] An array of sprinkle names.
+     * @param string[] $sprinkles An array of sprinkle names.
      */
     public function setSprinkles($sprinkles)
     {
-        // Create other sprinkle objects
-        foreach ($sprinkles as $name) {
-            $className = Str::studly($name);
-            $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
-            // Check that class exists.  If not, set to null
-            if (class_exists($fullClassName)) {
-                $this->sprinkles[$name] = new $fullClassName($this->ci);
-            } else {
-                $this->sprinkles[$name] = null;
-            }
+        $this->sprinkles = $sprinkles;
+        return $this;
+    }
+
+    /**
+     * Takes the name of a Sprinkle, and creates an instance of the initializer object (if defined).
+     *
+     * Creates an object of a subclass of UserFrosting\Sprinkle\Core\Initialize\Sprinkle if defined for the sprinkle (converting to StudlyCase).
+     * Otherwise, returns null.
+     * @param $name The name of the Sprinkle to initialize.
+     */
+    public function initializeSprinkle($name)
+    {
+        $className = Str::studly($name);
+        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
+
+        // Check that class exists.  If not, set to null
+        if (class_exists($fullClassName)) {
+            $sprinkle = new $fullClassName($this->ci);
+            $sprinkle->init();
+            return $sprinkle;
+        } else {
+            return null;
         }
     }    
 }
