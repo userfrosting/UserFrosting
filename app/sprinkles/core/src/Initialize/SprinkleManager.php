@@ -106,7 +106,7 @@ class SprinkleManager
 
         $this->ci->locator->addPath('templates', '', $path);
 
-        return $this->ci->locator->getBase() . DIRECTORY_SEPARATOR . $path;
+        return $this->ci->locator->findResource('templates://', true, false);
     }
 
     /**
