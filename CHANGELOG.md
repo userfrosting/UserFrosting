@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.1.21
+
+- Use Laravel's Schema interface to create tables and default rows, instead of constructing them with SQL
+
 ## v0.3.1.20
 
 - Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()` 

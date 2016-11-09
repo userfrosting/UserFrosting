@@ -359,7 +359,8 @@ class User extends UFModel {
             $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
         $event = new UserEvent([
             "event_type"  => "sign_up",
-            "description" => $description
+            "description" => $description,
+            "occurred_at" => \Carbon\Carbon::now()
         ]);
         $this->new_events[] = $event;
         return $event;
@@ -373,7 +374,8 @@ class User extends UFModel {
     public function newEventSignIn(){    
         $event = new UserEvent([
             "event_type"  => "sign_in",
-            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
+            "description" => "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . ".",
+            "occurred_at" => \Carbon\Carbon::now()
         ]);
         $this->new_events[] = $event;
         return $event;
@@ -388,7 +390,8 @@ class User extends UFModel {
         $this->secret_token = User::generateActivationToken();
         $event = new UserEvent([
             "event_type"  => "verification_request",
-            "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
+            "description" => "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . ".",
+            "occurred_at" => \Carbon\Carbon::now()
         ]);
         $this->new_events[] = $event;
         return $event;
@@ -404,7 +407,8 @@ class User extends UFModel {
         $this->flag_password_reset = "1";
         $event = new UserEvent([
             "event_type"  => "password_reset_request",
-            "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
+            "description" => "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . ".",
+            "occurred_at" => \Carbon\Carbon::now()
         ]);
         $this->new_events[] = $event;
         return $event;

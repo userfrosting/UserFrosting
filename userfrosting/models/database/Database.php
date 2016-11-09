@@ -3,6 +3,7 @@
 namespace UserFrosting;
 
 use \Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Represents the UserFrosting database.
@@ -146,7 +147,7 @@ abstract class Database {
         
         foreach ($test_list as $table){
             try {
-                $stmt = $connection->select("SELECT 1 FROM `$table` LIMIT 1;");
+                $stmt = $connection->select("SELECT 1 FROM $table LIMIT 1;");
             } catch (\PDOException $e){
                 continue;
             }
@@ -162,109 +163,238 @@ abstract class Database {
      * Creates all tables, and loads the configuration table with the default config data.  Also, sets install_status to `pending`.
      */   
     public static function install(){
-        $connection = Capsule::connection();
+        $schema = Capsule::schema();
+
+        /**
+         * `configuration` table.
+         */
+        if (!$schema->hasTable(static::getSchemaTable('configuration')->name)) {
+            $schema->create(static::getSchemaTable('configuration')->name, function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('plugin', 50)->comment("The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)");
+                $table->string('name', 150)->comment('The name of the setting.');
+                $table->text('value')->comment('The current value of the setting.');
+                $table->text('description')->comment('A brief description of this setting.');
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';
+            });
+        }
+
+        /**
+         * `authorize_group` table.
+         */
+        if (!$schema->hasTable(static::getSchemaTable('authorize_group')->name)) {
+            $schema->create(static::getSchemaTable('authorize_group')->name, function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('group_id')->unsigned();
+                $table->string('hook', 200)->comment('A code that references a specific action or URI that the group has access to.');
+                $table->text('conditions')->comment('The conditions under which members of this group have access for this hook.');
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';
+            });
+        }
         
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('configuration')->name . "` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `plugin` varchar(50) NOT NULL COMMENT 'The name of the plugin that manages this setting (set to ''userfrosting'' for core settings)',
-            `name` varchar(150) NOT NULL COMMENT 'The name of the setting.',
-            `value` longtext NOT NULL COMMENT 'The current value of the setting.',
-            `description` text NOT NULL COMMENT 'A brief description of this setting.',
-            PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A configuration table, mapping global configuration options to their values.' AUTO_INCREMENT=1 ;");
-            
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('authorize_group')->name . "` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `group_id` int(10) unsigned NOT NULL,
-            `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the group has access to.',
-            `conditions` text NOT NULL COMMENT 'The conditions under which members of this group have access to this hook.',
-            PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
-          
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('authorize_user')->name . "` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `user_id` int(10) unsigned NOT NULL,
-            `hook` varchar(200) NOT NULL COMMENT 'A code that references a specific action or URI that the user has access to.',
-            `conditions` text NOT NULL COMMENT 'The conditions under which the user has access to this action.',
-            PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
-              
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('group')->name . "` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `name` varchar(150) NOT NULL,
-            `is_default` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission is a default setting for new accounts.',
-            `can_delete` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Specifies whether this permission can be deleted from the control panel.',
-            `theme` varchar(100) NOT NULL DEFAULT 'default' COMMENT 'The theme assigned to primary users in this group.',
-            `landing_page` varchar(200) NOT NULL DEFAULT 'dashboard' COMMENT 'The page to take primary members to when they first log in.',
-            `new_user_title` varchar(200) NOT NULL DEFAULT 'New User' COMMENT 'The default title to assign to new primary users.',
-            `icon` varchar(100) NOT NULL DEFAULT 'fa fa-user' COMMENT 'The icon representing primary users in this group.',
-            PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
-          
-          
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('group_user')->name . "` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `user_id` int(10) unsigned NOT NULL,
-            `group_id` int(10) unsigned NOT NULL,
-            PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Maps users to their group(s)' AUTO_INCREMENT=1 ;");
-          
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('user')->name . "` (
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `user_name` varchar(50) NOT NULL,
-            `display_name` varchar(50) NOT NULL,
-            `email` varchar(150) NOT NULL,
-            `title` varchar(150) NOT NULL,
-            `locale` varchar(10) NOT NULL DEFAULT 'en_US' COMMENT 'The language and locale to use for this user.',
-            `primary_group_id` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'The id of this user''s primary group.',
-            `secret_token` varchar(32) NOT NULL DEFAULT '' COMMENT 'The current one-time use token for various user activities confirmed via email.',
-            `flag_verified` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user has verified their account via email, ''0'' otherwise.',
-            `flag_enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Set to ''1'' if the user''s account is currently enabled, ''0'' otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.',
-            `flag_password_reset` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Set to ''1'' if the user has an outstanding password reset request, ''0'' otherwise.',
-            `created_at` timestamp NULL DEFAULT NULL,
-            `updated_at` timestamp NULL DEFAULT NULL,
-            `password` varchar(255) NOT NULL,
-            PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
-        
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::getSchemaTable('user_event')->name . "` ( 
-            `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-            `user_id` int(10) unsigned NOT NULL,
-            `event_type` varchar(255) NOT NULL COMMENT 'An identifier used to track the type of event.',
-            `occurred_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            `description` text NOT NULL,
-            PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;");
-        
-        $connection->statement("CREATE TABLE IF NOT EXISTS `" . static::$app->remember_me_table['tableName'] . "` (
-            `user_id` int(11) NOT NULL,
-            `token` varchar(40) NOT NULL,
-            `persistent_token` varchar(40) NOT NULL,
-            `expires` datetime NOT NULL
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"); 
+        /**
+         * `authorize_user` table.
+         */
+        if (!$schema->hasTable(static::getSchemaTable('authorize_user')->name)) {
+            $schema->create(static::getSchemaTable('authorize_user')->name, function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id')->unsigned();
+                $table->string('hook', 200)->comment('A code that references a specific action or URI that the user has access to.');
+                $table->text('conditions')->comment('The conditions under which the user has access for this hook.');
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';
+            });
+        }
+
+        /**
+         * `group` table.
+         */
+        if (!$schema->hasTable(static::getSchemaTable('group')->name)) {
+            $schema->create(static::getSchemaTable('group')->name, function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name', 150);
+                $table->boolean('is_default')->default(0)->comment('Specifies whether this permission is a default setting for new accounts.');
+                $table->boolean('can_delete')->default(1)->comment('Specifies whether this permission can be deleted from the control panel.');
+                $table->string('theme', 100)->default('default')->comment('The theme assigned to primary users in this group.');
+                $table->string('landing_page', 200)->default('dashboard')->comment('The page to take primary members to when they first log in.');
+                $table->string('new_user_title', 200)->default('New User')->comment('The default title to assign to new primary users.');
+                $table->string('icon', 100)->default('fa fa-user')->comment('The icon representing primary users in this group.');
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';
+            });
+        }
+
+        /**
+         * `group_user` table.
+         */
+        if (!$schema->hasTable(static::getSchemaTable('group_user')->name)) {
+            $schema->create(static::getSchemaTable('group_user')->name, function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id')->unsigned();
+                $table->integer('group_id')->unsigned();
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';
+            });
+        }
+
+        /**
+         * `user` table.
+         */
+        if (!$schema->hasTable(static::getSchemaTable('user')->name)) {
+            $schema->create(static::getSchemaTable('user')->name, function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('user_name', 50);
+                $table->string('display_name', 50);
+                $table->string('email', 150);
+                $table->string('title', 150);
+                $table->string('locale', 10)->default('en_US')->comment('The language and locale to use for this user.');
+                $table->integer('primary_group_id')->unsigned()->default(1)->comment("The id of this user''s primary group.");
+                $table->string('secret_token', 32)->default('')->comment('The current one-time use token for various user activities confirmed via email.');
+                $table->boolean('flag_verified')->default(1)->comment("Set to ''1'' if the user has verified their account via email, ''0'' otherwise.");
+                $table->boolean('flag_enabled')->default(1)->comment("Set to ''1'' if the user''s account is currently enabled, ''0'' otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.");
+                $table->boolean('flag_password_reset')->default(0)->comment("Set to ''1'' if the user has an outstanding password reset request, ''0'' otherwise.");
+                $table->timestamps();
+                $table->string('password', 255);
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';
+            });
+        }
+
+        /**
+         * `user_event` table.
+         */
+        if (!$schema->hasTable(static::getSchemaTable('user_event')->name)) {
+            $schema->create(static::getSchemaTable('user_event')->name, function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id')->unsigned();
+                $table->string('event_type', 255)->comment('An identifier used to track the type of event.');
+                $table->timestamp('occurred_at');
+                $table->text('description');
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';             
+            });
+        }
+
+        /**
+         * 'remember me' table.
+         */
+        if (!$schema->hasTable(static::$app->remember_me_table['tableName'])) {
+            $schema->create(static::$app->remember_me_table['tableName'], function (Blueprint $table) {
+                $table->integer('user_id')->unsigned();
+                $table->string('token', 40);
+                $table->string('persistent_token', 40);
+                $table->dateTime('expires');
+                $table->engine = 'InnoDB';
+                $table->collation = 'utf8_unicode_ci';
+                $table->charset = 'utf8';             
+            });
+        }
         
         // Setup initial configuration settings        
         static::$app->site->install_status = "pending";
         static::$app->site->root_account_config_token = md5(uniqid(mt_rand(), false));
         static::$app->site->store();        
         
-        // Setup default groups.  TODO: finish Group API so they can be created through objects
-        $connection->insert("INSERT INTO `" . static::getSchemaTable('group')->name . "` (`name`, `is_default`, `can_delete`, `theme`, `landing_page`, `new_user_title`, `icon`) VALUES
-          ('User', " . GROUP_DEFAULT_PRIMARY . ", 0, 'default', 'dashboard', 'New User', 'fa fa-user'),
-          ('Administrator', " . GROUP_NOT_DEFAULT . ", 0, 'nyx', 'dashboard', 'Brood Spawn', 'fa fa-flag'),
-          ('Zerglings', " . GROUP_NOT_DEFAULT . ", 1, 'nyx', 'dashboard', 'Tank Fodder', 'sc sc-zergling');");        
+        // Setup default groups
+        Capsule::table(static::getSchemaTable('group')->name)->insert([
+            [
+                'id' => 1,
+                'name' => 'User',
+                'is_default' => GROUP_DEFAULT_PRIMARY,
+                'can_delete' => 0,
+                'theme' => 'default',
+                'landing_page' => 'dashboard',
+                'new_user_title' => 'New User',
+                'icon' => 'fa fa-user'
+            ],
+            [
+                'id' => 2,
+                'name' => 'Administrator',
+                'is_default' => GROUP_NOT_DEFAULT,
+                'can_delete' => 0,
+                'theme' => 'nyx',
+                'landing_page' => 'dashboard',
+                'new_user_title' => 'Brood Spawn',
+                'icon' => 'fa fa-flag'
+            ],
+            [
+                'id' => 3,
+                'name' => 'Zerglings',
+                'is_default' => GROUP_NOT_DEFAULT,
+                'can_delete' => 1,
+                'theme' => 'nyx',
+                'landing_page' => 'dashboard',
+                'new_user_title' => 'Tank Fodder',
+                'icon' => 'sc sc-zergling'
+            ]
+        ]);        
+    
     
         // Setup default authorizations
-        $connection->insert("INSERT INTO `" . static::getSchemaTable('authorize_group')->name . "` (`group_id`, `hook`, `conditions`) VALUES
-          (1, 'uri_dashboard', 'always()'),
-          (2, 'uri_dashboard', 'always()'),
-          (2, 'uri_users', 'always()'),
-          (1, 'uri_account_settings', 'always()'),
-          (1, 'update_account_setting', 'equals(self.id, user.id)&&in(property,[\"email\",\"locale\",\"password\"])'),
-          (2, 'update_account_setting', '!in_group(user.id,2)&&in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"flag_password_reset\",\"flag_enabled\"])'),
-          (2, 'view_account_setting', 'in(property,[\"user_name\",\"email\",\"display_name\",\"title\",\"locale\",\"flag_enabled\",\"groups\",\"primary_group_id\"])'),
-          (2, 'delete_account', '!in_group(user.id,2)'),
-          (2, 'create_account', 'always()');");    
+        Capsule::table(static::getSchemaTable('authorize_group')->name)->insert([
+            [
+                'id' => 1,
+                'group_id' => 1,
+                'hook' => 'uri_dashboard',
+                'conditions' => 'always()'
+            ],
+            [
+                'id' => 2,
+                'group_id' => 2,
+                'hook' => 'uri_dashboard',
+                'conditions' => 'always()'
+            ],            
+            [
+                'id' => 3,
+                'group_id' => 2,
+                'hook' => 'uri_users',
+                'conditions' => 'always()'
+            ],
+            [
+                'id' => 4,
+                'group_id' => 1,
+                'hook' => 'uri_account_settings',
+                'conditions' => 'always()'
+            ],
+            [
+                'id' => 5,
+                'group_id' => 1,
+                'hook' => 'update_account_setting',
+                'conditions' => 'equals(self.id, user.id)&&in(property,[\"email\",\"locale\",\"password\"])'
+            ],
+            [
+                'id' => 6,
+                'group_id' => 2,
+                'hook' => 'update_account_setting',
+                'conditions' => '!in_group(user.id,2)&&in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"flag_password_reset\",\"flag_enabled\"])'
+            ],
+            [
+                'id' => 7,
+                'group_id' => 2,
+                'hook' => 'view_account_setting',
+                'conditions' => 'in(property,[\"user_name\",\"email\",\"display_name\",\"title\",\"locale\",\"flag_enabled\",\"groups\",\"primary_group_id\"])'
+            ],
+            [
+                'id' => 8,
+                'group_id' => 2,
+                'hook' => 'delete_account',
+                'conditions' => '!in_group(user.id,2)'
+            ],
+            [
+                'id' => 9,
+                'group_id' => 2,
+                'hook' => 'create_account',
+                'conditions' => 'always()'
+            ]
+        ]);
     }
-    
 }
