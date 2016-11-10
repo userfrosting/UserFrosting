@@ -51,10 +51,13 @@ $connection_array = [
     'prefix'    => ''
 ];
 
-// This is for backwards compatibility. Pre-0.3.1.19 configuration files won't have $dbx['db_port'] defined at all.
-if (isset($dbx['db_port']))
-{
+// This is for backwards compatibility. Pre-0.3.1.19 configuration files won't have $dbx['db_port'] or $dbx['db_driver'] defined at all.
+if (isset($dbx['db_port'])) {
     $connection_array['port'] = $dbx['db_port'];
+}
+
+if (isset($dbx['db_driver'])) {
+    $connection_array['driver'] = $dbx['db_driver'];
 }
 
 $capsule->addConnection($connection_array);
