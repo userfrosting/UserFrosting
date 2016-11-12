@@ -4,6 +4,8 @@
 
 {% block stylesheets_page_group %}
     <!-- Page-group-specific CSS asset bundle -->
+    {{ assets.css('css/sb-admin-2') | raw }}
+    <!-- Theme-specific CSS asset bundle -->
     {{ assets.css('css/sb-admin-2-root') | raw }}
 {% endblock %}
 

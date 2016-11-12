@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'starcraft';
-	src:url('fonts/font-starcraft.eot?h9vi58');
-	src:url('fonts/font-starcraft.eot?#iefixh9vi58') format('embedded-opentype'),
-		url('fonts/font-starcraft.woff?h9vi58') format('woff'),
-		url('fonts/font-starcraft.ttf?h9vi58') format('truetype'),
-		url('fonts/font-starcraft.svg?h9vi58#starcraft') format('svg');
+	src:url('../fonts/font-starcraft.eot?h9vi58');
+	src:url('../fonts/font-starcraft.eot?#iefixh9vi58') format('embedded-opentype'),
+		url('../fonts/font-starcraft.woff?h9vi58') format('woff'),
+		url('../fonts/font-starcraft.ttf?h9vi58') format('truetype'),
+		url('../fonts/font-starcraft.svg?h9vi58#starcraft') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }

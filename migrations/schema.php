@@ -137,7 +137,7 @@
                 'id' => 2,
                 'slug' => 'update_user_field',
                 'name' => 'Edit user',
-                'conditions' => '!has_role(user.id,2)&&in(property,[ "email","name","flag_enabled","password","locale","theme"])',
+                'conditions' => '!has_role(user.id,2)&&in(property,["email","name","flag_enabled","password","locale","theme"])',
                 'description' => 'Edit users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
@@ -146,7 +146,7 @@
                 'id' => 3,
                 'slug' => 'view_user_field',
                 'name' => 'View user',
-                'conditions' => 'in(property,["user_name","name","email","locale","theme","roles","group_id"])',
+                'conditions' => 'in(property,["user_name","name","email","locale","theme","roles","group"])',
                 'description' => 'View certain properties of any user.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
@@ -184,6 +184,24 @@
                 'name' => 'Edit user',
                 'conditions' => 'always()',
                 'description' => 'Edit your own account settings.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
+            ],
+            [
+                'id' => 8,
+                'slug' => 'uri_user',
+                'name' => 'View user',
+                'conditions' => 'always()',
+                'description' => 'View the user page of any user.',
+                'created_at' => $installTime,
+                'updated_at' => $installTime
+            ],
+            [
+                'id' => 9,
+                'slug' => 'uri_user',
+                'name' => 'View user',
+                'conditions' => 'equals_num(self.group_id,user.group_id)',
+                'description' => 'View the user page of any user in your group.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
             ]
@@ -255,6 +273,19 @@
             [
                 'role_id' => 2,
                 'permission_id' => 5,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
+            ],
+            [
+                'role_id' => 2,
+                'permission_id' => 8,
+                'created_at' => $installTime,
+                'updated_at' => $installTime
+            ],
+            // Group admin permissions
+            [
+                'role_id' => 3,
+                'permission_id' => 9,
                 'created_at' => $installTime,
                 'updated_at' => $installTime
             ]

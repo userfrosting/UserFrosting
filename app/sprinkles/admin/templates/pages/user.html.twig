@@ -1,0 +1,53 @@
+{% extends "layouts/sb-admin-2.html.twig" %}
+
+{% block stylesheets_page %}      
+    <!-- Page-specific CSS asset bundle -->
+    {{ assets.css('css/form-widgets') | raw }}
+{% endblock %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}Users | {{user.user_name}}{% endblock %}
+
+{% block page_description %}User information page for {{user.user_name}}{% endblock %}
+
+{% block body_matter %}
+    <div class="row">
+        {% if 'group' not in fields.hidden %}
+        <div class="col-md-6">
+            <div class="biginfo biginfo-blue">
+                <div class="biginfo-icon">
+                    <i class="{{user.group.icon}}"></i>
+                </div>
+                <div class="biginfo-header">
+                    {{user.group.name}}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="view-user" class="panel panel-primary">
+                <div class="panel-heading">
+                    <h2 class="panel-title pull-left"><i class="fa fa-fw fa-user"></i> {{user.user_name}}</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    {% include "components/forms/user.html.twig" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts_page %}
+    <!-- Include validation rules -->
+    <script>
+    {% include "components/validators.js.twig" %}
+    </script>
+
+    <!-- Include form widgets JS -->
+    {{ assets.js('js/form-widgets') | raw }}
+
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/user') | raw }}
+{% endblock %}

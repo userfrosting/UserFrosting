@@ -21,7 +21,7 @@
             "type": "vcs",
             "url": "https://github.com/userfrosting/i18n"
         }
-    ],
+    ],    
     "require": {
         "illuminate/database": "^5.2",
         "illuminate/events": "^5.2",
@@ -37,7 +37,7 @@
         "slim/csrf": "dev-feature-persistent-token",
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
-        "userfrosting/assets": "1.1",
+        "userfrosting/assets": "dev-master",
         "userfrosting/config": "1.1",
         "userfrosting/fortress": "dev-master",
         "userfrosting/i18n": "1.0.x-dev",

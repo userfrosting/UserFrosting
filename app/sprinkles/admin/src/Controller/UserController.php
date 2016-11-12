@@ -1,25 +1,153 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
+namespace UserFrosting\Sprinkle\Admin\Controller;
 
-namespace UserFrosting;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Interop\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use UserFrosting\Fortress\RequestDataTransformer;
+use UserFrosting\Fortress\RequestSchema;
+use UserFrosting\Fortress\ServerSideValidator;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+use UserFrosting\Sprinkle\Account\Model\Group;
+use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
+use UserFrosting\Support\Exception\BadRequest;
+use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\HttpException;
 
 /**
- * UserController Class
+ * Controller class for user-related requests, including listing users, CRUD for users, etc.
  *
- * Controller class for /users/* URLs.  Handles user-related activities, including listing users, CRUD for users, etc.
- *
- * @package UserFrosting
- * @author Alex Weissman
- * @link http://www.userfrosting.com/navigating/#structure
+ * @author Alex Weissman (https://alexanderweissman.com)
+ * @see http://www.userfrosting.com/navigating/#structure
  */
-class UserController extends \UserFrosting\BaseController {
+class UserController
+{
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
+    protected $ci;
 
     /**
      * Create a new UserController object.
      *
-     * @param UserFrosting $app The main UserFrosting app.
+     * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct($app){
-        $this->_app = $app;
+    public function __construct(ContainerInterface $ci)
+    {
+        $this->ci = $ci;
+    }
+
+    /**
+     * Renders a page displaying a user's information, in read-only mode.
+     *
+     * This checks that the currently logged-in user has permission to view the requested user's info.
+     * It checks each field individually, showing only those that you have permission to view.
+     * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function pageUser($request, $response, $args)
+    {
+        // Get the user to view
+        $user_name = $args['user_name'];
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $user_name)->first();
+
+        // If the user no longer exists, forward to main user listing page
+        if (!$user) {
+            $usersPage = $this->ci->router->pathFor('uri_users');
+            return $response->withRedirect($usersPage, 400);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
+                'user' => $user
+            ])) {
+            throw new ForbiddenException();
+        }
+
+        $locales = $this->ci->translator->getAvailableLocales();
+
+        $themes = [];
+        /*
+        // Get a list of all groups
+        $groups = Group::get();
+
+        // Determine which groups this user is a member of
+        $user_groups = $target_user->getGroupIds();
+        foreach ($groups as $group){
+            $group_id = $group->id;
+            $group_list[$group_id] = $group->export();
+            if (in_array($group_id, $user_groups))
+                $group_list[$group_id]['member'] = true;
+            else
+                $group_list[$group_id]['member'] = false;
+        }
+        */
+        
+        // Determine authorized fields
+        $fields = ['name', 'email', 'locale', 'theme', 'last_activity', 'group'];
+        $show_fields = [];
+        $disabled_fields = [];
+        $hidden_fields = [];
+
+        foreach ($fields as $field) {
+            if ($authorizer->checkAccess($currentUser, "view_user_field", [
+                "user" => $user,
+                "property" => $field
+            ])) {
+                $disabled_fields[] = $field;
+            } else {
+                $hidden_fields[] = $field;
+            }
+        }
+
+        // Always disallow editing username
+        $disabled_fields[] = "user_name";
+
+        // Load validator rules
+        //$schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
+        //$this->_app->jsValidator->setSchema($schema);
+
+
+        return $this->ci->view->render($response, 'pages/user.html.twig', [
+            "user" => $user,
+            "locales" => $locales,
+            "fields" => [
+                "disabled" => $disabled_fields,
+                "hidden" => $hidden_fields
+            ],
+            "buttons" => [
+                "hidden" => [
+                    "submit", "cancel"
+                ]
+            ]
+            /*
+            "alerts_id" => 'form-view-user-alerts',
+            "groups" => $group_list,
+            "validators" => $this->_app->jsValidator->rules()
+            */
+        ]);
     }
 
     /**
@@ -75,85 +203,6 @@ class UserController extends \UserFrosting\BaseController {
             "primary_group_name" => $primary_group_name,
             "paginate_server_side" => $paginate_server_side,
             "users" => isset($user_collection) ? $user_collection->toArray() : []
-        ]);
-    }
-
-    /**
-     * Renders a page displaying a user's information, in read-only mode.
-     *
-     * This checks that the currently logged-in user has permission to view the requested user's info.
-     * It checks each field individually, showing only those that you have permission to view.
-     * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
-     * This page requires authentication.
-     * Request type: GET
-     * @param string $user_id The id of the user to view.
-     */
-    public function pageUser($user_id){
-        // Get the user to view
-        $target_user = User::find($user_id);
-
-        // If the user no longer exists, forward to main user page
-        if (!$target_user)
-            $this->_app->redirect($this->_app->urlFor('uri_users'));
-
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
-            $this->_app->notFound();
-        }
-
-        // Get a list of all groups
-        $groups = Group::get();
-
-        // Get a list of all locales
-        $locale_list = $this->_app->site->getLocales();
-
-        // Determine which groups this user is a member of
-        $user_groups = $target_user->getGroupIds();
-        foreach ($groups as $group){
-            $group_id = $group->id;
-            $group_list[$group_id] = $group->export();
-            if (in_array($group_id, $user_groups))
-                $group_list[$group_id]['member'] = true;
-            else
-                $group_list[$group_id]['member'] = false;
-        }
-
-        // Determine authorized fields
-        $fields = ['display_name', 'email', 'title', 'locale', 'groups', 'primary_group_id'];
-        $show_fields = [];
-        $disabled_fields = [];
-        $hidden_fields = [];
-        foreach ($fields as $field){
-            if ($this->_app->user->checkAccess("view_account_setting", ["user" => $target_user, "property" => $field]))
-                $disabled_fields[] = $field;
-            else
-                $hidden_fields[] = $field;
-        }
-
-        // Always disallow editing username
-        $disabled_fields[] = "user_name";
-
-        // Load validator rules
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render('users/user-info.twig', [
-            "box_id" => 'view-user',
-            "alerts_id" => 'form-view-user-alerts',
-            "box_title" => $target_user->user_name,
-            "target_user" => $target_user,
-            "groups" => $group_list,
-            "locales" => $locale_list,
-            "fields" => [
-                "disabled" => $disabled_fields,
-                "hidden" => $hidden_fields
-            ],
-            "buttons" => [
-                "hidden" => [
-                    "submit", "cancel"
-                ]
-            ],
-            "validators" => $this->_app->jsValidator->rules()
         ]);
     }
 

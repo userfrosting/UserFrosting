@@ -1,0 +1,133 @@
+<form id="form-user" method="post" action="{{form_action}}">
+    <div id="form-user-alerts">
+    </div>
+    <div class="row">
+        {% if 'name' not in fields.hidden %}
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label>First name</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                    <input type="text" class="form-control" name="first_name" autocomplete="off" value="{{user.first_name}}" placeholder="First name" {% if 'name' in fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label>Last name</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                    <input type="text" class="form-control" name="last_name" autocomplete="off" value="{{user.last_name}}" placeholder="Last name" {% if 'name' in fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'email' not in fields.hidden %}             
+        <div class="col-sm-6">
+            <div class="form-group ">
+                <label>Email</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><a href="mailto: {{user.email}}"><i class="fa fa-envelope"></i></a></span>
+                    <input type="text" class="form-control" name="email" autocomplete="off" value="{{user.email}}" placeholder="Email goes here" {% if 'email' in fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'theme' not in fields.hidden %}             
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="input-theme">Theme</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
+                    <select id="input-theme" class='form-control select2' name="theme" {% if 'theme' in fields.disabled %}disabled{% endif %}>
+                        {% for option, label in theme %}
+                        <option value="{{option}}" {% if (option == user.theme) %}selected{% endif %}>{{label}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'locale' not in fields.hidden %}
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="input-locale">Locale</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-language"></i></span>
+                    <select id="input-locale" class='form-control select2' name="locale" {% if 'locale' in fields.disabled %}disabled{% endif %}>
+                        {% for option, label in locales %}
+                        <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div><br>
+    <div class="row">
+        {% if "submit" not in buttons.hidden %}
+        <div class="col-xs-8 col-sm-4">
+            <div class="vert-pad">
+                <button type="submit" class="btn btn-block btn-lg btn-success">
+                    {{submit_button}}
+                </button>
+            </div>          
+        </div>
+        {% endif %}
+        {% if "edit" not in buttons.hidden %}  
+        <div class="col-xs-6 col-sm-3">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-id="{{user.id}}" data-toggle="modal">
+                    <i class="fa fa-edit"></i> Edit
+                </button>
+            </div>
+        </div>    
+        {% endif %}
+        {% if "activate" not in buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">      
+            <div class="vert-pad">
+                {% if user.flag_verified == "0" %}
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-id="{{user.id}}">
+                        <i class="fa fa-bolt"></i> Activate
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% if "enable" not in buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">      
+            <div class="vert-pad">
+                {% if user.flag_enabled == "1" %}
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-id="{{user.id}}">
+                        <i class="fa fa-minus-circle"></i> Disable
+                    </button>
+                {% else %}
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable" data-id="{{user.id}}">
+                        <i class="fa fa-plus-circle"></i> Enable
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% if "delete" not in buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">  
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-id="{{user.id}}" data-user_name="{{user.user_name}}" data-toggle="modal">
+                    <i class="fa fa-trash-o"></i> Delete
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "cancel" not in buttons.hidden %}        
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</form>
+<script>
+// Load the validator rules for this form
+var validators = {{validators | raw | default("[]")}};
+</script>

@@ -15,10 +15,9 @@
     "require": {    
         "php": ">=5.5.9"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "UserFrosting\\": "src/"
+            "UserFrosting\\Sprinkle\\Admin\\": "src/"
         }
     }
 }

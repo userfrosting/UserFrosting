@@ -22,6 +22,6 @@
                 'author' => 'https://attenboroughsreef.com'
             ]
         ],   
-        'timezone' => 'Europe/London'        
+        'timezone' => 'Europe/London'
     ];
     

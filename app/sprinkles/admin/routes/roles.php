@@ -28,7 +28,7 @@ $app->group('/api/roles', function () {
 });
     
 $app->group('/forms/roles', function () {
-    $this->get('/create/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:formCreateRole');
+    $this->get('/create/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:formCreateRole');
 
-    $this->get('/edit/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:formEditRole');
+    $this->get('/edit/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:formEditRole');
 });
