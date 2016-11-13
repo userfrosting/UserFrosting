@@ -161,8 +161,25 @@ class UserController
      * @param bool $paginate_server_side optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.
      * @todo implement interface to modify user-assigned authorization hooks and permissions
      */
-    public function pageUsers($primary_group_name = null, $paginate_server_side = true){
-        // Optional filtering by primary group
+    public function pageUsers($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
+            throw new ForbiddenException();
+        }
+
+        return $this->ci->view->render($response, "pages/users.html.twig");
+    }
+
+    public function pageGroupUsers($request, $response, $args)
+    {
+            // Optional filtering by primary group
         if ($primary_group_name){
             $primary_group = Group::where('name', $primary_group_name)->first();
 
@@ -181,29 +198,7 @@ class UserController
             }
             $name = $primary_group->name;
             $icon = $primary_group->icon;
-
-        } else {
-            // Access-controlled page
-            if (!$this->_app->user->checkAccess('uri_users')){
-                $this->_app->notFound();
-            }
-
-            if (!$paginate_server_side) {
-                $user_collection = User::get();
-                $user_collection->getRecentEvents('sign_in');
-                $user_collection->getRecentEvents('sign_up', 'sign_up_time');
-            }
-            $name = "Users";
-            $icon = "fa fa-users";
         }
-
-        $this->_app->render('users/users.twig', [
-            "box_title" => $name,
-            "icon" => $icon,
-            "primary_group_name" => $primary_group_name,
-            "paginate_server_side" => $paginate_server_side,
-            "users" => isset($user_collection) ? $user_collection->toArray() : []
-        ]);
     }
 
     /**

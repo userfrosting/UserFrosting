@@ -33,7 +33,11 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
-                    {% include "components/forms/user.html.twig" %}
+                    {% include "components/forms/user.html.twig" with {
+                        "form": {
+                            "action": "#"
+                        }
+                    } %}
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@
  * Routes for administrative user management.
  */
 $app->group('/users', function () {
-    $this->get('/', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageUsers')
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageUsers')
         ->setName('uri_users');
 
     $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageUser');
