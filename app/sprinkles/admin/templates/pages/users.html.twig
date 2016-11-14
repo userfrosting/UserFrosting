@@ -39,13 +39,10 @@
     {% include "components/validators.js.twig" %}
     </script>
 
-    <!-- Include JS snippets -->
-    {% include 'components/tables/columns/user.html.twig' %}
-        
     <!-- Include form widgets JS -->
     {{ assets.js('js/form-widgets') | raw }}
 
     <!-- Include page-specific JS -->
     {{ assets.js('js/pages/users') | raw }}
-    
+
 {% endblock %}

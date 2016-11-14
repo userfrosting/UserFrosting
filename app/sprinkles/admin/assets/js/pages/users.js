@@ -14,5 +14,9 @@ $(document).ready(function() {
         DEBUG: true
     });
     
-
+    $("#widget-users").on("pagerComplete", function () {
+        console.log("Done paging!");
+        // Link row buttons
+        //bindUserTableButtons($('#' + table_id));
+    });
 });

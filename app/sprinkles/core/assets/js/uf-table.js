@@ -161,6 +161,10 @@
             // Causes download to begin
             window.location = base.options.dataUrl + $.param( state );
         });
+        
+        base.ts.on("pagerComplete", function () {
+            $el.trigger("pagerComplete");
+        });
     };
     
     // Callback for generating the AJAX url
@@ -182,38 +186,49 @@
 
     // Callback for processing data returned from API
     Plugin.prototype._processAjax = function ( base, data ) {
+        var ts = base.ts[0];
+        var col, row, txt,
+            // make # column show correct value
+            index = ts.config.pager.page,
+            json = {},
+            rows = '';
+
         if (data) {
-            var col, row, txt,
-                // make # column show correct value
-                index = base.ts[0].config.pager.page,
-                json = {},
-                rows = '';
             size = data['rows'].length;
+
+            // Build Handlebars templates based on column-template attribute in each column header
+            var columns = ts.config.headerList;
+            var templates = [];
+            for (i = 0; i < columns.length; i++) {
+                var columnName = $(columns[i]).data("column-template");
+                templates.push(Handlebars.compile($(columnName).html()));
+            }
+
             // Render table cells via Handlebars
-            var template_0 = Handlebars.compile($("#user-table-column-info").html());
-            var template_1 = Handlebars.compile($("#user-table-column-last-activity").html());
-            var template_3 = Handlebars.compile($("#user-table-column-actions").html());
-            for (row = 0; row < size; row++){
+            for (row = 0; row < size; row++) {
                 rows += '<tr>';
-                var cell_data = {
+                var cellData = {
                     "user" : data['rows'][ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
                     "site" : site
                 };
-                rows += template_0(cell_data);
-                rows += template_1(cell_data);
-                rows += template_3(cell_data);
+
+                for (i = 0; i < columns.length; i++) {
+                    rows += templates[i](cellData);
+                }
+
                 rows += '</tr>';
             }
+            
             json.total = data['count'];  // Get total rows without pagination
             json.filteredRows = data['count_filtered']; // no filtering
             json.rows = $(rows);
-            return json;
+        } else {
+            json.total = 0;
+            json.filteredRows = 0;
+            json.rows = "";
         }
-    }
-        
-    function pagerCompleteCallback() {
-        // Link row buttons
-        bindUserTableButtons($('#' + table_id));
+
+        return json;
     }
     
     /**
@@ -394,13 +409,3 @@
         }
     };
 })(jQuery);
-
-/*
-   
-    if (typeof pagerCompleteCallback !== "undefined") {
-        $('#' + table_id).bind('pagerComplete', function(e, table) {
-            pagerCompleteCallback();
-        });
-    }
-
-*/

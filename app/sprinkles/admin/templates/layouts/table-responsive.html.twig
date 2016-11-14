@@ -1,7 +1,12 @@
+{# Base layout for paginated tablesorter tables. #}
 
 <div class="table-responsive">
     {% block table %}
     {% endblock %}
+
+    {% block table_cell_templates %}
+    {% endblock %}
+
     <div class="pager pager-lg tablesorter-pager js-table-pager-users">
         <span class='pager-control first' title='First page'><i class='fa fa-angle-double-left'></i></span>
         <span class='pager-control prev' title='Previous page'><i class='fa fa-angle-left'></i></span>
