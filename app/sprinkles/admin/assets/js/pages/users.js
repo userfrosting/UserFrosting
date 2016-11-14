@@ -11,6 +11,9 @@ $(document).ready(function() {
     
     $("#widget-users").ufTable({
         dataUrl: site.uri.public + "/api/users",
+        addParams: {
+            "group": "users"
+        },
         DEBUG: true
     });
     

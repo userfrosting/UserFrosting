@@ -1,10 +1,17 @@
-{% extends "layouts/table-responsive.html.twig" %}
+{# This partial template renders a table of users, to be populated with rows via an AJAX request.
+ # This extends a generic template for paginated tables.
+ #
+ # Note that this template contains a "skeleton" table with an empty table body, and then a block of Handlebars templates which are used
+ # to render the table cells with the data from the AJAX request.
+#}
+
+{% extends "layouts/table-paginated.html.twig" %}
 
 {% block table %}
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="last_name" data-column-template="#user-table-column-info">User/Info <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="last_name" data-column-template="#user-table-column-info">User <i class="fa fa-sort"></i></th>
                 {% if 'last_activity' in table.columns %}
                     <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">Last Activity <i class="fa fa-sort"></i></th>
                 {% endif %}
@@ -18,29 +25,29 @@
 
 {% block table_cell_templates %}
     {# This contains a series of <script> blocks, each of which is a client-side Handlebars template.
-     # Requires handlebars-helpers.js, moment.js
+     # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+     # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+     #
+     # These templates require handlebars-helpers.js, moment.js
     #}
     {% verbatim %}
     <script id="user-table-column-info" type="text/x-handlebars-template">
-        <td data-text="{{user.last_name}}">
+        <td data-text="{{row.last_name}}">
             <strong>
-                <a href="{{site.uri.public}}/users/u/{{user.user_name}}">{{user.first_name}} {{user.last_name}} ({{user.user_name}})</a>
+                <a href="{{site.uri.public}}/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
             </strong>
             <div>
-                <i>{{user.title}}</i>
-            </div>
-            <div>
-                <i class="fa fa-envelope"></i> <a href="mailto:{{user.email}}">{{user.email}}</a>
+                <i class="fa fa-envelope"></i> <a href="mailto:{{row.email}}">{{row.email}}</a>
             </div>
         </td>
     </script>
     
     <script id="user-table-column-last-activity" type="text/x-handlebars-template">
-        {{#if user.last_activity_at }}    
-        <td data-num="{{dateFormat user.last_activity_at format='x'}}">
-            {{dateFormat user.last_activity_at format="dddd"}}<br>{{dateFormat user.last_activity_at format="MMM Do, YYYY h:mm a"}}
+        {{#if row.last_activity_at }}    
+        <td data-num="{{dateFormat row.last_activity_at format='x'}}">
+            {{dateFormat row.last_activity_at format="dddd"}}<br>{{dateFormat row.last_activity_at format="MMM Do, YYYY h:mm a"}}
             <br>
-            <i>{{user.last_activity.description}}</i>
+            <i>{{row.last_activity.description}}</i>
         </td>
         {{ else }}
         <td data-num="0">
@@ -52,13 +59,13 @@
     <script id="user-table-column-actions" type="text/x-handlebars-template">
         <td>
             <div class="btn-group">
-                {{#ifCond user.flag_enabled 0 }}
+                {{#ifCond row.flag_enabled 0 }}
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         Disabled
                         <span class="caret"></span>
                     </button>
                 {{ else }}
-                    {{#ifCond user.flag_verified 0 }}
+                    {{#ifCond row.flag_verified 0 }}
                         <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                             Unactivated
                             <span class="caret"></span>
@@ -71,36 +78,36 @@
                     {{/ifCond }}
                 {{/ifCond }}
                 <ul class="dropdown-menu" role="menu">
-                    {{#ifCond user.flag_verified 0 }}
+                    {{#ifCond row.flag_verified 0 }}
                     <li>
-                        <a href="#" data-id="{{user.id}}" class="js-user-activate">
+                        <a href="#" data-id="{{row.id}}" class="js-user-activate">
                         <i class="fa fa-bolt"></i> Activate user
                         </a>
                     </li>
                     {{/ifCond }}
                     <li>
-                        <a href="#" data-id="{{user.id}}" class="js-user-edit" data-target="#dialog-user-edit" data-toggle="modal">
+                        <a href="#" data-id="{{row.id}}" class="js-user-edit" data-target="#dialog-user-edit" data-toggle="modal">
                         <i class="fa fa-edit"></i> Edit user
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-id="{{user.id}}" class="js-user-password" data-target="#dialog-user-password" data-toggle="modal">
+                        <a href="#" data-id="{{row.id}}" class="js-user-password" data-target="#dialog-user-password" data-toggle="modal">
                         <i class="fa fa-key"></i> Change password
                         </a>
                     </li>
                     <li>
-                    {{#ifCond user.flag_enabled 1 }}
-                        <a href="#" data-id="{{user.id}}" class="js-user-disable">
+                    {{#ifCond row.flag_enabled 1 }}
+                        <a href="#" data-id="{{row.id}}" class="js-user-disable">
                         <i class="fa fa-minus-circle"></i> Disable user
                         </a>
                     {{ else }}
-                        <a href="#" data-id="{{user.id}}" class="js-user-enable">
+                        <a href="#" data-id="{{row.id}}" class="js-user-enable">
                         <i class="fa fa-plus-circle"></i> Enable user
                         </a> 
                     {{/ifCond }}
                     </li>
                     <li>
-                        <a href="#" data-id="{{user.id}}" class="js-user-delete" data-user_name="{{user.user_name}}" data-target="#dialog-user-delete" data-toggle="modal">
+                        <a href="#" data-id="{{row.id}}" class="js-user-delete" data-user_name="{{row.user_name}}" data-target="#dialog-user-delete" data-toggle="modal">
                         <i class="fa fa-trash-o"></i> Delete user</a>
                     </li>
                 </ul>
@@ -108,10 +115,4 @@
         </td>
     </script>
     {% endverbatim %}
-{% endblock %}
-
-{% block button_create %}
-    <button type="button" class="btn btn-success js-user-create" data-toggle="modal" data-target="#dialog-user-create">
-        <i class="fa fa-plus-square"></i>  Create New User
-    </button>
 {% endblock %}

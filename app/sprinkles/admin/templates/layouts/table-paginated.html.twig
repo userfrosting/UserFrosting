@@ -1,16 +1,20 @@
-{# Base layout for paginated tablesorter tables. #}
+{# Base layout for paginated tablesorter tables.
+ # Requires tablesorter-custom.css for proper styling of pager elements.
+#}
 
 <div class="table-responsive">
     {% block table %}
+        {# Define your table skeleton in this block in your child template #}
     {% endblock %}
 
     {% block table_cell_templates %}
+        {# Define your Handlebars cell templates in this block in your child template #}
     {% endblock %}
 
-    <div class="pager pager-lg tablesorter-pager js-table-pager-users">
+    <div class="pager pager-lg tablesorter-pager">
         <span class='pager-control first' title='First page'><i class='fa fa-angle-double-left'></i></span>
         <span class='pager-control prev' title='Previous page'><i class='fa fa-angle-left'></i></span>
-        <span class='pagedisplay'></span> <!-- this can be any element, including an input -->
+        <span class='pagedisplay'></span> {# this can be any element, including an input #}
         <span class='pager-control next' title='Next page'><i class='fa fa-angle-right'></i></span>
         <span class='pager-control last' title= 'Last page'><i class='fa fa-angle-double-right'></i></span>
         <br><br>
@@ -20,11 +24,5 @@
             <option value="{{count}}">{{count}}</option>
         {% endfor %}
         </select>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-    {% block button_create %}
-    {% endblock %}
     </div>
 </div>

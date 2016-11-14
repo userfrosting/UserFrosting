@@ -1,5 +1,5 @@
 /**
- * uf-table plugin.  Sets up a Tablesorter table with sorting, pagination, and search, and interfaces with our user data JSON API.
+ * uf-table plugin.  Sets up a Tablesorter table with sorting, pagination, and search, and fetches data from a JSON API.
  *
  * This plugin depends on query-string.js, which is used to convert a query string into a JSON object.
  *
@@ -28,6 +28,7 @@
             {
                 DEBUG       : false,
                 dataUrl     : "",
+                addParams   : {},
                 tablesorter : {
                     debug: false,                
                     theme     : 'bootstrap',
@@ -152,14 +153,16 @@
 
         // Link CSV download button
         $el.find(".js-download-table").on("click", function () {
-            var state = getTableStateVars(base.ts);
-            state['format'] = "csv";
-            delete state['page'];
-            delete state['size'];
-            if (primary_group)
-                state['primary_group'] = primary_group;       
+            var tableState = base.getTableStateVars(base.ts[0]);
+            tableState['format'] = "csv";
+            delete tableState['page'];
+            delete tableState['size'];
+
+            // Merge in any additional request parameters
+            $.extend(tableState, base.options.addParams);
+
             // Causes download to begin
-            window.location = base.options.dataUrl + $.param( state );
+            window.location = base.options.dataUrl + $.param( tableState );
         });
         
         base.ts.on("pagerComplete", function () {
@@ -167,24 +170,27 @@
         });
     };
     
-    // Callback for generating the AJAX url
+    /**
+     * Callback for generating the AJAX url.
+     */
     Plugin.prototype._generateUrl = function ( base, table, url ) {
         var tableState = base.getTableStateVars(table);
+
         if (base.options.DEBUG) {
             console.log(tableState);
         }
-        
+
         $.extend(table.config.pager.ajaxObject.data, tableState);
-        // Limit to a particular primary group
-        /*
-        if (primary_group) {
-            table.config.pager.ajaxObject.data.primary_group = primary_group;
-        }
-        */
+
+        // Merge in any additional parameters
+        $.extend(table.config.pager.ajaxObject.data, base.options.addParams);
+
         return url;
     }
 
-    // Callback for processing data returned from API
+    /**
+     * Callback for processing data returned from the AJAX request and rendering the table cells.
+     */
     Plugin.prototype._processAjax = function ( base, data ) {
         var ts = base.ts[0];
         var col, row, txt,
@@ -208,7 +214,7 @@
             for (row = 0; row < size; row++) {
                 rows += '<tr>';
                 var cellData = {
-                    "user" : data['rows'][ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
+                    "row"  : data['rows'][ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
                     "site" : site
                 };
 
