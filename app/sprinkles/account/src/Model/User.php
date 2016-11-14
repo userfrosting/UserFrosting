@@ -10,9 +10,10 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Model\UFModel;
 
 /**
  * User Class
@@ -73,11 +74,7 @@ class User extends UFModel
     {
         if (in_array($name, [
                 'group',
-                'last_sign_in_activity',
-                'last_sign_in_time',
-                'sign_up_time',
-                'last_password_reset_time',
-                'last_verification_request_time'
+                'last_sign_in_time'
             ])) {
             return true;
         } else {
@@ -94,16 +91,8 @@ class User extends UFModel
      */
     public function __get($name)
     {
-        if ($name == 'last_sign_in_activity') {
-            return $this->lastActivity('sign_in');
-        } else if ($name == 'last_sign_in_time') {
+        if ($name == 'last_sign_in_time') {
             return $this->lastActivityTime('sign_in');
-        } else if ($name == 'sign_up_time') {
-            return $this->lastActivityTime('sign_up');
-        } else if ($name == 'last_password_reset_time') {
-            return $this->lastActivityTime('password_reset_request');
-        } else if ($name == 'last_verification_request_time') {
-            return $this->lastActivityTime('verification_request');
         } else {
             return parent::__get($name);
         }
@@ -118,6 +107,50 @@ class User extends UFModel
         $classMapper = static::$ci->classMapper;    
     
         return $this->hasMany($classMapper->getClassMapping('activity'));
+    }
+    
+    /**
+     * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
+     */
+    public function scopeJoinLastActivity($query, $type = null, $filter = null)
+    {
+        $query = $query->select('users.*', 'activities.occurred_at as last_activity_at');
+    
+        if ($filter) {
+            $filterClause = Capsule::raw("
+            (select activities.id as activity_id from activities where
+            activities.user_id = users.id
+            and activities.description like ?
+            order by occurred_at desc
+            limit 1)");
+            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause)->setBindings(["%$filter%"]);
+        } else {
+            $filterClause = Capsule::raw("
+            (select activities.id as activity_id from activities where
+            activities.user_id = users.id
+            order by occurred_at desc
+            limit 1)");
+            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause);
+        }
+
+        return $query;
+    }
+    
+    /**
+     * Get the most recent activity for this user.
+     */
+    public function lastActivity($type = null)
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+        
+        $query = $this->hasOne($classMapper->getClassMapping('activity'), 'user_id');
+        
+        if ($type) {
+            $query = $query->where('type', $type);
+        }
+
+        return $query->latest('occurred_at');
     }
     
     /**
@@ -197,19 +230,6 @@ class User extends UFModel
     public static function isLoggedIn()
     {
         // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
-    }
-       
-    /**
-     * Get the most recent activity of a specified type for this user.
-     *
-     * @return Activity
-     */    
-    public function lastActivity($type)
-    {
-        return $this->activities()
-            ->where('type', $type)
-            ->orderBy('occurred_at', 'desc')
-        ->first();
     }
     
     /**

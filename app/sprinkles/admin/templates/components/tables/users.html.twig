@@ -1,9 +1,10 @@
-<div class="table-responsive">
-    <table class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
+{% extends "layouts/table-responsive.html.twig" %}
+
+{% block table %}
+    <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="user_name">User/Info <i class="fa fa-sort"></i></th>
-                {# If this table isn't already being filtered for a specific worker, show the "worker" column #}
+                <th class="sorter-metatext" data-column-name="last_name">User/Info <i class="fa fa-sort"></i></th>
                 {% if 'last_activity' in table.columns %}
                     <th class="sorter-metanum" data-column-name="last_activity">Last Activity <i class="fa fa-sort"></i></th>
                 {% endif %}
@@ -14,26 +15,9 @@
         
         </tbody>
     </table>
-    <div class="pager pager-lg tablesorter-pager js-table-users-pager">
-        <span class='pager-control first' title='First page'><i class='fa fa-angle-double-left'></i></span>
-        <span class='pager-control prev' title='Previous page'><i class='fa fa-angle-left'></i></span>
-        <span class='pagedisplay'></span> <!-- this can be any element, including an input -->
-        <span class='pager-control next' title='Next page'><i class='fa fa-angle-right'></i></span>
-        <span class='pager-control last' title= 'Last page'><i class='fa fa-angle-double-right'></i></span>
-        <br><br>
-        Jump to Page: <select class='gotoPage'></select>
-        &bull; Show: <select class='pagesize'>
-            <option value='2'>2</option>
-            <option value='5'>5</option>
-            <option value='10'>10</option>
-            <option value='100'>100</option>
-        </select>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <button type="button" class="btn btn-success js-user-create" data-toggle="modal" data-target="#dialog-user-create">
-            <i class="fa fa-plus-square"></i>  Create New User
-        </button>
-    </div>
-</div>
+{% endblock %}
+{% block button_create %}
+    <button type="button" class="btn btn-success js-user-create" data-toggle="modal" data-target="#dialog-user-create">
+        <i class="fa fa-plus-square"></i>  Create New User
+    </button>
+{% endblock %}

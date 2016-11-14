@@ -22,7 +22,15 @@
     "js/sb-admin-2" : {
         "scripts": [
             "vendor/metismenu-1.1.3/js/metisMenu.js",
-            "vendor/start-bootstrap/js/sb-admin-2.js"
+            "vendor/start-bootstrap/js/sb-admin-2.js",
+            "vendor/moment-2.10.6/moment.js",
+            "js/handlebars-helpers.js",
+            "vendor/tablesorter-2.27.8/js/jquery.tablesorter.js",
+            "vendor/tablesorter-2.27.8/js/jquery.tablesorter.widgets.js",
+            "vendor/tablesorter-2.27.8/js/widgets/widget-sort2Hash.js",
+            "vendor/tablesorter-2.27.8/addons/pager/jquery.tablesorter.pager.js",
+            "js/query-string.js",
+            "js/uf-table.js"
         ],
         "options": {
             "result": {
@@ -120,6 +128,18 @@
     "js/pages/user" : {
 
     },
+    "js/pages/users" : {
+        "scripts": [
+            "js/pages/users.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },    
     "css/main": {
         "styles": [
             "vendor/font-awesome-4.5.0/css/font-awesome.css",
@@ -140,6 +160,9 @@
             "vendor/metismenu-1.1.3/css/metisMenu.css",
             "vendor/start-bootstrap/css/sb-admin-2.css",
             "vendor/font-starcraft/css/font-starcraft.css",
+            "vendor/tablesorter-2.27.8/css/theme.bootstrap.css",
+            "vendor/tablesorter-2.27.8/addons/pager/jquery.tablesorter.pager.css",
+            "css/tablesorter-custom.css",
             "css/sb-admin-2-custom.css"
         ],
         "options": {

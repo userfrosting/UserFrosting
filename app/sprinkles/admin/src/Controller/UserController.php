@@ -177,6 +177,98 @@ class UserController
         return $this->ci->view->render($response, "pages/users.html.twig");
     }
 
+
+    /**
+     * Returns a list of Users
+     *
+     * Generates a list of users, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getUsers($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+        
+        $filters = isset($params['filters']) ? $params['filters'] : [];
+        $size = isset($params['size']) ? $params['size'] : null;
+        $page = isset($params['page']) ? $params['page'] : null;
+        $sort_field = isset($params['sort_field']) ? $params['sort_field'] : "user_name";
+        $sort_order = isset($params['sort_order']) ? $params['sort_order'] : "asc";
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $this->ci->db;
+
+        $query = $classMapper->createInstance('user');
+
+        // Allow filtering by last activity
+        if (isset($filters['last_activity'])) {
+            $activityFilter = $filters['last_activity'];
+        } else {
+            $activityFilter = null;
+        }
+        
+        $query = $query->joinLastActivity($activityFilter)->with('lastActivity');
+
+        // Count unpaginated total
+        $total = $query->count();
+        
+        // Apply filters
+        $filtersApplied = false;
+        foreach ($filters as $name => $value) {
+            if ($name != 'last_activity') {
+                $query = $query->like($name, $value);
+                $filtersApplied = true;
+            }
+        }
+        
+        $totalFiltered = $query->count();
+        
+        // Sort "last activity" column by date
+        if ($sort_field == "last_activity") {
+            $sort_field = "last_activity_at";
+        }
+        
+        $query = $query->orderBy($sort_field, $sort_order);    
+        
+        // Paginate
+        if ( ($page !== null) && ($size !== null) ){
+            $offset = $size*$page;
+            $query = $query->skip($offset)->take($size);
+        }
+
+        $collection = collect($query->get());
+
+        // Exclude password field
+        $collection->transform(function ($item, $key) {
+            unset($item['password']);
+            return $item;
+        });
+
+        $result = [
+            "count" => $total,
+            "rows" => $collection->values()->toArray(),
+            "count_filtered" => $totalFiltered
+        ];
+    
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
     public function pageGroupUsers($request, $response, $args)
     {
             // Optional filtering by primary group

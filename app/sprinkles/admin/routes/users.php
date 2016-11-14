@@ -20,9 +20,11 @@ $app->group('/users', function () {
 $app->group('/api/users', function () {
     $this->delete('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:deleteUser');
 
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getUsers');
+
     $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getUser');
 
-    $this->put('/', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUser');
+    $this->put('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUser');
 
     $this->post('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUser');
 });

@@ -11,7 +11,7 @@
  * Routes for administrative group management.
  */
 $app->group('/groups', function () {
-    $this->get('/', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageGroups')
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageGroups')
         ->setName('uri_groups');
 
     $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageGroup');
@@ -24,7 +24,7 @@ $app->group('/api/groups', function () {
 
     $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getGroup');
 
-    $this->put('/', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:createGroup');
+    $this->put('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:createGroup');
 
     $this->post('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:updateGroup');
 

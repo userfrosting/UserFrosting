@@ -25,73 +25,7 @@ class ApiController extends \UserFrosting\BaseController {
         $this->_app = $app;
     }
 
-    /**
-     * Returns a list of Users
-     *
-     * Generates a list of users, optionally paginated, sorted and/or filtered.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function listUsers(){
-        $get = $this->_app->request->get();
-        
-        $filters = isset($get['filters']) ? $get['filters'] : [];
-        $primary_group_name = isset($get['primary_group']) ? $get['primary_group'] : null;
 
-        // Optional filtering by primary group
-        if ($primary_group_name){
-            $primary_group = Group::where('name', $primary_group_name)->first();
-
-            if (!$primary_group)
-                $this->_app->notFound();
-
-            // Access-controlled page
-            if (!$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $primary_group->id])){
-                $this->_app->notFound();
-            }
-
-            $userQuery = new User;
-            $userQuery = $userQuery->where('primary_group_id', $primary_group->id);
-
-        } else {
-            // Access-controlled page
-            if (!$this->_app->user->checkAccess('uri_users')){
-                $this->_app->notFound();
-            }
-
-            $userQuery = new User;
-        }
-
-        // Count unpaginated total
-        $total = $userQuery->count();
-
-        // Exclude fields
-        $userQuery = $userQuery
-                ->exclude(['password', 'secret_token']);
-                
-        // Get unfiltered, unsorted, unpaginated collection
-        $user_collection = $userQuery->get();
-
-        // Load recent events for all users and merge into the collection.  This can't be done in one query,
-        // at least not efficiently.  See http://laravel.io/forum/04-05-2014-eloquent-eager-loading-to-limit-for-each-post
-        $last_sign_in_times = $user_collection->getRecentEvents('sign_in');
-        $last_sign_up_times = $user_collection->getRecentEvents('sign_up', 'sign_up_time');
-
-        // Apply filters
-        foreach ($filters as $name => $value){
-            // For date filters, search for weekday, month, or year
-            if ($name == 'last_sign_in_time') {
-                $user_collection = $user_collection->filterRecentEventTime('sign_in', $last_sign_in_times, $value);
-            } else if ($name == 'sign_up_time') {
-                $user_collection = $user_collection->filterRecentEventTime('sign_up', $last_sign_up_times, $value, "Unknown");
-            } else {
-                $user_collection = $user_collection->filterTextField($name, $value);
-            }
-        }
-        
-        // Render
-        $this->sortPaginateRender($user_collection, $total, 'users');
-    }
     
     /**
      * Sorts, paginates, and renders a collection according to the GET parameters (so, JSON or CSV)
