@@ -34,7 +34,7 @@ class SprinkleManager
     /**
      * @var string The full absolute base path to the sprinkles directory.
      */    
-    protected $sprinklesPath = \UserFrosting\APP_DIR_NAME . DIRECTORY_SEPARATOR . \UserFrosting\SPRINKLES_DIR_NAME . DIRECTORY_SEPARATOR;
+    protected $sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
     
     /**
      * Create a new SprinkleManager object.
@@ -86,7 +86,7 @@ class SprinkleManager
      */
     public function addAssets($name)
     {
-        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\ASSET_DIR_NAME;
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME;
 
         $this->ci->locator->addPath('assets', '', $path);
 
@@ -101,7 +101,7 @@ class SprinkleManager
      */
     public function addConfig($name)
     {
-        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\CONFIG_DIR_NAME;
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME;
 
         $this->ci->locator->addPath('config', '', $path);
 
@@ -116,7 +116,7 @@ class SprinkleManager
      */    
     public function addLocale($name)
     {
-        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\LOCALE_DIR_NAME;
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME;
 
         $this->ci->locator->addPath('locale', '', $path);
 
@@ -131,7 +131,7 @@ class SprinkleManager
      */    
     public function addRoutes($name)
     {
-        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\ROUTE_DIR_NAME;
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME;
 
         $this->ci->locator->addPath('routes', '', $path);
 
@@ -146,7 +146,7 @@ class SprinkleManager
      */    
     public function addSchema($name)
     {
-        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\SCHEMA_DIR_NAME;
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME;
 
         $this->ci->locator->addPath('schema', '', $path);
 
@@ -161,7 +161,7 @@ class SprinkleManager
      */    
     public function addTemplates($name)
     {
-        $path = $this->sprinklesPath . $name . DIRECTORY_SEPARATOR . \UserFrosting\TEMPLATE_DIR_NAME;
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME;
 
         $this->ci->locator->addPath('templates', '', $path);
 
