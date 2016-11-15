@@ -122,6 +122,17 @@ abstract class UFModel extends Model
     }
     
     /**
+     * Perform a pattern match on a specified column in a query.
+     * @param $query
+     * @param $field string The column to match
+     * @param $value string The value to match    
+     */
+    public function scopeOrLike($query, $field, $value)
+    {
+        return $query->orWhere($field, 'LIKE', "%$value%");
+    }
+
+    /**
      * Store the object in the DB, creating a new row if one doesn't already exist.
      *
      * Calls save(), then returns the id of the new record in the database.

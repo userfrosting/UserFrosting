@@ -1,7 +1,10 @@
 /* ==========================================================================
-   Custom styling for table pager controls
+   Custom styling for tablesorter tables
    ========================================================================== */
-   
+
+/* Custom styling for pager controls
+   ========================================================================== */
+
 .pager-lg {
     font-size: large;
 }
@@ -12,6 +15,9 @@
     cursor: pointer;
 }
 
+/* Custom styling for panels that contain buttons in the header (eg, CSV download buttons)
+   ========================================================================== */
+   
 .panel-heading-buttons h3 {
     padding-top: 7.5px;
 }

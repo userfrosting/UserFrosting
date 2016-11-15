@@ -2,9 +2,9 @@
  * Page-specific Javascript file.  Should generally be included as a separate asset bundle in your page template.
  * example: {{ assets.js('js/pages/sign-in-or-register') | raw }}
  *
- * This script depends on __
+ * This script depends on uf-table.js, moment.js, handlebars-helpers.js
  *
- * Target page: users
+ * Target page: /users
  */
 
 $(document).ready(function() {
@@ -14,10 +14,10 @@ $(document).ready(function() {
         addParams: {
             "group": "users"
         },
-        DEBUG: true
+        DEBUG: false
     });
     
-    $("#widget-users").on("pagerComplete", function () {
+    $("#widget-users").on("pagerComplete.ufTable", function () {
         console.log("Done paging!");
         // Link row buttons
         //bindUserTableButtons($('#' + table_id));

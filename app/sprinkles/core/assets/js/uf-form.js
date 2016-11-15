@@ -20,7 +20,7 @@
  *
  * == EVENTS ==
  *
- * uf-form triggers the following events:
+ * ufForm triggers the following events:
  *
  * `submitSuccess.ufForm`: triggered when the form is successfully submitted, after re-enabling the submit button.
  * `submitError.ufForm`: triggered when the form submission (not validation) fails, after re-enabling the submit button

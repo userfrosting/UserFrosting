@@ -3,6 +3,88 @@
  *
  * This plugin depends on query-string.js, which is used to convert a query string into a JSON object.
  *
+ * jQuery plugin template adapted from https://gist.github.com/Air-Craft/1300890
+ *
+ * === USAGE ===
+ *
+ * Create a container element, and within it place your table, paging controls, and Handlebars templates for rendering the cells.
+ *
+ * - Your table should have a unique id, and your paging controls should be wrapped in an element with the `.tablesorter-pager` class.
+ * - Create a button with the `.js-download-table` class, and it will be automatically bound to trigger an AJAX request for downloading the table (CSV, etc).
+ *
+    <div id="widget-users">
+       <table id="table-users" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
+           <thead>
+               <tr>
+                   <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">User <i class="fa fa-sort"></i></th>
+                   <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">Last Activity <i class="fa fa-sort"></i></th>
+               </tr>
+           </thead>
+           <tbody>
+           </tbody>
+       </table>
+   
+       <script id="user-table-column-info" type="text/x-handlebars-template">
+           <td data-text="{{row.last_name}}">
+               <strong>
+                   <a href="{{site.uri.public}}/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
+               </strong>
+               <div>
+                   <i class="fa fa-envelope"></i> <a href="mailto:{{row.email}}">{{row.email}}</a>
+               </div>
+           </td>
+       </script>
+       
+       <script id="user-table-column-last-activity" type="text/x-handlebars-template">
+           {{#if row.last_activity_at }}    
+           <td data-num="{{dateFormat row.last_activity_at format='x'}}">
+               {{dateFormat row.last_activity_at format="dddd"}}<br>{{dateFormat row.last_activity_at format="MMM Do, YYYY h:mm a"}}
+               <br>
+               <i>{{row.last_activity.description}}</i>
+           </td>
+           {{ else }}
+           <td data-num="0">
+                   <i>Unknown</i>
+           </td>
+           {{/if }}
+       </script>
+   
+       <div class="pager pager-lg tablesorter-pager">
+           <span class='pager-control first' title='First page'><i class='fa fa-angle-double-left'></i></span>
+           <span class='pager-control prev' title='Previous page'><i class='fa fa-angle-left'></i></span>
+           <span class='pagedisplay'></span>
+           <span class='pager-control next' title='Next page'><i class='fa fa-angle-right'></i></span>
+           <span class='pager-control last' title= 'Last page'><i class='fa fa-angle-double-right'></i></span>
+           <br><br>
+           Jump to Page: <select class='gotoPage'></select> &bull; Show:
+           <select class='pagesize'>
+               <option value="5">5</option>
+               <option value="10">10</option>
+           </select>
+       </div>
+       
+       <button class="btn btn-sm btn-default js-download-table">Download CSV</button>    
+   </div>
+ *
+ * Initialize ufTable on your container object:
+ *
+ * $("#widget-users").ufTable(options);
+ *
+ * `options` is an object containing any of the following parameters:
+ * @param {string} dataUrl The absolute URL from which to fetch table data.
+ * @param {mixed} addParams An object containing any additional key-value pairs that you want appended to the AJAX requests.
+ * @param {mixed} tablesorter An object containing tablesorter's configuration options (https://mottie.github.io/tablesorter/docs/#Configuration)
+ * @param {mixed} pager An object containing tablesorter's paging options (https://mottie.github.io/tablesorter/docs/#pager)
+ *
+ * == EVENTS ==
+ *
+ * ufTable triggers the following events:
+ *
+ * `pagerComplete.ufTable`: triggered when the tablesorter pager plugin has completed rendering of the table.
+ *
+ * == METHODS ==
+ * 
+ * `getTableStateVars( table )`: fetches the current page size, page number, sort order, sort field, and column filters.
  *
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman https://alexanderweissman.com
@@ -129,6 +211,42 @@
         return this; 
     }
 
+    /**
+     * Get state variables for this table, as required by the AJAX data source: sort_field, sort_order, filters, size, page
+     */
+    Plugin.prototype.getTableStateVars = function ( table ) {
+        var base = this;
+
+        // Get sort column and order                    
+        var sortOrders = {
+            "0" : "asc",
+            "1" : "desc"
+        };
+
+        var sortFieldIndex = table.config.sortList[0][0];
+        var sortField = $(table.config.headerList[sortFieldIndex]).data("column-name");
+
+        // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
+        var filterList = $.tablesorter.getFilters(table);
+        var filters = {};
+        for (i = 0; i < filterList.length; i++) {
+            if (filterList[i]) {
+                var columnName = $(table.config.headerList[i]).data("column-name");
+                filters[columnName] = filterList[i];
+            }
+        }
+
+        var state = {
+            size: table.config.pager.size,
+            page: table.config.pager.page,
+            sort_field: sortField,
+            sort_order: sortOrders[table.config.sortList[0][1]],
+            filters: filters
+        };
+
+        return state;
+    }
+
     /** #### INITIALISER #### */
     Plugin.prototype._init = function ( target, options )
     { 
@@ -165,7 +283,7 @@
             window.location = base.options.dataUrl + $.param( tableState );
         });
         
-        base.ts.on("pagerComplete", function () {
+        base.ts.on("pagerComplete.ufTable", function () {
             $el.trigger("pagerComplete");
         });
     };
@@ -236,42 +354,10 @@
 
         return json;
     }
-    
-    /**
-     * Get state variables for this table: sort_field, sort_order, filters, size, page
-     */
-    Plugin.prototype.getTableStateVars = function ( table ) {
-        var base = this;
-        
-        // Get sort column and order                    
-        var sortOrders = {
-            "0" : "asc",
-            "1" : "desc"
-        };
-        
-        var sort_field_index = table.config.sortList[0][0];
-        var sort_field = $(table.config.headerList[sort_field_index]).data("column-name");
-        
-        // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
-        var filterList = $.tablesorter.getFilters(table);
-        var filters = {};
-        for (i = 0; i < filterList.length; i++) {
-            if (filterList[i]) {
-                var column_name = $(table.config.headerList[i]).data("column-name");
-                filters[column_name] = filterList[i];
-            }
-        }
 
-        var state = {
-            size: table.config.pager.size,
-            page: table.config.pager.page,
-            sort_field: sort_field,
-            sort_order: sortOrders[table.config.sortList[0][1]],
-            filters: filters
-        };
-        return state;
-    }
-    
+    /**
+     * Private method used to encode the current table state variables into a URL hash.
+     */
     Plugin.prototype._encodeHash = function ( config, tableId, component, value, rawValue ) {
         var wo = config.widgetOptions;
         if ( component === 'filter' ) {
@@ -299,7 +385,10 @@
         }
         return false;
     }
-      
+
+    /**
+     * Private method used to decode the current table state variables from the URL hash.
+     */
     Plugin.prototype._decodeHash = function ( config, tableId, component ) {
         var wo = config.widgetOptions;
         var result;
@@ -332,7 +421,10 @@
         }
         return false;
     }
-    
+
+    /**
+     * Private method used to clean up URL hash.
+     */
     Plugin.prototype._cleanHash = function ( config, tableId, component, hash ) {
         var wo = config.widgetOptions;
         // Convert hash to JSON object

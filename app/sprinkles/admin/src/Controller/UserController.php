@@ -193,8 +193,8 @@ class UserController
         $filters = isset($params['filters']) ? $params['filters'] : [];
         $size = isset($params['size']) ? $params['size'] : null;
         $page = isset($params['page']) ? $params['page'] : null;
-        $sort_field = isset($params['sort_field']) ? $params['sort_field'] : "user_name";
-        $sort_order = isset($params['sort_order']) ? $params['sort_order'] : "asc";
+        $sortField = isset($params['sort_field']) ? $params['sort_field'] : "user_name";
+        $sortOrder = isset($params['sort_order']) ? $params['sort_order'] : "asc";
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -220,7 +220,15 @@ class UserController
         } else {
             $activityFilter = null;
         }
-        
+
+        // Custom sort fields
+        if ($sortField == "last_activity") {
+            $sortField = "last_activity_at";
+        } else if ($sortField == "name") {
+            $sortField = "last_name";
+        } 
+
+        // Join user's most recent activity
         $query = $query->joinLastActivity($activityFilter)->with('lastActivity');
 
         // Count unpaginated total
@@ -229,30 +237,34 @@ class UserController
         // Apply filters
         $filtersApplied = false;
         foreach ($filters as $name => $value) {
-            if ($name != 'last_activity') {
-                $query = $query->like($name, $value);
-                $filtersApplied = true;
+            if ($name == 'last_activity') {
+                continue;
             }
+            
+            if ($name == 'name') {
+                $query = $query->like('first_name', $value)
+                                ->orLike('last_name', $value)
+                                ->orLike('email', $value);
+            } else {
+                $query = $query->like($name, $value);
+            }
+            
+            $filtersApplied = true;
         }
         
         $totalFiltered = $query->count();
         
-        // Sort "last activity" column by date
-        if ($sort_field == "last_activity") {
-            $sort_field = "last_activity_at";
-        }
-        
-        $query = $query->orderBy($sort_field, $sort_order);    
+        $query = $query->orderBy($sortField, $sortOrder);    
         
         // Paginate
-        if ( ($page !== null) && ($size !== null) ){
+        if (($page !== null) && ($size !== null)) {
             $offset = $size*$page;
             $query = $query->skip($offset)->take($size);
         }
 
         $collection = collect($query->get());
 
-        // Exclude password field
+        // Exclude password field from results
         $collection->transform(function ($item, $key) {
             unset($item['password']);
             return $item;
