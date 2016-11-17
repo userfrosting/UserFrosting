@@ -12,7 +12,9 @@
     
     if (!defined('STDIN')) {
         die('This program must be run from the command line.');
-    }    
+    }
+    
+    // TODO: check PHP version
     
     // Grab any relevant dotenv variables from the .env file
     try {
@@ -27,6 +29,7 @@
     
     $capsule = new Capsule;
     
+    // TODO: pull from config
     $capsule->addConnection([
         'driver'    => 'mysql',
         'host'      => 'localhost',

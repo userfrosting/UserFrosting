@@ -101,7 +101,7 @@
                 'base' => [
                     'host'              => trim($_SERVER['SERVER_NAME'], '/'),
                     'scheme'            => empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off' ? 'http' : 'https',
-                    'port'              => null,
+                    'port'              => (int) $_SERVER['SERVER_PORT'],
                     'path'              => trim(dirname($_SERVER['SCRIPT_NAME']), '/')
                 ],
                 'author'            => 'http://www.userfrosting.com',

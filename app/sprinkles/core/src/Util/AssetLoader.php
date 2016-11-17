@@ -16,9 +16,14 @@ namespace UserFrosting\Sprinkle\Core\Util;
  */
 class AssetLoader
 {
-
+    /**
+     * @var string The base filesystem path in which to look for the asset file.  Can be an absolute path or stream.
+     */
     protected $basePath;
 
+    /**
+     * @var string The fully constructed path to the file.
+     */
     protected $fullPath;
     
     /**
