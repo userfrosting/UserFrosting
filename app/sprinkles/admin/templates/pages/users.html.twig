@@ -11,6 +11,8 @@
 {% block page_description %}A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.{% endblock %}
 
 {% block body_matter %}
+    <div id="alerts-users">
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div id="widget-users" class="panel panel-primary">
@@ -43,7 +45,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/validators.js.twig" %}
+    {% include "components/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->

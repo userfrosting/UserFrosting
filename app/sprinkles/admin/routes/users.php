@@ -29,10 +29,12 @@ $app->group('/api/users', function () {
     $this->post('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUser');
 });
     
-$app->group('/forms/users', function () {
-    $this->get('/create/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:formCreateUser');
+$app->group('/modals/users', function () {
+    $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalConfirmDeleteUser');
 
-    $this->get('/edit/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:formEditUser');
+    $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalCreateUser');
 
-    $this->get('/password/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:formEditUserPassword');
+    $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUser');
+
+    $this->get('/password', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUserPassword');
 });

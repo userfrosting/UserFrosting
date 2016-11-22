@@ -9,7 +9,8 @@
             "js/fortress-jqueryvalidation-methods.js",
             "js/uf-jqueryvalidation-config.js",
             "js/uf-alerts.js",
-            "js/uf-form.js"
+            "js/uf-form.js",
+            "js/uf-modal.js"
         ],
         "options": {
             "result": {

@@ -2,13 +2,39 @@
     <div class="js-form-user-alerts">
     </div>
     <div class="row">
-        {% if 'name' not in fields.hidden %}
+        {% if 'user_name' not in form.fields.hidden %}             
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label>{{translate('USERNAME')}}</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                    <input type="text" class="form-control" name="user_name" autocomplete="off" value="{{user.user_name}}" placeholder="User name" {% if 'user_name' in form.fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'group' not in form.fields.hidden %}             
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="input-group">{{translate('GROUP')}}</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
+                    <select id="input-group" class='form-control select2' name="group" {% if 'group' in form.fields.disabled %}disabled{% endif %}>
+                        {% for group in groups %}
+                        <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'name' not in form.fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group">
                 <label>{{translate('FIRST_NAME')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="first_name" autocomplete="off" value="{{user.first_name}}" placeholder="First name" {% if 'name' in fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="first_name" autocomplete="off" value="{{user.first_name}}" placeholder="First name" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -17,29 +43,29 @@
                 <label>{{translate('LAST_NAME')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="last_name" autocomplete="off" value="{{user.last_name}}" placeholder="Last name" {% if 'name' in fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="last_name" autocomplete="off" value="{{user.last_name}}" placeholder="Last name" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
         {% endif %}
-        {% if 'email' not in fields.hidden %}             
+        {% if 'email' not in form.fields.hidden %}             
         <div class="col-sm-6">
-            <div class="form-group ">
+            <div class="form-group">
                 <label>{{translate('EMAIL')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><a href="mailto: {{user.email}}"><i class="fa fa-envelope"></i></a></span>
-                    <input type="text" class="form-control" name="email" autocomplete="off" value="{{user.email}}" placeholder="Email goes here" {% if 'email' in fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="email" autocomplete="off" value="{{user.email}}" placeholder="Email goes here" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
         {% endif %}
-        {% if 'theme' not in fields.hidden %}             
+        {% if 'theme' not in form.fields.hidden %}             
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="input-theme">Theme</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
-                    <select id="input-theme" class='form-control select2' name="theme" {% if 'theme' in fields.disabled %}disabled{% endif %}>
+                    <select id="input-theme" class='form-control select2' name="theme" {% if 'theme' in form.fields.disabled %}disabled{% endif %}>
                         {% for option, label in theme %}
                         <option value="{{option}}" {% if (option == user.theme) %}selected{% endif %}>{{label}}</option>
                         {% endfor %}
@@ -48,13 +74,13 @@
             </div>
         </div>
         {% endif %}
-        {% if 'locale' not in fields.hidden %}
+        {% if 'locale' not in form.fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="input-locale">{{translate('LOCALE')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-language"></i></span>
-                    <select id="input-locale" class='form-control select2' name="locale" {% if 'locale' in fields.disabled %}disabled{% endif %}>
+                    <select id="input-locale" class='form-control select2' name="locale" {% if 'locale' in form.fields.disabled %}disabled{% endif %}>
                         {% for option, label in locales %}
                         <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
                         {% endfor %}
@@ -65,16 +91,16 @@
         {% endif %}
     </div><br>
     <div class="row">
-        {% if 'submit' not in buttons.hidden %}
+        {% if 'submit' not in form.buttons.hidden %}
         <div class="col-xs-8 col-sm-4">
             <div class="vert-pad">
                 <button type="submit" class="btn btn-block btn-lg btn-success">
-                    {{submit_button}}
+                    {{form.buttons.submit_text}}
                 </button>
             </div>          
         </div>
         {% endif %}
-        {% if 'edit' not in buttons.hidden %}  
+        {% if 'edit' not in form.buttons.hidden %}  
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-id="{{user.id}}" data-toggle="modal">
@@ -83,7 +109,7 @@
             </div>
         </div>    
         {% endif %}
-        {% if 'activate' not in buttons.hidden %}
+        {% if 'activate' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">      
             <div class="vert-pad">
                 {% if user.flag_verified == "0" %}
@@ -94,7 +120,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'enable' not in buttons.hidden %}
+        {% if 'enable' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">      
             <div class="vert-pad">
                 {% if user.flag_enabled == "1" %}
@@ -109,7 +135,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'delete' not in buttons.hidden %}
+        {% if 'delete' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">  
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-id="{{user.id}}" data-user_name="{{user.user_name}}" data-toggle="modal">
@@ -118,7 +144,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'cancel' not in buttons.hidden %}        
+        {% if 'cancel' not in form.buttons.hidden %}        
         <div class="col-xs-4 col-sm-3 pull-right">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
@@ -127,7 +153,7 @@
         {% endif %}
     </div>
 </form>
+<!-- Include validation rules -->
 <script>
-// Load the validator rules for this form
-var validators = {{validators | raw | default("[]")}};
+{% include "components/page.js.twig" %}
 </script>

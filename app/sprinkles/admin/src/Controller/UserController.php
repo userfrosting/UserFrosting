@@ -86,30 +86,16 @@ class UserController
             throw new ForbiddenException();
         }
 
+        // Get list of all available locales.  Wait, why?
         $locales = $this->ci->translator->getAvailableLocales();
 
         $themes = [];
-        /*
-        // Get a list of all groups
-        $groups = Group::get();
-
-        // Determine which groups this user is a member of
-        $user_groups = $target_user->getGroupIds();
-        foreach ($groups as $group){
-            $group_id = $group->id;
-            $group_list[$group_id] = $group->export();
-            if (in_array($group_id, $user_groups))
-                $group_list[$group_id]['member'] = true;
-            else
-                $group_list[$group_id]['member'] = false;
-        }
-        */
         
-        // Determine authorized fields
-        $fields = ['name', 'email', 'locale', 'theme', 'last_activity', 'group'];
+        // Determine fields that currentUser is authorized to view
+        $fields = ['name', 'email', 'locale', 'theme'];
         $show_fields = [];
         $disabled_fields = [];
-        $hidden_fields = [];
+        $hidden_fields = ['user_name', 'group'];
 
         foreach ($fields as $field) {
             if ($authorizer->checkAccess($currentUser, "view_user_field", [
@@ -125,27 +111,22 @@ class UserController
         // Always disallow editing username
         $disabled_fields[] = "user_name";
 
-        // Load validator rules
-        //$schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
-        //$this->_app->jsValidator->setSchema($schema);
-
-
         return $this->ci->view->render($response, 'pages/user.html.twig', [
             "user" => $user,
             "locales" => $locales,
-            "fields" => [
-                "disabled" => $disabled_fields,
-                "hidden" => $hidden_fields
-            ],
-            "buttons" => [
-                "hidden" => [
-                    "submit", "cancel"
+            "form" => [
+                "fields" => [
+                    "disabled" => $disabled_fields,
+                    "hidden" => $hidden_fields
+                ],
+                "buttons" => [
+                    "hidden" => [
+                        "submit", "cancel"
+                    ]
                 ]
             ]
             /*
-            "alerts_id" => 'form-view-user-alerts',
             "groups" => $group_list,
-            "validators" => $this->_app->jsValidator->rules()
             */
         ]);
     }
@@ -306,7 +287,7 @@ class UserController
     }
 
     /**
-     * Renders the form for creating a new user.
+     * Renders the modal form for creating a new user.
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
      * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`.
@@ -315,22 +296,29 @@ class UserController
      * This page requires authentication.
      * Request type: GET
      */
-    public function formUserCreate(){
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('create_account')){
-            $this->_app->notFound();
+    public function getModalCreateUser($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'create_user')) {
+            throw new ForbiddenException();
         }
 
-        $get = $this->_app->request->get();
-
-        if (isset($get['render']))
-            $render = $get['render'];
-        else
-            $render = "modal";
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
         // Get a list of all groups
-        $groups = Group::all()->getDictionary();
-
+        $groups = $classMapper->staticMethod('group', 'all');
+        
+        /*
         // Get a list of all locales
         $locale_list = $this->_app->site->getLocales();
 
@@ -360,50 +348,46 @@ class UserController
         $data['title'] = $primary_group->new_user_title;
         // Set default locale
         $data['locale'] = $this->_app->site->default_locale;
-
+        */
+        
         // Create a dummy user to prepopulate fields
-        $target_user = new User($data);
+        $user = $classMapper->createInstance('user', []);
 
-        if ($render == "modal")
-            $template = "components/common/user-info-modal.twig";
-        else
-            $template = "components/common/user-info-panel.twig";
+        // Load validation rules
+        $schema = new RequestSchema('schema://create-user.json');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        // Determine authorized fields for those that have default values.  Don't hide any fields
-        $fields = ['title', 'locale', 'groups', 'primary_group_id'];
-        $show_fields = [];
-        $disabled_fields = [];
-        $hidden_fields = [];
-        foreach ($fields as $field){
-            if ($this->_app->user->checkAccess("update_account_setting", ["user" => $target_user, "property" => $field]))
-                $show_fields[] = $field;
-            else
-                $disabled_fields[] = $field;
-        }
-
-        // Load validator rules
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-create.json");
-        $this->_app->jsValidator->setSchema($schema);
-
+        return $this->ci->view->render($response, 'components/modals/user.html.twig', [
+            "user" => $user,
+            "groups" => $groups,
+            "modal" => [
+                
+            ],
+            "form" => [
+                "action" => "api/users",
+                "fields" => [
+                    "disabled" => $disabled_fields,
+                    "hidden" => $hidden_fields
+                ],
+                "buttons" => [
+                    "hidden" => [
+                        "edit", "enable", "delete", "activate"
+                    ],
+                    "submit_text" => "Create user"
+                ]
+            ],
+            "page" => [
+                "validators" => $validator->rules('json', false)
+            ]
+        ]);
+        
+        /*
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
             "box_title" => "Create User",
-            "submit_button" => "Create user",
-            "form_action" => $this->_app->site->uri['public'] . "/users",
-            "target_user" => $target_user,
-            "groups" => $group_list,
-            "locales" => $locale_list,
-            "fields" => [
-                "disabled" => $disabled_fields,
-                "hidden" => $hidden_fields
-            ],
-            "buttons" => [
-                "hidden" => [
-                    "edit", "enable", "delete", "activate"
-                ]
-            ],
-            "validators" => $this->_app->jsValidator->rules()
+            
         ]);
+        */
     }
 
     /**
@@ -499,43 +483,78 @@ class UserController
     }
 
     /**
-     * Renders the form for editing a user's password.
+     * Renders the modal form for editing a user's password.
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
      */
-    public function formUserEditPassword($user_id){
-        // Get the user to edit
-        $target_user = User::find($user_id);
+    public function getModalEditUserPassword($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
 
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('uri_users') && !$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $target_user->primary_group_id])){
-            $this->_app->notFound();
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+        $user = $classMapper->staticMethod('user', 'where', 'id', $params['user_id'])->first();
+
+        // If the user no longer exists, forward to main user listing page
+        if (!$user) {
+            $usersPage = $this->ci->router->pathFor('uri_users');
+            return $response->withStatus(400);
         }
 
-        $get = $this->_app->request->get();
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', ['user' => $user, 'property' => 'password'])) {
+            throw new ForbiddenException();
+        }
 
-         // Determine authorized fields
-        $hidden_fields = [];
+        // Load validation rules
+        $schema = new RequestSchema('schema://user-password.json');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        if (!$this->_app->user->checkAccess("update_account_setting", ["user" => $target_user, "property" => 'password']))
-            $hidden_fields[] = 'password';
+        return $this->ci->view->render($response, 'components/modals/user-set-password.html.twig', [
+            'user' => $user,
+            'page' => [
+                'validators' => $validator->rules('json', false)
+            ]
+        ]);
+    }
 
-        // Load validator rules
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
-        $this->_app->jsValidator->setSchema($schema);
+    public function getModalConfirmDeleteUser($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
 
-        // This form posts to the same resource as "update user"
-        $this->_app->render("components/common/user-set-password.twig", [
-            "box_id" => isset($get['box_id']) ? $get['box_id'] : 'user-set-password',
-            "box_title" => "Change User Password",
-            "form_action" => $this->_app->site->uri['public'] . "/users/u/$user_id",
-            "target_user" => $target_user,
-            "fields" => [
-                "hidden" => $hidden_fields
-            ],
-            "validators" => $this->_app->jsValidator->rules()
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+        $user = $classMapper->staticMethod('user', 'where', 'id', $params['user_id'])->first();
+
+        // If the user no longer exists, forward to main user listing page
+        if (!$user) {
+            $usersPage = $this->ci->router->pathFor('uri_users');
+            return $response->withStatus(400);
+        }
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_user', ['user' => $user])) {
+            throw new ForbiddenException();
+        }
+
+        return $this->ci->view->render($response, 'components/modals/confirm-delete-user.html.twig', [
+            'user' => $user
         ]);
     }
 

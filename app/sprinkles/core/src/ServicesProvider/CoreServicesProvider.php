@@ -416,13 +416,26 @@ class CoreServicesProvider
         /**
          * Custom 404 handler.
          *
-         * @todo Handle xhr case, just like we do in errorHandler
+         * @todo Is it possible to integrate this into the common error-handling system?
          */
         $container['notFoundHandler'] = function ($c) {
             return function ($request, $response) use ($c) {
-                return $c->view->render($response, 'pages/error/404.html.twig')
-                    ->withStatus(404)
-                    ->withHeader('Content-Type', 'text/html');
+                if ($request->isXhr()) {
+                    $c->alerts->addMessageTranslated("danger", "ERROR.404.TITLE");
+
+                    return $response->withStatus(404);
+                } else {
+                // Render a custom error page, if it exists
+                try {
+                    $template = $c->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");
+                } catch (\Twig_Error_Loader $e) {
+                    $template = $c->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
+                }
+
+                return $response->withStatus(404)
+                                ->withHeader('Content-Type', 'text/html')
+                                ->write($template->render([]));
+                }
             };
         };
 

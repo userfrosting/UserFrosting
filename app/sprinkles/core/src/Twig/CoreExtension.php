@@ -9,8 +9,7 @@
 namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
-use Slim\Http\Uri;
+use UserFrosting\Sprinkle\Core\Util\Util;
 
 /**
  * Extends Twig functionality for the Core sprinkle.

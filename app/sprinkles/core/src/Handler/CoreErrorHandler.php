@@ -67,10 +67,11 @@ class CoreErrorHandler extends \Slim\Handlers\Error
         $handler = new $handlerClass($this->ci);
         
         // Run either the ajaxHandler or standardHandler, depending on the request type
-        if ($request->isXhr())
+        if ($request->isXhr()) {
             $response = $handler->ajaxHandler($request, $response, $exception);
-        else
+        } else {
             $response = $handler->standardHandler($request, $response, $exception);
+        }
         
         // Write exception to log, if enabled by the handler
         if ($handler->getLogFlag())

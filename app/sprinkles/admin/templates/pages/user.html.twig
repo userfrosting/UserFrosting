@@ -33,11 +33,7 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
-                    {% include "components/forms/user.html.twig" with {
-                        "form": {
-                            "action": "#"
-                        }
-                    } %}
+                    {% include "components/forms/user.html.twig" %}
                 </div>
             </div>
         </div>
@@ -46,7 +42,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/validators.js.twig" %}
+    {% include "components/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->

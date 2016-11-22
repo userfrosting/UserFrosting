@@ -1,0 +1,18 @@
+{# Base layout for modals.
+#}
+<div class="modal fade" role="dialog" data-width="760">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{% block modal_title %}{% endblock %}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alerts-modal">
+                </div>
+                {% block modal_body %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>

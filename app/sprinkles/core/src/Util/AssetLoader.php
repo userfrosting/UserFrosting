@@ -37,7 +37,14 @@ class AssetLoader
         
         $this->fullPath = '';
     }
-    
+
+    /**
+     * Compute the full filesystem path for the specified relative path (usually extracted from a URL).
+     *
+     * Also checks to make sure that the file actually exists.
+     * @param string $relativePath
+     * @return bool True if the file exists, false otherwise
+     */
     public function loadAsset($relativePath)
     {
         // Remove any query string
@@ -53,17 +60,32 @@ class AssetLoader
 
         return true;
     }
-    
+
+    /**
+     * Get the raw contents of the currently targeted file.
+     *
+     * @return string
+     */
     public function getContent()
     {
         return file_get_contents($this->fullPath);
     }    
-    
+
+    /**
+     * Get the length in bytes of the currently targeted file.
+     *
+     * @return int
+     */    
     public function getLength()
     {
         return filesize($this->fullPath);
     }
     
+    /**
+     * Get the best-guess MIME type of the currently targeted file, based on the file extension.
+     *
+     * @return string
+     */
     public function getType()
     {
         return MimeType::detectByFilename($this->fullPath);

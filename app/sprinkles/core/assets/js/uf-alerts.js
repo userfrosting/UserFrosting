@@ -114,8 +114,22 @@
         }
 
         return base.$T;
-    }
-    
+    };
+
+    Plugin.prototype.destroy = function () {
+        var base = this;
+        var $el = base.$T;
+
+        // Delete the plugin object
+        base.delete;
+
+        // Unbind any bound events
+        $el.off('.ufAlerts');
+
+        // Remove plugin name from data-* attribute
+        $el.removeData(PLUGIN_NS);
+    };
+
     /**
      * Fetches messages from the alert stream
      *
@@ -135,7 +149,7 @@
         });
         
         return base.$T;
-    }
+    };
     
     /**
      * Push a given message to the current uf-alerts collection.
@@ -151,7 +165,7 @@
         });
         
         return base.$T;
-    }
+    };
     
     /**
      * Renders the messages.
