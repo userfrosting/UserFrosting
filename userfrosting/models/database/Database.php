@@ -132,9 +132,10 @@ abstract class Database {
         if (!static::testConnection())
             return [];
         
-        $connection = Capsule::connection();
+        $schema = Capsule::schema();
+
         $results = [];
-        
+
         $test_list = [
             static::getSchemaTable('user')->name,
             static::getSchemaTable('user_event')->name,
@@ -144,16 +145,13 @@ abstract class Database {
             static::getSchemaTable('authorize_group')->name,
             static::$app->remember_me_table['tableName']
         ];
-        
+
         foreach ($test_list as $table){
-            try {
-                $stmt = $connection->select("SELECT 1 FROM $table LIMIT 1;");
-            } catch (\PDOException $e){
-                continue;
+            if ($schema->hasTable($table)) {
+                $results[] = $table;
             }
-            $results[] = $table;
         }
-        
+
         return $results;
     }
     
