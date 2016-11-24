@@ -28,25 +28,34 @@
     date_default_timezone_set('America/New_York');
     
     $capsule = new Capsule;
-    
-    // TODO: pull from config
-    $capsule->addConnection([
+
+    // TODO: pull from config?
+    $dbParams = [
         'driver'    => 'mysql',
-        'host'      => 'localhost',
+        'host'      => getenv('DB_HOST'),
         'database'  => getenv('DB_NAME'),
         'username'  => getenv('DB_USER'),
         'password'  => getenv('DB_PASSWORD'),
         'charset'   => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix'    => ''
-    ]);
-    
+    ];
+
+    $capsule->addConnection($dbParams);
+
     // Register as global connection
     $capsule->setAsGlobal();
-    
+
     // Start Eloquent
     $capsule->bootEloquent();
-       
+
+    // Test database connection
+    try {
+        Capsule::connection()->getPdo();
+    } catch (\Exception $e) {
+        die(PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration." . PHP_EOL);
+    }
+    
     $schema = Capsule::schema();
     
     $installTime = Carbon::now();
