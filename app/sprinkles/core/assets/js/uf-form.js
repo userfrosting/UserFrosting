@@ -129,7 +129,7 @@
                             submit_button.html(submit_button_text);
                         }
                         // Error messages
-                        if ((typeof site !== "undefined") && site.debug == true && jqXHR.status == "500") {
+                        if ((typeof site !== "undefined") && site.debug.ajax) {
                             document.body.innerHTML = data.responseText;
                             base.$T.trigger('submitError.ufForm');
                         } else {

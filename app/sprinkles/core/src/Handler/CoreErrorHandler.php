@@ -54,29 +54,31 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception)
     {
-        // TODO: log server-side error messages if displayErrorDetails is false, otherwise render them
-        
         // Default exception handler class
         $handlerClass = '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandler';
-        
+
         // Get the last matching registered handler class, and instantiate it
-        foreach ($this->exceptionHandlers as $exceptionClass => $matchedHandlerClass)
-            if ($exception instanceof $exceptionClass)
+        foreach ($this->exceptionHandlers as $exceptionClass => $matchedHandlerClass) {
+            if ($exception instanceof $exceptionClass) {
                 $handlerClass = $matchedHandlerClass;
-        
-        $handler = new $handlerClass($this->ci);
-        
-        // Run either the ajaxHandler or standardHandler, depending on the request type
-        if ($request->isXhr()) {
-            $response = $handler->ajaxHandler($request, $response, $exception);
-        } else {
-            $response = $handler->standardHandler($request, $response, $exception);
+            }
         }
-        
+
+        $handler = new $handlerClass($this->ci);
+
+        // Run either the ajaxHandler or standardHandler, depending on the request type
+        if (!$request->isXhr() || $this->ci->config['site.debug.ajax']) {
+            $response = $handler->standardHandler($request, $response, $exception);
+        } else {
+            $response = $handler->ajaxHandler($request, $response, $exception);
+        }
+
         // Write exception to log, if enabled by the handler
-        if ($handler->getLogFlag())
+        // TODO: log server-side error messages if displayErrorDetails is false, otherwise render them
+        if ($handler->getLogFlag()) {
             $this->writeToErrorLog($exception);
-         
+        }
+
         return $response;
     }
     
@@ -91,12 +93,13 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      */
     public function registerHandler($exceptionClass, $handlerClass)
     {
-        if (!is_a($handlerClass, '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface', true))
+        if (!is_a($handlerClass, '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface', true)) {
             throw new \InvalidArgumentException("Registered exception handler must implement ExceptionHandlerInterface!");
-        
+        }
+
         $this->exceptionHandlers[$exceptionClass] = $handlerClass;
     }    
-    
+
     /**
      * Alternative logging for errors
      *

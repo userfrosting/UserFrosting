@@ -3,6 +3,9 @@
     var site = {
         "uri": {
             "public": "{{ site.uri.public | raw }}"
+        },
+        "debug": {
+            "ajax": {{ site.debug.ajax ? 'true' : 'false' }}
         }
     };
 {% endautoescape %}

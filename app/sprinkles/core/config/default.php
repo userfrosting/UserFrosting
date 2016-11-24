@@ -96,6 +96,9 @@
         'site' => [
             'title'     =>      'UserFrosting',
             'author'    =>      'Author',
+            'debug'     => [
+                'ajax' => false
+            ],
             // URLs
             'uri' => [
                 'base' => [
