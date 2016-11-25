@@ -95,9 +95,16 @@
         // "Site" settings that are automatically passed to Twig
         'site' => [
             'title'     =>      'UserFrosting',
+            'analytics' => [
+                'google' => [
+                    'code' => '',
+                    'enabled' => true
+                ]
+            ],
             'author'    =>      'Author',
             'debug'     => [
-                'ajax' => false
+                'ajax' => false,
+                'info' => true
             ],
             // URLs
             'uri' => [
@@ -108,6 +115,7 @@
                     'path'              => trim(dirname($_SERVER['SCRIPT_NAME']), '/')
                 ],
                 'author'            => 'http://www.userfrosting.com',
+                'publisher'         => '',
                 'assets-raw'        => 'assets-raw',
                 'assets'            => 'assets'
             ],

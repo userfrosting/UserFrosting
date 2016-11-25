@@ -17,6 +17,9 @@
             
             {% include "components/favicons.html.twig" %}
             
+            {# Use this block to add extra content in page head without having to override the entire base layout #}
+            {% block head_extra %}{% endblock %}
+            
             {% block stylesheets %}
                 {# Override this block in a child layout template or page template to override site-level stylesheets. #}
                 {% block stylesheets_site %}
@@ -33,18 +36,29 @@
                 {% endblock %}                
             {% endblock %}
         
-            <!-- Author link -->
-            <link href="{% block page_author_link %}{{ site.uri.author }}{% endblock %}" rel="author" />        
-        
-            <!-- Canonical link -->
-            <link href="{{site.uri.base.scheme}}://{% block page_canonical %}{% endblock %}" rel="canonical" />
-      
+            {# Site author link #}
+            {% if site.uri.author %}
+                <link href="{% block page_author_link %}{{ site.uri.author }}{% endblock %}" rel="author" />
+            {% endif %}
+            
+            {# Site publisher link #}
+            {% if site.uri.publisher %}
+                <link href="{% block page_publisher_link %}{{ site.uri.publisher }}{% endblock %}" rel="publisher" />
+            {% endif %}
+            
+            {# Canonical page link #}
+            {% if block('page_canonical') %}
+                <link href="{{site.uri.base.scheme}}://{% block page_canonical %}{% endblock %}" rel="canonical" />
+            {% endif %}
+            
             <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
             <!--[if lt IE 9]>
-                <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-                <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+                <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+                <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
             <![endif]-->
+            
+            {% include "components/analytics.html.twig" %}
         </head>         
     {% endblock %}
     
