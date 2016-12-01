@@ -230,7 +230,7 @@ class InstallController extends \UserFrosting\BaseController {
 
         // Create the master user
         $user = new User($data);
-        
+
         $user->id = $this->_app->config('user_id_master');
 
         // Add user to default groups, including default primary group
@@ -241,18 +241,24 @@ class InstallController extends \UserFrosting\BaseController {
             $user->addGroup($group_id);
         }
 
-        // Add sign-up event
-        $user->newEventSignUp();
-
         // If using SQL Server or Azure SQL Server, use this alternative insert method.
         if (\Illuminate\Database\Capsule\Manager::connection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlsrv") {
-            \Illuminate\Database\Capsule\Manager::transaction(function() use ($user) {
-                // Manually build insert statement to overcome session IDENTITY_INSERT restriction.
-                $insert = "INSERT INTO ".$this->_app->config('db')['db_prefix']."user (user_name, display_name, email, password, flag_verified, locale, primary_group_id, title, id, created_at, updated_at) VALUES ('".$user->user_name."', '".$user->display_name."', '".$user->email."', '".$user->password."', ".$user->flag_verified.", '".$user->locale."', ".$user->primary_group_id.", '".$user->title."', ".$user->id.", '".date("Y-m-d h:i:s")."', '".date("Y-m-d h:i:s")."');";
-                \Illuminate\Database\Capsule\Manager::statement("SET IDENTITY_INSERT ".$this->_app->config('db')['db_prefix']."user ON; ".$insert);
-            });
+            // Manually build insert statement to overcome session IDENTITY_INSERT restriction.
+            $tableName = $user->getTable();
+            $values = $user->export();
+            $values['created_at'] = date("Y-m-d h:i:s");
+            $values['updated_at'] = date("Y-m-d h:i:s");
+            \Illuminate\Database\Capsule\Manager::statement("SET IDENTITY_INSERT [$tableName] ON; INSERT INTO [$tableName] (id, user_name, display_name, email, password, flag_verified, locale, primary_group_id, title, created_at, updated_at) VALUES (:id, :user_name, :display_name, :email, :password, :flag_verified, :locale, :primary_group_id, :title, :created_at, :updated_at);", $values);
+
+            // Add sign-up event
+            $user = User::where('id', 1)->first();
+            $user->newEventSignUp();
+            $user->save();
         }
         else {
+            // Add sign-up event
+            $user->newEventSignUp();
+
             // Store new user to database
             $user->save();
         }
