@@ -463,9 +463,8 @@ class CoreServicesProvider
                 $handler = new FileSessionHandler($fs, $c->locator->findResource('session://'), $config['session.minutes']);
             } else if ($config['session.handler'] == 'database') {
                 $connection = $c->db->connection();
-                $table = 'session';
                 // Table must exist, otherwise an exception will be thrown
-                $handler = new DatabaseSessionHandler($connection, $table, $config['session.minutes']);
+                $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
             } else {
                 throw new \Exception("Bad session handler type '{$config['session.handler']}' specified in configuration file.");
             }

@@ -394,6 +394,23 @@
     }
 
     /**
+     * Table for database sessions.
+     */
+    if (!$schema->hasTable('sessions')) {
+        $schema->create('sessions', function (Blueprint $table) {
+            $table->string('id')->unique();
+            $table->integer('user_id')->nullable();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->text('payload');
+            $table->integer('last_activity');
+        });
+        echo "Created table 'sessions'..." . PHP_EOL;
+    } else {
+        echo "Table 'sessions' already exists.  Skipping..." . PHP_EOL;
+    }
+
+    /**
      * Keeps track of throttleable requests.
      */
     if (!$schema->hasTable('throttles')) {
