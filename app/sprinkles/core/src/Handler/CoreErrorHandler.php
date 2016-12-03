@@ -54,6 +54,11 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception)
     {
+        // If displayErrorDetails is set to true, render a debugging error page
+        if ($this->displayErrorDetails) {
+            return $this->getDebugResponse($request, $response, $exception);
+        }
+        
         // Default exception handler class
         $handlerClass = '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandler';
 
@@ -74,14 +79,53 @@ class CoreErrorHandler extends \Slim\Handlers\Error
         }
 
         // Write exception to log, if enabled by the handler
-        // TODO: log server-side error messages if displayErrorDetails is false, otherwise render them
         if ($handler->getLogFlag()) {
             $this->writeToErrorLog($exception);
         }
 
         return $response;
     }
-    
+
+    /**
+     * Generates an HTML/XML/JSON representation of the error/exception, and appends it to the response.
+     *
+     * Note that this should only be used for debugging purposes.  In production, it could reveal sensitive information and/or vulnerabilities.
+     * @param ServerRequestInterface $request   The most recent Request object
+     * @param ResponseInterface      $response  The most recent Response object
+     * @param Exception              $exception The caught Exception object
+     *
+     * @return ResponseInterface
+     */
+    public function getDebugResponse(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception)
+    {
+        $contentType = $this->determineContentType($request);
+        switch ($contentType) {
+            case 'application/json':
+                $output = $this->renderJsonErrorMessage($exception);
+                break;
+
+            case 'text/xml':
+            case 'application/xml':
+                $output = $this->renderXmlErrorMessage($exception);
+                break;
+
+            case 'text/html':
+                $output = $this->renderHtmlErrorMessage($exception);
+                break;
+
+            default:
+                throw new UnexpectedValueException('Cannot render unknown content type ' . $contentType);
+        }
+
+        $body = new Body(fopen('php://temp', 'r+'));
+        $body->write($output);
+
+        return $response
+                ->withStatus(500)
+                ->withHeader('Content-type', $contentType)
+                ->withBody($body);
+    }
+
     /**
      * Register an exception handler for a specified exception class.
      *

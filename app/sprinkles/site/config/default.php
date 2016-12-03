@@ -16,9 +16,6 @@
         'site' => [
             'title'     =>      'Owl Fancy',
             'author'    =>      'David Attenborough',
-            'debug' => [
-                'ajax' => true
-            ],
             'locales' => 'en_US',
             // URLs
             'uri' => [

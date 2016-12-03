@@ -236,7 +236,7 @@ class CoreServicesProvider
             $csrfStorage = $c->session[$csrfKey];
 
             $onFailure = function ($request, $response, $next) {
-                $e = new BadRequestException();
+                $e = new BadRequestException("The CSRF code was invalid or not provided.");
                 $e->addUserMessage('CSRF_MISSING');
                 throw $e;
 

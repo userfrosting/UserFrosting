@@ -16,7 +16,8 @@
         ],
         // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
         'settings' => [
-            'routerCacheFile' => \UserFrosting\ROOT_DIR . '/' . \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME . '/' . 'routes.cache'
+            'routerCacheFile' => \UserFrosting\ROOT_DIR . '/' . \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME . '/' . 'routes.cache',
+            'displayErrorDetails' => false
         ],
         'site' => [
             'analytics' => [
