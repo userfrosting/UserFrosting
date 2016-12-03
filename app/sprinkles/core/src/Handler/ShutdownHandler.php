@@ -53,7 +53,7 @@ class ShutdownHandler
                 // Inform the client of a fatal error
                 if ($this->ci->alerts && is_object($this->ci->alerts)) {
                     $this->ci->alerts->addMessageTranslated("danger", $clientErrorMessage);
-                    $output = "";
+                    $output = $clientErrorMessage;
                 }
             } else {
                 $title = "UserFrosting Application Error";

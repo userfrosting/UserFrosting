@@ -19,6 +19,9 @@ app/cache/*
 app/logs/*
 app/sessions/*
 
+# Ignore sample site sprinkle
+app/sprinkles/site-dev
+
 # Ignore vendor (for dev)
 app/vendor/*
 

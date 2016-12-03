@@ -29,7 +29,7 @@ $container['sprinkleManager'] = function ($c) {
     return new SprinkleManager($c, [
         "account",
         "admin",
-        "site"
+        "site-dev"
     ]);
 };
 
