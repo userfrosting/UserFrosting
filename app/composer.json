@@ -26,7 +26,8 @@
             "merge-extra": false
         }
     },
-    "minimum-stability": "dev",    
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "files" : [
             "defines.php"

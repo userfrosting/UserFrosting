@@ -479,12 +479,8 @@ class CoreServicesProvider
          * Custom shutdown handler, for dealing with fatal errors.
          */
         $container['shutdownHandler'] = function ($c) {
-            $alerts = $c->alerts;
-            $translator = $c->translator;
-            $request = $c->request;
-            $response = $c->response;
-
-            return new ShutdownHandler($request, $response, $alerts, $translator);
+            // This takes the entire container, so we don't have to initialize any other services unless absolutely necessary.
+            return new ShutdownHandler($c);
         };
 
         /**
