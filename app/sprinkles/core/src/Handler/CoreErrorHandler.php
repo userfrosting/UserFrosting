@@ -54,8 +54,8 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception)
     {
-        // If displayErrorDetails is set to true, render a debugging error page
-        if ($this->displayErrorDetails) {
+        // If displayErrorDetails is set to true, and we're not processing an AJAX request with AJAX debug mode turned off, render a debugging error page
+        if ($this->displayErrorDetails && (!$request->isXhr() || $this->ci->config['site.debug.ajax'])) {
             return $this->getDebugResponse($request, $response, $exception);
         }
         

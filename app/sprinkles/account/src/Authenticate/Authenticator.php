@@ -65,8 +65,17 @@ class Authenticator
         
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
-        $this->rememberMeStorage->setConnection(Capsule::connection()->getPdo());
         
+        // Catch the BindingResolutionException if we can't connect to the DB
+        try {
+            $pdo = Capsule::connection()->getPdo();
+        } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
+            $dbParams = $config['db'];
+            throw new \PDOException("Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration.");
+        }
+
+        $this->rememberMeStorage->setConnection($pdo);
+
         // Set up RememberMe
         $this->rememberMe = new RememberMe($this->rememberMeStorage);
         // Set cookie name
