@@ -34,5 +34,20 @@ $.tablesorter.addParser({
     type: 'text'
 });
 
+$.tablesorter.addParser({
+    // set a unique id
+    id: 'isblank',
+    is: function(s) {
+      // return false so this parser is not auto detected
+      return false;
+    },
+    format: function(s, table, cell, cellIndex) {
+      var $cell = $(cell);
+      // returns 1 if blank (whitespace), 0 otherwise
+      var isBlank = $cell.html().trim() == "&nbsp;" ? 1 : 0;
+      return isBlank;
+      
+    },
 
-
+    type: 'numeric'
+});
