@@ -74,8 +74,9 @@
             function (data) {
                 // Error messages
                 if ((typeof site !== "undefined") && site.debug.ajax) {
-                    document.body.innerHTML = data.responseText;
                     base.$T.trigger('renderError.ufModal');
+                    document.write(data.responseText);
+                    document.close();
                 } else {
                     if (base.options.DEBUG) {
                         console.log("Error (" + data.status + "): " + data.responseText );

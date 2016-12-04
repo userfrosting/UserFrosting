@@ -130,11 +130,13 @@
                         }
                         // Error messages
                         if ((typeof site !== "undefined") && site.debug.ajax) {
-                            document.body.innerHTML = data.responseText;
                             base.$T.trigger('submitError.ufForm');
+                            document.write(data.responseText);
+                            document.close();
                         } else {
-                            if (base.options.DEBUG)
+                            if (base.options.DEBUG) {
                                 console.log("Error (" + data.status + "): " + data.responseText );
+                            }
                             // Display errors on failure
                             // TODO: ufAlerts widget should have a 'destroy' method
                             if (!base.options.msgTarget.data('ufAlerts')) {
