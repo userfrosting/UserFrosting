@@ -106,6 +106,7 @@
                 ]
             ],
             'author'    =>      'Author',
+            'csrf'      => null,  // Do not set this variable.  The core Twig extension will override it with values from the CSRF service.
             'debug'     => [
                 'ajax' => false,
                 'info' => true

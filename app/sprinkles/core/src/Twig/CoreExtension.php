@@ -102,9 +102,7 @@ class CoreExtension extends \Twig_Extension
         $csrfName = $this->services->csrf->getTokenName();
         $csrfValue = $this->services->csrf->getTokenValue();
 
-        return array(
-            'site'   => $this->services->config['site'],
-            'assets' => $this->services->assets,
+        $csrf = [
             'csrf'   => [
                 'keys' => [
                     'name'  => $csrfNameKey,
@@ -113,6 +111,13 @@ class CoreExtension extends \Twig_Extension
                 'name'  => $csrfName,
                 'value' => $csrfValue
             ]
-        );
+        ];
+
+        $site = array_replace_recursive($this->services->config['site'], $csrf);
+
+        return [
+            'site'   => $site,
+            'assets' => $this->services->assets
+        ];
     }
 }
