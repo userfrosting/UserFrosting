@@ -305,7 +305,6 @@ abstract class Database {
         // Setup default groups
         Capsule::table(static::getSchemaTable('group')->name)->insert([
             [
-                'id' => 1,
                 'name' => 'User',
                 'is_default' => GROUP_DEFAULT_PRIMARY,
                 'can_delete' => 0,
@@ -315,7 +314,6 @@ abstract class Database {
                 'icon' => 'fa fa-user'
             ],
             [
-                'id' => 2,
                 'name' => 'Administrator',
                 'is_default' => GROUP_NOT_DEFAULT,
                 'can_delete' => 0,
@@ -325,7 +323,6 @@ abstract class Database {
                 'icon' => 'fa fa-flag'
             ],
             [
-                'id' => 3,
                 'name' => 'Zerglings',
                 'is_default' => GROUP_NOT_DEFAULT,
                 'can_delete' => 1,
@@ -336,60 +333,54 @@ abstract class Database {
             ]
         ]);        
     
+        // Get default groups id's.
+        $user = Capsule::table(static::getSchemaTable('group')->name)->where('name', '=', 'User')->first()['id'];
+        $admin = Capsule::table(static::getSchemaTable('group')->name)->where('name', '=', 'Administrator')->first()['id'];
     
         // Setup default authorizations
         Capsule::table(static::getSchemaTable('authorize_group')->name)->insert([
             [
-                'id' => 1,
-                'group_id' => 1,
+                'group_id' => $user,
                 'hook' => 'uri_dashboard',
                 'conditions' => 'always()'
             ],
             [
-                'id' => 2,
-                'group_id' => 2,
+                'group_id' => $admin,
                 'hook' => 'uri_dashboard',
                 'conditions' => 'always()'
             ],            
             [
-                'id' => 3,
-                'group_id' => 2,
+                'group_id' => $admin,
                 'hook' => 'uri_users',
                 'conditions' => 'always()'
             ],
             [
-                'id' => 4,
-                'group_id' => 1,
+                'group_id' => $user,
                 'hook' => 'uri_account_settings',
                 'conditions' => 'always()'
             ],
             [
-                'id' => 5,
-                'group_id' => 1,
+                'group_id' => $user,
                 'hook' => 'update_account_setting',
                 'conditions' => 'equals(self.id, user.id)&&in(property,[\"email\",\"locale\",\"password\"])'
             ],
             [
-                'id' => 6,
-                'group_id' => 2,
+                'group_id' => $admin,
                 'hook' => 'update_account_setting',
-                'conditions' => '!in_group(user.id,2)&&in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"flag_password_reset\",\"flag_enabled\"])'
+                'conditions' => '!in_group(user.id,'.$admin.')&&in(property,[\"email\",\"display_name\",\"title\",\"locale\",\"flag_password_reset\",\"flag_enabled\"])'
             ],
             [
-                'id' => 7,
-                'group_id' => 2,
+                'group_id' => $admin,
                 'hook' => 'view_account_setting',
                 'conditions' => 'in(property,[\"user_name\",\"email\",\"display_name\",\"title\",\"locale\",\"flag_enabled\",\"groups\",\"primary_group_id\"])'
             ],
             [
-                'id' => 8,
-                'group_id' => 2,
+                'group_id' => $admin,
                 'hook' => 'delete_account',
-                'conditions' => '!in_group(user.id,2)'
+                'conditions' => '!in_group(user.id,'.$admin.')'
             ],
             [
-                'id' => 9,
-                'group_id' => 2,
+                'group_id' => $admin,
                 'hook' => 'create_account',
                 'conditions' => 'always()'
             ]

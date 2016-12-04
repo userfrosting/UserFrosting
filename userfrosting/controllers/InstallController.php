@@ -230,7 +230,21 @@ class InstallController extends \UserFrosting\BaseController {
 
         // Create the master user
         $user = new User($data);
+
         $user->id = $this->_app->config('user_id_master');
+
+        // If using SQL Server or Azure SQL Server, store the user now.
+        if (\Illuminate\Database\Capsule\Manager::connection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlsrv") {
+            // Manually insert master user to overcome session IDENTITY_INSERT restriction caused by AUTO_NUMBER specification.
+            $tableName = $user->getTable();
+            $values = $user->export();
+            $values['created_at'] = \Carbon\Carbon::now();
+            $values['updated_at'] = \Carbon\Carbon::now();
+            \Illuminate\Database\Capsule\Manager::statement("SET IDENTITY_INSERT [$tableName] ON; INSERT INTO [$tableName] (id, user_name, display_name, email, password, flag_verified, locale, primary_group_id, title, created_at, updated_at) VALUES (:id, :user_name, :display_name, :email, :password, :flag_verified, :locale, :primary_group_id, :title, :created_at, :updated_at);", $values);
+
+            // Get master user back from database
+            $user = User::where('id', $this->_app->config('user_id_master'))->first();
+        }
 
         // Add user to default groups, including default primary group
         $defaultGroups = Group::where('is_default', GROUP_DEFAULT)->get();
