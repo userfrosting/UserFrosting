@@ -233,6 +233,19 @@ class InstallController extends \UserFrosting\BaseController {
 
         $user->id = $this->_app->config('user_id_master');
 
+        // If using SQL Server or Azure SQL Server, store the user now.
+        if (\Illuminate\Database\Capsule\Manager::connection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlsrv") {
+            // Manually insert master user to overcome session IDENTITY_INSERT restriction caused by AUTO_NUMBER specification.
+            $tableName = $user->getTable();
+            $values = $user->export();
+            $values['created_at'] = \Carbon\Carbon::now();
+            $values['updated_at'] = \Carbon\Carbon::now();
+            \Illuminate\Database\Capsule\Manager::statement("SET IDENTITY_INSERT [$tableName] ON; INSERT INTO [$tableName] (id, user_name, display_name, email, password, flag_verified, locale, primary_group_id, title, created_at, updated_at) VALUES (:id, :user_name, :display_name, :email, :password, :flag_verified, :locale, :primary_group_id, :title, :created_at, :updated_at);", $values);
+
+            // Get master user back from database
+            $user = User::where('id', $this->_app->config('user_id_master'))->first();
+        }
+
         // Add user to default groups, including default primary group
         $defaultGroups = Group::where('is_default', GROUP_DEFAULT)->get();
         $user->addGroup($primaryGroup->id);
@@ -241,27 +254,11 @@ class InstallController extends \UserFrosting\BaseController {
             $user->addGroup($group_id);
         }
 
-        // If using SQL Server or Azure SQL Server, use this alternative insert method.
-        if (\Illuminate\Database\Capsule\Manager::connection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME) == "sqlsrv") {
-            // Manually build insert statement to overcome session IDENTITY_INSERT restriction.
-            $tableName = $user->getTable();
-            $values = $user->export();
-            $values['created_at'] = date("Y-m-d h:i:s");
-            $values['updated_at'] = date("Y-m-d h:i:s");
-            \Illuminate\Database\Capsule\Manager::statement("SET IDENTITY_INSERT [$tableName] ON; INSERT INTO [$tableName] (id, user_name, display_name, email, password, flag_verified, locale, primary_group_id, title, created_at, updated_at) VALUES (:id, :user_name, :display_name, :email, :password, :flag_verified, :locale, :primary_group_id, :title, :created_at, :updated_at);", $values);
+        // Add sign-up event
+        $user->newEventSignUp();
 
-            // Add sign-up event
-            $user = User::where('id', 1)->first();
-            $user->newEventSignUp();
-            $user->save();
-        }
-        else {
-            // Add sign-up event
-            $user->newEventSignUp();
-
-            // Store new user to database
-            $user->save();
-        }
+        // Store new user to database
+        $user->save();
 
         // No activation required
         $ms->addMessageTranslated("success", "ACCOUNT_REGISTRATION_COMPLETE_TYPE1");
