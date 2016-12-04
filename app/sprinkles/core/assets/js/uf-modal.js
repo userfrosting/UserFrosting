@@ -73,7 +73,7 @@
             // Fetch failed
             function (data) {
                 // Error messages
-                if ((typeof site !== "undefined") && site.debug.ajax) {
+                if ((typeof site !== "undefined") && site.debug.ajax && data.responseText) {
                     base.$T.trigger('renderError.ufModal');
                     document.write(data.responseText);
                     document.close();

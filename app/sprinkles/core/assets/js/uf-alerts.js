@@ -148,7 +148,7 @@
             base.$T.trigger("fetch.ufAlerts");
         }).fail(function ( data ) {
             base.$T.trigger('error.ufAlerts');
-            if ((typeof site !== "undefined") && site.debug.ajax) {
+            if ((typeof site !== "undefined") && site.debug.ajax && data.responseText) {
                 document.write(data.responseText);
                 document.close();
             } else {

@@ -129,7 +129,7 @@
                             submit_button.html(submit_button_text);
                         }
                         // Error messages
-                        if ((typeof site !== "undefined") && site.debug.ajax) {
+                        if ((typeof site !== "undefined") && site.debug.ajax && data.responseText) {
                             base.$T.trigger('submitError.ufForm');
                             document.write(data.responseText);
                             document.close();
