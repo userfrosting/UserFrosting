@@ -37,14 +37,14 @@ class HttpExceptionHandler extends ExceptionHandler
         } else {
             $this->logFlag = false;
         }
-        
+
         foreach ($messages as $message) {
             $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
         }
-        
+
         return $response->withStatus($httpCode);
     }
-     
+
     /**
      * Handler for exceptions raised during "standard" requests.
      *
@@ -65,21 +65,20 @@ class HttpExceptionHandler extends ExceptionHandler
         if ($httpCode == 500) {
             $this->logFlag = true;
         } else {
-            $this->logFlag = false;        
+            $this->logFlag = false;
         }
-        
+
         // Render a custom error page, if it exists
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
         } catch (\Twig_Error_Loader $e) {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
         }
-        
+
         return $response->withStatus($httpCode)
                         ->withHeader('Content-Type', 'text/html')
                         ->write($template->render([
                             "messages" => $messages
                         ]));
-    }    
-    
+    }
 }

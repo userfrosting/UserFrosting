@@ -59,9 +59,9 @@
             options
         ); 
         
-        this._init( target, options );   
+        this._init( target, options );
         
-        return this; 
+        return this;
     }
 
     /** #### INITIALISER #### */
@@ -76,7 +76,7 @@
             submitHandler:  function (f, e) {
                 // Execute any "before submit" callback
                 if (base.options.beforeSubmitCallback)
-                    base.options.beforeSubmitCallback();        
+                    base.options.beforeSubmitCallback();
                 
                 var form = $(f);
                 
@@ -104,10 +104,10 @@
                 
                 // Submit the form via AJAX
                 var url = form.attr('action');
-                $.ajax({  
-                  type: form.attr('method'),  
-                  url: url,  
-                  data: serializedData       
+                $.ajax({
+                  type: form.attr('method'),
+                  url: url,
+                  data: serializedData
                 })
                 .then(
                     // Submission successful

@@ -41,7 +41,7 @@ class ShutdownHandler
         $error = error_get_last();
 
         // Handle fatal errors
-        if( $error !== NULL && $error['type'] == E_ERROR) {
+        if( $error !== NULL && $error['type'] == E_ERROR || $error['type'] == E_PARSE) {
             $errno   = (string)$error["type"];
             $errfile = $error["file"];
             $errline = (string)$error["line"];
