@@ -256,21 +256,9 @@ class CoreServicesProvider
 
             $capsule = new Capsule;
 
-            $dbConfig = array(
-                'driver'    => $config['db.driver'],
-                'host'      => $config['db.host'],
-                'database'  => $config['db.database'],
-                'username'  => $config['db.username'],
-                'password'  => $config['db.password'],
-                'charset'   => $config['db.charset'],
-                'collation' => $config['db.collation'],
-                'prefix'    => $config['db.prefix']
-            );
-
-            if (isset($config['db.port']))
-                $dbConfig['port'] = $config['db.port'];
-
-            $capsule->addConnection($dbConfig);
+            foreach ($config['db'] as $name => $dbConfig) {
+                $capsule->addConnection($dbConfig, $name);
+            }
 
             // Register as global connection
             $capsule->setAsGlobal();
