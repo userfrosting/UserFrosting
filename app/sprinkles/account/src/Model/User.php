@@ -25,25 +25,24 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property int id
  * @property string user_name
  * @property string first_name
- * @property string last_name 
+ * @property string last_name
  * @property string email
  * @property string locale
  * @property int group_id
  * @property bool flag_verified
  * @property bool flag_enabled
- * @property int last_activity_id 
+ * @property int last_activity_id
  * @property timestamp created_at
  * @property timestamp updated_at
  * @property string password
  */
 class User extends UFModel
 {
-    
     /**
      * @var string The name of the table for the current model.
-     */ 
+     */
     protected $table = "users";
-    
+
     protected $fillable = [
         "user_name",
         "first_name",
@@ -53,15 +52,15 @@ class User extends UFModel
         "group_id",
         "flag_verified",
         "flag_enabled",
-        "last_activity_id",        
+        "last_activity_id",
         "password"
     ];
-    
+
     /**
      * @var bool Enable timestamps for Users.
-     */ 
-    public $timestamps = true;    
-    
+     */
+    public $timestamps = true;
+
     /**
      * Determine if the property for this object exists.
      * We add relations here so that Twig will be able to find them.
@@ -69,7 +68,7 @@ class User extends UFModel
      * Every property in __get must also be implemented here for Twig to recognize it.
      * @param string $name the name of the property to check.
      * @return bool true if the property is defined, false otherwise.
-     */ 
+     */
     public function __isset($name)
     {
         if (in_array($name, [
@@ -82,7 +81,7 @@ class User extends UFModel
             return parent::__isset($name);
         }
     }
-    
+
     /**
      * Get a property for this object.
      *
@@ -101,63 +100,19 @@ class User extends UFModel
         } else {
             return parent::__get($name);
         }
-    }    
-    
+    }
+
     /**
      * Get all activities for this user.
-     */    
+     */
     public function activities()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = static::$ci->classMapper;    
-    
+        $classMapper = static::$ci->classMapper;
+
         return $this->hasMany($classMapper->getClassMapping('activity'));
     }
-    
-    /**
-     * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
-     */
-    public function scopeJoinLastActivity($query, $type = null, $filter = null)
-    {
-        $query = $query->select('users.*', 'activities.occurred_at as last_activity_at');
-    
-        if ($filter) {
-            $filterClause = Capsule::raw("
-            (select activities.id as activity_id from activities where
-            activities.user_id = users.id
-            and activities.description like ?
-            order by occurred_at desc
-            limit 1)");
-            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause)->setBindings(["%$filter%"]);
-        } else {
-            $filterClause = Capsule::raw("
-            (select activities.id as activity_id from activities where
-            activities.user_id = users.id
-            order by occurred_at desc
-            limit 1)");
-            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause);
-        }
 
-        return $query;
-    }
-    
-    /**
-     * Get the most recent activity for this user.
-     */
-    public function lastActivity($type = null)
-    {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = static::$ci->classMapper;
-        
-        $query = $this->hasOne($classMapper->getClassMapping('activity'), 'user_id');
-        
-        if ($type) {
-            $query = $query->where('type', $type);
-        }
-
-        return $query->latest('occurred_at');
-    }
-    
     /**
      * Delete this user from the database, along with any linked roles and activities.
      *
@@ -167,19 +122,19 @@ class User extends UFModel
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
-        
+
         // Remove all role associations
         $this->roles()->detach();
-        
+
         // Remove all user activities
         $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
-        
+
         // Delete the user
         $result = parent::delete();
-        
+
         return $result;
     }
-    
+
     /**
      * Allows you to get the full name of the user using `$user->full_name`
      *
@@ -189,12 +144,12 @@ class User extends UFModel
     {
         return $this->first_name . ' ' . $this->last_name;
     }
-    
+
     /**
      * Get the amount of time, in seconds, that has elapsed since the last activity of a certain time for this user.
-     * 
+     *
      * @param string $type The type of activity to search for.
-     * @return int     
+     * @return int
      */
     public function getSecondsSinceLastActivity($type)
     {
@@ -204,23 +159,23 @@ class User extends UFModel
 
         return $time->diffInSeconds();
     }
-    
+
     /**
      * Return this user's group.
      */
     public function group()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = static::$ci->classMapper;    
-    
+        $classMapper = static::$ci->classMapper;
+
         return $this->belongsTo($classMapper->getClassMapping('group'), 'group_id');
     }
-    
+
     /**
      * Determine whether or not this User object is a guest user (id set to `user_id_guest`) or an authenticated user.
      *
      * @return boolean True if the user is a guest, false otherwise.
-     */ 
+     */
     public function isGuest()
     {
         if (!isset($this->id) || $this->id == static::$ci->config['reserved_user_ids.guest'])   // Need to use loose comparison for now, because some DBs return `id` as a string
@@ -228,69 +183,76 @@ class User extends UFModel
         else
             return false;
     }
-    
+
     /**
      * @todo
-     */ 
+     */
     public static function isLoggedIn()
     {
         // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
     }
-    
+
+    /**
+     * Get the most recent activity for this user.
+     */
+    public function lastActivity($type = null)
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        $query = $this->hasOne($classMapper->getClassMapping('activity'), 'user_id');
+
+        if ($type) {
+            $query = $query->where('type', $type);
+        }
+
+        return $query->latest('occurred_at');
+    }
+
     /**
      * Get the most recent time for a specified activity type for this user.
      *
      * @return string|null The last activity time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an activity of this type doesn't exist.
-     */     
+     */
     public function lastActivityTime($type)
     {
         $result = $this->activities()
             ->where('type', $type)
             ->max('occurred_at');
         return $result ? $result : null;
-    }    
-    
-    /**
-     * Extends Eloquent's Collection models.
-     *
-     * @return UserCollection
-     */
-    public function newCollection(array $models = Array())
-    {
-	    return new UserCollection($models);
     }
-    
+
     /**
      * Create a new password reset request activity.
      *
      * @return Activity
      */
     public function newActivityPasswordResetRequest()
-    {        
+    {
         return $this->newActivity(
             'password_reset_request',
             "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
         );
     }
-        
+
     /**
      * Create a new user sign-in activity.
      *
      * @return Activity
      */
     public function newActivitySignIn()
-    {    
+    {
         return $this->newActivity(
             'sign_in',
             "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
         );
     }
-    
+
     /**
      * Create an activity saying that this user registered their account, or an account was created for them.
-     * 
+     *
      * @param User $creator optional The User who created this account.  If set, this will be recorded in the activity description.
-     * @return Activity     
+     * @return Activity
      */
     public function newActivitySignUp($creator = null){
         if ($creator) {
@@ -298,13 +260,13 @@ class User extends UFModel
         } else {
             $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
         }
-        
+
         return $this->newActivity(
             'sign_up',
             $description
         );
     }
-    
+
     /**
      * Create a new email verification request activity.  Also, generates a new secret token.
      *
@@ -317,7 +279,17 @@ class User extends UFModel
             "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
         );
     }
-    
+
+    /**
+     * Extends Eloquent's Collection models.
+     *
+     * @return UserCollection
+     */
+    public function newCollection(array $models = Array())
+    {
+	    return new UserCollection($models);
+    }
+
     /**
      * Performs tasks to be done after this user has been successfully authenticated.
      *
@@ -330,10 +302,10 @@ class User extends UFModel
     {
         // Add a sign in activity (time is automatically set by database)
         $this->newActivitySignIn();
-        
+
         // Update password if we had encountered an outdated hash
         $passwordType = Password::getHashType($this->password);
-        
+
         if ($passwordType != "modern") {
             if (!isset($params['password'])) {
                 error_log("Notice: Unhashed password must be supplied to update to modern password hashing.");
@@ -348,21 +320,21 @@ class User extends UFModel
                 }
             }
         }
-        
+
         // Save changes
         $this->save();
-        
+
         return $this;
     }
 
     /**
      * Get all password reset requests for this user.
-     */    
+     */
     public function passwordResets()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = static::$ci->classMapper;    
-    
+        $classMapper = static::$ci->classMapper;
+
         return $this->hasMany($classMapper->getClassMapping('password_reset'));
     }
 
@@ -386,42 +358,69 @@ class User extends UFModel
             ->join('roles', 'permission_roles.role_id', '=', 'roles.id')
             ->join('role_users', 'role_users.role_id', '=', 'roles.id')
             ->where('role_users.user_id', '=', $this->id);
-            
+
         if ($slug) {
             $result = $result->where('permissions.slug', $slug);
         }
-        
+
         return $result;
-    }    
-    
+    }
+
     /**
      * Get all roles to which this user belongs.
      *
-     */       
+     */
     public function roles()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
-    
+
         return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users');
+    }
+
+    /**
+     * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
+     */
+    public function scopeJoinLastActivity($query, $type = null, $filter = null)
+    {
+        $query = $query->select('users.*', 'activities.occurred_at as last_activity_at');
+
+        if ($filter) {
+            $filterClause = Capsule::raw("
+            (select activities.id as activity_id from activities where
+            activities.user_id = users.id
+            and activities.description like ?
+            order by occurred_at desc
+            limit 1)");
+            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause)->setBindings(["%$filter%"]);
+        } else {
+            $filterClause = Capsule::raw("
+            (select activities.id as activity_id from activities where
+            activities.user_id = users.id
+            order by occurred_at desc
+            limit 1)");
+            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause);
+        }
+
+        return $query;
     }
 
     protected function newActivity($type, $description)
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
-        
+
         $activity = $classMapper->createInstance('activity', [
             'type'  => $type,
             'description' => $description,
             'occurred_at' => Carbon::now()
         ]);
-        
+
         $this->activities()->save($activity);
-        
+
         $this->last_activity_id = $activity->id;
         $this->save();
-        
+
         return $activity;
-    }    
+    }
 }
