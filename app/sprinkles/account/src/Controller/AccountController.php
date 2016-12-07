@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Account\Controller;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Fortress\RequestDataTransformer;
@@ -22,6 +21,7 @@ use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
@@ -36,23 +36,8 @@ use UserFrosting\Support\Exception\HttpException;
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/navigating/#structure
  */
-class AccountController
+class AccountController extends SimpleController
 {
-    /**
-     * @var ContainerInterface The global container object, which holds all your services.
-     */
-    protected $ci;
-
-    /**
-     * Create a new AccountController object.
-     *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
-     */
-    public function __construct(ContainerInterface $ci)
-    {
-        $this->ci = $ci;
-    }
-
     /**
      * Processes a request to cancel a password reset request.
      *

@@ -8,7 +8,6 @@
  */ 
 namespace UserFrosting\Sprinkle\Core\Controller;
 
-use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\NotFoundException as NotFoundException;
@@ -20,23 +19,8 @@ use Slim\Exception\NotFoundException as NotFoundException;
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/navigating/#structure
  */
-class CoreController
+class CoreController extends SimpleController
 {
-    /**
-     * @var ContainerInterface The global container object, which holds all your services.
-     */
-    protected $ci;
-    
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $ci The global container object, which holds all your services.
-     */
-    public function __construct(ContainerInterface $ci)
-    {
-        $this->ci = $ci;
-    }
-
     /**
      * Renders the default home page for UserFrosting.
      *
