@@ -1,0 +1,23 @@
+{% extends "layouts/guest.html.twig" %}
+
+{% set page_active = "home" %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}Privacy Policy{% endblock %}
+
+{% block page_description %}Our privacy policy outlines what kind of information we collect from you and how we will use it.{% endblock %}
+
+{% block body_matter %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{translate("PRIVACY")}}
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{{ site.uri.public }}">Home</a>
+                </li>
+                <li class="active">{{translate("PRIVACY")}}</li>
+            </ol>
+        </div>
+    </div>
+    {% include 'components/privacy.html.twig' %}
+{% endblock %}

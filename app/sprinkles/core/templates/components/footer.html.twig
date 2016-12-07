@@ -1,11 +1,21 @@
 <footer>
     <div class="container">
+      <p class="text-center"><a href="#">Back to top</a></p>
       <div class="row">
-          <div class="col-sm-6 text-center">
+          <div class="col-xs-6">
+            <p>
               &copy; <a href="{{site.uri.public}}">{{site.title}}</a>, {{ "now"|date("Y") }}
-          </div>
-          <div class="col-sm-6 text-center">
+            </p>
+            <p>
               Built with <a href="http://www.userfrosting.com">UserFrosting</a>.
+            </p>
+          </div>
+          {# TODO: media queries to improve appearance on mobile #}
+          <div class="col-xs-6 text-right">
+            <p>
+                <a href="{{site.uri.public}}/legal">Terms and Conditions</a> &middot;
+                <a href="{{site.uri.public}}/privacy">Privacy Policy</a>
+            </p>
           </div>        
       </div>
     </div>

@@ -16,4 +16,8 @@ $app->get('/about','UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbo
 
 $app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts');
 
+$app->get('/legal', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageLegal');
+
+$app->get('/privacy', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pagePrivacy');
+
 $app->get('/' . $config['site.uri.assets-raw'] . '/{url:.+}', 'UserFrosting\Sprinkle\Core\Controller\CoreController:getAsset');
