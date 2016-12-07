@@ -40,12 +40,13 @@
                 'cache_limiter' => false
             ],
             'db'            =>  [
-                'db_host'  => 'localhost',
-                'db_port'  => '', // Leave blank to use the default port for your database driver (eg. 3306 for MySQL)
-                'db_name'  => 'userfrosting',
-                'db_user'  => 'admin',
-                'db_pass'  => 'password',
-                'db_prefix'=> 'uf_'
+                'db_driver' => 'mysql',
+                'db_host'   => 'localhost',
+                'db_port'   => '', // Leave blank to use the default port for your database driver (eg. 3306 for MySQL)
+                'db_name'   => 'userfrosting',
+                'db_user'   => 'admin',
+                'db_pass'   => 'password',
+                'db_prefix' => 'uf_'
             ],
             'mail' => 'smtp',
             'smtp'  => [
@@ -90,12 +91,13 @@
                 'cache_limiter' => false
             ],
             'db'            =>  [
-                'db_host'  => 'localhost',
-                'db_port'  => '', // Leave blank to use the default port for your database driver (eg. 3306 for MySQL)
-                'db_name'  => 'userfrosting',
-                'db_user'  => 'admin',
-                'db_pass'  => 'password',
-                'db_prefix'=> 'uf_'
+                'db_driver' => 'mysql',
+                'db_host'   => 'localhost',
+                'db_port'   => '', // Leave blank to use the default port for your database driver (eg. 3306 for MySQL)
+                'db_name'   => 'userfrosting',
+                'db_user'   => 'admin',
+                'db_pass'   => 'password',
+                'db_prefix' => 'uf_'
             ],
             'mail' => 'smtp',
             'smtp'  => [

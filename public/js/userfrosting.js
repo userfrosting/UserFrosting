@@ -1,3 +1,5 @@
+//does the fetching and printing of the server-side stored alerts
+//every object contained content or alert(s) removed
 (function( $ ) {
     $.fn.flashAlerts = function() {
         var field = $(this);
@@ -8,15 +10,7 @@
             var alertHTML = "";
             if (data) {
                 jQuery.each(data, function(alert_idx, alert_message) {
-                    if (alert_message['type'] == "success"){
-                        alertHTML += "<div class='alert alert-success'>" + alert_message['message'] + "</div>";
-                    } else if (alert_message['type'] == "warning"){
-                        alertHTML += "<div class='alert alert-warning'>" + alert_message['message'] + "</div>";
-                    } else 	if (alert_message['type'] == "info"){
-                        alertHTML += "<div class='alert alert-info'>" + alert_message['message'] + "</div>";
-                    } else if (alert_message['type'] == "danger"){
-                        alertHTML += "<div class='alert alert-danger'>" + alert_message['message'] + "</div>";
-                    }
+                    alertHTML += getAlertHtml(alert_message['type'], alert_message['message']);
                 });
             }
             field.html(alertHTML);
@@ -25,8 +19,49 @@
             return data;
         });
     };
+        
 }( jQuery ));
 
+//does the creation of client-side = "pushed"-alerts 
+//any existing alert preserved 
+(function( $ ) {
+    $.fn.pushAlert = function( alert_type, alert_message ){
+        var field = $(this);
+        if (alert_type && alert_message){
+            var newAlertHTML = "";            
+            var oldAlertHtml = field.html();
+            if (typeof oldAlertHtml !== 'undefined' && oldAlertHtml !== null) 
+                newAlertHTML += oldAlertHtml;
+           
+            newAlertHTML += getAlertHtml(alert_type, alert_message);
+            field.html(newAlertHTML);
+             $("html, body").animate({ scrollTop: 0 }, "fast");		// Scroll back to top of page
+        }
+        
+        return field;
+    };
+    
+}( jQuery ));
+
+//every object contained content or alert(s) removed
+(function( $ ) {
+    $.fn.clearAlerts = function(){
+        return this.html("");
+    }; 
+}( jQuery ));
+ 
+//helper function to generate the alert html tags
+function getAlertHtml(alert_type, alert_message){
+    if (alert_type == "success"){
+        return "<div class='alert alert-success'>" + alert_message + "</div>";
+    } else if (alert_type == "warning"){
+        return "<div class='alert alert-warning'>" + alert_message + "</div>";
+    } else 	if (alert_type == "info"){
+        return "<div class='alert alert-info'>" + alert_message + "</div>";
+    } else if (alert_type == "danger"){
+        return "<div class='alert alert-danger'>" +  alert_message + "</div>";
+    }
+}
 
 /**  format an ISO date using Moment.js
  *  http://momentjs.com/

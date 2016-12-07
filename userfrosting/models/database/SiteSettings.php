@@ -520,32 +520,28 @@ class SiteSettings extends UFModel {
         // Get current values as stored in DB
         $db_settings = $this->fetchSettings();
         
-        $db = Capsule::connection()->getPdo();
-        
-        $table = $this->table;
-        
-        $stmt_insert = $db->prepare("INSERT INTO `$table`
-            (plugin, name, value, description)
-            VALUES (:plugin, :name, :value, :description);");
-        
-        $stmt_update = $db->prepare("UPDATE `$table` SET
-            value = :value,
-            description = :description 
-            WHERE plugin = :plugin and name = :name;");
-        
         // For each setting in this object, check if it exists in DB.  If it does not exist, add.  If it exists and is different from the current value, update.
         foreach ($this->_settings as $plugin => $setting){
             foreach ($setting as $name => $value){
-                $sqlVars = [
-                    ":plugin" => $plugin,
-                    ":name" => $name,
-                    ":value" => $value,
-                    ":description" => $this->_descriptions[$plugin][$name]
-                ];
                 if (!isset($db_settings['settings'][$plugin]) || !isset($db_settings['settings'][$plugin][$name])){
-                    $stmt_insert->execute($sqlVars);
+                    Capsule::table($this->table)->insert(
+                        [
+                            'plugin' => $plugin,
+                            'name' => $name,
+                            'value' => $value,
+                            'description' => $this->_descriptions[$plugin][$name]
+                        ]
+                    );
                 } else if (($db_settings['settings'][$plugin][$name] !== $this->_settings[$plugin][$name]) || ($db_settings['descriptions'][$plugin][$name] !== $this->_descriptions[$plugin][$name])){
-                    $stmt_update->execute($sqlVars);
+                    Capsule::table($this->table)
+                        ->where('plugin', $plugin)
+                        ->where('name', $name)
+                        ->update(
+                        [
+                            'value' => $value,
+                            'description' => $this->_descriptions[$plugin][$name]
+                        ]
+                    );
                 }
             }
         }
