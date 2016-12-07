@@ -12,21 +12,21 @@ $(document).ready(function() {
         Fullscreen background
     */
     $.backstretch(site.uri.images.background);
-    
+
     /*
         Forms show / hide
     */
-    
+
     // Show login form if registration is disabled
     if (!site.registration.enabled) {
         $('.login-form').show();
     }
-    
+
     // Fetch and render any alerts on the login panel
     // This is needed, for example, when we are redirected from another page.
     $("#alerts-login").ufAlerts();
-    $("#alerts-login").ufAlerts('fetch').ufAlerts('render');    
-    
+    $("#alerts-login").ufAlerts('fetch').ufAlerts('render');
+
     function toggleRegistrationForm() {
     	if( ! $(this).hasClass('active') ) {
     		$('.show-login-form').removeClass('active');
@@ -36,7 +36,7 @@ $(document).ready(function() {
     		});
     	}
     }
-    
+
     function toggleLoginForm() {
     	if( ! $(this).hasClass('active') ) {
     		$('.show-register-form').removeClass('active');
@@ -46,12 +46,20 @@ $(document).ready(function() {
     		});
     	}
     }
-    
+
     $('.show-register-form').on('click', toggleRegistrationForm);
-    
+
     $('.show-login-form').on('click', toggleLoginForm);
 
-    // TODO: Process form 
+    // TOS modal
+    $(this).find('.js-show-tos').click(function() {
+        $("body").ufModal({
+            sourceUrl: site.uri.public + "/modals/account/tos",
+            msgTarget: $("#alerts-register")
+        });
+    });
+
+    // Handles form submission
     $("#register").ufForm({
         validators: page.validators.register,
         msgTarget: $("#alerts-register")
@@ -65,18 +73,18 @@ $(document).ready(function() {
         } else {
             $("#alerts-login").ufAlerts('clear');
         }
-        
+
         $("#alerts-login").ufAlerts('fetch').ufAlerts('render');
     }).on("submitError.ufForm", function() {
         // Reload captcha
         $("#captcha").captcha();
     });
-    
+
     $("#sign-in").ufForm({
         validators: page.validators.login,
         msgTarget: $("#alerts-login")
     }).on("submitSuccess.ufForm", function() {
         // Forward to settings page on success
         window.location.replace(site.uri.public + "/account/settings");
-    });    
+    });
 });

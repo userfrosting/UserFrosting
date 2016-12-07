@@ -82,8 +82,8 @@
                     <div class="text-left">
                         {{translate('TOS_AGREEMENT', {
                             'site_title' : site.title,
-                            'url' : '#" data-toggle="modal" data-target="#tos',
-                            'linkText' : '&TOS'
+                            'link_attributes' : 'class="js-show-tos" href="#" data-toggle="modal"',
+                            'link_text' : '&TOS'
                         }) | raw}}
                     </div>
                     <button type="submit" class="btn">{{translate('REGISTER_ME')}}</button>

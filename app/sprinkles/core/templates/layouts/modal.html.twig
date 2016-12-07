@@ -1,5 +1,9 @@
 {# Base layout for modals.
 #}
+
+{# Conditional block.  See http://stackoverflow.com/a/13806784/2970321 #}
+{% set _modal_footer = block('modal_footer') %}
+
 <div class="modal fade" role="dialog" data-width="760">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -13,6 +17,11 @@
                 {% block modal_body %}
                 {% endblock %}
             </div>
+            {% if _modal_footer is not empty %}
+                <div class="modal-footer">
+                    {{ _modal_footer | raw }}
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

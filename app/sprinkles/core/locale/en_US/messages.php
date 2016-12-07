@@ -64,5 +64,5 @@ return [
     "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>.",
 
     // TOOLS
-    "_LINK" => "<a href=\"{{url}}\">{{linkText}}<a>"
+    "_LINK" => "<a {{link_attributes}}>{{link_text}}</a>"
 ];

@@ -187,6 +187,17 @@ class AccountController extends SimpleController
     }
 
     /**
+     * Returns a modal containing account terms of service.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * Request type: GET
+     */
+    public function getModalAccountTos($request, $response, $args)
+    {
+        return $this->ci->view->render($response, 'components/modals/tos.html.twig');
+    }
+
+    /**
      * Generate a random captcha, store it to the session, and return the captcha image.
      *
      * Request type: GET

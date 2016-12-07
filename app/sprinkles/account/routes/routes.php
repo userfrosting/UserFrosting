@@ -26,7 +26,7 @@ $app->group('/account', function () {
     $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')
         ->add('checkEnvironment')
         ->setName('login');
-    
+
     $this->get('/verify', 'UserFrosting\Sprinkle\Account\Controller\AccountController:verify');
 
     $this->post('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:forgotPassword');
@@ -41,3 +41,5 @@ $app->group('/account', function () {
 
     $this->post('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:settings');
 });
+
+$app->get('/modals/account/tos', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getModalAccountTos');
