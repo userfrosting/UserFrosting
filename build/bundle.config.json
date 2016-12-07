@@ -4,8 +4,8 @@
         "scripts": [
             "vendor/bootstrap-3.3.6/js/bootstrap.js",
             "vendor/handlebars-1.2.0/handlebars.js",
-            "vendor/jQueryValidation-1.14.0/jquery.validate.js",
-            "vendor/jQueryValidation-1.14.0/additional-methods.js",
+            "vendor/jqueryValidation-1.14.0/jquery.validate.js",
+            "vendor/jqueryValidation-1.14.0/additional-methods.js",
             "js/fortress-jqueryvalidation-methods.js",
             "js/uf-jqueryvalidation-config.js",
             "js/uf-alerts.js",
@@ -140,7 +140,7 @@
                 }
             }
         }
-    },    
+    },
     "css/main": {
         "styles": [
             "vendor/font-awesome-4.5.0/css/font-awesome.css",
@@ -155,7 +155,7 @@
                 }
             }
         }
-    },    
+    },
     "css/sb-admin-2" : {
         "styles": [
             "vendor/metismenu-1.1.3/css/metisMenu.css",
@@ -211,7 +211,7 @@
                 }
             }
         }
-    },    
+    },
     "css/guest": {
         "styles": [
             "vendor/start-bootstrap/css/modern-business.css",
@@ -224,7 +224,7 @@
                 }
             }
         }
-    },    
+    },
     "css/theme/nyx" : {
 
     }
