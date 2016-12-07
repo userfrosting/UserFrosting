@@ -74,7 +74,8 @@ class User extends UFModel
     {
         if (in_array($name, [
                 'group',
-                'last_sign_in_time'
+                'last_sign_in_time',
+                'avatar'
             ])) {
             return true;
         } else {
@@ -93,6 +94,10 @@ class User extends UFModel
     {
         if ($name == 'last_sign_in_time') {
             return $this->lastActivityTime('sign_in');
+        } else if ($name == 'avatar') {
+            // Use Gravatar as the user avatar
+            $hash = md5(strtolower(trim( $this->email)));
+            return "https://www.gravatar.com/avatar/" . $hash . "?d=mm";
         } else {
             return parent::__get($name);
         }
