@@ -643,9 +643,8 @@ class UserController extends SimpleController
             }
         }
 
-        // Create events - account creation and password reset
-        $user->newEventSignUp($this->_app->user);
-        $user->newEventPasswordReset();
+        // Create events - created new user event
+        // User {$this->user_name} was created by {$creator->user_name} on
 
         // Save user again after creating events
         $user->save();

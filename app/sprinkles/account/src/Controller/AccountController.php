@@ -60,7 +60,7 @@ class AccountController extends SimpleController
         $this->ci->db;
 
         $loginPage = $this->ci->router->pathFor('login');
-        
+
         // Load validation rules
         $schema = new RequestSchema("schema://deny-password.json");
 
@@ -77,7 +77,7 @@ class AccountController extends SimpleController
         }
 
         $passwordReset = $this->ci->repoPasswordReset->cancel($data['token']);
-        
+
         if (!$passwordReset) {
             $ms->addMessageTranslated("danger", "PASSWORD.FORGET.INVALID");
             return $response->withRedirect($loginPage, 400);
@@ -91,7 +91,7 @@ class AccountController extends SimpleController
      * Processes a request to email a forgotten password reset link to the user.
      *
      * Processes the request from the form on the "forgot password" page, checking that:
-     * 1. The rate limit for this type of request is being observed.     
+     * 1. The rate limit for this type of request is being observed.
      * 2. The provided email address belongs to a registered account;
      * 3. The submitted data is valid.
      * Note that we have removed the requirement that a password reset request not already be in progress.
@@ -105,7 +105,7 @@ class AccountController extends SimpleController
     {
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
-        
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -145,43 +145,40 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
             return $response->withStatus(429);
         }
-    
+
         // All checks passed!  log events/activities, update user, and send email
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
 
             // Log throttleable event
             $throttler->logEvent('password_reset_request', $throttleData);
-    
+
             // Load the user, by email address
             $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
-    
+
             // Check that the email exists.
             // If there is no user with that email address, we should still pretend like we succeeded, to prevent account enumeration
             if ($user) {
                 // Try to generate a new password reset request.
                 // Use timeout for "reset password"
                 $passwordReset = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.reset']);
-        
-                // Log activity.
-                $user->newActivityPasswordResetRequest();
-        
+
                 // Create and send email
                 $message = new TwigMailMessage($this->ci->view, "mail/password-reset.html.twig");
-        
+
                 $this->ci->mailer->from($config['address_book.admin'])
                     ->addEmailRecipient($user->email, $user->full_name, [
                         "user" => $user,
                         "token" => $passwordReset->getToken(),
                         "request_date" => date("Y-m-d H:i:s")
                     ]);
-        
+
                 $this->ci->mailer->send($message);
             }
         });
 
         // TODO: create delay to prevent timing-based attacks
-        
+
         $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", ['email' => $data['email']]);
         $response->withStatus(200);
     }
@@ -282,7 +279,7 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
             return $response->withStatus(429);
         }
-        
+
         // Log throttleable event
         $throttler->logEvent('sign_in_attempt', $throttleData);
 
@@ -594,7 +591,7 @@ class AccountController extends SimpleController
         } else {
             $data['flag_verified'] = true;
         }
-        
+
         // Load default group
         $groupSlug = $config['site.registration.user_defaults.group'];
         $defaultGroup = $classMapper->staticMethod('group', 'where', 'slug', $groupSlug)->first();
@@ -619,40 +616,39 @@ class AccountController extends SimpleController
         Capsule::transaction( function() use ($classMapper, $data, $ms, $config) {
             // Create the user
             $user = $classMapper->createInstance('user', $data);
-    
+
             // Store new user to database
             $user->save();
 
-            // Create sign-up event
-            $user->newActivitySignUp();
-    
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$user->user_name} registered for a new account.", [
+                'type' => 'sign_up'
+            ]);
+
             // Load default roles
             $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
             $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
             $defaultRoleIds = $defaultRoles->pluck('id')->all();
-    
+
             // Attach default roles
             $user->roles()->attach($defaultRoleIds);
-    
+
             // Verification email
             if ($config['site.registration.require_email_verification']) {
                 // Try to generate a new verification request
                 $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);
-        
-                // Create verification request event
-                $user->newActivityVerificationRequest();
-    
+
                 // Create and send verification email
                 $message = new TwigMailMessage($this->ci->view, "mail/verify-account.html.twig");
-    
+
                 $this->ci->mailer->from($config['address_book.admin'])
                     ->addEmailRecipient($user->email, $user->full_name, [
                         "user" => $user,
                         "token" => $verification->getToken()
                     ]);
-    
+
                 $this->ci->mailer->send($message);
-    
+
                 $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE2");
             } else {
                 // No verification required
@@ -678,7 +674,7 @@ class AccountController extends SimpleController
     {
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
-        
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -724,28 +720,26 @@ class AccountController extends SimpleController
         Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
             // Log throttleable event
             $throttler->logEvent('verification_request', $throttleData);
-    
+
             // Load the user, by email address
             $user = $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first();
-    
+
             // Check that the user exists and is not already verified.
             // If there is no user with that email address, or the user exists and is already verified,
             // we pretend like we succeeded to prevent account enumeration
-            if ($user && $user->flag_verified != "1") {    
+            if ($user && $user->flag_verified != "1") {
                 // We're good to go - record user activity and send the email
-                $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);                
-                
-                $user->newActivityVerificationRequest();
-        
+                $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);
+
                 // Create and send verification email
                 $message = new TwigMailMessage($this->ci->view, "mail/resend-verification.html.twig");
-        
+
                 $this->ci->mailer->from($config['address_book.admin'])
                     ->addEmailRecipient($user->email, $user->full_name, [
                         "user" => $user,
                         "token" => $verification->getToken()
                     ]);
-        
+
                 $this->ci->mailer->send($message);
             }
         });
@@ -769,7 +763,7 @@ class AccountController extends SimpleController
     {
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
-        
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -856,7 +850,7 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated("danger", "ACCOUNT.ACCESS_DENIED");
             return $response->withStatus(403);
         }
-        
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -876,7 +870,7 @@ class AccountController extends SimpleController
         $data = $transformer->transform($params);
 
         $error = false;
-        
+
         // Validate, and halt on validation errors.
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
@@ -920,6 +914,11 @@ class AccountController extends SimpleController
 
         $currentUser->save();
 
+        // Create activity record
+        $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their account settings.", [
+            'type' => 'update_account_settings'
+        ]);
+
         $ms->addMessageTranslated("success", "ACCOUNT.SETTINGS_UPDATED");
         return $response->withStatus(200);
     }
@@ -947,7 +946,7 @@ class AccountController extends SimpleController
         $this->ci->db;
 
         $loginPage = $this->ci->router->pathFor('login');
-        
+
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -967,7 +966,7 @@ class AccountController extends SimpleController
         }
 
         $verification = $this->ci->repoVerification->complete($data['token']);
-        
+
         if (!$verification) {
             $ms->addMessageTranslated("danger", "ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND");
             return $response->withRedirect($loginPage, 400);
@@ -977,5 +976,5 @@ class AccountController extends SimpleController
 
         // Forward to login page
         return $response->withRedirect($loginPage);
-    }    
+    }
 }

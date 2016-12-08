@@ -16,11 +16,13 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
+use UserFrosting\Sprinkle\Account\Log\UserActivityProcessor;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Log\DatabaseHandler;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 
 /**
@@ -45,11 +47,11 @@ class AccountServicesProvider
             $currentUser = $c->currentUser;
             if (!$currentUser->isGuest()) {
                 $c->sprinkleManager->addAssets($currentUser->theme);
-            }            
-            
+            }
+
             return $assetLoader;
-        });    
-    
+        });
+
         /**
          * Extend the 'classMapper' service to register model classes.
          *
@@ -65,7 +67,7 @@ class AccountServicesProvider
             $classMapper->setClassMapping('verification', 'UserFrosting\Sprinkle\Account\Model\Verification');
             return $classMapper;
         });
-        
+
         /**
          * Extends the 'errorHandler' service with custom exception handlers.
          *
@@ -74,10 +76,10 @@ class AccountServicesProvider
         $container->extend('errorHandler', function ($handler, $c) {
             // Register the ForbiddenExceptionHandler.
             $handler->registerHandler('\UserFrosting\Support\Exception\ForbiddenException', '\UserFrosting\Sprinkle\Account\Handler\ForbiddenExceptionHandler');
-            
+
             return $handler;
         });
-        
+
         /**
          * Extends the 'translator' service, adding any locale files from the user theme.
          *
@@ -107,10 +109,10 @@ class AccountServicesProvider
          * Adds account-specific functions, globals, filters, etc to Twig, and the path to templates for the user theme.
          */
         $container->extend('view', function ($view, $c) {
-            $twig = $view->getEnvironment(); 
+            $twig = $view->getEnvironment();
             $extension = new AccountExtension($c);
             $twig->addExtension($extension);
-            
+
             // Add paths for user theme, if a user is logged in
             $currentUser = $c->currentUser;
             if (!$currentUser->isGuest()) {
@@ -123,27 +125,27 @@ class AccountServicesProvider
 
             return $view;
         });
-        
+
         /**
          * Authentication service.
          *
          * Supports logging in users, remembering their sessions, etc.
-         */        
+         */
         $container['authenticator'] = function ($c) {
             $classMapper = $c->classMapper;
             $config = $c->config;
             $session = $c->session;
-                
+
             // Force database connection to boot up
-            $c->db;            
-            
+            $c->db;
+
             // Fix RememberMe table name
-            $config['remember_me.table.tableName'] = Capsule::connection()->getTablePrefix() . $config['remember_me.table.tableName'];          
-            
+            $config['remember_me.table.tableName'] = Capsule::connection()->getTablePrefix() . $config['remember_me.table.tableName'];
+
             $authenticator = new Authenticator($classMapper, $session, $config);
             return $authenticator;
         };
-        
+
         /**
          * Auth logging with Monolog.
          *
@@ -163,14 +165,14 @@ class AccountServicesProvider
 
             return $logger;
         };
-        
+
         /**
          * Authorization service.
          *
          * Determines permissions for user actions.  Extend this service to add additional access condition callbacks.
-         */         
+         */
         $container['authorizer'] = function ($c) {
-            // Default access condition callbacks.  Add more in your sprinkle by using $container->extend(...) 
+            // Default access condition callbacks.  Add more in your sprinkle by using $container->extend(...)
             $callbacks = [
                 /**
                  * Unconditionally grant permission - use carefully!
@@ -179,23 +181,23 @@ class AccountServicesProvider
                 'always' => function () {
                     return true;
                 },
-                
+
                 /**
                  * Check if the specified values are identical to one another (strict comparison).
                  * @param mixed $val1 the first value to compare.
-                 * @param mixed $val2 the second value to compare.     
+                 * @param mixed $val2 the second value to compare.
                  * @return bool true if the values are strictly equal, false otherwise.
-                 */    
+                 */
                 'equals' => function ($val1, $val2) {
                     return ($val1 === $val2);
                 },
-                
+
                 /**
                  * Check if the specified values are numeric, and if so, if they are equal to each other.
                  * @param mixed $val1 the first value to compare.
-                 * @param mixed $val2 the second value to compare.     
+                 * @param mixed $val2 the second value to compare.
                  * @return bool true if the values are numeric and equal, false otherwise.
-                 */     
+                 */
                 'equals_num' => function ($val1, $val2) {
                     if (!is_numeric($val1)) {
                         return false;
@@ -203,15 +205,15 @@ class AccountServicesProvider
                     if (!is_numeric($val2)) {
                         return false;
                     }
-                    
+
                     return ($val1 == $val2);
                 },
-                
+
                 /**
                  * Check if the specified user (by user_id) has a particular role.
                  *
                  * @param int $user_id the id of the user.
-                 * @param int $role_id the id of the role. 
+                 * @param int $role_id the id of the role.
                  * @return bool true if the user has the role, false otherwise.
                  */
                 'has_role' => function ($user_id, $role_id) {
@@ -220,64 +222,64 @@ class AccountServicesProvider
                         ->where('role_id', $role_id)
                         ->count() > 0;
                 },
-                
+
                 /**
                  * Check if the specified value $needle is in the values of $haystack.
                  *
                  * @param mixed $needle the value to look for in $haystack
-                 * @param array[mixed] $haystack the array of values to search.    
+                 * @param array[mixed] $haystack the array of values to search.
                  * @return bool true if $needle is present in the values of $haystack, false otherwise.
-                 */      
+                 */
                 'in' => function ($needle, $haystack) {
                     return in_array($needle, $haystack);
                 },
-                
+
                 /**
                  * Check if the specified user (by user_id) is in a particular group.
                  *
                  * @param int $user_id the id of the user.
-                 * @param int $group_id the id of the group. 
+                 * @param int $group_id the id of the group.
                  * @return bool true if the user is in the group, false otherwise.
-                 */     
+                 */
                 'in_group' => function ($user_id, $group_id) {
                     $user = User::find($user_id);
                     return ($user->group_id == $group_id);
                 },
-                
+
                 /**
                  * Check if all values in the array $needle are present in the values of $haystack.
                  *
                  * @param array[mixed] $needle the array whose values we should look for in $haystack
-                 * @param array[mixed] $haystack the array of values to search.    
+                 * @param array[mixed] $haystack the array of values to search.
                  * @return bool true if every value in $needle is present in the values of $haystack, false otherwise.
-                 */          
+                 */
                 'subset' => function ($needle, $haystack) {
                     return count($needle) == count(array_intersect($needle, $haystack));
                 },
-                
+
                 /**
                  * Check if all keys of the array $needle are present in the values of $haystack.
                  *
                  * This function is useful for whitelisting an array of key-value parameters.
                  * @param array[mixed] $needle the array whose keys we should look for in $haystack
-                 * @param array[mixed] $haystack the array of values to search.    
+                 * @param array[mixed] $haystack the array of values to search.
                  * @return bool true if every key in $needle is present in the values of $haystack, false otherwise.
-                 */      
+                 */
                 'subset_keys' => function ($needle, $haystack) {
                     return count($needle) == count(array_intersect(array_keys($needle), $haystack));
                 }
             ];
-            
+
             $authorizer = new AuthorizationManager($c, $callbacks);
             return $authorizer;
         };
-        
+
         /**
          * Loads the User object for the currently logged-in user.
          *
          * Tries to re-establish a session for "remember-me" users who have been logged out, or creates a guest user object if no one is logged in.
          * @todo Move some of this logic to the Authenticate class.
-         */ 
+         */
         $container['currentUser'] = function ($c) {
             $authenticator = $c->authenticator;
             $classMapper = $c->classMapper;
@@ -304,10 +306,10 @@ class AccountServicesProvider
 
             return $currentUser;
         };
-        
+
         /**
          * Repository for password reset requests.
-         */ 
+         */
         $container['repoPasswordReset'] = function ($c) {
             $classMapper = $c->classMapper;
             $config = $c->config;
@@ -318,10 +320,10 @@ class AccountServicesProvider
             $repo = new PasswordResetRepository($classMapper, $config['password_reset.algorithm']);
             return $repo;
         };
-        
+
         /**
          * Repository for verification requests.
-         */ 
+         */
         $container['repoVerification'] = function ($c) {
             $classMapper = $c->classMapper;
             $config = $c->config;
@@ -331,6 +333,32 @@ class AccountServicesProvider
 
             $repo = new VerificationRepository($classMapper, $config['verification.algorithm']);
             return $repo;
+        };
+
+        /**
+         * Logger for logging the current user's activities to the database.
+         *
+         * Extend this service to push additional handlers onto the 'userActivity' log stack.
+         */
+        $container['userActivityLogger'] = function ($c) {
+            $classMapper = $c->classMapper;
+            $config = $c->config;
+            $session = $c->session;
+
+            $logger = new Logger('userActivity');
+
+            $handler = new DatabaseHandler($classMapper, 'activity');
+
+            // Note that we get the user id from the session, not the currentUser service.
+            // This is because the currentUser service may not reflect the actual user during login/logout requests.
+            $currentUserIdKey = $config['session.keys.current_user_id'];
+            $userId = $session[$currentUserIdKey];
+            $processor = new UserActivityProcessor($userId);
+
+            $logger->pushProcessor($processor);
+            $logger->pushHandler($handler);
+
+            return $logger;
         };
     }
 }

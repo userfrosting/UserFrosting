@@ -9,6 +9,7 @@
     if (!$schema->hasTable('activities')) {
         $schema->create('activities', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('ip_address', 45)->nullable();
             $table->integer('user_id')->unsigned();
             $table->string('type', 255)->comment('An identifier used to track the type of activity.');
             $table->timestamp('occurred_at');

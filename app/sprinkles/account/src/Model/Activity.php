@@ -16,6 +16,7 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  *
  * Represents a single user activity at a specified point in time.
  * @author Alex Weissman (https://alexanderweissman.com)
+ * @property string ip_address
  * @property int user_id
  * @property string type
  * @property datetime occurred_at
@@ -29,6 +30,7 @@ class Activity extends UFModel
     protected $table = "activities";
     
     protected $fillable = [
+        "ip_address",
         "user_id",
         "type",
         "occurred_at",

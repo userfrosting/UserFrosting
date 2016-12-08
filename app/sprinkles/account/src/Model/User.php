@@ -223,64 +223,6 @@ class User extends UFModel
     }
 
     /**
-     * Create a new password reset request activity.
-     *
-     * @return Activity
-     */
-    public function newActivityPasswordResetRequest()
-    {
-        return $this->newActivity(
-            'password_reset_request',
-            "User {$this->user_name} requested a password reset on " . date("Y-m-d H:i:s") . "."
-        );
-    }
-
-    /**
-     * Create a new user sign-in activity.
-     *
-     * @return Activity
-     */
-    public function newActivitySignIn()
-    {
-        return $this->newActivity(
-            'sign_in',
-            "User {$this->user_name} signed in at " . date("Y-m-d H:i:s") . "."
-        );
-    }
-
-    /**
-     * Create an activity saying that this user registered their account, or an account was created for them.
-     *
-     * @param User $creator optional The User who created this account.  If set, this will be recorded in the activity description.
-     * @return Activity
-     */
-    public function newActivitySignUp($creator = null){
-        if ($creator) {
-            $description = "User {$this->user_name} was created by {$creator->user_name} on " . date("Y-m-d H:i:s") . ".";
-        } else {
-            $description = "User {$this->user_name} successfully registered on " . date("Y-m-d H:i:s") . ".";
-        }
-
-        return $this->newActivity(
-            'sign_up',
-            $description
-        );
-    }
-
-    /**
-     * Create a new email verification request activity.  Also, generates a new secret token.
-     *
-     * @return Activity
-     */
-    public function newActivityVerificationRequest(){
-
-        return $this->newActivity(
-            "verification_request",
-            "User {$this->user_name} requested verification on " . date("Y-m-d H:i:s") . "."
-        );
-    }
-
-    /**
      * Extends Eloquent's Collection models.
      *
      * @return UserCollection
@@ -295,13 +237,14 @@ class User extends UFModel
      *
      * By default, adds a new sign-in activity and updates any legacy hash.
      * @param mixed[] $params Optional array of parameters used for this event handler.
-     * @todo Use Monolog logging service
      * @todo Transition to Laravel Event dispatcher to handle this
      */
     public function onLogin($params = array())
     {
         // Add a sign in activity (time is automatically set by database)
-        $this->newActivitySignIn();
+        static::$ci->userActivityLogger->info("User {$this->user_name} signed in.", [
+            'type' => 'sign_in'
+        ]);
 
         // Update password if we had encountered an outdated hash
         $passwordType = Password::getHashType($this->password);
@@ -323,6 +266,22 @@ class User extends UFModel
 
         // Save changes
         $this->save();
+
+        return $this;
+    }
+
+    /**
+     * Performs tasks to be done after this user has been logged out.
+     *
+     * By default, adds a new sign-out activity.
+     * @param mixed[] $params Optional array of parameters used for this event handler.
+     * @todo Transition to Laravel Event dispatcher to handle this
+     */
+    public function onLogout($params = array())
+    {
+        static::$ci->userActivityLogger->info("User {$this->user_name} signed out.", [
+            'type' => 'sign_out'
+        ]);
 
         return $this;
     }
@@ -403,24 +362,5 @@ class User extends UFModel
         }
 
         return $query;
-    }
-
-    protected function newActivity($type, $description)
-    {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = static::$ci->classMapper;
-
-        $activity = $classMapper->createInstance('activity', [
-            'type'  => $type,
-            'description' => $description,
-            'occurred_at' => Carbon::now()
-        ]);
-
-        $this->activities()->save($activity);
-
-        $this->last_activity_id = $activity->id;
-        $this->save();
-
-        return $activity;
     }
 }

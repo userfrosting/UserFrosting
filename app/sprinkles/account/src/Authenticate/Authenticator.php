@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
- */ 
+ */
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Birke\Rememberme\Authenticator as RememberMe;
@@ -32,24 +32,24 @@ class Authenticator
 
     /**
      * @var Session
-     */    
+     */
     protected $session;
-    
+
     /**
      * @var Config
-     */    
+     */
     protected $config;
-    
+
     /**
      * @var RememberMePDO
-     */    
+     */
     protected $rememberMeStorage;
-    
+
     /**
      * @var RememberMe
-     */    
+     */
     protected $rememberMe;
-    
+
     /**
      * Create a new Authenticator object.
      *
@@ -61,11 +61,11 @@ class Authenticator
     {
         $this->classMapper = $classMapper;
         $this->session = $session;
-        $this->config = $config;           
-        
+        $this->config = $config;
+
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
-        
+
         // Catch the BindingResolutionException if we can't connect to the DB
         try {
             $pdo = Capsule::connection()->getPdo();
@@ -81,16 +81,16 @@ class Authenticator
         // Set cookie name
         $cookieName = $this->config['session.name'] . '-' . $this->config['remember_me.cookie.name'];
         $this->rememberMe->setCookieName($cookieName);
-        
+
         // Change cookie path
         $this->rememberMe->getCookie()->setPath($this->config['remember_me.session.path']);
-        
+
         // Set expire time, if specified
         if ($this->config->has('remember_me.expire_time') && ($this->config->has('remember_me.expire_time') != null)) {
             $this->rememberMe->setExpireTime($this->config['remember_me.expire_time']);
         }
     }
-    
+
     /**
      * Attempts to authenticate a user based on a supplied identity and password.
      *
@@ -100,11 +100,11 @@ class Authenticator
     {
         // Try to load the user, using the specified conditions
         $user = $this->classMapper->staticMethod('user', 'where', $identityColumn, $identityValue)->first();
-        
+
         if (!$user) {
             throw new InvalidCredentialsException();
         }
-        
+
         // Check that the user has a password set (so, rule out newly created accounts without a password)
         if (!$user->password) {
             throw new InvalidCredentialsException();
@@ -129,36 +129,37 @@ class Authenticator
             throw new InvalidCredentialsException();
         }
     }
-    
+
     /**
      * Process an account login request.
      *
      * This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.
      * @param User $user The user to log in.
      * @param bool $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
+     * @todo Figure out a way to update the currentUser service to reflect the logged-in user *immediately* in the service provider.
+     * As it stands, the currentUser service will still reflect a "guest user" for the remainder of the request.
      */
     public function login($user, $rememberMe = false)
     {
         $this->session->regenerateId(true);
-        
+
         // If the user wants to be remembered, create Rememberme cookie
         if($rememberMe) {
-            //error_log("Creating user cookie for " . $user->id);
             $this->rememberMe->createCookie($user->id);
         } else {
             $this->rememberMe->clearCookie();
-        }            
+        }
         // Assume identity
         $key = $this->config['session.keys.current_user_id'];
         $this->session[$key] = $user->id;
-        
+
         // Set auth mode
         $this->session[$this->config['session.keys.auth_mode']] = 'form';
-        
-        // Set user login events
+
+        // User login actions
         $user->onLogin();
-    }       
-        
+    }
+
     /**
      * Try to get the currently authenticated user from the session.
      *
@@ -169,12 +170,12 @@ class Authenticator
      * @throws AccountDisabledException
      */
     public function getSessionUser()
-    {        
+    {
         // Determine if we are already logged in (user id exists in the session variable)
         $currentUserIdKey = $this->config['session.keys.current_user_id'];
-        if($this->session->has($currentUserIdKey) && ($this->session[$currentUserIdKey] != null)) {       
+        if($this->session->has($currentUserIdKey) && ($this->session[$currentUserIdKey] != null)) {
             $currentUserId = $this->session[$currentUserIdKey];
-            
+
             // Check, if the Rememberme cookie exists and is still valid.
             // If not, we log out the current session and throw an exception.
             if(!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
@@ -185,7 +186,7 @@ class Authenticator
         } else {
             // Get the user id. If we can present the correct tokens from the cookie, remake the session and automatically log the user in
             $currentUserId = $this->rememberMe->login();
-            
+
             if ($currentUserId) {
                 // Update in session
                 $this->session[$currentUserIdKey] = $currentUserId;
@@ -199,25 +200,25 @@ class Authenticator
                 }
             }
         }
-        
+
         // If a user id was retrieved from the session or rememberMe storage, try to load the user object from the DB
         if ($currentUserId) {
             $currentUser = $this->classMapper->staticMethod('user', 'find', $currentUserId);
-            
+
             // If the user doesn't exist any more, throw an exception.
             if (!$currentUser)
                 throw new AccountInvalidException();
-            
+
             // If the user has been disabled since their last request, throw an exception.
             if (!$currentUser->flag_enabled)
                 throw new AccountDisabledException();
         } else {
             return;
         }
-        
+
         return $currentUser;
     }
-    
+
     /**
      * Processes an account logout request.
      *
@@ -226,25 +227,31 @@ class Authenticator
      * and corresponding database entries in multiple browsers/devices.  See http://jaspan.com/improved_persistent_login_cookie_best_practice.
      *
      * @param bool $complete If set to true, will ensure that the user is logged out from *all* browsers on all devices.
-     */      
+     */
     public function logout($complete = false)
     {
         $currentUserIdKey = $this->config['session.keys.current_user_id'];
         $currentUserId = $this->session[$currentUserIdKey];
-        
+
         // This removes all of the user's persistent logins from the database
         if ($complete) {
             $this->storage->cleanAllTriplets($currentUserId);
         }
-        
+
         // Clear the rememberMe cookie
         if ($this->rememberMe->clearCookie()) {
             //error_log("Cleared cookie");
         }
-        
+
+        // User logout actions
+        if ($currentUserId) {
+            $currentUser = $this->classMapper->staticMethod('user', 'find', $currentUserId);
+            $currentUser->onLogout();
+        }
+
         // Completely destroy the session
         $this->session->destroy();
-        
+
         // Restart the session service
         $this->session->start();
     }
