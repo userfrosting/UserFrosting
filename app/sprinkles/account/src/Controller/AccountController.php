@@ -622,7 +622,8 @@ class AccountController extends SimpleController
 
             // Create activity record
             $this->ci->userActivityLogger->info("User {$user->user_name} registered for a new account.", [
-                'type' => 'sign_up'
+                'type' => 'sign_up',
+                'user_id' => $user->id
             ]);
 
             // Load default roles

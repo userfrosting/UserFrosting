@@ -352,7 +352,7 @@ class AccountServicesProvider
             // Note that we get the user id from the session, not the currentUser service.
             // This is because the currentUser service may not reflect the actual user during login/logout requests.
             $currentUserIdKey = $config['session.keys.current_user_id'];
-            $userId = $session[$currentUserIdKey];
+            $userId = isset($session[$currentUserIdKey]) ? $session[$currentUserIdKey] : $config['reserved_user_ids.guest'];
             $processor = new UserActivityProcessor($userId);
 
             $logger->pushProcessor($processor);
