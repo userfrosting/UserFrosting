@@ -16,13 +16,13 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
+use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
 use UserFrosting\Sprinkle\Account\Log\UserActivityProcessor;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
-use UserFrosting\Sprinkle\Core\Log\DatabaseHandler;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 
 /**
@@ -347,7 +347,7 @@ class AccountServicesProvider
 
             $logger = new Logger('userActivity');
 
-            $handler = new DatabaseHandler($classMapper, 'activity');
+            $handler = new UserActivityDatabaseHandler($classMapper, 'activity');
 
             // Note that we get the user id from the session, not the currentUser service.
             // This is because the currentUser service may not reflect the actual user during login/logout requests.
