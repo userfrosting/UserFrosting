@@ -55,6 +55,7 @@ return [
     "DELETE_NAMED" => "Delete {{name}}",
     "DENY" => "Deny",
     "EDIT" => "Edit",
+    "RESET" => "Reset",
     "SAVE" => "Save",
     "SORT" => "Sort",
     "PRINT" => "Print",

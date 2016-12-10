@@ -52,6 +52,7 @@ return [
     "DELETE_NAMED" => "Supprimer {{name}}",
     "DENY" => "Refuser",
     "EDIT" => "Modifier",
+    "RESET" => "Réinitialiser",
     "SAVE" => "Sauvegarder",
     "SORT" => "Trier",
     "PRINT" => "Imprimer",
