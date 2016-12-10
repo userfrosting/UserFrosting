@@ -218,7 +218,8 @@ class SprinkleManager
      *
      * @param none
      */
-    public function getSprinkles() {
+    public function getSprinkles()
+    {
         return $this->sprinkles;
     }
 
@@ -228,7 +229,8 @@ class SprinkleManager
      *
      * @param $name The name of the Sprinkle
      */
-    public function isAvailable($name) {
+    public function isAvailable($name)
+    {
         return in_array($name, $this->getSprinkles());
     }
 
