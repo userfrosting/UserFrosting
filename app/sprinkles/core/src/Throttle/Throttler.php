@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
- */ 
+ */
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 use Carbon\Carbon;
@@ -73,7 +73,7 @@ class Throttler
         // Get earliest time to start looking for throttleable events
         $startTime = Carbon::now()
             ->subSeconds($throttleRule->getInterval());
-        
+
         // Fetch all throttle events of the specified type, that match the specified rule
         if ($throttleRule->getMethod() == 'ip') {
             $events = $this->classMapper->staticMethod('throttle', 'where', 'type', $type)
@@ -88,7 +88,7 @@ class Throttler
             // Filter out only events that match the required JSON data
             $events = $events->filter(function ($key, $item) use ($requestData) {
                 $data = json_decode($item->request_data);
-                
+
                 // If a field is not specified in the logged data, or it doesn't match the value we're searching for,
                 // then filter out this event from the collection.
                 foreach ($requestData as $name => $value) {
@@ -96,7 +96,7 @@ class Throttler
                         return false;
                     }
                 }
-                
+
                 return true;
             });
         }
@@ -128,12 +128,12 @@ class Throttler
             'ip' => $_SERVER['REMOTE_ADDR'],
             'request_data' => json_encode($requestData)
         ]);
-        
+
         $event->save();
 
         return $this;
     }
-    
+
     /**
      * Returns the current delay for a specified throttle rule.
      *

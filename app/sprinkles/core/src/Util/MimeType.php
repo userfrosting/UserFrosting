@@ -11,7 +11,7 @@ namespace UserFrosting\Sprinkle\Core\Util;
 /**
  * Maps file extensions to MIME types.  Adapted from thephpleague/flysystem
  *
- * @author The PHP League (http://thephpleague.com/)  
+ * @author The PHP League (http://thephpleague.com/)
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see https://github.com/thephpleague/flysystem
  */
@@ -35,7 +35,7 @@ class MimeType
         }
         return 'text/plain';
     }
-    
+
     /**
      * @param string $filename
      *
@@ -46,7 +46,7 @@ class MimeType
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
         return empty($extension) ? 'text/plain' : static::detectByFileExtension($extension);
     }
-    
+
     /**
      * @return array Map of file extension to MIME Type
      */

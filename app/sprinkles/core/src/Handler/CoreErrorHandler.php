@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface;
  * Default UserFrosting application error handler
  *
  * It outputs the error message and diagnostic information in either JSON, XML, or HTML based on the Accept header.
- * @author Alex Weissman (https://alexanderweissman.com) 
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class CoreErrorHandler extends \Slim\Handlers\Error
 {
@@ -26,12 +26,12 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
-    
+
     /**
      * @var array[string] An array that maps Exception types to callbacks, for special processing of certain types of errors.
      */
     protected $exceptionHandlers = [];
-    
+
     /**
      * Constructor
      *
@@ -43,7 +43,7 @@ class CoreErrorHandler extends \Slim\Handlers\Error
         $this->ci = $ci;
         $this->displayErrorDetails = (bool)$displayErrorDetails;
     }
-        
+
     /**
      * Invoke error handler
      *
@@ -54,7 +54,7 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception)
-    {        
+    {
         // Default exception handler class
         $handlerClass = '\UserFrosting\Sprinkle\Core\Handler\ExceptionHandler';
 
@@ -150,14 +150,14 @@ class CoreErrorHandler extends \Slim\Handlers\Error
                 $enableLogging = false;
                 $this->ci->alerts->resetMessageStream();
             }
-        
+
             $contentType = $this->determineContentType($request);
-    
+
             $output = $this->getDebugMessage($request, $response, $exception, $contentType);
-    
+
             $body = new Body(fopen('php://temp', 'r+'));
             $body->write($output);
-    
+
             $response = $response
                         ->withHeader('Content-type', $contentType)
                         ->withBody($body);
@@ -187,12 +187,12 @@ class CoreErrorHandler extends \Slim\Handlers\Error
         // We do not log errors in this case.
         if ($this->displayErrorDetails) {
             $contentType = $this->determineContentType($request);
-        
+
             $output = $this->getDebugMessage($request, $response, $exception, $contentType);
-    
+
             $body = new Body(fopen('php://temp', 'r+'));
             $body->write($output);
-    
+
             $response = $response
                             ->withStatus(500)
                             ->withHeader('Content-type', $contentType)
@@ -280,7 +280,7 @@ class CoreErrorHandler extends \Slim\Handlers\Error
         $uri = $request->getUri();
         $params = $request->getParams();
         $requestHeaders = $request->getHeaders();
-        
+
         $html = '<h3>Request URI:</h3>';
 
         $html .= sprintf('<div><strong>%s</strong> %s</div>', $method, $uri);
@@ -304,7 +304,7 @@ class CoreErrorHandler extends \Slim\Handlers\Error
      * @return string
      */
     protected function renderHtmlResponseHeaders(ResponseInterface $response)
-    {        
+    {
         $html = '<h3>Response headers:</h3>';
         $html .= '<em>Additional response headers may have been set by Slim after the error handling routine.  Please check your browser console for a complete list.</em><br>';
 

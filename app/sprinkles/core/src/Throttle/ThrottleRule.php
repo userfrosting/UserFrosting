@@ -18,17 +18,17 @@ class ThrottleRule
 {
     /** @var string Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling. */
     protected $method;
-    
-    /** @var int The amount of time, in seconds, to look back in determining attempts to consider. */ 
+
+    /** @var int The amount of time, in seconds, to look back in determining attempts to consider. */
     protected $interval;
-    
+
     /**
      * @var int[] A mapping of minimum observation counts (x) to delays (y), in seconds.
      * Any throttleable event that has occurred more than x times in this rule's interval,
      * must wait y seconds after the last occurrence before another attempt is permitted.
      */
     protected $delays;
-    
+
     /**
      * Create a new ThrottleRule object.
      *
@@ -42,7 +42,7 @@ class ThrottleRule
         $this->setInterval($interval);
         $this->setDelays($delays);
     }
-    
+
     /**
      * Get the current delay on this rule for a particular number of event counts.
      *
@@ -55,13 +55,13 @@ class ThrottleRule
         if ($count == 0) {
             return 0;
         }
-        
+
         foreach ($this->delays as $observations => $delay) {
             // Skip any delay rules for which we haven't met the requisite number of observations
             if ($count < $observations) {
                 continue;
             }
-            
+
             // If this rule meets the observed number of events, and violates the required delay, then return the remaining time left
             if ($lastEventTime->diffInSeconds() < $delay) {
                 return $lastEventTime->addSeconds($delay)->diffInSeconds();

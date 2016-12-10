@@ -22,12 +22,12 @@ class AuthorizationManager
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
-    
+
     /**
      * @var array[callable] An array of callbacks that accept some parameters and evaluate to true or false.
      */
     protected $callbacks = [];
-        
+
     /**
      * Create a new AuthorizationManager object.
      *
@@ -38,7 +38,7 @@ class AuthorizationManager
         $this->ci = $ci;
         $this->callbacks = $callbacks;
     }
-    
+
     /**
      * Register an authorization callback, which can then be used in permission conditions.
      *
@@ -51,7 +51,7 @@ class AuthorizationManager
         $this->callbacks[$name] = $callback;
         return $this;
     }
-    
+
     /**
      * Checks whether or not a user has access on a particular permission slug.
      *
@@ -60,11 +60,11 @@ class AuthorizationManager
      * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.
      * @return boolean True if the user has access, false otherwise.
-     */ 
+     */
     public function checkAccess($user, $slug, $params = [])
     {
         $debug = $this->ci->config['debug.auth'];
-        
+
         if ($debug) {
             $trace = array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3), 1);
             $this->ci->authLogger->debug("Authorization check requested at: ", $trace);
@@ -77,10 +77,10 @@ class AuthorizationManager
             }
             return false;
         }
-    
+
         // The master (root) account has access to everything.
         // Need to use loose comparison for now, because some DBs return `id` as a string.
-        
+
         if ($user->id == $this->ci->config['reserved_user_ids.master']) {
             if ($debug) {
                 $this->ci->authLogger->debug("User is the master (root) user.  Access granted.");
@@ -105,7 +105,7 @@ class AuthorizationManager
         if ($debug) {
             $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($permissions->toArray(), true));
         }
-        
+
         foreach ($permissions as $permission) {
             $pass = $ace->evaluateCondition($permission->conditions, $params);
             if ($pass) {
@@ -115,7 +115,7 @@ class AuthorizationManager
                 return true;
             }
         }
-        
+
         if ($debug) {
             $this->ci->authLogger->debug("User failed to pass any of the matched permissions.  Access denied.");
         }

@@ -27,17 +27,17 @@ class AuthCompromisedExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
-     */   
+     * @return ResponseInterface
+     */
     public function ajaxHandler($request, $response, $exception)
     {
         $this->logFlag = false;
-    
+
         $this->ci->alerts->addMessageTranslated('danger', 'ACCOUNT.SESSION_COMPROMISED');
-        
+
         return $response->withStatus($httpCode);
     }
-     
+
     /**
      * Handler for exceptions raised during "standard" requests.
      *
@@ -47,15 +47,15 @@ class AuthCompromisedExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param HttpException          $exception The caught Exception object
      *
-     * @return ResponseInterface     
+     * @return ResponseInterface
      */
     public function standardHandler($request, $response, $exception)
     {
         $this->logFlag = false;
-        
+
         return $this->ci->view->render($response, 'pages/error/compromised.html.twig')
             ->withStatus($exception->getHttpErrorCode())
             ->withHeader('Content-Type', 'text/html');
     }
-    
+
 }

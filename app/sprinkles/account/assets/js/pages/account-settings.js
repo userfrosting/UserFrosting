@@ -7,20 +7,20 @@
  * Target page: account/settings
  */
 $(document).ready(function() {
-    
+
     // Fetch and render any alerts
     // This is needed, for example, when we refresh the page after the page is updated
     $("#alerts-page").ufAlerts();
-    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');        
-    
+    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
+
     // Set up select2 for locale
     $("#input-locale").select2();
-    
+
     $("#account-settings").ufForm({
         validators: page.validators.account_settings,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Reload the page on success
         window.location.reload();
-    }); 
+    });
 });

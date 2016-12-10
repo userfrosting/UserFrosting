@@ -41,9 +41,9 @@
             </div>
         </td>
     </script>
-    
+
     <script id="user-table-column-last-activity" type="text/x-handlebars-template">
-        {{#if row.last_activity_at }}    
+        {{#if row.last_activity_at }}
         <td data-num="{{dateFormat row.last_activity_at format='x'}}">
             {{dateFormat row.last_activity_at format="dddd"}}<br>{{dateFormat row.last_activity_at format="MMM Do, YYYY h:mm a"}}
             <br>
@@ -69,12 +69,12 @@
                         <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                             Unactivated
                             <span class="caret"></span>
-                        </button>            
+                        </button>
                     {{ else }}
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                             Active
                             <span class="caret"></span>
-                        </button>            
+                        </button>
                     {{/ifCond }}
                 {{/ifCond }}
                 <ul class="dropdown-menu" role="menu">
@@ -103,7 +103,7 @@
                     {{ else }}
                         <a href="#" data-id="{{row.id}}" class="js-user-enable">
                         <i class="fa fa-plus-circle"></i> Enable user
-                        </a> 
+                        </a>
                     {{/ifCond }}
                     </li>
                     <li>

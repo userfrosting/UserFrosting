@@ -11,9 +11,9 @@
  */
 
 return [
-    "AUTH_HOOK_CHAR_LIMIT" => "Authorization hook names must be between {{min}} and {{max}} characters in length",    
+    "AUTH_HOOK_CHAR_LIMIT" => "Authorization hook names must be between {{min}} and {{max}} characters in length",
 
-    "CANNOT_DELETE_GROUP" => "The group '{{name}}' cannot be deleted",    
+    "CANNOT_DELETE_GROUP" => "The group '{{name}}' cannot be deleted",
     "CONFIG_PLUGIN_INVALID" => "You are trying to update settings for plugin '{{plugin}}', but there is no plugin by that name.",
     "CONFIG_SETTING_INVALID" => "You are trying to update the setting '{{name}}' for plugin '{{plugin}}', but it does not exist.",
     "CONFIG_NAME_CHAR_LIMIT" => "Site name must be between {{min}} and {{max}} characters in length",
@@ -27,16 +27,16 @@ return [
     "CONFIG_TOKEN_MISMATCH" => "Sorry, that configuration token is not correct.",
     "CONFIG_UPDATE_SUCCESSFUL" => "Your site's configuration has been updated. You may need to load a new page for all the settings to take effect",
     "CREATION_COMPLETE" => "Account for new user '{{user_name}}' has been created.",
-    
+
     "DELETE_MASTER" => "You cannot delete the master account!",
-    "DELETION_SUCCESSFUL" => "User '{{user_name}}' has been successfully deleted.",        
+    "DELETION_SUCCESSFUL" => "User '{{user_name}}' has been successfully deleted.",
     "DETAILS_UPDATED" => "Account details updated for user '{{user_name}}'",
     "DISABLE_MASTER" => "You cannot disable the master account!",
     "DISABLE_SUCCESSFUL" => "Account for user '{{user_name}}' has been successfully disabled.",
     "DISPLAYNAME_UPDATED" => "{{user_name}}'s display name changed to '{{display_name}}'",
-    
+
     "ENABLE_SUCCESSFUL" => "Account for user '{{user_name}}' has been successfully enabled.",
-    
+
     "GROUP_ADDED" => "Added user to group '{{name}}'.",
     "GROUP_REMOVED" => "Removed user from group '{{name}}'.",
     "GROUP_NOT_MEMBER" => "User is not a member of group '{{name}}'.",
@@ -52,23 +52,23 @@ return [
     "GROUP_AUTH_CREATION_SUCCESSFUL" => "A rule for '{{hook}}' has been successfully created for group '{{name}}'.",
     "GROUP_AUTH_UPDATE_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully updated.",
     "GROUP_AUTH_DELETION_SUCCESSFUL" => "The rule granting access to group '{{name}}' for '{{hook}}' has been successfully deleted.",
-    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "You cannot create a new user because there is no default primary group defined.  Please check your group settings.",        
-    
+    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "You cannot create a new user because there is no default primary group defined.  Please check your group settings.",
+
     "INSTALLER_INCOMPLETE" => "You cannot register the root account until the installer has been successfully completed!",
-    
+
     "MANUALLY_ACTIVATED" => "{{user_name}}'s account has been manually activated",
     "MASTER_ACCOUNT_EXISTS" => "The master account already exists!",
     "MINIFICATION_SUCCESS" => "Successfully minified and concatenated CSS and JS for all page groups.",
-    
+
     "PRIMARY_GROUP_SET" => "Successfully set primary group for '{{user_name}}'.",
 
     "TITLE_UPDATED" => "{{user_name}}'s title changed to '{{title}}'",
-        
+
     "CONFIGURATION" => "Configuration",
-    
+
     "GROUPS" => "Groups",
-    
+
     "SITE_SETTINGS" => "Site Settings",
-    
+
     "USERS" => "Users"
 ];

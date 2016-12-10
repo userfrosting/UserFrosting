@@ -10,7 +10,7 @@
         "sanitizers" : {
             "raw" : ""
         }
-    },          
+    },
     "email" : {
         "validators" : {
             "length" : {
@@ -57,7 +57,7 @@
         },
         "sanitizers" : {
             "raw" : {}
-        }    
+        }
     },
     "passwordc" : {
         "validators" : {
@@ -73,8 +73,8 @@
         },
         "sanitizers" : {
             "raw" : {}
-        }    
-    },    
+        }
+    },
     "groups" : {
         "validators" : {
             "array" : {
@@ -88,7 +88,7 @@
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "VALIDATE_BOOLEAN" 
+                "message" : "VALIDATE_BOOLEAN"
             }
         }
     },
@@ -98,7 +98,7 @@
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "VALIDATE_BOOLEAN" 
+                "message" : "VALIDATE_BOOLEAN"
             }
         }
     },
@@ -108,8 +108,8 @@
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "VALIDATE_BOOLEAN" 
+                "message" : "VALIDATE_BOOLEAN"
             }
         }
-    }    
+    }
 }

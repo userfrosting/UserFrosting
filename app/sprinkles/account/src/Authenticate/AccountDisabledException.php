@@ -18,5 +18,5 @@ use UserFrosting\Support\Exception\HttpException;
 class AccountDisabledException extends HttpException
 {
     protected $default_message = 'ACCOUNT.DISABLED';
-    protected $http_error_code = 403;    
+    protected $http_error_code = 403;
 }

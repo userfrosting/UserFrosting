@@ -33,20 +33,20 @@ class AccountExtension extends \Twig_Extension
     {
         return 'userfrosting/account';
     }
-    
+
     public function getFunctions()
-    {        
+    {
         return array(
             // Add Twig function for checking permissions during dynamic menu rendering
             new \Twig_SimpleFunction('checkAccess', function ($slug, $params = []) {
                 $authorizer = $this->services['authorizer'];
                 $currentUser = $this->services['currentUser'];
-                
+
                 return $authorizer->checkAccess($currentUser, $slug, $params);
             })
         );
     }
-    
+
     public function getGlobals()
     {
         return array(

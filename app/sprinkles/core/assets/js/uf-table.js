@@ -23,7 +23,7 @@
            <tbody>
            </tbody>
        </table>
-   
+
        <script id="user-table-column-info" type="text/x-handlebars-template">
            <td data-text="{{row.last_name}}">
                <strong>
@@ -34,9 +34,9 @@
                </div>
            </td>
        </script>
-       
+
        <script id="user-table-column-last-activity" type="text/x-handlebars-template">
-           {{#if row.last_activity_at }}    
+           {{#if row.last_activity_at }}
            <td data-num="{{dateFormat row.last_activity_at format='x'}}">
                {{dateFormat row.last_activity_at format="dddd"}}<br>{{dateFormat row.last_activity_at format="MMM Do, YYYY h:mm a"}}
                <br>
@@ -48,7 +48,7 @@
            </td>
            {{/if }}
        </script>
-   
+
        <div class="pager pager-lg tablesorter-pager">
            <span class='pager-control first' title='First page'><i class='fa fa-angle-double-left'></i></span>
            <span class='pager-control prev' title='Previous page'><i class='fa fa-angle-left'></i></span>
@@ -62,8 +62,8 @@
                <option value="10">10</option>
            </select>
        </div>
-       
-       <button class="btn btn-sm btn-default js-download-table">Download CSV</button>    
+
+       <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
    </div>
  *
  * Initialize ufTable on your container object:
@@ -83,7 +83,7 @@
  * `pagerComplete.ufTable`: triggered when the tablesorter pager plugin has completed rendering of the table.
  *
  * == METHODS ==
- * 
+ *
  * `getTableStateVars( table )`: fetches the current page size, page number, sort order, sort field, and column filters.
  *
  * UserFrosting https://www.userfrosting.com
@@ -91,16 +91,16 @@
  */
 
 (function( $ )
-{    
+{
     /**
      * The plugin namespace, ie for $('.selector').ufTable(options)
-     * 
-     * Also the id for storing the object state via $('.selector').data()  
+     *
+     * Also the id for storing the object state via $('.selector').data()
      */
     var PLUGIN_NS = 'ufTable';
 
     var Plugin = function ( target, options )
-    { 
+    {
         this.$T = $(target);
         var base = this;
 
@@ -112,7 +112,7 @@
                 dataUrl     : "",
                 addParams   : {},
                 tablesorter : {
-                    debug: false,                
+                    debug: false,
                     theme     : 'bootstrap',
                     widthFixed: true,
                     // Set up pagination of data via an AJAX source
@@ -144,13 +144,13 @@
                         // direction text shown in the URL e.g. [ 'asc', 'desc' ]
                         sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
                         // if true, override saveSort widget sort, if used & stored sort is available
-                        sort2Hash_overrideSaveSort  : true // default = false                    
+                        sort2Hash_overrideSaveSort  : true // default = false
                     }
                 },
                 pager : {
                     // target the pager markup - see the HTML block below
                     container: this.$T.find(".tablesorter-pager"),
-            
+
                     // Must be initialized with a 'data' key
                     ajaxObject: {
                         data: {}
@@ -158,45 +158,45 @@
 
                     // Saves the current pager page size and number (requires storage widget)
                     savePages: true,
-                    
+
                     output: '{startRow} to {endRow} of {filteredRows} ({totalRows})',
-              
+
                     // apply disabled classname (cssDisabled option) to the pager arrows when the rows
                     // are at either extreme is visible; default is true
                     updateArrows: true,
-              
+
                     // starting page of the pager (zero based index)
                     page: 0,
-              
+
                     // Number of visible rows - default is 10
-                    size: 10, 
-                    
+                    size: 10,
+
                     // Reset pager to this page after filtering; set to desired page number (zero-based index),
                     // or false to not change page at filter start
                     pageReset: 0,
-              
+
                     // if true, the table will remain the same height no matter how many records are displayed.
                     // The space is made up by an empty table row set to a height to compensate; default is false
                     fixedHeight: false,
-              
+
                     // remove rows from the table to speed up the sort of large tables.
                     // setting this to false, only hides the non-visible rows; needed if you plan to
                     // add/remove rows with the pager enabled.
                     removeRows: false,
-              
+
                     // If true, child rows will be counted towards the pager set size
                     countChildRows: false,
-              
+
                     // css class names of pager arrows
                     cssNext        : '.next',  // next page arrow
                     cssPrev        : '.prev',  // previous page arrow
                     cssFirst       : '.first', // go to first page arrow
                     cssLast        : '.last',  // go to last page arrow
                     cssGoto        : '.gotoPage', // page select dropdown - select dropdown that set the "page" option
-              
+
                     cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
                     cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
-              
+
                     // class added to arrows when at the extremes; see the "updateArrows" option
                     // (i.e. prev/first arrows are "disabled" when on the first page)
                     cssDisabled    : 'disabled', // Note there is no period "." in front of this class name
@@ -204,11 +204,11 @@
                 }
             },
             options
-        ); 
-        
-        this._init( target, options );   
-        
-        return this; 
+        );
+
+        this._init( target, options );
+
+        return this;
     }
 
     /**
@@ -217,7 +217,7 @@
     Plugin.prototype.getTableStateVars = function ( table ) {
         var base = this;
 
-        // Get sort column and order                    
+        // Get sort column and order
         var sortOrders = {
             "0" : "asc",
             "1" : "desc"
@@ -249,7 +249,7 @@
 
     /** #### INITIALISER #### */
     Plugin.prototype._init = function ( target, options )
-    { 
+    {
         var base = this;
         var $el = $(target);
 
@@ -282,12 +282,12 @@
             // Causes download to begin
             window.location = base.options.dataUrl + $.param( tableState );
         });
-        
+
         base.ts.on("pagerComplete.ufTable", function () {
             $el.trigger("pagerComplete");
         });
     };
-    
+
     /**
      * Callback for generating the AJAX url.
      */
@@ -342,7 +342,7 @@
 
                 rows += '</tr>';
             }
-            
+
             json.total = data['count'];  // Get total rows without pagination
             json.filteredRows = data['count_filtered']; // no filtering
             json.rows = $(rows);
@@ -369,7 +369,7 @@
                     var columnName = $(config.$headerIndexed[ index ][0]).attr(wo.sort2Hash_headerTextAttr);
                     encodedFilters += '&filter[' + tableId + '][' + columnName + ']=' + encodeURIComponent(rawValue[index]);
                 }
-            }                
+            }
             return encodedFilters;
         } else if ( component === 'sort' ) {
             // rawValue is an array of sort pairs [columnNum, sortDirection]
@@ -380,7 +380,7 @@
                 var sortDirection = rawValue[index][1];
                 var columnName = $(config.$headerIndexed[columnNum][0]).attr(wo.sort2Hash_headerTextAttr);
                 encodedFilters += '&sort[' + tableId + '][' + columnName + ']=' + wo.sort2Hash_directionText[sortDirection];
-            }                
+            }
             return encodedFilters;
         }
         return false;
@@ -444,20 +444,20 @@
         result = jQuery.param(urlObject);
         return result.length ? result : '';
     }
-    
+
     /**
      * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
-     */    
-    Plugin.prototype.DLOG = function () 
+     */
+    Plugin.prototype.DLOG = function ()
     {
         if (!this.DEBUG) return;
         for (var i in arguments) {
-            console.log( PLUGIN_NS + ': ', arguments[i] );    
+            console.log( PLUGIN_NS + ': ', arguments[i] );
         }
     }
-    Plugin.prototype.DWARN = function () 
+    Plugin.prototype.DWARN = function ()
     {
-        this.DEBUG && console.warn( arguments );    
+        this.DEBUG && console.warn( arguments );
     }
 
 
@@ -466,39 +466,39 @@
  ###################################################################################*/
 
     /**
-     * Generic jQuery plugin instantiation method call logic 
-     * 
+     * Generic jQuery plugin instantiation method call logic
+     *
      * Method options are stored via jQuery's data() method in the relevant element(s)
      * Notice, myActionMethod mustn't start with an underscore (_) as this is used to
-     * indicate private methods on the PLUGIN class.   
-     */    
+     * indicate private methods on the PLUGIN class.
+     */
     $.fn[ PLUGIN_NS ] = function( methodOrOptions )
     {
         if (!$(this).length) {
             return $(this);
         }
         var instance = $(this).data(PLUGIN_NS);
-            
-        // CASE: action method (public method on PLUGIN class)        
-        if ( instance 
-                && methodOrOptions.indexOf('_') != 0 
-                && instance[ methodOrOptions ] 
+
+        // CASE: action method (public method on PLUGIN class)
+        if ( instance
+                && methodOrOptions.indexOf('_') != 0
+                && instance[ methodOrOptions ]
                 && typeof( instance[ methodOrOptions ] ) == 'function' ) {
-            
-            return instance[ methodOrOptions ]( Array.prototype.slice.call( arguments, 1 ) ); 
-                
-                
-        // CASE: argument is options object or empty = initialise            
+
+            return instance[ methodOrOptions ]( Array.prototype.slice.call( arguments, 1 ) );
+
+
+        // CASE: argument is options object or empty = initialise
         } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
 
             instance = new Plugin( $(this), methodOrOptions );    // ok to overwrite if this is a re-init
             $(this).data( PLUGIN_NS, instance );
             return $(this);
-        
+
         // CASE: method called before init
         } else if ( !instance ) {
             $.error( 'Plugin must be initialised before using method: ' + methodOrOptions );
-        
+
         // CASE: invalid method
         } else if ( methodOrOptions.indexOf('_') == 0 ) {
             $.error( 'Method ' +  methodOrOptions + ' is private!' );

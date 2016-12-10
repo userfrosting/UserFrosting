@@ -30,9 +30,9 @@ abstract class TokenRepository
 
     /**
      * @var string
-     */    
+     */
     protected $algorithm;
-    
+
     /**
      * @var string
      */
@@ -55,7 +55,7 @@ abstract class TokenRepository
      *
      * @param int $token The token to remove.
      * @return UFModel|false
-     */    
+     */
     public function cancel($token)
     {
         // Hash the password reset token for the stored version
@@ -129,7 +129,7 @@ abstract class TokenRepository
     {
         // Remove any previous tokens for this user
         $this->removeExisting($user);
-        
+
         // Compute expiration time
         $expiresAt = Carbon::now()->addSeconds($timeout);
 
@@ -194,7 +194,7 @@ abstract class TokenRepository
      * Remove all expired tokens from the database.
      *
      * @return bool|null
-     */    
+     */
     public function removeExpired()
     {
         return $this->classMapper
@@ -219,13 +219,13 @@ abstract class TokenRepository
             ->first());
         return $gen;
     }
-    
+
     /**
      * Modify the user during the token completion process.
      *
      * This method is called during complete(), and is a way for concrete implementations to modify the user.
      * @param User $user the user object to modify.
      * @return mixed[] $args the list of parameters that were supplied to the call to `complete()`
-     */    
+     */
     abstract protected function updateUser($user, $args);
 }

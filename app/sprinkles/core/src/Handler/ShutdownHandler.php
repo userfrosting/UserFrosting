@@ -21,7 +21,7 @@ class ShutdownHandler
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
-    
+
     /**
      * Constructor.
      *

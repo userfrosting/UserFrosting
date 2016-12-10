@@ -30,7 +30,7 @@ html.nyx-cover,
 }
 .nyx-cover body {
   padding-top: 0px;
-  padding-bottom: 0px;  
+  padding-bottom: 0px;
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
@@ -185,8 +185,8 @@ body {
     padding: 60px 30px 30px 30px;
     border-left: 1px solid #eeeeee;
   }
-} 
- 
+}
+
 .navbar-header .navbar-brand {
   color: #ffffff;
 }

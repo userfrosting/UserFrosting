@@ -1,6 +1,6 @@
 {% extends "layouts/basic.html.twig" %}
 
-{% block stylesheets_page_group %}      
+{% block stylesheets_page_group %}
     <!-- Page-group-specific CSS asset bundle -->
     {{ assets.css('css/guest') | raw }}
 {% endblock %}
@@ -11,7 +11,7 @@
 
 {% block content %}
     {% include "components/main-nav.html.twig" %}
-    
+
     {% block header %}{% endblock %}
 
     <div class="container">

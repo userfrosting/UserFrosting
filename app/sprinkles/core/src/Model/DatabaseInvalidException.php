@@ -17,5 +17,5 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class DatabaseInvalidException extends ForbiddenException
 {
-    protected $default_message = 'DB_INVALID';  
+    protected $default_message = 'DB_INVALID';
 }

@@ -5,13 +5,13 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
- */ 
+ */
 namespace UserFrosting\Sprinkle\Core\Controller;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\NotFoundException as NotFoundException;
-    
+
 /**
  * CoreController Class
  *
@@ -30,8 +30,8 @@ class CoreController extends SimpleController
     public function pageIndex($request, $response, $args)
     {
         return $this->ci->view->render($response, 'pages/index.html.twig');
-    }    
-    
+    }
+
     /**
      * Renders a sample "about" page for UserFrosting.
      *
@@ -40,8 +40,8 @@ class CoreController extends SimpleController
     public function pageAbout($request, $response, $args)
     {
         return $this->ci->view->render($response, 'pages/about.html.twig');
-    }      
-    
+    }
+
     /**
      * Renders terms of service page.
      *
@@ -72,11 +72,11 @@ class CoreController extends SimpleController
     {
         return $response->withJson($this->ci->alerts->getAndClearMessages());
     }
-    
+
     /**
      * Handle all requests for raw assets.
      * Request type: GET
-     */    
+     */
     public function getAsset($request, $response, $args)
     {
         // By starting this service, we ensure that the timezone gets set.

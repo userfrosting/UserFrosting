@@ -26,21 +26,21 @@ class Permission extends UFModel
 {
     /**
      * @var string The name of the table for the current model.
-     */ 
+     */
     protected $table = "permissions";
-    
+
     protected $fillable = [
         "slug",
         "name",
         "conditions",
         "description"
-    ];    
+    ];
 
     /**
      * @var bool Enable timestamps for this class.
-     */ 
+     */
     public $timestamps = true;
-    
+
     /**
      * Delete this permission from the database, removing associations with roles.
      *
@@ -49,21 +49,21 @@ class Permission extends UFModel
     {
         // Remove all role associations
         $this->roles()->detach();
-        
-        // Delete the permission        
+
+        // Delete the permission
         $result = parent::delete();
-        
+
         return $result;
     }
-    
+
     /**
      * Get a list of roles to which this permission is assigned.
-     */   
+     */
     public function roles()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = static::$ci->classMapper;    
-    
+        $classMapper = static::$ci->classMapper;
+
         return $this->belongsToMany($classMapper->getClassMapping('role'), 'permission_roles');
     }
 }

@@ -4,7 +4,7 @@
      * Account configuration file for UserFrosting.
      *
      */
-     
+
     return [
         'debug' => [
             'auth' => false
@@ -108,4 +108,3 @@
             'timeout'   => 10800
         ]
     ];
-    

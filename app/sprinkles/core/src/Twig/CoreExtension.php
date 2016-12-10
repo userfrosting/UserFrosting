@@ -79,10 +79,10 @@ class CoreExtension extends \Twig_Extension
              *
              * @param   String   $num   A unformatted phone number
              * @return  String   Returns the formatted phone number
-             */        
+             */
             new \Twig_SimpleFilter('phone', function ($num) {
                 return Util::formatPhoneNumber($num);
-            }),        
+            }),
             new \Twig_SimpleFilter('unescape', function ($string) {
                 return html_entity_decode($string);
             })

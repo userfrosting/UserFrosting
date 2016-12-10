@@ -83,7 +83,7 @@ class CoreServicesProvider
             $al = new AssetLoader();
             return $al;
         };
-        
+
         /**
          * Asset manager service.
          *

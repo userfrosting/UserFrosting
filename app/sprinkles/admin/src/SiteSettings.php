@@ -4,13 +4,13 @@ namespace UserFrosting\Sprinkle\Core\Model;
 
 use \Illuminate\Database\Capsule\Manager as Capsule;
 
-class SiteSettings extends UFModel {    
-    
+class SiteSettings extends UFModel {
+
     /**
      * Get an array of system information for UserFrosting.
      *
      * @return array An array containing a list of information, such as software version, application path, etc.
-     */ 
+     */
     public function getSystemInfo(){
         $results = [];
         $results['UserFrosting Version'] = $this->version;
@@ -25,7 +25,7 @@ class SiteSettings extends UFModel {
         $results['Document Root'] = $this->uri['public'];
         return $results;
     }
-    
+
     /**
      * Get the PHP error log as an array of lines.
      *

@@ -3,8 +3,8 @@
 
 {# Set page properties (page.*) here. #}
 {% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template,
+    but BEFORE the page itself is rendered. #}
     {% set page = page | merge({
         "title"       : "Authorization | " ~ group.name,
         "description" : "Authorization and access control settings for " ~ group.name ~ "."
@@ -37,7 +37,7 @@
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                 Actions
                                 <span class="caret"></span>
-                            </button>            
+                            </button>
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a href="#" data-id="{{rule.id}}" class="js-auth-edit" data-target="#dialog-auth-edit" data-toggle="modal">
@@ -63,10 +63,10 @@
                 <i class="fa fa-plus-square"></i>  Create New Rule
             </button>
         </div>
-    </div>    
+    </div>
 {% endblock %}
 {% block page_scripts %}
-        <script>            
+        <script>
             $(document).ready(function() {
                 ufTable('table-auth');
             });

@@ -25,26 +25,26 @@
     } else {
         echo "Table 'activities' already exists.  Skipping..." . PHP_EOL;
     }
-    
+
     /**
      * "Group" now replaces the notion of "primary group" in earlier versions of UF.  A user can belong to exactly one group.
      */
-    if (!$schema->hasTable('groups')) {     
+    if (!$schema->hasTable('groups')) {
         $schema->create('groups', function(Blueprint $table) {
             $table->increments('id');
-            $table->string('slug');            
+            $table->string('slug');
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('icon', 100)->nullable(false)->default('fa fa-user')->comment('The icon representing users in this group.');
             $table->timestamps();
-                
+
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
             $table->unique('slug');
             $table->index('slug');
         });
-        
+
         // Add default groups
         Capsule::table('groups')->insert([
             [
@@ -104,25 +104,25 @@
     } else {
         echo "Table 'password_resets' already exists.  Skipping..." . PHP_EOL;
     }
-    
+
     /**
      * Permissions now replace the 'authorize_group' and 'authorize_user' tables.
      * Also, they now map many-to-many to roles.
      */
-    if (!$schema->hasTable('permissions')) {     
+    if (!$schema->hasTable('permissions')) {
         $schema->create('permissions', function(Blueprint $table) {
-            $table->increments('id');        
+            $table->increments('id');
             $table->string('slug')->comment('A code that references a specific action or URI that an assignee of this permission has access to.');
             $table->string('name');
             $table->text('conditions')->comment('The conditions under which members of this group have access to this hook.');
             $table->text('description')->nullable();
             $table->timestamps();
-            
+
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
         });
-        
+
         // Add default permissions
         Capsule::table('permissions')->insert([
             [
@@ -142,7 +142,7 @@
                 'description' => 'Edit users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
-            ],            
+            ],
             [
                 'id' => 3,
                 'slug' => 'view_user_field',
@@ -160,7 +160,7 @@
                 'description' => 'Delete users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
-            ],            
+            ],
             [
                 'id' => 5,
                 'slug' => 'create_user',
@@ -223,14 +223,14 @@
 
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
-            $table->charset = 'utf8';            
+            $table->charset = 'utf8';
             $table->primary(['permission_id', 'role_id']);
             //$table->foreign('permission_id')->references('id')->on('permissions');
             //$table->foreign('role_id')->references('id')->on('roles');
             $table->index('permission_id');
             $table->index('role_id');
         });
-        
+
         // Add default mappings
         Capsule::table('permission_roles')->insert([
             // Basic user permissions
@@ -295,7 +295,7 @@
     } else {
         echo "Table 'permission_roles' already exists.  Skipping..." . PHP_EOL;
     }
-    
+
     /**
      * Renaming the "rememberme" table to something more standard.
      */
@@ -331,14 +331,14 @@
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
-            
+
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
             $table->unique('slug');
             $table->index('slug');
         });
-        
+
         // Add default roles
         Capsule::table('roles')->insert([
             [
@@ -382,7 +382,7 @@
 
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
-            $table->charset = 'utf8';            
+            $table->charset = 'utf8';
             $table->primary(['user_id', 'role_id']);
             //$table->foreign('user_id')->references('id')->on('users');
             //$table->foreign('role_id')->references('id')->on('roles');
@@ -417,14 +417,14 @@
     if (!$schema->hasTable('throttles')) {
         $schema->create('throttles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type');            
+            $table->string('type');
             $table->string('ip')->nullable();
             $table->text('request_data')->nullable();
             $table->timestamps();
 
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
-            $table->charset = 'utf8';            
+            $table->charset = 'utf8';
             $table->index('type');
             $table->index('ip');
         });
@@ -451,7 +451,7 @@
             $table->integer('last_activity_id')->unsigned()->nullable()->comment("The id of the last activity performed by this user.");
             $table->string('password', 255);
             $table->timestamps();
-            
+
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';

@@ -39,7 +39,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'icon' not in fields.hidden %}        
+        {% if 'icon' not in fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group ">
                 <label>Icon</label>
@@ -50,7 +50,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'landing_page' not in fields.hidden %}        
+        {% if 'landing_page' not in fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group ">
                 <label>Landing Page</label>
@@ -68,18 +68,18 @@
                 <div class='btn-group' data-toggle='buttons'>
                     <label class='btn btn-primary {% if (group.is_default == '0') %}active{% endif %}' title='Newly registered users will NOT be automatically assigned to this group.'>
                         <input class='form-control' type='radio' name='is_default' value='0' {% if (group.is_default == '0') %}checked{% endif %}> Neither
-                    </label>                      
+                    </label>
                     <label class='btn btn-primary {% if (group.is_default == '1') %}active{% endif %}' title='Newly registered users will be automatically assigned to this group.'>
                         <input class='form-control' type='radio' name='is_default' value='1' {% if (group.is_default == '1') %}checked{% endif %}> Default
                     </label>
-    
+
                     <label class='btn btn-primary {% if (group.is_default == '2') %}active{% endif %}' title='Newly registered users will be automatically assigned to this group, and it will be their primary group.'>
                         <input class='form-control' type='radio' name='is_default' value='2' {% if (group.is_default == '2') %}checked{% endif %}> Default Primary
                     </label>
                 </div>
             </div>
-        </div>        
-        {% endif %}        
+        </div>
+        {% endif %}
     </div><br>
     <div class="row">
         {% if "submit" not in buttons.hidden %}
@@ -88,20 +88,20 @@
                 <button type="submit" class="btn btn-block btn-lg btn-success">
                     {{submit_button}}
                 </button>
-            </div>          
+            </div>
         </div>
         {% endif %}
-        {% if "edit" not in buttons.hidden %}  
+        {% if "edit" not in buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-primary js-group-edit" data-id="{{group.id}}" data-toggle="modal">
                     <i class="fa fa-edit"></i> Edit
                 </button>
             </div>
-        </div>    
+        </div>
         {% endif %}
         {% if "delete" not in buttons.hidden %}
-        <div class="col-xs-6 col-sm-3">  
+        <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-danger js-group-delete" data-id="{{group.id}}" data-name="{{group.name}}" data-toggle="modal">
                     <i class="fa fa-trash-o"></i> Delete
@@ -109,7 +109,7 @@
             </div>
         </div>
         {% endif %}
-        {% if "cancel" not in buttons.hidden %}        
+        {% if "cancel" not in buttons.hidden %}
         <div class="col-xs-4 col-sm-3 pull-right">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>

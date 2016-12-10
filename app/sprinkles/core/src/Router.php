@@ -58,22 +58,22 @@ class Router extends \Slim\Router implements RouterInterface
 
         // According to RFC methods are defined in uppercase (See RFC 7231)
         $methods = array_map("strtoupper", $methods);
-        
+
         // Determine route signature
         $signature = implode('-', $methods) . '-' . $pattern;
-        
+
         // If a route with the same signature already exists, then we must replace it
         if (isset($this->identifiers[$signature])) {
             $route = new \Slim\Route($methods, $pattern, $handler, $this->routeGroups, str_replace('route', '', $this->identifiers[$signature]));
         } else {
             $route = new \Slim\Route($methods, $pattern, $handler, $this->routeGroups, $this->routeCounter);
         }
-        
+
         $this->routes[$route->getIdentifier()] = $route;
-        
+
         // Record identifier in reverse lookup array
         $this->identifiers[$signature] = $route->getIdentifier();
-        
+
         $this->routeCounter++;
 
         return $route;

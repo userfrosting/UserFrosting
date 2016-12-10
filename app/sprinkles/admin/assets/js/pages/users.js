@@ -19,7 +19,7 @@ $(document).ready(function() {
 
     // Link row buttons after table is loaded
     $("#widget-users").on("pagerComplete.ufTable", function () {
-        $(this).find('.js-user-create').click(function() { 
+        $(this).find('.js-user-create').click(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/create",
                 msgTarget: $("#alerts-users")
@@ -72,7 +72,7 @@ $(document).ready(function() {
                 window.location.reload();
             });
         });
-        
+
         $(table).find('.js-user-enable').click(function () {
             var btn = $(this);
             var user_id = btn.data('id');
@@ -82,7 +82,7 @@ $(document).ready(function() {
                 window.location.reload();
             });
         });
-        
+
         $(table).find('.js-user-disable').click(function () {
             var btn = $(this);
             var user_id = btn.data('id');
@@ -91,7 +91,7 @@ $(document).ready(function() {
                 // Reload page after updating user details
                 window.location.reload();
             });
-        });	
+        });
         */
     });
 });

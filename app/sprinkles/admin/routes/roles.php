@@ -26,7 +26,7 @@ $app->group('/api/roles', function () {
 
     $this->post('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateRole');
 });
-    
+
 $app->group('/forms/roles', function () {
     $this->get('/create/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:formCreateRole');
 

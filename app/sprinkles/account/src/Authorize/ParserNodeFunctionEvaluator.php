@@ -17,7 +17,7 @@ use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
  * ParserNodeFunctionEvaluator class
  *
  * This class parses access control condition expressions.
- * 
+ *
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/components/#authorization
  */
@@ -26,17 +26,17 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
 
     /**
      * @var array[callable] An array of callback functions to be used when evaluating a condition expression.
-     */ 
+     */
     protected $callbacks;
     /**
      * @var \PhpParser\PrettyPrinter\Standard The PrettyPrinter object to use (initialized in the ctor)
-     */ 
+     */
     protected $prettyPrinter;
     /**
      * @var array The parameters to be used when evaluating the methods in the condition expression, as an array.
-     */ 
+     */
     protected $params = [];
-    
+
     /**
      * @var Logger
      */
@@ -46,19 +46,19 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * @var bool Set to true if you want debugging information printed to the auth log.
      */
     protected $debug;
-    
+
     /**
      * Create a new ParserNodeFunctionEvaluator object.
      *
      * @param array $params The parameters to be used when evaluating the methods in the condition expression, as an array.
-     * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.     
+     * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.
-     */    
+     */
     public function __construct($callbacks, $logger, $debug = false)
     {
         $this->callbacks = $callbacks;
         $this->prettyPrinter = new StandardPrettyPrinter;
-        $this->logger        = $logger;        
+        $this->logger        = $logger;
         $this->debug = $debug;
         $this->params = [];
     }
@@ -68,12 +68,12 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
         // Look for function calls
         if ($node instanceof \PhpParser\Node\Expr\FuncCall) {
             $eval = new \PhpParser\Node\Scalar\LNumber;
-            
+
             // Get the method name
             $callbackName = $node->name->toString();
             // Get the method arguments
             $argNodes = $node->args;
-            
+
             $args = [];
             foreach ($argNodes as $arg) {
                 $arg_string = $this->prettyPrinter->prettyPrintExpr($arg->value);
@@ -88,7 +88,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
                 }
                 $args[] = $value;
             }
-            
+
             if ($this->debug) {
                 if (count($args)) {
                     $this->logger->debug("Evaluating callback '$callbackName' on: ", $args);
@@ -96,33 +96,33 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
                     $this->logger->debug("Evaluating callback '$callbackName'...");
                 }
             }
-            
+
             // Call the specified access condition callback with the specified arguments.
             if (isset($this->callbacks[$callbackName]) && is_callable($this->callbacks[$callbackName])) {
                 $result = call_user_func_array($this->callbacks[$callbackName], $args);
             } else {
                 throw new AuthorizationException("Authorization failed: Access condition method '$callbackName' does not exist.");
             }
-            
+
             if ($this->debug) {
                 $this->logger->debug("Result: " . ($result ? "1" : "0"));
             }
-            
+
             return new \PhpParser\Node\Scalar\LNumber($result ? "1" : "0");
         }
     }
-    
+
     public function setParams($params)
     {
         $this->params = $params;
     }
-    
+
     /**
      * Resolve an array expression in a condition expression into an actual array.
      *
      * @param string $arg the array, represented as a string.
      * @return array[mixed] the array, as a plain ol' PHP array.
-     */    
+     */
     private function resolveArray($arg)
     {
         $arr = [];
@@ -135,7 +135,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
         }
         return $arr;
     }
-    
+
     /**
      * Resolve a parameter path (e.g. "user.id", "post", etc) into its value.
      *

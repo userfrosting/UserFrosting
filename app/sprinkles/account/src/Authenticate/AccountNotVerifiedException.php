@@ -18,5 +18,5 @@ use UserFrosting\Support\Exception\HttpException;
 class AccountNotVerifiedException extends HttpException
 {
     protected $default_message = 'ACCOUNT.UNVERIFIED';
-    protected $http_error_code = 403;    
+    protected $http_error_code = 403;
 }

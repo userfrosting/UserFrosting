@@ -23,12 +23,12 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property datetime completed_at
  */
 class Verification extends UFModel
-{    
+{
     /**
      * @var string The name of the table for the current model.
-     */ 
+     */
     protected $table = "verifications";
-    
+
     protected $fillable = [
         "user_id",
         "hash",
@@ -39,14 +39,14 @@ class Verification extends UFModel
 
     /**
      * @var bool Enable timestamps for Verifications.
-     */ 
+     */
     public $timestamps = true;
 
     /**
      * Stores the raw (unhashed) token when created, so that it can be emailed out to the user.  NOT persisted.
      */
     protected $token;
-    
+
     public function getToken()
     {
         return $this->token;
@@ -65,7 +65,7 @@ class Verification extends UFModel
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
-        
+
         return $this->belongsTo($classMapper->getClassMapping('user'), 'user_id');
     }
 }

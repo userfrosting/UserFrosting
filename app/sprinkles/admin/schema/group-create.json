@@ -13,7 +13,7 @@
         "sanitizers" : {
             "raw" : ""
         }
-    },          
+    },
     "theme" : {
         "validators" : {
             "length" : {
@@ -60,7 +60,7 @@
                 "message" : "VALIDATE_REQUIRED"
             }
         }
-    },    
+    },
     "is_default" : {
         "validators" : {
             "member_of" : {

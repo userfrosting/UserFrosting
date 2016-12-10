@@ -23,12 +23,12 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property string description
  */
 class Activity extends UFModel
-{    
+{
     /**
      * @var string The name of the table for the current model.
-     */ 
+     */
     protected $table = "activities";
-    
+
     protected $fillable = [
         "ip_address",
         "user_id",
@@ -36,7 +36,7 @@ class Activity extends UFModel
         "occurred_at",
         "description"
     ];
-    
+
     /**
      * Add clauses to select the most recent event of each type for each user, to the query.
      *
@@ -54,14 +54,14 @@ class Activity extends UFModel
      *
      * @param string $type The type of event, matching the `event_type` field in the user_event table.
      * @return \Illuminate\Database\Query\Builder
-     */    
+     */
     public function scopeMostRecentEventsByType($query, $type)
     {
         return $query->select('user_id', Capsule::raw('MAX(occurred_at) as occurred_at'))
             ->where('type', $type)
             ->groupBy('user_id');
     }
-    
+
     /**
      * Get the user associated with this activity.
      */
@@ -69,7 +69,7 @@ class Activity extends UFModel
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
-        
+
         return $this->belongsTo($classMapper->getClassMapping('user'), 'user_id');
-    }    
+    }
 }

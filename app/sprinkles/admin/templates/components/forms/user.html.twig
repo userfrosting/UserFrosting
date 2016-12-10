@@ -2,7 +2,7 @@
     <div class="js-form-user-alerts">
     </div>
     <div class="row">
-        {% if 'user_name' not in form.fields.hidden %}             
+        {% if 'user_name' not in form.fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group">
                 <label>{{translate('USERNAME')}}</label>
@@ -13,7 +13,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'group' not in form.fields.hidden %}             
+        {% if 'group' not in form.fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="input-group">{{translate('GROUP')}}</label>
@@ -48,7 +48,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'email' not in form.fields.hidden %}             
+        {% if 'email' not in form.fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group">
                 <label>{{translate('EMAIL')}}</label>
@@ -59,7 +59,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'theme' not in form.fields.hidden %}             
+        {% if 'theme' not in form.fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="input-theme">Theme</label>
@@ -97,20 +97,20 @@
                 <button type="submit" class="btn btn-block btn-lg btn-success">
                     {{form.buttons.submit_text}}
                 </button>
-            </div>          
+            </div>
         </div>
         {% endif %}
-        {% if 'edit' not in form.buttons.hidden %}  
+        {% if 'edit' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-id="{{user.id}}" data-toggle="modal">
                     <i class="fa fa-edit"></i> {{translate('EDIT')}}
                 </button>
             </div>
-        </div>    
+        </div>
         {% endif %}
         {% if 'activate' not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-3">      
+        <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 {% if user.flag_verified == "0" %}
                     <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-id="{{user.id}}">
@@ -121,7 +121,7 @@
         </div>
         {% endif %}
         {% if 'enable' not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-3">      
+        <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 {% if user.flag_enabled == "1" %}
                     <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-id="{{user.id}}">
@@ -136,7 +136,7 @@
         </div>
         {% endif %}
         {% if 'delete' not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-3">  
+        <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-id="{{user.id}}" data-user_name="{{user.user_name}}" data-toggle="modal">
                     <i class="fa fa-trash-o"></i> Delete
@@ -144,7 +144,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'cancel' not in form.buttons.hidden %}        
+        {% if 'cancel' not in form.buttons.hidden %}
         <div class="col-xs-4 col-sm-3 pull-right">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>

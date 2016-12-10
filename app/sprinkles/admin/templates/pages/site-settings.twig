@@ -2,8 +2,8 @@
 
 {# Set page properties (page.*) here. #}
 {% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template,
+    but BEFORE the page itself is rendered. #}
     {% set page = page | merge({
         "title"       : "Site Settings",
         "description" : "Global settings for the site, including registration and activation settings, site title, admin emails, and default languages."
@@ -23,7 +23,7 @@
             </div>
             <form class='form-horizontal' role='form' name='settings' action='{{site.uri.public}}/config/settings' method='post'>
                 {% for plugin_name, plugin in settings %}
-                    {% for name, setting in plugin %} 
+                    {% for name, setting in plugin %}
                         <div class="form-group">
                             <label for="input_{{name}}" class="col-sm-2 control-label">{{setting.label}}</label>
                             <div class="col-sm-10">
@@ -38,7 +38,7 @@
                                 {% elseif (setting.type == 'toggle') %}
                                     <input type='checkbox' id="input_{{name}}" class="form-control bootstrapswitch" name="{{plugin_name}}[{{name}}]" value="{{setting.value}}" data-off-text="{{setting.options[0]}}" data-on-text="{{setting.options[1]}}" {% if (setting.value == 1) %}checked{% endif %}>
                                 {% elseif (setting.type == 'readonly') %}
-                                    <input type='input' id="input_{{name}}" class="form-control bootstrap-switch" name="{{plugin_name}}[{{name}}]" value='{{setting.value}}' disabled">                                  
+                                    <input type='input' id="input_{{name}}" class="form-control bootstrap-switch" name="{{plugin_name}}[{{name}}]" value='{{setting.value}}' disabled">
                                 {% endif %}
                                 <p class="help-block">{{setting.description}}</p>
                             </div>
@@ -56,7 +56,7 @@
                 </div>
                 <div class='panel-body'>
                     {% for name, value in info %}
-                        <p class="h6">{{name}}</p>                  
+                        <p class="h6">{{name}}</p>
                         <div class="well well-sm">
                             {{value}}
                         </div>
@@ -89,42 +89,42 @@
                 <div class='panel-body'>
                     <div class="well well-sm"><strong>{{error_log.path}}</strong></div>
                     {% for msg in error_log.messages %}
-                        <code>{{msg}}</code><br>                         
+                        <code>{{msg}}</code><br>
                     {% endfor %}
                 </div>
                 <div class="panel-footer">
                     <a class="btn btn-link" href="{{site.uri.public}}/errorlog">View complete error log</a>
-                </div>                        
+                </div>
             </div>
         </div>
     </div>
 {% endblock %}
 {% block page_scripts %}
     <script>
-        $(document).ready(function() {                   
+        $(document).ready(function() {
             var timer;
-            
+
             // Autosave text fields
             $("form[name='settings'] input[type=text]").keyup(function () {
                 clearTimeout(timer); // Clear the timer so we don't end up with dupes.
                 $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
-                timer = setTimeout(function() { // assign timer a new timeout 
+                timer = setTimeout(function() { // assign timer a new timeout
                     $("form[name='settings']").submit();
                 }, 700);
             });
-            
+
             // Autosave switches and selects
             $("form[name='settings'] input[type=checkbox]").on("change", function () {
                 $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
                 $("form[name='settings']").submit();
             });
-            
+
             $("form[name='settings'] select").on("change", function () {
                 $("#settings-alerts").html("<div class='alert alert-warning'>Saving...</div>");
                 $("form[name='settings']").submit();
             });
-            
-            // Process form 
+
+            // Process form
             ufFormSubmit(
                 $("form[name='settings']"),
                 { "" : "" },
@@ -138,7 +138,7 @@
                 function() {
                     $("#settings-alerts").html("<div class='alert alert-danger'>Could not save settings.</div>");
                 }
-            );     
+            );
         });
     </script>
 {% endblock %}

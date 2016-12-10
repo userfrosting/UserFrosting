@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * UserCollection Class
@@ -9,11 +9,11 @@
  * @author Alex Weissman
  * @link http://www.userfrosting.com/navigating/#structure
  */
- 
+
 namespace UserFrosting\Sprinkle\Account\Model\Collection;
 
 class UserCollection extends \Illuminate\Database\Eloquent\Collection {
-    
+
     /**
      * Get a list of the most recent event of a given type (e.g., "sign_in") for each user.
      *
@@ -25,20 +25,20 @@ class UserCollection extends \Illuminate\Database\Eloquent\Collection {
      * @param string $field_name optional The attribute name to use for this event in the User model.  If not specified, defaults to last_{$type}_time.
      * @return array An array of datetime strings, keyed by the `id` of each User.
      */
-    public function getRecentEvents($type, $field_name = null) {        
+    public function getRecentEvents($type, $field_name = null) {
         if (!$field_name)
             $field_name = "last_" . $type . "_time";
-        
+
         $recentEventsQuery = UserEvent::mostRecentEventsByType($type);
         $recent_events = $recentEventsQuery->get();
-        
+
         $recent_event_times = [];
-        
+
         // extract sign-in times
         foreach($recent_events as $event){
             $recent_event_times[$event['user_id']] = $event['occurred_at'];
-        }        
-        
+        }
+
         // Merge in recent event times, and set any missing values
         foreach ($this as $user){
             if (isset($recent_event_times[$user->id]))
@@ -48,10 +48,10 @@ class UserCollection extends \Illuminate\Database\Eloquent\Collection {
                 $recent_event_times[$user->id] = 0;
             }
         }
-        
+
         return $recent_event_times;
     }
-    
+
     /**
      * Filter this collection based on a recent event time.
      *
@@ -78,7 +78,7 @@ class UserCollection extends \Illuminate\Database\Eloquent\Collection {
         });
         return $result;
     }
-    
+
     /**
      * Filter this collection based on a specified User field.
      *
@@ -86,7 +86,7 @@ class UserCollection extends \Illuminate\Database\Eloquent\Collection {
      * @param string $name The name of the User field to filter by.
      * @param string $value The value to search for.  This filter does a simple stripos for searching.
      * @return UserCollection The modified UserCollection.
-     */    
+     */
     public function filterTextField($name, $value) {
         $result = $this->filter(function ($item) use ($name, $value){
             return (stripos($item->{$name}, $value) !== false);

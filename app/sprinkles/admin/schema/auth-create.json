@@ -13,7 +13,7 @@
         "sanitizers" : {
             "raw" : ""
         }
-    },          
+    },
     "conditions" : {
         "validators" : {
             "required" : {

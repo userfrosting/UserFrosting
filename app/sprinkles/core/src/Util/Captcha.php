@@ -30,17 +30,17 @@ class Captcha
      * @var string The captcha image, represented as a binary string.
      */
     protected $image;
-    
+
     /**
      * @var UserFrosting\Session\Session We use the session object so that the hashed captcha token will automatically appear in the session.
      */
     protected $session;
-    
+
     /**
      * @var string
      */
     protected $key;
-    
+
     /**
      * Create a new captcha.
      */
@@ -48,12 +48,12 @@ class Captcha
     {
         $this->session = $session;
         $this->key = $key;
-        
+
         if (!$this->session->has($key)) {
             $this->session[$key] = array();
         }
     }
-    
+
     /**
      * Generates a new captcha for the user registration form.
      *
@@ -65,13 +65,13 @@ class Captcha
         $md5_hash = md5(rand(0,99999));
         $this->code = substr($md5_hash, 25, 5);
         $enc = md5($this->code);
-        
+
         // Store the generated captcha value to the session
         $this->session[$this->key] = $enc;
-        
+
         $this->generateImage();
     }
-    
+
     /**
      * Returns the captcha code.
      */
@@ -79,15 +79,15 @@ class Captcha
     {
         return $this->code;
     }
-    
+
     /**
      * Returns the captcha image.
      */
     public function getImage()
     {
         return $this->image;
-    }       
-    
+    }
+
     /**
      * Check that the specified code, when hashed, matches the code in the session.
      *
@@ -99,14 +99,14 @@ class Captcha
     {
         return (md5($code) == $this->session[$this->key]);
     }
-    
+
     /**
      * Generate the image for the current captcha.
      *
      * This generates an image as a binary string.
-     */    
+     */
     protected function generateImage()
-    {       
+    {
         $width = 150;
         $height = 30;
 
@@ -154,7 +154,7 @@ class Captcha
 
         //get binary image data
         $this->image = ob_get_clean();
-        
+
         return $this->image;
-    } 
+    }
 }

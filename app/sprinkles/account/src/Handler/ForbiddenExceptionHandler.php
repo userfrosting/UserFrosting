@@ -16,7 +16,7 @@ use UserFrosting\Sprinkle\Core\Handler\ExceptionHandler;
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ForbiddenExceptionHandler extends ExceptionHandler
-{    
+{
     /**
      * Called when an exception is raised during AJAX requests.
      *
@@ -26,17 +26,17 @@ class ForbiddenExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
-     */   
+     * @return ResponseInterface
+     */
     public function ajaxHandler($request, $response, $exception)
     {
         $this->logFlag = true;
-    
+
         $this->ci->alerts->addMessageTranslated('danger', 'RESOURCE_NOT_FOUND');
-        
+
         return $response->withStatus(404);
     }
-     
+
     /**
      * Handler for exceptions raised during "standard" requests.
      *
@@ -46,22 +46,22 @@ class ForbiddenExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
+     * @return ResponseInterface
      */
     public function standardHandler($request, $response, $exception)
     {
         $this->logFlag = false;
-        
+
         // Render a custom error page, if it exists
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");
         } catch (\Twig_Error_Loader $e) {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
         }
-        
+
         return $response->withStatus(404)
                         ->withHeader('Content-Type', 'text/html')
                         ->write($template->render([]));
-    }    
-    
+    }
+
 }

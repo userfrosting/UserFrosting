@@ -13,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
 
 /**
- * Performs pre-flight tests on your server environment to check that it meets the requirements. 
+ * Performs pre-flight tests on your server environment to check that it meets the requirements.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -21,7 +21,7 @@ class CheckEnvironment
 {
     /**
      * @var \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator Locator service for stream resources.
-     */   
+     */
     protected $locator;
 
     /**
@@ -32,8 +32,8 @@ class CheckEnvironment
     /**
      * @var \Slim\Views\Twig The view object, needed for rendering error page.
      */
-    protected $view;    
-    
+    protected $view;
+
     /**
      * Constructor.
      *
@@ -45,7 +45,7 @@ class CheckEnvironment
         $this->view = $view;
         $this->locator = $locator;
     }
-    
+
     /**
      * Invoke the CheckEnvironment middleware, performing all pre-flight checks and returning an error page if problems were found.
      *
@@ -58,7 +58,7 @@ class CheckEnvironment
     public function __invoke($request, $response, $next)
     {
         $problemsFound = $this->checkAll();
-    
+
         if ($problemsFound){
             $response = $this->view->render($response, 'pages/error/config-errors.html.twig', [
                 "messages" => $this->results
@@ -66,39 +66,39 @@ class CheckEnvironment
         } else {
             $response = $next($request, $response);
         }
-        
+
         return $response;
     }
-    
+
     /**
      * Run through all pre-flight checks.
-     */     
+     */
     public function checkAll()
     {
         $problemsFound = false;
-        
+
         if ($this->checkApache()) $problemsFound = true;
-        
+
         if ($this->checkPhp()) $problemsFound = true;
-        
+
         if ($this->checkPdo()) $problemsFound = true;
-        
-        if ($this->checkGd()) $problemsFound = true;        
-        
+
+        if ($this->checkGd()) $problemsFound = true;
+
         if ($this->checkImageFunctions()) $problemsFound = true;
-        
+
         if ($this->checkPermissions()) $problemsFound = true;
-        
+
         return $problemsFound;
     }
-    
+
     /**
      * For Apache environments, check that required Apache modules are installed.
-     */    
+     */
     public function checkApache()
     {
         $problemsFound = false;
-        
+
         // Perform some Apache checks.  We may also need to do this before any routing takes place.
         if (strpos(php_sapi_name(), 'apache') !== false) {
 
@@ -124,7 +124,7 @@ class CheckEnvironment
                 }
             }
         }
-        
+
         return $problemsFound;
     }
 
@@ -134,7 +134,7 @@ class CheckEnvironment
     public function checkGd()
     {
         $problemsFound = false;
-        
+
         if (!(extension_loaded('gd') && function_exists('gd_info'))) {
             $problemsFound = true;
             $this->results['gd'] = [
@@ -149,19 +149,19 @@ class CheckEnvironment
                 "success" => true
             ];
         }
-        
-        return $problemsFound;  
+
+        return $problemsFound;
     }
-    
+
     /**
      * Check that all image* functions used by Captcha exist.
      *
      * Some versions of GD are missing one or more of these functions, thus why we check for them explicitly.
-     */    
+     */
     public function checkImageFunctions()
     {
         $problemsFound = false;
-        
+
         $funcs = [
             'imagepng',
             'imagecreatetruecolor',
@@ -172,7 +172,7 @@ class CheckEnvironment
             'imagefontwidth',
             'imagestring'
         ];
-        
+
         foreach ($funcs as $func) {
             if (!function_exists($func)) {
                 $problemsFound = true;
@@ -189,7 +189,7 @@ class CheckEnvironment
                 ];
             }
         }
-    
+
         return $problemsFound;
     }
 
@@ -199,7 +199,7 @@ class CheckEnvironment
     public function checkPdo()
     {
         $problemsFound = false;
-        
+
         if (!class_exists('PDO')) {
             $problemsFound = true;
             $this->results['pdo'] = [
@@ -214,24 +214,24 @@ class CheckEnvironment
                 "success" => true
             ];
         }
-        
+
         return $problemsFound;
     }
-        
+
     /**
-     * Check that log, cache, and session directories are writable, and that other directories are non-writable. 
-     */    
+     * Check that log, cache, and session directories are writable, and that other directories are non-writable.
+     */
     function checkPermissions()
     {
         $problemsFound = false;
-    
+
         $shouldBeWriteable = [
-            $this->locator->findResource('log://') => true,        
+            $this->locator->findResource('log://') => true,
             $this->locator->findResource('cache://') => true,
             $this->locator->findResource('session://') => true,
             $this->locator->findResource('sprinkles://') => false,
             \UserFrosting\VENDOR_DIR => false
-        ];    
+        ];
 
         // Check for essential files & perms
         foreach ($shouldBeWriteable as $file => $assertWriteable) {
@@ -265,20 +265,20 @@ class CheckEnvironment
                             . ($writeable ? "writeable" : "not writeable")
                             . "</b>.",
                         "success" => true
-                    ];  
+                    ];
                 }
             }
         }
-        return $problemsFound;     
+        return $problemsFound;
     }
-    
+
     /**
      * Check that PHP meets the minimum required version.
-     */    
+     */
     public function checkPhp()
     {
         $problemsFound = false;
-    
+
         // Check PHP version
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
             $problemsFound = true;
@@ -294,7 +294,7 @@ class CheckEnvironment
                 "success" => true
             ];
         }
-        
+
         return $problemsFound;
     }
 }

@@ -3,8 +3,8 @@
 
 {# Set page properties (page.*) here. #}
 {% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template,
+    but BEFORE the page itself is rendered. #}
     {% set page = page | merge({
         "title"       : "Groups",
         "description" : "Group management, authorization rules, add/remove groups, etc."
@@ -54,13 +54,13 @@
                                 </td>
                                 <td>
                                     {{group.theme}}
-                                </td>                                    
+                                </td>
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                             Actions
                                             <span class="caret"></span>
-                                        </button>            
+                                        </button>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
                                                 <a href="#" data-id="{{group.id}}" class="js-group-edit" data-target="#dialog-group-edit" data-toggle="modal">
@@ -104,7 +104,7 @@
 </div>
 {% endblock %}
 {% block page_scripts %}
-        <script>            
+        <script>
             $(document).ready(function() {
                 ufTable('table-groups');
             });

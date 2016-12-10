@@ -5,7 +5,7 @@
      *
      * Sensitive credentials should be stored in an environment variable or your .env file.
      * Database password: DB_PASSWORD
-     * SMTP server password: SMTP_PASSWORD     
+     * SMTP server password: SMTP_PASSWORD
      */
 
     return [

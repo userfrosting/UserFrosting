@@ -12,13 +12,13 @@ $(document).ready(function() {
         Fullscreen background
     */
     $.backstretch(site.uri.images.background);
-    
-    // TODO: Process form 
+
+    // TODO: Process form
     $("#request-password-reset").ufForm({
         validators: page.validators.forgot_password,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Forward to login page on success
         window.location.replace(site.uri.public + "/account/sign-in-or-register");
-    }); 
+    });
 });

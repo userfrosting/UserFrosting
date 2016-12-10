@@ -11,19 +11,19 @@ use \Illuminate\Database\Capsule\Manager as Capsule;
  * Finally, this class is responsible for initializing the database during installation.
  * @package UserFrosting
  * @author Alex Weissman
- * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/ 
+ * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
  */
 abstract class Database {
     /**
      * @var Slim The Slim app, containing configuration info
      */
     public static $app;
-    
+
     /**
      * @var array[DatabaseTable] An array of DatabaseTable objects representing the configuration of the database tables.
      */
     protected static $tables;
-    
+
     /**
      * Test whether a DB connection can be established.
      *
@@ -39,7 +39,7 @@ abstract class Database {
         }
         return true;
     }
-    
+
     /**
      * Get an array of key-value pairs containing basic information about this database.
      *
@@ -64,20 +64,20 @@ abstract class Database {
         $results['table_prefix'] = static::$app->config('db')['db_prefix'];
         return $results;
     }
-    
+
     /**
      * Get an array of the names of tables that exist in the database.
      *
      * Looks for tables with the following handles: user, group, group_user, authorize_group, authorize_user
      * @return array[string] the names of the UF tables that actually exist.
-     */ 
+     */
     public static function getCreatedTables(){
         if (!static::testConnection())
             return [];
-        
+
         $connection = Capsule::connection();
         $results = [];
-        
+
         $test_list = [
             static::getSchemaTable('user')->name,
             static::getSchemaTable('user_event')->name,
@@ -87,7 +87,7 @@ abstract class Database {
             static::getSchemaTable('authorize_group')->name,
             static::$app->remember_me_table['tableName']
         ];
-        
+
         foreach ($test_list as $table){
             try {
                 $stmt = $connection->select("SELECT 1 FROM `$table` LIMIT 1;");
@@ -96,7 +96,7 @@ abstract class Database {
             }
             $results[] = $table;
         }
-        
+
         return $results;
-    }    
+    }
 }

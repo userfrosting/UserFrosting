@@ -14,7 +14,7 @@
             "no_trailing_whitespace" : {
                 "label" : "&USERNAME",
                 "message" : "VALIDATE.NO_TRAIL_WS"
-            },            
+            },
             "required" : {
                 "label" : "&USERNAME",
                 "message" : "VALIDATE.REQUIRED"
@@ -40,7 +40,7 @@
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
         }
-    },    
+    },
     "email" : {
         "validators" : {
             "required" : {

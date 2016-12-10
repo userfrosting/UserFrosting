@@ -33,35 +33,35 @@ class AccessConditionExpression
      * @var User A user object, which for convenience can be referenced as 'self' in access conditions.
      */
     protected $user;
-    
+
     /**
      * @var ParserNodeFunctionEvaluator The node visitor, which evaluates access condition callbacks used in a permission condition.
      */
     protected $nodeVisitor;
-    
+
     /**
      * @var \PhpParser\Parser The PhpParser object to use (initialized in the ctor)
      */
     protected $parser;
-    
+
     /**
      * @var NodeTraverser The NodeTraverser object to use (initialized in the ctor)
-     */    
+     */
     protected $traverser;
-    
+
     /**
      * @var StandardPrettyPrinter The PrettyPrinter object to use (initialized in the ctor)
-     */ 
+     */
     protected $prettyPrinter;
-    
+
     /**
      * @var Logger
      */
     protected $logger;
-    
+
     /**
      * @var bool Set to true if you want debugging information printed to the auth log.
-     */ 
+     */
     protected $debug;
 
     /**
@@ -70,7 +70,7 @@ class AccessConditionExpression
      * @param User $user A user object, which for convenience can be referenced as 'self' in access conditions.
      * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.
-     */    
+     */
     public function __construct($nodeVisitor, $user, $logger, $debug = false)
     {
         $this->nodeVisitor   = $nodeVisitor;
@@ -82,7 +82,7 @@ class AccessConditionExpression
         $this->logger        = $logger;
         $this->debug = $debug;
     }
- 
+
     /**
      * Evaluates a condition expression, based on the given parameters.
      *
@@ -91,40 +91,40 @@ class AccessConditionExpression
      * @param string $condition a boolean expression composed of calls to AccessCondition functions.
      * @param array[mixed] $params the parameters to be used when evaluating the expression.
      * @return bool true if the condition is passed for the given parameters, otherwise returns false.
-     */      
+     */
     public function evaluateCondition($condition, $params)
     {
         // Set the reserved `self` parameters.
         // This replaces any values of `self` specified in the arguments, thus preventing them from being overridden in malicious user input.
         // (For example, from an unfiltered request body).
         $params['self'] = $this->user->export();
-        
+
         $this->nodeVisitor->setParams($params);
-        
+
         $code = "<?php $condition;";
-        
+
         if ($this->debug) {
             $this->logger->debug("Evaluating access condition '$condition' with parameters:", $params);
         }
-        
+
         // Traverse the parse tree, and execute any callbacks found using the supplied parameters.
-        // Replace the function node with the return value of the callback.        
+        // Replace the function node with the return value of the callback.
         try {
             // parse
             $stmts = $this->parser->parse($code);
-            
+
             // traverse
             $stmts = $this->traverser->traverse($stmts);
-            
+
             // Evaluate boolean statement.  It is safe to use eval() here, because our expression has been reduced entirely to a boolean expression.
             $expr = $this->prettyPrinter->prettyPrintExpr($stmts[0]);
             $expr_eval = "return " . $expr . ";\n";
             $result = eval($expr_eval);
-            
+
             if ($this->debug) {
                 $this->logger->debug("Expression '$expr' evaluates to " . ($result == true ? "true" : "false"));
             }
-            
+
             return $result;
         } catch (PhpParserException $e) {
             if ($this->debug) {

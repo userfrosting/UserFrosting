@@ -21,12 +21,12 @@ class TwigMailMessage extends MailMessage
      * @var \Slim\Views\Twig The view object, used to render mail templates.
      */
     protected $view;
-    
+
     /**
      * @var Twig_Template The Twig template object, to source the content for this message.
      */
     protected $template;
-    
+
     /**
      * Create a new TwigMailMessage instance.
      *
@@ -35,13 +35,13 @@ class TwigMailMessage extends MailMessage
     public function __construct($view, $filename = null)
     {
         $this->view = $view;
-        
+
         if ($filename !== null) {
             $twig = $this->view->getEnvironment();
             $this->template = $twig->loadTemplate($filename);
         }
     }
-    
+
     public function setTemplate($template)
     {
         $this->template = $template;
@@ -55,12 +55,12 @@ class TwigMailMessage extends MailMessage
         $twig = $this->view->getEnvironment();
         $this->params = array_merge($twig->getGlobals(), $params);
     }
-    
+
     public function renderSubject()
     {
         return $this->template->renderBlock('subject', $this->params);
     }
-    
+
     public function renderBody()
     {
         return $this->template->renderBlock('body', $this->params);

@@ -2,8 +2,8 @@
 
 {# Set page properties (page.*) here. #}
 {% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
+    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template,
+    but BEFORE the page itself is rendered. #}
     {% set page = page | merge({
         "title"       : "Zerg",
         "description" : "Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own."
@@ -32,7 +32,7 @@
     <i class="sc sc-hydralisk fa fa-3x"></i>
     <i class="sc sc-hydralisk fa fa-2x"></i>
     <i class="sc sc-hydralisk fa fa-lg"></i>
-    <i class="sc sc-hydralisk fa"></i>            
+    <i class="sc sc-hydralisk fa"></i>
     <br>
     <i class="sc sc-ultralisk fa fa-5x"></i>
     <i class="sc sc-ultralisk fa fa-4x"></i>

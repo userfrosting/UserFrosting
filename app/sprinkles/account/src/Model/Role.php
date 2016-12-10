@@ -23,41 +23,41 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  */
 class Role extends UFModel
 {
-   
+
     /**
      * @var string The name of the table for the current model.
-     */ 
+     */
     protected $table = "roles";
-    
+
     protected $fillable = [
         "slug",
         "name",
         "description"
-    ];    
+    ];
 
     /**
      * @var bool Enable timestamps for this class.
-     */ 
+     */
     public $timestamps = true;
-    
+
     /**
      * Delete this role from the database, removing associations with permissions and users.
      *
      */
     public function delete()
-    {        
+    {
         // Remove all permission associations
         $this->permissions()->detach();
-        
+
         // Remove all user associations
         $this->users()->detach();
-            
-        // Delete the role        
-        $result = parent::delete();        
-        
+
+        // Delete the role
+        $result = parent::delete();
+
         return $result;
-    }    
-    
+    }
+
     /**
      * Get a list of permissions assigned to this role.
      */
@@ -65,18 +65,18 @@ class Role extends UFModel
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
-        
+
         return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles');
     }
-    
+
     /**
      * Get a list of users who have this role.
      */
     public function users()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = static::$ci->classMapper;    
-    
+        $classMapper = static::$ci->classMapper;
+
         return $this->belongsToMany($classMapper->getClassMapping('user'), 'role_users');
     }
 }

@@ -29,21 +29,21 @@ class Group extends UFModel {
 
     /**
      * @var string The name of the table for the current model.
-     */ 
+     */
     protected $table = "groups";
-    
+
     protected $fillable = [
         "slug",
         "name",
         "description",
         "icon"
     ];
-    
+
     /**
      * @var bool Enable timestamps for this class.
-     */ 
+     */
     public $timestamps = true;
-    
+
     /**
      * Delete this group from the database, along with any user associations
      *
@@ -53,28 +53,28 @@ class Group extends UFModel {
     {
         // Remove all user associations
         $this->users()->detach();
-        
+
         /*
         // Reassign any primary users to the current default primary group
         $default_primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
-        
+
         Capsule::table('user')->where('primary_group_id', $this->id)->update(["primary_group_id" => $default_primary_group->id]);
         */
-        
-        // Delete the group        
+
+        // Delete the group
         $result = parent::delete();
-        
+
         return $result;
     }
-    
+
     /**
      * Lazily load a collection of Users which belong to this group.
-     */ 
+     */
     public function users()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
-    
+
         return $this->hasMany($classMapper->getClassMapping('user'));
     }
 }

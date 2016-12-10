@@ -25,7 +25,7 @@
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
         }
-    },    
+    },
     "email" : {
         "validators" : {
             "required" : {
@@ -51,7 +51,7 @@
                 "max" : 100,
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
-        }  
+        }
     },
     "passwordc" : {
         "validators" : {
@@ -66,7 +66,7 @@
                 "max" : 100,
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
-        }  
+        }
     },
     "locale" : {
         "validators" : {

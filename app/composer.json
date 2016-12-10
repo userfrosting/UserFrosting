@@ -11,10 +11,10 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.0.0", 
+    "version": "4.0.0",
     "require": {
         "wikimedia/composer-merge-plugin": "dev-master"
-	}, 
+	},
     "extra": {
         "merge-plugin": {
             "include": [

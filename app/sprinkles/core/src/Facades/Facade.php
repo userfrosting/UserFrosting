@@ -18,7 +18,7 @@ use RuntimeException;
  *
  * Adapted from the Laravel Facade class: https://github.com/laravel/framework/blob/5.3/src/Illuminate/Support/Facades/Facade.php
  *
- * @author Alex Weissman (https://alexanderweissman.com) 
+ * @author Alex Weissman (https://alexanderweissman.com)
  * @see https://laravel.com/docs/5.2/facades
  * @license https://github.com/laravel/framework/blob/5.3/LICENSE.md (MIT License)
  */
@@ -47,7 +47,7 @@ abstract class Facade
     public static function swap($instance)
     {
         $name = static::getFacadeAccessor();
-        
+
         static::$resolvedInstance[$name] = $instance;
 
         // Replace service in container

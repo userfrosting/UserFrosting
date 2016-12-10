@@ -11,8 +11,8 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.0.0", 
-    "require": {    
+    "version": "4.0.0",
+    "require": {
         "php": ">=5.5.9"
     },
     "autoload": {

@@ -17,5 +17,5 @@ use UserFrosting\Support\Exception\HttpException;
  */
 class SpammyRequestException extends HttpException
 {
-    
+
 }

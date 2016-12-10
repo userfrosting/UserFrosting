@@ -11,7 +11,7 @@ $.tablesorter.addParser({
       var $cell = $(cell);
       // returns metadata, or cell text (s) if it doesn't exist
       return $cell.attr('data-num') || s;
-      
+
     },
     // set type to numeric
     type: 'numeric'
@@ -28,7 +28,7 @@ $.tablesorter.addParser({
       var $cell = $(cell);
       // returns metadata, or cell text (s) if it doesn't exist
       return $cell.attr('data-text') || s;
-      
+
     },
 
     type: 'text'
@@ -46,7 +46,7 @@ $.tablesorter.addParser({
       // returns 1 if blank (whitespace), 0 otherwise
       var isBlank = $cell.html().trim() == "&nbsp;" ? 1 : 0;
       return isBlank;
-      
+
     },
 
     type: 'numeric'

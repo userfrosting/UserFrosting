@@ -25,7 +25,7 @@ class AssetLoader
      * @var string The fully constructed path to the file.
      */
     protected $fullPath;
-    
+
     /**
      * Create a new AssetLoader object.
      *
@@ -34,7 +34,7 @@ class AssetLoader
     public function __construct($basePath = 'assets://')
     {
         $this->basePath = $basePath;
-        
+
         $this->fullPath = '';
     }
 
@@ -51,7 +51,7 @@ class AssetLoader
         $relativePath = preg_replace('/\?.*/', '', $relativePath);
 
         // Find file
-        $this->fullPath = $this->basePath . $relativePath;        
+        $this->fullPath = $this->basePath . $relativePath;
 
         // Return 404 if file does not exist
         if (!file_exists($this->fullPath)) {
@@ -69,18 +69,18 @@ class AssetLoader
     public function getContent()
     {
         return file_get_contents($this->fullPath);
-    }    
+    }
 
     /**
      * Get the length in bytes of the currently targeted file.
      *
      * @return int
-     */    
+     */
     public function getLength()
     {
         return filesize($this->fullPath);
     }
-    
+
     /**
      * Get the best-guess MIME type of the currently targeted file, based on the file extension.
      *

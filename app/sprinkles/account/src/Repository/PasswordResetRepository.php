@@ -30,6 +30,6 @@ class PasswordResetRepository extends TokenRepository
     {
         $user->password = Password::hash($args['password']);
         // TODO: generate user activity? or do this in controller?
-        $user->save();    
+        $user->save();
     }
 }

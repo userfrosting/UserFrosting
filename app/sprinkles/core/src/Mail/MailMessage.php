@@ -18,9 +18,9 @@ namespace UserFrosting\Sprinkle\Core\Mail;
 class MailMessage
 {
     protected $body;
-       
+
     protected $subject;
-    
+
     /**
      * Create a new MailMessage instance.
      *
@@ -31,17 +31,17 @@ class MailMessage
         $this->subject = $subject;
         $this->body = $body;
     }
-    
+
     public function renderBody()
     {
         return $this->body;
     }
-    
+
     public function renderSubject()
     {
         return $this->subject;
     }
-    
+
     public function setSubject($subject)
     {
         $this->subject = $subject;

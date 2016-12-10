@@ -75,7 +75,7 @@ class UserController extends SimpleController
         $locales = $this->ci->translator->getAvailableLocales();
 
         $themes = [];
-        
+
         // Determine fields that currentUser is authorized to view
         $fields = ['name', 'email', 'locale', 'theme'];
         $show_fields = [];
@@ -155,7 +155,7 @@ class UserController extends SimpleController
     {
         // GET parameters
         $params = $request->getQueryParams();
-        
+
         $filters = isset($params['filters']) ? $params['filters'] : [];
         $size = isset($params['size']) ? $params['size'] : null;
         $page = isset($params['page']) ? $params['page'] : null;
@@ -192,21 +192,21 @@ class UserController extends SimpleController
             $sortField = "last_activity_at";
         } else if ($sortField == "name") {
             $sortField = "last_name";
-        } 
+        }
 
         // Join user's most recent activity
         $query = $query->joinLastActivity($activityFilter)->with('lastActivity');
 
         // Count unpaginated total
         $total = $query->count();
-        
+
         // Apply filters
         $filtersApplied = false;
         foreach ($filters as $name => $value) {
             if ($name == 'last_activity') {
                 continue;
             }
-            
+
             if ($name == 'name') {
                 $query = $query->like('first_name', $value)
                                 ->orLike('last_name', $value)
@@ -214,14 +214,14 @@ class UserController extends SimpleController
             } else {
                 $query = $query->like($name, $value);
             }
-            
+
             $filtersApplied = true;
         }
-        
+
         $totalFiltered = $query->count();
-        
-        $query = $query->orderBy($sortField, $sortOrder);    
-        
+
+        $query = $query->orderBy($sortField, $sortOrder);
+
         // Paginate
         if (($page !== null) && ($size !== null)) {
             $offset = $size*$page;
@@ -241,7 +241,7 @@ class UserController extends SimpleController
             "rows" => $collection->values()->toArray(),
             "count_filtered" => $totalFiltered
         ];
-    
+
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
         return $response->withJson($result, 200, JSON_PRETTY_PRINT);
@@ -302,7 +302,7 @@ class UserController extends SimpleController
 
         // Get a list of all groups
         $groups = $classMapper->staticMethod('group', 'all');
-        
+
         /*
         // Get a list of all locales
         $locale_list = $this->_app->site->getLocales();
@@ -334,7 +334,7 @@ class UserController extends SimpleController
         // Set default locale
         $data['locale'] = $this->_app->site->default_locale;
         */
-        
+
         // Create a dummy user to prepopulate fields
         $user = $classMapper->createInstance('user', []);
 
@@ -346,7 +346,7 @@ class UserController extends SimpleController
             "user" => $user,
             "groups" => $groups,
             "modal" => [
-                
+
             ],
             "form" => [
                 "action" => "api/users",
@@ -365,12 +365,12 @@ class UserController extends SimpleController
                 "validators" => $validator->rules('json', false)
             ]
         ]);
-        
+
         /*
         $this->_app->render($template, [
             "box_id" => $get['box_id'],
             "box_title" => "Create User",
-            
+
         ]);
         */
     }

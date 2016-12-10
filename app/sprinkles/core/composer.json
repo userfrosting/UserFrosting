@@ -21,7 +21,7 @@
             "type": "vcs",
             "url": "https://github.com/userfrosting/i18n"
         }
-    ],    
+    ],
     "require": {
         "illuminate/database": "^5.2",
         "illuminate/events": "^5.2",

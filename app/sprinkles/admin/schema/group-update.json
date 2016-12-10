@@ -10,7 +10,7 @@
         "sanitizers" : {
             "raw" : ""
         }
-    },          
+    },
     "theme" : {
         "validators" : {
             "length" : {
@@ -45,7 +45,7 @@
                 "max" : 100
             }
         }
-    },    
+    },
     "is_default" : {
         "validators" : {
             "member_of" : {

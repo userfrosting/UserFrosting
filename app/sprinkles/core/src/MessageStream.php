@@ -25,29 +25,29 @@ class MessageStream
      * @var UserFrosting\Session\Session We use the session object so that added messages will automatically appear in the session.
      */
     protected $session;
-    
+
     /**
      * @var string
      */
     protected $messagesKey;
-    
+
     /**
      * @var UserFrosting\I18n\MessageTranslator|null
-     */    
+     */
     protected $messageTranslator = null;
 
-    /** 
+    /**
      * Create a new message stream.
      */
     public function __construct($session, $messagesKey, $translator = null)
     {
         $this->session = $session;
         $this->messagesKey = $messagesKey;
-    
+
         if (!$this->session->has($messagesKey)) {
             $this->session[$messagesKey] = array();
         }
-        
+
         $this->setTranslator($translator);
     }
 
@@ -55,19 +55,19 @@ class MessageStream
      * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
      * @param UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
-     */    
+     */
     public function setTranslator($translator)
     {
         $this->messageTranslator = $translator;
         return $this;
     }
-    
+
     /**
      * Adds a raw text message to the session message stream.
      *
      * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
      * @param string $message The message to be added to the message stream.
-     * @return MessageStream this MessageStream object. 
+     * @return MessageStream this MessageStream object.
      */
     public function addMessage($type, $message)
     {
@@ -96,7 +96,7 @@ class MessageStream
         $message = $this->messageTranslator->translate($messageId, $placeholders);
         return $this->addMessage($type, $message);
     }
-    
+
     /**
      * Add error messages from a ServerSideValidator object to the message stream.
      *
@@ -108,9 +108,9 @@ class MessageStream
             foreach($field as $eidx => $error) {
                 $this->addMessage("danger", $error);
             }
-        }    
+        }
     }
-    
+
     /**
      * Get the messages from this message stream.
      *
@@ -130,7 +130,7 @@ class MessageStream
     {
         return $this->messageTranslator;
     }
-    
+
     /**
      * Clear all messages from this message stream.
      */
@@ -138,7 +138,7 @@ class MessageStream
     {
         $this->session[$this->messagesKey] = array();
     }
-    
+
     /**
      * Get the messages and then clear the message stream.
      * This function does the same thing as `messages()`, except that it also clears all messages afterwards.

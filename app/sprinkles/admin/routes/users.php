@@ -28,7 +28,7 @@ $app->group('/api/users', function () {
 
     $this->post('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUser');
 });
-    
+
 $app->group('/modals/users', function () {
     $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalConfirmDeleteUser');
 

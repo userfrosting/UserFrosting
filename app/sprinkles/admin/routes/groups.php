@@ -28,9 +28,9 @@ $app->group('/api/groups', function () {
 
     $this->post('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:updateGroup');
 
-    $this->get('/g/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getGroupUsers');    
+    $this->get('/g/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getGroupUsers');
 });
-    
+
 $app->group('/forms/groups', function () {
     $this->get('/create/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:formCreateGroup');
 

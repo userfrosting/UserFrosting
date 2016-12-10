@@ -14,7 +14,7 @@ namespace UserFrosting\Sprinkle\Core\Handler;
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class HttpExceptionHandler extends ExceptionHandler
-{    
+{
     /**
      * Called when an exception is raised during AJAX requests.
      *
@@ -24,13 +24,13 @@ class HttpExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
-     */   
+     * @return ResponseInterface
+     */
     public function ajaxHandler($request, $response, $exception)
-    { 
+    {
         $messages = $exception->getUserMessages();
         $httpCode = $exception->getHttpErrorCode();
-    
+
         // If the status code is 500, log the exception's message
         if ($httpCode == 500) {
             $this->logFlag = true;
@@ -54,13 +54,13 @@ class HttpExceptionHandler extends ExceptionHandler
      * @param ResponseInterface      $response  The most recent Response object
      * @param Exception              $exception The caught Exception object
      *
-     * @return ResponseInterface     
+     * @return ResponseInterface
      */
     public function standardHandler($request, $response, $exception)
     {
         $messages = $exception->getUserMessages();
         $httpCode = $exception->getHttpErrorCode();
-        
+
         // If the status code is 500, log the exception's message
         if ($httpCode == 500) {
             $this->logFlag = true;
