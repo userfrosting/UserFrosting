@@ -25,17 +25,17 @@ class SprinkleManager
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
-    
+
     /**
      * @var string[] An array of sprinkle names.
      */
     protected $sprinkles = [];
-    
+
     /**
      * @var string The full absolute base path to the sprinkles directory.
-     */    
+     */
     protected $sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
-    
+
     /**
      * Create a new SprinkleManager object.
      *
@@ -47,7 +47,7 @@ class SprinkleManager
         $this->ci = $ci;
         $this->setSprinkles($sprinkles);
     }
-    
+
     /**
      * Initialize the application.  Register core services and resources and load all sprinkles.
      */
@@ -55,25 +55,25 @@ class SprinkleManager
     {
         // Set up facade reference to container.
         Facade::setFacadeContainer($this->ci);
-    
+
         // Register core services
         $serviceProvider = new CoreServicesProvider();
         $serviceProvider->register($this->ci);
-        
+
         // Register core resources
         $this->addSprinkleResources('core');
-        
+
         // For each sprinkle (other than Core), register its resources and then run its initializer
-        foreach ($this->sprinkles as $name) {        
+        foreach ($this->sprinkles as $name) {
             $this->addSprinkleResources($name);
-            
+
             // Initialize the sprinkle
             $sprinkle = $this->initializeSprinkle($name);
         }
-        
+
         // Set the configuration settings for Slim in the 'settings' service
         $this->ci->settings = $this->ci->config['settings'];
-        
+
         // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
         $this->ci->shutdownHandler;
     }
@@ -113,7 +113,7 @@ class SprinkleManager
      *
      * @param string $name
      * @return string|bool The full path to the Sprinkle's locales (if found).
-     */    
+     */
     public function addLocale($name)
     {
         $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME;
@@ -128,7 +128,7 @@ class SprinkleManager
      *
      * @param string $name
      * @return string|bool The full path to the Sprinkle's routes (if found).
-     */    
+     */
     public function addRoutes($name)
     {
         $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME;
@@ -143,7 +143,7 @@ class SprinkleManager
      *
      * @param string $name
      * @return string|bool The full path to the Sprinkle's schema (if found).
-     */    
+     */
     public function addSchema($name)
     {
         $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME;
@@ -158,7 +158,7 @@ class SprinkleManager
      *
      * @param string $name
      * @return string|bool The full path to the Sprinkle's templates (if found).
-     */    
+     */
     public function addTemplates($name)
     {
         $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME;
@@ -214,6 +214,25 @@ class SprinkleManager
     }
 
     /**
+     * Returns a list of avaialble sprinkles.
+     *
+     * @param none
+     */
+    public function getSprinkles() {
+        return $this->sprinkles;
+    }
+
+    /**
+     * Return if a Sprinkle is available
+     * Can be used by other Sprinkles to test if their dependecies are met
+     *
+     * @param $name The name of the Sprinkle
+     */
+    public function isAvailable($name) {
+        return in_array($name, $this->getSprinkles());
+    }
+
+    /**
      * Takes the name of a Sprinkle, and creates an instance of the initializer object (if defined).
      *
      * Creates an object of a subclass of UserFrosting\Sprinkle\Core\Initialize\Sprinkle if defined for the sprinkle (converting to StudlyCase).
@@ -233,5 +252,5 @@ class SprinkleManager
         } else {
             return null;
         }
-    }    
+    }
 }
