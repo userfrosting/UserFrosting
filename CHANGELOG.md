@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.1.22
+
+- Use `nullableTimestamps` instead of `timestamps` in installer, to prevent conflict with MySQL modes 'NO_ZERO_IN_DATE' and 'NO_ZERO_DATE'.
+
 ## v0.3.1.21
 
 - Use Laravel's Schema interface to create tables and default rows, instead of constructing them with SQL
