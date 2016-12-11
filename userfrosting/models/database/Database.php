@@ -258,7 +258,7 @@ abstract class Database {
                 $table->boolean('flag_verified')->default(1)->comment("Set to ''1'' if the user has verified their account via email, ''0'' otherwise.");
                 $table->boolean('flag_enabled')->default(1)->comment("Set to ''1'' if the user''s account is currently enabled, ''0'' otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.");
                 $table->boolean('flag_password_reset')->default(0)->comment("Set to ''1'' if the user has an outstanding password reset request, ''0'' otherwise.");
-                $table->timestamps();
+                $table->nullableTimestamps();
                 $table->string('password', 255);
                 $table->engine = 'InnoDB';
                 $table->collation = 'utf8_unicode_ci';
