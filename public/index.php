@@ -43,6 +43,10 @@ $app = new App($container);
 $container->sprinkleManager->loadRoutes($app);
 
 // Middleware
-$app->add($container->csrf);
+// Only set up CSRF middleware for unsafe requests.  This allows us to avoid unnecessary dependencies for GET requests.
+$request = $container->request;
+if (in_array($request->getMethod(), ['POST', 'PUT', 'DELETE', 'PATCH'])) {
+    $app->add($container->csrf);
+}
 
 $app->run();

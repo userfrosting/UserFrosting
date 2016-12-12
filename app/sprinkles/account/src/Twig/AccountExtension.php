@@ -26,7 +26,7 @@ class AccountExtension extends \Twig_Extension
     public function __construct(ContainerInterface $services)
     {
         $this->services = $services;
-        $this->config = $services->get('config');
+        $this->config = $services->config;
     }
 
     public function getName()
@@ -39,8 +39,8 @@ class AccountExtension extends \Twig_Extension
         return array(
             // Add Twig function for checking permissions during dynamic menu rendering
             new \Twig_SimpleFunction('checkAccess', function ($slug, $params = []) {
-                $authorizer = $this->services['authorizer'];
-                $currentUser = $this->services['currentUser'];
+                $authorizer = $this->services->authorizer;
+                $currentUser = $this->services->currentUser;
 
                 return $authorizer->checkAccess($currentUser, $slug, $params);
             })
@@ -49,9 +49,9 @@ class AccountExtension extends \Twig_Extension
 
     public function getGlobals()
     {
-        return array(
-            'current_user'   => $this->services['currentUser']
-        );
+        return [
+            'current_user'   => $this->services->currentUser,
+            'theme_assets'   => $this->services->themeAssets
+        ];
     }
-
 }

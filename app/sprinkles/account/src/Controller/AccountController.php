@@ -924,6 +924,28 @@ class AccountController extends SimpleController
         return $response->withStatus(200);
     }
 
+
+    /**
+     * Handle all requests for raw theme assets.
+     * Request type: GET
+     */
+    public function getThemeAsset($request, $response, $args)
+    {
+        // By starting this service, we ensure that the timezone gets set.
+        $config = $this->ci->config;
+
+        $assetLoader = $this->ci->themeAssetLoader;
+
+        if (!$assetLoader->loadAsset($args['url'])) {
+            throw new NotFoundException($request, $response);
+        }
+
+        return $response
+            ->withHeader('Content-Type', $assetLoader->getType())
+            ->withHeader('Content-Length', $assetLoader->getLength())
+            ->write($assetLoader->getContent());
+    }
+
     /**
      * Processes an new email verification request.
      *

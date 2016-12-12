@@ -94,18 +94,14 @@ class CoreServicesProvider
             $config = $c->config;
 
             // TODO: map stream identifier ("asset://") to desired relative URLs?
-            $base_url = $config['site.uri.public'];
-            $raw_assets_path = $config['site.uri.assets-raw'];
-            $use_raw_assets = $config['use_raw_assets'];
-
-            $am = new AssetManager($base_url, $use_raw_assets);
-            $am->setRawAssetsPath($raw_assets_path);
-            $am->setCompiledAssetsPath($config['site.uri.assets']);
+            $am = new AssetManager($config['site.uri.public'], $config['use_raw_assets']);
+            $am->setRawAssetsPath($config['assets.raw.path']);
+            $am->setCompiledAssetsPath($config['assets.compiled.path']);
 
             // Load asset schema
             $as = new AssetBundleSchema();
-            $as->loadRawSchemaFile($c->locator->findResource('build://bundle.config.json', true, true));
-            $as->loadCompiledSchemaFile($c->locator->findResource('build://bundle.result.json', true, true));
+            $as->loadRawSchemaFile($c->locator->findResource($config['assets.raw.schema'], true, true));
+            $as->loadCompiledSchemaFile($c->locator->findResource($config['assets.compiled.schema'], true, true));
 
             $am->setBundleSchema($as);
 

@@ -20,4 +20,4 @@ $app->get('/legal', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageLe
 
 $app->get('/privacy', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pagePrivacy');
 
-$app->get('/' . $config['site.uri.assets-raw'] . '/{url:.+}', 'UserFrosting\Sprinkle\Core\Controller\CoreController:getAsset');
+$app->get('/' . $config['assets.raw.path'] . '/{url:.+}', 'UserFrosting\Sprinkle\Core\Controller\CoreController:getAsset');

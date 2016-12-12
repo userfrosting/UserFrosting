@@ -14,6 +14,8 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use UserFrosting\Assets\AssetManager;
+use UserFrosting\Assets\AssetBundleSchema;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
@@ -24,6 +26,7 @@ use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
+use UserFrosting\Sprinkle\Core\Util\AssetLoader;
 
 /**
  * Registers services for the account sprinkle, such as currentUser, etc.
@@ -38,20 +41,7 @@ class AccountServicesProvider
      * @param Container $container A DI container implementing ArrayAccess and container-interop.
      */
     public function register($container)
-    {
-        /**
-         * Extends the 'assetLoader' service to add paths for user themes.
-         */
-        $container->extend('assetLoader', function ($assetLoader, $c) {
-            // Register paths for user theme, if a user is logged in
-            $currentUser = $c->currentUser;
-            if (!$currentUser->isGuest()) {
-                $c->sprinkleManager->addAssets($currentUser->theme);
-            }
-
-            return $assetLoader;
-        });
-
+    {        
         /**
          * Extend the 'classMapper' service to register model classes.
          *
@@ -305,6 +295,46 @@ class AccountServicesProvider
             }
 
             return $currentUser;
+        };
+
+        /**
+         * Asset manager for themes.
+         *
+         * Loads raw or compiled asset information from your bundle.config.json schema file.
+         * Assets are Javascript, CSS, image, and other files used by your site.
+         */
+        $container['themeAssets'] = function ($c) {
+            $config = $c->config;
+
+            // TODO: map stream identifier ("asset://") to desired relative URLs?
+            $am = new AssetManager($config['site.uri.public'], $config['use_raw_assets']);
+            $am->setRawAssetsPath($config['assets.theme.path']);
+            $am->setCompiledAssetsPath($config['assets.compiled.path']);
+
+            // Load asset schema
+            $as = new AssetBundleSchema();
+            $as->loadRawSchemaFile($c->locator->findResource($config['assets.theme.schema'], true, true));
+            $as->loadCompiledSchemaFile($c->locator->findResource($config['assets.compiled.schema'], true, true));
+
+            $am->setBundleSchema($as);
+
+            return $am;
+        };
+
+        /**
+         * Asset loader for users themes.  This allows us to partially decouple asset loading from
+         * the current user and therefore from the session.
+         */
+        $container['themeAssetLoader'] = function ($c) {
+            $al = new AssetLoader();
+
+            // Register paths for user theme, if a user is logged in
+            $currentUser = $c->currentUser;
+            if (!$currentUser->isGuest()) {
+                $c->sprinkleManager->addAssets($currentUser->theme);
+            }
+
+            return $al;
         };
 
         /**

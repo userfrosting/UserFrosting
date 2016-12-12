@@ -15,6 +15,16 @@
                 'name'  => 'Site Administrator'
             ]
         ],
+        'assets' => [
+            'compiled' => [
+                'path'   => 'assets',
+                'schema' => 'build://bundle.result.json'
+            ],
+            'raw' => [
+                'path'   => 'assets-raw',
+                'schema' => 'build://bundle.config.json'
+            ]
+        ],
         'cache' => [
             'twig' => false,
             'illuminate' => [
@@ -122,9 +132,7 @@
                     'path'              => trim(dirname($_SERVER['SCRIPT_NAME']), '/')
                 ],
                 'author'            => 'http://www.userfrosting.com',
-                'publisher'         => '',
-                'assets-raw'        => 'assets-raw',
-                'assets'            => 'assets'
+                'publisher'         => ''
             ],
             'locales' =>  'en_US'   // This can be a comma-separated list, to load multiple fallback locales
         ],
