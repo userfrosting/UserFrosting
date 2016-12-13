@@ -43,9 +43,15 @@ $app = new App($container);
 $container->sprinkleManager->loadRoutes($app);
 
 // Middleware
-// Only set up CSRF middleware for unsafe requests.  This allows us to avoid unnecessary dependencies for GET requests.
+// Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
 $request = $container->request;
-if (in_array($request->getMethod(), ['POST', 'PUT', 'DELETE', 'PATCH'])) {
+$path = $request->getUri()->getPath();
+$csrfBlacklist = [
+    $container->config['assets.raw.path'],
+    $container->config['assets.theme.path']
+];
+
+if (!$path || !starts_with($path, $csrfBlacklist)) {
     $app->add($container->csrf);
 }
 
