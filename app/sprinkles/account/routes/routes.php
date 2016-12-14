@@ -43,5 +43,3 @@ $app->group('/account', function () {
 });
 
 $app->get('/modals/account/tos', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getModalAccountTos');
-
-$app->get('/' . $config['assets.theme.path'] . '/{url:.+}', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getThemeAsset');

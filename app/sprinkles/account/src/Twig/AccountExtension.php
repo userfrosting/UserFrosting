@@ -50,8 +50,7 @@ class AccountExtension extends \Twig_Extension
     public function getGlobals()
     {
         return [
-            'current_user'   => $this->services->currentUser,
-            'theme_assets'   => $this->services->themeAssets
+            'current_user'   => $this->services->currentUser
         ];
     }
 }

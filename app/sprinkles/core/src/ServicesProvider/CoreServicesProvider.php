@@ -30,8 +30,11 @@ use Slim\Http\Uri;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
-use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\AssetBundleSchema;
+use UserFrosting\Assets\AssetLoader;
+use UserFrosting\Assets\AssetManager;
+use UserFrosting\Assets\UrlBuilder\AssetUrlBuilder;
+use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -44,7 +47,6 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
-use UserFrosting\Sprinkle\Core\Util\AssetLoader;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -80,7 +82,10 @@ class CoreServicesProvider
          * Assets are Javascript, CSS, image, and other files used by your site.
          */
         $container['assetLoader'] = function ($c) {
-            $al = new AssetLoader();
+            $basePath = \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME;
+            $pattern = "/^[A-Za-z0-9_\-]+\/assets\//";
+
+            $al = new AssetLoader($basePath, $pattern);
             return $al;
         };
 
@@ -92,18 +97,25 @@ class CoreServicesProvider
          */
         $container['assets'] = function ($c) {
             $config = $c->config;
-
-            // TODO: map stream identifier ("asset://") to desired relative URLs?
-            $am = new AssetManager($config['site.uri.public'], $config['use_raw_assets']);
-            $am->setRawAssetsPath($config['assets.raw.path']);
-            $am->setCompiledAssetsPath($config['assets.compiled.path']);
+            $locator = $c->locator;
 
             // Load asset schema
-            $as = new AssetBundleSchema();
-            $as->loadRawSchemaFile($c->locator->findResource($config['assets.raw.schema'], true, true));
-            $as->loadCompiledSchemaFile($c->locator->findResource($config['assets.compiled.schema'], true, true));
+            if ($config['use_raw_assets']) {
+                $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
+                $removePrefix = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME;
+                $aub = new AssetUrlBuilder($locator, $baseUrl, $removePrefix, 'assets');
 
-            $am->setBundleSchema($as);
+                $as = new AssetBundleSchema($aub);
+                $as->loadRawSchemaFile($locator->findResource($config['assets.raw.schema'], true, true));
+            } else {
+                $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
+                $aub = new CompiledAssetUrlBuilder($baseUrl);
+
+                $as = new AssetBundleSchema($aub);
+                $as->loadCompiledSchemaFile($locator->findResource($config['assets.compiled.schema'], true, true));
+            }
+
+            $am = new AssetManager($aub, $as);
 
             return $am;
         };

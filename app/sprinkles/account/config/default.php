@@ -6,12 +6,6 @@
      */
 
     return [
-        'assets' => [
-            'theme' => [
-                'path'   => 'assets-theme',
-                'schema' => 'build://bundle.config.json'
-            ]
-        ],
         'debug' => [
             'auth' => false
         ],

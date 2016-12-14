@@ -20,6 +20,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/userfrosting/i18n"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/userfrosting/assets"
         }
     ],
     "require": {
@@ -37,7 +41,7 @@
         "slim/csrf": "dev-feature-persistent-token",
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
-        "userfrosting/assets": "dev-master",
+        "userfrosting/assets": "1.0.x-dev",
         "userfrosting/config": "1.1",
         "userfrosting/fortress": "dev-master",
         "userfrosting/i18n": "1.0.x-dev",
