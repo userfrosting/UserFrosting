@@ -15,6 +15,10 @@
     {% block header %}{% endblock %}
 
     <div class="container">
+        <!-- Page Heading/Breadcrumbs -->
+        {% block page_heading %}
+            {% include "components/default/page-heading.html.twig" with {page_title: block('page_title'), page_description: block('page_description')}  %}
+        {% endblock %}
         {% block body_matter %}{% endblock %}
     </div>
 {% endblock %}

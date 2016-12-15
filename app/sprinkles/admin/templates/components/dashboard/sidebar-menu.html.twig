@@ -1,0 +1,20 @@
+{% block navigation %}
+    <li>
+        <a href="{{site.uri.public}}/admin"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+    </li>
+    {% if checkAccess('uri_users') %}
+    <li>
+        <a href="{{site.uri.public}}/admin/users"><i class="fa fa-users fa-fw"></i> {{ translate("USERS") }}</a>
+    </li>
+    {% endif %}
+    {% if checkAccess('uri_manage_roles') %}
+    <li>
+        <a href="{{site.uri.public}}/admin/roles"><i class="fa fa-key fa-fw"></i> {{ translate("ROLES") }}</a>
+    </li>
+    {% endif %}
+    {% if checkAccess('uri_manage_groups') %}
+    <li>
+        <a href="{{site.uri.public}}/admin/groups"><i class="fa fa-tags fa-fw"></i> {{ translate("GROUPS") }}</a>
+    </li>
+    {% endif %}
+{% endblock %}
