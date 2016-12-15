@@ -64,11 +64,13 @@ return [
 
     "TITLE_UPDATED" => "{{user_name}}'s title changed to '{{title}}'",
 
-    "CONFIGURATION" => "Configuration",
+    "ADMIN" => [
+        "PANEL" => "Admin panel"
+    ],
 
     "GROUPS" => "Groups",
 
-    "SITE_SETTINGS" => "Site Settings",
+    "ROLES" => "Roles",
 
     "USERS" => "Users"
 ];

@@ -10,7 +10,7 @@
 /**
  * Routes for administrative role management.
  */
-$app->group('/roles', function () {
+$app->group('/admin/roles', function () {
     $this->get('/', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:pageRoles')
         ->setName('uri_roles');
 

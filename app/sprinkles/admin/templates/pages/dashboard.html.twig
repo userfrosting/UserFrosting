@@ -1,18 +1,17 @@
-{% extends "layouts/layout-dashboard.twig" %}
-{% set page_group = "dashboard" %}
+{% extends "layouts/dashboard.html.twig" %}
 
-{# Set page properties (page.*) here. #}
-{% block page %}
-    {# By putting this in a special block, we ensure that it will be set AFTER the default values are set in the parent template, 
-    but BEFORE the page itself is rendered. #}    
-    {% set page = page | merge({
-        "title"       : "Dashboard",
-        "description" : "Your user dashboard."
-    }) %}
-    {{ parent() }}
+{% block stylesheets_page %}
+    <!-- Page-specific CSS asset bundle -->
+    {{ assets.css('css/sb-admin-2-dashboard') | raw }}
+    <style src="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"></style>
 {% endblock %}
 
-{% block content %}
+{# Overrides blocks in head of base template #}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block page_description %}The admin dashboard{% endblock %}
+
+{% block body_matter %}
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Dashboard</h1>
@@ -21,7 +20,7 @@
 </div>
 <!-- /.row -->
 <div class="row">
-    <div class="col-lg-12">            
+    <div class="col-lg-12">
         <div class="alert alert-success alert-dismissable">
           <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -576,7 +575,7 @@ template engine for PHP
 </div>
 <!-- /.row -->
 {% endblock %}
-{% block page_scripts %}
-    <script src="{{site.uri.js}}/morris-data.js"></script>
+{% block scripts_page %}
+    {{ assets.js('js/sb-admin-2-dashboard') | raw }}
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
 {% endblock %}

@@ -1,32 +1,49 @@
-{% extends "layouts/sb-admin-2.html.twig" %}
+{% extends "layouts/default.html.twig" %}
 
-{% block stylesheets_page %}      
+{% set page_active = "account-settings" %}
+
+{% block stylesheets_page %}
     <!-- Page-specific CSS asset bundle -->
     {{ assets.css('css/form-widgets') | raw }}
 {% endblock %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Account Settings{% endblock %}
+{% block page_title %}{{translate("ACCOUNT.SETTINGS")}}{% endblock %}
 
-{% block page_description %}Update your account settings, including email, name, and password.{% endblock %}
+{% block page_description %}{{translate("ACCOUNT.SETTINGS.DESCRIPTION")}}{% endblock %}
 
 {% block body_matter %}
+    <!-- Page Heading/Breadcrumbs -->
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{translate("ACCOUNT.SETTINGS")}}
+                <small>{{translate("ACCOUNT.SETTINGS.DESCRIPTION")}}</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="{{ site.uri.public }}">Home</a>
+                </li>
+                <li class="active">{{translate("ACCOUNT.SETTINGS")}}</li>
+            </ol>
+        </div>
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+        <div class="col-lg-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-gear"></i> Account Settings</h3>
+                    <h3 class="panel-title"><i class="fa fa-gear"></i> {{translate("ACCOUNT.SETTINGS")}}</h3>
                 </div>
                 <div class="panel-body">
                     <div id="alerts-page">
-    
+
                     </div>
                     <form class="form-horizontal" id="account-settings" role="form" action="{{site.uri.public}}/account/settings" method="post">
                         {% include "components/csrf.html.twig" %}
                         <!-- Prevent browsers from trying to autofill the password field.  See http://stackoverflow.com/a/23234498/2970321 -->
                         <input type="text" style="display:none">
                         <input type="password" style="display:none">
-                        
+
                         <div class="form-group">
                             <label for="input-email" class="col-sm-4 control-label">{{translate("EMAIL")}}</label>
                             <div class="col-sm-8">
@@ -34,7 +51,7 @@
                                 <p class="help-block">Your email address.</p>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="input-first-name" class="col-sm-4 control-label">Name</label>
                             <div class="col-sm-4">
@@ -42,9 +59,9 @@
                             </div>
                             <div class="col-sm-4">
                                 <input type="text" id="input-last-name" class="form-control" name="last_name" value="{{current_user.last_name}}" placeholder="{{translate("LAST_NAME")}}" {{page.visibility}}>
-                            </div>                            
+                            </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="input-locale" class="col-sm-4 control-label">{{translate("LOCALE")}}</label>
                             <div class="col-sm-8">
@@ -56,7 +73,7 @@
                                 <p class="help-block">The language and locale to use for your account.</p>
                             </div>
                         </div>
-                        
+
                         {% if page.visibility != "disabled" %}
                             <div class="form-group">
                                 <label for="input-password" class="col-sm-4 control-label">New Password</label>

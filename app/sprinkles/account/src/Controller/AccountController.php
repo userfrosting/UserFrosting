@@ -920,7 +920,7 @@ class AccountController extends SimpleController
             'type' => 'update_account_settings'
         ]);
 
-        $ms->addMessageTranslated("success", "ACCOUNT.SETTINGS_UPDATED");
+        $ms->addMessageTranslated("success", "ACCOUNT.SETTINGS.UPDATED");
         return $response->withStatus(200);
     }
 

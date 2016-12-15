@@ -10,7 +10,7 @@
 /**
  * Routes for administrative group management.
  */
-$app->group('/groups', function () {
+$app->group('/admin/groups', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageGroups')
         ->setName('uri_groups');
 

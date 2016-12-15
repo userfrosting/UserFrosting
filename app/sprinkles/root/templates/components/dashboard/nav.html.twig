@@ -10,12 +10,15 @@
         <a class="navbar-brand" href="{{site.uri.public}}">{{site.title}}</a>
     </div>
     <!-- /.navbar-header -->
-
-    {% include 'components/topbar.html.twig' %}
+    <p class="navbar-text navbar-alert">
+        {{ translate("HEADER_MESSAGE_ROOT") | upper }}
+    </p>
+    {% include 'components/dashboard/topbar.html.twig' %}
     <div class="sidebar-wrapper">
         <div class="navbar-default navbar-userfrosting sidebar" role="navigation">
-            {% include 'components/sidebar.html.twig' %}
+            {% include 'components/dashboard/sidebar.html.twig' %}
         </div>
-        <!-- /.navbar-static-side -->        
+        <!-- /.navbar-static-side -->
     </div>
  </nav>
+

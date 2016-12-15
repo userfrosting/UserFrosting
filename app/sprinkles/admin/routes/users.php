@@ -10,7 +10,7 @@
 /**
  * Routes for administrative user management.
  */
-$app->group('/users', function () {
+$app->group('/admin/users', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageUsers')
         ->setName('uri_users');
 

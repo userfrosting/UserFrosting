@@ -28,7 +28,11 @@ return [
         "SESSION_COMPROMISED" => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
         "SESSION_EXPIRED" => "Your session has expired.  Please sign in again.",
 
-        "SETTINGS_UPDATED" => "Account settings updated",
+        "SETTINGS" => [
+            "@TRANSLATION" => "Account settings",
+            "DESCRIPTION" => "Update your account settings, including email, name, and password.",
+            "UPDATED" => "Account settings updated"
+        ],
 
         "UNVERIFIED" => "Your account has not yet been verified. Check your emails / spam folder for account activation instructions.",
 

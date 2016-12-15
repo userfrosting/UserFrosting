@@ -41,6 +41,20 @@
             }
         }
     },
+    "js/sb-admin-2-dashboard" : {
+        "scripts": [
+            "vendor/start-bootstrap/js/morris-data.js",
+            "vendor/raphael-2.1.1/raphael.js",
+            "vendor/morris-0.5.0/js/morris.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
     "js/azmind" : {
         "scripts": [
             "vendor/jquery-backstretch/jquery.backstretch.js"
@@ -165,6 +179,19 @@
             "vendor/tablesorter-2.27.8/addons/pager/jquery.tablesorter.pager.css",
             "css/tablesorter-custom.css",
             "css/sb-admin-2-custom.css"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "styles": "plain"
+                }
+            }
+        }
+    },
+    "css/sb-admin-2-dashboard" : {
+        "styles": [
+            "vendor/start-bootstrap/css/timeline.css",
+            "vendor/morris-0.5.0/css/morris.css"
         ],
         "options": {
             "result": {
