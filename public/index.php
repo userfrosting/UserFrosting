@@ -53,6 +53,7 @@ $csrfBlacklist = [
 
 if (!$path || !starts_with($path, $csrfBlacklist)) {
     $app->add($container->csrf);
+    $app->add($container->sprinkleManager);
 }
 
 $app->run();
