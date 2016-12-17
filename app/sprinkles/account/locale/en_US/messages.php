@@ -8,6 +8,7 @@
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
  * @author Alexander Weissman
+ *
  */
 
 return [

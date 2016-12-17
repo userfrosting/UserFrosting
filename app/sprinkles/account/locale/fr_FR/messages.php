@@ -29,7 +29,11 @@ return [
         "SESSION_COMPROMISED" => "Votre session a été compromise. Vous devez vous déconnecter de tous les périphériques, puis vous reconnecter et vous assurer que vos données n'ont pas été altérées.",
         "SESSION_EXPIRED" => "Votre session a expiré. Veuillez vous connecter à nouveau.",
 
-        "SETTINGS_UPDATED" => "Paramètres du compte mis à jour",
+        "SETTINGS" => [
+            "@TRANSLATION" => "Paramètres du compte",
+            "DESCRIPTION" => "Mettez à jour les paramètres de votre compte, y compris votre adresse e-mail, votre nom et votre mot de passe.",
+            "UPDATED" => "Paramètres du compte mis à jour"
+        ],
 
         "UNVERIFIED" => "Votre compte n'a pas encore été vérifié. Vérifiez vos emails / dossier spam pour les instructions d'activation du compte.",
 

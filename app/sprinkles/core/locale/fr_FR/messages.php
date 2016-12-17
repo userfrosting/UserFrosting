@@ -33,9 +33,15 @@ return [
 
 	"FEATURE_DISABLED" => "Cette fonction est présentement désactivée",
 
+    "HOME"  => "Accueil",
+
+    "LEGAL" => "Politique légale",
+
     "LOCALE" => "Langue",
 
     "MAIL_ERROR" => "Erreur fatale lors de l'envoie du courriel. Contactez votre administrateur. Si vous être administrateur, consultez les logs.",
+
+    "PRIVACY" => "Politique de confidentialité",
 
     // Actions words
     "ACTIONS" => "Actions",

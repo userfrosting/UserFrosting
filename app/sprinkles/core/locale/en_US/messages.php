@@ -8,6 +8,7 @@
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
  * @author Alexander Weissman
+ *
  */
 
 return [
@@ -31,6 +32,8 @@ return [
     ],
 
     "FEATURE_DISABLED" => "This feature is currently disabled",
+
+    "HOME"  => "Home",
 
     "LEGAL" => "Legal Policy",
 
