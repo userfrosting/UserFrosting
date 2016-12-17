@@ -116,10 +116,13 @@ class AccountServicesProvider
             // Add paths for user theme, if a user is logged in
             $currentUser = $c->currentUser;
             if (!$currentUser->isGuest()) {
-                $themePath = $c->sprinkleManager->addTemplates($currentUser->theme);
+                $theme = $currentUser->theme;
+                $themePath = $c->sprinkleManager->addTemplates($theme);
                 if ($themePath) {
                     $loader = $twig->getLoader();
                     $loader->prependPath($themePath);
+                    // Add namespaced path as well
+                    $loader->addPath($themePath, $theme);
                 }
             }
 
