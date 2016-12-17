@@ -47,13 +47,11 @@ $container->sprinkleManager->loadRoutes($app);
 $request = $container->request;
 $path = $request->getUri()->getPath();
 $csrfBlacklist = [
-    $container->config['assets.raw.path'],
-    $container->config['assets.theme.path']
+    $container->config['assets.raw.path']
 ];
 
 if (!$path || !starts_with($path, $csrfBlacklist)) {
     $app->add($container->csrf);
-    $app->add($container->sprinkleManager);
 }
 
 $app->run();

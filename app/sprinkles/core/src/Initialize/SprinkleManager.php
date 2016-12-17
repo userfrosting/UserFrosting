@@ -79,33 +79,6 @@ class SprinkleManager
     }
 
     /**
-     * Invoke the SprinkleManager middleware, adding all Sprinkles as a Twig Namespace template
-     *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function __invoke($request, $response, $next)
-    {
-
-        // Do Core
-        if ($path = $this->ci->locator->findResource('sprinkles://core/templates/', true, false)) {
-            $this->ci->view->getLoader()->addPath($path, 'core');
-        }
-
-        // Loop all available Sprinkle
-        foreach ($this->getSprinkles() as $sprinkle) {
-            if ($path = $this->ci->locator->findResource('sprinkles://'.$sprinkle.'/templates/', true, false)) {
-                $this->ci->view->getLoader()->addPath($path, $sprinkle);
-            }
-        }
-
-        return $next($request, $response);
-    }
-
-    /**
      * Adds assets for a specified Sprinkle to the assets (assets://) stream.
      *
      * @param string $name
@@ -241,24 +214,14 @@ class SprinkleManager
     }
 
     /**
-     * Returns a list of avaialble sprinkles.
+     * Returns a list of available sprinkles.
      *
-     * @param none
+     * @return string[]
+     * @todo Should this automatically prepend the 'core' Sprinkle as well?
      */
     public function getSprinkles()
     {
         return $this->sprinkles;
-    }
-
-    /**
-     * Return if a Sprinkle is available
-     * Can be used by other Sprinkles to test if their dependecies are met
-     *
-     * @param $name The name of the Sprinkle
-     */
-    public function isAvailable($name)
-    {
-        return in_array($name, $this->getSprinkles());
     }
 
     /**
@@ -281,5 +244,16 @@ class SprinkleManager
         } else {
             return null;
         }
+    }
+
+    /**
+     * Return if a Sprinkle is available
+     * Can be used by other Sprinkles to test if their dependencies are met
+     *
+     * @param $name The name of the Sprinkle
+     */
+    public function isAvailable($name)
+    {
+        return in_array($name, $this->getSprinkles());
     }
 }

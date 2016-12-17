@@ -535,6 +535,18 @@ class CoreServicesProvider
 
             $view = new Twig($templatePaths);
 
+            $loader = $view->getLoader();
+
+            $sprinkles = $c->sprinkleManager->getSprinkles();
+            $sprinkles[] = 'core';
+
+            // Add other Sprinkles' templates namespaces
+            foreach ($sprinkles as $sprinkle) {
+                if ($path = $c->locator->findResource('sprinkles://'.$sprinkle.'/templates/', true, false)) {
+                    $loader->addPath($path, $sprinkle);
+                }
+            }
+
             $twig = $view->getEnvironment();
 
             if ($c->config['cache.twig']) {
