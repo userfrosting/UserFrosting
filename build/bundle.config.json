@@ -57,7 +57,8 @@
     },
     "js/azmind" : {
         "scripts": [
-            "vendor/jquery-backstretch/jquery.backstretch.js"
+            "vendor/jquery-backstretch/jquery.backstretch.js",
+            "js/azmind-backstretch.js"
         ],
         "options": {
             "result": {

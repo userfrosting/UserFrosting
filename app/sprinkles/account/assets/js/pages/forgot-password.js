@@ -8,11 +8,6 @@
  */
 $(document).ready(function() {
 
-    /*
-        Fullscreen background
-    */
-    $.backstretch(site.uri.images.background);
-
     // TODO: Process form
     $("#request-password-reset").ufForm({
         validators: page.validators.forgot_password,

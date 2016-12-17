@@ -9,11 +9,6 @@
 $(document).ready(function() {
 
     /*
-        Fullscreen background
-    */
-    $.backstretch(site.uri.images.background);
-
-    /*
         Forms show / hide
     */
 
