@@ -100,7 +100,7 @@ class CoreServicesProvider
             $locator = $c->locator;
 
             // Load asset schema
-            if ($config['use_raw_assets']) {
+            if ($config['assets.use_raw']) {
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
                 $removePrefix = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME;
                 $aub = new AssetUrlBuilder($locator, $baseUrl, $removePrefix, 'assets');

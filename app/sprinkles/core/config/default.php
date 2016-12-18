@@ -23,7 +23,8 @@
             'raw' => [
                 'path'   => 'assets-raw',
                 'schema' => 'build://bundle.config.json'
-            ]
+            ],
+            'use_raw'  => true
         ],
         'cache' => [
             'twig' => false,
@@ -138,6 +139,5 @@
         ],
         'timezone' => 'America/New_York',
         'error_reporting' => E_ALL,  // Development - report all errors and suggestions
-        'display_errors'  => 'off',
-        'use_raw_assets'  => true
+        'display_errors'  => 'off'
     ];

@@ -6,6 +6,9 @@
      */
 
     return [
+        'assets' => [
+            'use_raw' => false
+        ],
         'cache' => [
             'twig' => true
         ],
@@ -29,6 +32,5 @@
                 'ajax' => false,
                 'info' => false
             ]
-        ],
-        'use_raw_assets' => false
+        ]
     ];
