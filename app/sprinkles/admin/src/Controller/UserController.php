@@ -50,6 +50,7 @@ class UserController extends SimpleController
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
+        $this->ci->db;
         $user = $classMapper->staticMethod('user', 'where', 'user_name', $user_name)->first();
 
         // If the user no longer exists, forward to main user listing page
