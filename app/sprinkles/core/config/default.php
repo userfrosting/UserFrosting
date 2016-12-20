@@ -127,10 +127,10 @@
             // URLs
             'uri' => [
                 'base' => [
-                    'host'              => trim($_SERVER['SERVER_NAME'], '/'),
+                    'host'              => isset($_SERVER['SERVER_NAME']) ? trim($_SERVER['SERVER_NAME'], '/') : 'localhost',
                     'scheme'            => empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off' ? 'http' : 'https',
-                    'port'              => (int) $_SERVER['SERVER_PORT'],
-                    'path'              => trim(dirname($_SERVER['SCRIPT_NAME']), '/')
+                    'port'              => isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : null,
+                    'path'              => isset($_SERVER['SCRIPT_NAME']) ? trim(dirname($_SERVER['SCRIPT_NAME']), '/') : ''
                 ],
                 'author'            => 'http://www.userfrosting.com',
                 'publisher'         => ''
