@@ -63,6 +63,8 @@ return [
     "SORT" => "Sort",
     "PRINT" => "Print",
     "UPDATE" => "Update",
+    "YES" => "Yes",
+    "NO" => "No",
 
     // Misc.
     "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>.",
