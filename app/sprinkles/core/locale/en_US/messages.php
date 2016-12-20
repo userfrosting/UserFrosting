@@ -61,6 +61,7 @@ return [
     "RESET" => "Reset",
     "SAVE" => "Save",
     "SORT" => "Sort",
+    "SUBMIT" => "Submit",
     "PRINT" => "Print",
     "UPDATE" => "Update",
     "YES" => "Yes",

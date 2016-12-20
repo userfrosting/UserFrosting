@@ -61,6 +61,7 @@ return [
     "RESET" => "Réinitialiser",
     "SAVE" => "Sauvegarder",
     "SORT" => "Trier",
+    "SUBMIT" => "Envoyer",
     "PRINT" => "Imprimer",
     "UPDATE" => "Mettre à jour",
     "YES" => "Oui",
