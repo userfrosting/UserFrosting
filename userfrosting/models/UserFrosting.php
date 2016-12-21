@@ -26,6 +26,7 @@ class UserFrosting extends \Slim\Slim {
         $this->user->id = $this->config('user_id_guest');
         $this->setupServices($this->site->default_locale);
         $this->setupErrorHandling();
+        $this->applyHook("setupGuestEnvironment");
     }
         
     /**
@@ -35,6 +36,7 @@ class UserFrosting extends \Slim\Slim {
         //error_log("Setting up authenticated user environment");
         $this->setupServices($this->user->locale);
         $this->setupTwigUserVariables();
+        $this->applyHook("setupAuthenticatedEnvironment");
     }
     
     /**
@@ -52,14 +54,40 @@ class UserFrosting extends \Slim\Slim {
         
         /**** Translation setup ****/
         $this->translator = new \Fortress\MessageTranslator();
+
+        /* Get the translation path. */
+        $paths = array($this->config("locales.path") . "/" . $locale . ".php");
+        $paths_default = array($this->config("locales.path") . "/en_US.php");
         
-        /* Set the translation path and default language path. */
-        $this->translator->setTranslationTable($this->config("locales.path") . "/" . $locale . ".php");
-        $this->translator->setDefaultTable($this->config("locales.path") . "/en_US.php");
+        /* Do the same with the plugins files. Those are loaded on per directory setting */
+        $var_plugins = $this->site->getPlugins();
+        foreach($var_plugins as $var_plugin) {
+            //User's
+            $paths_plugins = glob($this->config('plugins.path')."/".$var_plugin."/locale/".$locale."/*.php");
+            $paths = array_merge($paths, $paths_plugins);
+            
+            //Default path
+            $paths_default_plugins = glob($this->config('plugins.path')."/".$var_plugin."/locale/en_US/*.php");
+            $paths_default = array_merge($paths_default, $paths_default_plugins);
+        }
+        
+        /* Set the translation paths. */
+        foreach ($paths as $path){
+            $this->translator->setTranslationTable($path);
+        }
+        
+        /* Set the default language path. */
+        foreach ($paths_default as $path){
+            $this->translator->setDefaultTable($path);
+        }
+        
+        /* Set the translator in the MessageStream */
         \Fortress\MessageStream::setTranslator($this->translator);
         
         // Once we have the translator, we can set up the client-side validation adapter too
-        $this->jsValidator = new \Fortress\JqueryValidationAdapter($this->translator);        
+        $this->jsValidator = new \Fortress\JqueryValidationAdapter($this->translator);
+        
+        $this->applyHook("setupServices");        
     }
     
     /**
@@ -138,6 +166,9 @@ class UserFrosting extends \Slim\Slim {
             // Set path to user's theme, prioritizing over any other themes.
             $loader = $twig->getLoader();
             $loader->prependPath($this->config('themes.path') . "/" . $this->user->getTheme());
+            
+            //Apply hook for plugin template
+            $this->applyHook("setupThemePathUser");
         }
     }
     
@@ -199,6 +230,12 @@ class UserFrosting extends \Slim\Slim {
         });
         
         $twig->addFunction($function_include_top_js);
+        
+        $function_apply_hook = new \Twig_SimpleFunction('applyHook', function ($hook) {
+           // Return array of template file to include at this hook
+           return $this->schema->getTwigHook($hook);
+        });
+        $twig->addFunction($function_apply_hook);
         
         /* TODO: enable Twig caching?
         $view = $app->view();

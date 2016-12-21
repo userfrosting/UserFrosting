@@ -283,13 +283,39 @@ $app->hook('includes.js.register', function () use ($app){
     $app->schema->registerJS("auth", "widget-auth.js");
 }, 1);
 
-/** Plugins */
-// Run initialization scripts for plugins
-$var_plugins = $app->site->getPlugins();
-foreach($var_plugins as $var_plugin) {
-    require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
-}
-
 // Hook for core and plugins to register includes
 $app->applyHook("includes.css.register");
 $app->applyHook("includes.js.register");
+
+/** Plugins */
+// Run initialization scripts for plugins and define hook for routes
+$var_plugins = $app->site->getPlugins();
+foreach($var_plugins as $var_plugin) {
+    require_once($app->config('plugins.path')."/".$var_plugin."/config-plugin.php");
+
+    //Setup routes
+    $app->hook('defineRoutes', function () use ($app, $var_plugin){
+        $routes = glob($app->config('plugins.path')."/".$var_plugin."/routes/*.php");
+        foreach ($routes as $route){
+            include_once($app->config('plugins.path')."/".$var_plugin."/routes/".basename($route));
+        }
+    }, 1);
+
+    //Setup plugin template
+    //First check if this plugin have the template folder and if so add it to twig
+    //We do this for the general theme... At this point, it's already setup, so we go ahead right away.
+    $themePath = glob($app->config('plugins.path')."/".$var_plugin."/templates/themes/" . $app->config('theme-base'), GLOB_ONLYDIR);
+    $twig = $app->view()->getEnvironment();
+    $loader = $twig->getLoader();
+    foreach ($themePath as $path) {
+        $loader->prependPath($path);
+    }
+
+    //...and the user theme, which is not setup yet. So we use a hook.
+    $app->hook('setupThemePathUser', function () use ($app, $var_plugin, $loader){
+        $themePath = glob($app->config('plugins.path')."/".$var_plugin."/templates/themes/" . $app->user->getTheme(), GLOB_ONLYDIR);
+        foreach ($themePath as $path) {
+            $loader->prependPath($path);
+        }
+    }, 1);
+}
