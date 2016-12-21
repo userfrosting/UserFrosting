@@ -274,7 +274,7 @@ abstract class Database {
                 $table->increments('id');
                 $table->integer('user_id')->unsigned();
                 $table->string('event_type', 255)->comment('An identifier used to track the type of event.');
-                $table->timestamp('occurred_at');
+                $table->timestamp('occurred_at')->nullable();
                 $table->text('description');
                 $table->engine = 'InnoDB';
                 $table->collation = 'utf8_unicode_ci';

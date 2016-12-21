@@ -1,5 +1,9 @@
 # Change Log
 
+## v0.3.1.23
+
+- Also fix the `occurred_at` timestamp in the `user_event` table to allow null, for newer versions of MySQL that don't allow a zero date (see #605).
+
 ## v0.3.1.22
 
 - Use `nullableTimestamps` instead of `timestamps` in installer, to prevent conflict with MySQL modes 'NO_ZERO_IN_DATE' and 'NO_ZERO_DATE'.
