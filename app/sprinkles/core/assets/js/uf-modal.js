@@ -109,13 +109,13 @@
         // Delete the plugin object
         base.delete;
 
-        // Remove the modal
+        // Remove the modal from the selector
         $el.find('.modal').remove();
 
-        // Unbind any bound events
+        // Unbind any modal events bound to the selector
         $el.off('.ufModal');
 
-        // Remove plugin name from data-* attribute
+        // Remove plugin name from selector's data-* attribute
         $el.removeData(PLUGIN_NS);
     };
 

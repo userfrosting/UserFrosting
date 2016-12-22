@@ -26,17 +26,15 @@ $(document).ready(function() {
                 sourceUrl: site.uri.public + "/modals/users/create",
                 msgTarget: $("#alerts-users")
             });
-        });
 
-        // TODO: can we do this using a promise instead of an event handler?
-        // Since it's a one-time action, a promise seems more appropriate.
-        $("body").on( 'renderSuccess.ufModal', function (data) {
-            // TODO: set up any widgets inside the modal
-            console.log("Setting up form");
-            // Set up the form for submission
-            $(".js-form-user").ufForm({
-                validators: page.validators,
-                msgTarget: $("#alerts-users")
+            $("body").on( 'renderSuccess.ufModal', function (data) {
+                // TODO: set up any widgets inside the modal
+                console.log("Setting up form");
+                // Set up the form for submission
+                $(".js-form-user").ufForm({
+                    validators: page.validators,
+                    msgTarget: $("#alerts-users")
+                });
             });
         });
 
