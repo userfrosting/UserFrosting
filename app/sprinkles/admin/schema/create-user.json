@@ -29,7 +29,8 @@
                 "max" : 20,
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
-        }
+        },
+        "transformations" : ["trim"]
     },
     "last_name" : {
         "validators" : {
@@ -39,7 +40,8 @@
                 "max" : 30,
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
-        }
+        },
+        "transformations" : ["trim"]
     },
     "email" : {
         "validators" : {

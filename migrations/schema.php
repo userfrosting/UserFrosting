@@ -138,7 +138,7 @@
                 'id' => 2,
                 'slug' => 'update_user_field',
                 'name' => 'Edit user',
-                'conditions' => '!has_role(user.id,2)&&in(property,["email","name","flag_enabled","password","locale","theme"])',
+                'conditions' => '!has_role(user.id,2)&&subset(fields,["name","email","theme","locale","group","flag_enabled","password"])',
                 'description' => 'Edit users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime

@@ -24,7 +24,7 @@ $app->group('/api/users', function () {
 
     $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getUser');
 
-    $this->put('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUser');
+    $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUser');
 
     $this->post('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUser');
 });

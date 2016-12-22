@@ -11,7 +11,7 @@
  * Routes for administrative role management.
  */
 $app->group('/admin/roles', function () {
-    $this->get('/', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:pageRoles')
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:pageRoles')
         ->setName('uri_roles');
 
     $this->get('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:pageRole');
@@ -22,7 +22,7 @@ $app->group('/api/roles', function () {
 
     $this->get('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getRole');
 
-    $this->put('/', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:createRole');
+    $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:createRole');
 
     $this->post('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateRole');
 });

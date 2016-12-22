@@ -80,34 +80,34 @@
                 <ul class="dropdown-menu" role="menu">
                     {{#ifCond row.flag_verified 0 }}
                     <li>
-                        <a href="#" data-id="{{row.id}}" class="js-user-activate">
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-activate">
                         <i class="fa fa-bolt"></i> Activate user
                         </a>
                     </li>
                     {{/ifCond }}
                     <li>
-                        <a href="#" data-id="{{row.id}}" class="js-user-edit">
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-edit">
                         <i class="fa fa-edit"></i> Edit user
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-id="{{row.id}}" class="js-user-password">
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-password">
                         <i class="fa fa-key"></i> Change password
                         </a>
                     </li>
                     <li>
                     {{#ifCond row.flag_enabled 1 }}
-                        <a href="#" data-id="{{row.id}}" class="js-user-disable">
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-disable">
                         <i class="fa fa-minus-circle"></i> Disable user
                         </a>
                     {{ else }}
-                        <a href="#" data-id="{{row.id}}" class="js-user-enable">
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-enable">
                         <i class="fa fa-plus-circle"></i> Enable user
                         </a>
                     {{/ifCond }}
                     </li>
                     <li>
-                        <a href="#" data-id="{{row.id}}" class="js-user-delete">
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-delete">
                         <i class="fa fa-trash-o"></i> Delete user</a>
                     </li>
                 </ul>

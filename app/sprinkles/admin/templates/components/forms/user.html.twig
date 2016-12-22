@@ -1,4 +1,5 @@
 <form class="js-form-user" method="post" action="{{site.uri.public}}/{{form.action}}">
+    {% include "components/csrf.html.twig" %}
     <div class="js-form-user-alerts">
     </div>
     <div class="row">
@@ -34,7 +35,7 @@
                 <label>{{translate('FIRST_NAME')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="first_name" autocomplete="off" value="{{user.first_name}}" placeholder="First name" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="first_name" autocomplete="off" value="{{user.first_name}}" placeholder="{{translate('FIRST_NAME')}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -43,7 +44,7 @@
                 <label>{{translate('LAST_NAME')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="last_name" autocomplete="off" value="{{user.last_name}}" placeholder="Last name" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="last_name" autocomplete="off" value="{{user.last_name}}" placeholder="{{translate('LAST_NAME')}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -103,7 +104,7 @@
         {% if 'edit' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-id="{{user.id}}" data-toggle="modal">
+                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-user_name="{{user.user_name}}" data-toggle="modal">
                     <i class="fa fa-edit"></i> {{translate('EDIT')}}
                 </button>
             </div>
@@ -113,7 +114,7 @@
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 {% if user.flag_verified == "0" %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-id="{{user.id}}">
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-user_name="{{user.user_name}}">
                         <i class="fa fa-bolt"></i> Activate
                     </button>
                 {% endif %}
@@ -124,11 +125,11 @@
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 {% if user.flag_enabled == "1" %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-id="{{user.id}}">
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-user_name="{{user.user_name}}">
                         <i class="fa fa-minus-circle"></i> Disable
                     </button>
                 {% else %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable" data-id="{{user.id}}">
+                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable" data-user_name="{{user.user_name}}">
                         <i class="fa fa-plus-circle"></i> Enable
                     </button>
                 {% endif %}
@@ -138,8 +139,8 @@
         {% if 'delete' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-id="{{user.id}}" data-user_name="{{user.user_name}}" data-toggle="modal">
-                    <i class="fa fa-trash-o"></i> Delete
+                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-user_name="{{user.user_name}}" data-toggle="modal">
+                    <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
                 </button>
             </div>
         </div>
@@ -147,7 +148,7 @@
         {% if 'cancel' not in form.buttons.hidden %}
         <div class="col-xs-4 col-sm-3 pull-right">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
             </div>
         </div>
         {% endif %}

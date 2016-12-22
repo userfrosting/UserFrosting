@@ -68,9 +68,18 @@ return [
         "PANEL" => "Admin panel"
     ],
 
-    "GROUPS" => "Groups",
+    "GROUP" => [
+        1 => "Group",
+        2 => "Groups"
+    ],
 
-    "ROLES" => "Roles",
+    "ROLE" => [
+        1 => "Role",
+        2 => "Roles"
+    ],
 
-    "USERS" => "Users"
+    "USER" => [
+        1 => "User",
+        2 => "Users"
+    ]
 ];

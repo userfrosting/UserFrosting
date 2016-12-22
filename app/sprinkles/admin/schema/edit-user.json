@@ -1,50 +1,66 @@
 {
-    "display_name" : {
+    "user_name" : {
         "validators" : {
             "length" : {
+                "label" : "&USERNAME",
                 "min" : 1,
                 "max" : 50,
-                "message" : "ACCOUNT_DISPLAY_CHAR_LIMIT"
+                "message" : "VALIDATE.LENGTH_RANGE"
+            },
+            "no_leading_whitespace" : {
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.NO_LEAD_WS"
+            },
+            "no_trailing_whitespace" : {
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.NO_TRAIL_WS"
+            },
+            "required" : {
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.REQUIRED"
             }
-        },
-        "sanitizers" : {
-            "raw" : ""
+        }
+    },
+    "first_name" : {
+        "validators" : {
+            "length" : {
+                "label" : "&FIRST_NAME",
+                "min" : 1,
+                "max" : 20,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },
+    "last_name" : {
+        "validators" : {
+            "length" : {
+                "label" : "&LAST_NAME",
+                "min" : 1,
+                "max" : 30,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
         }
     },
     "email" : {
         "validators" : {
+            "required" : {
+                "label" : "&EMAIL",
+                "message" : "VALIDATE.REQUIRED"
+            },
             "length" : {
+                "label" : "&EMAIL",
                 "min" : 1,
                 "max" : 150,
-                "message" : "ACCOUNT_EMAIL_CHAR_LIMIT"
+                "message" : "VALIDATE.LENGTH_RANGE"
             },
             "email" : {
-                "message" : "ACCOUNT_INVALID_EMAIL"
-            }
-        },
-        "sanitizers" : {
-            "raw" : ""
-        }
-    },
-    "title" : {
-        "validators" : {
-            "length" : {
-                "min" : 1,
-                "max" : 150,
-                "message" : "ACCOUNT_TITLE_CHAR_LIMIT"
+                "message" : "VALIDATE.INVALID_EMAIL"
             }
         }
     },
     "locale" : {
         "validators" : {
 
-        }
-    },
-    "primary_group_id" : {
-        "validators" : {
-            "integer" : {
-                "message" : "VALIDATE_INTEGER"
-            }
         }
     },
     "password" : {
@@ -54,9 +70,6 @@
                 "max" : 50,
                 "message" : "ACCOUNT_PASS_CHAR_LIMIT"
             }
-        },
-        "sanitizers" : {
-            "raw" : {}
         }
     },
     "passwordc" : {
@@ -69,16 +82,6 @@
                 "min" : 8,
                 "max" : 50,
                 "message" : "ACCOUNT_PASS_CHAR_LIMIT"
-            }
-        },
-        "sanitizers" : {
-            "raw" : {}
-        }
-    },
-    "groups" : {
-        "validators" : {
-            "array" : {
-                "message" : "VALIDATE_ARRAY"
             }
         }
     },

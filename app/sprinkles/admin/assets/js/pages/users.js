@@ -17,8 +17,10 @@ $(document).ready(function() {
         DEBUG: false
     });
 
-    // Link row buttons after table is loaded
+    
     $("#widget-users").on("pagerComplete.ufTable", function () {
+
+        // Link create button
         $(this).find('.js-user-create').click(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/create",
@@ -26,11 +28,24 @@ $(document).ready(function() {
             });
         });
 
+        // TODO: can we do this using a promise instead of an event handler?
+        // Since it's a one-time action, a promise seems more appropriate.
+        $("body").on( 'renderSuccess.ufModal', function (data) {
+            // TODO: set up any widgets inside the modal
+            console.log("Setting up form");
+            // Set up the form for submission
+            $(".js-form-user").ufForm({
+                validators: page.validators,
+                msgTarget: $("#alerts-users")
+            });
+        });
+
+        // Link row buttons after table is loaded
         $(this).find('.js-user-edit').click(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/edit",
                 ajaxParams: {
-                    user_id: $(this).data('id')
+                    user_name: $(this).data('user_name')
                 },
                 msgTarget: $("#alerts-users")
             });
@@ -40,15 +55,9 @@ $(document).ready(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/password",
                 ajaxParams: {
-                    user_id: $(this).data('id')
+                    user_name: $(this).data('user_name')
                 },
                 msgTarget: $("#alerts-users")
-            });
-
-            // TODO: can we do this using a promise instead of an event handler?
-            // Since it's a one-time action, a promise seems more appropriate.
-            $("body").on( 'renderSuccess.ufModal', function (data) {
-                // TODO: set up any widgets inside the modal
             });
         });
 
@@ -56,7 +65,7 @@ $(document).ready(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/confirm-delete",
                 ajaxParams: {
-                    user_id: $(this).data('id')
+                    user_name: $(this).data('user_name')
                 },
                 msgTarget: $("#alerts-users")
             });
