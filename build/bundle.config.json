@@ -230,7 +230,8 @@
     },
     "css/form-widgets" : {
         "styles": [
-            "vendor/select2-4.0.3/css/select2.css"
+            "vendor/select2-4.0.3/css/select2.css",
+            "vendor/select2-bootstrap-theme/css/select2-bootstrap.css"
         ],
         "options": {
             "result": {

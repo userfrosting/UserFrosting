@@ -32,6 +32,8 @@
             options
         );
 
+        this.modal = null;
+
         this._init( target, options );
 
         return this;
@@ -43,7 +45,7 @@
         var base = this;
         var $el = $(target);
 
-        // Delete any existing instance of the modal (should have been deleted already anyway)
+        // Delete any existing modals attached to the element (should have been deleted already anyway)
         if ($el.find(".modal").length) {
             $el.find(".modal").remove();
         }
@@ -59,11 +61,13 @@
             // Fetch successful
             function (data) {
                 // Append the form as a modal dialog to the body
-                $el.append(data);
-                $el.find(".modal").modal('show');
+                base.modal = $(data);
+                $el.append(base.modal);
+
+                base.modal.modal('show');
 
                 // Bind modal to be deleted when closed
-                $el.find(".modal").on("hidden.bs.modal", function () {
+                base.modal.on("hidden.bs.modal", function () {
                     base.destroy();
                 });
 
@@ -110,7 +114,7 @@
         base.delete;
 
         // Remove the modal from the selector
-        $el.find('.modal').remove();
+        base.modal.remove();
 
         // Unbind any modal events bound to the selector
         $el.off('.ufModal');
@@ -119,6 +123,10 @@
         $el.removeData(PLUGIN_NS);
     };
 
+    Plugin.prototype.getModal = function () {
+        return this.modal;
+    };
+    
     /**
      * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
      */

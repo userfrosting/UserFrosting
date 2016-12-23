@@ -7,7 +7,29 @@
  * Target page: /users
  */
 
+// TODO: move these to a common JS file for form widgets 
+$.fn.select2.defaults.set( "theme", "bootstrap" );
+ 
+function attachUserForm() {
+    $("body").on('renderSuccess.ufModal', function (data) {
+        // TODO: set up any widgets inside the modal
+        $(".js-form-user").find("select[name='group_id']").select2();
+        
+        // Set up the form for submission
+        $(".js-form-user").ufForm({
+            validators: page.validators,
+            msgTarget: $(".js-form-user-alerts")
+        }).on("submitSuccess.ufForm", function() {
+            // Reload page on success
+            window.location.reload();
+        });
+    });
+}
+
 $(document).ready(function() {
+    // Render any alerts
+    $("#alerts-users").ufAlerts();
+    $("#alerts-users").ufAlerts('fetch').ufAlerts('render');
 
     $("#widget-users").ufTable({
         dataUrl: site.uri.public + "/api/users",
@@ -17,7 +39,6 @@ $(document).ready(function() {
         DEBUG: false
     });
 
-    
     $("#widget-users").on("pagerComplete.ufTable", function () {
 
         // Link create button
@@ -27,15 +48,7 @@ $(document).ready(function() {
                 msgTarget: $("#alerts-users")
             });
 
-            $("body").on( 'renderSuccess.ufModal', function (data) {
-                // TODO: set up any widgets inside the modal
-                console.log("Setting up form");
-                // Set up the form for submission
-                $(".js-form-user").ufForm({
-                    validators: page.validators,
-                    msgTarget: $("#alerts-users")
-                });
-            });
+            attachUserForm();
         });
 
         // Link row buttons after table is loaded
@@ -47,6 +60,8 @@ $(document).ready(function() {
                 },
                 msgTarget: $("#alerts-users")
             });
+
+            attachUserForm();
         });
 
         $(this).find('.js-user-password').click(function() {
@@ -59,6 +74,7 @@ $(document).ready(function() {
             });
         });
 
+        // Delete user button
         $(this).find('.js-user-delete').click(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/confirm-delete",
@@ -66,6 +82,17 @@ $(document).ready(function() {
                     user_name: $(this).data('user_name')
                 },
                 msgTarget: $("#alerts-users")
+            });
+
+            $("body").on('renderSuccess.ufModal', function (data) {
+                var modal = $(this).ufModal('getModal');
+
+                modal.find('.js-form-user-delete').ufForm({
+                    msgTarget: $(".js-form-user-alerts")
+                }).on("submitSuccess.ufForm", function() {
+                    // Reload page on success
+                    window.location.reload();
+                });
             });
         });
 

@@ -20,7 +20,7 @@
                 <label for="input-group">{{translate('GROUP')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
-                    <select id="input-group" class='form-control select2' name="group" {% if 'group' in form.fields.disabled %}disabled{% endif %}>
+                    <select id="input-group" class='form-control select2' name="group_id" {% if 'group' in form.fields.disabled %}disabled{% endif %}>
                         {% for group in groups %}
                         <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
                         {% endfor %}

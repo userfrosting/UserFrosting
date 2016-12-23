@@ -664,7 +664,10 @@ class UserController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'components/modals/confirm-delete-user.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'form' => [
+                'action' => '/api/users/u/' . $user->user_name
+            ]
         ]);
     }
 
@@ -997,38 +1000,83 @@ class UserController extends SimpleController
     /**
      * Processes the request to delete an existing user.
      *
-     * Deletes the specified user, removing associations with any groups and any user-specific authorization rules.
+     * Deletes the specified user, removing any existing associations.
      * Before doing so, checks that:
      * 1. You are not trying to delete the master account;
-     * 2. You have permission to delete user user accounts.
+     * 2. You have permission to delete the target user's account.
      * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @param int $user_id the id of the user to delete.
+     * Request type: DELETE
      */
-    public function deleteUser($user_id){
-        $post = $this->_app->request->post();
+    public function deleteUser($request, $response, $args)
+    {
+        // Get URL parameters: user_name
+        $params = $args;
 
-        // Get the target user
-        $target_user = User::find($user_id);
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        // Load the request schema
+        $schema = new RequestSchema("schema://get-user.json");
 
-        // Check authorization
-        if (!$this->_app->user->checkAccess('delete_account', ['user' => $target_user])){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
         }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
+
+        $this->ci->db;
+    
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+        
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Get the user to delete
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
+            ->first();
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
+        }
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
 
         // Check that we are not disabling the master account
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        if (($target_user->id == $this->_app->config('user_id_master'))){
-            $ms->addMessageTranslated("danger", "ACCOUNT_DELETE_MASTER");
-            $this->_app->halt(403);
+        if ($user->id == $config['reserved_user_ids.master']) {
+            $e = new ForbiddenException();
+            $e->addUserMessage("DELETE_MASTER");
         }
 
-        $ms->addMessageTranslated("success", "ACCOUNT_DELETION_SUCCESSFUL", ["user_name" => $target_user->user_name]);
-        $target_user->delete();
-        unset($target_user);
+        $user->delete();
+        unset($user);
+
+        $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
+            "user_name" => $data['user_name']
+        ]);
     }
 }
