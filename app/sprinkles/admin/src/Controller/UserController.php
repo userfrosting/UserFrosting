@@ -168,7 +168,7 @@ class UserController extends SimpleController
         if (!$validator->validate($data)) {
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {    
+            foreach ($validator->errors() as $idx => $field) {
                 foreach($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
@@ -411,7 +411,7 @@ class UserController extends SimpleController
         ];
 
         // TODO: determine if currentUser has permission to set the group.  Otherwise, we'll just apply the default group.
-        
+
         // Load validation rules
         $schema = new RequestSchema('schema://create-user.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
@@ -471,7 +471,7 @@ class UserController extends SimpleController
         if (!$validator->validate($data)) {
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {    
+            foreach ($validator->errors() as $idx => $field) {
                 foreach($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
@@ -572,7 +572,7 @@ class UserController extends SimpleController
         if (!$validator->validate($data)) {
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {    
+            foreach ($validator->errors() as $idx => $field) {
                 foreach($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
@@ -633,7 +633,7 @@ class UserController extends SimpleController
         if (!$validator->validate($data)) {
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {    
+            foreach ($validator->errors() as $idx => $field) {
                 foreach($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
@@ -718,7 +718,7 @@ class UserController extends SimpleController
         }
 
         $this->ci->db;
-    
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -741,7 +741,7 @@ class UserController extends SimpleController
 
         /** @var Config $config */
         $config = $this->ci->config;
-        
+
         /*
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
         $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
@@ -813,9 +813,9 @@ class UserController extends SimpleController
             // Attach default roles
             $user->roles()->attach($defaultRoleIds);
 
-            // Try to generate a new verification request
-            $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);
-    
+            // Try to generate a new password request
+            $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
+
             // Create and send welcome email with password set link
             $message = new TwigMailMessage($this->ci->view, "mail/password-create.html.twig");
 
@@ -823,7 +823,7 @@ class UserController extends SimpleController
                 ->addEmailRecipient($user->email, $user->full_name, [
                     'user' => $user,
                     'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . " hours",
-                    "token" => $verification->getToken()
+                    'token' => $passwordRequest->getToken()
                 ]);
 
             $this->ci->mailer->send($message);
@@ -832,6 +832,89 @@ class UserController extends SimpleController
         });
 
         return $response->withStatus(200);
+    }
+
+    /**
+     * Processes the request to delete an existing user.
+     *
+     * Deletes the specified user, removing any existing associations.
+     * Before doing so, checks that:
+     * 1. You are not trying to delete the master account;
+     * 2. You have permission to delete the target user's account.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: DELETE
+     */
+    public function deleteUser($request, $response, $args)
+    {
+        // Get URL parameters: user_name
+        $params = $args;
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://get-user.json");
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
+
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Get the user to delete
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
+            ->first();
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
+        }
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Check that we are not disabling the master account
+        // Need to use loose comparison for now, because some DBs return `id` as a string
+        if ($user->id == $config['reserved_user_ids.master']) {
+            $e = new ForbiddenException();
+            $e->addUserMessage("DELETE_MASTER");
+        }
+
+        $user->delete();
+        unset($user);
+
+        $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
+            "user_name" => $data['user_name']
+        ]);
     }
 
     /**
@@ -997,86 +1080,4 @@ class UserController extends SimpleController
         $target_user->save();
     }
 
-    /**
-     * Processes the request to delete an existing user.
-     *
-     * Deletes the specified user, removing any existing associations.
-     * Before doing so, checks that:
-     * 1. You are not trying to delete the master account;
-     * 2. You have permission to delete the target user's account.
-     * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: DELETE
-     */
-    public function deleteUser($request, $response, $args)
-    {
-        // Get URL parameters: user_name
-        $params = $args;
-
-        /** @var MessageStream $ms */
-        $ms = $this->ci->alerts;
-
-        // Load the request schema
-        $schema = new RequestSchema("schema://get-user.json");
-
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        $error = false;
-
-        // Validate request data
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            $ms->addValidationErrors($validator);
-            $error = true;
-        }
-
-        if ($error) {
-            return $response->withStatus(400);
-        }
-
-        $this->ci->db;
-    
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-        
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Get the user to delete
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
-            ->first();
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException();
-        }
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
-        ])) {
-            throw new ForbiddenException();
-        }
-
-        /** @var Config $config */
-        $config = $this->ci->config;
-
-        // Check that we are not disabling the master account
-        // Need to use loose comparison for now, because some DBs return `id` as a string
-        if ($user->id == $config['reserved_user_ids.master']) {
-            $e = new ForbiddenException();
-            $e->addUserMessage("DELETE_MASTER");
-        }
-
-        $user->delete();
-        unset($user);
-
-        $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
-            "user_name" => $data['user_name']
-        ]);
-    }
 }

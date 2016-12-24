@@ -334,7 +334,7 @@ class User extends UFModel
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users');
+        return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users')->withTimestamps();
     }
 
     /**

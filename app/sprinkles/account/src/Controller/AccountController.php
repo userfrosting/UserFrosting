@@ -276,7 +276,9 @@ class AccountController extends SimpleController
 
         $delay = $throttler->getDelay('sign_in_attempt', $throttleData);
         if ($delay > 0) {
-            $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", ["delay" => $delay]);
+            $ms->addMessageTranslated("danger", "RATE_LIMIT_EXCEEDED", [
+                "delay" => $delay
+            ]);
             return $response->withStatus(429);
         }
 
@@ -294,7 +296,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
-        if($isEmail){
+        if($isEmail) {
             $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);
         } else {
             $currentUser = $authenticator->attempt('user_name', $data['user_name'], $data['password'], $data['rememberme']);
