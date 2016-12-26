@@ -217,9 +217,21 @@ class User extends UFModel
     }
 
     /**
-     * Get the most recent activity for this user.
+     * Get the most recent activity for this user, based on the user's last_activity_id.
      */
-    public function lastActivity($type = null)
+    public function lastActivity()
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        $query = $this->belongsTo($classMapper->getClassMapping('activity'), 'last_activity_id');
+        return $query;
+    }
+
+    /**
+     * Find the most recent activity for this user of a particular type.
+     */
+    public function lastActivityOfType($type = null)
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
@@ -232,7 +244,7 @@ class User extends UFModel
 
         return $query->latest('occurred_at');
     }
-
+    
     /**
      * Get the most recent time for a specified activity type for this user.
      *
@@ -364,26 +376,11 @@ class User extends UFModel
     /**
      * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
      */
-    public function scopeJoinLastActivity($query, $type = null, $filter = null)
+    public function scopeJoinLastActivity($query)
     {
-        $query = $query->select('users.*', 'activities.occurred_at as last_activity_at');
+        $query = $query->select('users.*');
 
-        if ($filter) {
-            $filterClause = Capsule::raw("
-            (select activities.id as activity_id from activities where
-            activities.user_id = users.id
-            and activities.description like ?
-            order by occurred_at desc
-            limit 1)");
-            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause)->setBindings(["%$filter%"]);
-        } else {
-            $filterClause = Capsule::raw("
-            (select activities.id as activity_id from activities where
-            activities.user_id = users.id
-            order by occurred_at desc
-            limit 1)");
-            $query = $query->leftJoin('activities', 'activities.id', '=', $filterClause);
-        }
+        $query = $query->leftJoin('activities', 'activities.id', '=', 'users.last_activity_id');
 
         return $query;
     }

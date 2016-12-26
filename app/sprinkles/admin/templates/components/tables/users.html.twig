@@ -43,9 +43,9 @@
     </script>
 
     <script id="user-table-column-last-activity" type="text/x-handlebars-template">
-        {{#if row.last_activity_at }}
-        <td data-num="{{dateFormat row.last_activity_at format='x'}}">
-            {{dateFormat row.last_activity_at format="dddd"}}<br>{{dateFormat row.last_activity_at format="MMM Do, YYYY h:mm a"}}
+        {{#if row.last_activity }}
+        <td data-num="{{dateFormat row.last_activity.occurred_at format='x'}}">
+            {{dateFormat row.last_activity.occurred_at format="dddd"}}<br>{{dateFormat row.last_activity.occurred_at format="MMM Do, YYYY h:mm a"}}
             <br>
             <i>{{row.last_activity.description}}</i>
         </td>

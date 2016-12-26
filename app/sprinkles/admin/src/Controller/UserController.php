@@ -717,22 +717,15 @@ class UserController extends SimpleController
 
         $query = $classMapper->createInstance('user');
 
-        // Allow filtering by last activity
-        if (isset($filters['last_activity'])) {
-            $activityFilter = $filters['last_activity'];
-        } else {
-            $activityFilter = null;
-        }
-
         // Custom sort fields
         if ($sortField == "last_activity") {
-            $sortField = "last_activity_at";
+            $sortField = "activities.occurred_at";
         } else if ($sortField == "name") {
             $sortField = "last_name";
         }
 
         // Join user's most recent activity
-        $query = $query->joinLastActivity($activityFilter)->with('lastActivity');
+        $query = $query->joinLastActivity()->with('lastActivity');
 
         // Count unpaginated total
         $total = $query->count();
@@ -740,14 +733,12 @@ class UserController extends SimpleController
         // Apply filters
         $filtersApplied = false;
         foreach ($filters as $name => $value) {
-            if ($name == 'last_activity') {
-                continue;
-            }
-
             if ($name == 'name') {
                 $query = $query->like('first_name', $value)
                                 ->orLike('last_name', $value)
                                 ->orLike('email', $value);
+            } elseif ($name == 'last_activity') {
+                $query = $query->like('activities.description', "%$value%");
             } else {
                 $query = $query->like($name, $value);
             }
