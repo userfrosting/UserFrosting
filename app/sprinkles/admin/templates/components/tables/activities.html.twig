@@ -1,0 +1,65 @@
+{# This partial template renders a table of user activities, to be populated with rows via an AJAX request.
+ # This extends a generic template for paginated tables.
+ #
+ # Note that this template contains a "skeleton" table with an empty table body, and then a block of Handlebars templates which are used
+ # to render the table cells with the data from the AJAX request.
+#}
+
+{% extends "components/tables/table-paginated.html.twig" %}
+
+{% block table %}
+    <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
+        <thead>
+            <tr>
+                <th class="sorter-metanum" data-column-name="occurred_at" data-column-template="#activity-table-column-occurred-at">Activity Time <i class="fa fa-sort"></i></th>
+                {% if 'user' in table.columns %}
+                    <th class="sorter-metatext" data-column-name="user" data-column-template="#activity-table-column-user">User <i class="fa fa-sort"></i></th>
+                {% endif %}
+                <th class="sorter-metatext" data-column-name="description" data-column-template="#activity-table-column-description">Description <i class="fa fa-sort"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block table_cell_templates %}
+    {# This contains a series of <script> blocks, each of which is a client-side Handlebars template.
+     # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+     # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+     #
+     # These templates require handlebars-helpers.js, moment.js
+    #}
+    {% verbatim %}
+    <script id="activity-table-column-occurred-at" type="text/x-handlebars-template">
+        {{#if row.occurred_at }}
+        <td data-num="{{dateFormat row.occurred_at format='x'}}">
+            {{dateFormat row.occurred_at format="dddd"}}<br>{{dateFormat row.occurred_at format="MMM Do, YYYY h:mm a"}}
+        </td>
+        {{ else }}
+        <td data-num="0">
+            <i>Unknown</i>
+        </td>
+        {{/if }}
+    </script>
+
+    <script id="activity-table-column-user" type="text/x-handlebars-template">
+        <td data-text="{{row.user.last_name}}">
+            <strong>
+                <a href="{{site.uri.public}}/admin/users/u/{{row.user.user_name}}">{{row.user.first_name}} {{row.user.last_name}} ({{row.user.user_name}})</a>
+            </strong>
+            <div>
+                <i class="fa fa-envelope"></i> <a href="mailto:{{row.user.email}}">{{row.user.email}}</a>
+            </div>
+        </td>
+    </script>
+
+    <script id="activity-table-column-description" type="text/x-handlebars-template">
+        <td>
+            <strong>
+                <i>{{row.description}}</i>
+            </strong>
+        </td>
+    </script>
+    {% endverbatim %}
+{% endblock %}

@@ -65,41 +65,6 @@ function bindUserTableButtons(table) {
     });
 }
 
-// Enable/disable the specified user
-function updateUserEnabledStatus(user_id, flag_enabled) {
-	flag_enabled = typeof flag_enabled !== 'undefined' ? flag_enabled : 1;
-	csrf_token = $("meta[name=csrf_token]").attr("content");
-    var data = {
-		flag_enabled: flag_enabled,
-		csrf_token: csrf_token
-	};
-
-	var url = site['uri']['public'] + "/users/u/" + user_id;
-
-    return $.ajax({
-	  type: "POST",
-	  url: url,
-	  data: data
-    });
-}
-
-// Activate (verify) new user account
-function updateUserActiveStatus(user_id) {
-	csrf_token = $("meta[name=csrf_token]").attr("content");
-    var data = {
-		flag_verified: "1",
-        csrf_token: csrf_token
-	};
-
-    var url = site['uri']['public'] + "/users/u/" + user_id;
-
-    return $.ajax({
-	  type: "POST",
-	  url: url,
-	  data: data
-	});
-}
-
 function deleteUserDialog(box_id, user_id, name){
 	// Delete any existing instance of the form with the same name
 	if($('#' + box_id).length ) {

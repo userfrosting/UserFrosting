@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
@@ -38,6 +39,8 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  */
 class User extends UFModel
 {
+    use SoftDeletes;
+
     /**
      * @var string The name of the table for the current model.
      */
@@ -49,12 +52,21 @@ class User extends UFModel
         "last_name",
         "email",
         "locale",
+        "theme",
         "group_id",
         "flag_verified",
         "flag_enabled",
         "last_activity_id",
-        "password"
+        "password",
+        "deleted_at"
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 
     /**
      * @var bool Enable timestamps for Users.
@@ -116,21 +128,33 @@ class User extends UFModel
     /**
      * Delete this user from the database, along with any linked roles and activities.
      *
+     * @param bool $hardDelete Set to true to completely remove the user and all associated objects.
      * @return bool true if the deletion was successful, false otherwise.
      */
-    public function delete()
+    public function delete($hardDelete = false)
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        // Remove all role associations
-        $this->roles()->detach();
-
-        // Remove all user activities
-        $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
-
-        // Delete the user
-        $result = parent::delete();
+        if ($hardDelete) {
+            // Remove all role associations
+            $this->roles()->detach();
+    
+            // Remove all user activities
+            $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
+    
+            // Remove all user tokens
+            $classMapper->staticMethod('password_reset', 'where', 'user_id', $this->id)->delete();
+            $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
+    
+            // TODO: remove any persistences
+    
+            // Delete the user
+            $result = parent::forceDelete();
+        } else {
+            // Soft delete the user, leaving all associated records alone
+            $result = parent::delete();
+        }
 
         return $result;
     }

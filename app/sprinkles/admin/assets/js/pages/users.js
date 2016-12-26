@@ -7,14 +7,17 @@
  * Target page: /users
  */
 
-// TODO: move these to a common JS file for form widgets 
+// TODO: move these to a common JS file for form widgets
 $.fn.select2.defaults.set( "theme", "bootstrap" );
- 
+
+/**
+ * Set up the form in a modal after being successfully attached to the body.
+ */
 function attachUserForm() {
     $("body").on('renderSuccess.ufModal', function (data) {
         // TODO: set up any widgets inside the modal
         $(".js-form-user").find("select[name='group_id']").select2();
-        
+
         // Set up the form for submission
         $(".js-form-user").ufForm({
             validators: page.validators,
@@ -24,6 +27,24 @@ function attachUserForm() {
             window.location.reload();
         });
     });
+}
+
+/**
+ * Update user field(s)
+ */
+function updateUser(userName, data) {
+	data = typeof data !== 'undefined' ? data : {};
+
+    data[site.csrf.keys.name] = site.csrf.name;
+    data[site.csrf.keys.value] = site.csrf.value;
+
+    var url = site.uri.public + "/users/u/" + userName;
+
+    return $.ajax({
+        type: "POST",
+        url: url,
+        data: data
+	});
 }
 
 $(document).ready(function() {
@@ -51,7 +72,14 @@ $(document).ready(function() {
             attachUserForm();
         });
 
-        // Link row buttons after table is loaded
+        /**
+         * Link row buttons after table is loaded.
+         */
+
+        /**
+         * Buttons that launch a modal dialog
+         */
+        // Edit general user details button
         $(this).find('.js-user-edit').click(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/edit",
@@ -64,6 +92,7 @@ $(document).ready(function() {
             attachUserForm();
         });
 
+        // Change user password button
         $(this).find('.js-user-password').click(function() {
             $("body").ufModal({
                 sourceUrl: site.uri.public + "/modals/users/password",
@@ -71,6 +100,22 @@ $(document).ready(function() {
                     user_name: $(this).data('user_name')
                 },
                 msgTarget: $("#alerts-users")
+            });
+            
+            $("body").on('renderSuccess.ufModal', function (data) {
+                var modal = $(this).ufModal('getModal');
+            	// Enable/disable password fields when switch is toggled
+                $(".controls-password").find("input[type='password']").prop('disabled', true);
+                modal.find("input[name='change_password_mode']").click(function() {
+                    var type = $(this).val();
+                    if (type == "link") {
+                        $(".controls-password").find("input[type='password']").prop('disabled', true);
+                        modal.find("input[name='flag_password_reset']").prop('disabled', false);
+                    } else {
+                        $(".controls-password").find("input[type='password']").prop('disabled', false);
+                        modal.find("input[name='flag_password_reset']").prop('disabled', true);
+                    }
+                });
             });
         });
 
@@ -96,36 +141,40 @@ $(document).ready(function() {
             });
         });
 
-        /*
-        $(table).find('.js-user-activate').click(function() {
+        /**
+         * Direct action buttons
+         */
+        $(this).find('.js-user-activate').click(function() {
             var btn = $(this);
-            var user_id = btn.data('id');
-            updateUserActiveStatus(user_id)
+            updateUser(btn.data('user_name'), {
+                flag_verified: '1'
+            })
             .always(function(response) {
                 // Reload page after updating user details
                 window.location.reload();
             });
         });
 
-        $(table).find('.js-user-enable').click(function () {
+        $(this).find('.js-user-enable').click(function () {
             var btn = $(this);
-            var user_id = btn.data('id');
-            updateUserEnabledStatus(user_id, "1")
+            updateUser(btn.data('user_name'), {
+                flag_enabled: '1'
+            })
             .always(function(response) {
                 // Reload page after updating user details
                 window.location.reload();
             });
         });
 
-        $(table).find('.js-user-disable').click(function () {
+        $(this).find('.js-user-disable').click(function () {
             var btn = $(this);
-            var user_id = btn.data('id');
-            updateUserEnabledStatus(user_id, "0")
+            updateUser(btn.data('user_name'), {
+                flag_enabled: '0'
+            })
             .always(function(response) {
                 // Reload page after updating user details
                 window.location.reload();
             });
         });
-        */
     });
 });

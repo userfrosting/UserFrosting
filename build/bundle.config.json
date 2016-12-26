@@ -142,7 +142,16 @@
         }
     },
     "js/pages/user" : {
-
+        "scripts": [
+            "js/pages/user.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
     },
     "js/pages/users" : {
         "scripts": [

@@ -37,12 +37,39 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6">
+            <div id="widget-user-activities" class="panel panel-primary">
+                <div class="panel-heading panel-heading-buttons clearfix">
+                    <h3 class="panel-title pull-left"><i class="fa fa-tasks"></i> Activities</h3>
+                    <div class="pull-right">
+                        <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {% include "components/tables/activities.html.twig" with {
+                            "table" : {
+                                "id" : "table-user-activities"
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block scripts_page %}
-    <!-- Include validation rules -->
+    <!-- Include page variables -->
     <script>
     {% include "components/page.js.twig" %}
+
+    // Add user name
+    page = $.extend(
+        true,               // deep extend
+        {
+            "user_name": "{{user.user_name}}"
+        },
+        page
+    );
     </script>
 
     <!-- Include form widgets JS -->

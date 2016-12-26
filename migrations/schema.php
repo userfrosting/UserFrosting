@@ -450,6 +450,7 @@
             $table->boolean('flag_enabled')->default(1)->comment("Set to 1 if the user account is currently enabled, 0 otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.");
             $table->integer('last_activity_id')->unsigned()->nullable()->comment("The id of the last activity performed by this user.");
             $table->string('password', 255);
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
 
             $table->engine = 'InnoDB';
