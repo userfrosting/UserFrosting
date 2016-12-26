@@ -36,29 +36,210 @@ use UserFrosting\Support\Exception\HttpException;
 class UserController extends SimpleController
 {
     /**
-     * Renders a page displaying a user's information, in read-only mode.
+     * Processes the request to create a new user (from the admin controls).
      *
-     * This checks that the currently logged-in user has permission to view the requested user's info.
-     * It checks each field individually, showing only those that you have permission to view.
-     * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
-     * This page requires authentication.
-     * Request type: GET
+     * Processes the request from the user creation form, checking that:
+     * 1. The username and email are not already in use;
+     * 2. The logged-in user has the necessary permissions to update the posted field(s);
+     * 3. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST
+     * @see formUserCreate
      */
-    public function pageUser($request, $response, $args)
+    public function createUser($request, $response, $args)
     {
-        // Get the user to view
-        $user_name = $args['user_name'];
+        // Get POST parameters: user_name, first_name, last_name, email, theme, locale, csrf_token, (group)
+        $params = $request->getParsedBody();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'create_user')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://create-user.json");
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
+        }
+
+        $this->ci->db;
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
-        $this->ci->db;
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $user_name)->first();
 
-        // If the user no longer exists, forward to main user listing page
-        if (!$user) {
-            $usersPage = $this->ci->router->pathFor('uri_users');
-            return $response->withRedirect($usersPage, 400);
+        // Check if username or email already exists
+        if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
+            $ms->addMessageTranslated("danger", "USERNAME.IN_USE", $data);
+            $error = true;
         }
+
+        if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
+            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
+
+        // Determine if currentUser has permission to set the group.  Otherwise, use default group.
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        /*
+        // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
+        $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
+
+        // Set default values if not specified or not authorized
+        if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "locale"]))
+            $data['locale'] = $this->_app->site->default_locale;
+
+        if (!isset($data['title']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "title"])) {
+            // Set default title for new users
+            $data['title'] = $primaryGroup->new_user_title;
+        }
+
+        if (!isset($data['primary_group_id']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "primary_group_id"])) {
+            $data['primary_group_id'] = $primaryGroup->id;
+        }
+
+        // Set groups to default groups if not specified or not authorized to set groups
+        if (!isset($data['groups']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "groups"])) {
+            $default_groups = Group::where('is_default', GROUP_DEFAULT)->get();
+            $data['groups'] = [];
+            foreach ($default_groups as $group){
+                $group_id = $group->id;
+                $data['groups'][$group_id] = "1";
+            }
+        }
+        */
+
+        // Load default group
+        $groupSlug = $config['site.registration.user_defaults.group'];
+        $defaultGroup = $classMapper->staticMethod('group', 'where', 'slug', $groupSlug)->first();
+
+        if (!$defaultGroup) {
+            $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
+            $e->addUserMessage("ACCOUNT.REGISTRATION_BROKEN");
+            throw $e;
+        }
+
+        // Set default group
+        $data['group_id'] = $defaultGroup->id;
+
+        // Set default locale
+        $data['locale'] = $config['site.registration.user_defaults.locale'];
+
+        $data['flag_verified'] = 1;
+        // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
+        $data['password'] = "";
+
+        // All checks passed!  log events/activities, create user, and send verification email (if required)
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+            // Create the user
+            $user = $classMapper->createInstance('user', $data);
+
+            // Store new user to database
+            $user->save();
+
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} created a new account for {$user->user_name}.", [
+                'type' => 'account_create',
+                'user_id' => $currentUser->id
+            ]);
+
+            // Load default roles
+            $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
+            $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
+            $defaultRoleIds = $defaultRoles->pluck('id')->all();
+
+            // Attach default roles
+            $user->roles()->attach($defaultRoleIds);
+
+            // Try to generate a new password request
+            $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
+
+            // Create and send welcome email with password set link
+            $message = new TwigMailMessage($this->ci->view, "mail/password-create.html.twig");
+
+            $this->ci->mailer->from($config['address_book.admin'])
+                ->addEmailRecipient($user->email, $user->full_name, [
+                    'user' => $user,
+                    'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . " hours",
+                    'token' => $passwordRequest->getToken()
+                ]);
+
+            $this->ci->mailer->send($message);
+
+            $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
+        });
+
+        return $response->withStatus(200);
+    }
+
+    /**
+     * Processes the request to delete an existing user.
+     *
+     * Deletes the specified user, removing any existing associations.
+     * Before doing so, checks that:
+     * 1. You are not trying to delete the master account;
+     * 2. You have permission to delete the target user's account.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: DELETE
+     */
+    public function deleteUser($request, $response, $args)
+    {
+        // Get URL parameters: user_name
+        $params = $args;
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://get-user.json");
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
+
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -66,98 +247,48 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        // Get the user to delete
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
+            ->first();
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
+        }
+
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-                'user' => $user
-            ])) {
+        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
+            'user' => $user
+        ])) {
             throw new ForbiddenException();
         }
 
-        // Get list of all available locales.  Wait, why?
-        $locales = $this->ci->translator->getAvailableLocales();
+        /** @var Config $config */
+        $config = $this->ci->config;
 
-        $themes = [];
-
-        // Determine fields that currentUser is authorized to view
-        $fields = ['name', 'email', 'locale', 'theme'];
-        $show_fields = [];
-        $disabled_fields = [];
-        $hidden_fields = ['user_name', 'group'];
-
-        foreach ($fields as $field) {
-            if ($authorizer->checkAccess($currentUser, "view_user_field", [
-                "user" => $user,
-                "property" => $field
-            ])) {
-                $disabled_fields[] = $field;
-            } else {
-                $hidden_fields[] = $field;
-            }
+        // Check that we are not disabling the master account
+        // Need to use loose comparison for now, because some DBs return `id` as a string
+        if ($user->id == $config['reserved_user_ids.master']) {
+            $e = new ForbiddenException();
+            $e->addUserMessage("DELETE_MASTER");
         }
 
-        // Always disallow editing username
-        $disabled_fields[] = "user_name";
+        $user->delete();
+        unset($user);
 
-        return $this->ci->view->render($response, 'pages/user.html.twig', [
-            "user" => $user,
-            "locales" => $locales,
-            "form" => [
-                "fields" => [
-                    "disabled" => $disabled_fields,
-                    "hidden" => $hidden_fields
-                ],
-                "buttons" => [
-                    "hidden" => [
-                        "submit", "cancel"
-                    ]
-                ]
-            ]
-            /*
-            "groups" => $group_list,
-            */
+        $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
+            "user_name" => $data['user_name']
         ]);
     }
 
-    /**
-     * Renders the user listing page.
-     *
-     * This page renders a table of users, with dropdown menus for admin actions for each user.
-     * Actions typically include: edit user details, activate user, enable/disable user, delete user.
-     * This page requires authentication.
-     * Request type: GET
-     * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
-     * @param bool $paginate_server_side optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.
-     * @todo implement interface to modify user-assigned authorization hooks and permissions
-     */
-    public function pageUsers($request, $response, $args)
+
+    public function getModalConfirmDeleteUser($request, $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
-            throw new ForbiddenException();
-        }
-
-        return $this->ci->view->render($response, "pages/users.html.twig");
-    }
-
-    /**
-     * Returns info for a single user.
-     *
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getUser($request, $response, $args)
-    {
-        // URI parameters
-        $params = $args;
+        // GET parameters
+        $params = $request->getQueryParams();
 
        // Load request schema
-        $schema = new RequestSchema("schema://get-user.json");
+        $schema = new RequestSchema('schema://get-user.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -176,165 +307,34 @@ class UserController extends SimpleController
             throw $e;
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $this->ci->db;
-
-        $query = $classMapper->createInstance('user');
-
-        // Join user's most recent activity
-        $query = $query->where('user_name', $data['user_name'])->joinLastActivity()->with('lastActivity', 'group');
-
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        // Get the user to edit
-        $user = $query->first();
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user', ['user' => $user])) {
-            throw new ForbiddenException();
-        }
-
-        // Unset password
-        unset($user['password']);
-
-        $result = $user->toArray();
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
-    }
-
-    /**
-     * Returns a list of Users
-     *
-     * Generates a list of users, optionally paginated, sorted and/or filtered.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getUsers($request, $response, $args)
-    {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        $filters = isset($params['filters']) ? $params['filters'] : [];
-        $size = isset($params['size']) ? $params['size'] : null;
-        $page = isset($params['page']) ? $params['page'] : null;
-        $sortField = isset($params['sort_field']) ? $params['sort_field'] : "user_name";
-        $sortOrder = isset($params['sort_order']) ? $params['sort_order'] : "asc";
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
-            throw new ForbiddenException();
-        }
-
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first();
 
-        $this->ci->db;
-
-        $query = $classMapper->createInstance('user');
-
-        // Allow filtering by last activity
-        if (isset($filters['last_activity'])) {
-            $activityFilter = $filters['last_activity'];
-        } else {
-            $activityFilter = null;
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
         }
 
-        // Custom sort fields
-        if ($sortField == "last_activity") {
-            $sortField = "last_activity_at";
-        } else if ($sortField == "name") {
-            $sortField = "last_name";
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
         }
 
-        // Join user's most recent activity
-        $query = $query->joinLastActivity($activityFilter)->with('lastActivity');
-
-        // Count unpaginated total
-        $total = $query->count();
-
-        // Apply filters
-        $filtersApplied = false;
-        foreach ($filters as $name => $value) {
-            if ($name == 'last_activity') {
-                continue;
-            }
-
-            if ($name == 'name') {
-                $query = $query->like('first_name', $value)
-                                ->orLike('last_name', $value)
-                                ->orLike('email', $value);
-            } else {
-                $query = $query->like($name, $value);
-            }
-
-            $filtersApplied = true;
-        }
-
-        $totalFiltered = $query->count();
-
-        $query = $query->orderBy($sortField, $sortOrder);
-
-        // Paginate
-        if (($page !== null) && ($size !== null)) {
-            $offset = $size*$page;
-            $query = $query->skip($offset)->take($size);
-        }
-
-        $collection = collect($query->get());
-
-        // Exclude password field from results
-        $collection->transform(function ($item, $key) {
-            unset($item['password']);
-            return $item;
-        });
-
-        $result = [
-            "count" => $total,
-            "rows" => $collection->values()->toArray(),
-            "count_filtered" => $totalFiltered
-        ];
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
-    }
-
-    public function pageGroupUsers($request, $response, $args)
-    {
-            // Optional filtering by primary group
-        if ($primary_group_name){
-            $primary_group = Group::where('name', $primary_group_name)->first();
-
-            if (!$primary_group)
-                $this->_app->notFound();
-
-            // Access-controlled page
-            if (!$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $primary_group->id])){
-                $this->_app->notFound();
-            }
-
-            if (!$paginate_server_side) {
-                $user_collection = User::where('primary_group_id', $primary_group->id)->get();
-                $user_collection->getRecentEvents('sign_in');
-                $user_collection->getRecentEvents('sign_up', 'sign_up_time');
-            }
-            $name = $primary_group->name;
-            $icon = $primary_group->icon;
-        }
+        return $this->ci->view->render($response, 'components/modals/confirm-delete-user.html.twig', [
+            'user' => $user,
+            'form' => [
+                'action' => '/api/users/u/' . $user->user_name
+            ]
+        ]);
     }
 
     /**
@@ -616,13 +616,19 @@ class UserController extends SimpleController
         ]);
     }
 
-    public function getModalConfirmDeleteUser($request, $response, $args)
+    /**
+     * Returns info for a single user.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getUser($request, $response, $args)
     {
-        // GET parameters
-        $params = $request->getQueryParams();
+        // URI parameters
+        $params = $args;
 
        // Load request schema
-        $schema = new RequestSchema('schema://get-user.json');
+        $schema = new RequestSchema("schema://get-user.json");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -641,241 +647,191 @@ class UserController extends SimpleController
             throw $e;
         }
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first();
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException();
-        }
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
-        ])) {
-            throw new ForbiddenException();
-        }
-
-        return $this->ci->view->render($response, 'components/modals/confirm-delete-user.html.twig', [
-            'user' => $user,
-            'form' => [
-                'action' => '/api/users/u/' . $user->user_name
-            ]
-        ]);
-    }
-
-    /**
-     * Processes the request to create a new user (from the admin controls).
-     *
-     * Processes the request from the user creation form, checking that:
-     * 1. The username and email are not already in use;
-     * 2. The logged-in user has the necessary permissions to update the posted field(s);
-     * 3. The submitted data is valid.
-     * This route requires authentication.
-     * Request type: POST
-     * @see formUserCreate
-     */
-    public function createUser($request, $response, $args)
-    {
-        // Get POST parameters: user_name, first_name, last_name, email, theme, locale, csrf_token, (group)
-        $params = $request->getParsedBody();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'create_user')) {
-            throw new ForbiddenException();
-        }
-
-        /** @var MessageStream $ms */
-        $ms = $this->ci->alerts;
-
-        // Load the request schema
-        $schema = new RequestSchema("schema://create-user.json");
-
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        $error = false;
-
-        // Validate request data
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            $ms->addValidationErrors($validator);
-            $error = true;
-        }
 
         $this->ci->db;
 
+        $query = $classMapper->createInstance('user');
+
+        // Join user's most recent activity
+        $query = $query->where('user_name', $data['user_name'])->joinLastActivity()->with('lastActivity', 'group');
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Get the user to edit
+        $user = $query->first();
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', ['user' => $user])) {
+            throw new ForbiddenException();
+        }
+
+        // Unset password
+        unset($user['password']);
+
+        $result = $user->toArray();
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Returns a list of Users
+     *
+     * Generates a list of users, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getUsers($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        $filters = isset($params['filters']) ? $params['filters'] : [];
+        $size = isset($params['size']) ? $params['size'] : null;
+        $page = isset($params['page']) ? $params['page'] : null;
+        $sortField = isset($params['sort_field']) ? $params['sort_field'] : "user_name";
+        $sortOrder = isset($params['sort_order']) ? $params['sort_order'] : "asc";
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
+            throw new ForbiddenException();
+        }
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
-            $ms->addMessageTranslated("danger", "USERNAME.IN_USE", $data);
-            $error = true;
+        $this->ci->db;
+
+        $query = $classMapper->createInstance('user');
+
+        // Allow filtering by last activity
+        if (isset($filters['last_activity'])) {
+            $activityFilter = $filters['last_activity'];
+        } else {
+            $activityFilter = null;
         }
 
-        if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
-            $error = true;
+        // Custom sort fields
+        if ($sortField == "last_activity") {
+            $sortField = "last_activity_at";
+        } else if ($sortField == "name") {
+            $sortField = "last_name";
         }
 
-        if ($error) {
-            return $response->withStatus(400);
-        }
+        // Join user's most recent activity
+        $query = $query->joinLastActivity($activityFilter)->with('lastActivity');
 
-        // Determine if currentUser has permission to set the group.  Otherwise, use default group.
+        // Count unpaginated total
+        $total = $query->count();
 
-        /** @var Config $config */
-        $config = $this->ci->config;
-
-        /*
-        // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
-
-        // Set default values if not specified or not authorized
-        if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "locale"]))
-            $data['locale'] = $this->_app->site->default_locale;
-
-        if (!isset($data['title']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "title"])) {
-            // Set default title for new users
-            $data['title'] = $primaryGroup->new_user_title;
-        }
-
-        if (!isset($data['primary_group_id']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "primary_group_id"])) {
-            $data['primary_group_id'] = $primaryGroup->id;
-        }
-
-        // Set groups to default groups if not specified or not authorized to set groups
-        if (!isset($data['groups']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "groups"])) {
-            $default_groups = Group::where('is_default', GROUP_DEFAULT)->get();
-            $data['groups'] = [];
-            foreach ($default_groups as $group){
-                $group_id = $group->id;
-                $data['groups'][$group_id] = "1";
+        // Apply filters
+        $filtersApplied = false;
+        foreach ($filters as $name => $value) {
+            if ($name == 'last_activity') {
+                continue;
             }
+
+            if ($name == 'name') {
+                $query = $query->like('first_name', $value)
+                                ->orLike('last_name', $value)
+                                ->orLike('email', $value);
+            } else {
+                $query = $query->like($name, $value);
+            }
+
+            $filtersApplied = true;
         }
-        */
 
-        // Load default group
-        $groupSlug = $config['site.registration.user_defaults.group'];
-        $defaultGroup = $classMapper->staticMethod('group', 'where', 'slug', $groupSlug)->first();
+        $totalFiltered = $query->count();
 
-        if (!$defaultGroup) {
-            $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
-            $e->addUserMessage("ACCOUNT.REGISTRATION_BROKEN");
-            throw $e;
+        $query = $query->orderBy($sortField, $sortOrder);
+
+        // Paginate
+        if (($page !== null) && ($size !== null)) {
+            $offset = $size*$page;
+            $query = $query->skip($offset)->take($size);
         }
 
-        // Set default group
-        $data['group_id'] = $defaultGroup->id;
+        $collection = collect($query->get());
 
-        // Set default locale
-        $data['locale'] = $config['site.registration.user_defaults.locale'];
-
-        $data['flag_verified'] = 1;
-        // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
-        $data['password'] = "";
-
-        // All checks passed!  log events/activities, create user, and send verification email (if required)
-        // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
-            // Create the user
-            $user = $classMapper->createInstance('user', $data);
-
-            // Store new user to database
-            $user->save();
-
-            // Create activity record
-            $this->ci->userActivityLogger->info("User {$currentUser->user_name} created a new account for {$user->user_name}.", [
-                'type' => 'account_create',
-                'user_id' => $currentUser->id
-            ]);
-
-            // Load default roles
-            $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
-            $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
-            $defaultRoleIds = $defaultRoles->pluck('id')->all();
-
-            // Attach default roles
-            $user->roles()->attach($defaultRoleIds);
-
-            // Try to generate a new password request
-            $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
-
-            // Create and send welcome email with password set link
-            $message = new TwigMailMessage($this->ci->view, "mail/password-create.html.twig");
-
-            $this->ci->mailer->from($config['address_book.admin'])
-                ->addEmailRecipient($user->email, $user->full_name, [
-                    'user' => $user,
-                    'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . " hours",
-                    'token' => $passwordRequest->getToken()
-                ]);
-
-            $this->ci->mailer->send($message);
-
-            $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
+        // Exclude password field from results
+        $collection->transform(function ($item, $key) {
+            unset($item['password']);
+            return $item;
         });
 
-        return $response->withStatus(200);
+        $result = [
+            "count" => $total,
+            "rows" => $collection->values()->toArray(),
+            "count_filtered" => $totalFiltered
+        ];
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    public function pageGroupUsers($request, $response, $args)
+    {
+        // Optional filtering by primary group
+        if ($primary_group_name){
+            $primary_group = Group::where('name', $primary_group_name)->first();
+
+            if (!$primary_group)
+                $this->_app->notFound();
+
+            // Access-controlled page
+            if (!$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $primary_group->id])){
+                $this->_app->notFound();
+            }
+
+            if (!$paginate_server_side) {
+                $user_collection = User::where('primary_group_id', $primary_group->id)->get();
+                $user_collection->getRecentEvents('sign_in');
+                $user_collection->getRecentEvents('sign_up', 'sign_up_time');
+            }
+            $name = $primary_group->name;
+            $icon = $primary_group->icon;
+        }
     }
 
     /**
-     * Processes the request to delete an existing user.
+     * Renders a page displaying a user's information, in read-only mode.
      *
-     * Deletes the specified user, removing any existing associations.
-     * Before doing so, checks that:
-     * 1. You are not trying to delete the master account;
-     * 2. You have permission to delete the target user's account.
-     * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: DELETE
+     * This checks that the currently logged-in user has permission to view the requested user's info.
+     * It checks each field individually, showing only those that you have permission to view.
+     * This will also try to show buttons for activating, disabling/enabling, deleting, and editing the user.
+     * This page requires authentication.
+     * Request type: GET
      */
-    public function deleteUser($request, $response, $args)
+    public function pageUser($request, $response, $args)
     {
-        // Get URL parameters: user_name
-        $params = $args;
-
-        /** @var MessageStream $ms */
-        $ms = $this->ci->alerts;
-
-        // Load the request schema
-        $schema = new RequestSchema("schema://get-user.json");
-
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        $error = false;
-
-        // Validate request data
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            $ms->addValidationErrors($validator);
-            $error = true;
-        }
-
-        if ($error) {
-            return $response->withStatus(400);
-        }
-
-        $this->ci->db;
+        // Get the user to view
+        $user_name = $args['user_name'];
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
+        $this->ci->db;
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $user_name)->first();
+
+        // If the user no longer exists, forward to main user listing page
+        if (!$user) {
+            $usersPage = $this->ci->router->pathFor('uri_users');
+            return $response->withRedirect($usersPage, 400);
+        }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -883,38 +839,83 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        // Get the user to delete
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
-            ->first();
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException();
-        }
-
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
-            'user' => $user
-        ])) {
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
+                'user' => $user
+            ])) {
             throw new ForbiddenException();
         }
 
-        /** @var Config $config */
-        $config = $this->ci->config;
+        // Get list of all available locales.  Wait, why?
+        $locales = $this->ci->translator->getAvailableLocales();
 
-        // Check that we are not disabling the master account
-        // Need to use loose comparison for now, because some DBs return `id` as a string
-        if ($user->id == $config['reserved_user_ids.master']) {
-            $e = new ForbiddenException();
-            $e->addUserMessage("DELETE_MASTER");
+        $themes = [];
+
+        // Determine fields that currentUser is authorized to view
+        $fields = ['name', 'email', 'locale', 'theme'];
+        $show_fields = [];
+        $disabled_fields = [];
+        $hidden_fields = ['user_name', 'group'];
+
+        foreach ($fields as $field) {
+            if ($authorizer->checkAccess($currentUser, "view_user_field", [
+                "user" => $user,
+                "property" => $field
+            ])) {
+                $disabled_fields[] = $field;
+            } else {
+                $hidden_fields[] = $field;
+            }
         }
 
-        $user->delete();
-        unset($user);
+        // Always disallow editing username
+        $disabled_fields[] = "user_name";
 
-        $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
-            "user_name" => $data['user_name']
+        return $this->ci->view->render($response, 'pages/user.html.twig', [
+            "user" => $user,
+            "locales" => $locales,
+            "form" => [
+                "fields" => [
+                    "disabled" => $disabled_fields,
+                    "hidden" => $hidden_fields
+                ],
+                "buttons" => [
+                    "hidden" => [
+                        "submit", "cancel"
+                    ]
+                ]
+            ]
+            /*
+            "groups" => $group_list,
+            */
         ]);
+    }
+
+    /**
+     * Renders the user listing page.
+     *
+     * This page renders a table of users, with dropdown menus for admin actions for each user.
+     * Actions typically include: edit user details, activate user, enable/disable user, delete user.
+     * This page requires authentication.
+     * Request type: GET
+     * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
+     * @param bool $paginate_server_side optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.
+     * @todo implement interface to modify user-assigned authorization hooks and permissions
+     */
+    public function pageUsers($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
+            throw new ForbiddenException();
+        }
+
+        return $this->ci->view->render($response, "pages/users.html.twig");
     }
 
     /**
@@ -1079,5 +1080,4 @@ class UserController extends SimpleController
         $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
         $target_user->save();
     }
-
 }
