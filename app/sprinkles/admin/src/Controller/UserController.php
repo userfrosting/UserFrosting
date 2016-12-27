@@ -20,6 +20,7 @@ use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
@@ -693,11 +694,6 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        $sorts = isset($params['sorts']) ? $params['sorts'] : [];
-        $filters = isset($params['filters']) ? $params['filters'] : [];
-        $size = isset($params['size']) ? $params['size'] : null;
-        $page = isset($params['page']) ? $params['page'] : null;
-
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -714,64 +710,9 @@ class UserController extends SimpleController
 
         $this->ci->db;
 
-        $query = $classMapper->createInstance('user');
+        $sprunje = new UserSprunje($classMapper, $params);
 
-        // Join user's most recent activity
-        $query = $query->joinLastActivity()->with('lastActivity');
-
-        // Count unfiltered total
-        $total = $query->count();
-
-        // Apply filters
-        $filtersApplied = false;
-        foreach ($filters as $name => $value) {
-            if ($name == 'name') {
-                $query = $query->like('first_name', $value)
-                                ->orLike('last_name', $value)
-                                ->orLike('email', $value);
-            } elseif ($name == 'last_activity') {
-                $query = $query->like('activities.description', "%$value%");
-            } else {
-                $query = $query->like($name, $value);
-            }
-
-            $filtersApplied = true;
-        }
-
-        // Count filtered total
-        $totalFiltered = $query->count();
-
-        // Apply sorts
-        foreach ($sorts as $name => $direction) {
-            // Custom sort fields
-            if ($name == "last_activity") {
-                $name = "activities.occurred_at";
-            } else if ($name == "name") {
-                $name = "last_name";
-            }
-
-            $query = $query->orderBy($name, $direction);
-        }
-
-        // Paginate
-        if (($page !== null) && ($size !== null) && ($size != 'all')) {
-            $offset = $size*$page;
-            $query = $query->skip($offset)->take($size);
-        }
-
-        $collection = collect($query->get());
-
-        // Exclude password field from results
-        $collection->transform(function ($item, $key) {
-            unset($item['password']);
-            return $item;
-        });
-
-        $result = [
-            "count" => $total,
-            "rows" => $collection->values()->toArray(),
-            "count_filtered" => $totalFiltered
-        ];
+        $result = $sprunje->getResults();
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
