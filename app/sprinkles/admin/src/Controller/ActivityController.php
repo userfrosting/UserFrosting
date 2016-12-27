@@ -81,11 +81,10 @@ class ActivityController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
+        $sorts = isset($params['sorts']) ? $params['sorts'] : [];
         $filters = isset($params['filters']) ? $params['filters'] : [];
         $size = isset($params['size']) ? $params['size'] : null;
         $page = isset($params['page']) ? $params['page'] : null;
-        $sortField = isset($params['sort_field']) ? $params['sort_field'] : "occurred_at";
-        $sortOrder = isset($params['sort_order']) ? $params['sort_order'] : "asc";
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -102,7 +101,7 @@ class ActivityController extends SimpleController
 
         $query = $classMapper->createInstance('activity')->where('user_id', $user->id);
 
-        // Count unpaginated total
+        // Count unfiltered total
         $total = $query->count();
 
         // Apply filters
@@ -113,9 +112,13 @@ class ActivityController extends SimpleController
             $filtersApplied = true;
         }
 
+        // Count filtered total
         $totalFiltered = $query->count();
 
-        $query = $query->orderBy($sortField, $sortOrder);
+        // Apply sorts
+        foreach ($sorts as $name => $direction) {
+            $query = $query->orderBy($name, $direction);
+        }
 
         // Paginate
         if (($page !== null) && ($size !== null) && ($size != 'all')) {

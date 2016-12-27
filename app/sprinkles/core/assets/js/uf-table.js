@@ -212,7 +212,7 @@
     }
 
     /**
-     * Get state variables for this table, as required by the AJAX data source: sort_field, sort_order, filters, size, page
+     * Get state variables for this table, as required by the AJAX data source: sorts, filters, size, page
      */
     Plugin.prototype.getTableStateVars = function ( table ) {
         var base = this;
@@ -223,8 +223,17 @@
             "1" : "desc"
         };
 
-        var sortFieldIndex = table.config.sortList[0][0];
-        var sortField = $(table.config.headerList[sortFieldIndex]).data("column-name");
+        // Set sorts in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
+        var sortList = table.config.sortList;
+        var sorts = {};
+        for (i = 0; i < sortList.length; i++) {
+            var columnIndex = sortList[i][0];
+            var columnDirection = sortOrders[sortList[i][1]];   // Converts to 'asc' or 'desc'
+            if (sortList[i]) {
+                var columnName = $(table.config.headerList[columnIndex]).data("column-name");
+                sorts[columnName] = columnDirection;
+            }
+        }
 
         // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
         var filterList = $.tablesorter.getFilters(table);
@@ -239,8 +248,7 @@
         var state = {
             size: table.config.pager.size,
             page: table.config.pager.page,
-            sort_field: sortField,
-            sort_order: sortOrders[table.config.sortList[0][1]],
+            sorts: sorts,
             filters: filters
         };
 

@@ -693,11 +693,10 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
+        $sorts = isset($params['sorts']) ? $params['sorts'] : [];
         $filters = isset($params['filters']) ? $params['filters'] : [];
         $size = isset($params['size']) ? $params['size'] : null;
         $page = isset($params['page']) ? $params['page'] : null;
-        $sortField = isset($params['sort_field']) ? $params['sort_field'] : "user_name";
-        $sortOrder = isset($params['sort_order']) ? $params['sort_order'] : "asc";
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -717,17 +716,10 @@ class UserController extends SimpleController
 
         $query = $classMapper->createInstance('user');
 
-        // Custom sort fields
-        if ($sortField == "last_activity") {
-            $sortField = "activities.occurred_at";
-        } else if ($sortField == "name") {
-            $sortField = "last_name";
-        }
-
         // Join user's most recent activity
         $query = $query->joinLastActivity()->with('lastActivity');
 
-        // Count unpaginated total
+        // Count unfiltered total
         $total = $query->count();
 
         // Apply filters
@@ -746,9 +738,20 @@ class UserController extends SimpleController
             $filtersApplied = true;
         }
 
+        // Count filtered total
         $totalFiltered = $query->count();
 
-        $query = $query->orderBy($sortField, $sortOrder);
+        // Apply sorts
+        foreach ($sorts as $name => $direction) {
+            // Custom sort fields
+            if ($name == "last_activity") {
+                $name = "activities.occurred_at";
+            } else if ($name == "name") {
+                $name = "last_name";
+            }
+
+            $query = $query->orderBy($name, $direction);
+        }
 
         // Paginate
         if (($page !== null) && ($size !== null) && ($size != 'all')) {

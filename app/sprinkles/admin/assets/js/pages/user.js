@@ -6,7 +6,7 @@
  *
  * Target page: /users/u/{user_name}
  */
- 
+
 $(document).ready(function() {
     // Render any alerts
     $("#alerts-users").ufAlerts();
