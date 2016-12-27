@@ -118,7 +118,7 @@ class ActivityController extends SimpleController
         $query = $query->orderBy($sortField, $sortOrder);
 
         // Paginate
-        if (($page !== null) && ($size !== null)) {
+        if (($page !== null) && ($size !== null) && ($size != 'all')) {
             $offset = $size*$page;
             $query = $query->skip($offset)->take($size);
         }

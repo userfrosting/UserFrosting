@@ -14,9 +14,6 @@ $(document).ready(function() {
 
     $("#widget-user-activities").ufTable({
         dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities',
-        addParams: {
-            group: 'users'
-        },
         DEBUG: false
     });
 });
