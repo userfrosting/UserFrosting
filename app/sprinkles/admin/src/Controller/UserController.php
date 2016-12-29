@@ -712,11 +712,9 @@ class UserController extends SimpleController
 
         $sprunje = new UserSprunje($classMapper, $params);
 
-        $result = $sprunje->getResults();
-
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+        return $sprunje->toResponse($response);
     }
 
     public function pageGroupUsers($request, $response, $args)

@@ -8,7 +8,6 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -17,13 +16,9 @@ use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-use UserFrosting\Sprinkle\Account\Model\Group;
-use UserFrosting\Sprinkle\Account\Model\User;
-use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Admin\Sprunje\ActivitySprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
-use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\HttpException;
@@ -101,10 +96,8 @@ class ActivityController extends SimpleController
             return $query->where('user_id', $user->id);
         });
 
-        $result = $sprunje->getResults();
-
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+        return $sprunje->toResponse($response);
     }
 }

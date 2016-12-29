@@ -8,7 +8,11 @@
  */
 namespace UserFrosting\Sprinkle\Core\Sprunje;
 
+use Carbon\Carbon;
+use League\Csv\Writer;
+use Psr\Http\Message\ResponseInterface as Response;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
  * Sprunje
@@ -19,21 +23,23 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
  */
 abstract class Sprunje
 {
-
     protected $classMapper;
 
-    protected $sortable = [];
-
     protected $filterable = [];
+
+    protected $name = '';
 
     protected $options = [
         'sorts' => [],
         'filters' => [],
         'size' => 'all',
-        'page' => null
+        'page' => null,
+        'format' => 'json'
     ];
 
     protected $query;
+
+    protected $sortable = [];
 
     /**
      * Constructor.
@@ -54,10 +60,64 @@ abstract class Sprunje
 
     /**
      * Extend the query by providing a callback.
+     *
+     * @param callable $callback A callback which accepts and returns a Builder instance.
      */
     public function extendQuery(callable $callback)
     {
         $this->query = $callback($this->query);
+    }
+
+    /**
+     * Run the query and build a CSV object by flattening the resulting collection.  Ignores any pagination.
+     *
+     * @return SplTempFileObject
+     */
+    public function getCsv()
+    {
+        // Apply filters
+        $this->applyFilters();
+
+        // Apply sorts
+        $this->applySorts();
+
+        $collection = collect($this->query->get());
+
+        // Perform any additional transformations on the dataset
+        $this->applyTransformations($collection);
+
+        $csv = Writer::createFromFileObject(new \SplTempFileObject());
+
+        $columnNames = [];
+
+        // Flatten collection while simultaneously building the column names from the union of each element's keys
+        $collection->transform(function ($item, $key) use (&$columnNames) {
+            $item = array_dot($item->toArray());
+            foreach ($item as $itemKey => $itemValue) {
+                if (!in_array($itemKey, $columnNames)) {
+                    $columnNames[] = $itemKey;
+                }
+            }
+            return $item;
+        });
+
+        $csv->insertOne($columnNames);
+
+        // Insert the data as rows in the CSV document
+        $collection->each(function ($item) use ($csv, $columnNames) {
+            $row = [];
+            foreach ($columnNames as $itemKey) {
+                if (isset($item[$itemKey])) {
+                    $row[] = $item[$itemKey];
+                } else {
+                    $row[] = '';
+                }
+            }
+
+            $csv->insertOne($row);
+        });
+
+        return $csv;
     }
 
     /**
@@ -100,7 +160,35 @@ abstract class Sprunje
     }
 
     /**
+     * Execute the query and build the results, and append them in the appropriate format to the response.
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    public function toResponse(Response $response)
+    {
+        $format = $this->options['format'];
+
+        if ($format == 'csv') {
+            $result = $this->getCsv();
+
+            // Prepare response
+            $settings = http_build_query($this->options);
+            $date = Carbon::now()->format('Ymd');
+            $response = $response->withAddedHeader('Content-Disposition', "attachment;filename=$date-{$this->name}-$settings.csv");
+            $response = $response->withAddedHeader('Content-Type', 'text/csv; charset=utf-8');
+            return $response->write($result);
+        // Default to JSON
+        } else {
+            $result = $this->getResults();
+            return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+        }
+    }
+
+    /**
      * Apply any filters from the options, calling a custom filter callback when appropriate.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     protected function applyFilters()
     {
@@ -119,7 +207,9 @@ abstract class Sprunje
     }
 
     /**
-     * Apply any sorts from the options, calling a custom filter callback when appropriate.
+     * Apply any sorts from the options, calling a custom sorter callback when appropriate.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     protected function applySorts()
     {
@@ -137,6 +227,11 @@ abstract class Sprunje
         return $this->query;
     }
 
+    /**
+     * Apply pagination based on the `page` and `size` options.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     protected function applyPagination()
     {
         if (
@@ -155,6 +250,9 @@ abstract class Sprunje
 
     /**
      * Set any transformations you wish to apply to the collection, after the query is executed.
+     *
+     * @param \Illuminate\Database\Eloquent\Collection $collection
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     protected function applyTransformations($collection)
     {

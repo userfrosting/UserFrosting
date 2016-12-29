@@ -21,13 +21,14 @@ use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
  */
 class UserSprunje extends Sprunje
 {
+    protected $name = 'users';
 
     protected $sortable = [];
 
     protected $filterable = [];
 
     /**
-     * Set the initial query used by your Sprunje.
+     * {@inheritDoc}
      */
     protected function baseQuery()
     {
@@ -37,6 +38,9 @@ class UserSprunje extends Sprunje
         return $query->joinLastActivity()->with('lastActivity');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function applyTransformations($collection)
     {
         // Exclude password field from results
@@ -48,11 +52,25 @@ class UserSprunje extends Sprunje
         return $collection;
     }
 
+    /**
+     * Filter LIKE the last activity description.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
     protected function filterLastActivity($query, $value)
     {
         return $query->like('activities.description', "%$value%");
     }
 
+    /**
+     * Filter LIKE the first name, last name, or email.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
     protected function filterName($query, $value)
     {
         return $query->like('first_name', $value)
@@ -60,11 +78,25 @@ class UserSprunje extends Sprunje
                      ->orLike('email', $value);
     }
 
+    /**
+     * Sort based on last activity time.
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return Builder
+     */
     protected function sortLastActivity($query, $direction)
     {
         return $query->orderBy('activities.occurred_at', $direction);
     }
 
+    /**
+     * Sort based on last name.
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return Builder
+     */
     protected function sortName($query, $direction)
     {
         return $query->orderBy('last_name', $direction);

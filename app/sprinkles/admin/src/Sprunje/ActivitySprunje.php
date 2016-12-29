@@ -21,6 +21,8 @@ use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
  */
 class ActivitySprunje extends Sprunje
 {
+    protected $name = 'activities';
+
     /**
      * Set the initial query used by your Sprunje.
      */

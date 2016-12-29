@@ -53,11 +53,12 @@ $(document).ready(function() {
     $("#alerts-users").ufAlerts('fetch').ufAlerts('render');
 
     $("#widget-users").ufTable({
-        dataUrl: site.uri.public + "/api/users",
+        dataUrl: site.uri.public + "/api/users"
+        /*
         addParams: {
-            "group": "users"
-        },
-        DEBUG: false
+            "group": "terran"
+        }
+        */
     });
 
     $("#widget-users").on("pagerComplete.ufTable", function () {

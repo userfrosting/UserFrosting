@@ -288,7 +288,7 @@
             $.extend(tableState, base.options.addParams);
 
             // Causes download to begin
-            window.location = base.options.dataUrl + $.param( tableState );
+            window.location = base.options.dataUrl + '?' + $.param( tableState );
         });
 
         base.ts.on("pagerComplete.ufTable", function () {
