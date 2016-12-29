@@ -215,7 +215,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -237,8 +237,9 @@ class UserController extends SimpleController
         // Check that we are not disabling the master account
         // Need to use loose comparison for now, because some DBs return `id` as a string
         if ($user->id == $config['reserved_user_ids.master']) {
-            $e = new ForbiddenException();
+            $e = new BadRequestException();
             $e->addUserMessage("DELETE_MASTER");
+            throw $e;
         }
 
         $userName = $user->user_name;
@@ -246,9 +247,14 @@ class UserController extends SimpleController
         $user->delete();
         unset($user);
 
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
         $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
             "user_name" => $userName
         ]);
+
+        return $response->withStatus(200);
     }
 
 
@@ -261,7 +267,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -280,7 +286,7 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'components/modals/confirm-delete-user.html.twig', [
             'user' => $user,
             'form' => [
-                'action' => '/api/users/u/' . $user->user_name
+                'action' => "api/users/u/{$user->user_name}",
             ]
         ]);
     }
@@ -410,7 +416,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
 
         $this->ci->db;
@@ -462,7 +468,7 @@ class UserController extends SimpleController
             'user' => $user,
             'groups' => $groups,
             'form' => [
-                'action' => "api/users/u/{$data['user_name']}",
+                'action' => "api/users/u/{$user->user_name}",
                 'fields' => $fields,
                 'buttons' => [
                     'hidden' => [
@@ -493,7 +499,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -534,7 +540,7 @@ class UserController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -749,7 +755,7 @@ class UserController extends SimpleController
         $user = $this->getUserFromParams($args);
 
         if (!$user) {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */

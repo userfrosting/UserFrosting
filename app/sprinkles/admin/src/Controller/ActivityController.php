@@ -71,7 +71,7 @@ class ActivityController extends SimpleController
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException();
+            throw new NotFoundException($request, $response);
         }
 
         // GET parameters
