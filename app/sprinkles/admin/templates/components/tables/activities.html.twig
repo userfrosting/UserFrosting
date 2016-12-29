@@ -56,9 +56,12 @@
 
     <script id="activity-table-column-description" type="text/x-handlebars-template">
         <td>
-            <strong>
+            <div>
+                {{row.ip_address}}
+            </div>
+            <div>
                 <i>{{row.description}}</i>
-            </strong>
+            </div>
         </td>
     </script>
     {% endverbatim %}

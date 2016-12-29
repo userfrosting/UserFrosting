@@ -42,7 +42,7 @@ class ActivityController extends SimpleController
         $params = $args;
 
        // Load request schema
-        $schema = new RequestSchema("schema://get-user.json");
+        $schema = new RequestSchema('schema://get-user.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

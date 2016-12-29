@@ -67,7 +67,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema("schema://create-user.json");
+        $schema = new RequestSchema('schema://create-user.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -89,12 +89,12 @@ class UserController extends SimpleController
 
         // Check if username or email already exists
         if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
-            $ms->addMessageTranslated("danger", "USERNAME.IN_USE", $data);
+            $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
             $error = true;
         }
 
         if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
+            $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
 
@@ -112,25 +112,25 @@ class UserController extends SimpleController
         $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
 
         // Set default values if not specified or not authorized
-        if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "locale"]))
+        if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property' => 'locale']))
             $data['locale'] = $this->_app->site->default_locale;
 
-        if (!isset($data['title']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "title"])) {
+        if (!isset($data['title']) || !$this->_app->user->checkAccess('update_account_setting', ['property' => 'title'])) {
             // Set default title for new users
             $data['title'] = $primaryGroup->new_user_title;
         }
 
-        if (!isset($data['primary_group_id']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "primary_group_id"])) {
+        if (!isset($data['primary_group_id']) || !$this->_app->user->checkAccess('update_account_setting', ['property' => 'primary_group_id'])) {
             $data['primary_group_id'] = $primaryGroup->id;
         }
 
         // Set groups to default groups if not specified or not authorized to set groups
-        if (!isset($data['groups']) || !$this->_app->user->checkAccess("update_account_setting", ["property" => "groups"])) {
+        if (!isset($data['groups']) || !$this->_app->user->checkAccess('update_account_setting', ['property' => 'groups'])) {
             $default_groups = Group::where('is_default', GROUP_DEFAULT)->get();
             $data['groups'] = [];
             foreach ($default_groups as $group){
                 $group_id = $group->id;
-                $data['groups'][$group_id] = "1";
+                $data['groups'][$group_id] = '1';
             }
         }
         */
@@ -141,7 +141,7 @@ class UserController extends SimpleController
 
         if (!$defaultGroup) {
             $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
-            $e->addUserMessage("ACCOUNT.REGISTRATION_BROKEN");
+            $e->addUserMessage('ACCOUNT.REGISTRATION_BROKEN');
             throw $e;
         }
 
@@ -153,7 +153,7 @@ class UserController extends SimpleController
 
         $data['flag_verified'] = 1;
         // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
-        $data['password'] = "";
+        $data['password'] = '';
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
@@ -182,18 +182,18 @@ class UserController extends SimpleController
             $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
 
             // Create and send welcome email with password set link
-            $message = new TwigMailMessage($this->ci->view, "mail/password-create.html.twig");
+            $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
 
             $this->ci->mailer->from($config['address_book.admin'])
                 ->addEmailRecipient($user->email, $user->full_name, [
                     'user' => $user,
-                    'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . " hours",
+                    'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
                     'token' => $passwordRequest->getToken()
                 ]);
 
             $this->ci->mailer->send($message);
 
-            $ms->addMessageTranslated("success", "ACCOUNT_CREATION_COMPLETE", $data);
+            $ms->addMessageTranslated('success', 'ACCOUNT_CREATION_COMPLETE', $data);
         });
 
         return $response->withStatus(200);
@@ -238,7 +238,7 @@ class UserController extends SimpleController
         // Need to use loose comparison for now, because some DBs return `id` as a string
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
-            $e->addUserMessage("DELETE_MASTER");
+            $e->addUserMessage('DELETE_MASTER');
             throw $e;
         }
 
@@ -250,8 +250,8 @@ class UserController extends SimpleController
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
-        $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
-            "user_name" => $userName
+        $ms->addMessageTranslated('success', 'DELETION_SUCCESSFUL', [
+            'user_name' => $userName
         ]);
 
         return $response->withStatus(200);
@@ -328,16 +328,16 @@ class UserController extends SimpleController
         $locale_list = $this->_app->site->getLocales();
 
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primary_group = Group::where("is_default", GROUP_DEFAULT_PRIMARY)->first();
+        $primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
 
         // If there is no default primary group, there is a problem.  Show an error message for now.
         if (!$primary_group){
-            $this->_app->alerts->addMessageTranslated("danger", "GROUP_DEFAULT_PRIMARY_NOT_DEFINED");
+            $this->_app->alerts->addMessageTranslated('danger', 'GROUP_DEFAULT_PRIMARY_NOT_DEFINED');
             $this->_app->halt(500);
         }
 
         // Get the default groups as a dictionary
-        $default_groups = Group::all()->where("is_default", GROUP_DEFAULT)->getDictionary();
+        $default_groups = Group::all()->where('is_default', GROUP_DEFAULT)->getDictionary();
 
         // Set default groups, including default primary group
         foreach ($groups as $group_id => $group){
@@ -390,14 +390,6 @@ class UserController extends SimpleController
                 'validators' => $validator->rules('json', false)
             ]
         ]);
-
-        /*
-        $this->_app->render($template, [
-            "box_id" => $get['box_id'],
-            "box_title" => "Create User",
-
-        ]);
-        */
     }
 
     /**
@@ -543,15 +535,16 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
+        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $this->ci->db;
-
-        $query = $classMapper->createInstance('user');
-
         // Join user's most recent activity
-        $query = $query->where('user_name', $data['user_name'])->joinLastActivity()->with('lastActivity', 'group');
+        $user = $classMapper->createInstance('user')
+                            ->where('user_name', $user->user_name)
+                            ->joinLastActivity()
+                            ->with('lastActivity', 'group')
+                            ->first();
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -559,16 +552,15 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        // Get the user to edit
-        $user = $query->first();
-
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user', ['user' => $user])) {
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
+            'user' => $user
+        ])) {
             throw new ForbiddenException();
         }
 
-        // Unset password
-        unset($user['password']);
+        // Exclude password from result set
+        unset($user->password);
 
         $result = $user->toArray();
 
@@ -680,9 +672,9 @@ class UserController extends SimpleController
         $hidden_fields = ['user_name', 'group'];
 
         foreach ($fields as $field) {
-            if ($authorizer->checkAccess($currentUser, "view_user_field", [
-                "user" => $user,
-                "property" => $field
+            if ($authorizer->checkAccess($currentUser, 'view_user_field', [
+                'user' => $user,
+                'property' => $field
             ])) {
                 $disabled_fields[] = $field;
             } else {
@@ -691,24 +683,24 @@ class UserController extends SimpleController
         }
 
         // Always disallow editing username
-        $disabled_fields[] = "user_name";
+        $disabled_fields[] = 'user_name';
 
         return $this->ci->view->render($response, 'pages/user.html.twig', [
-            "user" => $user,
-            "locales" => $locales,
-            "form" => [
-                "fields" => [
-                    "disabled" => $disabled_fields,
-                    "hidden" => $hidden_fields
+            'user' => $user,
+            'locales' => $locales,
+            'form' => [
+                'fields' => [
+                    'disabled' => $disabled_fields,
+                    'hidden' => $hidden_fields
                 ],
-                "buttons" => [
-                    "hidden" => [
-                        "submit", "cancel"
+                'buttons' => [
+                    'hidden' => [
+                        'submit', 'cancel'
                     ]
                 ]
             ]
             /*
-            "groups" => $group_list,
+            'groups' => $group_list,
             */
         ]);
     }
@@ -735,7 +727,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        return $this->ci->view->render($response, "pages/users.html.twig");
+        return $this->ci->view->render($response, 'pages/users.html.twig');
     }
 
     /**
@@ -769,6 +761,9 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
+        /** @var Config $config */
+        $config = $this->ci->config;
+
         // Only the master account can edit the master account!
         // Need to use loose comparison for now, because some DBs return `id` as a string
         if (
@@ -785,7 +780,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema("schema://edit-user.json");
+        $schema = new RequestSchema('schema://edit-user.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -807,7 +802,7 @@ class UserController extends SimpleController
 
         // Check if username or email already exists
         if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
+            $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
 
@@ -817,10 +812,6 @@ class UserController extends SimpleController
 
         // Determine if currentUser has permission to set the group.  Otherwise, use default group.
 
-        /** @var Config $config */
-        $config = $this->ci->config;
-        
-        
 
 
 
@@ -837,28 +828,28 @@ class UserController extends SimpleController
 
         // Check authorization for submitted fields, if the value has been changed
         foreach ($post as $name => $value) {
-            if ($name == "groups" || ($target_user->attributeExists($name) && $post[$name] != $target_user->$name)){
+            if ($name == 'groups' || ($target_user->attributeExists($name) && $post[$name] != $target_user->$name)){
                 // Check authorization
                 if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $target_user, 'property' => $name])){
-                    $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+                    $ms->addMessageTranslated('danger', 'ACCESS_DENIED');
                     $this->_app->halt(403);
                 }
             } else if (!$target_user->attributeExists($name)) {
-                $ms->addMessageTranslated("danger", "NO_DATA");
+                $ms->addMessageTranslated('danger', 'NO_DATA');
                 $this->_app->halt(400);
             }
         }
 
         // Check that we are not disabling the master account
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == "0"){
-            $ms->addMessageTranslated("danger", "ACCOUNT_DISABLE_MASTER");
+        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == '0'){
+            $ms->addMessageTranslated('danger', 'ACCOUNT_DISABLE_MASTER');
             $this->_app->halt(403);
         }
 
         // Check that the email address is not in use
         if (isset($post['email']) && $post['email'] != $target_user->email && User::where('email', $post['email'])->first()){
-            $ms->addMessageTranslated("danger", "ACCOUNT_EMAIL_IN_USE", $post);
+            $ms->addMessageTranslated('danger', 'ACCOUNT_EMAIL_IN_USE', $post);
             $this->_app->halt(400);
         }
 
@@ -873,23 +864,23 @@ class UserController extends SimpleController
             if ($value != $target_user->$name){
                 $target_user->$name = $value;
                 // Custom success messages (optional)
-                if ($name == "flag_enabled") {
-                    if ($value == "1")
-                        $ms->addMessageTranslated("success", "ACCOUNT_ENABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
+                if ($name == 'flag_enabled') {
+                    if ($value == '1')
+                        $ms->addMessageTranslated('success', 'ACCOUNT_ENABLE_SUCCESSFUL', ['user_name' => $target_user->user_name]);
                     else
-                        $ms->addMessageTranslated("success", "ACCOUNT_DISABLE_SUCCESSFUL", ["user_name" => $target_user->user_name]);
+                        $ms->addMessageTranslated('success', 'ACCOUNT_DISABLE_SUCCESSFUL', ['user_name' => $target_user->user_name]);
                 }
-                if ($name == "flag_verified") {
-                    $ms->addMessageTranslated("success", "ACCOUNT_MANUALLY_ACTIVATED", ["user_name" => $target_user->user_name]);
+                if ($name == 'flag_verified') {
+                    $ms->addMessageTranslated('success', 'ACCOUNT_MANUALLY_ACTIVATED', ['user_name' => $target_user->user_name]);
                 }
             }
         }
 
         // If we're generating a password reset, create the corresponding event and shoot off an email
-        if (isset($data['flag_password_reset']) && ($data['flag_password_reset'] == "1")){
+        if (isset($data['flag_password_reset']) && ($data['flag_password_reset'] == '1')){
             // Recheck auth
             if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $target_user, 'property' => 'flag_password_reset'])){
-                $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+                $ms->addMessageTranslated('danger', 'ACCESS_DENIED');
                 $this->_app->halt(403);
             }
             // New password reset event - bypass any rate limiting
@@ -897,26 +888,26 @@ class UserController extends SimpleController
             $target_user->save();
             // Email the user asking to confirm this change password request
             $twig = $this->_app->view()->getEnvironment();
-            $template = $twig->loadTemplate("mail/password-reset.twig");
+            $template = $twig->loadTemplate('mail/password-reset.twig');
             $notification = new Notification($template);
             $notification->fromWebsite();      // Automatically sets sender and reply-to
             $notification->addEmailRecipient($target_user->email, $target_user->display_name, [
-                "user" => $target_user,
-                "request_date" => date("Y-m-d H:i:s")
+                'user' => $target_user,
+                'request_date' => date('Y-m-d H:i:s')
             ]);
 
             try {
                 $notification->send();
             } catch (\phpmailerException $e){
-                $ms->addMessageTranslated("danger", "MAIL_ERROR");
+                $ms->addMessageTranslated('danger', 'MAIL_ERROR');
                 error_log('Mailer Error: ' . $e->errorMessage());
                 $this->_app->halt(500);
             }
 
-            $ms->addMessageTranslated("success", "FORGOTPASS_REQUEST_SENT", ["user_name" => $target_user->user_name]);
+            $ms->addMessageTranslated('success', 'FORGOTPASS_REQUEST_SENT', ['user_name' => $target_user->user_name]);
         }
 
-        $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
+        $ms->addMessageTranslated('success', 'ACCOUNT_DETAILS_UPDATED', ['user_name' => $target_user->user_name]);
         $user->save();
     }
 
@@ -926,7 +917,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema("schema://get-user.json");
+        $schema = new RequestSchema('schema://get-user.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
