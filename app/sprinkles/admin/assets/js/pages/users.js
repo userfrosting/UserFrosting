@@ -38,7 +38,7 @@ function updateUser(userName, data) {
     data[site.csrf.keys.name] = site.csrf.name;
     data[site.csrf.keys.value] = site.csrf.value;
 
-    var url = site.uri.public + "/users/u/" + userName;
+    var url = site.uri.public + "/api/users/u/" + userName;
 
     return $.ajax({
         type: "POST",

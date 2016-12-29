@@ -211,51 +211,18 @@ class UserController extends SimpleController
      */
     public function deleteUser($request, $response, $args)
     {
-        // Get URL parameters: user_name
-        $params = $args;
+        $user = $this->getUserFromParams($args);
 
-        /** @var MessageStream $ms */
-        $ms = $this->ci->alerts;
-
-        // Load the request schema
-        $schema = new RequestSchema("schema://get-user.json");
-
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        $error = false;
-
-        // Validate request data
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            $ms->addValidationErrors($validator);
-            $error = true;
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
         }
-
-        if ($error) {
-            return $response->withStatus(400);
-        }
-
-        $this->ci->db;
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
-
-        // Get the user to delete
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
-            ->first();
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException();
-        }
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
@@ -274,11 +241,13 @@ class UserController extends SimpleController
             $e->addUserMessage("DELETE_MASTER");
         }
 
+        $userName = $user->user_name;
+
         $user->delete();
         unset($user);
 
         $ms->addMessageTranslated("success", "DELETION_SUCCESSFUL", [
-            "user_name" => $data['user_name']
+            "user_name" => $userName
         ]);
     }
 
@@ -288,24 +257,11 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-       // Load request schema
-        $schema = new RequestSchema('schema://get-user.json');
+        $user = $this->getUserFromParams($params);
 
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        // Validate, and halt on validation errors.  This is a GET request, so we redirect on validation error.
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
-            $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
-                    $e->addUserMessage($error);
-                }
-            }
-            throw $e;
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -313,15 +269,6 @@ class UserController extends SimpleController
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first();
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException();
-        }
 
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
@@ -448,57 +395,38 @@ class UserController extends SimpleController
     }
 
     /**
-     * Renders the form for editing an existing user.
+     * Renders the modal form for editing an existing user.
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
-     * @param int $user_id the id of the user to edit.
      */
     public function getModalEditUser($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
 
-       // Load request schema
-        $schema = new RequestSchema('schema://get-user.json');
+        $user = $this->getUserFromParams($params);
 
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        // Validate, and halt on validation errors.  This is a GET request, so we redirect on validation error.
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
-            $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
-                    $e->addUserMessage($error);
-                }
-            }
-            throw $e;
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
         }
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
 
         $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Get the user to edit
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $user->user_name)
             ->with('group')
             ->first();
 
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException();
-        }
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "email", "theme", "locale" for this user
         $fieldNames = ['name', 'email', 'theme', 'locale'];
@@ -561,24 +489,11 @@ class UserController extends SimpleController
         // GET parameters
         $params = $request->getQueryParams();
 
-        // Load request schema
-        $schema = new RequestSchema('schema://get-user.json');
+        $user = $this->getUserFromParams($params);
 
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        // Validate, and halt on validation errors.  This is a GET request, so we redirect on validation error.
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
-            $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
-                    $e->addUserMessage($error);
-                }
-            }
-            throw $e;
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -586,16 +501,6 @@ class UserController extends SimpleController
 
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
-
-        $this->ci->db;
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first();
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException();
-        }
 
         // Access-controlled resource - check that currentUser has permission to edit "password" field for this user
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
@@ -625,27 +530,11 @@ class UserController extends SimpleController
      */
     public function getUser($request, $response, $args)
     {
-        // URI parameters
-        $params = $args;
+        $user = $this->getUserFromParams($args);
 
-       // Load request schema
-        $schema = new RequestSchema("schema://get-user.json");
-
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        // Validate, and halt on validation errors.  This is a GET request, so we redirect on validation error.
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
-            $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
-                    $e->addUserMessage($error);
-                }
-            }
-            throw $e;
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException();
         }
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -752,18 +641,12 @@ class UserController extends SimpleController
      */
     public function pageUser($request, $response, $args)
     {
-        // Get the user to view
-        $user_name = $args['user_name'];
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-        $this->ci->db;
-        $user = $classMapper->staticMethod('user', 'where', 'user_name', $user_name)->first();
+        $user = $this->getUserFromParams($args);
 
         // If the user no longer exists, forward to main user listing page
         if (!$user) {
             $usersPage = $this->ci->router->pathFor('uri_users');
-            return $response->withRedirect($usersPage, 400);
+            return $response->withRedirect($usersPage, 404);
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -831,8 +714,6 @@ class UserController extends SimpleController
      * Actions typically include: edit user details, activate user, enable/disable user, delete user.
      * This page requires authentication.
      * Request type: GET
-     * @param string $primary_group_name optional.  If specified, will only display users in that particular primary group.
-     * @param bool $paginate_server_side optional.  Set to true if you want UF to load each page of results via AJAX on demand, rather than all at once.
      * @todo implement interface to modify user-assigned authorization hooks and permissions
      */
     public function pageUsers($request, $response, $args)
@@ -861,38 +742,82 @@ class UserController extends SimpleController
      * 4. The submitted data is valid.
      * This route requires authentication.
      * Request type: POST
-     * @param int $user_id the id of the user to edit.
-     * @see formUserEdit
      */
-    public function updateUser($user_id){
-        $post = $this->_app->request->post();
+    public function updateUser($request, $response, $args)
+    {
+        // Get the username from the URL
+        $user = $this->getUserFromParams($args);
 
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/user-update.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Get the target user
-        $target_user = User::find($user_id);
-
-        // Get the target user's groups
-        $groups = $target_user->getGroups();
-
-        /*
-        // Access control for entire page
-        if (!$this->_app->user->checkAccess('uri_update_user')){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
+        if (!$user) {
+            throw new NotFoundException();
         }
-        */
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'update_user')) {
+            throw new ForbiddenException();
+        }
 
         // Only the master account can edit the master account!
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        if (($target_user->id == $this->_app->config('user_id_master')) && $this->_app->user->id != $this->_app->config('user_id_master')) {
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
+        if (
+            ($user->id == $config['reserved_user_ids.master']) &&
+            ($currentUser->id != $config['reserved_user_ids.master'])
+        ) {
+            throw new ForbiddenException();
         }
+
+        // Get POST parameters: user_name, first_name, last_name, email, theme, locale, csrf_token, (group)
+        $params = $request->getParsedBody();
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://edit-user.json");
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
+        }
+
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if username or email already exists
+        if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
+            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
+
+        // Determine if currentUser has permission to set the group.  Otherwise, use default group.
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+        
+        
+
+
+
 
         // Remove csrf_token
         unset($post['csrf_token']);
@@ -931,31 +856,6 @@ class UserController extends SimpleController
             $this->_app->halt(400);
         }
 
-        // Sanitize
-        $rf->sanitize();
-
-        // Validate, and halt on validation errors.
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
-        }
-
-        // Remove passwordc
-        $rf->removeFields(['passwordc']);
-
-        // Get the filtered data
-        $data = $rf->data();
-
-        // Update user groups
-        if (isset($data['groups'])){
-            foreach ($data['groups'] as $group_id => $is_member) {
-                if ($is_member == "1" && !isset($groups[$group_id])){
-                    $target_user->addGroup($group_id);
-                } else if ($is_member == "0" && isset($groups[$group_id])){
-                    $target_user->removeGroup($group_id);
-                }
-            }
-            unset($data['groups']);
-        }
 
         // Hash password
         if (isset($data['password'])){
@@ -1011,6 +911,43 @@ class UserController extends SimpleController
         }
 
         $ms->addMessageTranslated("success", "ACCOUNT_DETAILS_UPDATED", ["user_name" => $target_user->user_name]);
-        $target_user->save();
+        $user->save();
+    }
+
+    protected function getUserFromParams($params)
+    {
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://get-user.json");
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and throw exception on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            $e = new BadRequestException();
+            foreach ($validator->errors() as $idx => $field) {
+                foreach($field as $eidx => $error) {
+                    $e->addUserMessage($error);
+                }
+            }
+            throw $e;
+        }
+
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Get the user to delete
+        $user = $classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])
+            ->first();
+
+        return $user;
     }
 }
