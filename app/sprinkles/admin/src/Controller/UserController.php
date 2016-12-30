@@ -1004,11 +1004,11 @@ class UserController extends SimpleController
                     'user_name' => $user->user_name
                 ]);
             }
-        } else if ($field == 'flag_verified') {
+        } else if ($fieldName == 'flag_verified') {
             $ms->addMessageTranslated('success', 'MANUALLY_ACTIVATED', [
                 'user_name' => $user->user_name
             ]);
-        } else if ($field == 'password') {
+        } else if ($fieldName == 'password') {
             $fieldValue = Password::hash($fieldValue);
             $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
                 'user_name' => $user->user_name
