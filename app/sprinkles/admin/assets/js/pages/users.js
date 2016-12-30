@@ -67,13 +67,15 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
 /**
  * Update user field(s)
  */
-function updateUser(userName, data) {
-	data = typeof data !== 'undefined' ? data : {};
+function updateUser(userName, fieldName, fieldValue) {
+	data = {
+        'value': fieldValue
+    };
 
     data[site.csrf.keys.name] = site.csrf.name;
     data[site.csrf.keys.value] = site.csrf.value;
 
-    var url = site.uri.public + "/api/users/u/" + userName;
+    var url = site.uri.public + '/api/users/u/' + userName + '/' + fieldName;
 
     return $.ajax({
         type: "PUT",
@@ -187,9 +189,7 @@ $(document).ready(function() {
          */
         $(this).find('.js-user-activate').click(function() {
             var btn = $(this);
-            updateUser(btn.data('user_name'), {
-                flag_verified: '1'
-            })
+            updateUser(btn.data('user_name'), 'flag_verified', '1')
             .always(function(response) {
                 // Reload page after updating user details
                 window.location.reload();
@@ -198,9 +198,7 @@ $(document).ready(function() {
 
         $(this).find('.js-user-enable').click(function () {
             var btn = $(this);
-            updateUser(btn.data('user_name'), {
-                flag_enabled: '1'
-            })
+            updateUser(btn.data('user_name'), 'flag_enabled', '1')
             .always(function(response) {
                 // Reload page after updating user details
                 window.location.reload();
@@ -209,9 +207,7 @@ $(document).ready(function() {
 
         $(this).find('.js-user-disable').click(function () {
             var btn = $(this);
-            updateUser(btn.data('user_name'), {
-                flag_enabled: '0'
-            })
+            updateUser(btn.data('user_name'), 'flag_enabled', '0')
             .always(function(response) {
                 // Reload page after updating user details
                 window.location.reload();

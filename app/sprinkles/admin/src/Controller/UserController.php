@@ -818,7 +818,7 @@ class UserController extends SimpleController
         /** @var Config $config */
         $config = $this->ci->config;
 
-        // Get POST parameters: first_name, last_name, email, theme, locale, (group_id)
+        // Get PUT parameters: first_name, last_name, email, theme, locale, (group_id)
         $params = $request->getParsedBody();
 
         /** @var MessageStream $ms */
@@ -920,42 +920,113 @@ class UserController extends SimpleController
      */
     public function updateUserField($request, $response, $args)
     {
-        // Check that we are not disabling the master account
-        // Need to use loose comparison for now, because some DBs return `id` as a string
-        if (
-            ($user->id == $config['reserved_user_ids.master']) &&
-            isset($data['flag_enabled']) &&
-            ($data['flag_enabled'] == '0')
-        ) {
-            $e = new ForbiddenException();
-            $e->addUserMessage('ACCOUNT_DISABLE_MASTER');
-            throw $e;
-        }
-        if (isset($post['passwordc'])){
-            unset($post['passwordc']);
+        // Get the username from the URL
+        $user = $this->getUserFromParams($args);
+
+        if (!$user) {
+            throw new NotFoundException($request, $response);
         }
 
-        // Hash password
-        if (isset($data['password'])){
-            $data['password'] = Authentication::hashPassword($data['password']);
+        // Get key->value pair from URL and request body
+        $fieldName = $args['field'];
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => [$fieldName]
+        ])) {
+            throw new ForbiddenException();
         }
-                // Custom success messages (optional)
-                if ($name == 'flag_enabled') {
-                    if ($value == '1')
-                        $ms->addMessageTranslated('success', 'ACCOUNT_ENABLE_SUCCESSFUL', ['user_name' => $target_user->user_name]);
-                    else
-                        $ms->addMessageTranslated('success', 'ACCOUNT_DISABLE_SUCCESSFUL', ['user_name' => $target_user->user_name]);
+
+        // Get PUT parameters: value
+        $put = $request->getParsedBody();
+
+        if (!isset($put['value'])) {
+            throw new BadRequestException();
+        }
+
+        $params = [
+            $fieldName => $put['value']
+        ];
+
+        // Validate key -> value pair
+
+        // Load the request schema
+        $schema = new RequestSchema('schema://edit-user.json');
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and throw exception on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            $e = new BadRequestException();
+            foreach ($validator->errors() as $idx => $field) {
+                foreach($field as $eidx => $error) {
+                    $e->addUserMessage($error);
                 }
-                if ($name == 'flag_verified') {
-                    $ms->addMessageTranslated('success', 'ACCOUNT_MANUALLY_ACTIVATED', ['user_name' => $target_user->user_name]);
-                }
+            }
+            throw $e;
+        }
+
+        // Get validated and transformed value
+        $fieldValue = $data[$fieldName];
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        if ($fieldName == 'flag_enabled') {
+            // Check that we are not disabling the master account            
+            if (($user->id == $config['reserved_user_ids.master']) &&
+                ($fieldValue == '0')
+            ) {
+                $e = new ForbiddenException();
+                $e->addUserMessage('DISABLE_MASTER');
+                throw $e;
+            }
+            if ($fieldValue == '1') {
+                $ms->addMessageTranslated('success', 'ENABLE_SUCCESSFUL', [
+                    'user_name' => $user->user_name
+                ]);
+            } else {
+                $ms->addMessageTranslated('success', 'DISABLE_SUCCESSFUL', [
+                    'user_name' => $user->user_name
+                ]);
+            }
+        } else if ($field == 'flag_verified') {
+            $ms->addMessageTranslated('success', 'MANUALLY_ACTIVATED', [
+                'user_name' => $user->user_name
+            ]);
+        } else if ($field == 'password') {
+            $fieldValue = Password::hash($fieldValue);
+            $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
+                'user_name' => $user->user_name
+            ]);
+        } else {
+            $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
+                'user_name' => $user->user_name
+            ]);
+        }
+
+        $user->$fieldName = $fieldValue;
+        $user->save();
+
+        return $response->withStatus(200);
     }
 
     protected function getUserFromParams($params)
     {
-        /** @var MessageStream $ms */
-        $ms = $this->ci->alerts;
-
         // Load the request schema
         $schema = new RequestSchema('schema://get-user.json');
 
