@@ -28,7 +28,11 @@ $app->group('/api/users', function () {
 
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUser');
 
-    $this->post('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUser');
+    $this->post('/u/{user_name}/password-reset', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUserPasswordReset');
+
+    $this->put('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUser');
+
+    $this->put('/u/{user_name}/{field}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUserField');
 });
 
 $app->group('/modals/users', function () {

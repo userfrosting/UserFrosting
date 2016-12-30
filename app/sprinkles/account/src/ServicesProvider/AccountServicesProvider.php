@@ -175,6 +175,8 @@ class AccountServicesProvider
          * Determines permissions for user actions.  Extend this service to add additional access condition callbacks.
          */
         $container['authorizer'] = function ($c) {
+            $config = $c->config;
+
             // Default access condition callbacks.  Add more in your sprinkle by using $container->extend(...)
             $callbacks = [
                 /**
@@ -247,6 +249,17 @@ class AccountServicesProvider
                 'in_group' => function ($user_id, $group_id) {
                     $user = User::find($user_id);
                     return ($user->group_id == $group_id);
+                },
+
+                /**
+                 * Check if the specified user (by user_id) is the master user.
+                 *
+                 * @param int $user_id the id of the user.
+                 * @return bool true if the user id is equal to the id of the master account, false otherwise.
+                 */
+                'is_master' => function ($user_id) use ($config) {
+                    // Need to use loose comparison for now, because some DBs return `id` as a string
+                    return ($user->id == $config['reserved_user_ids.master']);
                 },
 
                 /**

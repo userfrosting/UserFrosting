@@ -8,6 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
+use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -200,6 +201,69 @@ class UserController extends SimpleController
     }
 
     /**
+     * Processes the request to send a user a password reset email.
+     *
+     * Processes the request from the user update form, checking that:
+     * 1. The target user's new email address, if specified, is not already in use;
+     * 2. The logged-in user has the necessary permissions to update the posted field(s);
+     * 3. We're not trying to disable the master account;
+     * 4. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST
+     */
+    public function createUserPasswordReset($request, $response, $args)
+    {
+        // Get the username from the URL
+        $user = $this->getUserFromParams($args);
+
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled resource - check that currentUser has permission to edit "password" for this user
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['password']
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($user, $config) {
+
+            // Create a password reset and shoot off an email
+            $passwordReset = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.reset']);
+    
+            // Create and send welcome email with password set link
+            $message = new TwigMailMessage($this->ci->view, 'mail/password-reset.html.twig');
+    
+            $this->ci->mailer->from($config['address_book.admin'])
+                ->addEmailRecipient($user->email, $user->full_name, [
+                    'user' => $user,
+                    'token' => $passwordReset->getToken(),
+                    'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                ]);
+    
+            $this->ci->mailer->send($message);
+        });
+
+        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", ['email' => $data['email']]);
+        return $response->withStatus(200);
+    }
+
+    /**
      * Processes the request to delete an existing user.
      *
      * Deletes the specified user, removing any existing associations.
@@ -234,7 +298,7 @@ class UserController extends SimpleController
         /** @var Config $config */
         $config = $this->ci->config;
 
-        // Check that we are not disabling the master account
+        // Check that we are not deleting the master account
         // Need to use loose comparison for now, because some DBs return `id` as a string
         if ($user->id == $config['reserved_user_ids.master']) {
             $e = new BadRequestException();
@@ -378,6 +442,7 @@ class UserController extends SimpleController
             ],
             'form' => [
                 'action' => 'api/users',
+                'method' => 'POST',
                 'fields' => $fields,
                 'buttons' => [
                     'hidden' => [
@@ -461,6 +526,7 @@ class UserController extends SimpleController
             'groups' => $groups,
             'form' => [
                 'action' => "api/users/u/{$user->user_name}",
+                'method' => 'PUT',
                 'fields' => $fields,
                 'buttons' => [
                     'hidden' => [
@@ -756,8 +822,12 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'update_user')) {
+        // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "email", "theme", "locale" for this user
+        $fieldNames = ['name', 'email', 'theme', 'locale'];
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => $fieldNames
+        ])) {
             throw new ForbiddenException();
         }
 
@@ -773,7 +843,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        // Get POST parameters: user_name, first_name, last_name, email, theme, locale, csrf_token, (group)
+        // Get POST parameters: first_name, last_name, email, theme, locale, csrf_token, (group)
         $params = $request->getParsedBody();
 
         /** @var MessageStream $ms */
@@ -795,13 +865,37 @@ class UserController extends SimpleController
             $error = true;
         }
 
+        // If a 'group' was submitted, but current user doesn't have permission to modify 'group', then throw an error
+        if (isset($data['group_id']) && !$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['group']
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        // Check that we are not disabling the master account
+        // Need to use loose comparison for now, because some DBs return `id` as a string
+        if (
+            ($user->id == $config['reserved_user_ids.master']) &&
+            isset($data['flag_enabled']) &&
+            ($data['flag_enabled'] == '0')
+        ) {
+            $e = new ForbiddenException();
+            $e->addUserMessage('ACCOUNT_DISABLE_MASTER');
+            throw $e;
+        }
+
         $this->ci->db;
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
+        if (
+            isset($data['email']) &&
+            $data['email'] != $user->email &&
+            $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()
+        ) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
@@ -810,49 +904,10 @@ class UserController extends SimpleController
             return $response->withStatus(400);
         }
 
-        // Determine if currentUser has permission to set the group.  Otherwise, use default group.
-
-
-
-
-
-        // Remove csrf_token
-        unset($post['csrf_token']);
-
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
 
         if (isset($post['passwordc'])){
             unset($post['passwordc']);
         }
-
-        // Check authorization for submitted fields, if the value has been changed
-        foreach ($post as $name => $value) {
-            if ($name == 'groups' || ($target_user->attributeExists($name) && $post[$name] != $target_user->$name)){
-                // Check authorization
-                if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $target_user, 'property' => $name])){
-                    $ms->addMessageTranslated('danger', 'ACCESS_DENIED');
-                    $this->_app->halt(403);
-                }
-            } else if (!$target_user->attributeExists($name)) {
-                $ms->addMessageTranslated('danger', 'NO_DATA');
-                $this->_app->halt(400);
-            }
-        }
-
-        // Check that we are not disabling the master account
-        // Need to use loose comparison for now, because some DBs return `id` as a string
-        if (($target_user->id == $this->_app->config('user_id_master')) && isset($post['flag_enabled']) && $post['flag_enabled'] == '0'){
-            $ms->addMessageTranslated('danger', 'ACCOUNT_DISABLE_MASTER');
-            $this->_app->halt(403);
-        }
-
-        // Check that the email address is not in use
-        if (isset($post['email']) && $post['email'] != $target_user->email && User::where('email', $post['email'])->first()){
-            $ms->addMessageTranslated('danger', 'ACCOUNT_EMAIL_IN_USE', $post);
-            $this->_app->halt(400);
-        }
-
 
         // Hash password
         if (isset($data['password'])){
@@ -874,37 +929,6 @@ class UserController extends SimpleController
                     $ms->addMessageTranslated('success', 'ACCOUNT_MANUALLY_ACTIVATED', ['user_name' => $target_user->user_name]);
                 }
             }
-        }
-
-        // If we're generating a password reset, create the corresponding event and shoot off an email
-        if (isset($data['flag_password_reset']) && ($data['flag_password_reset'] == '1')){
-            // Recheck auth
-            if (!$this->_app->user->checkAccess('update_account_setting', ['user' => $target_user, 'property' => 'flag_password_reset'])){
-                $ms->addMessageTranslated('danger', 'ACCESS_DENIED');
-                $this->_app->halt(403);
-            }
-            // New password reset event - bypass any rate limiting
-            $target_user->newEventPasswordReset();
-            $target_user->save();
-            // Email the user asking to confirm this change password request
-            $twig = $this->_app->view()->getEnvironment();
-            $template = $twig->loadTemplate('mail/password-reset.twig');
-            $notification = new Notification($template);
-            $notification->fromWebsite();      // Automatically sets sender and reply-to
-            $notification->addEmailRecipient($target_user->email, $target_user->display_name, [
-                'user' => $target_user,
-                'request_date' => date('Y-m-d H:i:s')
-            ]);
-
-            try {
-                $notification->send();
-            } catch (\phpmailerException $e){
-                $ms->addMessageTranslated('danger', 'MAIL_ERROR');
-                error_log('Mailer Error: ' . $e->errorMessage());
-                $this->_app->halt(500);
-            }
-
-            $ms->addMessageTranslated('success', 'FORGOTPASS_REQUEST_SENT', ['user_name' => $target_user->user_name]);
         }
 
         $ms->addMessageTranslated('success', 'ACCOUNT_DETAILS_UPDATED', ['user_name' => $target_user->user_name]);

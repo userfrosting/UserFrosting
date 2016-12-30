@@ -180,7 +180,7 @@ class AccountController extends SimpleController
         // TODO: create delay to prevent timing-based attacks
 
         $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", ['email' => $data['email']]);
-        $response->withStatus(200);
+        return $response->withStatus(200);
     }
 
     /**

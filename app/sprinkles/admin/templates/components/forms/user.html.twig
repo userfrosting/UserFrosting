@@ -1,4 +1,4 @@
-<form class="js-form-user" method="post" action="{{site.uri.public}}/{{form.action}}">
+<form class="js-form-user" method="{{form.method}}" action="{{site.uri.public}}/{{form.action}}">
     {% include "components/csrf.html.twig" %}
     <div class="js-form-user-alerts">
     </div>

@@ -1,26 +1,4 @@
 {
-    "user_name" : {
-        "validators" : {
-            "length" : {
-                "label" : "&USERNAME",
-                "min" : 1,
-                "max" : 50,
-                "message" : "VALIDATE.LENGTH_RANGE"
-            },
-            "no_leading_whitespace" : {
-                "label" : "&USERNAME",
-                "message" : "VALIDATE.NO_LEAD_WS"
-            },
-            "no_trailing_whitespace" : {
-                "label" : "&USERNAME",
-                "message" : "VALIDATE.NO_TRAIL_WS"
-            },
-            "required" : {
-                "label" : "&USERNAME",
-                "message" : "VALIDATE.REQUIRED"
-            }
-        }
-    },
     "first_name" : {
         "validators" : {
             "length" : {
@@ -43,10 +21,6 @@
     },
     "email" : {
         "validators" : {
-            "required" : {
-                "label" : "&EMAIL",
-                "message" : "VALIDATE.REQUIRED"
-            },
             "length" : {
                 "label" : "&EMAIL",
                 "min" : 1,
@@ -58,40 +32,15 @@
             }
         }
     },
-    "locale" : {
-        "validators" : {
-
-        }
-    },
-    "password" : {
-        "validators" : {
-            "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
-            }
-        }
-    },
-    "passwordc" : {
-        "validators" : {
-            "matches" : {
-                "field" : "password",
-                "message" : "ACCOUNT_PASS_MISMATCH"
-            },
-            "length" : {
-                "min" : 8,
-                "max" : 50,
-                "message" : "ACCOUNT_PASS_CHAR_LIMIT"
-            }
-        }
-    },
+    "locale" : {},
+    "theme" : {},
     "flag_enabled" : {
         "validators" : {
             "member_of" : {
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "VALIDATE_BOOLEAN"
+                "message" : "VALIDATE.BOOLEAN"
             }
         }
     },
@@ -101,7 +50,7 @@
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "VALIDATE_BOOLEAN"
+                "message" : "VALIDATE.BOOLEAN"
             }
         }
     },
@@ -111,7 +60,7 @@
                 "values" : [
                     "0", "1"
                 ],
-                "message" : "VALIDATE_BOOLEAN"
+                "message" : "VALIDATE.BOOLEAN"
             }
         }
     }
