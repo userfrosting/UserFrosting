@@ -949,6 +949,9 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
+        /** @var Config $config */
+        $config = $this->ci->config;
+
         // Only the master account can edit the master account!
         if (
             ($user->id == $config['reserved_user_ids.master']) &&
@@ -992,9 +995,6 @@ class UserController extends SimpleController
 
         // Get validated and transformed value
         $fieldValue = $data[$fieldName];
-
-        /** @var Config $config */
-        $config = $this->ci->config;
 
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
