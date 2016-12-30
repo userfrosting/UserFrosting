@@ -116,23 +116,8 @@ class UserController extends SimpleController
         if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property' => 'locale']))
             $data['locale'] = $this->_app->site->default_locale;
 
-        if (!isset($data['title']) || !$this->_app->user->checkAccess('update_account_setting', ['property' => 'title'])) {
-            // Set default title for new users
-            $data['title'] = $primaryGroup->new_user_title;
-        }
-
         if (!isset($data['primary_group_id']) || !$this->_app->user->checkAccess('update_account_setting', ['property' => 'primary_group_id'])) {
             $data['primary_group_id'] = $primaryGroup->id;
-        }
-
-        // Set groups to default groups if not specified or not authorized to set groups
-        if (!isset($data['groups']) || !$this->_app->user->checkAccess('update_account_setting', ['property' => 'groups'])) {
-            $default_groups = Group::where('is_default', GROUP_DEFAULT)->get();
-            $data['groups'] = [];
-            foreach ($default_groups as $group){
-                $group_id = $group->id;
-                $data['groups'][$group_id] = '1';
-            }
         }
         */
 
@@ -394,27 +379,6 @@ class UserController extends SimpleController
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
         $primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
 
-        // If there is no default primary group, there is a problem.  Show an error message for now.
-        if (!$primary_group){
-            $this->_app->alerts->addMessageTranslated('danger', 'GROUP_DEFAULT_PRIMARY_NOT_DEFINED');
-            $this->_app->halt(500);
-        }
-
-        // Get the default groups as a dictionary
-        $default_groups = Group::all()->where('is_default', GROUP_DEFAULT)->getDictionary();
-
-        // Set default groups, including default primary group
-        foreach ($groups as $group_id => $group){
-            $group_list[$group_id] = $group->export();
-            if (isset($default_groups[$group_id]) || $group_id == $primary_group->id)
-                $group_list[$group_id]['member'] = true;
-            else
-                $group_list[$group_id]['member'] = false;
-        }
-
-        $data['primary_group_id'] = $primary_group->id;
-        // Set default title for new users
-        $data['title'] = $primary_group->new_user_title;
         // Set default locale
         $data['locale'] = $this->_app->site->default_locale;
         */

@@ -12,7 +12,7 @@
             $table->string('ip_address', 45)->nullable();
             $table->integer('user_id')->unsigned();
             $table->string('type', 255)->comment('An identifier used to track the type of activity.');
-            $table->timestamp('occurred_at');
+            $table->timestamp('occurred_at')->nullable();
             $table->text('description')->nullable();
 
             $table->engine = 'InnoDB';
@@ -305,7 +305,7 @@
             $table->integer('user_id')->unsigned();
             $table->string('token', 40);
             $table->string('persistent_token', 40);
-            $table->timestamp('expires_at');
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
 
             $table->engine = 'InnoDB';
