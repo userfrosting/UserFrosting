@@ -818,7 +818,7 @@ class UserController extends SimpleController
         /** @var Config $config */
         $config = $this->ci->config;
 
-        // Get PUT parameters: first_name, last_name, email, theme, locale, (group_id)
+        // Get PUT parameters: (first_name, last_name, email, theme, locale, password, group_id)
         $params = $request->getParsedBody();
 
         /** @var MessageStream $ms */
@@ -893,6 +893,11 @@ class UserController extends SimpleController
             return $response->withStatus(400);
         }
 
+        // Hash password, if a new password was specified
+        if (isset($data['password'])) {
+            $data['password'] = Password::hash($data['password']);
+        }
+
         // Update the user and generate success messages
         foreach ($data as $name => $value) {
             if ($value != $user->$name){
@@ -941,6 +946,14 @@ class UserController extends SimpleController
             'user' => $user,
             'fields' => [$fieldName]
         ])) {
+            throw new ForbiddenException();
+        }
+
+        // Only the master account can edit the master account!
+        if (
+            ($user->id == $config['reserved_user_ids.master']) &&
+            ($currentUser->id != $config['reserved_user_ids.master'])
+        ) {
             throw new ForbiddenException();
         }
 

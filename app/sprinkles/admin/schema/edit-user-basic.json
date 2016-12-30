@@ -40,5 +40,15 @@
                 "message" : "VALIDATE.INTEGER"
             }
         }
+    },
+    "password" : {
+        "validators" : {
+            "length" : {
+                "label" : "&PASSWORD",
+                "min" : 12,
+                "max" : 100,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
     }
 }

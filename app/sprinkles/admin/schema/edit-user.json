@@ -70,20 +70,5 @@
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
         }
-    },
-    "passwordc" : {
-        "validators" : {
-            "matches" : {
-                "field" : "password",
-                "label" : "&PASSWORD.CONFIRM",
-                "message" : "VALIDATE.PASSWORD_MISMATCH"
-            },
-            "length" : {
-                "label" : "&PASSWORD.CONFIRM",
-                "min" : 12,
-                "max" : 100,
-                "message" : "VALIDATE.LENGTH_RANGE"
-            }
-        }
     }
 }

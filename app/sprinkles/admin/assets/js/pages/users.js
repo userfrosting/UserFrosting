@@ -33,7 +33,6 @@ function attachUserForm() {
 function toggleChangePasswordMode(el, userName, changePasswordMode) {
     if (changePasswordMode == 'link') {
         $(".controls-password").find("input[type='password']").prop('disabled', true);
-        el.find("input[name='flag_password_reset']").prop('disabled', false);
         // Form submits password reset request
         var form = el.find("form");
         form
@@ -56,11 +55,10 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
         });
     } else {
         $(".controls-password").find("input[type='password']").prop('disabled', false);
-        el.find("input[name='flag_password_reset']").prop('disabled', true);
         // Form submits direct password update
         el.find("form")
         .prop('method', 'PUT')
-        .prop('action', site.uri.public + '/api/users/u/' + userName + '/password');
+        .prop('action', site.uri.public + '/api/users/u/' + userName);
     }
 }
 
