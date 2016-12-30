@@ -259,7 +259,7 @@ class AccountServicesProvider
                  */
                 'is_master' => function ($user_id) use ($config) {
                     // Need to use loose comparison for now, because some DBs return `id` as a string
-                    return ($user->id == $config['reserved_user_ids.master']);
+                    return ($user_id == $config['reserved_user_ids.master']);
                 },
 
                 /**
