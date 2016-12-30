@@ -138,7 +138,7 @@
                 'id' => 2,
                 'slug' => 'update_user_field',
                 'name' => 'Edit user',
-                'conditions' => '!has_role(user.id,2)&&subset(fields,["name","email","theme","locale","group","flag_enabled","password"])',
+                'conditions' => '!has_role(user.id,2)&&subset(fields,["name","email","theme","locale","group","flag_enabled","flag_verified","password"])',
                 'description' => 'Edit users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime
@@ -156,7 +156,7 @@
                 'id' => 4,
                 'slug' => 'delete_user',
                 'name' => 'Delete user',
-                'conditions' => '!has_role(user.id,2)',
+                'conditions' => '!has_role(user.id,2) && !is_master(user.id)',
                 'description' => 'Delete users who are not Site Administrators.',
                 'created_at' => $installTime,
                 'updated_at' => $installTime

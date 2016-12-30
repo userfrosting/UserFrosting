@@ -114,7 +114,9 @@
         base.delete;
 
         // Remove the modal from the selector
-        base.modal.remove();
+        if (base.modal) {
+            base.modal.remove();
+        }
 
         // Unbind any modal events bound to the selector
         $el.off('.ufModal');
