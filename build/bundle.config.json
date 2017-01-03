@@ -165,6 +165,18 @@
             }
         }
     },
+    "js/pages/groups" : {
+        "scripts": [
+            "js/pages/groups.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
     "css/main": {
         "styles": [
             "vendor/font-awesome-4.5.0/css/font-awesome.css",

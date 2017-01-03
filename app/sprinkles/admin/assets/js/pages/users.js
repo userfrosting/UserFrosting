@@ -66,7 +66,7 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
  * Update user field(s)
  */
 function updateUser(userName, fieldName, fieldValue) {
-	data = {
+	var data = {
         'value': fieldValue
     };
 

@@ -1,46 +1,98 @@
 <?php
+/**
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
+namespace UserFrosting\Sprinkle\Admin\Controller;
 
-namespace UserFrosting;
+use Carbon\Carbon;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Exception\NotFoundException;
+use UserFrosting\Fortress\RequestDataTransformer;
+use UserFrosting\Fortress\RequestSchema;
+use UserFrosting\Fortress\ServerSideValidator;
+use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+use UserFrosting\Sprinkle\Account\Model\Group;
+use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Admin\Sprunje\GroupSprunje;
+use UserFrosting\Sprinkle\Core\Controller\SimpleController;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
+use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Support\Exception\HttpException;
 
 /**
- * GroupController Class
+ * Controller class for group-related requests, including listing groups, CRUD for groups, etc.
  *
- * Controller class for /groups/* URLs.  Handles group-related activities, including listing groups, CRUD for groups, etc.
- *
- * @package UserFrosting
- * @author Alex Weissman
- * @link http://www.userfrosting.com/navigating/#structure
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
-class GroupController extends \UserFrosting\BaseController {
-
-    /**
-     * Create a new GroupController object.
-     *
-     * @param UserFrosting $app The main UserFrosting app.
-     */
-    public function __construct($app){
-        $this->_app = $app;
-    }
+class GroupController extends SimpleController
+{
 
     /**
      * Renders the group listing page.
      *
-     * This page renders a table of user groups, with dropdown menus for modifying those groups.
-     * This page requires authentication (and should generally be limited to admins or the root user).
+     * This page renders a table of groups, with dropdown menus for admin actions for each group.
+     * Actions typically include: edit group, delete group.
+     * This page requires authentication.
      * Request type: GET
-     * @todo implement interface to modify authorization hooks and permissions
      */
-    public function pageGroups(){
+    public function pageGroups($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
         // Access-controlled page
-        if (!$this->_app->user->checkAccess('uri_groups')){
-            $this->_app->notFound();
+        if (!$authorizer->checkAccess($currentUser, 'uri_groups')) {
+            throw new ForbiddenException();
         }
 
-        $groups = Group::queryBuilder()->get();
+        return $this->ci->view->render($response, 'pages/groups.html.twig');
+    }
 
-        $this->_app->render('groups/groups.twig', [
-            "groups" => $groups
-        ]);
+    /**
+     * Returns a list of Groups
+     *
+     * Generates a list of groups, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getGroups($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_groups')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $this->ci->db;
+
+        $sprunje = new GroupSprunje($classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
     }
 
     public function pageGroupAuthorization($group_id) {

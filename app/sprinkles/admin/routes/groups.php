@@ -22,6 +22,8 @@ $app->group('/admin/groups', function () {
 $app->group('/api/groups', function () {
     $this->delete('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:deleteGroup');
 
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getGroups');
+
     $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getGroup');
 
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:createGroup');
