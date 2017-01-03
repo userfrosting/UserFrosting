@@ -35,6 +35,69 @@ use UserFrosting\Support\Exception\HttpException;
  */
 class GroupController extends SimpleController
 {
+    /**
+     * Renders the modal form for creating a new group.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getModalCreateGroup($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'create_group')) {
+            throw new ForbiddenException();
+        }
+
+        $this->ci->db;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Create a dummy group to prepopulate fields
+        $group = $classMapper->createInstance('group', []);
+
+        $group->icon = 'fa fa-user';
+
+        $fieldNames = ['name', 'slug', 'icon', 'description'];
+        $fields = [
+            'hidden' => [],
+            'disabled' => []
+        ];
+
+        // Load validation rules
+        $schema = new RequestSchema('schema://create-group.json');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        return $this->ci->view->render($response, 'components/modals/group.html.twig', [
+            'group' => $group,
+            'modal' => [
+
+            ],
+            'form' => [
+                'action' => 'api/groups',
+                'method' => 'POST',
+                'fields' => $fields,
+                'buttons' => [
+                    'hidden' => [
+                        'edit', 'delete'
+                    ],
+                    'submit_text' => 'Create group'
+                ]
+            ],
+            'page' => [
+                'validators' => $validator->rules('json', false)
+            ]
+        ]);
+    }
 
     /**
      * Renders the group listing page.
@@ -93,102 +156,6 @@ class GroupController extends SimpleController
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
         return $sprunje->toResponse($response);
-    }
-
-    public function pageGroupAuthorization($group_id) {
-        // Access-controlled page
-        if (!$this->_app->user->checkAccess('uri_authorization_settings')){
-            $this->_app->notFound();
-        }
-
-        $group = Group::find($group_id);
-
-        // Load all auth rules
-        $rules = GroupAuth::where('group_id', $group_id)->get();
-
-        $this->_app->render('config/authorization.twig', [
-            "group" => $group,
-            "rules" => $rules
-        ]);
-
-    }
-
-    /**
-     * Renders the form for creating a new group.
-     *
-     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
-     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`
-     * This page requires authentication (and should generally be limited to admins or the root user).
-     * Request type: GET
-     */
-    public function formGroupCreate(){
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('create_group')){
-            $this->_app->notFound();
-        }
-
-        $get = $this->_app->request->get();
-
-        if (isset($get['render']))
-            $render = $get['render'];
-        else
-            $render = "modal";
-
-        // Get a list of all themes
-        $theme_list = $this->_app->site->getThemes();
-
-        // Set default values
-        $data['is_default'] = "0";
-        // Set default title for new users
-        $data['new_user_title'] = "New User";
-        // Set default theme
-        $data['theme'] = "default";
-        // Set default icon
-        $data['icon'] = "fa fa-user";
-        // Set default landing page
-        $data['landing_page'] = "dashboard";
-
-        // Create a dummy Group to prepopulate fields
-        $group = new Group($data);
-
-        if ($render == "modal")
-            $template = "components/common/group-info-modal.twig";
-        else
-            $template = "components/common/group-info-panel.twig";
-
-        // Determine authorized fields
-        $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default', 'icon'];
-        $show_fields = [];
-        $disabled_fields = [];
-        foreach ($fields as $field){
-            if ($this->_app->user->checkAccess("update_group_setting", ["property" => $field]))
-                $show_fields[] = $field;
-            else
-                $disabled_fields[] = $field;
-        }
-
-        // Load validator rules
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render($template, [
-            "box_id" => $get['box_id'],
-            "box_title" => "New Group",
-            "submit_button" => "Create group",
-            "form_action" => $this->_app->site->uri['public'] . "/groups",
-            "group" => $group,
-            "themes" => $theme_list,
-            "fields" => [
-                "disabled" => $disabled_fields,
-                "hidden" => []
-            ],
-            "buttons" => [
-                "hidden" => [
-                    "edit", "delete"
-                ]
-            ],
-            "validators" => $this->_app->jsValidator->rules()
-        ]);
     }
 
     /**

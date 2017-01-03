@@ -47,7 +47,7 @@ $(document).ready(function() {
                 msgTarget: $("#alerts-groups")
             });
 
-            attachUserForm();
+            attachGroupForm();
         });
 
         /**

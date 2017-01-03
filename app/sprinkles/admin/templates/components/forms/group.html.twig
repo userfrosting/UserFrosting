@@ -1,0 +1,88 @@
+<form class="js-form-group" method="{{form.method}}" action="{{site.uri.public}}/{{form.action}}">
+    {% include "components/csrf.html.twig" %}
+    <div class="js-form-group-alerts">
+    </div>
+    <div class="row">
+        {% if 'name' not in form.fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>Name</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="Please enter a name for the group" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'slug' not in form.fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>Slug</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-tag"></i></span>
+                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'icon' not in fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>Icon</label>
+                <div class="input-group">
+                    <span class="input-group-addon icon-preview"><i class="{{group.icon}}"></i></span>
+                    <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="Icon for group members" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'description' not in fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="input_description">Description</label>
+                <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{group.description}}</textarea>
+            </div>
+        </div>
+        {% endif %}
+    </div><br>
+    <div class="row">
+        {% if "submit" not in form.buttons.hidden %}
+        <div class="col-xs-8 col-sm-4">
+            <div class="vert-pad">
+                <button type="submit" class="btn btn-block btn-lg btn-success">
+                    {{form.buttons.submit_text}}
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "edit" not in form.buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-primary js-group-edit" data-id="{{group.id}}" data-toggle="modal">
+                    <i class="fa fa-edit"></i> {{translate('EDIT')}}
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "delete" not in form.buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-danger js-group-delete" data-id="{{group.id}}" data-name="{{group.name}}" data-toggle="modal">
+                    <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "cancel" not in form.buttons.hidden %}
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</form>
+<!-- Include validation rules -->
+<script>
+{% include "components/page.js.twig" %}
+</script>

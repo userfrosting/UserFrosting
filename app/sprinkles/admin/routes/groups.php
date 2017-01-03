@@ -26,15 +26,17 @@ $app->group('/api/groups', function () {
 
     $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getGroup');
 
+    $this->get('/g/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getGroupUsers');
+
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:createGroup');
 
-    $this->post('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:updateGroup');
-
-    $this->get('/g/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getGroupUsers');
+    $this->put('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:updateGroup');
 });
 
-$app->group('/forms/groups', function () {
-    $this->get('/create/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:formCreateGroup');
+$app->group('/modals/groups', function () {
+    $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalConfirmDeleteGroup');
 
-    $this->get('/edit/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:formEditGroup');
+    $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalCreateGroup');
+
+    $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalEditGroup');
 });
