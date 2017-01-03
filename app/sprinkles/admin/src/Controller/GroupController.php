@@ -36,6 +36,41 @@ use UserFrosting\Support\Exception\HttpException;
 class GroupController extends SimpleController
 {
     /**
+     * Returns a list of Groups
+     *
+     * Generates a list of groups, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getGroups($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_groups')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $this->ci->db;
+
+        $sprunje = new GroupSprunje($classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
      * Renders the modal form for creating a new group.
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
@@ -74,7 +109,7 @@ class GroupController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://create-group.json');
+        $schema = new RequestSchema('schema://group.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
@@ -91,6 +126,73 @@ class GroupController extends SimpleController
                         'edit', 'delete'
                     ],
                     'submit_text' => 'Create group'
+                ]
+            ],
+            'page' => [
+                'validators' => $validator->rules('json', false)
+            ]
+        ]);
+    }
+
+    /**
+     * Renders the modal form for editing an existing group.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getModalEditGroup($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        $group = $this->getGroupFromParams($params);
+
+        // If the group doesn't exist, return 404
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $this->ci->db;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "icon", "description" for this group
+        $fieldNames = ['name', 'slug', 'icon', 'description'];
+        if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
+            'group' => $group,
+            'fields' => $fieldNames
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        // Generate form
+        $fields = [
+            'hidden' => [],
+            'disabled' => []
+        ];
+
+        // Load validation rules
+        $schema = new RequestSchema('schema://group.json');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        return $this->ci->view->render($response, 'components/modals/group.html.twig', [
+            'group' => $group,
+            'form' => [
+                'action' => "api/groups/g/{$group->slug}",
+                'method' => 'PUT',
+                'fields' => $fields,
+                'buttons' => [
+                    'hidden' => [
+                        'edit', 'delete'
+                    ],
+                    'submit_text' => 'Update group'
                 ]
             ],
             'page' => [
@@ -123,112 +225,7 @@ class GroupController extends SimpleController
         return $this->ci->view->render($response, 'pages/groups.html.twig');
     }
 
-    /**
-     * Returns a list of Groups
-     *
-     * Generates a list of groups, optionally paginated, sorted and/or filtered.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getGroups($request, $response, $args)
-    {
-        // GET parameters
-        $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_groups')) {
-            throw new ForbiddenException();
-        }
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $this->ci->db;
-
-        $sprunje = new GroupSprunje($classMapper, $params);
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
-    }
-
-    /**
-     * Renders the form for editing an existing group.
-     *
-     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
-     * The form can be rendered in "modal" (for popup) or "panel" mode, depending on the value of the GET parameter `render`.
-     * Any fields that the user does not have permission to modify will be automatically disabled.
-     * This page requires authentication (and should generally be limited to admins or the root user).
-     * Request type: GET
-     * @param int $group_id the id of the group to edit.
-     */
-    public function formGroupEdit($group_id){
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('uri_groups')){
-            $this->_app->notFound();
-        }
-
-        $get = $this->_app->request->get();
-
-        if (isset($get['render']))
-            $render = $get['render'];
-        else
-            $render = "modal";
-
-        // Get the group to edit
-        $group = Group::find($group_id);
-
-        // Get a list of all themes
-        $theme_list = $this->_app->site->getThemes();
-
-        if ($render == "modal")
-            $template = "components/common/group-info-modal.twig";
-        else
-            $template = "components/common/group-info-panel.twig";
-
-        // Determine authorized fields
-        $fields = ['name', 'new_user_title', 'landing_page', 'theme', 'is_default'];
-        $show_fields = [];
-        $disabled_fields = [];
-        $hidden_fields = [];
-        foreach ($fields as $field){
-            if ($this->_app->user->checkAccess("update_group_setting", ["property" => $field]))
-                $show_fields[] = $field;
-            else if ($this->_app->user->checkAccess("view_group_setting", ["property" => $field]))
-                $disabled_fields[] = $field;
-            else
-                $hidden_fields[] = $field;
-        }
-
-        // Load validator rules
-        $schema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-update.json");
-        $this->_app->jsValidator->setSchema($schema);
-
-        $this->_app->render($template, [
-            "box_id" => $get['box_id'],
-            "box_title" => "Edit Group",
-            "submit_button" => "Update group",
-            "form_action" => $this->_app->site->uri['public'] . "/groups/g/$group_id",
-            "group" => $group,
-            "themes" => $theme_list,
-            "fields" => [
-                "disabled" => $disabled_fields,
-                "hidden" => $hidden_fields
-            ],
-            "buttons" => [
-                "hidden" => [
-                    "edit", "delete"
-                ]
-            ],
-            "validators" => $this->_app->jsValidator->rules()
-        ]);
-    }
 
     /**
      * Processes the request to create a new group.
@@ -448,4 +445,38 @@ class GroupController extends SimpleController
         unset($group);
     }
 
+
+    protected function getGroupFromParams($params)
+    {
+        // Load the request schema
+        $schema = new RequestSchema('schema://get-group.json');
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and throw exception on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            $e = new BadRequestException();
+            foreach ($validator->errors() as $idx => $field) {
+                foreach($field as $eidx => $error) {
+                    $e->addUserMessage($error);
+                }
+            }
+            throw $e;
+        }
+
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Get the group
+        $group = $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])
+            ->first();
+
+        return $group;
+    }
 }

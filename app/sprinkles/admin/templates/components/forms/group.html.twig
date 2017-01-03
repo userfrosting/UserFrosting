@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label>Icon</label>
                 <div class="input-group">
-                    <span class="input-group-addon icon-preview"><i class="{{group.icon}}"></i></span>
+                    <span class="input-group-addon icon-preview"><i class="{{group.icon}} fa-fw"></i></span>
                     <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="Icon for group members" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
