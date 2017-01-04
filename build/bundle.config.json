@@ -141,6 +141,18 @@
             }
         }
     },
+    "js/pages/group" : {
+        "scripts": [
+            "js/pages/group.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
     "js/pages/user" : {
         "scripts": [
             "js/pages/user.js"
