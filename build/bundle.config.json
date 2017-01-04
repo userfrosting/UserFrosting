@@ -192,9 +192,35 @@
             }
         }
     },
+    "js/pages/permissions" : {
+        "scripts": [
+            "js/widgets/permissions.js",
+            "js/pages/permissions.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
+    "js/pages/roles" : {
+        "scripts": [
+            "js/widgets/roles.js",
+            "js/pages/roles.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
     "css/main": {
         "styles": [
-            "vendor/font-awesome-4.5.0/css/font-awesome.css",
+            "vendor/font-awesome-4.7.0/css/font-awesome.css",
             "vendor/bootstrap-3.3.6/css/bootstrap.css",
             "css/uf-jqueryvalidation.css",
             "css/uf-alerts.css"

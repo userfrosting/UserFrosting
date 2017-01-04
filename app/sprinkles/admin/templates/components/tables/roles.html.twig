@@ -1,4 +1,4 @@
-{# This partial template renders a table of groups, to be populated with rows via an AJAX request.
+{# This partial template renders a table of roles, to be populated with rows via an AJAX request.
  # This extends a generic template for paginated tables.
  #
  # Note that this template contains a "skeleton" table with an empty table body, and then a block of Handlebars templates which are used
@@ -11,9 +11,9 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info">{{translate('GROUP')}} <i class="fa fa-sort"></i></th>
-                <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description">Description <i class="fa fa-sort"></i></th>
-                <th data-column-template="#group-table-column-actions">Actions <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#role-table-column-info">{{translate('ROLE')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="description" data-column-template="#role-table-column-description">Description <i class="fa fa-sort"></i></th>
+                <th data-column-template="#role-table-column-actions">Actions <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -29,21 +29,21 @@
      # These templates require handlebars-helpers.js, moment.js
     #}
     {% verbatim %}
-    <script id="group-table-column-info" type="text/x-handlebars-template">
+    <script id="role-table-column-info" type="text/x-handlebars-template">
         <td data-text="{{row.name}}">
             <strong>
-            <i class="{{row.icon}} fa-fw"></i> <a href="{{site.uri.public}}/admin/groups/g/{{row.slug}}">{{row.name}}</a>
+            <a href="{{site.uri.public}}/admin/roles/r/{{row.slug}}">{{row.name}}</a>
             </strong>
         </td>
     </script>
 
-    <script id="group-table-column-description" type="text/x-handlebars-template">
+    <script id="role-table-column-description" type="text/x-handlebars-template">
         <td>
             {{row.description}}
         </td>
     </script>
 
-    <script id="group-table-column-actions" type="text/x-handlebars-template">
+    <script id="role-table-column-actions" type="text/x-handlebars-template">
         <td>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -52,13 +52,13 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a href="#" data-slug="{{row.slug}}" class="js-group-edit">
-                        <i class="fa fa-edit"></i> Edit group
+                        <a href="#" data-slug="{{row.slug}}" class="js-role-edit">
+                        <i class="fa fa-edit"></i> Edit role
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-slug="{{row.slug}}" class="js-group-delete">
-                        <i class="fa fa-trash-o"></i> Delete group
+                        <a href="#" data-slug="{{row.slug}}" class="js-role-delete">
+                        <i class="fa fa-trash-o"></i> Delete role
                         </a>
                     </li>
                 </ul>

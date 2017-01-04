@@ -15,8 +15,6 @@ $app->group('/admin/groups', function () {
         ->setName('uri_groups');
 
     $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageGroup');
-
-    $this->get('/g/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageGroupUsers');
 });
 
 $app->group('/api/groups', function () {

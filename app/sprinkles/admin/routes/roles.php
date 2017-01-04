@@ -20,15 +20,19 @@ $app->group('/admin/roles', function () {
 $app->group('/api/roles', function () {
     $this->delete('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:deleteRole');
 
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getRoles');
+
     $this->get('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getRole');
 
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:createRole');
 
-    $this->post('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateRole');
+    $this->put('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateRole');
 });
 
-$app->group('/forms/roles', function () {
-    $this->get('/create/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:formCreateRole');
+$app->group('/modals/roles', function () {
+    $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalConfirmDeleteRole');
 
-    $this->get('/edit/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:formEditRole');
+    $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalCreateRole');
+
+    $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalEditRole');
 });

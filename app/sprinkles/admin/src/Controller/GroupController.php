@@ -71,7 +71,6 @@ class GroupController extends SimpleController
         return $sprunje->toResponse($response);
     }
 
-
     public function getGroupUsers($request, $response, $args)
     {
         $group = $this->getGroupFromParams($args);

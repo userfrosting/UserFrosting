@@ -1,4 +1,4 @@
-{# This partial template renders a table of groups, to be populated with rows via an AJAX request.
+{# This partial template renders a table of permissions, to be populated with rows via an AJAX request.
  # This extends a generic template for paginated tables.
  #
  # Note that this template contains a "skeleton" table with an empty table body, and then a block of Handlebars templates which are used
@@ -11,9 +11,9 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info">{{translate('GROUP')}} <i class="fa fa-sort"></i></th>
-                <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description">Description <i class="fa fa-sort"></i></th>
-                <th data-column-template="#group-table-column-actions">Actions <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#permission-table-column-name">{{translate('PERMISSION')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="properties" data-column-template="#permission-table-column-properties">Slug/Conditions <i class="fa fa-sort"></i></th>
+                <th data-column-template="#permission-table-column-actions">Actions <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -29,21 +29,31 @@
      # These templates require handlebars-helpers.js, moment.js
     #}
     {% verbatim %}
-    <script id="group-table-column-info" type="text/x-handlebars-template">
+    <script id="permission-table-column-name" type="text/x-handlebars-template">
         <td data-text="{{row.name}}">
-            <strong>
-            <i class="{{row.icon}} fa-fw"></i> <a href="{{site.uri.public}}/admin/groups/g/{{row.slug}}">{{row.name}}</a>
-            </strong>
+            <div>
+                <strong>
+                <a href="{{site.uri.public}}/admin/permissions/p/{{row.id}}">{{row.name}}</a>
+                </strong>
+            </div>
         </td>
     </script>
 
-    <script id="group-table-column-description" type="text/x-handlebars-template">
+    <script id="permission-table-column-properties" type="text/x-handlebars-template">
         <td>
-            {{row.description}}
+            <div>
+                <code>{{row.slug}}</code>
+            </div>
+            <div>
+                ↳ <code>{{row.conditions}}</code>
+            </div>
+            <div>
+                <i>{{row.description}}</i>
+            </div>
         </td>
     </script>
 
-    <script id="group-table-column-actions" type="text/x-handlebars-template">
+    <script id="permission-table-column-actions" type="text/x-handlebars-template">
         <td>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -52,13 +62,13 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a href="#" data-slug="{{row.slug}}" class="js-group-edit">
-                        <i class="fa fa-edit"></i> Edit group
+                        <a href="#" data-slug="{{row.slug}}" class="js-permission-edit">
+                        <i class="fa fa-edit"></i> Edit permission
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-slug="{{row.slug}}" class="js-group-delete">
-                        <i class="fa fa-trash-o"></i> Delete group
+                        <a href="#" data-slug="{{row.slug}}" class="js-permission-delete">
+                        <i class="fa fa-trash-o"></i> Delete permission
                         </a>
                     </li>
                 </ul>

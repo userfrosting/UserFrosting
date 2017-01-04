@@ -4,17 +4,22 @@
     </li>
     {% if checkAccess('uri_users') %}
     <li>
-        <a href="{{site.uri.public}}/admin/users"><i class="fa fa-users fa-fw"></i> {{ translate("USER", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/users"><i class="fa fa-user fa-fw"></i> {{ translate("USER", 2) }}</a>
     </li>
     {% endif %}
     {% if checkAccess('uri_manage_roles') %}
     <li>
-        <a href="{{site.uri.public}}/admin/roles"><i class="fa fa-key fa-fw"></i> {{ translate("ROLE", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/roles"><i class="fa fa-drivers-license fa-fw"></i> {{ translate("ROLE", 2) }}</a>
+    </li>
+    {% endif %}
+    {% if checkAccess('uri_manage_permissions') %}
+    <li>
+        <a href="{{site.uri.public}}/admin/permissions"><i class="fa fa-key fa-fw"></i> {{ translate("PERMISSION", 2) }}</a>
     </li>
     {% endif %}
     {% if checkAccess('uri_manage_groups') %}
     <li>
-        <a href="{{site.uri.public}}/admin/groups"><i class="fa fa-tags fa-fw"></i> {{ translate("GROUP", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/groups"><i class="fa fa-users fa-fw"></i> {{ translate("GROUP", 2) }}</a>
     </li>
     {% endif %}
 {% endblock %}
