@@ -143,6 +143,7 @@
     },
     "js/pages/group" : {
         "scripts": [
+            "js/widgets/users.js",
             "js/pages/group.js"
         ],
         "options": {
@@ -167,6 +168,7 @@
     },
     "js/pages/users" : {
         "scripts": [
+            "js/widgets/users.js",
             "js/pages/users.js"
         ],
         "options": {
@@ -179,6 +181,7 @@
     },
     "js/pages/groups" : {
         "scripts": [
+            "js/widgets/groups.js",
             "js/pages/groups.js"
         ],
         "options": {

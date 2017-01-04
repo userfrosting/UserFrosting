@@ -9,11 +9,12 @@
 
 $(document).ready(function() {
     // Render any alerts
-    $("#alerts-groups").ufAlerts();
-    $("#alerts-groups").ufAlerts('fetch').ufAlerts('render');
+    $("#alerts-page").ufAlerts();
+    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
 
     $("#widget-group-users").ufTable({
-        dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users',
-        DEBUG: false
+        dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users'
     });
+
+    $("#widget-group-users").on("pagerComplete.ufTable", initUserTable);
 });
