@@ -1,4 +1,4 @@
-<form class="js-form-user" method="{{form.method}}" action="{{site.uri.public}}/{{form.action}}">
+<form class="js-form-user" method="{{form.method | default('POST') }}" action="{{site.uri.public}}/{{form.action}}">
     {% include "components/csrf.html.twig" %}
     <div class="js-form-user-alerts">
     </div>
@@ -104,7 +104,7 @@
         {% if 'edit' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-user_name="{{user.user_name}}" data-toggle="modal">
+                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-user_name="{{user.user_name}}">
                     <i class="fa fa-edit"></i> {{translate('EDIT')}}
                 </button>
             </div>
@@ -139,7 +139,7 @@
         {% if 'delete' not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-user_name="{{user.user_name}}" data-toggle="modal">
+                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-user_name="{{user.user_name}}">
                     <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
                 </button>
             </div>

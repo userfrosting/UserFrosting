@@ -1,7 +1,7 @@
 /**
  * Users widget.  Sets up dropdowns, modals, etc for a table of users.
  */
- 
+
 // TODO: move these to a common JS file for form widgets
 $.fn.select2.defaults.set( "theme", "bootstrap" );
 
@@ -10,11 +10,14 @@ $.fn.select2.defaults.set( "theme", "bootstrap" );
  */
 function attachUserForm() {
     $("body").on('renderSuccess.ufModal', function (data) {
+        var modal = $(this).ufModal('getModal');
+        var form = modal.find('.js-form-user');
+
         // Set up any widgets inside the modal
-        $(".js-form-user").find("select[name='group_id']").select2();
+        form.find("select[name='group_id']").select2();
 
         // Set up the form for submission
-        $(".js-form-user").ufForm({
+        form.ufForm({
             validators: page.validators,
             msgTarget: $(".js-form-user-alerts")
         }).on("submitSuccess.ufForm", function() {
@@ -79,26 +82,16 @@ function updateUser(userName, fieldName, fieldValue) {
 	});
 }
 
-var initUserTable = function () {
-    // Link create button
-    $(this).find('.js-user-create').click(function() {
-        $("body").ufModal({
-            sourceUrl: site.uri.public + "/modals/users/create",
-            msgTarget: $("#alerts-page")
-        });
-
-        attachUserForm();
-    });
-
-    /**
-     * Link row buttons after table is loaded.
-     */
+/**
+ * Link user action buttons, for example in a table or on a specific user's page.
+ */
+ function bindUserButtons(el) {
 
     /**
      * Buttons that launch a modal dialog
      */
     // Edit general user details button
-    $(this).find('.js-user-edit').click(function() {
+    el.find('.js-user-edit').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/edit",
             ajaxParams: {
@@ -111,7 +104,7 @@ var initUserTable = function () {
     });
 
     // Change user password button
-    $(this).find('.js-user-password').click(function() {
+    el.find('.js-user-password').click(function() {
         var userName = $(this).data('user_name');
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/password",
@@ -120,10 +113,11 @@ var initUserTable = function () {
             },
             msgTarget: $("#alerts-page")
         });
-        
+
         $("body").on('renderSuccess.ufModal', function (data) {
+            var modal = $(this).ufModal('getModal');
             // Set up form for submission
-            $(".js-form-user").ufForm({
+            modal.find('.js-form-user').ufForm({
                 validators: page.validators,
                 msgTarget: $(".js-form-user-alerts")
             }).on("submitSuccess.ufForm", function() {
@@ -143,7 +137,7 @@ var initUserTable = function () {
     });
 
     // Delete user button
-    $(this).find('.js-user-delete').click(function() {
+    el.find('.js-user-delete').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/confirm-delete",
             ajaxParams: {
@@ -167,7 +161,7 @@ var initUserTable = function () {
     /**
      * Direct action buttons
      */
-    $(this).find('.js-user-activate').click(function() {
+    el.find('.js-user-activate').click(function() {
         var btn = $(this);
         updateUser(btn.data('user_name'), 'flag_verified', '1')
         .always(function(response) {
@@ -176,7 +170,7 @@ var initUserTable = function () {
         });
     });
 
-    $(this).find('.js-user-enable').click(function () {
+    el.find('.js-user-enable').click(function () {
         var btn = $(this);
         updateUser(btn.data('user_name'), 'flag_enabled', '1')
         .always(function(response) {
@@ -185,7 +179,7 @@ var initUserTable = function () {
         });
     });
 
-    $(this).find('.js-user-disable').click(function () {
+    el.find('.js-user-disable').click(function () {
         var btn = $(this);
         updateUser(btn.data('user_name'), 'flag_enabled', '0')
         .always(function(response) {
@@ -193,4 +187,18 @@ var initUserTable = function () {
             window.location.reload();
         });
     });
+}
+
+var initUserTable = function () {
+    // Link create button
+    $(this).find('.js-user-create').click(function() {
+        $("body").ufModal({
+            sourceUrl: site.uri.public + "/modals/users/create",
+            msgTarget: $("#alerts-page")
+        });
+
+        attachUserForm();
+    });
+
+    bindUserButtons($(this));
 };

@@ -9,9 +9,13 @@
 
 $(document).ready(function() {
     // Render any alerts
-    $("#alerts-users").ufAlerts();
-    $("#alerts-users").ufAlerts('fetch').ufAlerts('render');
+    $("#alerts-page").ufAlerts();
+    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
 
+    // Control buttons
+    bindUserButtons($("#view-user"));
+
+    // Table of activities
     $("#widget-user-activities").ufTable({
         dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities',
         DEBUG: false

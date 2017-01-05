@@ -156,6 +156,7 @@
     },
     "js/pages/user" : {
         "scripts": [
+            "js/widgets/users.js",
             "js/pages/user.js"
         ],
         "options": {

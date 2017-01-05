@@ -672,42 +672,36 @@ class UserController extends SimpleController
         $themes = [];
 
         // Determine fields that currentUser is authorized to view
-        $fields = ['name', 'email', 'locale', 'theme'];
-        $show_fields = [];
-        $disabled_fields = [];
-        $hidden_fields = ['user_name', 'group'];
+        $fieldNames = ['name', 'email', 'locale', 'theme'];
 
-        foreach ($fields as $field) {
+        // Generate form
+        $fields = [
+            'hidden' => ['user_name', 'group'],
+            'disabled' => []
+        ];
+
+        foreach ($fieldNames as $field) {
             if ($authorizer->checkAccess($currentUser, 'view_user_field', [
                 'user' => $user,
                 'property' => $field
             ])) {
-                $disabled_fields[] = $field;
+                $fields['disabled'][] = $field;
             } else {
-                $hidden_fields[] = $field;
+                $fields['hidden'][] = $field;
             }
         }
-
-        // Always disallow editing username
-        $disabled_fields[] = 'user_name';
 
         return $this->ci->view->render($response, 'pages/user.html.twig', [
             'user' => $user,
             'locales' => $locales,
             'form' => [
-                'fields' => [
-                    'disabled' => $disabled_fields,
-                    'hidden' => $hidden_fields
-                ],
+                'fields' => $fields,
                 'buttons' => [
                     'hidden' => [
                         'submit', 'cancel'
                     ]
                 ]
             ]
-            /*
-            'groups' => $group_list,
-            */
         ]);
     }
 
@@ -940,7 +934,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         if ($fieldName == 'flag_enabled') {
-            // Check that we are not disabling the master account            
+            // Check that we are not disabling the master account
             if (($user->id == $config['reserved_user_ids.master']) &&
                 ($fieldValue == '0')
             ) {
