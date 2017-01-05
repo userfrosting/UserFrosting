@@ -24,13 +24,12 @@ use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 // First, we create our DI container
 $container = new Container;
 
+// Fetch list of Sprinkles
+$sprinkles = json_decode(file_get_contents('../app/sprinkles/sprinkles.json'));
+
 // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
 $container['sprinkleManager'] = function ($c) {
-    return new SprinkleManager($c, [
-        "account",
-        "admin",
-        "site-dev"
-    ]);
+    return new SprinkleManager($c, $sprinkles);
 };
 
 // Now, run the sprinkle manager to boot up all our sprinkles

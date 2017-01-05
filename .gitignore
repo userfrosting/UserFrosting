@@ -29,7 +29,11 @@ app/vendor/*
 build/node_modules/*
 
 # Ignore compiled assets schema
+build/bundle.config.json
 build/bundle.result.json
+
+# Ignore temporary build assets
+build/temp
 
 # Ignore compiled assets (dev)
 public/assets/*

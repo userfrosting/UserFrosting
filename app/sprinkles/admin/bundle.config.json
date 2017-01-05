@@ -1,0 +1,118 @@
+{
+    "bundle": {
+        "js/sb-admin-2": {
+            "scripts": [
+                "vendor/metismenu-1.1.3/js/metisMenu.js",
+                "vendor/start-bootstrap/js/sb-admin-2.js",
+                "vendor/moment-2.10.6/moment.js",
+                "js/handlebars-helpers.js",
+                "vendor/tablesorter-2.27.8/js/jquery.tablesorter.js",
+                "vendor/tablesorter-2.27.8/js/jquery.tablesorter.widgets.js",
+                "vendor/tablesorter-2.27.8/js/widgets/widget-sort2Hash.js",
+                "vendor/tablesorter-2.27.8/addons/pager/jquery.tablesorter.pager.js",
+                "js/query-string.js",
+                "js/uf-table.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/sb-admin-2-dashboard": {
+            "scripts": [
+                "vendor/start-bootstrap/js/morris-data.js",
+                "vendor/raphael-2.1.1/raphael.js",
+                "vendor/morris-0.5.0/js/morris.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/user": {
+            "scripts": [
+                "js/pages/user.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/users": {
+            "scripts": [
+                "js/pages/users.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/groups": {
+            "scripts": [
+                "js/pages/groups.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "css/sb-admin-2": {
+            "styles": [
+                "vendor/metismenu-1.1.3/css/metisMenu.css",
+                "vendor/start-bootstrap/css/sb-admin-2.css",
+                "vendor/font-starcraft/css/font-starcraft.css",
+                "vendor/tablesorter-2.27.8/css/theme.bootstrap.css",
+                "vendor/tablesorter-2.27.8/addons/pager/jquery.tablesorter.pager.css",
+                "css/tablesorter-custom.css",
+                "css/sb-admin-2-custom.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        },
+        "css/sb-admin-2-dashboard": {
+            "styles": [
+                "vendor/start-bootstrap/css/timeline.css",
+                "vendor/morris-0.5.0/css/morris.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        },
+        "css/sb-admin-2-root": {
+            "styles": [
+                "css/sb-admin-2-red.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        }
+    }
+}
