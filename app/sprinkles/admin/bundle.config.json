@@ -35,6 +35,19 @@
                 }
             }
         },
+        "js/pages/group": {
+            "scripts": [
+                "js/widgets/users.js",
+                "js/pages/group.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
         "js/pages/user": {
             "scripts": [
                 "js/pages/user.js"
@@ -49,6 +62,7 @@
         },
         "js/pages/users": {
             "scripts": [
+                "js/widgets/users.js",
                 "js/pages/users.js"
             ],
             "options": {
@@ -61,7 +75,34 @@
         },
         "js/pages/groups": {
             "scripts": [
+                "js/widgets/groups.js",
                 "js/pages/groups.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/permissions": {
+            "scripts": [
+                "js/widgets/permissions.js",
+                "js/pages/permissions.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/roles": {
+            "scripts": [
+                "js/widgets/roles.js",
+                "js/pages/roles.js"
             ],
             "options": {
                 "result": {

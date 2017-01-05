@@ -21,6 +21,7 @@ use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Admin\Sprunje\GroupSprunje;
+use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
@@ -64,6 +65,46 @@ class GroupController extends SimpleController
         $this->ci->db;
 
         $sprunje = new GroupSprunje($classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    public function getGroupUsers($request, $response, $args)
+    {
+        $group = $this->getGroupFromParams($args);
+
+        // If the group no longer exists, forward to main group listing page
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_group_users', [
+            'group' => $group
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $this->ci->db;
+
+        $sprunje = new UserSprunje($classMapper, $params);
+        $sprunje->extendQuery(function ($query) use ($group) {
+            return $query->where('group_id', $group->id);
+        });
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
@@ -201,6 +242,74 @@ class GroupController extends SimpleController
         ]);
     }
 
+
+    /**
+     * Renders a page displaying a group's information, in read-only mode.
+     *
+     * This checks that the currently logged-in user has permission to view the requested group's info.
+     * It checks each field individually, showing only those that you have permission to view.
+     * This will also try to show buttons for deleting, and editing the group.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function pageGroup($request, $response, $args)
+    {
+        $group = $this->getGroupFromParams($args);
+
+        $groupsPage = '';
+
+        // If the group no longer exists, forward to main group listing page
+        if (!$group) {
+            $usersPage = $this->ci->router->pathFor('uri_groups');
+            return $response->withRedirect($groupsPage, 404);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_group', [
+                'group' => $group
+            ])) {
+            throw new ForbiddenException();
+        }
+
+        // Determine fields that currentUser is authorized to view
+        $fieldNames = ['name', 'slug', 'icon', 'description'];
+
+        // Generate form
+        $fields = [
+            'hidden' => [],
+            'disabled' => []
+        ];
+
+        foreach ($fieldNames as $field) {
+            if ($authorizer->checkAccess($currentUser, 'view_group_field', [
+                'group' => $group,
+                'property' => $field
+            ])) {
+                $fields['disabled'][] = $field;
+            } else {
+                $fields['hidden'][] = $field;
+            }
+        }
+
+        return $this->ci->view->render($response, 'pages/group.html.twig', [
+            'group' => $group,
+            'form' => [
+                'fields' => $fields,
+                'buttons' => [
+                    'hidden' => [
+                        'submit', 'cancel'
+                    ]
+                ]
+            ]
+        ]);
+    }
+
     /**
      * Renders the group listing page.
      *
@@ -224,7 +333,6 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/groups.html.twig');
     }
-
 
 
     /**

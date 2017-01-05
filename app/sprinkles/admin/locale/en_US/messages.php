@@ -64,6 +64,11 @@ return [
 
     "TITLE_UPDATED" => "{{user_name}}'s title changed to '{{title}}'",
 
+    "ACTIVITY" => [
+        1 => "Activity",
+        2 => "Activities"
+    ],
+
     "ADMIN" => [
         "PANEL" => "Admin panel"
     ],
@@ -71,6 +76,11 @@ return [
     "GROUP" => [
         1 => "Group",
         2 => "Groups"
+    ],
+
+    "PERMISSION" => [
+        1 => "Permission",
+        2 => "Permissions"
     ],
 
     "ROLE" => [

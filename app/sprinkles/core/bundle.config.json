@@ -34,7 +34,7 @@
         },
         "css/main": {
             "styles": [
-                "vendor/font-awesome-4.5.0/css/font-awesome.css",
+                "vendor/font-awesome-4.7.0/css/font-awesome.css",
                 "vendor/bootstrap-3.3.6/css/bootstrap.css",
                 "css/uf-jqueryvalidation.css",
                 "css/uf-alerts.css"

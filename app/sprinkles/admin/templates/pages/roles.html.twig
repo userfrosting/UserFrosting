@@ -6,34 +6,33 @@
 {% endblock %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Users{% endblock %}
+{% block page_title %}Roles{% endblock %}
 
-{% block page_description %}A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.{% endblock %}
+{% block page_description %}A listing of the roles for your site.  Provides management tools for editing and deleting roles.{% endblock %}
 
 {% block body_matter %}
     <div id="alerts-page">
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div id="widget-users" class="panel panel-primary">
+            <div id="widget-roles" class="panel panel-primary">
                 <div class="panel-heading panel-heading-buttons clearfix">
-                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
+                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-drivers-license"></i> {{translate('ROLE', 2)}}</h3>
                     <div class="pull-right">
                         <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
                     </div>
                 </div>
                 <div class="panel-body">
-                    {% include "components/tables/users.html.twig" with {
+                    {% include "components/tables/roles.html.twig" with {
                             "table" : {
-                                "id" : "table-users",
-                                "columns" : ["last_activity"]
+                                "id" : "table-roles"
                             }
                         }
                     %}
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-success js-user-create">
-                                <i class="fa fa-plus-square"></i>  Create New User
+                            <button type="button" class="btn btn-success js-role-create">
+                                <i class="fa fa-plus-square"></i>  Create New Role
                             </button>
                         </div>
                     </div>
@@ -52,6 +51,6 @@
     {{ assets.js('js/form-widgets') | raw }}
 
     <!-- Include page-specific JS -->
-    {{ assets.js('js/pages/users') | raw }}
+    {{ assets.js('js/pages/roles') | raw }}
 
 {% endblock %}

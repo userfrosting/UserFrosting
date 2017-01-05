@@ -6,9 +6,9 @@
 {% endblock %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Users | {{user.user_name}}{% endblock %}
+{% block page_title %}Groups | {{group.name}}{% endblock %}
 
-{% block page_description %}User information page for {{user.user_name}}{% endblock %}
+{% block page_description %}Group information page for {{group.name}}{% endblock %}
 
 {% block body_matter %}
     <div class="row">
@@ -16,39 +16,41 @@
         <div class="col-md-6">
             <div class="biginfo biginfo-blue">
                 <div class="biginfo-icon">
-                    <i class="{{user.group.icon}}"></i>
+                    <i class="{{group.icon}}"></i>
                 </div>
                 <div class="biginfo-header">
-                    {{user.group.name}}
+                    {{group.name}}
                 </div>
             </div>
         </div>
         {% endif %}
     </div>
+    <div id="alerts-page">
+    </div>
     <div class="row">
         <div class="col-lg-6">
-            <div id="view-user" class="panel panel-primary">
+            <div id="view-group" class="panel panel-primary">
                 <div class="panel-heading">
-                    <h2 class="panel-title pull-left"><i class="fa fa-fw fa-user"></i> {{user.user_name}}</h2>
+                    <h2 class="panel-title pull-left"><i class="fa fa-fw fa-users"></i> {{group.name}}</h2>
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
-                    {% include "components/forms/user.html.twig" %}
+                    {% include "components/forms/group.html.twig" %}
                 </div>
             </div>
         </div>
         <div class="col-lg-6">
-            <div id="widget-user-activities" class="panel panel-primary">
+            <div id="widget-group-users" class="panel panel-primary">
                 <div class="panel-heading panel-heading-buttons clearfix">
-                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-tasks"></i> {{translate('ACTIVITY', 2)}}</h3>
+                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
                     <div class="pull-right">
                         <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
                     </div>
                 </div>
                 <div class="panel-body">
-                    {% include "components/tables/activities.html.twig" with {
+                    {% include "components/tables/users.html.twig" with {
                             "table" : {
-                                "id" : "table-user-activities"
+                                "id" : "table-group-users"
                             }
                         }
                     %}
@@ -66,7 +68,7 @@
     page = $.extend(
         true,               // deep extend
         {
-            "user_name": "{{user.user_name}}"
+            "group_slug": "{{group.slug}}"
         },
         page
     );
@@ -76,5 +78,5 @@
     {{ assets.js('js/form-widgets') | raw }}
 
     <!-- Include page-specific JS -->
-    {{ assets.js('js/pages/user') | raw }}
+    {{ assets.js('js/pages/group') | raw }}
 {% endblock %}

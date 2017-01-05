@@ -11,7 +11,7 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">User <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">{{translate('USER')}} <i class="fa fa-sort"></i></th>
                 {% if 'last_activity' in table.columns %}
                     <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">Last Activity <i class="fa fa-sort"></i></th>
                 {% endif %}

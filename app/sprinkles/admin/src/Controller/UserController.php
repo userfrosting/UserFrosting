@@ -634,30 +634,6 @@ class UserController extends SimpleController
         return $sprunje->toResponse($response);
     }
 
-    public function pageGroupUsers($request, $response, $args)
-    {
-        // Optional filtering by primary group
-        if ($primary_group_name){
-            $primary_group = Group::where('name', $primary_group_name)->first();
-
-            if (!$primary_group)
-                $this->_app->notFound();
-
-            // Access-controlled page
-            if (!$this->_app->user->checkAccess('uri_group_users', ['primary_group_id' => $primary_group->id])){
-                $this->_app->notFound();
-            }
-
-            if (!$paginate_server_side) {
-                $user_collection = User::where('primary_group_id', $primary_group->id)->get();
-                $user_collection->getRecentEvents('sign_in');
-                $user_collection->getRecentEvents('sign_up', 'sign_up_time');
-            }
-            $name = $primary_group->name;
-            $icon = $primary_group->icon;
-        }
-    }
-
     /**
      * Renders a page displaying a user's information, in read-only mode.
      *

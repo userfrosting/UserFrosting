@@ -13,7 +13,7 @@
             <tr>
                 <th class="sorter-metanum" data-column-name="occurred_at" data-column-template="#activity-table-column-occurred-at">Activity Time <i class="fa fa-sort"></i></th>
                 {% if 'user' in table.columns %}
-                    <th class="sorter-metatext" data-column-name="user" data-column-template="#activity-table-column-user">User <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metatext" data-column-name="user" data-column-template="#activity-table-column-user">{{translate('USER')}} <i class="fa fa-sort"></i></th>
                 {% endif %}
                 <th class="sorter-metatext" data-column-name="description" data-column-template="#activity-table-column-description">Description <i class="fa fa-sort"></i></th>
             </tr>
