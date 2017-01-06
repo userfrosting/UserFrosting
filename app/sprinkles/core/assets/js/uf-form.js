@@ -14,7 +14,7 @@
  *
  * `options` is an object containing any of the following parameters:
  * @param {JSON} validators An object containing two keys, "rules" and "messages", which specify the jQueryvalidation rules to use.
- * @param {Object} msgTarget a jQuery selector specifying the element where any error messages should be inserted.
+ * @param {Object} msgTarget a jQuery selector specifying the element where any error messages should be inserted.  Defaults to looking for a container with class .js-form-alerts inside this form.
  * @param {Callback} beforeSubmitCallback a callback function to execute immediately after form validation, before the form is submitted.
  * @param {bool} binaryCheckboxes specify whether to submit checkboxes as binary values 0 and 1, instead of omitting unchecked checkboxes from submission.
  *
@@ -51,7 +51,7 @@
                     'rules'   : {},
                     'messages': {}
                 },
-                msgTarget           : null,
+                msgTarget           : this.$T.find('.js-form-alerts'),
                 beforeSubmitCallback: null,
                 binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
                 DEBUG: false

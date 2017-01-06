@@ -10,13 +10,15 @@ $.fn.select2.defaults.set( "theme", "bootstrap" );
  */
 function attachRoleForm() {
     $("body").on('renderSuccess.ufModal', function (data) {
+        var modal = $(this).ufModal('getModal');
+        var form = modal.find('.js-form');
+
         // TODO: set up any widgets inside the modal
-        $(".js-form-role").find("select[name='group_id']").select2();
+        form.find("select[name='group_id']").select2();
         
         // Set up the form for submission
-        $(".js-form-role").ufForm({
-            validators: page.validators,
-            msgTarget: $(".js-form-role-alerts")
+        form.ufForm({
+            validators: page.validators
         }).on("submitSuccess.ufForm", function() {
             // Reload page on success
             window.location.reload();
@@ -67,10 +69,10 @@ var initRoleTable = function () {
 
         $("body").on('renderSuccess.ufModal', function (data) {
             var modal = $(this).ufModal('getModal');
+            var form = modal.find('.js-form');
 
-            modal.find('.js-form-role-delete').ufForm({
-                msgTarget: $(".js-form-role-alerts")
-            }).on("submitSuccess.ufForm", function() {
+            form.ufForm()
+            .on("submitSuccess.ufForm", function() {
                 // Reload page on success
                 window.location.reload();
             });

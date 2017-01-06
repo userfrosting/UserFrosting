@@ -11,15 +11,14 @@ $.fn.select2.defaults.set( "theme", "bootstrap" );
 function attachUserForm() {
     $("body").on('renderSuccess.ufModal', function (data) {
         var modal = $(this).ufModal('getModal');
-        var form = modal.find('.js-form-user');
+        var form = modal.find('.js-form');
 
         // Set up any widgets inside the modal
         form.find("select[name='group_id']").select2();
 
         // Set up the form for submission
         form.ufForm({
-            validators: page.validators,
-            msgTarget: $(".js-form-user-alerts")
+            validators: page.validators
         }).on("submitSuccess.ufForm", function() {
             // Reload page on success
             window.location.reload();
@@ -116,16 +115,16 @@ function updateUser(userName, fieldName, fieldValue) {
 
         $("body").on('renderSuccess.ufModal', function (data) {
             var modal = $(this).ufModal('getModal');
+            var form = modal.find('.js-form');
+
             // Set up form for submission
-            modal.find('.js-form-user').ufForm({
-                validators: page.validators,
-                msgTarget: $(".js-form-user-alerts")
+            form.ufForm({
+                validators: page.validators
             }).on("submitSuccess.ufForm", function() {
                 // Reload page on success
                 window.location.reload();
             });
 
-            var modal = $(this).ufModal('getModal');
             toggleChangePasswordMode(modal, userName, 'link');
 
             // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
@@ -148,10 +147,10 @@ function updateUser(userName, fieldName, fieldValue) {
 
         $("body").on('renderSuccess.ufModal', function (data) {
             var modal = $(this).ufModal('getModal');
+            var form = modal.find('.js-form');
 
-            modal.find('.js-form-user-delete').ufForm({
-                msgTarget: $(".js-form-user-alerts")
-            }).on("submitSuccess.ufForm", function() {
+            form.ufForm()
+            .on("submitSuccess.ufForm", function() {
                 // Reload page on success
                 window.location.reload();
             });

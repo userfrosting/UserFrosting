@@ -10,20 +10,20 @@ $.fn.select2.defaults.set( "theme", "bootstrap" );
  */
 function attachGroupForm() {
     $("body").on('renderSuccess.ufModal', function (data) {
-        // TODO: set up any widgets inside the modal
-        $(".js-form-group").find("select[name='group_id']").select2();
+        var modal = $(this).ufModal('getModal');
+        var form = modal.find('.js-form');
 
-        /*
+        // TODO: set up any widgets inside the modal
+        form.find("select[name='group_id']").select2();
+
         // Set icon when changed
-        $('#' + box_id + ' input[name=icon]').on('change', function(){
+        form.find('input[name=icon]').on('change', function() {
             $(this).prev(".icon-preview").find("i").removeClass().addClass($(this).val());
         });
-        */
-        
+
         // Set up the form for submission
-        $(".js-form-group").ufForm({
-            validators: page.validators,
-            msgTarget: $(".js-form-group-alerts")
+        form.ufForm({
+            validators: page.validators
         }).on("submitSuccess.ufForm", function() {
             // Reload page on success
             window.location.reload();
@@ -74,10 +74,10 @@ var initGroupTable = function () {
 
         $("body").on('renderSuccess.ufModal', function (data) {
             var modal = $(this).ufModal('getModal');
+            var form = modal.find('.js-form');
 
-            modal.find('.js-form-group-delete').ufForm({
-                msgTarget: $(".js-form-group-alerts")
-            }).on("submitSuccess.ufForm", function() {
+            form.ufForm()
+            .on("submitSuccess.ufForm", function() {
                 // Reload page on success
                 window.location.reload();
             });

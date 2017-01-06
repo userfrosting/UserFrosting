@@ -1,6 +1,6 @@
-<form class="js-form-group" method="{{form.method}}" action="{{site.uri.public}}/{{form.action}}">
+<form class="js-form" method="{{form.method | default('POST')}}" action="{{site.uri.public}}/{{form.action}}">
     {% include "components/csrf.html.twig" %}
-    <div class="js-form-group-alerts">
+    <div class="js-form-alerts">
     </div>
     <div class="row">
         {% if 'name' not in form.fields.hidden %}

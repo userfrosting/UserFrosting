@@ -3,9 +3,9 @@
 {% block modal_title %}Delete User{% endblock %}
 
 {% block modal_body %}
-<form class="js-form-user-delete" method="delete" action="{{site.uri.public}}/{{form.action}}">
+<form class="js-form" method="delete" action="{{site.uri.public}}/{{form.action}}">
     {% include "components/csrf.html.twig" %}
-    <div class="js-form-user-alerts">
+    <div class="js-form-alerts">
     </div>
     <h4>Are you sure you want to delete the user '{{user.user_name}}'?<br><small>This action cannot be undone.</small></h4>
     <br>
