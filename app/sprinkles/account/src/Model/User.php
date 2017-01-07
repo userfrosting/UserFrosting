@@ -259,16 +259,6 @@ class User extends UFModel
     }
 
     /**
-     * Extends Eloquent's Collection models.
-     *
-     * @return UserCollection
-     */
-    public function newCollection(array $models = Array())
-    {
-	    return new UserCollection($models);
-    }
-
-    /**
      * Performs tasks to be done after this user has been successfully authenticated.
      *
      * By default, adds a new sign-in activity and updates any legacy hash.
