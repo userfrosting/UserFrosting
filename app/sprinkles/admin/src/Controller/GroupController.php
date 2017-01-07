@@ -456,12 +456,10 @@ class GroupController extends SimpleController
     {
         $group = $this->getGroupFromParams($args);
 
-        $groupsPage = '';
-
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            $usersPage = $this->ci->router->pathFor('uri_groups');
-            return $response->withRedirect($groupsPage, 404);
+            $redirectPage = $this->ci->router->pathFor('uri_groups');
+            return $response->withRedirect($redirectPage, 404);
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */

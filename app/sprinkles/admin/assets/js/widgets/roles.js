@@ -45,17 +45,10 @@ function attachRoleForm() {
     });
 }
 
-var initRoleTable = function () {
-    // Link create button
-    $(this).find('.js-role-create').click(function() {
-        $("body").ufModal({
-            sourceUrl: site.uri.public + "/modals/roles/create",
-            msgTarget: $("#alerts-page")
-        });
-
-        attachRoleForm();
-    });
-
+/**
+ * Link role action buttons, for example in a table or on a specific role's page.
+ */
+function bindRoleButtons(el) {
     /**
      * Link row buttons after table is loaded.
      */
@@ -64,7 +57,7 @@ var initRoleTable = function () {
      * Buttons that launch a modal dialog
      */
     // Edit role details button
-    $(this).find('.js-role-edit').click(function() {
+    el.find('.js-role-edit').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/edit",
             ajaxParams: {
@@ -76,8 +69,8 @@ var initRoleTable = function () {
         attachRoleForm();
     });
 
-    // Delete group button
-    $(this).find('.js-role-delete').click(function() {
+    // Delete role button
+    el.find('.js-role-delete').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/confirm-delete",
             ajaxParams: {
@@ -97,4 +90,18 @@ var initRoleTable = function () {
             });
         });
     });
+}
+
+var initRoleTable = function () {
+    // Link create button
+    $(this).find('.js-role-create').click(function() {
+        $("body").ufModal({
+            sourceUrl: site.uri.public + "/modals/roles/create",
+            msgTarget: $("#alerts-page")
+        });
+
+        attachRoleForm();
+    });
+
+    bindRoleButtons($(this));
 };

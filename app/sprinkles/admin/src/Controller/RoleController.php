@@ -20,6 +20,7 @@ use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Model\Role;
 use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Admin\Sprunje\PermissionSprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\RoleSprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
@@ -409,6 +410,112 @@ class RoleController extends SimpleController
         ]);
     }
 
+    public function getRolePermissions($request, $response, $args)
+    {
+        $role = $this->getRoleFromParams($args);
+
+        // If the role no longer exists, forward to main role listing page
+        if (!$role) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_role_permissions', [
+            'role' => $role
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $this->ci->db;
+
+        $sprunje = new PermissionSprunje($classMapper, $params);
+        $sprunje->extendQuery(function ($query) use ($role) {
+            return $query->join('permission_roles', 'permissions.id', 'permission_id')
+                         ->where('role_id', $role->id);
+        });
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
+     * Renders a page displaying a role's information, in read-only mode.
+     *
+     * This checks that the currently logged-in user has permission to view the requested role's info.
+     * It checks each field individually, showing only those that you have permission to view.
+     * This will also try to show buttons for deleting and editing the role.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function pageRole($request, $response, $args)
+    {
+        $role = $this->getRoleFromParams($args);
+
+        // If the role no longer exists, forward to main role listing page
+        if (!$role) {
+            $redirectPage = $this->ci->router->pathFor('uri_roles');
+            return $response->withRedirect($redirectPage, 404);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_role', [
+                'role' => $role
+            ])) {
+            throw new ForbiddenException();
+        }
+
+        // Determine fields that currentUser is authorized to view
+        $fieldNames = ['name', 'slug', 'description'];
+
+        // Generate form
+        $fields = [
+            'hidden' => [],
+            'disabled' => []
+        ];
+
+        foreach ($fieldNames as $field) {
+            if ($authorizer->checkAccess($currentUser, 'view_role_field', [
+                'role' => $role,
+                'property' => $field
+            ])) {
+                $fields['disabled'][] = $field;
+            } else {
+                $fields['hidden'][] = $field;
+            }
+        }
+
+        return $this->ci->view->render($response, 'pages/role.html.twig', [
+            'role' => $role,
+            'form' => [
+                'fields' => $fields,
+                'buttons' => [
+                    'hidden' => [
+                        'submit', 'cancel'
+                    ]
+                ]
+            ]
+        ]);
+    }
+
     /**
      * Renders the role listing page.
      *
@@ -431,40 +538,6 @@ class RoleController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/roles.html.twig');
-    }
-
-    protected function getRoleFromParams($params)
-    {
-        // Load the request schema
-        $schema = new RequestSchema('schema://get-role.json');
-
-        // Whitelist and set parameter defaults
-        $transformer = new RequestDataTransformer($schema);
-        $data = $transformer->transform($params);
-
-        // Validate, and throw exception on validation errors.
-        $validator = new ServerSideValidator($schema, $this->ci->translator);
-        if (!$validator->validate($data)) {
-            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
-            $e = new BadRequestException();
-            foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
-                    $e->addUserMessage($error);
-                }
-            }
-            throw $e;
-        }
-
-        $this->ci->db;
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        // Get the role
-        $role = $classMapper->staticMethod('role', 'where', 'slug', $data['slug'])
-            ->first();
-
-        return $role;
     }
 
     /**
@@ -574,5 +647,39 @@ class RoleController extends SimpleController
         ]);
 
         return $response->withStatus(200);
+    }
+
+    protected function getRoleFromParams($params)
+    {
+        // Load the request schema
+        $schema = new RequestSchema('schema://get-role.json');
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and throw exception on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            $e = new BadRequestException();
+            foreach ($validator->errors() as $idx => $field) {
+                foreach($field as $eidx => $error) {
+                    $e->addUserMessage($error);
+                }
+            }
+            throw $e;
+        }
+
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Get the role
+        $role = $classMapper->staticMethod('role', 'where', 'slug', $data['slug'])
+            ->first();
+
+        return $role;
     }
 }

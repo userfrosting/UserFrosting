@@ -156,6 +156,20 @@
             }
         }
     },
+    "js/pages/role" : {
+        "scripts": [
+            "js/widgets/permissions.js",
+            "js/widgets/roles.js",
+            "js/pages/role.js"
+        ],
+        "options": {
+            "result": {
+                "type": {
+                  "scripts": "plain"
+                }
+            }
+        }
+    },
     "js/pages/user" : {
         "scripts": [
             "js/widgets/users.js",
