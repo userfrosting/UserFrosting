@@ -17,7 +17,6 @@ $(document).ready(function() {
 
     // Table of activities
     $("#widget-user-activities").ufTable({
-        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities',
-        DEBUG: false
+        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities'
     });
 });
