@@ -21,11 +21,13 @@
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
                     <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
-                    <span class="input-group-btn" data-toggle="buttons">
-                        <label class="btn btn-primary">
-                            <input type="checkbox" id="form-group-slug-override" autocomplete="off"> Override
-                        </label>
-                    </span>
+                    {% if 'slug' not in form.fields.disabled %}
+                        <span class="input-group-btn" data-toggle="buttons">
+                            <label class="btn btn-primary">
+                                <input type="checkbox" id="form-group-slug-override" autocomplete="off"> Override
+                            </label>
+                        </span>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -63,7 +65,7 @@
         {% if "edit" not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-group-edit" data-id="{{group.id}}" data-toggle="modal">
+                <button type="button" class="btn btn-block btn-md btn-primary js-group-edit" data-slug="{{group.slug}}">
                     <i class="fa fa-edit"></i> {{translate('EDIT')}}
                 </button>
             </div>
@@ -72,7 +74,7 @@
         {% if "delete" not in form.buttons.hidden %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-group-delete" data-id="{{group.id}}" data-name="{{group.name}}" data-toggle="modal">
+                <button type="button" class="btn btn-block btn-md btn-danger js-group-delete" data-slug="{{group.slug}}">
                     <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
                 </button>
             </div>

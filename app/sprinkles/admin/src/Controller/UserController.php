@@ -401,9 +401,6 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'components/modals/user.html.twig', [
             'user' => $user,
             'groups' => $groups,
-            'modal' => [
-
-            ],
             'form' => [
                 'action' => 'api/users',
                 'method' => 'POST',

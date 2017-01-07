@@ -50,17 +50,10 @@ function attachGroupForm() {
     });
 }
 
-var initGroupTable = function () {
-    // Link create button
-    $(this).find('.js-group-create').click(function() {
-        $("body").ufModal({
-            sourceUrl: site.uri.public + "/modals/groups/create",
-            msgTarget: $("#alerts-page")
-        });
-
-        attachGroupForm();
-    });
-
+/**
+ * Link group action buttons, for example in a table or on a specific group's page.
+ */
+function bindGroupButtons(el) {
     /**
      * Link row buttons after table is loaded.
      */
@@ -69,7 +62,7 @@ var initGroupTable = function () {
      * Buttons that launch a modal dialog
      */
     // Edit group details button
-    $(this).find('.js-group-edit').click(function() {
+    el.find('.js-group-edit').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/edit",
             ajaxParams: {
@@ -82,7 +75,7 @@ var initGroupTable = function () {
     });
 
     // Delete group button
-    $(this).find('.js-group-delete').click(function() {
+    el.find('.js-group-delete').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/confirm-delete",
             ajaxParams: {
@@ -102,4 +95,18 @@ var initGroupTable = function () {
             });
         });
     });
+}
+
+var initGroupTable = function () {
+    // Link create button
+    $(this).find('.js-group-create').click(function() {
+        $("body").ufModal({
+            sourceUrl: site.uri.public + "/modals/groups/create",
+            msgTarget: $("#alerts-page")
+        });
+
+        attachGroupForm();
+    });
+
+    bindGroupButtons($(this));
 };

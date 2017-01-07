@@ -40,93 +40,90 @@ class GroupController extends SimpleController
      * Processes the request to create a new group.
      *
      * Processes the request from the group creation form, checking that:
-     * 1. The group name is not already in use;
-     * 2. The user has the necessary permissions to update the posted field(s);
+     * 1. The group name and slug are not already in use;
+     * 2. The user has permission to create a new group;
      * 3. The submitted data is valid.
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: POST
-     * @see formGroupCreate
+     * @see getModalCreateGroup
      */
-    public function createGroup(){
-        $post = $this->_app->request->post();
+    public function createGroup($request, $response, $args)
+    {
+        // Get POST parameters: name, slug, icon, description
+        $params = $request->getParsedBody();
 
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
 
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('create_group')){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'create_group')) {
+            throw new ForbiddenException();
         }
 
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
 
-        // Sanitize data
-        $rf->sanitize();
+        // Load the request schema
+        $schema = new RequestSchema('schema://group.json');
 
-        // Validate, and halt on validation errors.
-        $error = !$rf->validate(true);
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
 
-        // Get the filtered data
-        $data = $rf->data();
+        $error = false;
 
-        // Remove csrf_token from object data
-        $rf->removeFields(['csrf_token']);
-
-        // Perform desired data transformations on required fields.
-        $data['name'] = trim($data['name']);
-        $data['new_user_title'] = trim($data['new_user_title']);
-        $data['landing_page'] = strtolower(trim($data['landing_page']));
-        $data['theme'] = trim($data['theme']);
-        $data['can_delete'] = 1;
-
-        // Check if group name already exists
-        if (Group::where('name', $data['name'])->first()){
-            $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
             $error = true;
         }
 
-        // Halt on any validation errors
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if name or slug already exists
+        if ($classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()) {
+            $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
+            $error = true;
+        }
+
+        if ($classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()) {
+            $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
+            $error = true;
+        }
+
         if ($error) {
-            $this->_app->halt(400);
+            return $response->withStatus(400);
         }
 
-        // Set default values if not specified or not authorized
-        if (!isset($data['theme']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "theme"]))
-            $data['theme'] = "default";
+        /** @var Config $config */
+        $config = $this->ci->config;
 
-        if (!isset($data['new_user_title']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "new_user_title"])) {
-            // Set default title for new users
-            $data['new_user_title'] = "New User";
-        }
+        // All checks passed!  log events/activities and create group
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+            // Create the group
+            $group = $classMapper->createInstance('group', $data);
 
-        if (!isset($data['landing_page']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "landing_page"])) {
-            $data['landing_page'] = "dashboard";
-        }
+            // Store new group to database
+            $group->save();
 
-        if (!isset($data['icon']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "icon"])) {
-            $data['icon'] = "fa fa-user";
-        }
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} created group {$group->name}.", [
+                'type' => 'group_create',
+                'user_id' => $currentUser->id
+            ]);
 
-        if (!isset($data['is_default']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "is_default"])) {
-            $data['is_default'] = "0";
-        }
+            $ms->addMessageTranslated('success', 'GROUP.CREATION_SUCCESSFUL', $data);
+        });
 
-        // Create the group
-        $group = new Group($data);
-
-        // Store new group to database
-        $group->store();
-
-        // Success message
-        $ms->addMessageTranslated("success", "GROUP_CREATION_SUCCESSFUL", $data);
+        return $response->withStatus(200);
     }
 
     /**
@@ -248,9 +245,6 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
             'group' => $group,
-            'modal' => [
-
-            ],
             'form' => [
                 'action' => 'api/groups',
                 'method' => 'POST',

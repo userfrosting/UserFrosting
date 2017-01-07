@@ -145,6 +145,7 @@
     "js/pages/group" : {
         "scripts": [
             "js/widgets/users.js",
+            "js/widgets/groups.js",
             "js/pages/group.js"
         ],
         "options": {
