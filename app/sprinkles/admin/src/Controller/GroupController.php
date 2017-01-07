@@ -128,14 +128,14 @@ class GroupController extends SimpleController
     /**
      * Processes the request to delete an existing group.
      *
-     * Deletes the specified group, removing associations with any users and any group-specific authorization rules.
+     * Deletes the specified group.
      * Before doing so, checks that:
-     * 1. The group is deleteable (as specified in the `can_delete` column in the database);
-     * 2. The group is not currently set as the default primary group;
-     * 3. The submitted data is valid.
+     * 1. The user has permission to delete this group;
+     * 2. The group is not currently set as the default for new users;
+     * 3. The group is empty (does not have any users);
+     * 4. The submitted data is valid.
      * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @param int $group_id the id of the group to delete.
+     * Request type: DELETE
      */
     public function deleteGroup($request, $response, $args)
     {
@@ -547,7 +547,7 @@ class GroupController extends SimpleController
      */
     public function updateGroup($request, $response, $args)
     {
-        // Get the username from the URL
+        // Get the group based on slug in URL
         $group = $this->getGroupFromParams($args);
 
         if (!$group) {
@@ -636,7 +636,7 @@ class GroupController extends SimpleController
 
         $group->save();
 
-        $ms->addMessageTranslated('success', 'GROUP_UPDATE', [
+        $ms->addMessageTranslated('success', 'GROUP.UPDATE', [
             'name' => $group->name
         ]);
 

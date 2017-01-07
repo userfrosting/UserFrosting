@@ -13,9 +13,28 @@ function attachRoleForm() {
         var modal = $(this).ufModal('getModal');
         var form = modal.find('.js-form');
 
-        // TODO: set up any widgets inside the modal
-        form.find("select[name='group_id']").select2();
-        
+        /**
+         * Set up modal widgets
+         */
+
+        // Auto-generate slug
+        form.find('input[name=name]').on('input change', function() {
+            var manualSlug = form.find('#form-role-slug-override').prop('checked');
+            if (!manualSlug) {
+                var slug = getSlug($(this).val());
+                form.find('input[name=slug]').val(slug);
+            }
+        });
+
+        form.find('#form-role-slug-override').on('change', function() {
+            if ($(this).prop('checked')) {
+                form.find('input[name=slug]').prop('readonly', false);
+            } else {
+                form.find('input[name=slug]').prop('readonly', true);
+                form.find('input[name=name]').trigger('change');
+            }
+        });
+
         // Set up the form for submission
         form.ufForm({
             validators: page.validators

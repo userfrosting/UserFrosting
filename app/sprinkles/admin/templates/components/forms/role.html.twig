@@ -1,0 +1,84 @@
+<form class="js-form" method="{{form.method | default('POST')}}" action="{{site.uri.public}}/{{form.action}}">
+    {% include "components/csrf.html.twig" %}
+    <div class="js-form-alerts">
+    </div>
+    <div class="row">
+        {% if 'name' not in form.fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>Name</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
+                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{role.name}}" placeholder="Please enter a name for the role" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'slug' not in form.fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>Slug</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
+                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{role.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
+                    {% if 'slug' not in form.fields.disabled %}
+                        <span class="input-group-btn" data-toggle="buttons">
+                            <label class="btn btn-primary">
+                                <input type="checkbox" id="form-role-slug-override" autocomplete="off"> Override
+                            </label>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'description' not in fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="input_description">Description</label>
+                <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{role.description}}</textarea>
+            </div>
+        </div>
+        {% endif %}
+    </div><br>
+    <div class="row">
+        {% if "submit" not in form.buttons.hidden %}
+        <div class="col-xs-8 col-sm-4">
+            <div class="vert-pad">
+                <button type="submit" class="btn btn-block btn-lg btn-success">
+                    {{form.buttons.submit_text}}
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "edit" not in form.buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-primary js-role-edit" data-slug="{{role.slug}}">
+                    <i class="fa fa-edit"></i> {{translate('EDIT')}}
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "delete" not in form.buttons.hidden %}
+        <div class="col-xs-6 col-sm-3">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-md btn-danger js-role-delete" data-slug="{{role.slug}}">
+                    <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
+                </button>
+            </div>
+        </div>
+        {% endif %}
+        {% if "cancel" not in form.buttons.hidden %}
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</form>
+<!-- Include validation rules -->
+<script>
+{% include "components/page.js.twig" %}
+</script>
