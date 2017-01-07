@@ -51,9 +51,6 @@ class Group extends UFModel {
      */
     public function delete()
     {
-        // Remove all user associations
-        $this->users()->detach();
-
         /*
         // Reassign any primary users to the current default primary group
         $default_primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();

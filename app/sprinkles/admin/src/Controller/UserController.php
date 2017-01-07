@@ -306,7 +306,6 @@ class UserController extends SimpleController
         return $response->withStatus(200);
     }
 
-
     public function getModalConfirmDeleteUser($request, $response, $args)
     {
         // GET parameters

@@ -24,7 +24,6 @@ use UserFrosting\Sprinkle\Admin\Sprunje\GroupSprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
-use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\HttpException;
@@ -127,6 +126,77 @@ class GroupController extends SimpleController
     }
 
     /**
+     * Processes the request to delete an existing group.
+     *
+     * Deletes the specified group, removing associations with any users and any group-specific authorization rules.
+     * Before doing so, checks that:
+     * 1. The group is deleteable (as specified in the `can_delete` column in the database);
+     * 2. The group is not currently set as the default primary group;
+     * 3. The submitted data is valid.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @param int $group_id the id of the group to delete.
+     */
+    public function deleteGroup($request, $response, $args)
+    {
+        $group = $this->getGroupFromParams($args);
+
+        // If the group doesn't exist, return 404
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_group', [
+            'group' => $group
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Check that we are not deleting the default group
+        // Need to use loose comparison for now, because some DBs return `id` as a string
+        if ($group->slug == $config['site.registration.user_defaults.group']) {
+            $e = new BadRequestException();
+            $e->addUserMessage('GROUP.DELETE_DEFAULT');
+            throw $e;
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if there are any users in this group
+        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        if ($countGroupUsers > 0) {
+            $e = new BadRequestException();
+            $e->addUserMessage('GROUP.NOT_EMPTY');
+            throw $e;
+        }
+
+        $groupName = $group->name;
+
+        $group->delete();
+        unset($group);
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        $ms->addMessageTranslated('success', 'GROUP.DELETION_SUCCESSFUL', [
+            'name' => $groupName
+        ]);
+
+        return $response->withStatus(200);
+    }
+
+    /**
      * Returns a list of Groups
      *
      * Generates a list of groups, optionally paginated, sorted and/or filtered.
@@ -199,6 +269,50 @@ class GroupController extends SimpleController
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
         return $sprunje->toResponse($response);
+    }
+
+    public function getModalConfirmDeleteGroup($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        $group = $this->getGroupFromParams($params);
+
+        // If the group no longer exists, forward to main group listing page
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_group', [
+            'group' => $group
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if there are any users in this group
+        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        if ($countGroupUsers > 0) {
+            $e = new BadRequestException();
+            $e->addUserMessage('GROUP.NOT_EMPTY');
+            throw $e;
+        }
+
+        return $this->ci->view->render($response, 'components/modals/confirm-delete-group.html.twig', [
+            'group' => $group,
+            'form' => [
+                'action' => "api/groups/g/{$group->slug}",
+            ]
+        ]);
     }
 
     /**
@@ -328,7 +442,6 @@ class GroupController extends SimpleController
             ]
         ]);
     }
-
 
     /**
      * Renders a page displaying a group's information, in read-only mode.
@@ -501,51 +614,6 @@ class GroupController extends SimpleController
         $group->store();
 
     }
-
-    /**
-     * Processes the request to delete an existing group.
-     *
-     * Deletes the specified group, removing associations with any users and any group-specific authorization rules.
-     * Before doing so, checks that:
-     * 1. The group is deleteable (as specified in the `can_delete` column in the database);
-     * 2. The group is not currently set as the default primary group;
-     * 3. The submitted data is valid.
-     * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @param int $group_id the id of the group to delete.
-     */
-    public function deleteGroup($group_id){
-        $post = $this->_app->request->post();
-
-        // Get the target group
-        $group = Group::find($group_id);
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Check authorization
-        if (!$this->_app->user->checkAccess('delete_group', ['group' => $group])){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
-        }
-
-        // Check that we are allowed to delete this group
-        if ($group->can_delete == "0"){
-            $ms->addMessageTranslated("danger", "CANNOT_DELETE_GROUP", ["name" => $group->name]);
-            $this->_app->halt(403);
-        }
-
-        // Do not allow deletion if this group is currently set as the default primary group
-        if ($group->is_default == GROUP_DEFAULT_PRIMARY){
-            $ms->addMessageTranslated("danger", "GROUP_CANNOT_DELETE_DEFAULT_PRIMARY", ["name" => $group->name]);
-            $this->_app->halt(403);
-        }
-
-        $ms->addMessageTranslated("success", "GROUP_DELETION_SUCCESSFUL", ["name" => $group->name]);
-        $group->delete();       // TODO: implement Group function
-        unset($group);
-    }
-
 
     protected function getGroupFromParams($params)
     {

@@ -1,0 +1,17 @@
+{% extends "layouts/modal.html.twig" %}
+
+{% block modal_title %}Delete Group{% endblock %}
+
+{% block modal_body %}
+<form class="js-form" method="delete" action="{{site.uri.public}}/{{form.action}}">
+    {% include "components/csrf.html.twig" %}
+    <div class="js-form-alerts">
+    </div>
+    <h4>Are you sure you want to delete the group '{{group.name}}'?<br><small>This action cannot be undone.</small></h4>
+    <br>
+    <div class="btn-group-action">
+        <button type="submit" class="btn btn-danger btn-lg btn-block">Yes, delete group</button>
+        <button type="button" class="btn btn-default btn-lg btn-block" data-dismiss="modal">Cancel</button>
+    </div>
+</form>
+{% endblock %}
