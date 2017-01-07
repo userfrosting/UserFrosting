@@ -538,81 +538,109 @@ class GroupController extends SimpleController
      * Processes the request to update an existing group's details.
      *
      * Processes the request from the group update form, checking that:
-     * 1. The group name is not already in use;
+     * 1. The group name/slug are not already in use;
      * 2. The user has the necessary permissions to update the posted field(s);
      * 3. The submitted data is valid.
      * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @param int $group_id the id of the group to edit.
-     * @see formGroupEdit
+     * Request type: PUT
+     * @see getModalGroupEdit
      */
-    public function updateGroup($group_id){
-        $post = $this->_app->request->post();
+    public function updateGroup($request, $response, $args)
+    {
+        // Get the username from the URL
+        $group = $this->getGroupFromParams($args);
 
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Get PUT parameters: (name, slug, icon, description)
+        $params = $request->getParsedBody();
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-update.json");
+        $schema = new RequestSchema('schema://group.json');
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
 
-        // Get the target group
-        $group = Group::find($group_id);
+        $error = false;
 
-        // If desired, put route-level authorization check here
-
-        // Remove csrf_token
-        unset($post['csrf_token']);
-
-        // Check authorization for submitted fields, if the value has been changed
-        foreach ($post as $name => $value) {
-            if ($group->attributeExists($name) && $post[$name] != $group->$name){
-                // Check authorization
-                if (!$this->_app->user->checkAccess('update_group_setting', ['group' => $group, 'property' => $name])){
-                    $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-                    $this->_app->halt(403);
-                }
-            } else if (!$group->attributeExists($name)) {
-                $ms->addMessageTranslated("danger", "NO_DATA");
-                $this->_app->halt(400);
-            }
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
         }
 
-        // Check that name is not already in use
-        if (isset($post['name']) && $post['name'] != $group->name && Group::where('name', $post['name'])->first()){
-            $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
-            $this->_app->halt(400);
+        // Determine targeted fields
+        $fieldNames = [];
+        foreach ($data as $name => $value) {
+            $fieldNames[] = $name;
         }
 
-        // TODO: validate landing page route, theme, icon?
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
 
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
 
-        // Sanitize
-        $rf->sanitize();
-
-        // Validate, and halt on validation errors.
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
+        // Access-controlled resource - check that currentUser has permission to edit submitted fields for this group
+        if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
+            'group' => $group,
+            'fields' => array_values(array_unique($fieldNames))
+        ])) {
+            throw new ForbiddenException();
         }
 
-        // Get the filtered data
-        $data = $rf->data();
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if name or slug already exists
+        if (
+            isset($data['name']) &&
+            $data['name'] != $group->name &&
+            $classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()
+        ) {
+            $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
+            $error = true;
+        }
+
+        if (
+            isset($data['slug']) &&
+            $data['slug'] != $group->slug &&
+            $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()
+        ) {
+            $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
 
         // Update the group and generate success messages
-        foreach ($data as $name => $value){
+        foreach ($data as $name => $value) {
             if ($value != $group->$name){
                 $group->$name = $value;
-                // Add any custom success messages here
             }
         }
 
-        $ms->addMessageTranslated("success", "GROUP_UPDATE", ["name" => $group->name]);
-        $group->store();
+        $group->save();
 
+        $ms->addMessageTranslated('success', 'GROUP_UPDATE', [
+            'name' => $group->name
+        ]);
+
+        return $response->withStatus(200);
     }
 
     protected function getGroupFromParams($params)
