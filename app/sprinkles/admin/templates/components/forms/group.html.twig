@@ -8,7 +8,7 @@
             <div class="form-group">
                 <label>Name</label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                    <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
                     <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="Please enter a name for the group" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
@@ -19,8 +19,13 @@
             <div class="form-group">
                 <label>Slug</label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-tag"></i></span>
-                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %}>
+                    <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
+                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
+                    <span class="input-group-btn" data-toggle="buttons">
+                        <label class="btn btn-primary">
+                            <input type="checkbox" id="form-group-slug-override" autocomplete="off"> Override
+                        </label>
+                    </span>
                 </div>
             </div>
         </div>

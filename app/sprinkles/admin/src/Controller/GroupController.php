@@ -37,6 +37,99 @@ use UserFrosting\Support\Exception\HttpException;
 class GroupController extends SimpleController
 {
     /**
+     * Processes the request to create a new group.
+     *
+     * Processes the request from the group creation form, checking that:
+     * 1. The group name is not already in use;
+     * 2. The user has the necessary permissions to update the posted field(s);
+     * 3. The submitted data is valid.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @see formGroupCreate
+     */
+    public function createGroup(){
+        $post = $this->_app->request->post();
+
+        // DEBUG: view posted data
+        //error_log(print_r($post, true));
+
+        // Load the request schema
+        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
+
+        // Get the alert message stream
+        $ms = $this->_app->alerts;
+
+        // Access-controlled resource
+        if (!$this->_app->user->checkAccess('create_group')){
+            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
+            $this->_app->halt(403);
+        }
+
+        // Set up Fortress to process the request
+        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
+
+        // Sanitize data
+        $rf->sanitize();
+
+        // Validate, and halt on validation errors.
+        $error = !$rf->validate(true);
+
+        // Get the filtered data
+        $data = $rf->data();
+
+        // Remove csrf_token from object data
+        $rf->removeFields(['csrf_token']);
+
+        // Perform desired data transformations on required fields.
+        $data['name'] = trim($data['name']);
+        $data['new_user_title'] = trim($data['new_user_title']);
+        $data['landing_page'] = strtolower(trim($data['landing_page']));
+        $data['theme'] = trim($data['theme']);
+        $data['can_delete'] = 1;
+
+        // Check if group name already exists
+        if (Group::where('name', $data['name'])->first()){
+            $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
+            $error = true;
+        }
+
+        // Halt on any validation errors
+        if ($error) {
+            $this->_app->halt(400);
+        }
+
+        // Set default values if not specified or not authorized
+        if (!isset($data['theme']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "theme"]))
+            $data['theme'] = "default";
+
+        if (!isset($data['new_user_title']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "new_user_title"])) {
+            // Set default title for new users
+            $data['new_user_title'] = "New User";
+        }
+
+        if (!isset($data['landing_page']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "landing_page"])) {
+            $data['landing_page'] = "dashboard";
+        }
+
+        if (!isset($data['icon']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "icon"])) {
+            $data['icon'] = "fa fa-user";
+        }
+
+        if (!isset($data['is_default']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "is_default"])) {
+            $data['is_default'] = "0";
+        }
+
+        // Create the group
+        $group = new Group($data);
+
+        // Store new group to database
+        $group->store();
+
+        // Success message
+        $ms->addMessageTranslated("success", "GROUP_CREATION_SUCCESSFUL", $data);
+    }
+
+    /**
      * Returns a list of Groups
      *
      * Generates a list of groups, optionally paginated, sorted and/or filtered.
@@ -332,100 +425,6 @@ class GroupController extends SimpleController
         }
 
         return $this->ci->view->render($response, 'pages/groups.html.twig');
-    }
-
-
-    /**
-     * Processes the request to create a new group.
-     *
-     * Processes the request from the group creation form, checking that:
-     * 1. The group name is not already in use;
-     * 2. The user has the necessary permissions to update the posted field(s);
-     * 3. The submitted data is valid.
-     * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @see formGroupCreate
-     */
-    public function createGroup(){
-        $post = $this->_app->request->post();
-
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
-
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('create_group')){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
-        }
-
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
-
-        // Sanitize data
-        $rf->sanitize();
-
-        // Validate, and halt on validation errors.
-        $error = !$rf->validate(true);
-
-        // Get the filtered data
-        $data = $rf->data();
-
-        // Remove csrf_token from object data
-        $rf->removeFields(['csrf_token']);
-
-        // Perform desired data transformations on required fields.
-        $data['name'] = trim($data['name']);
-        $data['new_user_title'] = trim($data['new_user_title']);
-        $data['landing_page'] = strtolower(trim($data['landing_page']));
-        $data['theme'] = trim($data['theme']);
-        $data['can_delete'] = 1;
-
-        // Check if group name already exists
-        if (Group::where('name', $data['name'])->first()){
-            $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
-            $error = true;
-        }
-
-        // Halt on any validation errors
-        if ($error) {
-            $this->_app->halt(400);
-        }
-
-        // Set default values if not specified or not authorized
-        if (!isset($data['theme']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "theme"]))
-            $data['theme'] = "default";
-
-        if (!isset($data['new_user_title']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "new_user_title"])) {
-            // Set default title for new users
-            $data['new_user_title'] = "New User";
-        }
-
-        if (!isset($data['landing_page']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "landing_page"])) {
-            $data['landing_page'] = "dashboard";
-        }
-
-        if (!isset($data['icon']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "icon"])) {
-            $data['icon'] = "fa fa-user";
-        }
-
-        if (!isset($data['is_default']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "is_default"])) {
-            $data['is_default'] = "0";
-        }
-
-        // Create the group
-        $group = new Group($data);
-
-        // Store new group to database
-        $group->store();
-
-        // Success message
-        $ms->addMessageTranslated("success", "GROUP_CREATION_SUCCESSFUL", $data);
     }
 
     /**
