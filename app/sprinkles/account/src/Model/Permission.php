@@ -66,4 +66,19 @@ class Permission extends UFModel
 
         return $this->belongsToMany($classMapper->getClassMapping('role'), 'permission_roles');
     }
+
+    /**
+     * Query scope to get all permissions assigned to a specific role.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $roleId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForRole($query, $roleId)
+    {
+        return $query->join('permission_roles', function ($join) use ($roleId) {
+            $join->on('permission_roles.permission_id', 'permissions.id')
+                 ->where('role_id', $roleId);
+        });
+    }
 }

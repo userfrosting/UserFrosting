@@ -9,7 +9,7 @@
                 <label>Name</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
-                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="Please enter a name for the group" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{role.name}}" placeholder="Please enter a name for the role" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -20,25 +20,14 @@
                 <label>Slug</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
-                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
+                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{role.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
                     {% if 'slug' not in form.fields.disabled %}
                         <span class="input-group-btn" data-toggle="buttons">
                             <label class="btn btn-primary">
-                                <input type="checkbox" id="form-group-slug-override" autocomplete="off"> Override
+                                <input type="checkbox" id="form-role-slug-override" autocomplete="off"> Override
                             </label>
                         </span>
                     {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {% if 'icon' not in fields.hidden %}
-        <div class="col-sm-12">
-            <div class="form-group">
-                <label>Icon</label>
-                <div class="input-group">
-                    <span class="input-group-addon icon-preview"><i class="{{group.icon}} fa-fw"></i></span>
-                    <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="Icon for group members" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -47,7 +36,7 @@
         <div class="col-sm-12">
             <div class="form-group">
                 <label for="input_description">Description</label>
-                <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{group.description}}</textarea>
+                <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{role.description}}</textarea>
             </div>
         </div>
         {% endif %}
@@ -63,25 +52,25 @@
         </div>
         {% endif %}
         {% if "edit" not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-3">
+        <div class="col-xs-6 col-sm-4">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-group-edit" data-slug="{{group.slug}}">
+                <button type="button" class="btn btn-block btn-md btn-primary js-role-edit" data-slug="{{role.slug}}">
                     <i class="fa fa-edit"></i> {{translate('EDIT')}}
                 </button>
             </div>
         </div>
         {% endif %}
         {% if "delete" not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-3">
+        <div class="col-xs-6 col-sm-4">
             <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-group-delete" data-slug="{{group.slug}}">
+                <button type="button" class="btn btn-block btn-md btn-danger js-role-delete" data-slug="{{role.slug}}">
                     <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
                 </button>
             </div>
         </div>
         {% endif %}
         {% if "cancel" not in form.buttons.hidden %}
-        <div class="col-xs-4 col-sm-3 pull-right">
+        <div class="col-xs-4 col-sm-4 pull-right">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
             </div>

@@ -22,6 +22,7 @@
         },
         "js/form-widgets": {
             "scripts": [
+                "vendor/speakingurl-11.0.0/speakingurl.js",
                 "vendor/select2-4.0.3/js/select2.js"
             ],
             "options": {

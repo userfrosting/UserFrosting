@@ -12,6 +12,9 @@ $(document).ready(function() {
     $("#alerts-page").ufAlerts();
     $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
 
+    // Control buttons
+    bindGroupButtons($("#view-group"));
+
     $("#widget-group-users").ufTable({
         dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users'
     });

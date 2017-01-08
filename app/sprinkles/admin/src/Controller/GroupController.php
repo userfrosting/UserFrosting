@@ -24,7 +24,6 @@ use UserFrosting\Sprinkle\Admin\Sprunje\GroupSprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
-use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\HttpException;
@@ -36,6 +35,167 @@ use UserFrosting\Support\Exception\HttpException;
  */
 class GroupController extends SimpleController
 {
+    /**
+     * Processes the request to create a new group.
+     *
+     * Processes the request from the group creation form, checking that:
+     * 1. The group name and slug are not already in use;
+     * 2. The user has permission to create a new group;
+     * 3. The submitted data is valid.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: POST
+     * @see getModalCreateGroup
+     */
+    public function createGroup($request, $response, $args)
+    {
+        // Get POST parameters: name, slug, icon, description
+        $params = $request->getParsedBody();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'create_group')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // Load the request schema
+        $schema = new RequestSchema('schema://group.json');
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
+        }
+
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if name or slug already exists
+        if ($classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()) {
+            $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
+            $error = true;
+        }
+
+        if ($classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()) {
+            $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // All checks passed!  log events/activities and create group
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+            // Create the group
+            $group = $classMapper->createInstance('group', $data);
+
+            // Store new group to database
+            $group->save();
+
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} created group {$group->name}.", [
+                'type' => 'group_create',
+                'user_id' => $currentUser->id
+            ]);
+
+            $ms->addMessageTranslated('success', 'GROUP.CREATION_SUCCESSFUL', $data);
+        });
+
+        return $response->withStatus(200);
+    }
+
+    /**
+     * Processes the request to delete an existing group.
+     *
+     * Deletes the specified group.
+     * Before doing so, checks that:
+     * 1. The user has permission to delete this group;
+     * 2. The group is not currently set as the default for new users;
+     * 3. The group is empty (does not have any users);
+     * 4. The submitted data is valid.
+     * This route requires authentication (and should generally be limited to admins or the root user).
+     * Request type: DELETE
+     */
+    public function deleteGroup($request, $response, $args)
+    {
+        $group = $this->getGroupFromParams($args);
+
+        // If the group doesn't exist, return 404
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_group', [
+            'group' => $group
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Check that we are not deleting the default group
+        // Need to use loose comparison for now, because some DBs return `id` as a string
+        if ($group->slug == $config['site.registration.user_defaults.group']) {
+            $e = new BadRequestException();
+            $e->addUserMessage('GROUP.DELETE_DEFAULT');
+            throw $e;
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if there are any users in this group
+        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        if ($countGroupUsers > 0) {
+            $e = new BadRequestException();
+            $e->addUserMessage('GROUP.NOT_EMPTY');
+            throw $e;
+        }
+
+        $groupName = $group->name;
+
+        $group->delete();
+        unset($group);
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        $ms->addMessageTranslated('success', 'GROUP.DELETION_SUCCESSFUL', [
+            'name' => $groupName
+        ]);
+
+        return $response->withStatus(200);
+    }
+
     /**
      * Returns a list of Groups
      *
@@ -111,6 +271,50 @@ class GroupController extends SimpleController
         return $sprunje->toResponse($response);
     }
 
+    public function getModalConfirmDeleteGroup($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        $group = $this->getGroupFromParams($params);
+
+        // If the group no longer exists, forward to main group listing page
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'delete_group', [
+            'group' => $group
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if there are any users in this group
+        $countGroupUsers = $classMapper->staticMethod('user', 'where', 'group_id', $group->id)->count();
+        if ($countGroupUsers > 0) {
+            $e = new BadRequestException();
+            $e->addUserMessage('GROUP.NOT_EMPTY');
+            throw $e;
+        }
+
+        return $this->ci->view->render($response, 'components/modals/confirm-delete-group.html.twig', [
+            'group' => $group,
+            'form' => [
+                'action' => "api/groups/g/{$group->slug}",
+            ]
+        ]);
+    }
+
     /**
      * Renders the modal form for creating a new group.
      *
@@ -155,9 +359,6 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
             'group' => $group,
-            'modal' => [
-
-            ],
             'form' => [
                 'action' => 'api/groups',
                 'method' => 'POST',
@@ -242,7 +443,6 @@ class GroupController extends SimpleController
         ]);
     }
 
-
     /**
      * Renders a page displaying a group's information, in read-only mode.
      *
@@ -256,12 +456,10 @@ class GroupController extends SimpleController
     {
         $group = $this->getGroupFromParams($args);
 
-        $groupsPage = '';
-
         // If the group no longer exists, forward to main group listing page
         if (!$group) {
-            $usersPage = $this->ci->router->pathFor('uri_groups');
-            return $response->withRedirect($groupsPage, 404);
+            $redirectPage = $this->ci->router->pathFor('uri_groups');
+            return $response->withRedirect($redirectPage, 404);
         }
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -334,225 +532,114 @@ class GroupController extends SimpleController
         return $this->ci->view->render($response, 'pages/groups.html.twig');
     }
 
-
-    /**
-     * Processes the request to create a new group.
-     *
-     * Processes the request from the group creation form, checking that:
-     * 1. The group name is not already in use;
-     * 2. The user has the necessary permissions to update the posted field(s);
-     * 3. The submitted data is valid.
-     * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @see formGroupCreate
-     */
-    public function createGroup(){
-        $post = $this->_app->request->post();
-
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
-
-        // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-create.json");
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Access-controlled resource
-        if (!$this->_app->user->checkAccess('create_group')){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
-        }
-
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
-
-        // Sanitize data
-        $rf->sanitize();
-
-        // Validate, and halt on validation errors.
-        $error = !$rf->validate(true);
-
-        // Get the filtered data
-        $data = $rf->data();
-
-        // Remove csrf_token from object data
-        $rf->removeFields(['csrf_token']);
-
-        // Perform desired data transformations on required fields.
-        $data['name'] = trim($data['name']);
-        $data['new_user_title'] = trim($data['new_user_title']);
-        $data['landing_page'] = strtolower(trim($data['landing_page']));
-        $data['theme'] = trim($data['theme']);
-        $data['can_delete'] = 1;
-
-        // Check if group name already exists
-        if (Group::where('name', $data['name'])->first()){
-            $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
-            $error = true;
-        }
-
-        // Halt on any validation errors
-        if ($error) {
-            $this->_app->halt(400);
-        }
-
-        // Set default values if not specified or not authorized
-        if (!isset($data['theme']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "theme"]))
-            $data['theme'] = "default";
-
-        if (!isset($data['new_user_title']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "new_user_title"])) {
-            // Set default title for new users
-            $data['new_user_title'] = "New User";
-        }
-
-        if (!isset($data['landing_page']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "landing_page"])) {
-            $data['landing_page'] = "dashboard";
-        }
-
-        if (!isset($data['icon']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "icon"])) {
-            $data['icon'] = "fa fa-user";
-        }
-
-        if (!isset($data['is_default']) || !$this->_app->user->checkAccess("update_group_setting", ["property" => "is_default"])) {
-            $data['is_default'] = "0";
-        }
-
-        // Create the group
-        $group = new Group($data);
-
-        // Store new group to database
-        $group->store();
-
-        // Success message
-        $ms->addMessageTranslated("success", "GROUP_CREATION_SUCCESSFUL", $data);
-    }
-
     /**
      * Processes the request to update an existing group's details.
      *
      * Processes the request from the group update form, checking that:
-     * 1. The group name is not already in use;
+     * 1. The group name/slug are not already in use;
      * 2. The user has the necessary permissions to update the posted field(s);
      * 3. The submitted data is valid.
      * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @param int $group_id the id of the group to edit.
-     * @see formGroupEdit
+     * Request type: PUT
+     * @see getModalGroupEdit
      */
-    public function updateGroup($group_id){
-        $post = $this->_app->request->post();
+    public function updateGroup($request, $response, $args)
+    {
+        // Get the group based on slug in URL
+        $group = $this->getGroupFromParams($args);
 
-        // DEBUG: view posted data
-        //error_log(print_r($post, true));
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Get PUT parameters: (name, slug, icon, description)
+        $params = $request->getParsedBody();
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
 
         // Load the request schema
-        $requestSchema = new \Fortress\RequestSchema($this->_app->config('schema.path') . "/forms/group-update.json");
+        $schema = new RequestSchema('schema://group.json');
 
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
 
-        // Get the target group
-        $group = Group::find($group_id);
+        $error = false;
 
-        // If desired, put route-level authorization check here
-
-        // Remove csrf_token
-        unset($post['csrf_token']);
-
-        // Check authorization for submitted fields, if the value has been changed
-        foreach ($post as $name => $value) {
-            if ($group->attributeExists($name) && $post[$name] != $group->$name){
-                // Check authorization
-                if (!$this->_app->user->checkAccess('update_group_setting', ['group' => $group, 'property' => $name])){
-                    $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-                    $this->_app->halt(403);
-                }
-            } else if (!$group->attributeExists($name)) {
-                $ms->addMessageTranslated("danger", "NO_DATA");
-                $this->_app->halt(400);
-            }
+        // Validate request data
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
         }
 
-        // Check that name is not already in use
-        if (isset($post['name']) && $post['name'] != $group->name && Group::where('name', $post['name'])->first()){
-            $ms->addMessageTranslated("danger", "GROUP_NAME_IN_USE", $post);
-            $this->_app->halt(400);
+        // Determine targeted fields
+        $fieldNames = [];
+        foreach ($data as $name => $value) {
+            $fieldNames[] = $name;
         }
 
-        // TODO: validate landing page route, theme, icon?
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
 
-        // Set up Fortress to process the request
-        $rf = new \Fortress\HTTPRequestFortress($ms, $requestSchema, $post);
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
 
-        // Sanitize
-        $rf->sanitize();
-
-        // Validate, and halt on validation errors.
-        if (!$rf->validate()) {
-            $this->_app->halt(400);
+        // Access-controlled resource - check that currentUser has permission to edit submitted fields for this group
+        if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
+            'group' => $group,
+            'fields' => array_values(array_unique($fieldNames))
+        ])) {
+            throw new ForbiddenException();
         }
 
-        // Get the filtered data
-        $data = $rf->data();
+        $this->ci->db;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Check if name or slug already exists
+        if (
+            isset($data['name']) &&
+            $data['name'] != $group->name &&
+            $classMapper->staticMethod('group', 'where', 'name', $data['name'])->first()
+        ) {
+            $ms->addMessageTranslated('danger', 'GROUP.NAME.IN_USE', $data);
+            $error = true;
+        }
+
+        if (
+            isset($data['slug']) &&
+            $data['slug'] != $group->slug &&
+            $classMapper->staticMethod('group', 'where', 'slug', $data['slug'])->first()
+        ) {
+            $ms->addMessageTranslated('danger', 'GROUP.SLUG.IN_USE', $data);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
 
         // Update the group and generate success messages
-        foreach ($data as $name => $value){
+        foreach ($data as $name => $value) {
             if ($value != $group->$name){
                 $group->$name = $value;
-                // Add any custom success messages here
             }
         }
 
-        $ms->addMessageTranslated("success", "GROUP_UPDATE", ["name" => $group->name]);
-        $group->store();
+        $group->save();
 
+        $ms->addMessageTranslated('success', 'GROUP.UPDATE', [
+            'name' => $group->name
+        ]);
+
+        return $response->withStatus(200);
     }
-
-    /**
-     * Processes the request to delete an existing group.
-     *
-     * Deletes the specified group, removing associations with any users and any group-specific authorization rules.
-     * Before doing so, checks that:
-     * 1. The group is deleteable (as specified in the `can_delete` column in the database);
-     * 2. The group is not currently set as the default primary group;
-     * 3. The submitted data is valid.
-     * This route requires authentication (and should generally be limited to admins or the root user).
-     * Request type: POST
-     * @param int $group_id the id of the group to delete.
-     */
-    public function deleteGroup($group_id){
-        $post = $this->_app->request->post();
-
-        // Get the target group
-        $group = Group::find($group_id);
-
-        // Get the alert message stream
-        $ms = $this->_app->alerts;
-
-        // Check authorization
-        if (!$this->_app->user->checkAccess('delete_group', ['group' => $group])){
-            $ms->addMessageTranslated("danger", "ACCESS_DENIED");
-            $this->_app->halt(403);
-        }
-
-        // Check that we are allowed to delete this group
-        if ($group->can_delete == "0"){
-            $ms->addMessageTranslated("danger", "CANNOT_DELETE_GROUP", ["name" => $group->name]);
-            $this->_app->halt(403);
-        }
-
-        // Do not allow deletion if this group is currently set as the default primary group
-        if ($group->is_default == GROUP_DEFAULT_PRIMARY){
-            $ms->addMessageTranslated("danger", "GROUP_CANNOT_DELETE_DEFAULT_PRIMARY", ["name" => $group->name]);
-            $this->_app->halt(403);
-        }
-
-        $ms->addMessageTranslated("success", "GROUP_DELETION_SUCCESSFUL", ["name" => $group->name]);
-        $group->delete();       // TODO: implement Group function
-        unset($group);
-    }
-
 
     protected function getGroupFromParams($params)
     {

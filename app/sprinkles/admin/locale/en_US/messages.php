@@ -58,11 +58,6 @@ return [
 
     "MANUALLY_ACTIVATED" => "{{user_name}}'s account has been manually activated",
     "MASTER_ACCOUNT_EXISTS" => "The master account already exists!",
-    "MINIFICATION_SUCCESS" => "Successfully minified and concatenated CSS and JS for all page groups.",
-
-    "PRIMARY_GROUP_SET" => "Successfully set primary group for '{{user_name}}'.",
-
-    "TITLE_UPDATED" => "{{user_name}}'s title changed to '{{title}}'",
 
     "ACTIVITY" => [
         1 => "Activity",

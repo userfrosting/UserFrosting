@@ -38,7 +38,22 @@
         "js/pages/group": {
             "scripts": [
                 "js/widgets/users.js",
+                "js/widgets/groups.js",
                 "js/pages/group.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/role": {
+            "scripts": [
+                "js/widgets/permissions.js",
+                "js/widgets/roles.js",
+                "js/pages/role.js"
             ],
             "options": {
                 "result": {
@@ -50,6 +65,7 @@
         },
         "js/pages/user": {
             "scripts": [
+                "js/widgets/users.js",
                 "js/pages/user.js"
             ],
             "options": {
