@@ -435,15 +435,14 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
+        $this->ci->db;
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $this->ci->db;
-
         $sprunje = new PermissionSprunje($classMapper, $params);
         $sprunje->extendQuery(function ($query) use ($role) {
-            return $query->join('permission_roles', 'permissions.id', 'permission_id')
-                         ->where('role_id', $role->id);
+            return $query->forRole($role->id);
         });
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.

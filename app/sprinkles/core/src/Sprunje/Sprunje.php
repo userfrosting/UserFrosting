@@ -121,6 +121,16 @@ abstract class Sprunje
     }
 
     /**
+     * Get the underlying QueryBuilder object.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
      * Executes the sprunje query, applying all sorts, filters, and pagination.
      *
      * Returns an array containing `count` (the total number of rows, before filtering), `count_filtered` (the total number of rows after filtering),
