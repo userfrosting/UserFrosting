@@ -4,7 +4,14 @@
     3. gulp bundle-cleanup
 */
 
+
 let gulp = require('gulp');
+install = require("gulp-install") ;
+notify = require("gulp-notify") ;
+//bower = require('gulp-bower');
+debug = require('gulp-debug') ;
+del=require('del');
+
 let plugins = require('gulp-load-plugins')();
 
 // The Sprinkle load order from sprinkles.json
@@ -16,6 +23,24 @@ let sourceDirectory = '../app/sprinkles/*/assets/';
 // The directory where the bundle task should place compiled assets.  The names of assets in bundle.result.json
 // will be specified relative to this path.
 let destDirectory = '../public/assets/';
+
+let bowerSourcePath = '../app/sprinkles/*/bower.json';
+
+gulp.task('bower-clean', function () {
+    return plugins.del(bowerSourcePath,{force:true});
+});
+
+// Gulp task to install bower packages
+gulp.task('bower-install', function () {
+    return gulp.src(bowerSourcePath)
+            .pipe(plugins.debug())
+            .pipe(plugins.install({args: ['config.directory=./assets/bower-vendor' ]}))
+            .pipe(plugins.notify({
+                onLast: true,
+                message: 'All bower packages installed successfully'
+            }));
+});
+
 
 gulp.task('build', ['copy'], function () {
     fb = gulp.src('./bundle.config.json')

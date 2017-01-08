@@ -15,6 +15,13 @@
     "gulp-load-plugins": "^1.4.0",
     "merge-array-object": "^1.0.3",
     "recursive-copy": "^2.0.5",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.5.4",
+        "gulp-notify": "*",
+        "gulp-install": "*",
+        "gulp-debug": "*",
+        "gulp-clean": "*",
+        "gulp-prune": "*",
+        "del": "*"
+        
   }
 }
