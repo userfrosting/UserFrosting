@@ -36,4 +36,17 @@ class RoleSprunje extends Sprunje
 
         return $query;
     }
+
+    /**
+     * Filter LIKE name OR description.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function filterInfo($query, $value)
+    {
+        return $query->like('name', $value)
+                     ->orLike('description', $value);
+    }
 }

@@ -1,0 +1,69 @@
+{% extends "layouts/modal.html.twig" %}
+
+{% block modal_title %}Manage Roles{% endblock %}
+
+{% block modal_body %}
+<form class="js-form" method="PUT" action="{{site.uri.public}}/api/users/u/{{user.user_name}}/roles">
+    {% include "components/csrf.html.twig" %}
+    <div class="js-form-alerts">
+    </div>
+    <div class="js-form-roles">
+
+    </div>
+    <div class="padding-bottom">
+      <button type="button" class="btn btn-link js-add-role">Assign another role</button>
+    </div>
+        <br>
+    <div class="row">
+        <div class="col-xs-8 col-sm-4">
+            <div class="vert-pad">
+                <button type="submit" class="btn btn-block btn-lg btn-success">
+                    Update roles
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <div class="vert-pad">
+                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+{# This contains a series of <script> blocks, each of which is a client-side Handlebars template.
+ # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+ # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+ #
+ # These templates require handlebars-helpers.js, moment.js
+#}
+{% verbatim %}
+<script id="user-roles-select-option" type="text/x-handlebars-template">
+    <div>
+        <strong>
+            {{name}}
+        </strong>
+        <br>
+        {{description}}
+    </div>
+</script>
+
+<script id="user-roles-row" type="text/x-handlebars-template">
+    <div class="uf-collection-row">
+        <div class="pull-left col-button">
+            <button type="button" class="btn btn-sm btn-danger js-delete-row" title="Delete"> <i class="fa fa-times"></i> </button>
+        </div>
+        <div class="col-button-offset">
+          <label class="sr-only">Role</label>
+          <select name="roles[{{ rownum }}][role_id]" type="text" class="form-control">
+          <option></option>
+          </select>
+        </div>
+    </div>
+</script>
+{% endverbatim %}
+
+<!-- Include validation rules -->
+<script>
+    {% include "components/page.js.twig" %}
+</script>
+{% endblock %}

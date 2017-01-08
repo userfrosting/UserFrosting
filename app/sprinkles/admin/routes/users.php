@@ -26,6 +26,8 @@ $app->group('/api/users', function () {
 
     $this->get('/u/{user_name}/activities', 'UserFrosting\Sprinkle\Admin\Controller\ActivityController:getUserActivities');
 
+    $this->get('/u/{user_name}/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getUserRoles');
+
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUser');
 
     $this->post('/u/{user_name}/password-reset', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUserPasswordReset');
@@ -43,4 +45,6 @@ $app->group('/modals/users', function () {
     $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUser');
 
     $this->get('/password', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUserPassword');
+
+    $this->get('/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUserRoles');
 });

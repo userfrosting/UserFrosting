@@ -81,4 +81,19 @@ class Permission extends UFModel
                  ->where('role_id', $roleId);
         });
     }
+
+    /**
+     * Query scope to get all permissions NOT associated with a specific role.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $roleId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNotForRole($query, $roleId)
+    {
+        return $query->join('permission_roles', function ($join) use ($roleId) {
+            $join->on('permission_roles.permission_id', 'permissions.id')
+                 ->where('role_id', '!=', $roleId);
+        });
+    }
 }

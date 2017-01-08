@@ -71,7 +71,8 @@
     "js/form-widgets" : {
         "scripts": [
             "vendor/speakingurl-11.0.0/speakingurl.js",
-            "vendor/select2-4.0.3/js/select2.js"
+            "vendor/select2-4.0.3/js/select2.full.js",
+            "js/uf-collection.js"
         ],
         "options": {
             "result": {
@@ -310,7 +311,8 @@
     "css/form-widgets" : {
         "styles": [
             "vendor/select2-4.0.3/css/select2.css",
-            "vendor/select2-bootstrap-theme/css/select2-bootstrap.css"
+            "vendor/select2-bootstrap-theme/css/select2-bootstrap.css",
+            "css/uf-collection.css"
         ],
         "options": {
             "result": {

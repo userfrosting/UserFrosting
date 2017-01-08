@@ -21,6 +21,7 @@ use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Admin\Sprunje\RoleSprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
@@ -547,6 +548,51 @@ class UserController extends SimpleController
     }
 
     /**
+     * Renders the modal form for editing a user's roles.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getModalEditUserRoles($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        $user = $this->getUserFromParams($params);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled resource - check that currentUser has permission to edit "roles" field for this user
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['roles']
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        // Load validation rules
+        $schema = new RequestSchema('schema://edit-user-roles.json');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        return $this->ci->view->render($response, 'components/modals/user-manage-roles.html.twig', [
+            'user' => $user,
+            'page' => [
+                'validators' => $validator->rules('json', false)
+            ]
+        ]);
+    }
+
+    /**
      * Returns info for a single user.
      *
      * This page requires authentication.
@@ -593,6 +639,51 @@ class UserController extends SimpleController
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
         return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Returns roles associated with a single user.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getUserRoles($request, $response, $args)
+    {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $this->ci->db;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user_roles', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        $sprunje = new RoleSprunje($classMapper, $params);
+        $sprunje->extendQuery(function ($query) use ($user) {
+            return $query->forUser($user->id);
+        });
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
     }
 
     /**
