@@ -300,6 +300,9 @@ abstract class Database {
         // Setup initial configuration settings        
         static::$app->site->install_status = "pending";
         static::$app->site->root_account_config_token = md5(uniqid(mt_rand(), false));
+        if (static::$app->config('db')['db_driver'] == 'sqlite') {
+          error_log("initial config token: ".static::$app->site->root_account_config_token);
+        }
         static::$app->site->store();        
         
         // Setup default groups
