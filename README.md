@@ -18,6 +18,27 @@ UserFrosting is a secure, modern user management system written in PHP and built
 
 Please see our [installation guide](http://www.userfrosting.com/installation/).
 
+## Quickstart With Docker
+
+If you're a [docker](https://www.docker.com) user, it takes about 2 minutes to get started. First build the image.
+
+```shell
+docker build -t userfrosting .
+```
+
+Now, run the container.
+
+```shell
+docker run -d -p 9080:80 --name=userfrosting userfrosting
+```
+
+You should now be able to connect your browser [http://localhost:9080](http://localhost:9080). During configuration you will need a configuration token which can be retrieved from the logs:
+
+```shell
+docker logs userfrosting 2>&1 | grep 'initial config token'
+```
+
+
 ## Troubleshooting
 
 If you are having trouble installing UserFrosting, please read our [troubleshooting guide](http://www.userfrosting.com/troubleshooting) first!
@@ -93,7 +114,7 @@ $user = User::find(1);
 $user = UserLoader::fetch("alex", "user_name");   // Fetch User with user_name = "alex"
 
 // You can do...
-$user = User::where("user_name", "alex")->first(); 
+$user = User::where("user_name", "alex")->first();
 
 // Instead of...
 UserLoader::exists("zergling@userfrosting.com", "email");
