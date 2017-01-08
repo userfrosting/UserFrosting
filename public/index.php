@@ -28,7 +28,7 @@ $container = new Container;
 $sprinkles = json_decode(file_get_contents('../app/sprinkles/sprinkles.json'));
 
 // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
-$container['sprinkleManager'] = function ($c) {
+$container['sprinkleManager'] = function ($c) use ($sprinkles) {
     return new SprinkleManager($c, $sprinkles);
 };
 

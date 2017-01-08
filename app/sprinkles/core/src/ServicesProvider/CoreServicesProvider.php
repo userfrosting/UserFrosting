@@ -107,6 +107,15 @@ class CoreServicesProvider
 
                 $as = new AssetBundleSchema($aub);
                 $as->loadRawSchemaFile($locator->findResource($config['assets.raw.schema'], true, true));
+
+                // Extend for loaded sprinkles
+                $sprinkles = $c->sprinkleManager->getSprinkles();
+                foreach ($sprinkles as $sprinkle) {
+                    $resource = $locator->findResource("sprinkles://$sprinkle/bundle.config.json", true, true);
+                    if (file_exists($resource)) {
+                        $as->loadRawSchemaFile($resource);
+                    }
+                }
             } else {
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
                 $aub = new CompiledAssetUrlBuilder($baseUrl);
@@ -116,7 +125,7 @@ class CoreServicesProvider
             }
 
             $am = new AssetManager($aub, $as);
-
+            
             return $am;
         };
 
@@ -206,7 +215,7 @@ class CoreServicesProvider
                     $base_uri['port'],
                     $base_uri['path']
                 );
-
+                
                 // Slim\Http\Uri likes to add trailing slashes when the path is empty, so this fixes that.
                 $config['site.uri.public'] = trim($public, '/');
             }
