@@ -2,15 +2,15 @@
     "bundle": {
         "js/main": {
             "scripts": [
-                "vendor/bootstrap-3.3.6/js/bootstrap.js",
-                "vendor/handlebars-1.2.0/handlebars.js",
-                "vendor/jqueryValidation-1.14.0/jquery.validate.js",
-                "vendor/jqueryValidation-1.14.0/additional-methods.js",
-                "js/fortress-jqueryvalidation-methods.js",
-                "js/uf-jqueryvalidation-config.js",
-                "js/uf-alerts.js",
-                "js/uf-form.js",
-                "js/uf-modal.js"
+                "vendor/bootstrap/dist/js/bootstrap.js",
+                "vendor/handlebars/handlebars.js",
+                "vendor/jquery-validation/dist/jquery.validate.js",
+                "vendor/jquery-validation/dist/additional-methods.js",
+                "local/core/js/fortress-jqueryvalidation-methods.js",
+                "local/core/js/uf-jqueryvalidation-config.js",
+                "local/core/js/uf-alerts.js",
+                "local/core/js/uf-form.js",
+                "local/core/js/uf-modal.js"
             ],
             "options": {
                 "result": {
@@ -22,8 +22,8 @@
         },
         "js/form-widgets": {
             "scripts": [
-                "vendor/speakingurl-11.0.0/speakingurl.js",
-                "vendor/select2-4.0.3/js/select2.js"
+                "vendor/speakingurl/speakingurl.min.js",
+                "vendor/select2/dist/js/select2.js"
             ],
             "options": {
                 "result": {
@@ -35,10 +35,10 @@
         },
         "css/main": {
             "styles": [
-                "vendor/font-awesome-4.7.0/css/font-awesome.css",
-                "vendor/bootstrap-3.3.6/css/bootstrap.css",
-                "css/uf-jqueryvalidation.css",
-                "css/uf-alerts.css"
+                "vendor/font-awesome/css/font-awesome.css",
+                "vendor/bootstrap/dist/css/bootstrap.css",
+                "local/core/css/uf-jqueryvalidation.css",
+                "local/core/css/uf-alerts.css"
             ],
             "options": {
                 "result": {
@@ -50,8 +50,8 @@
         },
         "css/guest": {
             "styles": [
-                "vendor/start-bootstrap/css/modern-business.css",
-                "css/guest.css"
+                "local/start-bootstrap/css/modern-business.css",
+                "local/core/css/guest.css"
             ],
             "options": {
                 "result": {
@@ -63,8 +63,8 @@
         },
         "css/form-widgets": {
             "styles": [
-                "vendor/select2-4.0.3/css/select2.css",
-                "vendor/select2-bootstrap-theme/css/select2-bootstrap.css"
+                "vendor/select2/dist/css/select2.css",
+                "vendor/select2-bootstrap-theme/dist/select2-bootstrap.css"
             ],
             "options": {
                 "result": {

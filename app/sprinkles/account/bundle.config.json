@@ -3,7 +3,7 @@
         "js/azmind": {
             "scripts": [
                 "vendor/jquery-backstretch/jquery.backstretch.js",
-                "js/azmind-backstretch.js"
+                "local/azmind/js/azmind-backstretch.js"
             ],
             "options": {
                 "result": {
@@ -15,7 +15,7 @@
         },
         "js/pages/account-settings": {
             "scripts": [
-                "js/pages/account-settings.js"
+                "local/pages/js/account-settings.js"
             ],
             "options": {
                 "result": {
@@ -27,7 +27,7 @@
         },
         "js/pages/forgot-password": {
             "scripts": [
-                "js/pages/forgot-password.js"
+                "local/pages/js/forgot-password.js"
             ],
             "options": {
                 "result": {
@@ -39,7 +39,7 @@
         },
         "js/pages/resend-verification": {
             "scripts": [
-                "js/pages/resend-verification.js"
+                "local/pages/js/resend-verification.js"
             ],
             "options": {
                 "result": {
@@ -51,7 +51,7 @@
         },
         "js/pages/set-or-reset-password": {
             "scripts": [
-                "js/pages/set-or-reset-password.js"
+                "local/pages/js/set-or-reset-password.js"
             ],
             "options": {
                 "result": {
@@ -63,8 +63,8 @@
         },
         "js/pages/sign-in-or-register": {
             "scripts": [
-                "js/uf-captcha.js",
-                "js/pages/sign-in-or-register.js"
+                "local/core/js/uf-captcha.js",
+                "local/pages/js/sign-in-or-register.js"
             ],
             "options": {
                 "result": {
@@ -76,9 +76,9 @@
         },
         "css/azmind": {
             "styles": [
-                "vendor/azmind/css/form-elements.css",
-                "vendor/azmind/css/styles.css",
-                "css/azmind-custom.css"
+                "local/azmind/css/form-elements.css",
+                "local/azmind/css/styles.css",
+                "local/azmind/css/azmind-custom.css"
             ],
             "options": {
                 "result": {
