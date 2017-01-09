@@ -102,6 +102,53 @@ function updateUser(userName, fieldName, fieldValue) {
         attachUserForm();
     });
 
+    // Manage user roles button
+    el.find('.js-user-roles').click(function() {
+        var userName = $(this).data('user_name');
+        $("body").ufModal({
+            sourceUrl: site.uri.public + "/modals/users/roles",
+            ajaxParams: {
+                user_name: userName
+            },
+            msgTarget: $("#alerts-page")
+        });
+
+        $("body").on('renderSuccess.ufModal', function (data) {
+            var modal = $(this).ufModal('getModal');
+            var form = modal.find('.js-form');
+
+            // Set up collection widget
+            var roleWidget = modal.find('.js-form-roles');
+            roleWidget.ufCollection({
+                dataUrl         : site.uri.public + '/api/roles',
+                dropdownTemplate: modal.find('#user-roles-select-option').html(),
+                rowTemplate     : modal.find('#user-roles-row').html(),
+                placeholder     : "Select a role"
+            });
+
+            // Get current roles and add to widget
+            $.getJSON(site.uri.public + '/api/users/u/' + userName + '/roles')
+            .done(function (data) {
+                $.each(data.rows, function (idx, role) {
+                    role.text = role.name;
+                    roleWidget.ufCollection('addRow', role);
+                });
+            });
+
+            $('.js-add-role').on('click', function () {
+                roleWidget.ufCollection('addRow');
+            });
+
+            // Set up form for submission
+            form.ufForm({
+                validators: page.validators
+            }).on("submitSuccess.ufForm", function() {
+                // Reload page on success
+                window.location.reload();
+            });
+        });
+    });
+
     // Change user password button
     el.find('.js-user-password').click(function() {
         var userName = $(this).data('user_name');

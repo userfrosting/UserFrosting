@@ -196,40 +196,6 @@ class RoleController extends SimpleController
         return $response->withStatus(200);
     }
 
-    /**
-     * Returns a list of Roles
-     *
-     * Generates a list of roles, optionally paginated, sorted and/or filtered.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getRoles($request, $response, $args)
-    {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_roles')) {
-            throw new ForbiddenException();
-        }
-
-        $this->ci->db;
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $sprunje = new RoleSprunje($classMapper, $params);
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
-    }
-
     public function getModalConfirmDeleteRole($request, $response, $args)
     {
         // GET parameters
@@ -410,6 +376,47 @@ class RoleController extends SimpleController
         ]);
     }
 
+    /**
+     * Returns a list of Roles
+     *
+     * Generates a list of roles, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getRoles($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_roles')) {
+            throw new ForbiddenException();
+        }
+
+        $this->ci->db;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $sprunje = new RoleSprunje($classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
+     * Returns a list of Permissions for a specified Role.
+     *
+     * Generates a list of permissions, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
     public function getRolePermissions($request, $response, $args)
     {
         $role = $this->getRoleFromParams($args);
