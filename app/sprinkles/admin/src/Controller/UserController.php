@@ -1053,8 +1053,13 @@ class UserController extends SimpleController
             ]);
         }
 
-        $user->$fieldName = $fieldValue;
-        $user->save();
+        if ($fieldName == "roles") {
+            $newRoles = collect($fieldValue)->pluck('role_id')->all();
+            $user->roles()->sync($newRoles);
+        } else {
+            $user->$fieldName = $fieldValue;
+            $user->save();
+        }
 
         return $response->withStatus(200);
     }
