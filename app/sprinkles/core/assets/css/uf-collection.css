@@ -1,3 +1,7 @@
+/**
+ * Custom CSS for the ufCollection widget.
+ */
+
 .uf-collection .col-button {
   padding-top: 2px;  
 }
@@ -5,9 +9,9 @@
 .uf-collection .col-button-offset {
     margin-left: 4px;
     float:left;
-    width: calc( 100% - 50px )
+    width: calc( 100% - 50px );
+    margin-bottom: 12px;
 }
-/*..col-button-offset { position:absolute; padding-left:34px; width:100%; padding-right:16px }*/
 
 .uf-collection span.select2-dropdown.select2-dropdown--below {
     position:absolute;

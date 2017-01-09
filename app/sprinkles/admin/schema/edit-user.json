@@ -70,5 +70,12 @@
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
         }
+    },
+    "roles" : {
+        "validators" : {
+            "array" : {
+                "message" : "VALIDATE.ARRAY"
+            }
+        }
     }
 }
