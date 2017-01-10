@@ -23,7 +23,7 @@
     "dependencies": {
         "bootstrap": "^3.3.6",
         "bootstrap-modal": "2.2.5",
-        "font-awesome": "4.5.0",
+        "font-awesome": "4.7.0",
         "handlebars": "3.0.3",
         "jquery": ">= 2.2.4",
         "jquery-ui": "jquery.ui#~1.11.4",

@@ -23,9 +23,9 @@
         },
         "js/sb-admin-2-dashboard": {
             "scripts": [
-                "local/start-bootstrap/js/morris-data.js",
-                "local/raphael-2.1.1/raphael.js",
-                "vendor/morris.js/morris.js"
+                "vendor/raphael/raphael.js",
+                "vendor/morris.js/morris.js",
+                "local/start-bootstrap/js/morris-data.js"
             ],
             "options": {
                 "result": {

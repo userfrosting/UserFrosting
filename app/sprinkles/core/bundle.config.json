@@ -23,7 +23,7 @@
         "js/form-widgets": {
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
-                "vendor/select2/dist/js/select2.js",
+                "vendor/select2/dist/js/select2.full.js",
                 "local/core/js/uf-collection.js"
             ],
             "options": {
@@ -65,7 +65,8 @@
         "css/form-widgets": {
             "styles": [
                 "vendor/select2/dist/css/select2.css",
-                "vendor/select2-bootstrap-theme/dist/select2-bootstrap.css"
+                "vendor/select2-bootstrap-theme/dist/select2-bootstrap.css",
+                "local/core/css/uf-collection.css"
             ],
             "options": {
                 "result": {
