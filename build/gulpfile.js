@@ -145,23 +145,9 @@ gulp.task('bundle-clean', () => {
 });
 
 gulp.task('copy', function () {
-    // Copy images from core.  Obviously, we will need some way to properly iterate through the sprinkles directory, and override assets as necessary.
-    gulp.src('../app/sprinkles/core/assets/local/core/images/**/*')
-        .pipe(gulp.dest(destDirectory + 'images/'));
-
-    // Copy azmind images
-    gulp.src('../app/sprinkles/account/assets/local/azmind/images/**/*')
-        .pipe(gulp.dest(destDirectory + 'vendor/azmind/images/'));
-
-    // Copy favicons from core
-    gulp.src('../app/sprinkles/core/assets/local/core/favicons/*')
-        .pipe(gulp.dest(destDirectory + 'favicons/'));
-
-    // Copy font-awesome font files from core.  Obviously we will want to find all sprinkles automatically, rather than having to explicitly define them here.
-    gulp.src('../app/sprinkles/core/assets/vendor/font-awesome-4.5.0/fonts/**/*')
-        .pipe(gulp.dest(destDirectory + 'fonts/'));
-
-    // Copy font-starcraft font files from core.
-    gulp.src('../app/sprinkles/core/assets/vendor/font-starcraft/fonts/**/*')
-        .pipe(gulp.dest(destDirectory + 'fonts/'));
+    // TODO: Uglify JS and Minify CSS
+    sprinkles.forEach((sprinkle) => {
+        gulp.src(`../app/sprinkles/${sprinkle}/assets/**/*`)
+            .pipe(gulp.dest(destDirectory));
+    });
 });

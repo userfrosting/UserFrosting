@@ -28,6 +28,7 @@
     "uf-bundle": "gulp bundle",
     "uf-bundle-clean": "gulp bundle-clean",
     "uf-assets-install": "gulp bower-install",
-    "uf-assets-clean": "gulp bower-clean"
+    "uf-assets-clean": "gulp bower-clean",
+    "uf-assets-copy": "gulp copy"
   }
 }
