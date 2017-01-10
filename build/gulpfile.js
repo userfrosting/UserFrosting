@@ -1,37 +1,64 @@
 /* To build bundles...
-    1. gulp build-bundle
-    2. gulp bundle
-    3. gulp bundle-cleanup
+    1. npm run build-bundle
+    2. npm run bundle
+    3. npm run bundle-cleanup
+
+   To get bower packages
+    1. npm run bower-install
+   
+   To clean assets retrieved by bower
+    1. npm run bower-clean
 */
 
 let gulp = require('gulp');
+let del = require('del');
+
 let plugins = require('gulp-load-plugins')();
 
+let sprinkleDirectory = '../app/sprinkles';
+
 // The Sprinkle load order from sprinkles.json
-let sprinkles = ['core'].concat(require('../app/sprinkles/sprinkles.json'));
+let sprinkles = ['core'].concat(require(`${sprinkleDirectory}/sprinkles.json`));
 
 // The directory where the bundle task should look for the raw assets, as specified in bundle.config.json
-let sourceDirectory = '../app/sprinkles/*/assets/';
+let sourceDirectory = `${sprinkleDirectory}/*/assets/`;
 
 // The directory where the bundle task should place compiled assets.  The names of assets in bundle.result.json
 // will be specified relative to this path.
 let destDirectory = '../public/assets/';
 
-gulp.task('build', ['copy'], function () {
-    fb = gulp.src('./bundle.config.json')
-        .pipe(plugins.bundleAssets({
-            base: sourceDirectory
-        }))
-        .pipe(plugins.bundleAssets.results({
-            dest: './'  // destination of bundle.result.json
-        }))
-        .pipe(gulp.dest(destDirectory));
-    return fb;
+// name of the bundle file
+let bundleFile = 'bundle.config.json';
+
+// base bundle config file
+let bundleConfigFile = `./${bundleFile}`;
+
+// location of the bower.json file in the sprinkle directory
+let bowerSourcePath = `${sprinkleDirectory}/*/bower.json`;
+
+// destination directory for bower assets
+let bowerDestDirectory = './assets/vendor';
+
+// Deletes assets fetched by bower-install
+gulp.task('bower-clean', () => {
+    return del(`${sprinkleDirectory}/*/assets/vendor`, {force:true});
+});
+
+
+// Gulp task to install bower packages
+gulp.task('bower-install', () => {
+    return gulp.src(bowerSourcePath)
+        .pipe(plugins.debug())
+        .pipe(plugins.install({args: [`config.directory=${bowerDestDirectory}`]}))
+        .pipe(plugins.notify({
+            onLast: true,
+            message: 'All bower packages installed successfully'
+        }));
 });
 
 // Executes bundleing tasks according to bundle.config.json files in each Sprinkle, as per Sprinkle load order.
 // Respects bundle collision rules.
-gulp.task('build-bundle', () => {
+gulp.task('bundle-build', () => {
     let fs = require('fs');
     let copy = require('recursive-copy');
     let merge = require('merge-array-object');
@@ -39,7 +66,7 @@ gulp.task('build-bundle', () => {
         // Delete temporary directory if exists
         fs.rmdirSync("./temp");
         // Delete created bundle.config.json file
-        fs.unlinkSync("./bundle.config.json");
+        fs.unlinkSync(bundleConfigFile);
         // Propagate error
         throw e;
     };
@@ -48,9 +75,9 @@ gulp.task('build-bundle', () => {
         copy: []
     };
     sprinkles.forEach((sprinkle) => {
-        let location = `../app/sprinkles/${sprinkle}/`;
-        if (fs.existsSync(`${location}bundle.config.json`)) {
-            let currentConfig = require(`${location}bundle.config.json`);
+        let location = `${sprinkleDirectory}/${sprinkle}/`;
+        if (fs.existsSync(`${location}${bundleFile}`)) {
+            let currentConfig = require(`${location}${bundleFile}`);
             // Add bundles to config, respecting collision rules.
             for (let bundleName in currentConfig.bundle) {
                 // If bundle already defined, handle as per collision rules.
@@ -96,12 +123,12 @@ gulp.task('build-bundle', () => {
         }
     });
     // Save bundle rules to bundle.config.json
-    fs.writeFileSync('./bundle.config.json', JSON.stringify(config));
+    fs.writeFileSync(bundleConfigFile, JSON.stringify(config));
 });
 
 // Execute gulp-bundle-assets
 gulp.task('bundle', () => {
-    gulp.src('./bundle.config.json')
+    gulp.src(bundleConfigFile)
         .pipe(plugins.bundleAssets({
             base: './temp'
         }))
@@ -111,28 +138,23 @@ gulp.task('bundle', () => {
         .pipe(gulp.dest(destDirectory));
 });
 
-gulp.task('bundle-cleanup', () => {
-    let rimraf = require('rimraf');
+gulp.task('bundle-clean', () => {
     // Clean up temporary files
-    rimraf("./temp", () => {
-
-    });
-    rimraf("./bundle.config.json", () => {
-        
-    });
+    del("./temp", {force:true});
+    del(bundleConfigFile, {force:true});
 });
 
 gulp.task('copy', function () {
     // Copy images from core.  Obviously, we will need some way to properly iterate through the sprinkles directory, and override assets as necessary.
-    gulp.src('../app/sprinkles/core/assets/images/**/*')
+    gulp.src('../app/sprinkles/core/assets/local/core/images/**/*')
         .pipe(gulp.dest(destDirectory + 'images/'));
 
     // Copy azmind images
-    gulp.src('../app/sprinkles/account/assets/vendor/azmind/images/**/*')
+    gulp.src('../app/sprinkles/account/assets/local/azmind/images/**/*')
         .pipe(gulp.dest(destDirectory + 'vendor/azmind/images/'));
 
     // Copy favicons from core
-    gulp.src('../app/sprinkles/core/assets/favicons/*')
+    gulp.src('../app/sprinkles/core/assets/local/core/favicons/*')
         .pipe(gulp.dest(destDirectory + 'favicons/'));
 
     // Copy font-awesome font files from core.  Obviously we will want to find all sprinkles automatically, rather than having to explicitly define them here.

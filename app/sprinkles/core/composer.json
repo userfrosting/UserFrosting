@@ -24,6 +24,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/userfrosting/assets"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Silic0nS0ldier/assets"
         }
     ],
     "require": {
