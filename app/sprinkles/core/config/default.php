@@ -22,7 +22,7 @@
             ],
             'raw' => [
                 'path'   => 'assets-raw',
-                'schema' => 'build://bundle.config.json'
+                'schema' => 'sprinkles://core/bundle.config.json'
             ],
             'use_raw'  => true
         ],

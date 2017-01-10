@@ -1,0 +1,92 @@
+{
+    "bundle": {
+        "js/azmind": {
+            "scripts": [
+                "vendor/jquery-backstretch/jquery.backstretch.js",
+                "local/azmind/js/azmind-backstretch.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/account-settings": {
+            "scripts": [
+                "local/pages/js/account-settings.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/forgot-password": {
+            "scripts": [
+                "local/pages/js/forgot-password.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/resend-verification": {
+            "scripts": [
+                "local/pages/js/resend-verification.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/set-or-reset-password": {
+            "scripts": [
+                "local/pages/js/set-or-reset-password.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/sign-in-or-register": {
+            "scripts": [
+                "local/core/js/uf-captcha.js",
+                "local/pages/js/sign-in-or-register.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "css/azmind": {
+            "styles": [
+                "local/azmind/css/form-elements.css",
+                "local/azmind/css/styles.css",
+                "local/azmind/css/azmind-custom.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        }
+    }
+}

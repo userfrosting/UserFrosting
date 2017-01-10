@@ -1,0 +1,79 @@
+{
+    "bundle": {
+        "js/main": {
+            "scripts": [
+                "vendor/bootstrap/dist/js/bootstrap.js",
+                "vendor/handlebars/handlebars.js",
+                "vendor/jquery-validation/dist/jquery.validate.js",
+                "vendor/jquery-validation/dist/additional-methods.js",
+                "local/core/js/fortress-jqueryvalidation-methods.js",
+                "local/core/js/uf-jqueryvalidation-config.js",
+                "local/core/js/uf-alerts.js",
+                "local/core/js/uf-form.js",
+                "local/core/js/uf-modal.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/form-widgets": {
+            "scripts": [
+                "vendor/speakingurl/speakingurl.min.js",
+                "vendor/select2/dist/js/select2.js",
+                "local/core/js/uf-collection.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "css/main": {
+            "styles": [
+                "vendor/font-awesome/css/font-awesome.css",
+                "vendor/bootstrap/dist/css/bootstrap.css",
+                "local/core/css/uf-jqueryvalidation.css",
+                "local/core/css/uf-alerts.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        },
+        "css/guest": {
+            "styles": [
+                "local/start-bootstrap/css/modern-business.css",
+                "local/core/css/guest.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        },
+        "css/form-widgets": {
+            "styles": [
+                "vendor/select2/dist/css/select2.css",
+                "vendor/select2-bootstrap-theme/dist/select2-bootstrap.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        }
+    }
+}

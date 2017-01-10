@@ -29,7 +29,11 @@ app/vendor/*
 build/node_modules/*
 
 # Ignore compiled assets schema
+build/bundle.config.json
 build/bundle.result.json
+
+# Ignore temporary build assets
+build/temp
 
 # Ignore compiled assets (dev)
 public/assets/*
@@ -40,3 +44,5 @@ public/css/min/*
 
 # Ignore personal config files (v0.3.x)
 app/config-userfrosting.php
+/app/sprinkles/account/assets/vendor/
+/app/sprinkles/core/assets/vendor/

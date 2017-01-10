@@ -1,0 +1,45 @@
+{
+    "name": "core-assets",
+    "version": "0.0.1",
+    "homepage": "https://github.com/userfrosting",
+    "authors": [
+        "ssnukala"
+    ],
+    "moduleType": [
+        "node"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "assets/vendor",
+        "examples",
+        "demo-resources",
+        "demo",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "bootstrap": "^3.3.6",
+        "bootstrap-modal": "2.2.5",
+        "font-awesome": "4.5.0",
+        "handlebars": "3.0.3",
+        "jquery": ">= 2.2.4",
+        "jquery-ui": "jquery.ui#~1.11.4",
+        "jquery-validation": "~1.14.0",
+        "jquery-validation-bootstrap-tooltip": "*",
+        "jquery.tablesorter": "*",
+        "select2": "4.0.3",
+        "select2-bootstrap-theme":"*",
+        "tablesorter": "jquery.tablesorter#~2.27.8",
+        "accounting.js": "*",
+        "moment":"*",
+        "speakingurl":"11.0.0"
+    },
+    "resolutions": {
+        "jquery": ">= 2.2.4",
+        "bootstrap": "3.x",
+        "jquery-validation": "~1.14.0"
+    }
+}
