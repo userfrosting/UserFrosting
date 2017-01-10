@@ -5,35 +5,7 @@ Development branch for UF 4.
 [Roadmap](https://github.com/userfrosting/UserFrosting/wiki/Roadmap-for-UserFrosting-4)
 [Style Guidelines](STYLE-GUIDE.md)
 
-
-## Bower Implementation for UF 4
-
-### Changes to UF4 
-
-#### Re-organized the the sprinkles/*/assets/ directories
-1. Moved all the local UF CSS and JS under /local/* directory 
-2. Removed all the assets/vendor/* from the vendor directory
-
-#### Added bower.json to the sprinkles
-Based on the javascript packages used in the sprinkles added bower.json entries
-
-#### Updated bundle.config.json files
-Updated bundle.config.json files in the sprinkles to refer to the JS and CSS files from the bower downloaded vendor directories.
-
-
 ## To get running
-
-### Install Bower
-npm install -g bower
-
-### Download bower packages
-1. cd build
-2. npm install (this will install the additional gulp packages)
-2. gulp bower-install
-
-
-
-## UF instructions continue from here
 
 ### Copy files
 
