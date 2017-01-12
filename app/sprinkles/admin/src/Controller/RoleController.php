@@ -377,6 +377,51 @@ class RoleController extends SimpleController
     }
 
     /**
+     * Renders the modal form for editing a role's permissions.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getModalEditRolePermissions($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        $role = $this->getRoleFromParams($params);
+
+        // If the role doesn't exist, return 404
+        if (!$role) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled resource - check that currentUser has permission to edit "permissions" field for this role
+        if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
+            'role' => $role,
+            'fields' => ['permissions']
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        // Load validation rules
+        $schema = new RequestSchema('schema://role.json');
+        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        return $this->ci->view->render($response, 'components/modals/role-manage-permissions.html.twig', [
+            'role' => $role,
+            'page' => [
+                'validators' => $validator->rules('json', false)
+            ]
+        ]);
+    }
+
+    /**
      * Returns a list of Roles
      *
      * Generates a list of roles, optionally paginated, sorted and/or filtered.
@@ -649,6 +694,98 @@ class RoleController extends SimpleController
         $role->save();
 
         $ms->addMessageTranslated('success', 'ROLE.UPDATE', [
+            'name' => $role->name
+        ]);
+
+        return $response->withStatus(200);
+    }
+
+    /**
+     * Processes the request to update a specific field for an existing role, including permissions.
+     *
+     * Processes the request from the role update form, checking that:
+     * 1. The logged-in user has the necessary permissions to update the putted field(s);
+     * 2. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: PUT
+     */
+    public function updateRoleField($request, $response, $args)
+    {
+        // Get the username from the URL
+        $role = $this->getRoleFromParams($args);
+
+        if (!$role) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // Get key->value pair from URL and request body
+        $fieldName = $args['field'];
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
+        if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
+            'role' => $role,
+            'fields' => [$fieldName]
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Get PUT parameters: value
+        $put = $request->getParsedBody();
+
+        if (!isset($put['value'])) {
+            throw new BadRequestException();
+        }
+
+        $params = [
+            $fieldName => $put['value']
+        ];
+
+        // Validate key -> value pair
+
+        // Load the request schema
+        $schema = new RequestSchema('schema://role-fields.json');
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and throw exception on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            $e = new BadRequestException();
+            foreach ($validator->errors() as $idx => $field) {
+                foreach($field as $eidx => $error) {
+                    $e->addUserMessage($error);
+                }
+            }
+            throw $e;
+        }
+
+        // Get validated and transformed value
+        $fieldValue = $data[$fieldName];
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        if ($fieldName == "permissions") {
+            $newPermissions = collect($fieldValue)->pluck('permission_id')->all();
+            $role->permissions()->sync($newPermissions);
+        } else {
+            $role->$fieldName = $fieldValue;
+            $role->save();
+        }
+
+        $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
             'name' => $role->name
         ]);
 

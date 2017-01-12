@@ -44,6 +44,18 @@ class PermissionSprunje extends Sprunje
      * @param mixed $value
      * @return Builder
      */
+    protected function filterInfo($query, $value)
+    {
+        return $this->filterProperties($query, $value);
+    }
+
+    /**
+     * Filter LIKE the slug, conditions, or description.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
     protected function filterProperties($query, $value)
     {
         return $query->like('slug', $value)

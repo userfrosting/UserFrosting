@@ -29,6 +29,8 @@ $app->group('/api/roles', function () {
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:createRole');
 
     $this->put('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateRole');
+
+    $this->put('/r/{slug}/{field}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateRoleField');
 });
 
 $app->group('/modals/roles', function () {
@@ -37,4 +39,6 @@ $app->group('/modals/roles', function () {
     $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalCreateRole');
 
     $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalEditRole');
+
+    $this->get('/permissions', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalEditRolePermissions');
 });

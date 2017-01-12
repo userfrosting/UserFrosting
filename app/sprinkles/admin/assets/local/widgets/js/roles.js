@@ -53,6 +53,53 @@ function bindRoleButtons(el) {
      * Link row buttons after table is loaded.
      */
 
+    // Manage permissions button
+    el.find('.js-role-permissions').click(function() {
+        var slug = $(this).data('slug');
+        $("body").ufModal({
+            sourceUrl: site.uri.public + "/modals/roles/permissions",
+            ajaxParams: {
+                slug: slug
+            },
+            msgTarget: $("#alerts-page")
+        });
+
+        $("body").on('renderSuccess.ufModal', function (data) {
+            var modal = $(this).ufModal('getModal');
+            var form = modal.find('.js-form');
+
+            // Set up collection widget
+            var permissionWidget = modal.find('.js-form-permissions');
+            permissionWidget.ufCollection({
+                dataUrl         : site.uri.public + '/api/permissions',
+                dropdownTemplate: modal.find('#role-permissions-select-option').html(),
+                rowTemplate     : modal.find('#role-permissions-row').html(),
+                placeholder     : "Select a permission"
+            });
+
+            // Get current roles and add to widget
+            $.getJSON(site.uri.public + '/api/roles/r/' + slug + '/permissions')
+            .done(function (data) {
+                $.each(data.rows, function (idx, permission) {
+                    permission.text = permission.name;
+                    permissionWidget.ufCollection('addRow', permission);
+                });
+            });
+
+            $('.js-add-permission').on('click', function () {
+                permissionWidget.ufCollection('addRow');
+            });
+
+            // Set up form for submission
+            form.ufForm({
+                validators: page.validators
+            }).on("submitSuccess.ufForm", function() {
+                // Reload page on success
+                window.location.reload();
+            });
+        });
+    });
+
     /**
      * Buttons that launch a modal dialog
      */

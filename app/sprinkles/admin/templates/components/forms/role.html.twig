@@ -52,7 +52,7 @@
         </div>
         {% endif %}
         {% if "edit" not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-4">
+        <div class="col-xs-6 col-sm-6">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-primary js-role-edit" data-slug="{{role.slug}}">
                     <i class="fa fa-edit"></i> {{translate('EDIT')}}
@@ -61,7 +61,7 @@
         </div>
         {% endif %}
         {% if "delete" not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-4">
+        <div class="col-xs-6 col-sm-6">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-danger js-role-delete" data-slug="{{role.slug}}">
                     <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
