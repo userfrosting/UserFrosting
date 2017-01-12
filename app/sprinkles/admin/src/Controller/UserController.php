@@ -25,6 +25,7 @@ use UserFrosting\Sprinkle\Admin\Sprunje\RoleSprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
@@ -171,12 +172,13 @@ class UserController extends SimpleController
             // Create and send welcome email with password set link
             $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
 
-            $this->ci->mailer->from($config['address_book.admin'])
-                ->addEmailRecipient($user->email, $user->full_name, [
-                    'user' => $user,
-                    'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
-                    'token' => $passwordRequest->getToken()
-                ]);
+            $message->from($config['address_book.admin'])
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user' => $user,
+                        'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
+                        'token' => $passwordRequest->getToken()
+                    ]);
 
             $this->ci->mailer->send($message);
 
@@ -235,17 +237,20 @@ class UserController extends SimpleController
             // Create and send welcome email with password set link
             $message = new TwigMailMessage($this->ci->view, 'mail/password-reset.html.twig');
 
-            $this->ci->mailer->from($config['address_book.admin'])
-                ->addEmailRecipient($user->email, $user->full_name, [
-                    'user' => $user,
-                    'token' => $passwordReset->getToken(),
-                    'request_date' => Carbon::now()->format('Y-m-d H:i:s')
-                ]);
+            $message->from($config['address_book.admin'])
+                    ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                    ->addParams([
+                        'user' => $user,
+                        'token' => $passwordReset->getToken(),
+                        'request_date' => Carbon::now()->format('Y-m-d H:i:s')
+                    ]);
 
             $this->ci->mailer->send($message);
         });
 
-        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", ['email' => $data['email']]);
+        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", [
+            'email' => $user->email
+        ]);
         return $response->withStatus(200);
     }
 

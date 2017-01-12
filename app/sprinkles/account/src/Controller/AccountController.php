@@ -23,6 +23,7 @@ use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
@@ -165,13 +166,13 @@ class AccountController extends SimpleController
 
                 // Create and send email
                 $message = new TwigMailMessage($this->ci->view, "mail/password-reset.html.twig");
-
-                $this->ci->mailer->from($config['address_book.admin'])
-                    ->addEmailRecipient($user->email, $user->full_name, [
-                        "user" => $user,
-                        "token" => $passwordReset->getToken(),
-                        "request_date" => date("Y-m-d H:i:s")
-                    ]);
+                $message->from($config['address_book.admin'])
+                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                        ->addParams([
+                            "user" => $user,
+                            "token" => $passwordReset->getToken(),
+                            "request_date" => date("Y-m-d H:i:s")
+                        ]);
 
                 $this->ci->mailer->send($message);
             }
@@ -644,11 +645,12 @@ class AccountController extends SimpleController
                 // Create and send verification email
                 $message = new TwigMailMessage($this->ci->view, "mail/verify-account.html.twig");
 
-                $this->ci->mailer->from($config['address_book.admin'])
-                    ->addEmailRecipient($user->email, $user->full_name, [
-                        "user" => $user,
-                        "token" => $verification->getToken()
-                    ]);
+                $message->from($config['address_book.admin'])
+                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                        ->addParams([
+                            "user" => $user,
+                            "token" => $verification->getToken()
+                        ]);
 
                 $this->ci->mailer->send($message);
 
@@ -737,11 +739,12 @@ class AccountController extends SimpleController
                 // Create and send verification email
                 $message = new TwigMailMessage($this->ci->view, "mail/resend-verification.html.twig");
 
-                $this->ci->mailer->from($config['address_book.admin'])
-                    ->addEmailRecipient($user->email, $user->full_name, [
-                        "user" => $user,
-                        "token" => $verification->getToken()
-                    ]);
+                $message->from($config['address_book.admin'])
+                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                        ->addParams([
+                            "user" => $user,
+                            "token" => $verification->getToken()
+                        ]);
 
                 $this->ci->mailer->send($message);
             }

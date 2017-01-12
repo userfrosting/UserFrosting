@@ -20,16 +20,6 @@ use Monolog\Logger;
 class Mailer
 {
     /**
-     * @var string The current sender email address.
-     */
-    protected $fromEmail = "";
-
-    /**
-     * @var string The current sender name.
-     */
-    protected $fromName = null;
-
-    /**
      * @var Logger
      */
     protected $logger;
@@ -38,21 +28,6 @@ class Mailer
      * @var \PHPMailer
      */
     protected $phpMailer;
-
-    /**
-     * @var EmailRecipient[] A list of recipients for this message.
-     */
-    protected $recipients = [];
-
-    /**
-     * @var string The current reply-to email.
-     */
-    protected $replyEmail = null;
-
-    /**
-     * @var string The current reply-to name.
-     */
-    protected $replyName = null;
 
     /**
      * Create a new Mailer instance.
@@ -102,62 +77,6 @@ class Mailer
     }
 
     /**
-     * Add an email recipient.
-     *
-     * Each "recipient" added with this method will be sent out as a separate email.  To CC or BCC recipients on the same email,
-     * use the ->cc and ->bcc methods on the EmailRecipient object returned by this method.
-     * @param string $email The primary recipient email address.
-     * @param string $name The primary recipient name.
-     * @param array $params An array of template parameters to render the email message with for this particular recipient.
-     * @return EmailRecipient The EmailRecipient object created for this recipient, which you can call ->cc() or ->bcc() on to add CC and BCC.
-     */
-    public function addEmailRecipient($email, $name = "", $params = [])
-    {
-        $r = new EmailRecipient($email, $name, $params);
-        $this->recipients[] = $r;
-        return $r;
-    }
-
-    /**
-     * Set sender information for this message.
-     *
-     * This uses the site setting "admin_email" as the "from" field, and "site_title" as the "from" name.
-     * @param string $fromEmail The sender email address.
-     * @param string $fromName The sender name.
-     * @param string $replyToEmail The reply-to email address.  Will default to $email if not set.
-     * @param string $replyToName The reply-to name.  Will default to $name if not set.
-     */
-    public function from($fromInfo = [])
-    {
-        $this->setFromEmail(isset($fromInfo['email']) ? $fromInfo['email'] : "");
-        $this->setFromName(isset($fromInfo['name']) ? $fromInfo['name'] : null);
-        $this->setReplyEmail(isset($fromInfo['reply_email']) ? $fromInfo['reply_email'] : null);
-        $this->setReplyName(isset($fromInfo['reply_name']) ? $fromInfo['reply_name'] : null);
-
-        return $this;
-    }
-
-    /**
-     * Get the sender email address.
-     *
-     * @return string
-     */
-    public function getFromEmail()
-    {
-        return $this->fromEmail;
-    }
-
-    /**
-     * Get the sender name.  Defaults to the email address if name is not set.
-     *
-     * @return string
-     */
-    public function getFromName()
-    {
-        return isset($this->fromName) ? $this->fromName : $this->getFromEmail();
-    }
-
-    /**
      * Get the underlying PHPMailer object.
      *
      * @return \PHPMailer
@@ -168,100 +87,100 @@ class Mailer
     }
 
     /**
-     * Get the list of recipients for this message.
+     * Send a MailMessage message.
      *
-     * @return EmailRecipient[]
-     */
-    public function getRecipients()
-    {
-        return $this->recipients;
-    }
-
-    /**
-     * Get the 'reply-to' address for this message.  Defaults to the sender email.
-     *
-     * @return string
-     */
-    public function getReplyEmail()
-    {
-        return isset($this->replyEmail) ? $this->replyEmail : $this->getFromEmail();
-    }
-
-    /**
-     * Get the 'reply-to' name for this message.  Defaults to the sender name.
-     *
-     * @return string
-     */
-    public function getReplyName()
-    {
-        return isset($this->replyName) ? $this->replyName : $this->getFromName();
-    }
-
-    /**
-     * Send a message.
-     *
-     * Sends a separate email to each recipient.  If the message object supports message templates, this will
-     * render the template with the corresponding placeholder values for each recipient.
-     * @param MailMessageInterface $message
+     * Sends a single email to all recipients, as well as their CCs and BCCs.
+     * Since it is a single-header message, recipient-specific template data will not be included.
+     * @param MailMessage $message
+     * @param bool $clearRecipients Set to true to clear the list of recipients in the message after calling send().  This helps avoid accidentally sending a message multiple times.
      * @throws phpmailerException The message could not be sent.
      */
-    public function send($message)
+    public function send(MailMessage $message, $clearRecipients = true)
     {
-        $this->phpMailer->From = $this->getFromEmail();
-        $this->phpMailer->FromName = $this->getFromName();
-        $this->phpMailer->addReplyTo($this->getReplyEmail(), $this->getReplyName());
+        $this->phpMailer->From = $message->getFromEmail();
+        $this->phpMailer->FromName = $message->getFromName();
+        $this->phpMailer->addReplyTo($message->getReplyEmail(), $message->getReplyName());
 
-        // Loop through email recipients, sending customized content to each one
-        foreach ($this->recipients as $recipient){
+        // Add all email recipients, as well as their CCs and BCCs
+        foreach ($message->getRecipients() as $recipient) {
             $this->phpMailer->addAddress($recipient->getEmail(), $recipient->getName());
 
             // Add any CCs and BCCs
-            if ($recipient->getCCs()){
-                foreach($recipient->getCCs() as $cc){
+            if ($recipient->getCCs()) {
+                foreach($recipient->getCCs() as $cc) {
                     $this->phpMailer->addCC($cc['email'], $cc['name']);
                 }
             }
-
-            if ($recipient->getBCCs()){
-                foreach($recipient->getBCCs() as $bcc){
+    
+            if ($recipient->getBCCs()) {
+                foreach($recipient->getBCCs() as $bcc) {
                     $this->phpMailer->addBCC($bcc['email'], $bcc['name']);
                 }
             }
+        }
 
-            $message->setParams($recipient->getParams());
+        $this->phpMailer->Subject = $message->renderSubject();
+        $this->phpMailer->Body    = $message->renderBody();
 
-            $this->phpMailer->Subject = $message->renderSubject();
-            $this->phpMailer->Body    = $message->renderBody();
+        // Try to send the mail.  Will throw an exception on failure.
+        $this->phpMailer->send();
 
-            // Try to send the mail.  Will throw an exception on failure.
-            $this->phpMailer->send();
+        // Clear recipients from the PHPMailer object for this iteration,
+        // so that we can use the same object for other emails.
+        $this->phpMailer->clearAllRecipients();
 
-            // Clear recipients from the PHPMailer object for this iteration,
-            // so that we can send a separate email to the next recipient.
-            $this->phpMailer->clearAllRecipients();
+        // Clear out the MailMessage's internal recipient list
+        if ($clearRecipients) {
+            $message->clearRecipients();
         }
     }
 
     /**
-     * Set the sender email address.
+     * Send a MailMessage message, sending a separate email to each recipient. 
      *
-     * @param string $fromEmail
+     * If the message object supports message templates, this will render the template with the corresponding placeholder values for each recipient.
+     * @param MailMessage $message
+     * @param bool $clearRecipients Set to true to clear the list of recipients in the message after calling send().  This helps avoid accidentally sending a message multiple times.
+     * @throws phpmailerException The message could not be sent.
      */
-    public function setFromEmail($fromEmail)
+    public function sendDistinct(MailMessage $message, $clearRecipients = true)
     {
-        $this->fromEmail = $fromEmail;
-        return $this;
-    }
+        $this->phpMailer->From = $message->getFromEmail();
+        $this->phpMailer->FromName = $message->getFromName();
+        $this->phpMailer->addReplyTo($message->getReplyEmail(), $message->getReplyName());
 
-    /**
-     * Set the sender name.
-     *
-     * @param string $fromName
-     */
-    public function setFromName($fromName)
-    {
-        $this->fromName = $fromName;
-        return $this;
+        // Loop through email recipients, sending customized content to each one
+        foreach ($message->getRecipients() as $recipient) {
+            $this->phpMailer->addAddress($recipient->getEmail(), $recipient->getName());
+
+            // Add any CCs and BCCs
+            if ($recipient->getCCs()) {
+                foreach($recipient->getCCs() as $cc) {
+                    $this->phpMailer->addCC($cc['email'], $cc['name']);
+                }
+            }
+    
+            if ($recipient->getBCCs()) {
+                foreach($recipient->getBCCs() as $bcc) {
+                    $this->phpMailer->addBCC($bcc['email'], $bcc['name']);
+                }
+            }
+    
+            $this->phpMailer->Subject = $message->renderSubject($recipient->getParams());
+            $this->phpMailer->Body    = $message->renderBody($recipient->getParams());
+    
+            // Try to send the mail.  Will throw an exception on failure.
+            $this->phpMailer->send();
+    
+            // Clear recipients from the PHPMailer object for this iteration,
+            // so that we can send a separate email to the next recipient.
+            $this->phpMailer->clearAllRecipients();
+        }
+
+        // Clear out the MailMessage's internal recipient list
+        if ($clearRecipients) {
+            $message->clearRecipients();
+        }
     }
 
     /**
@@ -279,28 +198,6 @@ class Mailer
             $this->phpMailer->set($name, $value);
         }
 
-        return $this;
-    }
-
-    /**
-     * Set the sender 'reply-to' address.
-     *
-     * @param string $replyEmail
-     */
-    public function setReplyEmail($replyEmail)
-    {
-        $this->replyEmail = $replyEmail;
-        return $this;
-    }
-
-    /**
-     * Set the sender 'reply-to' name.
-     *
-     * @param string $replyName
-     */
-    public function setReplyName($replyName)
-    {
-        $this->replyName = $replyName;
         return $this;
     }
 }

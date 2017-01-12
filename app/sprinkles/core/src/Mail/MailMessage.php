@@ -15,42 +15,173 @@ namespace UserFrosting\Sprinkle\Core\Mail;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class MailMessage
+abstract class MailMessage
 {
-    protected $body;
-
-    protected $subject;
+    /**
+     * @var string The current sender email address.
+     */
+    protected $fromEmail = "";
 
     /**
-     * Create a new MailMessage instance.
-     *
-     * @param Slim\Views\Twig The view object used to render mail templates.
+     * @var string The current sender name.
      */
-    public function __construct($subject = "", $body = "")
-    {
-        $this->subject = $subject;
-        $this->body = $body;
-    }
+    protected $fromName = null;
 
-    public function renderBody()
-    {
-        return $this->body;
-    }
+    /**
+     * @var EmailRecipient[] A list of recipients for this message.
+     */
+    protected $recipients = [];
 
-    public function renderSubject()
-    {
-        return $this->subject;
-    }
+    /**
+     * @var string The current reply-to email.
+     */
+    protected $replyEmail = null;
 
-    public function setSubject($subject)
+    /**
+     * @var string The current reply-to name.
+     */
+    protected $replyName = null;
+
+    /**
+     * Gets the fully rendered text of the message body.
+     *
+     * @return string
+     */
+    abstract public function renderBody($params = []);
+
+    /**
+     * Gets the fully rendered text of the message subject.
+     *
+     * @return string
+     */
+    abstract public function renderSubject($params = []);
+
+    /**
+     * Add an email recipient.
+     *
+     * @param EmailRecipient $recipient
+     */
+    public function addEmailRecipient(EmailRecipient $recipient)
     {
-        $this->subject = $subject;
+        $this->recipients[] = $recipient;
         return $this;
     }
 
-    public function setBody($body)
+    /**
+     * Clears out all recipients for this message.
+     */
+    public function clearRecipients()
     {
-        $this->body = $body;
+        $this->recipients = array();
+    }
+
+    /**
+     * Set sender information for this message.
+     *
+     * This is a shortcut for calling setFromEmail, setFromName, setReplyEmail, and setReplyName.
+     * @param string $fromInfo An array containing 'email', 'name', 'reply_email', and 'reply_name'.
+     */
+    public function from($fromInfo = [])
+    {
+        $this->setFromEmail(isset($fromInfo['email']) ? $fromInfo['email'] : "");
+        $this->setFromName(isset($fromInfo['name']) ? $fromInfo['name'] : null);
+        $this->setReplyEmail(isset($fromInfo['reply_email']) ? $fromInfo['reply_email'] : null);
+        $this->setReplyName(isset($fromInfo['reply_name']) ? $fromInfo['reply_name'] : null);
+
+        return $this;
+    }
+
+    /**
+     * Get the sender email address.
+     *
+     * @return string
+     */
+    public function getFromEmail()
+    {
+        return $this->fromEmail;
+    }
+
+    /**
+     * Get the sender name.  Defaults to the email address if name is not set.
+     *
+     * @return string
+     */
+    public function getFromName()
+    {
+        return isset($this->fromName) ? $this->fromName : $this->getFromEmail();
+    }
+
+    /**
+     * Get the list of recipients for this message.
+     *
+     * @return EmailRecipient[]
+     */
+    public function getRecipients()
+    {
+        return $this->recipients;
+    }
+
+    /**
+     * Get the 'reply-to' address for this message.  Defaults to the sender email.
+     *
+     * @return string
+     */
+    public function getReplyEmail()
+    {
+        return isset($this->replyEmail) ? $this->replyEmail : $this->getFromEmail();
+    }
+
+    /**
+     * Get the 'reply-to' name for this message.  Defaults to the sender name.
+     *
+     * @return string
+     */
+    public function getReplyName()
+    {
+        return isset($this->replyName) ? $this->replyName : $this->getFromName();
+    }
+
+    /**
+     * Set the sender email address.
+     *
+     * @param string $fromEmail
+     */
+    public function setFromEmail($fromEmail)
+    {
+        $this->fromEmail = $fromEmail;
+        return $this;
+    }
+
+    /**
+     * Set the sender name.
+     *
+     * @param string $fromName
+     */
+    public function setFromName($fromName)
+    {
+        $this->fromName = $fromName;
+        return $this;
+    }
+
+    /**
+     * Set the sender 'reply-to' address.
+     *
+     * @param string $replyEmail
+     */
+    public function setReplyEmail($replyEmail)
+    {
+        $this->replyEmail = $replyEmail;
+        return $this;
+    }
+
+    /**
+     * Set the sender 'reply-to' name.
+     *
+     * @param string $replyName
+     */
+    public function setReplyName($replyName)
+    {
+        $this->replyName = $replyName;
         return $this;
     }
 }

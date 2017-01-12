@@ -29,7 +29,7 @@ class EmailRecipient
     protected $name;
 
     /**
-     * @var array The parameters (name => value) to use when rendering an email template for this recipient.
+     * @var array Any additional parameters (name => value) to use when rendering an email template for this recipient.
      */
     protected $params = [];
 
