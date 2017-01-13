@@ -35,6 +35,18 @@
                 }
             }
         },
+        "js/pages/activities": {
+            "scripts": [
+                "local/pages/js/activities.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
         "js/pages/group": {
             "scripts": [
                 "local/widgets/js/users.js",
@@ -51,7 +63,6 @@
         },
         "js/pages/role": {
             "scripts": [
-                "local/widgets/js/permissions.js",
                 "local/widgets/js/roles.js",
                 "local/pages/js/role.js"
             ],
@@ -104,7 +115,6 @@
         },
         "js/pages/permissions": {
             "scripts": [
-                "local/widgets/js/permissions.js",
                 "local/pages/js/permissions.js"
             ],
             "options": {

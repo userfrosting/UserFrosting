@@ -7,6 +7,11 @@
         <a href="{{site.uri.public}}/admin/users"><i class="fa fa-user fa-fw"></i> {{ translate("USER", 2) }}</a>
     </li>
     {% endif %}
+    {% if checkAccess('uri_activities') %}
+    <li>
+        <a href="{{site.uri.public}}/admin/activities"><i class="fa fa-tasks fa-fw"></i> {{ translate("ACTIVITY", 2) }}</a>
+    </li>
+    {% endif %}
     {% if checkAccess('uri_manage_roles') %}
     <li>
         <a href="{{site.uri.public}}/admin/roles"><i class="fa fa-drivers-license fa-fw"></i> {{ translate("ROLE", 2) }}</a>

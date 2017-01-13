@@ -1,0 +1,50 @@
+{% extends "layouts/dashboard.html.twig" %}
+
+{% block stylesheets_page %}
+    <!-- Page-specific CSS asset bundle -->
+    {{ assets.css('css/form-widgets') | raw }}
+{% endblock %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}Activities{% endblock %}
+
+{% block page_description %}A listing of user activities.{% endblock %}
+
+{% block body_matter %}
+    <div id="alerts-page">
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="widget-activities" class="panel panel-primary">
+                <div class="panel-heading panel-heading-buttons clearfix">
+                    <h3 class="panel-title pull-left"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
+                    <div class="pull-right">
+                        <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {% include "components/tables/activities.html.twig" with {
+                            "table" : {
+                                "id" : "table-activities",
+                                "columns" : ["user"]
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts_page %}
+    <!-- Include validation rules -->
+    <script>
+    {% include "components/page.js.twig" %}
+    </script>
+
+    <!-- Include form widgets JS -->
+    {{ assets.js('js/form-widgets') | raw }}
+
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/activities') | raw }}
+
+{% endblock %}

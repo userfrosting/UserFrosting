@@ -15,6 +15,4 @@ $(document).ready(function() {
     $("#widget-permissions").ufTable({
         dataUrl: site.uri.public + "/api/permissions"
     });
-
-    $("#widget-permissions").on("pagerComplete.ufTable", initPermissionTable);
 });
