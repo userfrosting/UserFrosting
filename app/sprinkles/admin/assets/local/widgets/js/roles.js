@@ -74,6 +74,7 @@ function bindRoleButtons(el) {
                 dataUrl         : site.uri.public + '/api/permissions',
                 dropdownTemplate: modal.find('#role-permissions-select-option').html(),
                 rowTemplate     : modal.find('#role-permissions-row').html(),
+                dropdownControl : modal.find('.js-select-permission'),
                 placeholder     : "Select a permission"
             });
 

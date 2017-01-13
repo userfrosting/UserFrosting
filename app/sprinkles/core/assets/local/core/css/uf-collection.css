@@ -2,6 +2,13 @@
  * Custom CSS for the ufCollection widget.
  */
 
+/** Prevent rows from overflowing container */
+.uf-collection-col-wrap {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
 .uf-collection .col-button {
   padding-top: 2px;  
 }

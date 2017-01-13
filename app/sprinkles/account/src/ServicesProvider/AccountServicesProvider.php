@@ -94,10 +94,10 @@ class AccountServicesProvider
                 if ($themePath) {
                     // Add paths to locale files for user theme
                     $translator->addPath($themePath);
-
-                    // Add user locale to translator service
-                    $translator->loadLocaleFiles($currentUser->locale);
                 }
+
+                // Add user locale to translator service
+                $translator->loadLocaleFiles($currentUser->locale);
             }
 
             return $translator;

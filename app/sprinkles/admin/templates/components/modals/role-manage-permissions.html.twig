@@ -2,18 +2,31 @@
 
 {% block modal_title %}Manage Permissions{% endblock %}
 
+{% block modal_size %}modal-lg{% endblock %}
+
 {% block modal_body %}
 <form class="js-form" method="PUT" action="{{site.uri.public}}/api/roles/r/{{role.slug}}/permissions">
     {% include "components/csrf.html.twig" %}
     <div class="js-form-alerts">
     </div>
-    <div class="js-form-permissions">
-
-    </div>
+    <table class="table table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Hook/Conditions</th>
+            <th>Remove</th>
+        </tr>
+        <tbody class="js-form-permissions">
+         
+        </tbody>
+    </table>
     <div class="padding-bottom">
-      <button type="button" class="btn btn-link js-add-permission">Add another permission</button>
+        <label>Assign new permission:</label>
+        <select class="form-control select2 js-select-permission" type="text">
+        <option></option>
+        </select>
     </div>
-        <br>
+    <br>
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <div class="vert-pad">
@@ -54,17 +67,26 @@
 </script>
 
 <script id="role-permissions-row" type="text/x-handlebars-template">
-    <div class="uf-collection-row">
-        <div class="pull-left col-button">
+    <tr class="uf-collection-row">
+        <td>
+            {{name}}
+            <input type="hidden" name="value[{{ rownum }}][permission_id]" value="{{id}}">
+        </td>
+        <td>
+            {{description}}
+        </td>
+        <td class="uf-collection-col-wrap">
+            <div>
+                <code>{{slug}}</code>
+            </div>
+            <div>
+                ↳ <code>{{conditions}}</code>
+            </div>
+        </td>
+        <td>
             <button type="button" class="btn btn-sm btn-danger js-delete-row" title="Delete"> <i class="fa fa-times"></i> </button>
-        </div>
-        <div class="col-button-offset">
-          <label class="sr-only">Permission</label>
-          <select name="value[{{ rownum }}][permission_id]" type="text" class="form-control">
-          <option></option>
-          </select>
-        </div>
-    </div>
+        </td>
+    </tr>
 </script>
 {% endverbatim %}
 

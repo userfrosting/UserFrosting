@@ -19,6 +19,7 @@
                 rowTemplate     : "",
                 dropdownTheme   : "bootstrap",
                 placeholder     : "Item",
+                dropdownControl : null,
                 DEBUG: false
             },
             options
@@ -48,10 +49,11 @@
         // Add container class
         $el.toggleClass("uf-collection", true);
 
-        // Go through each select field inside this object, and initialize it as a select2 dropdown
-        var selects = $el.find("select");
-        $.each(selects, function(idx, field) {
-            base._initDropdownField(field);
+        base._initDropdownField(options.dropdownControl);
+        
+        options.dropdownControl.on("select2:select", function () {
+           var item = $(this).select2("data");
+           base.addRow(item);
         });
 
         return this;
@@ -61,24 +63,13 @@
         var base = this;
 
         var params = {
-            id : ""
+            id : "",
+            rownum: base._rownum
         };
         $.extend(true, params, options[0]);
         
-        var newRowTemplate = base._rowTemplateCompiled({
-            rownum     : base._rownum
-        });
+        var newRowTemplate = base._rowTemplateCompiled(params);
         var newRow = $(newRowTemplate).appendTo(base.$T);
-
-        // Setup the new row with a select2
-        var selectField = base._initDropdownField(newRow.find("select"));
-
-        if (params.id != "") {
-            var preSelect = new Option(params.text, params.id, true, true);
-            // Append it to the select
-            selectField.append(preSelect).trigger("change");    
-            base._addedIds.push(params.id);
-        }
 
         // Trigger to delete row
         $(newRow).find(".js-delete-row").on("click", function() {
@@ -88,11 +79,6 @@
             if (index > -1) {
                 base._addedIds.splice(index, 1);
             }
-        });
-
-        // When value is changed, fire event 'rowchange'
-        selectField.on("select2:select", function() {
-            base.$T.trigger("rowchange");
         });
 
         base._rownum += 1;
@@ -107,7 +93,7 @@
     Plugin.prototype._initDropdownField = function (field) {
         var base = this;
 
-        return $(field).select2({
+        return field.select2({
             // Fetch data source options and construct the dropdown options
             ajax: {
                 url: base.options.dataUrl,

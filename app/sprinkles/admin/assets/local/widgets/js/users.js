@@ -14,7 +14,9 @@ function attachUserForm() {
         var form = modal.find('.js-form');
 
         // Set up any widgets inside the modal
-        form.find(".select2").select2();
+        form.find(".select2").select2({
+            width: '100%'
+        });
 
         // Set up the form for submission
         form.ufForm({
@@ -123,6 +125,7 @@ function updateUser(userName, fieldName, fieldValue) {
                 dataUrl         : site.uri.public + '/api/roles',
                 dropdownTemplate: modal.find('#user-roles-select-option').html(),
                 rowTemplate     : modal.find('#user-roles-row').html(),
+                dropdownControl : modal.find('.js-select-role'),
                 placeholder     : "Select a role"
             });
 

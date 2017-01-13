@@ -1,7 +1,9 @@
 {% block navigation %}
+    {% if checkAccess('uri_dashboard') %}
     <li>
         <a href="{{site.uri.public}}/admin"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
     </li>
+    {% endif %}
     {% if checkAccess('uri_users') %}
     <li>
         <a href="{{site.uri.public}}/admin/users"><i class="fa fa-user fa-fw"></i> {{ translate("USER", 2) }}</a>
