@@ -8,8 +8,12 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
+use Carbon\Carbon;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Support\Exception\ForbiddenException;
+use UserFrosting\Sprinkle\Account\Model\Group;
+use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Model\Role;
 
 /**
  * AdminController Class
@@ -39,6 +43,29 @@ class AdminController extends SimpleController
             throw new ForbiddenException();
         }
 
-        return $this->ci->view->render($response, "pages/dashboard.html.twig");
+        // Probably a better way to do this
+        $users = User::orderBy('created_at', 'desc')
+               ->take(8)
+               ->get();
+
+        // Transform the `create_at` date in "x days ago" type of string
+        $users->transform(function ($item, $key) {
+            $item->registered = Carbon::parse($item->created_at)->diffForHumans();
+            return $item;
+        });
+
+        return $this->ci->view->render($response, "pages/dashboard.html.twig", [
+            'counter' => [
+                'users' => User::count(),
+                'roles' => Role::count(),
+                'groups' => Group::count(),
+            ],
+            'version' => [
+                'UF' => '4.0.0 Alpha',
+                'php' => phpversion()
+            ],
+            'sprinkles' => $this->ci->sprinkleManager->getSprinkles(),
+            'users' => $users
+        ]);
     }
 }
