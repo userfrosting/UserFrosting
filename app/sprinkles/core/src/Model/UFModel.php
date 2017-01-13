@@ -30,6 +30,14 @@ abstract class UFModel extends Model
      */
     public $timestamps = false;
 
+    public function __construct(array $attributes = [])
+    {
+        // Hacky way to force the DB service to load before attempting to use the model
+        static::$ci->db;
+
+        parent::__construct($attributes);
+    }
+
     /**
      * Determine if an attribute exists on the model - even if it is null.
      *
