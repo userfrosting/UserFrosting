@@ -11,30 +11,30 @@
  * Routes for administrative group management.
  */
 $app->group('/admin/groups', function () {
-    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageGroups')
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageList')
         ->setName('uri_groups');
 
-    $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageGroup');
+    $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:pageInfo');
 });
 
 $app->group('/api/groups', function () {
-    $this->delete('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:deleteGroup');
+    $this->delete('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:delete');
 
-    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getGroups');
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getList');
 
-    $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getGroup');
+    $this->get('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getInfo');
 
-    $this->get('/g/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getGroupUsers');
+    $this->get('/g/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getUsers');
 
-    $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:createGroup');
+    $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:create');
 
-    $this->put('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:updateGroup');
+    $this->put('/g/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:updateInfo');
 });
 
 $app->group('/modals/groups', function () {
-    $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalConfirmDeleteGroup');
+    $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalConfirmDelete');
 
-    $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalCreateGroup');
+    $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalCreate');
 
-    $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalEditGroup');
+    $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\GroupController:getModalEdit');
 });

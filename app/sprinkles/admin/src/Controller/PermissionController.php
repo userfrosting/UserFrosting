@@ -41,7 +41,7 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getPermissions($request, $response, $args)
+    public function getList($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -77,7 +77,7 @@ class PermissionController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pagePermissions($request, $response, $args)
+    public function pageList($request, $response, $args)
     {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;

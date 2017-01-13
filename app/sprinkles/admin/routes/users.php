@@ -11,40 +11,40 @@
  * Routes for administrative user management.
  */
 $app->group('/admin/users', function () {
-    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageUsers')
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageList')
         ->setName('uri_users');
 
-    $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageUser');
+    $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:pageInfo');
 });
 
 $app->group('/api/users', function () {
-    $this->delete('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:deleteUser');
+    $this->delete('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:delete');
 
-    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getUsers');
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getList');
 
-    $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getUser');
+    $this->get('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getInfo');
 
-    $this->get('/u/{user_name}/activities', 'UserFrosting\Sprinkle\Admin\Controller\ActivityController:getUserActivities');
+    $this->get('/u/{user_name}/activities', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getActivities');
 
-    $this->get('/u/{user_name}/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getUserRoles');
+    $this->get('/u/{user_name}/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getRoles');
 
-    $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUser');
+    $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:create');
 
-    $this->post('/u/{user_name}/password-reset', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createUserPasswordReset');
+    $this->post('/u/{user_name}/password-reset', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createPasswordReset');
 
-    $this->put('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUser');
+    $this->put('/u/{user_name}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateInfo');
 
-    $this->put('/u/{user_name}/{field}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateUserField');
+    $this->put('/u/{user_name}/{field}', 'UserFrosting\Sprinkle\Admin\Controller\UserController:updateField');
 });
 
 $app->group('/modals/users', function () {
-    $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalConfirmDeleteUser');
+    $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalConfirmDelete');
 
-    $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalCreateUser');
+    $this->get('/create', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalCreate');
 
-    $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUser');
+    $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEdit');
 
-    $this->get('/password', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUserPassword');
+    $this->get('/password', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditPassword');
 
-    $this->get('/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditUserRoles');
+    $this->get('/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getModalEditRoles');
 });

@@ -21,6 +21,7 @@ use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Admin\Sprunje\ActivitySprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\RoleSprunje;
 use UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
@@ -50,7 +51,7 @@ class UserController extends SimpleController
      * Request type: POST
      * @see formUserCreate
      */
-    public function createUser($request, $response, $args)
+    public function create($request, $response, $args)
     {
         // Get POST parameters: user_name, first_name, last_name, email, theme, locale, csrf_token, (group)
         $params = $request->getParsedBody();
@@ -70,7 +71,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://create-user.json');
+        $schema = new RequestSchema('schema://user/create.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -199,7 +200,7 @@ class UserController extends SimpleController
      * This route requires authentication.
      * Request type: POST
      */
-    public function createUserPasswordReset($request, $response, $args)
+    public function createPasswordReset($request, $response, $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
@@ -264,7 +265,7 @@ class UserController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: DELETE
      */
-    public function deleteUser($request, $response, $args)
+    public function delete($request, $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -312,7 +313,7 @@ class UserController extends SimpleController
         return $response->withStatus(200);
     }
 
-    public function getModalConfirmDeleteUser($request, $response, $args)
+    public function getModalConfirmDelete($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -354,7 +355,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalCreateUser($request, $response, $args)
+    public function getModalCreate($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -400,7 +401,7 @@ class UserController extends SimpleController
         // TODO: determine if currentUser has permission to set the group.  Otherwise, we'll just apply the default group.
 
         // Load validation rules
-        $schema = new RequestSchema('schema://create-user.json');
+        $schema = new RequestSchema('schema://user/create.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/user.html.twig', [
@@ -430,7 +431,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditUser($request, $response, $args)
+    public function getModalEdit($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -484,7 +485,7 @@ class UserController extends SimpleController
         }
 
         // Load validation rules
-        $schema = new RequestSchema('schema://edit-user.json');
+        $schema = new RequestSchema('schema://user/edit-info.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/user.html.twig', [
@@ -514,7 +515,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditUserPassword($request, $response, $args)
+    public function getModalEditPassword($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -541,7 +542,7 @@ class UserController extends SimpleController
         }
 
         // Load validation rules
-        $schema = new RequestSchema('schema://edit-user-password.json');
+        $schema = new RequestSchema('schema://user/edit-password.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/user-set-password.html.twig', [
@@ -559,7 +560,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditUserRoles($request, $response, $args)
+    public function getModalEditRoles($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -585,16 +586,55 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        // Load validation rules
-        $schema = new RequestSchema('schema://edit-user-roles.json');
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-
         return $this->ci->view->render($response, 'components/modals/user-manage-roles.html.twig', [
-            'user' => $user,
-            'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+            'user' => $user
         ]);
+    }
+
+    /**
+     * Returns activity history for a single user.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getActivities($request, $response, $args)
+    {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        $this->ci->db;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user_activities', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        $sprunje = new ActivitySprunje($classMapper, $params);
+
+        $sprunje->extendQuery(function ($query) use ($user) {
+            return $query->where('user_id', $user->id);
+        });
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
     }
 
     /**
@@ -603,7 +643,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getUser($request, $response, $args)
+    public function getInfo($request, $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -647,12 +687,47 @@ class UserController extends SimpleController
     }
 
     /**
+     * Returns a list of Users
+     *
+     * Generates a list of users, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getList($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $this->ci->db;
+
+        $sprunje = new UserSprunje($classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
      * Returns roles associated with a single user.
      *
      * This page requires authentication.
      * Request type: GET
      */
-    public function getUserRoles($request, $response, $args)
+    public function getRoles($request, $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -692,41 +767,6 @@ class UserController extends SimpleController
     }
 
     /**
-     * Returns a list of Users
-     *
-     * Generates a list of users, optionally paginated, sorted and/or filtered.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getUsers($request, $response, $args)
-    {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
-            throw new ForbiddenException();
-        }
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $this->ci->db;
-
-        $sprunje = new UserSprunje($classMapper, $params);
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
-    }
-
-    /**
      * Renders a page displaying a user's information, in read-only mode.
      *
      * This checks that the currently logged-in user has permission to view the requested user's info.
@@ -735,7 +775,7 @@ class UserController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageUser($request, $response, $args)
+    public function pageInfo($request, $response, $args)
     {
         $user = $this->getUserFromParams($args);
 
@@ -806,7 +846,7 @@ class UserController extends SimpleController
      * Request type: GET
      * @todo implement interface to modify user-assigned authorization hooks and permissions
      */
-    public function pageUsers($request, $response, $args)
+    public function pageList($request, $response, $args)
     {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -832,7 +872,7 @@ class UserController extends SimpleController
      * This route requires authentication.
      * Request type: PUT
      */
-    public function updateUser($request, $response, $args)
+    public function updateInfo($request, $response, $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
@@ -851,7 +891,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://edit-user-basic.json');
+        $schema = new RequestSchema('schema://user/edit-info.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -949,7 +989,7 @@ class UserController extends SimpleController
      * This route requires authentication.
      * Request type: PUT
      */
-    public function updateUserField($request, $response, $args)
+    public function updateField($request, $response, $args)
     {
         // Get the username from the URL
         $user = $this->getUserFromParams($args);
@@ -1000,7 +1040,7 @@ class UserController extends SimpleController
         // Validate key -> value pair
 
         // Load the request schema
-        $schema = new RequestSchema('schema://edit-user.json');
+        $schema = new RequestSchema('schema://user/edit-field.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1072,7 +1112,7 @@ class UserController extends SimpleController
     protected function getUserFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://get-user.json');
+        $schema = new RequestSchema('schema://user/get-by-username.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

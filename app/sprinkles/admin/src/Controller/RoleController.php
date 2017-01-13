@@ -47,7 +47,7 @@ class RoleController extends SimpleController
      * Request type: POST
      * @see getModalCreateRole
      */
-    public function createRole($request, $response, $args)
+    public function create($request, $response, $args)
     {
         // Get POST parameters: name, slug, description
         $params = $request->getParsedBody();
@@ -67,7 +67,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role.json');
+        $schema = new RequestSchema('schema://role/create.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -127,6 +127,40 @@ class RoleController extends SimpleController
     }
 
     /**
+     * Returns a list of Roles
+     *
+     * Generates a list of roles, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getList($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_roles')) {
+            throw new ForbiddenException();
+        }
+
+        $this->ci->db;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $sprunje = new RoleSprunje($classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
      * Processes the request to delete an existing role.
      *
      * Deletes the specified role.
@@ -138,7 +172,7 @@ class RoleController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: DELETE
      */
-    public function deleteRole($request, $response, $args)
+    public function delete($request, $response, $args)
     {
         $role = $this->getRoleFromParams($args);
 
@@ -196,7 +230,7 @@ class RoleController extends SimpleController
         return $response->withStatus(200);
     }
 
-    public function getModalConfirmDeleteRole($request, $response, $args)
+    public function getModalConfirmDelete($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -257,7 +291,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalCreateRole($request, $response, $args)
+    public function getModalCreate($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -287,7 +321,7 @@ class RoleController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://role.json');
+        $schema = new RequestSchema('schema://role/create.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/role.html.twig', [
@@ -316,7 +350,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditRole($request, $response, $args)
+    public function getModalEdit($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -354,7 +388,7 @@ class RoleController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://role.json');
+        $schema = new RequestSchema('schema://role/edit-info.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/role.html.twig', [
@@ -383,7 +417,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditRolePermissions($request, $response, $args)
+    public function getModalEditPermissions($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -409,50 +443,9 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        // Load validation rules
-        $schema = new RequestSchema('schema://role.json');
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
-
         return $this->ci->view->render($response, 'components/modals/role-manage-permissions.html.twig', [
-            'role' => $role,
-            'page' => [
-                'validators' => $validator->rules('json', false)
-            ]
+            'role' => $role
         ]);
-    }
-
-    /**
-     * Returns a list of Roles
-     *
-     * Generates a list of roles, optionally paginated, sorted and/or filtered.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getRoles($request, $response, $args)
-    {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_roles')) {
-            throw new ForbiddenException();
-        }
-
-        $this->ci->db;
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $sprunje = new RoleSprunje($classMapper, $params);
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
     }
 
     /**
@@ -462,7 +455,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getRolePermissions($request, $response, $args)
+    public function getPermissions($request, $response, $args)
     {
         $role = $this->getRoleFromParams($args);
 
@@ -511,7 +504,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageRole($request, $response, $args)
+    public function pageInfo($request, $response, $args)
     {
         $role = $this->getRoleFromParams($args);
 
@@ -575,7 +568,7 @@ class RoleController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageRoles($request, $response, $args)
+    public function pageList($request, $response, $args)
     {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -602,7 +595,7 @@ class RoleController extends SimpleController
      * Request type: PUT
      * @see getModalRoleEdit
      */
-    public function updateRole($request, $response, $args)
+    public function updateInfo($request, $response, $args)
     {
         // Get the role based on slug in the URL
         $role = $this->getRoleFromParams($args);
@@ -621,7 +614,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role.json');
+        $schema = new RequestSchema('schema://role/edit-info.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -709,7 +702,7 @@ class RoleController extends SimpleController
      * This route requires authentication.
      * Request type: PUT
      */
-    public function updateRoleField($request, $response, $args)
+    public function updateField($request, $response, $args)
     {
         // Get the username from the URL
         $role = $this->getRoleFromParams($args);
@@ -752,7 +745,7 @@ class RoleController extends SimpleController
         // Validate key -> value pair
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role-fields.json');
+        $schema = new RequestSchema('schema://role/edit-field.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -795,7 +788,7 @@ class RoleController extends SimpleController
     protected function getRoleFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://get-role.json');
+        $schema = new RequestSchema('schema://role/get-by-slug.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

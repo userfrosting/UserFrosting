@@ -46,7 +46,7 @@ class GroupController extends SimpleController
      * Request type: POST
      * @see getModalCreateGroup
      */
-    public function createGroup($request, $response, $args)
+    public function create($request, $response, $args)
     {
         // Get POST parameters: name, slug, icon, description
         $params = $request->getParsedBody();
@@ -66,7 +66,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://group.json');
+        $schema = new RequestSchema('schema://group/create.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -137,7 +137,7 @@ class GroupController extends SimpleController
      * This route requires authentication (and should generally be limited to admins or the root user).
      * Request type: DELETE
      */
-    public function deleteGroup($request, $response, $args)
+    public function delete($request, $response, $args)
     {
         $group = $this->getGroupFromParams($args);
 
@@ -203,7 +203,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getGroups($request, $response, $args)
+    public function getList($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -231,47 +231,7 @@ class GroupController extends SimpleController
         return $sprunje->toResponse($response);
     }
 
-    public function getGroupUsers($request, $response, $args)
-    {
-        $group = $this->getGroupFromParams($args);
-
-        // If the group no longer exists, forward to main group listing page
-        if (!$group) {
-            throw new NotFoundException($request, $response);
-        }
-
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_group_users', [
-            'group' => $group
-        ])) {
-            throw new ForbiddenException();
-        }
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $this->ci->db;
-
-        $sprunje = new UserSprunje($classMapper, $params);
-        $sprunje->extendQuery(function ($query) use ($group) {
-            return $query->where('group_id', $group->id);
-        });
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
-    }
-
-    public function getModalConfirmDeleteGroup($request, $response, $args)
+    public function getModalConfirmDelete($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -322,7 +282,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalCreateGroup($request, $response, $args)
+    public function getModalCreate($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -354,7 +314,7 @@ class GroupController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://group.json');
+        $schema = new RequestSchema('schema://group/create.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
@@ -383,7 +343,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function getModalEditGroup($request, $response, $args)
+    public function getModalEdit($request, $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
@@ -421,7 +381,7 @@ class GroupController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://group.json');
+        $schema = new RequestSchema('schema://group/edit-info.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
@@ -443,6 +403,46 @@ class GroupController extends SimpleController
         ]);
     }
 
+    public function getUsers($request, $response, $args)
+    {
+        $group = $this->getGroupFromParams($args);
+
+        // If the group no longer exists, forward to main group listing page
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_group_users', [
+            'group' => $group
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $this->ci->db;
+
+        $sprunje = new UserSprunje($classMapper, $params);
+        $sprunje->extendQuery(function ($query) use ($group) {
+            return $query->where('group_id', $group->id);
+        });
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
     /**
      * Renders a page displaying a group's information, in read-only mode.
      *
@@ -452,7 +452,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageGroup($request, $response, $args)
+    public function pageInfo($request, $response, $args)
     {
         $group = $this->getGroupFromParams($args);
 
@@ -516,7 +516,7 @@ class GroupController extends SimpleController
      * This page requires authentication.
      * Request type: GET
      */
-    public function pageGroups($request, $response, $args)
+    public function pageList($request, $response, $args)
     {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
@@ -543,7 +543,7 @@ class GroupController extends SimpleController
      * Request type: PUT
      * @see getModalGroupEdit
      */
-    public function updateGroup($request, $response, $args)
+    public function updateInfo($request, $response, $args)
     {
         // Get the group based on slug in URL
         $group = $this->getGroupFromParams($args);
@@ -562,7 +562,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://group.json');
+        $schema = new RequestSchema('schema://group/edit-info.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -644,7 +644,7 @@ class GroupController extends SimpleController
     protected function getGroupFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://get-group.json');
+        $schema = new RequestSchema('schema://group/get-by-slug.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

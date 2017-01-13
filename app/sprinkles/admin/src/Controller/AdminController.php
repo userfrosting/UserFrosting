@@ -19,13 +19,15 @@ use UserFrosting\Support\Exception\ForbiddenException;
  * @author Alex Weissman
  * @link http://www.userfrosting.com/navigating/#structure
  */
-class AdminController extends SimpleController {
+class AdminController extends SimpleController
+{
 
     /**
      * Renders the admin panel dashboard
      *
      */
-    public function dashboard($request, $response, $args){
+    public function pageDashboard($request, $response, $args)
+    {
         //** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
@@ -33,7 +35,7 @@ class AdminController extends SimpleController {
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
+        if (!$authorizer->checkAccess($currentUser, 'uri_dashboard')) {
             throw new ForbiddenException();
         }
 

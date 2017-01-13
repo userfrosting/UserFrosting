@@ -11,6 +11,6 @@
  * Routes for administrative panel management.
  */
 $app->group('/admin', function () {
-    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\AdminController:dashboard')
-        ->setName('uri_admin');
+    $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\AdminController:pageDashboard')
+         ->setName('uri_dashboard');
 });

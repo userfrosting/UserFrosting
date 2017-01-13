@@ -32,8 +32,26 @@
             }
         }
     },
-    "locale" : {},
-    "theme" : {},
+    "locale" : {
+        "validators" : {
+            "length" : {
+                "label" : "&LOCALE",
+                "min" : 1,
+                "max" : 10,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },
+    "theme" : {
+        "validators" : {
+            "length" : {
+                "label" : "&THEME",
+                "min" : 1,
+                "max" : 100,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },
     "group_id" : {
         "validators" : {
             "integer" : {

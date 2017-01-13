@@ -63,7 +63,31 @@
     "locale" : {
         "default" : "en_US",
         "validators" : {
-
+            "required" : {
+                "label" : "&LOCALE",
+                "message" : "VALIDATE.REQUIRED"
+            },
+            "length" : {
+                "label" : "&LOCALE",
+                "min" : 1,
+                "max" : 10,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },
+    "theme" : {
+        "default" : "default",
+        "validators" : {
+            "required" : {
+                "label" : "&THEME",
+                "message" : "VALIDATE.REQUIRED"
+            },
+            "length" : {
+                "label" : "&THEME",
+                "min" : 1,
+                "max" : 100,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
         }
     }
 }

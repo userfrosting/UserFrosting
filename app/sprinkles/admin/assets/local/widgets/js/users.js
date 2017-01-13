@@ -141,7 +141,6 @@ function updateUser(userName, fieldName, fieldValue) {
 
             // Set up form for submission
             form.ufForm({
-                validators: page.validators
             }).on("submitSuccess.ufForm", function() {
                 // Reload page on success
                 window.location.reload();
