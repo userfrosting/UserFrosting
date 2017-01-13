@@ -7,21 +7,24 @@
     {% include "components/csrf.html.twig" %}
     <div class="js-form-alerts">
     </div>
-    <table class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Remove</th>
-        </tr>
-        <tbody class="js-form-roles">
-         
-        </tbody>
-    </table>
-    <div class="padding-bottom">
-        <label>Assign new role:</label>
-        <select class="form-control select2 js-select-role" type="text">
-        <option></option>
-        </select>
+    <div class="js-form-roles">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="padding-bottom">
+            <label>Assign new role:</label>
+            <select class="form-control select2 js-select-new" type="text">
+            <option></option>
+            </select>
+        </div>
     </div>
     <br>
     <div class="row">

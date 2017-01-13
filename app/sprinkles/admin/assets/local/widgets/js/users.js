@@ -125,7 +125,6 @@ function updateUser(userName, fieldName, fieldValue) {
                 dataUrl         : site.uri.public + '/api/roles',
                 dropdownTemplate: modal.find('#user-roles-select-option').html(),
                 rowTemplate     : modal.find('#user-roles-row').html(),
-                dropdownControl : modal.find('.js-select-role'),
                 placeholder     : "Select a role"
             });
 
@@ -136,10 +135,6 @@ function updateUser(userName, fieldName, fieldValue) {
                     role.text = role.name;
                     roleWidget.ufCollection('addRow', role);
                 });
-            });
-
-            $('.js-add-role').on('click', function () {
-                roleWidget.ufCollection('addRow');
             });
 
             // Set up form for submission

@@ -1,5 +1,33 @@
-(function( $ ){
-
+/**
+ * uf-collection plugin.  Widget for attaching/detaching related items to a single parent item (e.g. roles for a user, etc).
+ *
+ * === USAGE ===
+ *
+ * uf-collection can be initialized on a div element as follows:
+ *
+ * $("#myCollection").ufCollection(options);
+ *
+ * `options` is an object containing any of the following parameters:
+ * @param {string} dataUrl The url from which to fetch options (as JSON data) in the dropdown selector menu.
+ * @param {string} dropdownTemplate A Handlebars template to use for rendering the dropdown items.
+ * @param {string} rowTemplate A Handlebars template to use for rendering each row in the table.
+ * @param {string} dropdownTheme The select2 theme to use for the dropdown menu.  Defaults to "bootstrap".
+ * @param {string} placeholder Placeholder text to use in the dropdown menu before a selection is made.  Defaults to "Item".
+ * @param {Object} dropdownControl a jQuery selector specifying the dropdown select2 control.  Defaults to looking for a .js-select-new element inside the parent object.
+ * @param {Object} rowContainer a jQuery selector specifying the place where rows should be added.  Defaults to looking for the first tbody element inside the parent object.
+ *
+ * == EVENTS ==
+ *
+ * ufCollection triggers the following events:
+ *
+ * `rowAdd.ufCollection`: triggered when a new row is added to the collection.
+ * `rowDelete.ufCollection`: triggered when a row is removed from the collection.
+ *
+ * UserFrosting https://www.userfrosting.com
+ * @author Alexander Weissman https://alexanderweissman.com
+ */
+(function( $ )
+{
     /**
      * The plugin namespace, ie for $('.selector').ufCollection(options)
      *
@@ -19,7 +47,8 @@
                 rowTemplate     : "",
                 dropdownTheme   : "bootstrap",
                 placeholder     : "Item",
-                dropdownControl : null,
+                dropdownControl : this.$T.find('.js-select-new'),
+                rowContainer    : this.$T.find('tbody').first(),
                 DEBUG: false
             },
             options
@@ -36,7 +65,7 @@
 
         this._rowTemplateCompiled = Handlebars.compile(this.options.rowTemplate);
 
-        this._init( target, options );
+        this._init( target, this.options );
 
         return this;
     }
@@ -49,9 +78,9 @@
         // Add container class
         $el.toggleClass("uf-collection", true);
 
-        base._initDropdownField(options.dropdownControl);
+        base._initDropdownField(base.options.dropdownControl);
         
-        options.dropdownControl.on("select2:select", function () {
+        base.options.dropdownControl.on("select2:select", function () {
            var item = $(this).select2("data");
            base.addRow(item);
         });
@@ -69,12 +98,12 @@
         $.extend(true, params, options[0]);
         
         var newRowTemplate = base._rowTemplateCompiled(params);
-        var newRow = $(newRowTemplate).appendTo(base.$T);
+        var newRow = $(newRowTemplate).appendTo(base.options.rowContainer);
 
         // Trigger to delete row
         $(newRow).find(".js-delete-row").on("click", function() {
             $(this).closest('.uf-collection-row').remove();
-            base.$T.trigger("rowdelete");
+            base.$T.trigger('rowDelete.ufCollection');
             var index = base._addedIds.indexOf(5);
             if (index > -1) {
                 base._addedIds.splice(index, 1);
@@ -84,7 +113,7 @@
         base._rownum += 1;
 
         // Fire event when row has been constructed
-        base.$T.trigger("rowadd");
+        base.$T.trigger('rowAdd.ufCollection');
 
         return base.$T;
     };

@@ -9,22 +9,25 @@
     {% include "components/csrf.html.twig" %}
     <div class="js-form-alerts">
     </div>
-    <table class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Hook/Conditions</th>
-            <th>Remove</th>
-        </tr>
-        <tbody class="js-form-permissions">
-         
-        </tbody>
-    </table>
-    <div class="padding-bottom">
-        <label>Assign new permission:</label>
-        <select class="form-control select2 js-select-permission" type="text">
-        <option></option>
-        </select>
+    <div class="js-form-permissions">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Hook/Conditions</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="padding-bottom">
+            <label>Assign new permission:</label>
+            <select class="form-control select2 js-select-new" type="text">
+            <option></option>
+            </select>
+        </div>
     </div>
     <br>
     <div class="row">
