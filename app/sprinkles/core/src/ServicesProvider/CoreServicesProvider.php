@@ -106,12 +106,12 @@ class CoreServicesProvider
                 $aub = new AssetUrlBuilder($locator, $baseUrl, $removePrefix, 'assets');
 
                 $as = new AssetBundleSchema($aub);
-                $as->loadRawSchemaFile($locator->findResource($config['assets.raw.schema'], true, true));
+                $as->loadRawSchemaFile($locator->findResource("sprinkles://core/" . $config['assets.raw.schema'], true, true));
 
                 // Extend for loaded sprinkles
                 $sprinkles = $c->sprinkleManager->getSprinkles();
                 foreach ($sprinkles as $sprinkle) {
-                    $resource = $locator->findResource("sprinkles://$sprinkle/bundle.config.json", true, true);
+                    $resource = $locator->findResource("sprinkles://$sprinkle/" . $config['assets.raw.schema'], true, true);
                     if (file_exists($resource)) {
                         $as->loadRawSchemaFile($resource);
                     }
@@ -121,7 +121,7 @@ class CoreServicesProvider
                 $aub = new CompiledAssetUrlBuilder($baseUrl);
 
                 $as = new AssetBundleSchema($aub);
-                $as->loadCompiledSchemaFile($locator->findResource($config['assets.compiled.schema'], true, true));
+                $as->loadCompiledSchemaFile($locator->findResource("build://" . $config['assets.compiled.schema'], true, true));
             }
 
             $am = new AssetManager($aub, $as);

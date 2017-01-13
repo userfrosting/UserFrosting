@@ -18,11 +18,11 @@
         'assets' => [
             'compiled' => [
                 'path'   => 'assets',
-                'schema' => 'build://bundle.result.json'
+                'schema' => 'bundle.result.json'
             ],
             'raw' => [
                 'path'   => 'assets-raw',
-                'schema' => 'sprinkles://core/bundle.config.json'
+                'schema' => 'bundle.config.json'
             ],
             'use_raw'  => true
         ],
