@@ -194,14 +194,14 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var Config $config */
-        $config = $this->ci->config;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
         // Check that we are not deleting a default role
-        $defaultRoles = explode(',', $config['site.registration.user_defaults.roles']);
+        $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        if (in_array($role->slug, $defaultRoles)) {
+        if (in_array($role->slug, $defaultRoleSlugs)) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.DELETE_DEFAULT');
             throw $e;
@@ -255,14 +255,14 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var Config $config */
-        $config = $this->ci->config;
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
 
         // Check that we are not deleting a default role
-        $defaultRoles = explode(',', $config['site.registration.user_defaults.roles']);
+        $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
 
         // Need to use loose comparison for now, because some DBs return `id` as a string
-        if (in_array($role->slug, $defaultRoles)) {
+        if (in_array($role->slug, $defaultRoleSlugs)) {
             $e = new BadRequestException();
             $e->addUserMessage('ROLE.DELETE_DEFAULT');
             throw $e;

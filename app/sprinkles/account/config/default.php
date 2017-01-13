@@ -17,6 +17,23 @@
                 'reset' => 10800
             ]
         ],
+        // See https://github.com/gbirke/rememberme for an explanation of these settings
+        'remember_me' => [
+            'cookie' => [
+                'name' => 'rememberme'
+            ],
+            'expire_time' => 604800,
+            'session' => [
+                'path' => '/'
+            ],
+            'table' => [
+                'tableName' => 'persistences',
+                'credentialColumn' => 'user_id',
+                'tokenColumn' => 'token',
+                'persistentTokenColumn' => 'persistent_token',
+                'expiresColumn' => 'expires_at'
+            ]
+        ],
         'reserved_user_ids' => [
             'guest'  => -1,
             'master' => 1
@@ -28,23 +45,6 @@
                 'auth_mode'        => 'account.auth_mode',           // the key to use for storing the authenticated user's authentication mode ('cookie' or 'form')
                 'captcha'          => 'account.captcha'     // Key used to store a captcha hash during captcha verification
             ]
-        ],
-        // See https://github.com/gbirke/rememberme for an explanation of these settings
-        'remember_me' => [
-            'table' => [
-                'tableName' => 'persistences',
-                'credentialColumn' => 'user_id',
-                'tokenColumn' => 'token',
-                'persistentTokenColumn' => 'persistent_token',
-                'expiresColumn' => 'expires_at'
-            ],
-            'session' => [
-                'path' => '/'
-            ],
-            'cookie' => [
-                'name' => 'rememberme'
-            ],
-            'expire_time' => 604800
         ],
         // "Site" settings that are automatically passed to Twig
         'site' => [
@@ -58,8 +58,10 @@
                 'user_defaults' => [
                     'locale' => 'en_US',
                     'group' => 'terran',
-                    // A comma-separated list of default roles for newly registered users
-                    'roles' => 'user'
+                    // Default roles for newly registered users
+                    'roles' => [
+                        'user' => true
+                    ]
                 ]
             ]
         ],

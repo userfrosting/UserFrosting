@@ -59,6 +59,17 @@ class Role extends UFModel
     }
 
     /**
+     * Get a list of default roles.
+     */
+    public static function getDefaultSlugs()
+    {
+        /** @var UserFrosting\Config $config */
+        $config = static::$ci->config;
+
+        return array_map('trim', array_keys($config['site.registration.user_defaults.roles'], true));
+    }
+
+    /**
      * Get a list of permissions assigned to this role.
      */
     public function permissions()
@@ -68,7 +79,6 @@ class Role extends UFModel
 
         return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles');
     }
-
 
     /**
      * Query scope to get all roles assigned to a specific user.

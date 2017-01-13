@@ -160,7 +160,7 @@ class UserController extends SimpleController
             ]);
 
             // Load default roles
-            $defaultRoleSlugs = array_map('trim', explode(',', $config['site.registration.user_defaults.roles']));
+            $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
             $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
             $defaultRoleIds = $defaultRoles->pluck('id')->all();
 
