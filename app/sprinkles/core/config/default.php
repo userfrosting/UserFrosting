@@ -111,7 +111,6 @@
         ],
         // "Site" settings that are automatically passed to Twig
         'site' => [
-            'title'     =>      'UserFrosting',
             'analytics' => [
                 'google' => [
                     'code' => '',
@@ -124,6 +123,15 @@
                 'ajax' => false,
                 'info' => true
             ],
+            'locales' =>  [
+                'available' => [
+                    'en_US' => 'English',
+                    'fr_FR' => 'French'
+                ],
+                // This can be a comma-separated list, to load multiple fallback locales
+                'default' => 'en_US'
+            ],
+            'title'     =>      'UserFrosting',
             // URLs
             'uri' => [
                 'base' => [
@@ -134,8 +142,7 @@
                 ],
                 'author'            => 'http://www.userfrosting.com',
                 'publisher'         => ''
-            ],
-            'locales' =>  'en_US'   // This can be a comma-separated list, to load multiple fallback locales
+            ]
         ],
         'timezone' => 'America/New_York',
         'error_reporting' => E_ALL,  // Development - report all errors and suggestions

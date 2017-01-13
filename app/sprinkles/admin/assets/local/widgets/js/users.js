@@ -14,7 +14,7 @@ function attachUserForm() {
         var form = modal.find('.js-form');
 
         // Set up any widgets inside the modal
-        form.find("select[name='group_id']").select2();
+        form.find(".select2").select2();
 
         // Set up the form for submission
         form.ufForm({

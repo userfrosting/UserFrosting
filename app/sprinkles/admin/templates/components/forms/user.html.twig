@@ -19,12 +19,16 @@
             <div class="form-group">
                 <label for="input-group">{{translate('GROUP')}}</label>
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
-                    <select id="input-group" class='form-control select2' name="group_id" {% if 'group' in form.fields.disabled %}disabled{% endif %}>
-                        {% for group in groups %}
-                        <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
-                        {% endfor %}
-                    </select>
+                    <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                    {% if 'group' in form.fields.disabled %}
+                        <input type="text" class="form-control" name="theme" value="{{user.group.name}}" disabled>
+                    {% else %}
+                        <select id="input-group" class="form-control select2" name="group_id">
+                            {% for group in groups %}
+                            <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}    
                 </div>
             </div>
         </div>
@@ -54,8 +58,11 @@
             <div class="form-group">
                 <label>{{translate('EMAIL')}}</label>
                 <div class="input-group">
-                    <span class="input-group-addon"><a href="mailto: {{user.email}}"><i class="fa fa-envelope"></i></a></span>
+                    <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                     <input type="text" class="form-control" name="email" autocomplete="off" value="{{user.email}}" placeholder="Email goes here" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
+                    {% if 'email' in form.fields.disabled %}
+                        <span class="input-group-addon"><a href="mailto: {{user.email}}"><i class="fa fa-send"></i></a></span>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -66,11 +73,15 @@
                 <label for="input-theme">Theme</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
-                    <select id="input-theme" class='form-control select2' name="theme" {% if 'theme' in form.fields.disabled %}disabled{% endif %}>
-                        {% for option, label in theme %}
-                        <option value="{{option}}" {% if (option == user.theme) %}selected{% endif %}>{{label}}</option>
-                        {% endfor %}
-                    </select>
+                    {% if 'theme' in form.fields.disabled %}
+                        <input type="text" class="form-control" name="theme" value="{{themes[user.theme]}}" disabled>
+                    {% else %}
+                        <select id="input-theme" class="form-control select2" name="theme">
+                            {% for option, label in theme %}
+                            <option value="{{option}}" {% if (option == user.theme) %}selected{% endif %}>{{label}}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -81,11 +92,15 @@
                 <label for="input-locale">{{translate('LOCALE')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-language"></i></span>
-                    <select id="input-locale" class='form-control select2' name="locale" {% if 'locale' in form.fields.disabled %}disabled{% endif %}>
-                        {% for option, label in locales %}
-                        <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
-                        {% endfor %}
-                    </select>
+                    {% if 'locale' in form.fields.disabled %}
+                        <input type="text" class="form-control" name="theme" value="{{locales[user.locale]}}" disabled>
+                    {% else %}
+                        <select id="input-locale" class="form-control select2" name="locale">
+                            {% for option, label in locales %}
+                            <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
                 </div>
             </div>
         </div>

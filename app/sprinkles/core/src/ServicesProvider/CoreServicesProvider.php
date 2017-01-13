@@ -526,7 +526,7 @@ class CoreServicesProvider
             $config = $c->config;
 
             // Load the base locale file(s) as specified in the configuration
-            $locales = explode(',', $config['site.locales']);
+            $locales = explode(',', $config['site.locales.default']);
             foreach ($locales as $locale) {
                 $translator->loadLocaleFiles(trim($locale));
             }

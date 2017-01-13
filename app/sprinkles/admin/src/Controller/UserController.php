@@ -378,10 +378,13 @@ class UserController extends SimpleController
         // Get a list of all groups
         $groups = $classMapper->staticMethod('group', 'all');
 
-        /*
-        // Get a list of all locales
-        $locale_list = $this->_app->site->getLocales();
+        /** @var Config $config */
+        $config = $this->ci->config;
 
+        // Get a list of all locales
+        $locales = $config['site.locales.available'];
+
+        /*
         // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
         $primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
 
@@ -407,6 +410,7 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'components/modals/user.html.twig', [
             'user' => $user,
             'groups' => $groups,
+            'locales' => $locales,
             'form' => [
                 'action' => 'api/users',
                 'method' => 'POST',
@@ -470,6 +474,12 @@ class UserController extends SimpleController
         // Get a list of all groups
         $groups = $classMapper->staticMethod('group', 'all');
 
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Get a list of all locales
+        $locales = $config['site.locales.available'];
+
         // Generate form
         $fields = [
             'hidden' => [],
@@ -491,6 +501,7 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'components/modals/user.html.twig', [
             'user' => $user,
             'groups' => $groups,
+            'locales' => $locales,
             'form' => [
                 'action' => "api/users/u/{$user->user_name}",
                 'method' => 'PUT',
@@ -798,8 +809,11 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        // Get list of all available locales.  Wait, why?
-        $locales = $this->ci->translator->getAvailableLocales();
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Get a list of all locales
+        $locales = $config['site.locales.available'];
 
         $themes = [];
 
