@@ -33,7 +33,7 @@ abstract class UFModel extends Model
     public function __construct(array $attributes = [])
     {
         // Hacky way to force the DB service to load before attempting to use the model
-        static::$ci->db;
+        static::$ci['db'];
 
         parent::__construct($attributes);
     }

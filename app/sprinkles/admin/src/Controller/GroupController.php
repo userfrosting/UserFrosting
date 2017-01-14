@@ -81,8 +81,6 @@ class GroupController extends SimpleController
             $error = true;
         }
 
-        $this->ci->db;
-
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -222,8 +220,6 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $this->ci->db;
-
         $sprunje = new GroupSprunje($classMapper, $params);
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
@@ -298,7 +294,6 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -355,7 +350,6 @@ class GroupController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -430,8 +424,6 @@ class GroupController extends SimpleController
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
-
-        $this->ci->db;
 
         $sprunje = new UserSprunje($classMapper, $params);
         $sprunje->extendQuery(function ($query) use ($group) {
@@ -597,8 +589,6 @@ class GroupController extends SimpleController
             throw new ForbiddenException();
         }
 
-        $this->ci->db;
-
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -662,8 +652,6 @@ class GroupController extends SimpleController
             }
             throw $e;
         }
-
-        $this->ci->db;
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;

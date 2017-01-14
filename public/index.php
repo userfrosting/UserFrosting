@@ -24,8 +24,27 @@ use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 // First, we create our DI container
 $container = new Container;
 
-// Fetch list of Sprinkles
-$sprinkles = json_decode(file_get_contents('../app/sprinkles/sprinkles.json'));
+// Attempt to fetch list of Sprinkles
+// TODO: move this to a separate class?
+$sprinklesFile = file_get_contents('../app/sprinkles/sprinkles.json');
+if ($sprinklesFile === false) {
+    ob_clean();
+    $title = "UserFrosting Application Error";
+    $errorMessage = "Unable to start site. Contact owner.<br/><br/>" .
+        "Version: UserFrosting 4 Pre-Alpha<br/>Error: Unable to determine Sprinkle load order.";
+    $output = sprintf(
+        "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
+        "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
+        "sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{" .
+        "display:inline-block;width:65px;}</style></head><body><h1>%s</h1>%s</body></html>",
+        $title,
+        $title,
+        $errorMessage
+    );
+    exit($output);
+}
+$sprinkles = json_decode($sprinklesFile);
+
 
 // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
 $container['sprinkleManager'] = function ($c) use ($sprinkles) {

@@ -58,8 +58,6 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $this->ci->db;
-
         $loginPage = $this->ci->router->pathFor('login');
 
         // Load validation rules
@@ -112,8 +110,6 @@ class AccountController extends SimpleController
 
         /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
-
-        $this->ci->db;
 
         // Get POST parameters
         $params = $request->getParsedBody();
@@ -517,8 +513,6 @@ class AccountController extends SimpleController
         /** @var Config $config */
         $config = $this->ci->config;
 
-        $this->ci->db;
-
         // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
         $params = $request->getParsedBody();
 
@@ -686,8 +680,6 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
-        $this->ci->db;
-
         // Get POST parameters
         $params = $request->getParsedBody();
 
@@ -776,8 +768,6 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
-        $this->ci->db;
-
         // Get POST parameters
         $params = $request->getParsedBody();
 
@@ -863,8 +853,6 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
-        $this->ci->db;
-
         // POST parameters
         $params = $request->getParsedBody();
 
@@ -948,8 +936,6 @@ class AccountController extends SimpleController
 
         /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
-
-        $this->ci->db;
 
         $loginPage = $this->ci->router->pathFor('login');
 

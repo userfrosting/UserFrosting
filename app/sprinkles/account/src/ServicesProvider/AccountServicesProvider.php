@@ -301,9 +301,6 @@ class AccountServicesProvider
             $classMapper = $c->classMapper;
             $config = $c->config;
 
-            // Force database connection to boot up
-            $c->db;
-
             // If this throws a PDOException we catch it and generate a guest user rather than allowing the exception to propagate.
             // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
             // So, we really don't want this particular service to throw any exceptions.
@@ -330,9 +327,6 @@ class AccountServicesProvider
             $classMapper = $c->classMapper;
             $config = $c->config;
 
-            // Force database connection to boot up
-            $c->db;
-
             $repo = new PasswordResetRepository($classMapper, $config['password_reset.algorithm']);
             return $repo;
         };
@@ -343,9 +337,6 @@ class AccountServicesProvider
         $container['repoVerification'] = function ($c) {
             $classMapper = $c->classMapper;
             $config = $c->config;
-
-            // Force database connection to boot up
-            $c->db;
 
             $repo = new VerificationRepository($classMapper, $config['verification.algorithm']);
             return $repo;
