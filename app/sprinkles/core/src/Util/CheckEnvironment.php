@@ -229,8 +229,8 @@ class CheckEnvironment
             $this->locator->findResource('log://') => true,
             $this->locator->findResource('cache://') => true,
             $this->locator->findResource('session://') => true,
-            $this->locator->findResource('sprinkles://') => false,
-            \UserFrosting\VENDOR_DIR => false
+            $this->locator->findResource('sprinkles://') => true,
+            \UserFrosting\VENDOR_DIR => true
         ];
 
         // Check for essential files & perms
