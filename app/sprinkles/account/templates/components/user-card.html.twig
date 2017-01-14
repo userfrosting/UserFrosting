@@ -1,0 +1,37 @@
+<li class="dropdown user user-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+      <img src="{{ current_user.avatar }}" class="user-image" alt="User Image">
+      <span class="hidden-xs">{{current_user.first_name}} {{current_user.last_name}}</span>
+    </a>
+    <ul class="dropdown-menu">
+      <!-- User image -->
+      <li class="user-header">
+        <img src="{{ current_user.avatar }}" class="img-circle" alt="User Image">
+
+        <p>
+          {{current_user.first_name}} {{current_user.last_name}}
+          <small>({{current_user.user_name}})</small>
+        </p>
+      </li>
+      <!-- Menu Body -->
+      {% if checkAccess('uri_dashboard') %}
+      <li class="user-body">
+        <div class="row">
+          <div class="col-xs-12 text-center">
+            <a href="{{site.uri.public}}/admin">{{translate("ADMIN.PANEL")}}</a>
+          </div>
+        </div>
+        <!-- /.row -->
+      </li>
+      {% endif %}
+      <!-- Menu Footer-->
+      <li class="user-footer">
+        <div class="pull-left">
+          <a href="{{site.uri.public}}/account/settings" class="btn btn-default btn-flat">{{translate("ACCOUNT.MY")}}</a>
+        </div>
+        <div class="pull-right">
+          <a href="{{site.uri.public}}/account/logout" class="btn btn-default btn-flat">{{translate("LOGOUT")}}</a>
+        </div>
+      </li>
+    </ul>
+</li>

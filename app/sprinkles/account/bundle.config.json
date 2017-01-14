@@ -1,18 +1,5 @@
 {
     "bundle": {
-        "js/azmind": {
-            "scripts": [
-                "vendor/jquery-backstretch/jquery.backstretch.js",
-                "local/azmind/js/azmind-backstretch.js"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "scripts": "plain"
-                    }
-                }
-            }
-        },
         "js/pages/account-settings": {
             "scripts": [
                 "local/pages/js/account-settings.js"
@@ -70,20 +57,6 @@
                 "result": {
                     "type": {
                         "scripts": "plain"
-                    }
-                }
-            }
-        },
-        "css/azmind": {
-            "styles": [
-                "local/azmind/css/form-elements.css",
-                "local/azmind/css/styles.css",
-                "local/azmind/css/azmind-custom.css"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "styles": "plain"
                     }
                 }
             }

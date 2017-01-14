@@ -1,189 +1,157 @@
-{% extends "layouts/azmind.html.twig" %}
+{% extends "layouts/basic.html.twig" %}
 
 {# Overrides blocks in head of base template #}
 {% block page_title %}{{translate('SIGNIN_OR_REGISTER')}}{% endblock %}
 
 {% block page_description %}{{translate('LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
 
-{% block body_matter %}
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 text">
-            <h1>{{translate('PAGE.LOGIN.TITLE')}}</h1>
-            <div class="description">
+{% block body_attributes %}
+    class="hold-transition login-page"
+{% endblock %}
+
+{% block content %}
+<div class="login-box">
+    <div class="login-logo">
+        <a href="{{site.uri.public}}">{{site.title}}</a>
+    </div>
+    <!-- /.login-logo -->
+
+    <div class="login-box-body login-form">
+        <p class="login-box-msg">{{translate('SIGNIN')}}</p>
+
+        <div class="alerts" id="alerts-login"></div>
+
+        <form action="{{site.uri.public}}/account/login" id="sign-in" method="post">
+          {% include "components/csrf.html.twig" %}
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control" placeholder="{{translate('USERNAME')}}" name="user_name">
+            <span class="glyphicon glyphicon-user form-control-feedback" style=" margin-right: 0px"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" class="form-control" placeholder="{{translate('PASSWORD')}}" name="password">
+            <span class="glyphicon glyphicon-lock form-control-feedback" style=" margin-right: 0px"></span>
+          </div>
+          <div class="row">
+            <div class="col-xs-8">
+              <div class="checkbox icheck">
+                <label>
+                  <input type="checkbox" name="rememberme"> {{translate('REMEMBER_ME')}}
+                </label>
+              </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-primary btn-block btn-flat">{{translate('LOGIN')}}</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+
+        <a href="{{site.uri.public}}/account/forgot-password">{{translate('PASSWORD.FORGET')}}</a><br>
+        <a href="{{site.uri.public}}/account/resend-verification">{{translate('ACCOUNT.VERIFICATION.RESEND')}}</a><br>
+        {% if site.registration.enabled %}<a href="#" class="show-register-form">{{translate('REGISTER')}}</a>{% endif %}
+
+    </div>
+    <!-- /.login-box-body -->
+
+    {% if site.registration.enabled %}
+    <div class="login-box-body register-form" style="display:none;">
+        <p class="login-box-msg">{{translate('REGISTER')}}</p>
+
+        <div class="alerts" id="alerts-register"></div>
+
+        <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
+            {% include "components/csrf.html.twig" %}
+            <div class="form-group">
+                <label class="sr-only" for="r-form-username">{{translate('USERNAME')}}</label>
+                <input type="text" name="user_name" placeholder="{{translate('USERNAME.CHOOSE')}}" class="form-control" id="r-form-username">
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label class="sr-only" for="r-form-first-name">{{translate('FIRST_NAME')}}</label>
+                    <input type="text" name="first_name" placeholder="{{translate('FIRST_NAME')}}" class="form-control" id="r-form-first-name">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label class="sr-only" for="r-form-last-name">{{translate('LAST_NAME')}}</label>
+                    <input type="text" name="last_name" placeholder="{{translate('LAST_NAME')}}" class="form-control" id="r-form-last-name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="r-form-email">{{translate('EMAIL')}}</label>
+                <input type="text" name="email" placeholder="{{translate('EMAIL')}}" class="form-control" id="r-form-email">
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="r-form-password">{{translate('PASSWORD')}}</label>
+                <input type="password" name="password" placeholder="{{translate('PASSWORD.BETWEEN', {min: 12, max: 100})}}" class="form-control" id="r-form-password">
+            </div>
+            <div class="form-group">
+                <label class="sr-only" for="r-form-passwordc">{{translate('PASSWORD.CONFIRM')}}</label>
+                <input type="password" name="passwordc" placeholder="{{translate('PASSWORD.CONFIRM')}}" class="form-control" id="r-form-passwordc">
+            </div>
+            {% if site.registration.captcha %}
+                <div class="form-group">
+                    <label class="sr-only" for="r-form-passwordc">{{translate('CAPTCHA.VERIFY')}}</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="captcha" placeholder="{{translate('CAPTCHA.SPECIFY')}}" class="form-control" id="r-form-captcha">
+                        </div>
+                        <div class="col-md-6 form-col-captcha">
+                                <img src="{{site.uri.public}}/account/captcha" id="captcha" data-target="#r-form-captcha">
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="collapse">
+                <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
+                <input name="spiderbro" id="spiderbro" value="http://"/>
+            </div>
+            <div class="text-left">
                 <p>
-                    {{translate('PAGE.LOGIN.SUBTITLE')}}
+                    {{translate('TOS_AGREEMENT', {
+                        'site_title' : site.title,
+                        'link_attributes' : 'class="js-show-tos" href="#" data-toggle="modal"',
+                        'link_text' : '&TOS'
+                    }) | raw}}
                 </p>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-10 col-sm-offset-1 show-forms">
-            {% if site.registration.enabled %}
-                <span class="show-login-form active">{{translate('SIGNIN')}}</span>
-                <span class="show-forms-divider">/</span>
-                <span class="show-register-form">{{translate('REGISTER')}}</span>
-            {% else %}
-                <span class="show-login-form-static">{{translate('SIGNIN')}}</span>
-            {% endif %}
-        </div>
-    </div>
-    {% if site.registration.enabled %}
-        <div class="row register-form">
-            <div class="col-sm-4 col-sm-offset-1">
-                <div id="alerts-register">
-
-                </div>
-                <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
-                    {% include "components/csrf.html.twig" %}
-                    <div class="form-group">
-                        <label class="sr-only" for="r-form-username">{{translate('USERNAME')}}</label>
-                        <input type="text" name="user_name" placeholder="{{translate('USERNAME.CHOOSE')}}" class="form-control" id="r-form-username">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label class="sr-only" for="r-form-first-name">{{translate('FIRST_NAME')}}</label>
-                            <input type="text" name="first_name" placeholder="{{translate('FIRST_NAME')}}" class="form-control" id="r-form-first-name">
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label class="sr-only" for="r-form-last-name">{{translate('LAST_NAME')}}</label>
-                            <input type="text" name="last_name" placeholder="{{translate('LAST_NAME')}}" class="form-control" id="r-form-last-name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="sr-only" for="r-form-email">{{translate('EMAIL')}}</label>
-                        <input type="text" name="email" placeholder="{{translate('EMAIL')}}" class="form-control" id="r-form-email">
-                    </div>
-                    <div class="form-group">
-                        <label class="sr-only" for="r-form-password">{{translate('PASSWORD')}}</label>
-                        <input type="password" name="password" placeholder="{{translate('PASSWORD.BETWEEN', {min: 12, max: 100})}}" class="form-control" id="r-form-password">
-                    </div>
-                    <div class="form-group">
-                        <label class="sr-only" for="r-form-passwordc">{{translate('PASSWORD.CONFIRM')}}</label>
-                        <input type="password" name="passwordc" placeholder="{{translate('PASSWORD.CONFIRM')}}" class="form-control" id="r-form-passwordc">
-                    </div>
-                    {% if site.registration.captcha %}
-                        <div class="form-group">
-                            <label class="sr-only" for="r-form-passwordc">{{translate('CAPTCHA.VERIFY')}}</label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <input type="text" name="captcha" placeholder="{{translate('CAPTCHA.SPECIFY')}}" class="form-control" id="r-form-captcha">
-                                </div>
-                                <div class="col-md-6 form-col-captcha">
-                                        <img src="{{site.uri.public}}/account/captcha" id="captcha" data-target="#r-form-captcha">
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-                    <div class="collapse">
-                        <label>Spiderbro: Don't change me bro, I'm tryin'a catch some flies!</label>
-                        <input name="spiderbro" id="spiderbro" value="http://"/>
-                    </div>
-                    <div class="text-left">
-                        {{translate('TOS_AGREEMENT', {
-                            'site_title' : site.title,
-                            'link_attributes' : 'class="js-show-tos" href="#" data-toggle="modal"',
-                            'link_text' : '&TOS'
-                        }) | raw}}
-                    </div>
-                    <button type="submit" class="btn">{{translate('REGISTER_ME')}}</button>
-                </form>
+            <div class="row">
+                <div class="col-sm-6"><button type="button" class="btn btn-block show-login-form">{{translate('SIGNIN')}}</button></div>
+                <div class="col-sm-6"><button type="submit" class="btn btn-block btn-primary">{{translate('REGISTER_ME')}}</button></div>
             </div>
-            <div class="col-sm-6 forms-right-icons">
-                <div class="row">
-                    <div class="col-sm-2 icon"><i class="fa fa-pencil"></i></div>
-                    <div class="col-sm-10">
-                        <h3>Beautiful Forms</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-2 icon"><i class="fa fa-commenting"></i></div>
-                    <div class="col-sm-10">
-                        <h3>Awesome Login</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-2 icon"><i class="fa fa-magic"></i></div>
-                    <div class="col-sm-10">
-                        <h3>Great Registration</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </form>
+    </div>
+    <!-- /.login-box-body -->
     {% endif %}
-    <div class="row login-form">
-        <div class="col-sm-4 col-sm-offset-1">
-            <div id="alerts-login">
 
-            </div>
-            <form id="sign-in" role="form" action="{{site.uri.public}}/account/login" method="post" class="l-form">
-                {% include "components/csrf.html.twig" %}
-                <div class="form-group">
-                    <label class="sr-only" for="l-form-username">{{translate('USERNAME')}}</label>
-                    <input type="text" name="user_name" placeholder="{{translate('USERNAME')}}" class="form-control" id="l-form-username">
-                </div>
-                <div class="form-group">
-                    <label class="sr-only" for="l-form-password">{{translate('PASSWORD')}}</label>
-                    <input type="password" name="password" placeholder="{{translate('PASSWORD')}}" class="form-control" id="l-form-password">
-                </div>
-                <div class="form-group">
-                    <label for="l-form-rememberme">
-                        <input type="checkbox" name="rememberme" id="l-form-rememberme"> {{translate('REMEMBER_ME_ON_COMPUTER')}}
-                    </label>
-                </div>
-                <button type="submit" class="btn">{{translate('SIGNIN')}}</button>
-            </form>
-            <div class="registration-links">
-                <a href="{{site.uri.public}}/account/forgot-password">{{translate('PASSWORD.FORGET')}}</a>
-                <br>
-                {# TODO: hide this link if public registration is turned off? #}
-                <a href="{{site.uri.public}}/account/resend-verification">{{translate('ACCOUNT.VERIFICATION.RESEND')}}</a>
-            </div>
-            <div class="social-login">
-                <p>{{translate('LOGIN.SOCIAL')}}:</p>
-                <div class="social-login-buttons">
-                    <a class="btn btn-link-1" href="#"><i class="fa fa-facebook"></i></a>
-                    <a class="btn btn-link-1" href="#"><i class="fa fa-twitter"></i></a>
-                    <a class="btn btn-link-1" href="#"><i class="fa fa-google-plus"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 forms-right-icons">
-            <div class="row">
-                <div class="col-sm-2 icon"><i class="fa fa-user"></i></div>
-                <div class="col-sm-10">
-                    <h3>New Features</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2 icon"><i class="fa fa-eye"></i></div>
-                <div class="col-sm-10">
-                    <h3>Easy To Use</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2 icon"><i class="fa fa-twitter"></i></div>
-                <div class="col-sm-10">
-                    <h3>Social Integrated</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
+<!-- /.login-box -->
+{% endblock %}
+
+{% block stylesheets_page %}
+<style>
+    .form-control-feedback { margin-right: 20px; }
+    .alerts { margin-bottom: 10px !important; }
+</style>
 {% endblock %}
 
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/page.js.twig" %}
+        {% include "components/page.js.twig" %}
+    </script>
+
+    <script>
+    site = $.extend(
+        true,               // deep extend
+        {
+            "registration" : {
+                "enabled" : "{{site.registration.enabled}}"
+            }
+        },
+        site
+    );
     </script>
 
     <!-- Include page-specific JS -->
     {{ assets.js('js/pages/sign-in-or-register') | raw }}
-
 {% endblock %}

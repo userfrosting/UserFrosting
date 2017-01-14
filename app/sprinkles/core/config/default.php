@@ -111,6 +111,9 @@
         ],
         // "Site" settings that are automatically passed to Twig
         'site' => [
+            'AdminLTE' =>  [
+                'skin' => "blue"
+            ],
             'analytics' => [
                 'google' => [
                     'code' => '',

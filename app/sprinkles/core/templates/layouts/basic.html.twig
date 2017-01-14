@@ -9,7 +9,7 @@
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta charset="utf-8">
             <meta name="generator" content="UserFrosting" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
             <meta name="description" content="{% block page_description %}This page has not yet been configured.{% endblock %}">
             <meta name="author" content="{% block page_author %}{{ site.author }}{% endblock %}">
 
@@ -67,11 +67,6 @@
             <!-- Page Content -->
             {% block content %}{% endblock %}
 
-            <!-- Footer -->
-            {% block footer %}
-                {% include "components/footer.html.twig" %}
-            {% endblock %}
-
             <!-- Javascript configuration -->
             <script>
             {% include "components/config.js.twig" %}
@@ -94,6 +89,14 @@
 
                 {# Override this block in a child layout template or page template to specify or override page-level scripts. #}
                 {% block scripts_page %}
+                {% endblock %}
+
+                {# Override this block to alter UfAlerts. #}
+                {% block scripts_UFAlert %}
+                    <script>
+                        $("#alerts-main").ufAlerts();
+                        $("#alerts-main").ufAlerts('fetch').ufAlerts('render');
+                    </script>
                 {% endblock %}
             {% endblock %}
 

@@ -1,21 +1,13 @@
 {# This extend the same file from core to add a sign-up/sign-in or "my account" link to the "home page" nav menu. #}
 {% extends "@core/components/default/main-nav.html.twig" %}
 
-{% block main_nav %}
+{% block secondary_nav %}
     {{parent()}}
     {% if current_user.isGuest() %}
         <li>
             <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">{{translate("SIGNIN")}}</a>
         </li>
     {% else %}
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle nav-highlight" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{current_user.user_name}} <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{{site.uri.public}}/account/settings"><i class="fa fa-gear fa-fw"></i> {{translate("ACCOUNT.MY")}}</a></li>
-            <li><a href="{{site.uri.public}}/admin" class=""><i class="fa fa-lock fa-fw"></i> {{translate("ADMIN.PANEL")}}</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="{{site.uri.public}}/account/logout"><i class="fa fa-sign-out fa-fw"></i> {{translate("LOGOUT")}}</a>
-          </ul>
-        </li>
+        {% include "components/user-card.html.twig" %}
     {% endif %}
 {% endblock %}

@@ -41,6 +41,8 @@ return [
 
     "MAIL_ERROR" => "Erreur fatale lors de l'envoie du courriel. Contactez votre administrateur. Si vous être administrateur, consultez les logs.",
 
+    "NAVIGATION" => "Menu principal",
+
     "PRIVACY" => "Politique de confidentialité",
 
     // Actions words

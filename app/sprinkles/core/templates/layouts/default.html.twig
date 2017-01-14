@@ -1,25 +1,45 @@
 {% extends "layouts/basic.html.twig" %}
 
 {% block stylesheets_page_group %}
-    <!-- Page-group-specific CSS asset bundle -->
-    {{ assets.css('css/guest') | raw }}
 {% endblock %}
 
 {% block body_attributes %}
-    id="page-top" data-target=".navbar-fixed-top"
+    class="hold-transition skin-{{site.AdminLTE.skin}} layout-top-nav"
 {% endblock %}
 
 {% block content %}
+
+<div class="wrapper">
+
+  <header class="main-header">
     {% include "components/default/main-nav.html.twig" %}
+  </header>
 
-    {% block header %}{% endblock %}
-
+  <!-- Full Width Column -->
+  <div class="content-wrapper">
     <div class="container">
-        <!-- Page Heading/Breadcrumbs -->
-        {% block page_heading %}
-            {% include "components/default/page-heading.html.twig" with {page_title: block('page_title'), page_description: block('page_description')}  %}
+        <!-- Content Header (Page header) -->
+        {% block content_header %}
+        <section class="content-header">
+          <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
+          <h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>
+          {% block breadcrumb %}
+            {% include 'components/breadcrumb.html.twig' with {page_title: block('page_title')} %}
+          {% endblock %}
+          <div id="alerts-main"></div>
+        </section>
         {% endblock %}
-        {% block body_matter %}{% endblock %}
+        <section class="content">
+            {% block body_matter %}{% endblock %}
+        </section>
     </div>
-{% endblock %}
+  </div>
+  <!-- /.content-wrapper -->
 
+  {% block footer %}
+    {% include "components/footer.html.twig" %}
+  {% endblock %}
+</div>
+<!-- ./wrapper -->
+
+{% endblock %}

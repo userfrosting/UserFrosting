@@ -1,4 +1,4 @@
-{% extends "layouts/default.html.twig" %}
+{% extends forcedLayout ? forcedLayout  : "layouts/default.html.twig" %}
 
 {% set page_active = "account-settings" %}
 
@@ -16,15 +16,15 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-gear"></i> {{translate("ACCOUNT.SETTINGS")}}</h3>
-                </div>
-                <div class="panel-body">
-                    <div id="alerts-page">
-
+            <div class="box box-primary">
+                <form class="form-horizontal" id="account-settings" role="form" action="{{site.uri.public}}/account/settings" method="post">
+                    <div class="box-header">
+                        <h3 class="box-title"><i class="fa fa-gear"></i> {{translate("ACCOUNT.SETTINGS")}}</h3>
                     </div>
-                    <form class="form-horizontal" id="account-settings" role="form" action="{{site.uri.public}}/account/settings" method="post">
+                    <div class="box-body">
+                        <div id="alerts-page">
+
+                        </div>
                         {% include "components/csrf.html.twig" %}
                         <!-- Prevent browsers from trying to autofill the password field.  See http://stackoverflow.com/a/23234498/2970321 -->
                         <input type="text" style="display:none">
@@ -81,12 +81,13 @@
                                     <input type="password" id="input-passwordcheck" class="form-control" name="passwordcheck" placeholder="You must confirm your current password to make changes.">
                                 </div>
                             </div>
-                            <div class="form-group text-center">
-                                <button type="submit" class="btn btn-success text-center">Update Settings</button>
-                            </div>
                         {% endif %}
-                    </form>
-                </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <button type="reset" class="btn btn-default">{{translate('RESET')}}</button>
+                        <button type="submit" class="btn btn-primary js-submit">{{translate('SAVE')}}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

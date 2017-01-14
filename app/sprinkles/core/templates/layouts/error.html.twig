@@ -2,33 +2,27 @@
 {% extends "layouts/basic.html.twig" %}
 
 {% block body %}
-<body id="page-top" class="index">
+    <body {% block body_attributes %}{% endblock %}>
+        <!-- Main content -->
+        <section class="content">
+          <div class="error-page">
+            {% block headline %}<h2 class="headline text-red"><i class="fa fa-terminal" aria-hidden="true"></i></h2>{% endblock %}
 
-    <!-- Main content of page -->
-    <div id="content">
-        {% block content %}
-            <div class="container">
-                <div class="text-center">
-                    <h1>
-                        {% block heading %}
-                            {{ translate('ERROR.ENCOUNTERED') }}
-                        {% endblock %}
-                    </h1>
+            <div class="error-content">
+              <br /><h3>{% block heading %}<i class="fa fa-warning text-red"></i> {{ translate('ERROR.ENCOUNTERED') }}{% endblock %}</h3>
 
-                    <br><br>
-                    <p class="lead">{{ translate('ERROR.DETAIL') }}</p>
-                </div>
-
-                {% for message in messages %}
+              {% block content %}
+                  {% if messages %}<p>{{ translate('ERROR.DETAIL') }}</p>{% endif %}
+                  {% for message in messages %}
                     <div class="alert alert-danger">{{ translate(message.message, message.parameters) }}</div>
-                {% endfor %}
-
-                <p class="lead">{{ translate('ERROR.RETURN', {url : site.uri.public})|raw }}</p>
-            </div> <!-- /container -->
-        {% endblock %}
-    </div>
-
-    {% include "components/footer.html.twig" %}
-
-</body>
+                  {% endfor %}
+                  <p class="lead">{{ translate('ERROR.RETURN', {url : site.uri.public})|raw }}</p>
+              {% endblock %}
+            </div>
+            <!-- /.error-content -->
+          </div>
+          <!-- /.error-page -->
+        </section>
+        <!-- /.content -->
+    </body>
 {% endblock %}

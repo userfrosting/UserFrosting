@@ -1,17 +1,12 @@
-<div class="sidebar-nav navbar-collapse">
-    <ul class="nav" id="side-menu">
-        <li class="sidebar-search">
-            <div class="input-group custom-search-form">
-                <input type="text" class="form-control" placeholder="Search...">
-                <span class="input-group-btn">
-                <button class="btn btn-default" type="button">
-                    <i class="fa fa-search"></i>
-                </button>
-            </span>
-            </div>
-            <!-- /input-group -->
-        </li>
-        {% include 'components/dashboard/sidebar-menu.html.twig' %}
-    </ul>
-</div>
-<!-- /.sidebar-collapse -->
+{% block sidebar_user %}
+    {% include 'components/dashboard/sidebar-user.html.twig' %}
+{% endblock %}
+
+{% block sidebar_search %}
+    {% include 'components/dashboard/sidebar-search.html.twig' %}
+{% endblock %}
+
+<ul class="sidebar-menu">
+    <li class="header" style="text-transform: uppercase">{{translate('NAVIGATION')}}</li>
+    {% include 'components/dashboard/sidebar-menu.html.twig' %}
+</ul>

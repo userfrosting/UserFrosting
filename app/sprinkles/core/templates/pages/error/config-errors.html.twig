@@ -4,23 +4,19 @@
 
 {% block page_description %}{{ translate('ERROR.CONFIG.DESCRIPTION') }}{% endblock %}
 
-{% block content %}
-    <div class="container">
-        <h1 class="text-center">{{ translate('ERROR.CONFIG.DETAIL') }}</h1>
-        <h2>{{ translate('ERROR.CONFIG.RETURN', {url: "#{site.uri.public}/install"})|raw }}</h2>
-        <p>
-            <img src="{{ assets.url('assets://local/core/images/stuck.jpg') }}">
-        </p>
+{% block heading %}<i class="fa fa-warning text-yellow"></i> {{ translate('ERROR.CONFIG.DETAIL') }}{% endblock %}
 
-        {% autoescape false %}
-        {% for message in messages %}
-            <div class="list-group">
-              <div class="list-group-item {% if message.success %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
-                <h4 class="list-group-item-heading">{{message.title}}</h4>
-                <p class="list-group-item-text">{{message.message | raw}}</p>
-              </div>
-            </div>
-        {% endfor %}
-        {% endautoescape %}
-    </div> <!-- /container -->
+{% block content %}
+    <p>{{ translate('ERROR.CONFIG.RETURN', {url: "#{site.uri.public}/install"})|raw }}</a>.</p>
+
+    {% autoescape false %}
+    {% for message in messages %}
+        <div class="list-group">
+          <div class="list-group-item {% if message.success %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
+            <h4 class="list-group-item-heading">{{message.title}}</h4>
+            <p class="list-group-item-text">{{message.message | raw}}</p>
+          </div>
+        </div>
+    {% endfor %}
+    {% endautoescape %}
 {% endblock %}

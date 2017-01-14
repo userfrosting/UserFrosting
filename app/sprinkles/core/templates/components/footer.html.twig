@@ -1,22 +1,8 @@
-<footer>
-    <div class="container">
-      <p class="text-center"><a href="#">Back to top</a></p>
-      <div class="row">
-          <div class="col-xs-6">
-            <p>
-              &copy; <a href="{{site.uri.public}}">{{site.title}}</a>, {{ "now"|date("Y") }}
-            </p>
-            <p>
-              Built with <a href="http://www.userfrosting.com">UserFrosting</a>.
-            </p>
-          </div>
-          {# TODO: media queries to improve appearance on mobile #}
-          <div class="col-xs-6 text-right">
-            <p>
-                <a href="{{site.uri.public}}/legal">Terms and Conditions</a> &middot;
-                <a href="{{site.uri.public}}/privacy">Privacy Policy</a>
-            </p>
-          </div>
-      </div>
+<footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      Built with <a href="http://www.userfrosting.com">UserFrosting</a> &middot;
+      <a href="{{site.uri.public}}/legal">Terms and Conditions</a> &middot;
+      <a href="{{site.uri.public}}/privacy">Privacy Policy</a>
     </div>
+    &copy; <a href="{{site.uri.public}}">{{site.title}}</a>, {{ "now"|date("Y") }}. Theme by <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
 </footer>

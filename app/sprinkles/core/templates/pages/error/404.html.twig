@@ -4,12 +4,13 @@
 
 {% block page_description %}{{ translate('ERROR.404.DESCRIPTION') }}{% endblock %}
 
+{% block headline %}<h2 class="headline text-yellow">404</h2>{% endblock %}
+
+{% block heading %}<i class="fa fa-warning text-yellow"></i> {{ translate('ERROR.404.DETAIL') }}{% endblock %}
+
 {% block content %}
-    <div class="container text-center">
-        <h1>{{ translate('ERROR.404.DETAIL') }}</h1>
-        <img src="{{ assets.url('assets://images/404.png') }}">
-        <br><br>
-        <p class="lead">{{ translate('ERROR.404.EXPLAIN') }}</p>
-        <p class="lead">{{ translate('ERROR.404.RETURN', {url: site.uri.public})|raw }}</p>
-    </div> <!-- /container -->
+    <p>
+        {{ translate('ERROR.404.EXPLAIN') }}
+        {{ translate('ERROR.404.RETURN', {url: site.uri.public})|raw }}
+    </p>
 {% endblock %}

@@ -8,38 +8,22 @@
  */
 $(document).ready(function() {
 
-    /*
-        Forms show / hide
-    */
-
-    // Show login form if registration is disabled
-    if (!site.registration.enabled) {
-        $('.login-form').show();
-    }
-
     // Fetch and render any alerts on the login panel
     // This is needed, for example, when we are redirected from another page.
     $("#alerts-login").ufAlerts();
     $("#alerts-login").ufAlerts('fetch').ufAlerts('render');
 
     function toggleRegistrationForm() {
-    	if( ! $(this).hasClass('active') ) {
-    		$('.show-login-form').removeClass('active');
-    		$(this).addClass('active');
-    		$('.login-form').fadeOut('fast', function() {
-    			$('.register-form').fadeIn('fast');
-    		});
-    	}
+		$('.login-form').fadeOut('fast', function() {
+			$('.register-form').fadeIn('fast');
+			$("#captcha").captcha();
+		});
     }
 
     function toggleLoginForm() {
-    	if( ! $(this).hasClass('active') ) {
-    		$('.show-register-form').removeClass('active');
-    		$(this).addClass('active');
-    		$('.register-form').fadeOut('fast', function() {
-    			$('.login-form').fadeIn('fast');
-    		});
-    	}
+    	$('.register-form').fadeOut('fast', function() {
+			$('.login-form').fadeIn('fast');
+		});
     }
 
     $('.show-register-form').on('click', toggleRegistrationForm);
@@ -80,6 +64,6 @@ $(document).ready(function() {
         msgTarget: $("#alerts-login")
     }).on("submitSuccess.ufForm", function() {
         // Forward to settings page on success
-        window.location.replace(site.uri.public + "/account/settings");
+        window.location.replace(site.uri.public);
     });
 });

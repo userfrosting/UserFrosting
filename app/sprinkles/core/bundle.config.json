@@ -6,6 +6,12 @@
                 "vendor/handlebars/handlebars.js",
                 "vendor/jquery-validation/dist/jquery.validate.js",
                 "vendor/jquery-validation/dist/additional-methods.js",
+                "vendor/jquery-slimscroll/jquery.slimscroll.min.js",
+                "vendor/icheck/icheck.min.js",
+                "vendor/fastclick/lib/fastclick.js",
+                "vendor/select2/dist/js/select2.full.js",
+                "local/core/js/AdminLTE.js",
+                "local/core/js/AdminLTE-custom.js",
                 "local/core/js/fortress-jqueryvalidation-methods.js",
                 "local/core/js/uf-jqueryvalidation-config.js",
                 "local/core/js/uf-alerts.js",
@@ -23,7 +29,6 @@
         "js/form-widgets": {
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
-                "vendor/select2/dist/js/select2.full.js",
                 "local/core/js/uf-collection.js"
             ],
             "options": {
@@ -38,8 +43,14 @@
             "styles": [
                 "vendor/font-awesome/css/font-awesome.css",
                 "vendor/bootstrap/dist/css/bootstrap.css",
+                "vendor/select2/dist/css/select2.css",
+                "vendor/select2-bootstrap-theme/dist/select2-bootstrap.css",
+                "vendor/icheck/skins/square/_all.css",
+                "vendor/ionicons/css/ionicons.css",
                 "local/core/css/uf-jqueryvalidation.css",
-                "local/core/css/uf-alerts.css"
+                "local/core/css/uf-alerts.css",
+                "local/core/css/AdminLTE.css",
+                "local/core/css/AdminLTE-skins-all.css"
             ],
             "options": {
                 "result": {
@@ -64,8 +75,6 @@
         },
         "css/form-widgets": {
             "styles": [
-                "vendor/select2/dist/css/select2.css",
-                "vendor/select2-bootstrap-theme/dist/select2-bootstrap.css",
                 "local/core/css/uf-collection.css"
             ],
             "options": {

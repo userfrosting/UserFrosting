@@ -1,32 +1,32 @@
 {% block navigation %}
     {% if checkAccess('uri_dashboard') %}
     <li>
-        <a href="{{site.uri.public}}/admin"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+        <a href="{{site.uri.public}}/admin"><i class="fa fa-dashboard fa-fw"></i> <span>Dashboard</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_users') %}
     <li>
-        <a href="{{site.uri.public}}/admin/users"><i class="fa fa-user fa-fw"></i> {{ translate("USER", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/users"><i class="fa fa-user fa-fw"></i> <span>{{ translate("USER", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_activities') %}
     <li>
-        <a href="{{site.uri.public}}/admin/activities"><i class="fa fa-tasks fa-fw"></i> {{ translate("ACTIVITY", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/activities"><i class="fa fa-tasks fa-fw"></i> <span>{{ translate("ACTIVITY", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_manage_roles') %}
     <li>
-        <a href="{{site.uri.public}}/admin/roles"><i class="fa fa-drivers-license fa-fw"></i> {{ translate("ROLE", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/roles"><i class="fa fa-drivers-license fa-fw"></i> <span>{{ translate("ROLE", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_manage_permissions') %}
     <li>
-        <a href="{{site.uri.public}}/admin/permissions"><i class="fa fa-key fa-fw"></i> {{ translate("PERMISSION", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/permissions"><i class="fa fa-key fa-fw"></i> <span>{{ translate("PERMISSION", 2) }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_manage_groups') %}
     <li>
-        <a href="{{site.uri.public}}/admin/groups"><i class="fa fa-users fa-fw"></i> {{ translate("GROUP", 2) }}</a>
+        <a href="{{site.uri.public}}/admin/groups"><i class="fa fa-users fa-fw"></i> <span>{{ translate("GROUP", 2) }}</span></a>
     </li>
     {% endif %}
 {% endblock %}

@@ -2,5 +2,10 @@
 {
     text-align: left;
     padding: 10px 0px;
-    margin: 10px 0px;
+    margin: 20px 0px 0px 0px;
+    display: none;
+}
+
+.uf-alerts.uf-alerts.alert {
+    display: block;
 }

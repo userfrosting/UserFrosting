@@ -8,16 +8,5 @@
 {% block page_description %}Our legal policy applies to your usage of this website and our services.{% endblock %}
 
 {% block body_matter %}
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">{{translate("LEGAL")}}
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="{{ site.uri.public }}">Home</a>
-                </li>
-                <li class="active">{{translate("LEGAL")}}</li>
-            </ol>
-        </div>
-    </div>
     {% include 'components/legal.html.twig' %}
 {% endblock %}
