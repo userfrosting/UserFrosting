@@ -219,7 +219,7 @@
         $schema->create('permission_roles', function (Blueprint $table) {
             $table->integer('permission_id')->unsigned();
             $table->integer('role_id')->unsigned();
-            $table->nullableTimestamps();
+            $table->timestamps();
 
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
@@ -378,7 +378,7 @@
         $schema->create('role_users', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('role_id')->unsigned();
-            $table->nullableTimestamps();
+            $table->timestamps();
 
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
@@ -450,7 +450,7 @@
             $table->boolean('flag_enabled')->default(1)->comment("Set to 1 if the user account is currently enabled, 0 otherwise.  Disabled accounts cannot be logged in to, but they retain all of their data and settings.");
             $table->integer('last_activity_id')->unsigned()->nullable()->comment("The id of the last activity performed by this user.");
             $table->string('password', 255);
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->engine = 'InnoDB';
