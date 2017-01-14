@@ -1,11 +1,10 @@
 /**
- * ufModal plugin.  Handles
+ * ufModal plugin.  Handles modal windows that dynamically their fetch content from a specified URL.
  *
  *
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman https://alexanderweissman.com
  */
-
 (function( $ )
 {
     /**

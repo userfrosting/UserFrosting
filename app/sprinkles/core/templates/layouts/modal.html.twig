@@ -4,8 +4,8 @@
 {# Conditional block.  See http://stackoverflow.com/a/13806784/2970321 #}
 {% set _modal_footer = block('modal_footer') %}
 
-<div class="modal fade" role="dialog" data-width="760">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" role="dialog">
+    <div class="modal-dialog {% block modal_size %}{% endblock %}" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

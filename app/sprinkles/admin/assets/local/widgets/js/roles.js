@@ -86,10 +86,6 @@ function bindRoleButtons(el) {
                 });
             });
 
-            $('.js-add-permission').on('click', function () {
-                permissionWidget.ufCollection('addRow');
-            });
-
             // Set up form for submission
             form.ufForm({
             }).on("submitSuccess.ufForm", function() {

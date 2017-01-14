@@ -14,7 +14,9 @@ function attachUserForm() {
         var form = modal.find('.js-form');
 
         // Set up any widgets inside the modal
-        form.find(".select2").select2();
+        form.find(".select2").select2({
+            width: '100%'
+        });
 
         // Set up the form for submission
         form.ufForm({
@@ -133,10 +135,6 @@ function updateUser(userName, fieldName, fieldValue) {
                     role.text = role.name;
                     roleWidget.ufCollection('addRow', role);
                 });
-            });
-
-            $('.js-add-role').on('click', function () {
-                roleWidget.ufCollection('addRow');
             });
 
             // Set up form for submission
