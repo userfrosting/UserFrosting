@@ -86,8 +86,6 @@ class UserController extends SimpleController
             $error = true;
         }
 
-        $this->ci->db;
-
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -371,7 +369,6 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -447,7 +444,6 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -617,7 +613,6 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -663,7 +658,6 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -745,7 +739,6 @@ class UserController extends SimpleController
             throw new NotFoundException($request, $response);
         }
 
-        $this->ci->db;
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -952,8 +945,6 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        $this->ci->db;
-
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
@@ -1142,8 +1133,6 @@ class UserController extends SimpleController
             }
             throw $e;
         }
-
-        $this->ci->db;
 
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
