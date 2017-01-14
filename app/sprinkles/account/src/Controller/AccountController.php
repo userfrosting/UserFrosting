@@ -438,11 +438,15 @@ class AccountController extends SimpleController
         $schema = new RequestSchema("schema://account-settings.json");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        $locales = $this->ci->translator->getAvailableLocales();
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Get a list of all locales
+        $locales = $config['site.locales.available'];
 
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
+            "locales" => $locales,
             "page" => [
-                "locales" => $locales,
                 "validators" => [
                     "account_settings"    => $validator->rules('json', false)
                 ],
