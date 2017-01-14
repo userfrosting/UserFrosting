@@ -127,11 +127,12 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     {
         $arr = [];
         $items = (array) $arg->value->items;
-        foreach ($items as $item){
-            if ($item->key)
+        foreach ($items as $item) {
+            if ($item->key) {
                 $arr[$item->key] = $item->value->value;
-            else
+            } else {
                 $arr[] = $item->value->value;
+            }
         }
         return $arr;
     }
@@ -147,9 +148,9 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     {
         $pathTokens = explode(".", $path);
         $value = $this->params;
-        foreach ($pathTokens as $token){
+        foreach ($pathTokens as $token) {
             $token = trim($token);
-            if (is_array($value) && isset($value[$token])){
+            if (is_array($value) && isset($value[$token])) {
                 $value = $value[$token];
                 continue;
             } else if (is_object($value) && isset($value->$token)) {
