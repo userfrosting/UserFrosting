@@ -52,8 +52,6 @@ class ActivityController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $this->ci->db;
-
         $sprunje = new ActivitySprunje($classMapper, $params);
         $sprunje->extendQuery(function ($query) {
             return $query->with('user');

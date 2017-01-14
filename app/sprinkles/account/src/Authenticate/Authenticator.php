@@ -70,7 +70,7 @@ class Authenticator
         try {
             $pdo = Capsule::connection()->getPdo();
         } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
-            $dbParams = $config['db'];
+            $dbParams = $config['db.default'];
             throw new \PDOException("Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration.");
         }
 

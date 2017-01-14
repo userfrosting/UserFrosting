@@ -35,6 +35,9 @@ build/bundle.result.json
 # Ignore temporary build assets
 build/temp
 
+# Ignore npm-debug.log
+build/npm-debug.log
+
 # Ignore compiled assets (dev)
 public/assets/*
 
@@ -44,5 +47,6 @@ public/css/min/*
 
 # Ignore personal config files (v0.3.x)
 app/config-userfrosting.php
-/app/sprinkles/account/assets/vendor/
-/app/sprinkles/core/assets/vendor/
+
+# Ignore vendor assets
+/app/sprinkles/*/assets/vendor/

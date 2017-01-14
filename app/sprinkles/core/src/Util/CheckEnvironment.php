@@ -229,8 +229,10 @@ class CheckEnvironment
             $this->locator->findResource('log://') => true,
             $this->locator->findResource('cache://') => true,
             $this->locator->findResource('session://') => true,
-            $this->locator->findResource('sprinkles://') => false,
-            \UserFrosting\VENDOR_DIR => false
+            // These directories need to be writeable for the installation process.
+            // In *production*, we should actually check to make sure that these directories are *not* writeable.
+            $this->locator->findResource('sprinkles://') => true,
+            \UserFrosting\VENDOR_DIR => true
         ];
 
         // Check for essential files & perms

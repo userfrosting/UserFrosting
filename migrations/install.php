@@ -29,7 +29,7 @@
 
     $capsule = new Capsule;
 
-    // TODO: pull from config?
+    // TODO: pull from config? Since we have sprinkles.json now, it would be feasible to load the config here with 'array_replace_recursive'
     $dbParams = [
         'driver'    => 'mysql',
         'host'      => getenv('DB_HOST'),

@@ -16,8 +16,6 @@
     "gulp-notify": "^2.2.0",
     "gulp-install": "^0.6.0",
     "gulp-debug": "^3.0.0",
-    "gulp-clean": "^0.3.2",
-    "gulp-prune": "^0.2.0",
     "merge-array-object": "^1.0.3",
     "recursive-copy": "^2.0.5",
     "del": "^2.2.2",
