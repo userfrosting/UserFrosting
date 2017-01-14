@@ -38,6 +38,18 @@ class Activity extends UFModel
     ];
 
     /**
+     * Joins the activity's user, so we can do things like sort, search, paginate, etc.
+     */
+    public function scopeJoinUser($query)
+    {
+        $query = $query->select('activities.*');
+
+        $query = $query->leftJoin('users', 'activities.user_id', '=', 'users.id');
+
+        return $query;
+    }
+
+    /**
      * Add clauses to select the most recent event of each type for each user, to the query.
      *
      * @return \Illuminate\Database\Query\Builder

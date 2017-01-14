@@ -61,7 +61,7 @@ class UserSprunje extends Sprunje
      */
     protected function filterLastActivity($query, $value)
     {
-        return $query->like('activities.description', "%$value%");
+        return $query->like('activities.description', $value);
     }
 
     /**
