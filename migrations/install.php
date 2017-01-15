@@ -61,7 +61,7 @@
 
     $installTime = Carbon::now();
 
-    $UFVersion = "4.0.0-alpha";
+    $ufVersion = "4.0.0-alpha";
 
     $detectedOS = php_uname('s');
 
@@ -104,13 +104,13 @@
         Capsule::table('version')->insert([
             [
                 'sprinkle' => 'core',
-                'version' => $UFVersion,
+                'version' => $ufVersion,
                 'created_at' => $installTime,
                 'updated_at' => $installTime
             ]
         ]);
 
-        echo "Installing UserFrosting $UFVersion for the first time..." . PHP_EOL;
+        echo "Installing UserFrosting $ufVersion for the first time..." . PHP_EOL;
         echo "Created table 'version'..." . PHP_EOL;
     } else {
         echo "Table 'version' found." . PHP_EOL;
@@ -278,9 +278,9 @@
     Capsule::table('version')->where('sprinkle', 'core')
         ->update(
             [
-                'version' => $UFVersion,
+                'version' => $ufVersion,
                 'updated_at' => $installTime
             ]
         );
 
-    echo PHP_EOL.PHP_EOL."UserFrosting migrated to $UFVersion successfully !".PHP_EOL;
+    echo PHP_EOL.PHP_EOL."UserFrosting migrated to $ufVersion successfully !".PHP_EOL;
