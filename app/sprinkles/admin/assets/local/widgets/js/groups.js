@@ -1,9 +1,8 @@
 /**
  * Groups widget.  Sets up dropdowns, modals, etc for a table of groups.
  */
- 
+
 // TODO: move these to a common JS file for form widgets
-$.fn.select2.defaults.set( "theme", "bootstrap" );
 
 /**
  * Set up the form in a modal after being successfully attached to the body.
@@ -16,7 +15,7 @@ function attachGroupForm() {
         /**
          * Set up modal widgets
          */
-         
+
         // Auto-generate slug
         form.find('input[name=name]').on('input change', function() {
             var manualSlug = form.find('#form-group-slug-override').prop('checked');

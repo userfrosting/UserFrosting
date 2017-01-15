@@ -1,9 +1,8 @@
 /**
  * Roles widget.  Sets up dropdowns, modals, etc for a table of roles.
  */
- 
+
 // TODO: move these to a common JS file for form widgets
-$.fn.select2.defaults.set( "theme", "bootstrap" );
 
 /**
  * Set up the form in a modal after being successfully attached to the body.
