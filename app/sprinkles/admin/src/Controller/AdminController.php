@@ -14,6 +14,7 @@ use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Model\Role;
+use UserFrosting\Sprinkle\Admin\Model\Version;
 
 /**
  * AdminController Class
@@ -61,7 +62,7 @@ class AdminController extends SimpleController
                 'groups' => Group::count(),
             ],
             'version' => [
-                'UF' => '4.0.0 Alpha',
+                'UF' => Version::where('sprinkle', 'core')->first()->version,
                 'php' => phpversion()
             ],
             'sprinkles' => $this->ci->sprinkleManager->getSprinkles(),
