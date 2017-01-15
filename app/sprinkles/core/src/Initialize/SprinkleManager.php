@@ -63,6 +63,9 @@ class SprinkleManager
         // Register core resources
         $this->addSprinkleResources('core');
 
+        // Initialize the core sprinkle
+        $sprinkle = $this->initializeSprinkle('core');
+
         // For each sprinkle (other than Core), register its resources and then run its initializer
         foreach ($this->sprinkles as $name) {
             $this->addSprinkleResources($name);

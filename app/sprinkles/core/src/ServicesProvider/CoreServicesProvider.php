@@ -43,7 +43,6 @@ use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\MessageStream;
-use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
@@ -282,9 +281,6 @@ class CoreServicesProvider
 
             // Start Eloquent
             $capsule->bootEloquent();
-
-            // Set container for data model
-            UFModel::$ci = $c;
 
             return $capsule;
         };

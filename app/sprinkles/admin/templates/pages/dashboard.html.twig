@@ -89,10 +89,25 @@
                 <div class="box-body">
                   <dl class="dl-horizontal">
                     <dt>UserFrosting version</dt>
-                    <dd>{{version.UF}}</dd>
+                    <dd>{{info.version.UF}}</dd>
 
                     <dt>PHP version</dt>
-                    <dd>{{version.php}}</dd>
+                    <dd>{{info.version.php}}</dd>
+
+                    <dt>Webserver software</dt>
+                    <dd>{{info.environment.SERVER_SOFTWARE}}</dd>
+
+                    <dt>Database version</dt>
+                    <dd>{{info.version.database.type}} {{info.version.database.version}}</dd>
+
+                    <dt>Database name</dt>
+                    <dd>{{info.database.name}}</dd>
+
+                    <dt>Project directory</dt>
+                    <dd>{{info.path.project}}</dd>
+
+                    <dt>Site root url</dt>
+                    <dd>{{site.uri.public}}</dd>
 
                     <dt>Loaded sprinkles</dt>
                     <dd>

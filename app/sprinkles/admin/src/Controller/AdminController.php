@@ -15,6 +15,7 @@ use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Model\Role;
 use UserFrosting\Sprinkle\Admin\Model\Version;
+use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 
 /**
  * AdminController Class
@@ -55,15 +56,28 @@ class AdminController extends SimpleController
             return $item;
         });
 
+        /** @var Config $config */
+        $config = $this->ci->config;
+
         return $this->ci->view->render($response, "pages/dashboard.html.twig", [
             'counter' => [
                 'users' => User::count(),
                 'roles' => Role::count(),
                 'groups' => Group::count(),
             ],
-            'version' => [
-                'UF' => Version::where('sprinkle', 'core')->first()->version,
-                'php' => phpversion()
+            'info' => [
+                'version' => [
+                    'UF' => Version::where('sprinkle', 'core')->first()->version,
+                    'php' => phpversion(),
+                    'database' => EnvironmentInfo::database()
+                ],
+                'database' => [
+                    'name' => $config['db.default.database']
+                ],
+                'environment' => $this->ci->environment,
+                'path' => [
+                    'project' => \UserFrosting\ROOT_DIR
+                ]
             ],
             'sprinkles' => $this->ci->sprinkleManager->getSprinkles(),
             'users' => $users
