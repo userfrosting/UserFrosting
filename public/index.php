@@ -43,7 +43,7 @@ if ($sprinklesFile === false) {
     );
     exit($output);
 }
-$sprinkles = json_decode($sprinklesFile);
+$sprinkles = json_decode($sprinklesFile)->base;
 
 
 // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
