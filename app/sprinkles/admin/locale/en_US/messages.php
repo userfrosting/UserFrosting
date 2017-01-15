@@ -86,5 +86,9 @@ return [
     "USER" => [
         1 => "User",
         2 => "Users"
+    ],
+    "X_USER" => [
+        1 => "{{plural}} user",
+        2 => "{{plural}} users"
     ]
 ];

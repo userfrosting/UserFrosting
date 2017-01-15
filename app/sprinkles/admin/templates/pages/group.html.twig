@@ -13,16 +13,18 @@
 {% block body_matter %}
     <div class="row">
         {% if 'group' not in fields.hidden %}
-        <div class="col-md-6">
-            <div class="biginfo biginfo-blue">
-                <div class="biginfo-icon">
-                    <i class="{{group.icon}}"></i>
-                </div>
-                <div class="biginfo-header">
-                    {{group.name}}
-                </div>
+        <div class="col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="{{group.icon}}"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-number">{{group.name}}</span>
+              <span class="info-box-text">{{ translate('X_USER', group.users.count)}}</span>
             </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
         </div>
+        <!-- /.col -->
         {% endif %}
     </div>
     <div class="row">
