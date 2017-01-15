@@ -2,8 +2,6 @@
  * Groups widget.  Sets up dropdowns, modals, etc for a table of groups.
  */
 
-// TODO: move these to a common JS file for form widgets
-
 /**
  * Set up the form in a modal after being successfully attached to the body.
  */
