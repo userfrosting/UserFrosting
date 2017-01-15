@@ -1,7 +1,0 @@
-{
-    "base": [
-        "account",
-        "admin",
-        "site-dev"
-    ]
-}
