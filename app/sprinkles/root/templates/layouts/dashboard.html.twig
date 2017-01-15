@@ -1,25 +1,5 @@
-{% extends "layouts/basic.html.twig" %}
+{% extends "@admin/layouts/dashboard.html.twig" %}
 
-{# This is the base layout template for pages based on the Start Bootstrap Admin 2 template (basically, all authenticated pages). #}
-
-{% block stylesheets_page_group %}
-    <!-- Page-group-specific CSS asset bundle -->
-    {{ assets.css('css/sb-admin-2') | raw }}
-    <!-- Theme-specific CSS asset bundle -->
-    {{ assets.css('css/sb-admin-2-root') | raw }}
-{% endblock %}
-
-{% block content %}
-    <div id="wrapper">
-        {% include 'components/dashboard/nav.html.twig' %}
-        <div id="page-wrapper">
-            {% block body_matter %}{% endblock %}
-        </div>
-        <!-- /#page-wrapper -->
-    </div>
-    <!-- /#wrapper -->
-{% endblock %}
-
-{% block scripts_page_group %}
-    {{ assets.js('js/sb-admin-2') | raw }}
+{% block body_attributes %}
+    class="hold-transition skin-red sidebar-mini"
 {% endblock %}

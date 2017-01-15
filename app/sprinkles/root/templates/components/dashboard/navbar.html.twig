@@ -1,0 +1,11 @@
+{% extends "@admin/components/dashboard/navbar.html.twig" %}
+
+{% block dashboard_navbar %}
+    <div class="navbar-menu">
+        <ul class="nav navbar-nav">
+          <li>{{ translate("HEADER_MESSAGE_ROOT") | upper }}</li>
+        </ul>
+    </div>
+
+    {{ parent() }}
+{% endblock %}
