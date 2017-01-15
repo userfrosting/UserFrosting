@@ -7,9 +7,11 @@
     use Dotenv\Exception\InvalidPathException;
     use Illuminate\Database\Capsule\Manager as Capsule;
     use Illuminate\Database\Schema\Blueprint;
+    use Slim\Container;
     use Slim\Http\Uri;
     use UserFrosting\Sprinkle\Account\Model\User;
     use UserFrosting\Sprinkle\Account\Util\Password;
+    use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 
     if (!defined('STDIN')) {
         die('This program must be run from the command line.');
@@ -17,43 +19,36 @@
 
     // TODO: check PHP version
 
-    // Grab any relevant dotenv variables from the .env file
-    try {
-        $dotenv = new Dotenv(\UserFrosting\APP_DIR);
-        $dotenv->load();
-    } catch (InvalidPathException $e) {
-        // Skip loading the environment config file if it doesn't exist.
+
+    // First, we create our DI container
+    $container = new Container;
+
+    // Attempt to fetch list of Sprinkles
+    $sprinklesFile = file_get_contents('../app/sprinkles/sprinkles.json');
+    if ($sprinklesFile === false) {
+        die(PHP_EOL . "File 'app/sprinkles/sprinkles.json' not found. Please create a 'sprinkles.json' file and try again." . PHP_EOL);
     }
+    $sprinkles = json_decode($sprinklesFile)->base;
 
-    // TODO: make this interactive?
-    date_default_timezone_set('America/New_York');
+    // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
+    $container['sprinkleManager'] = function ($c) use ($sprinkles) {
+        return new SprinkleManager($c, $sprinkles);
+    };
 
-    $capsule = new Capsule;
+    // Now, run the sprinkle manager to boot up all our sprinkles
+    $container->sprinkleManager->init();
 
-    // TODO: pull from config? Since we have sprinkles.json now, it would be feasible to load the config here with 'array_replace_recursive'
-    $dbParams = [
-        'driver'    => 'mysql',
-        'host'      => getenv('DB_HOST'),
-        'database'  => getenv('DB_NAME'),
-        'username'  => getenv('DB_USER'),
-        'password'  => getenv('DB_PASSWORD'),
-        'charset'   => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix'    => ''
-    ];
+    $container->config['settings.displayErrorDetails'] = false;
 
-    $capsule->addConnection($dbParams);
+    $config = $container->config;
 
-    // Register as global connection
-    $capsule->setAsGlobal();
-
-    // Start Eloquent
-    $capsule->bootEloquent();
+    $container->db;
 
     // Test database connection
     try {
         Capsule::connection()->getPdo();
     } catch (\Exception $e) {
+        $dbParams = $config['db.default'];
         die(PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration." . PHP_EOL);
     }
 
@@ -118,16 +113,11 @@
 
     // Load the sprinkles list
     echo PHP_EOL . "Migrating Sprinkle's:" . PHP_EOL;
-    $sprinklesFile = file_get_contents('../app/sprinkles/sprinkles.json');
-    if ($sprinklesFile === false) {
-        die(PHP_EOL . "File 'app/sprinkles/sprinkles.json' not found. Please try again." . PHP_EOL);
-    }
-    $sprinkles = json_decode($sprinklesFile);
 
     // Looping throught every sprinkle and running their migration
     // N.B.: No migrations in core... yet. Add it manually if migration is added
     // to core at some point
-    foreach ($sprinkles->base as $sprinkle) {
+    foreach ($sprinkles as $sprinkle) {
 
         echo ">> $sprinkle" . PHP_EOL;
 
@@ -256,6 +246,7 @@
             "email" => $email,
             "first_name" => $first_name,
             "last_name" => $last_name,
+            "theme" => 'root',
             "password" => Password::hash($password)
         ]);
 

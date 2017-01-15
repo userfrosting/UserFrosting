@@ -45,7 +45,6 @@ if ($sprinklesFile === false) {
 }
 $sprinkles = json_decode($sprinklesFile)->base;
 
-
 // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
 $container['sprinkleManager'] = function ($c) use ($sprinkles) {
     return new SprinkleManager($c, $sprinkles);

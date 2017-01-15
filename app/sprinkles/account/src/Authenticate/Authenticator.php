@@ -246,7 +246,9 @@ class Authenticator
         // User logout actions
         if ($currentUserId) {
             $currentUser = $this->classMapper->staticMethod('user', 'find', $currentUserId);
-            $currentUser->onLogout();
+            if ($currentUser) {
+                $currentUser->onLogout();
+            }
         }
 
         // Completely destroy the session

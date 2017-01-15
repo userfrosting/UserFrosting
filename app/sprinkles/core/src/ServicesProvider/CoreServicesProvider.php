@@ -219,16 +219,19 @@ class CoreServicesProvider
                 $config['site.uri.public'] = trim($public, '/');
             }
 
-            if (isset($config['display_errors']))
+            if (isset($config['display_errors'])) {
                 ini_set("display_errors", $config['display_errors']);
+            }
 
             // Configure error-reporting
-            if (isset($config['error_reporting']))
+            if (isset($config['error_reporting'])) {
                 error_reporting($config['error_reporting']);
+            }
 
             // Configure time zone
-            if (isset($config['timezone']))
+            if (isset($config['timezone'])) {
                 date_default_timezone_set($config['timezone']);
+            }
 
             return $config;
         };

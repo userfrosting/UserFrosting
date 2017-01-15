@@ -55,7 +55,7 @@ class AccountServicesProvider
         /**
          * Extend the 'classMapper' service to register model classes.
          *
-         * Mappings added: User, Group, Permission, Role, Activity
+         * Mappings added: User, Group, Role, Permission, Activity, PasswordReset, Verification
          */
         $container->extend('classMapper', function ($classMapper, $c) {
             $classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Model\User');

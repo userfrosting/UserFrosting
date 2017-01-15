@@ -51,6 +51,7 @@ class ShutdownHandler
             // For AJAX requests, add an alert to the message stream instead
             if ($this->ci->request->isXhr()) {
                 // Inform the client of a fatal error
+                $output = "";
                 if ($this->ci->alerts && is_object($this->ci->alerts)) {
                     $this->ci->alerts->addMessageTranslated("danger", $clientErrorMessage);
                     $output = $clientErrorMessage;
