@@ -15,9 +15,13 @@ $(document).ready(function() {
     // Control buttons
     bindGroupButtons($("#view-group"));
 
+    // Table of users in this group
     $("#widget-group-users").ufTable({
         dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users'
     });
 
-    $("#widget-group-users").on("pagerComplete.ufTable", initUserTable);
+    // Bind user table buttons
+    $("#widget-group-users").on("pagerComplete.ufTable", function () {
+        bindUserButtons($(this));
+    });
 });

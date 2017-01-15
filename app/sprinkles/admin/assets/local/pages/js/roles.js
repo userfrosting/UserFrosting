@@ -16,5 +16,11 @@ $(document).ready(function() {
         dataUrl: site.uri.public + "/api/roles"
     });
 
-    $("#widget-roles").on("pagerComplete.ufTable", initRoleTable);
+    // Bind creation button
+    bindRoleCreationButton($("#widget-roles"));
+
+    // Bind table buttons
+    $("#widget-roles").on("pagerComplete.ufTable", function () {
+        bindRoleButtons($(this));
+    });
 });

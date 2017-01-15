@@ -97,9 +97,9 @@ function bindGroupButtons(el) {
     });
 }
 
-var initGroupTable = function () {
+function bindGroupCreationButton(el) {
     // Link create button
-    $(this).find('.js-group-create').click(function() {
+    el.find('.js-group-create').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/groups/create",
             msgTarget: $("#alerts-page")
@@ -107,6 +107,4 @@ var initGroupTable = function () {
 
         attachGroupForm();
     });
-
-    bindGroupButtons($(this));
 };

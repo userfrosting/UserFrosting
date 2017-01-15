@@ -21,5 +21,11 @@ $(document).ready(function() {
         */
     });
 
-    $("#widget-users").on("pagerComplete.ufTable", initUserTable);
+    // Bind creation button
+    bindUserCreationButton($("#widget-users"));
+    
+    // Bind table buttons
+    $("#widget-users").on("pagerComplete.ufTable", function () {
+        bindUserButtons($(this));
+    });
 });

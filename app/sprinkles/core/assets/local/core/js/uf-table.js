@@ -291,8 +291,8 @@
             window.location = base.options.dataUrl + '?' + $.param( tableState );
         });
 
-        base.ts.on("pagerComplete.ufTable", function () {
-            $el.trigger("pagerComplete");
+        base.ts.on("pagerComplete", function () {
+            $el.trigger("pagerComplete.ufTable");
         });
     };
 
