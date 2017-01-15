@@ -1,5 +1,7 @@
-[
-    "account",
-    "admin",
-    "site-dev"
-]
+{
+    "base": [
+        "account",
+        "admin",
+        "site-dev"
+    ]
+}
