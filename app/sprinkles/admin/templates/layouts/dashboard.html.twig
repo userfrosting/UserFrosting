@@ -1,6 +1,8 @@
 {% extends "layouts/basic.html.twig" %}
 
 {% block stylesheets_page_group %}
+    <!-- Page-group-specific CSS asset bundle -->
+    {{ assets.css('css/admin') | raw }}
 {% endblock %}
 
 {% block body_attributes %}
@@ -8,62 +10,66 @@
 {% endblock %}
 
 {% block content %}
-<div class="wrapper">
+    <div class="wrapper">
 
-  <header class="main-header">
-    <!-- Logo -->
-    {% block navbar_logo %}
-      <a href="{{site.uri.public}}" class="logo">
-      <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><img src="{{ assets.url('assets://local/core/images/logo.svg') | raw }}" width="35" alt=""></span>
-      <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><img src="{{ assets.url('assets://local/core/images/logo.svg') | raw }}" width="35" alt="">{{site.title}}</span>
-    </a>
-    {% endblock %}
-    <!-- Header Navbar: style can be found in header.less -->
-    <nav class="navbar navbar-static-top">
-        <!-- Sidebar toggle button-->
-        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-            <span class="sr-only">Toggle navigation</span>
+      <header class="main-header">
+        <!-- Logo -->
+        {% block navbar_logo %}
+          <a href="{{site.uri.public}}" class="logo">
+          <!-- mini logo for sidebar mini 50x50 pixels -->
+          <span class="logo-mini"><img src="{{ assets.url('assets://local/core/images/logo.svg') | raw }}" width="35" alt=""></span>
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg"><img src="{{ assets.url('assets://local/core/images/logo.svg') | raw }}" width="35" alt="">{{site.title}}</span>
         </a>
-        <!-- Main nav buttons -->
-        {% include "components/dashboard/navbar.html.twig" %}
-    </nav>
-  </header>
-  <!-- Left side column. contains the logo and sidebar -->
-  <aside class="main-sidebar">
-    <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
-        {% include 'components/dashboard/sidebar.html.twig' %}
-    </section>
-    <!-- /.sidebar -->
-  </aside>
+        {% endblock %}
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Main nav buttons -->
+            {% include "components/dashboard/navbar.html.twig" %}
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            {% include 'components/dashboard/sidebar.html.twig' %}
+        </section>
+        <!-- /.sidebar -->
+      </aside>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    {% block content_header %}
-    <section class="content-header">
-      <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
-      <h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>
-      {% block breadcrumb %}
-        {% include 'components/breadcrumb.html.twig' with {page_title: block('page_title')} %}
-      {% endblock %}
-      <div id="alerts-main"></div>
-    </section>
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        {% block content_header %}
+        <section class="content-header">
+          <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
+          <h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>
+          {% block breadcrumb %}
+            {% include 'components/breadcrumb.html.twig' with {page_title: block('page_title')} %}
+          {% endblock %}
+          <div id="alerts-main"></div>
+        </section>
+        {% endblock %}
+        <section class="content">
+            {% block body_matter %}{% endblock %}
+        </section>
+      </div>
+      <!-- /.content-wrapper -->
+
+    <!-- Footer -->
+    {% block footer %}
+        {% include "components/footer.html.twig" %}
     {% endblock %}
-    <section class="content">
-        {% block body_matter %}{% endblock %}
-    </section>
-  </div>
-  <!-- /.content-wrapper -->
 
-<!-- Footer -->
-{% block footer %}
-    {% include "components/footer.html.twig" %}
+    </div>
+    <!-- ./wrapper -->
+
 {% endblock %}
 
-</div>
-<!-- ./wrapper -->
-
+{% block scripts_page_group %}
+    {{ assets.js('js/admin') | raw }}
 {% endblock %}

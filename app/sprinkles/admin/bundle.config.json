@@ -1,5 +1,24 @@
 {
     "bundle": {
+        "js/admin": {
+            "scripts": [
+                "vendor/moment/moment.js",
+                "local/core/js/handlebars-helpers.js",
+                 "vendor/tablesorter/dist/js/jquery.tablesorter.js",
+                 "vendor/tablesorter/dist/js/jquery.tablesorter.widgets.js",
+                 "vendor/tablesorter/dist/js/widgets/widget-sort2Hash.min.js",
+                 "vendor/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
+                 "local/core/js/query-string.js",
+                 "local/core/js/uf-table.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
         "js/pages/activities": {
             "scripts": [
                 "local/pages/js/activities.js"
@@ -99,6 +118,21 @@
                 "result": {
                     "type": {
                         "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "css/admin": {
+            "styles": [
+                "local/font-starcraft/css/font-starcraft.css",
+                "vendor/tablesorter/dist/css/theme.bootstrap.min.css",
+                "vendor/tablesorter/dist/css/jquery.tablesorter.pager.min.css",
+                "local/pages/css/tablesorter-custom.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
                     }
                 }
             }
