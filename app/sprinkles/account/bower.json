@@ -21,11 +21,6 @@
         "tests"
     ],
     "dependencies": {
-        "bootstrap-switch": "2.0.1",
-        "jquery-backstretch": "2.0.4",
-        "metisMenu": "2.4.2",
-        "morris.js": "0.5.1",
-        "raphael": "2.2.7"
     },
     "resolutions": {
         "jquery": ">= 2.2.4",

@@ -1,40 +1,5 @@
 {
     "bundle": {
-        "js/sb-admin-2": {
-            "scripts": [
-                "vendor/metisMenu/dist/metisMenu.js",
-                "local/start-bootstrap/js/sb-admin-2.js",
-                "vendor/moment/moment.js",
-                "local/core/js/handlebars-helpers.js",
-                "vendor/tablesorter/dist/js/jquery.tablesorter.js",
-                "vendor/tablesorter/dist/js/jquery.tablesorter.widgets.js",
-                "vendor/tablesorter/dist/js/widgets/widget-sort2Hash.min.js",
-                "vendor/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
-                "local/core/js/query-string.js",
-                "local/core/js/uf-table.js"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "scripts": "plain"
-                    }
-                }
-            }
-        },
-        "js/sb-admin-2-dashboard": {
-            "scripts": [
-                "vendor/raphael/raphael.js",
-                "vendor/morris.js/morris.js",
-                "local/start-bootstrap/js/morris-data.js"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "scripts": "plain"
-                    }
-                }
-            }
-        },
         "js/pages/activities": {
             "scripts": [
                 "local/pages/js/activities.js"
@@ -134,49 +99,6 @@
                 "result": {
                     "type": {
                         "scripts": "plain"
-                    }
-                }
-            }
-        },
-        "css/sb-admin-2": {
-            "styles": [
-                "vendor/metisMenu/dist/metisMenu.css",
-                "local/start-bootstrap/css/sb-admin-2.css",
-                "local/font-starcraft/css/font-starcraft.css",
-                "vendor/tablesorter/dist/css/theme.bootstrap.min.css",
-                "vendor/tablesorter/dist/css/jquery.tablesorter.pager.min.css",
-                "local/pages/css/tablesorter-custom.css",
-                "local/pages/css/sb-admin-2-custom.css"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "styles": "plain"
-                    }
-                }
-            }
-        },
-        "css/sb-admin-2-dashboard": {
-            "styles": [
-                "local/start-bootstrap/css/timeline.css",
-                "vendor/morris.js/morris.css"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "styles": "plain"
-                    }
-                }
-            }
-        },
-        "css/sb-admin-2-root": {
-            "styles": [
-                "local/css/sb-admin-2-red.css"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "styles": "plain"
                     }
                 }
             }
