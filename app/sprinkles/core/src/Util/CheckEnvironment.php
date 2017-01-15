@@ -64,7 +64,6 @@ class CheckEnvironment
     public function __invoke($request, $response, $next)
     {
         $problemsFound = false;
-        $cacheFilePath = '../app/cache/environmentChecksPass.cache';
         
         // If production environment and no cached checks, perform environment checks
         if (getenv('UF_MODE') == 'production' && $this->cache->get('checkEnvironment') != 'pass') {
