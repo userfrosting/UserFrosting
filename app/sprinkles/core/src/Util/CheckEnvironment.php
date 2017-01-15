@@ -35,15 +35,21 @@ class CheckEnvironment
     protected $view;
 
     /**
+     * @var \Illuminate\Cache\CacheManager Cache service for cache access.
+     */
+    protected $cache;
+
+    /**
      * Constructor.
      *
      * @param $view \Slim\Views\Twig The view object, needed for rendering error page.
      * @param $locator \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator Locator service for stream resources.
      */
-    public function __construct($view, $locator)
+    public function __construct($view, $locator, $cache)
     {
         $this->view = $view;
         $this->locator = $locator;
+        $this->cache = $cache;
     }
 
     /**
@@ -57,7 +63,20 @@ class CheckEnvironment
      */
     public function __invoke($request, $response, $next)
     {
-        $problemsFound = $this->checkAll();
+        $problemsFound = false;
+        $cacheFilePath = '../app/cache/environmentChecksPass.cache';
+        
+        // If production environment and no cached checks, perform environment checks
+        if (getenv('UF_MODE') == 'production' && $this->cache->get('checkEnvironment') != 'pass') {
+            $problemsFound = $this->checkAll();
+
+            // Cache if checks passed
+            if (!$problemsFound) {
+                $this->cache->forever('checkEnvironment', 'pass');
+            }
+        } elseif (getenv('UF_MODE') != 'production') {
+            $problemsFound = $this->checkAll();
+        }
 
         if ($problemsFound){
             $response = $this->view->render($response, 'pages/error/config-errors.html.twig', [
@@ -87,7 +106,7 @@ class CheckEnvironment
 
         if ($this->checkImageFunctions()) $problemsFound = true;
 
-        if ($this->checkPermissions()) $problemsFound = true;
+        if ($this->checkPermissions() && getenv('UF_MODE') == 'production') $problemsFound = true;
 
         return $problemsFound;
     }
@@ -229,10 +248,8 @@ class CheckEnvironment
             $this->locator->findResource('log://') => true,
             $this->locator->findResource('cache://') => true,
             $this->locator->findResource('session://') => true,
-            // These directories need to be writeable for the installation process.
-            // In *production*, we should actually check to make sure that these directories are *not* writeable.
-            $this->locator->findResource('sprinkles://') => true,
-            \UserFrosting\VENDOR_DIR => true
+            $this->locator->findResource('sprinkles://') => false,
+            \UserFrosting\VENDOR_DIR => false
         ];
 
         // Check for essential files & perms
