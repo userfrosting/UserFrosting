@@ -19,17 +19,22 @@ app/cache/*
 app/logs/*
 app/sessions/*
 
+# Ignore bower vendor assets
+/app/sprinkles/*/assets/vendor/
+
+# Ignore sprinkles.json config file
+app/sprinkles/sprinkles.json
+
 # Ignore sample site sprinkle
 app/sprinkles/site-dev
 
-# Ignore vendor (for dev)
+# Ignore Composer vendor
 app/vendor/*
 
 # Ignore node modules
 build/node_modules/*
 
 # Ignore compiled assets schema
-build/bundle.config.json
 build/bundle.result.json
 
 # Ignore temporary build assets
@@ -38,7 +43,7 @@ build/temp
 # Ignore npm-debug.log
 build/npm-debug.log
 
-# Ignore compiled assets (dev)
+# Ignore compiled assets
 public/assets/*
 
 # Ignore minified assets (v0.3.x)
@@ -47,6 +52,3 @@ public/css/min/*
 
 # Ignore personal config files (v0.3.x)
 app/config-userfrosting.php
-
-# Ignore vendor assets
-/app/sprinkles/*/assets/vendor/
