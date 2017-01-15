@@ -164,7 +164,7 @@ class CoreServicesProvider
          * @todo We should cache the results of this, the first time that it succeeds.
          */
         $container['checkEnvironment'] = function ($c) {
-            $checkEnvironment = new CheckEnvironment($c->view, $c->locator);
+            $checkEnvironment = new CheckEnvironment($c->view, $c->locator, $c->cache);
             return $checkEnvironment;
         };
 
