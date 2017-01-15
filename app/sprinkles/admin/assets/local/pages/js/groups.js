@@ -16,5 +16,11 @@ $(document).ready(function() {
         dataUrl: site.uri.public + "/api/groups"
     });
 
-    $("#widget-groups").on("pagerComplete.ufTable", initGroupTable);
+    // Bind creation button
+    bindGroupCreationButton($("#widget-groups"));
+
+    // Bind table buttons
+    $("#widget-groups").on("pagerComplete.ufTable", function () {
+        bindGroupButtons($(this));
+    });
 });

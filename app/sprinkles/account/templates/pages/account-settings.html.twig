@@ -52,8 +52,8 @@
                             <label for="input-locale" class="col-sm-4 control-label">{{translate("LOCALE")}}</label>
                             <div class="col-sm-8">
                                 <select id="input-locale" class="form-control select2" name="locale" {{page.visibility}}>
-                                    {% for id, option in page.locales %}
-                                    <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{option}}</option>
+                                    {% for option, label in locales %}
+                                    <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
                                     {% endfor %}
                                 </select>
                                 <p class="help-block">The language and locale to use for your account.</p>

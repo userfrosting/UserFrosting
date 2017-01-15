@@ -134,9 +134,9 @@ function bindRoleButtons(el) {
     });
 }
 
-var initRoleTable = function () {
+function bindRoleCreationButton(el) {
     // Link create button
-    $(this).find('.js-role-create').click(function() {
+    el.find('.js-role-create').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/roles/create",
             msgTarget: $("#alerts-page")
@@ -144,6 +144,4 @@ var initRoleTable = function () {
 
         attachRoleForm();
     });
-
-    bindRoleButtons($(this));
 };

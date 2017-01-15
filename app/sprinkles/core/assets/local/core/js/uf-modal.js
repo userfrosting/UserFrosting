@@ -33,13 +33,13 @@
 
         this.modal = null;
 
-        this._init( target, options );
+        this._init( target );
 
         return this;
     };
 
     /** #### INITIALISER #### */
-    Plugin.prototype._init = function ( target, options )
+    Plugin.prototype._init = function ( target )
     {
         var base = this;
         var $el = $(target);

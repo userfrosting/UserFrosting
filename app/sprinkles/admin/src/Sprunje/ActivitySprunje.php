@@ -24,6 +24,11 @@ class ActivitySprunje extends Sprunje
     protected $name = 'activities';
 
     /**
+     * @var bool Keep track of whether the users table has already been joined on the query.
+     */
+    protected $joinedUsers = false;
+
+    /**
      * Set the initial query used by your Sprunje.
      */
     protected function baseQuery()
@@ -47,5 +52,43 @@ class ActivitySprunje extends Sprunje
         });
 
         return $collection;
+    }
+
+    /**
+     * Filter LIKE the user info.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function filterUser($query, $value)
+    {
+        if (!$this->joinedUsers) {
+            $query = $query->joinUser();
+        }
+
+        $this->joinedUsers = true;
+
+        return $query->like('users.first_name', $value)
+                     ->orLike('users.last_name', $value)
+                     ->orLike('users.email', $value);
+    }
+
+    /**
+     * Sort based on user last name.
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return Builder
+     */
+    protected function sortUser($query, $direction)
+    {
+        if (!$this->joinedUsers) {
+            $query = $query->joinUser();
+        }
+
+        $this->joinedUsers = true;
+
+        return $query->orderBy('users.last_name', $direction);
     }
 }

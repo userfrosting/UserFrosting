@@ -232,9 +232,9 @@ function updateUser(userName, fieldName, fieldValue) {
     });
 }
 
-var initUserTable = function () {
+function bindUserCreationButton(el) {
     // Link create button
-    $(this).find('.js-user-create').click(function() {
+    el.find('.js-user-create').click(function() {
         $("body").ufModal({
             sourceUrl: site.uri.public + "/modals/users/create",
             msgTarget: $("#alerts-page")
@@ -242,6 +242,4 @@ var initUserTable = function () {
 
         attachUserForm();
     });
-
-    bindUserButtons($(this));
 };

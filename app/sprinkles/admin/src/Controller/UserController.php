@@ -311,6 +311,139 @@ class UserController extends SimpleController
         return $response->withStatus(200);
     }
 
+    /**
+     * Returns activity history for a single user.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getActivities($request, $response, $args)
+    {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user_activities', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        $sprunje = new ActivitySprunje($classMapper, $params);
+
+        $sprunje->extendQuery(function ($query) use ($user) {
+            return $query->where('user_id', $user->id);
+        });
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
+     * Returns info for a single user.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getInfo($request, $response, $args)
+    {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // Join user's most recent activity
+        $user = $classMapper->createInstance('user')
+                            ->where('user_name', $user->user_name)
+                            ->joinLastActivity()
+                            ->with('lastActivity', 'group')
+                            ->first();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
+            'user' => $user
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        // Exclude password from result set
+        unset($user->password);
+
+        $result = $user->toArray();
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Returns a list of Users
+     *
+     * Generates a list of users, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getList($request, $response, $args)
+    {
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $sprunje = new UserSprunje($classMapper, $params);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
+     * Renders the modal form to confirm user deletion.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */
     public function getModalConfirmDelete($request, $response, $args)
     {
         // GET parameters
@@ -348,7 +481,7 @@ class UserController extends SimpleController
      * Renders the modal form for creating a new user.
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
-     * If the currently logged-in user has permission to modify user group membership, then the group toggles will be displayed.
+     * If the currently logged-in user has permission to modify user group membership, then the group toggle will be displayed.
      * Otherwise, the user will be added to the default group and receive the default roles automatically.
      * This page requires authentication.
      * Request type: GET
@@ -596,132 +729,6 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'components/modals/user-manage-roles.html.twig', [
             'user' => $user
         ]);
-    }
-
-    /**
-     * Returns activity history for a single user.
-     *
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getActivities($request, $response, $args)
-    {
-        $user = $this->getUserFromParams($args);
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException($request, $response);
-        }
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user_activities', [
-            'user' => $user
-        ])) {
-            throw new ForbiddenException();
-        }
-
-        $sprunje = new ActivitySprunje($classMapper, $params);
-
-        $sprunje->extendQuery(function ($query) use ($user) {
-            return $query->where('user_id', $user->id);
-        });
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
-    }
-
-    /**
-     * Returns info for a single user.
-     *
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getInfo($request, $response, $args)
-    {
-        $user = $this->getUserFromParams($args);
-
-        // If the user doesn't exist, return 404
-        if (!$user) {
-            throw new NotFoundException($request, $response);
-        }
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        // Join user's most recent activity
-        $user = $classMapper->createInstance('user')
-                            ->where('user_name', $user->user_name)
-                            ->joinLastActivity()
-                            ->with('lastActivity', 'group')
-                            ->first();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user', [
-            'user' => $user
-        ])) {
-            throw new ForbiddenException();
-        }
-
-        // Exclude password from result set
-        unset($user->password);
-
-        $result = $user->toArray();
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
-    }
-
-    /**
-     * Returns a list of Users
-     *
-     * Generates a list of users, optionally paginated, sorted and/or filtered.
-     * This page requires authentication.
-     * Request type: GET
-     */
-    public function getList($request, $response, $args)
-    {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
-            throw new ForbiddenException();
-        }
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $sprunje = new UserSprunje($classMapper, $params);
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $sprunje->toResponse($response);
     }
 
     /**
