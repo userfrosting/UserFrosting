@@ -42,7 +42,7 @@
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
         "userfrosting/assets": "1.0.x-dev",
-        "userfrosting/config": "1.1",
+        "userfrosting/config": "dev-master",
         "userfrosting/fortress": "dev-master",
         "userfrosting/i18n": "1.0.x-dev",
         "userfrosting/session": "1.0.x-dev",
