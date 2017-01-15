@@ -34,7 +34,8 @@ app/vendor/*
 # Ignore node modules
 build/node_modules/*
 
-# Ignore compiled assets schema
+# Ignore generated bundle schema files
+build/bundle.config.json
 build/bundle.result.json
 
 # Ignore temporary build assets

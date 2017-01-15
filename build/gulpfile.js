@@ -18,7 +18,7 @@ let plugins = require('gulp-load-plugins')();
 let sprinkleDirectory = '../app/sprinkles';
 
 // The Sprinkle load order from sprinkles.json
-let sprinkles = ['core'].concat(require(`${sprinkleDirectory}/sprinkles.json`));
+let sprinkles = ['core'].concat(require(`${sprinkleDirectory}/sprinkles.json`)['base']);
 
 // The directory where the bundle task should look for the raw assets, as specified in bundle.config.json
 let sourceDirectory = `${sprinkleDirectory}/*/assets/`;
