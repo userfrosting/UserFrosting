@@ -107,65 +107,29 @@
         {% endif %}
     </div><br>
     <div class="row">
-        {% if 'submit' not in form.buttons.hidden %}
-        <div class="col-xs-8 col-sm-4">
-            <div class="vert-pad">
-                <button type="submit" class="btn btn-block btn-lg btn-success">
-                    {{form.buttons.submit_text}}
-                </button>
-            </div>
-        </div>
-        {% endif %}
-        {% if 'edit' not in form.buttons.hidden and checkAccess('update_user_field', {'user': user, 'fields': ['name', 'email', 'locale'] }) %}
-        <div class="col-xs-6 col-sm-3">
-            <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-user_name="{{user.user_name}}">
-                    <i class="fa fa-edit"></i> {{translate('EDIT')}}
-                </button>
-            </div>
-        </div>
-        {% endif %}
-        {% if 'activate' not in form.buttons.hidden and checkAccess('update_user_field', {'user': user, 'fields': ['flag_verified'] }) %}
-        <div class="col-xs-6 col-sm-3">
-            <div class="vert-pad">
-                {% if user.flag_verified == "0" %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-user_name="{{user.user_name}}">
-                        <i class="fa fa-bolt"></i> Activate
+        {% if form.edit_buttons %}
+            {% if 'edit' not in form.edit_buttons.hidden %}
+            <div class="col-xs-6 col-sm-3">
+                <div class="vert-pad">
+                    <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-user_name="{{user.user_name}}">
+                        <i class="fa fa-edit"></i> {{translate('EDIT')}}
                     </button>
-                {% endif %}
+                </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'enable' not in form.buttons.hidden and checkAccess('update_user_field', {'user': user, 'fields': ['flag_enabled'] }) %}
-        <div class="col-xs-6 col-sm-3">
-            <div class="vert-pad">
-                {% if user.flag_enabled == "1" %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-user_name="{{user.user_name}}">
-                        <i class="fa fa-minus-circle"></i> Disable
+            {% endif %}
+        {% else %}
+            <div class="col-xs-8 col-sm-4">
+                <div class="vert-pad">
+                    <button type="submit" class="btn btn-block btn-lg btn-success">
+                        {{form.submit_text}}
                     </button>
-                {% else %}
-                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable" data-user_name="{{user.user_name}}">
-                        <i class="fa fa-plus-circle"></i> Enable
-                    </button>
-                {% endif %}
+                </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'delete' not in form.buttons.hidden and checkAccess('delete_user', {'user': user }) %}
-        <div class="col-xs-6 col-sm-3">
-            <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-user_name="{{user.user_name}}">
-                    <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
-                </button>
+            <div class="col-xs-4 col-sm-3 pull-right">
+                <div class="vert-pad">
+                    <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
+                </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'cancel' not in form.buttons.hidden %}
-        <div class="col-xs-4 col-sm-3 pull-right">
-            <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
-            </div>
-        </div>
         {% endif %}
     </div>
 </form>

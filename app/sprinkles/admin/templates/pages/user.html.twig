@@ -29,14 +29,77 @@
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <div id="view-user" class="panel panel-primary">
-                <div class="panel-heading">
-                    <h2 class="panel-title pull-left"><i class="fa fa-fw fa-user"></i> {{user.user_name}}</h2>
-                    <div class="clearfix"></div>
+            <div id="view-user">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title pull-left"><i class="fa fa-fw fa-user"></i> {{user.user_name}}</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        {% include "components/forms/user.html.twig" %}
+                    </div>
                 </div>
-                <div class="panel-body">
-                    {% include "components/forms/user.html.twig" %}
+                {% if form.edit_buttons %}
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h2 class="panel-title pull-left"><i class="fa fa-fw fa-wrench"></i> Account tools</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        {% if 'password' not in form.edit_buttons.hidden %}
+                        <div class="col-xs-6 col-sm-3">
+                            <div class="vert-pad">
+                                <button type="button" class="btn btn-block btn-md btn-primary js-user-password" data-user_name="{{user.user_name}}">
+                                    <i class="fa fa-lock"></i> {{translate('PASSWORD')}}
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if 'roles' not in form.edit_buttons.hidden %}
+                        <div class="col-xs-6 col-sm-3">
+                            <div class="vert-pad">
+                                <button type="button" class="btn btn-block btn-md btn-primary js-user-roles" data-user_name="{{user.user_name}}">
+                                    <i class="fa fa-drivers-license"></i> {{translate('ROLE', 2)}}
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if 'activate' not in form.edit_buttons.hidden and user.flag_verified == "0" %}
+                        <div class="col-xs-6 col-sm-3">
+                            <div class="vert-pad">
+                                <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-user_name="{{user.user_name}}">
+                                    <i class="fa fa-bolt"></i> {{translate('ACTIVATE')}}
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if 'enable' not in form.edit_buttons.hidden %}
+                        <div class="col-xs-6 col-sm-3">
+                            <div class="vert-pad">
+                                {% if user.flag_enabled == "1" %}
+                                    <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-user_name="{{user.user_name}}">
+                                        <i class="fa fa-minus-circle"></i> {{translate('DISABLE')}}
+                                    </button>
+                                {% else %}
+                                    <button type="button" class="btn btn-block btn-md btn-warning js-user-enable" data-user_name="{{user.user_name}}">
+                                        <i class="fa fa-plus-circle"></i> {{translate('ENABLE')}}
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if 'delete' not in form.edit_buttons.hidden %}
+                        <div class="col-xs-6 col-sm-3">
+                            <div class="vert-pad">
+                                <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-user_name="{{user.user_name}}">
+                                    <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-lg-6">

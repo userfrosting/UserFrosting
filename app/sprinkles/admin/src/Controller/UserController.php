@@ -536,12 +536,7 @@ class UserController extends SimpleController
                 'action' => 'api/users',
                 'method' => 'POST',
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'edit', 'enable', 'delete', 'activate'
-                    ],
-                    'submit_text' => 'Create user'
-                ]
+                'submit_text' => 'Create user'
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -626,12 +621,7 @@ class UserController extends SimpleController
                 'action' => "api/users/u/{$user->user_name}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'edit', 'enable', 'delete', 'activate'
-                    ],
-                    'submit_text' => 'Update user'
-                ]
+                'submit_text' => 'Update user'
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -825,16 +815,44 @@ class UserController extends SimpleController
             }
         }
 
+        // Determine buttons to display
+        $editButtons = [
+            'hidden' => []
+        ];
+
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['name', 'email', 'locale']
+        ])) {
+            $editButtons['hidden'][] = 'edit';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['flag_enabled']
+        ])) {
+            $editButtons['hidden'][] = 'enable';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['flag_verified']
+        ])) {
+            $editButtons['hidden'][] = 'activate';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'delete_user', [
+            'user' => $user
+        ])) {
+            $editButtons['hidden'][] = 'delete';
+        }
+
         return $this->ci->view->render($response, 'pages/user.html.twig', [
             'user' => $user,
             'locales' => $locales,
             'form' => [
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'submit', 'cancel'
-                    ]
-                ]
+                'edit_buttons' => $editButtons
             ]
         ]);
     }

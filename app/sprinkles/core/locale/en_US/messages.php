@@ -47,6 +47,7 @@ return [
 
     // Actions words
     "ACTIONS" => "Actions",
+    "ACTIVATE" => "Activate",
     "ADD" => "Add",
     "CANCEL" => "Cancel",
     "CONFIRM" => "Confirm",
@@ -59,7 +60,9 @@ return [
     "DELETE_CANNOT_UNDONE" => "This action cannot be undone.",
     "DELETE_NAMED" => "Delete {{name}}",
     "DENY" => "Deny",
+    "DISABLE" => "Disable",
     "EDIT" => "Edit",
+    "ENABLE" => "Enable",
     "RESET" => "Reset",
     "SAVE" => "Save",
     "SORT" => "Sort",

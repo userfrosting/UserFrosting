@@ -326,12 +326,7 @@ class RoleController extends SimpleController
                 'action' => 'api/roles',
                 'method' => 'POST',
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'edit', 'delete'
-                    ],
-                    'submit_text' => 'Create role'
-                ]
+                'submit_text' => 'Create role'
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -392,12 +387,7 @@ class RoleController extends SimpleController
                 'action' => "api/roles/r/{$role->slug}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'edit', 'delete'
-                    ],
-                    'submit_text' => 'Update role'
-                ]
+                'submit_text' => 'Update role'
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -540,15 +530,29 @@ class RoleController extends SimpleController
             }
         }
 
+        // Determine buttons to display
+        $editButtons = [
+            'hidden' => []
+        ];
+
+        if (!$authorizer->checkAccess($currentUser, 'update_role_field', [
+            'role' => $role,
+            'fields' => ['name', 'slug', 'description']
+        ])) {
+            $editButtons['hidden'][] = 'edit';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'delete_role', [
+            'role' => $role
+        ])) {
+            $editButtons['hidden'][] = 'delete';
+        }
+
         return $this->ci->view->render($response, 'pages/role.html.twig', [
             'role' => $role,
             'form' => [
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'submit', 'cancel'
-                    ]
-                ]
+                'edit_buttons' => $editButtons
             ]
         ]);
     }

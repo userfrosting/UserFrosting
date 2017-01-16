@@ -42,39 +42,38 @@
         {% endif %}
     </div><br>
     <div class="row">
-        {% if "submit" not in form.buttons.hidden %}
-        <div class="col-xs-8 col-sm-4">
-            <div class="vert-pad">
-                <button type="submit" class="btn btn-block btn-lg btn-success">
-                    {{form.buttons.submit_text}}
-                </button>
+        {% if form.edit_buttons %}
+            {% if "edit" not in form.edit_buttons.hidden %}
+            <div class="col-xs-6 col-sm-4">
+                <div class="vert-pad">
+                    <button type="button" class="btn btn-block btn-md btn-primary js-role-edit" data-slug="{{role.slug}}">
+                        <i class="fa fa-edit"></i> {{translate('EDIT')}}
+                    </button>
+                </div>
             </div>
-        </div>
-        {% endif %}
-        {% if "edit" not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-6">
-            <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-primary js-role-edit" data-slug="{{role.slug}}">
-                    <i class="fa fa-edit"></i> {{translate('EDIT')}}
-                </button>
+            {% endif %}
+            {% if "delete" not in form.edit_buttons.hidden %}
+            <div class="col-xs-6 col-sm-4">
+                <div class="vert-pad">
+                    <button type="button" class="btn btn-block btn-md btn-danger js-role-delete" data-slug="{{role.slug}}">
+                        <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
+                    </button>
+                </div>
             </div>
-        </div>
-        {% endif %}
-        {% if "delete" not in form.buttons.hidden %}
-        <div class="col-xs-6 col-sm-6">
-            <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-md btn-danger js-role-delete" data-slug="{{role.slug}}">
-                    <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
-                </button>
+            {% endif %}
+        {% else %}
+            <div class="col-xs-8 col-sm-4">
+                <div class="vert-pad">
+                    <button type="submit" class="btn btn-block btn-lg btn-success">
+                        {{form.submit_text}}
+                    </button>
+                </div>
             </div>
-        </div>
-        {% endif %}
-        {% if "cancel" not in form.buttons.hidden %}
-        <div class="col-xs-4 col-sm-4 pull-right">
-            <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+            <div class="col-xs-4 col-sm-4 pull-right">
+                <div class="vert-pad">
+                    <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+                </div>
             </div>
-        </div>
         {% endif %}
     </div>
 </form>

@@ -318,12 +318,7 @@ class GroupController extends SimpleController
                 'action' => 'api/groups',
                 'method' => 'POST',
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'edit', 'delete'
-                    ],
-                    'submit_text' => 'Create group'
-                ]
+                'submit_text' => 'Create group'
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -384,12 +379,7 @@ class GroupController extends SimpleController
                 'action' => "api/groups/g/{$group->slug}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'edit', 'delete'
-                    ],
-                    'submit_text' => 'Update group'
-                ]
+                'submit_text' => 'Update group'
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -487,15 +477,29 @@ class GroupController extends SimpleController
             }
         }
 
+        // Determine buttons to display
+        $editButtons = [
+            'hidden' => []
+        ];
+
+        if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
+            'group' => $group,
+            'fields' => ['name', 'slug', 'icon', 'description']
+        ])) {
+            $editButtons['hidden'][] = 'edit';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'delete_group', [
+            'group' => $group
+        ])) {
+            $editButtons['hidden'][] = 'delete';
+        }
+
         return $this->ci->view->render($response, 'pages/group.html.twig', [
             'group' => $group,
             'form' => [
                 'fields' => $fields,
-                'buttons' => [
-                    'hidden' => [
-                        'submit', 'cancel'
-                    ]
-                ]
+                'edit_buttons' => $editButtons
             ]
         ]);
     }
