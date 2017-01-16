@@ -56,7 +56,7 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
         // Form submits direct password update
         el.find("form")
         .prop('method', 'PUT')
-        .prop('action', site.uri.public + '/api/users/u/' + userName);
+        .prop('action', site.uri.public + '/api/users/u/' + userName + '/password');
     }
 }
 

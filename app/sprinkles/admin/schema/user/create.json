@@ -75,18 +75,11 @@
             }
         }
     },
-    "theme" : {
-        "default" : "default",
+    "group_id" : {
         "validators" : {
-            "required" : {
-                "label" : "&THEME",
-                "message" : "VALIDATE.REQUIRED"
-            },
-            "length" : {
-                "label" : "&THEME",
-                "min" : 1,
-                "max" : 100,
-                "message" : "VALIDATE.LENGTH_RANGE"
+            "integer" : {
+                "label" : "&GROUP",
+                "message" : "VALIDATE.INTEGER"
             }
         }
     }

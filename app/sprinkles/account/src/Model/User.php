@@ -29,6 +29,7 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property string last_name
  * @property string email
  * @property string locale
+ * @property string theme
  * @property int group_id
  * @property bool flag_verified
  * @property bool flag_enabled
@@ -36,6 +37,7 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property timestamp created_at
  * @property timestamp updated_at
  * @property string password
+ * @property timestamp deleted_at
  */
 class User extends UFModel
 {

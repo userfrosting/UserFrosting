@@ -61,6 +61,7 @@ $container->sprinkleManager->loadRoutes($app);
 
 // Middleware
 // Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
+// See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
 $request = $container->request;
 $path = $request->getUri()->getPath();
 $csrfBlacklist = [

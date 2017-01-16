@@ -53,7 +53,7 @@ class UserController extends SimpleController
      */
     public function create($request, $response, $args)
     {
-        // Get POST parameters: user_name, first_name, last_name, email, theme, locale, csrf_token, (group)
+        // Get POST parameters: user_name, first_name, last_name, email, locale, (group)
         $params = $request->getParsedBody();
 
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -104,39 +104,23 @@ class UserController extends SimpleController
             return $response->withStatus(400);
         }
 
-        // Determine if currentUser has permission to set the group.  Otherwise, use default group.
-
         /** @var Config $config */
         $config = $this->ci->config;
 
-        /*
-        // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primaryGroup = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
-
-        // Set default values if not specified or not authorized
-        if (!isset($data['locale']) || !$this->_app->user->checkAccess("update_account_setting", ["property' => 'locale']))
-            $data['locale'] = $this->_app->site->default_locale;
-
-        if (!isset($data['primary_group_id']) || !$this->_app->user->checkAccess('update_account_setting', ['property' => 'primary_group_id'])) {
-            $data['primary_group_id'] = $primaryGroup->id;
-        }
-        */
-
-        // Load default group
-        $groupSlug = $config['site.registration.user_defaults.group'];
-        $defaultGroup = $classMapper->staticMethod('group', 'where', 'slug', $groupSlug)->first();
-
-        if (!$defaultGroup) {
-            $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
-            $e->addUserMessage('ACCOUNT.REGISTRATION_BROKEN');
-            throw $e;
+        // If currentUser does not have permission to set the group, but they try to set it to something other than their own group,
+        // throw an exception.
+        if (!$authorizer->checkAccess($currentUser, 'create_user_field', [
+            'fields' => ['group']
+        ])) {
+            if (isset($data['group_id']) && $data['group_id'] != $currentUser->group_id) {
+                throw new ForbiddenException();
+            }
         }
 
-        // Set default group
-        $data['group_id'] = $defaultGroup->id;
-
-        // Set default locale
-        $data['locale'] = $config['site.registration.user_defaults.locale'];
+        // In any case, set the group id if not otherwise set
+        if (!isset($data['group_id'])) {
+            $data['group_id'] = $currentUser->group_id;
+        }
 
         $data['flag_verified'] = 1;
         // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
@@ -505,33 +489,40 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        // Get a list of all groups
-        $groups = $classMapper->staticMethod('group', 'all');
-
         /** @var Config $config */
         $config = $this->ci->config;
+
+        // Determine form fields to hide/disable
+        // TODO: come back to this when we finish implementing theming
+        $fields = [
+            'hidden' => ['theme'],
+            'disabled' => []
+        ];
 
         // Get a list of all locales
         $locales = $config['site.locales.available'];
 
-        /*
-        // Get default primary group (is_default = GROUP_DEFAULT_PRIMARY)
-        $primary_group = Group::where('is_default', GROUP_DEFAULT_PRIMARY)->first();
-
-        // Set default locale
-        $data['locale'] = $this->_app->site->default_locale;
-        */
+        // Determine if currentUser has permission to modify the group.  If so, show the 'group' dropdown.
+        // Otherwise, set to the currentUser's group and disable the dropdown.
+        if ($authorizer->checkAccess($currentUser, 'create_user_field', [
+            'fields' => ['group']
+        ])) {
+            // Get a list of all groups
+            $groups = $classMapper->staticMethod('group', 'all');
+        } else {
+            // Get the current user's group
+            $groups = $classMapper->staticMethod('group', 'where', 'id', $currentUser->group_id);
+            $fields['disabled'][] = 'group';
+        }
 
         // Create a dummy user to prepopulate fields
-        $user = $classMapper->createInstance('user', []);
-
-        $fieldNames = ['name', 'email', 'theme', 'locale', 'group'];
-        $fields = [
-            'hidden' => [],
-            'disabled' => []
+        $data = [
+            'group_id' => $currentUser->group_id,
+            'locale'   => $config['site.registration.user_defaults.locale'],
+            'theme'    => ''
         ];
 
-        // TODO: determine if currentUser has permission to set the group.  Otherwise, we'll just apply the default group.
+        $user = $classMapper->createInstance('user', $data);
 
         // Load validation rules
         $schema = new RequestSchema('schema://user/create.json');
@@ -591,8 +582,8 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
-        // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "email", "theme", "locale" for this user
-        $fieldNames = ['name', 'email', 'theme', 'locale'];
+        // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "email", "locale" for this user
+        $fieldNames = ['name', 'email', 'locale'];
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
             'fields' => $fieldNames
@@ -611,16 +602,16 @@ class UserController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => [],
+            'hidden' => ['theme'],
             'disabled' => ['user_name']
         ];
 
-        // Hide group field if currentUser doesn't have permission to modify group
+        // Disable group field if currentUser doesn't have permission to modify group
         if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
             'user' => $user,
             'fields' => ['group']
         ])) {
-            $fields['hidden'][] = 'group';
+            $fields['disabled'][] = 'group';
         }
 
         // Load validation rules
@@ -813,14 +804,13 @@ class UserController extends SimpleController
         // Get a list of all locales
         $locales = $config['site.locales.available'];
 
-        $themes = [];
-
         // Determine fields that currentUser is authorized to view
-        $fieldNames = ['name', 'email', 'locale', 'theme'];
+        $fieldNames = ['name', 'email', 'locale'];
 
         // Generate form
         $fields = [
-            'hidden' => ['user_name', 'group'],
+            // Always hide these
+            'hidden' => ['user_name', 'group', 'theme'],
             'disabled' => []
         ];
 
@@ -856,7 +846,6 @@ class UserController extends SimpleController
      * Actions typically include: edit user details, activate user, enable/disable user, delete user.
      * This page requires authentication.
      * Request type: GET
-     * @todo implement interface to modify user-assigned authorization hooks and permissions
      */
     public function pageList($request, $response, $args)
     {
@@ -875,7 +864,7 @@ class UserController extends SimpleController
     }
 
     /**
-     * Processes the request to update an existing user's basic details.
+     * Processes the request to update an existing user's basic details (first_name, last_name, email, locale, group_id)
      *
      * Processes the request from the user update form, checking that:
      * 1. The target user's new email address, if specified, is not already in use;
@@ -896,7 +885,7 @@ class UserController extends SimpleController
         /** @var Config $config */
         $config = $this->ci->config;
 
-        // Get PUT parameters: (first_name, last_name, email, theme, locale, password, group_id)
+        // Get PUT parameters
         $params = $request->getParsedBody();
 
         /** @var MessageStream $ms */
@@ -969,11 +958,6 @@ class UserController extends SimpleController
             return $response->withStatus(400);
         }
 
-        // Hash password, if a new password was specified
-        if (isset($data['password'])) {
-            $data['password'] = Password::hash($data['password']);
-        }
-
         // Update the user and generate success messages
         foreach ($data as $name => $value) {
             if ($value != $user->$name){
@@ -990,8 +974,9 @@ class UserController extends SimpleController
     }
 
     /**
-     * Processes the request to update a specific field for an existing user, including enabled/disabled status and verification status.
+     * Processes the request to update a specific field for an existing user.
      *
+     * Supports editing all user fields, including password, enabled/disabled status and verification status.
      * Processes the request from the user update form, checking that:
      * 1. The logged-in user has the necessary permissions to update the putted field(s);
      * 2. We're not trying to disable the master account;
@@ -1043,11 +1028,10 @@ class UserController extends SimpleController
             throw new BadRequestException();
         }
 
+        // Create and validate key -> value pair
         $params = [
             $fieldName => $put['value']
         ];
-
-        // Validate key -> value pair
 
         // Load the request schema
         $schema = new RequestSchema('schema://user/edit-field.json');
