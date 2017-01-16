@@ -116,7 +116,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'edit' not in form.buttons.hidden %}
+        {% if 'edit' not in form.buttons.hidden and checkAccess('update_user_field', {'user': user, 'fields': ['name', 'email', 'locale'] }) %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-user_name="{{user.user_name}}">
@@ -125,7 +125,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'activate' not in form.buttons.hidden %}
+        {% if 'activate' not in form.buttons.hidden and checkAccess('update_user_field', {'user': user, 'fields': ['flag_verified'] }) %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 {% if user.flag_verified == "0" %}
@@ -136,7 +136,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'enable' not in form.buttons.hidden %}
+        {% if 'enable' not in form.buttons.hidden and checkAccess('update_user_field', {'user': user, 'fields': ['flag_enabled'] }) %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 {% if user.flag_enabled == "1" %}
@@ -151,7 +151,7 @@
             </div>
         </div>
         {% endif %}
-        {% if 'delete' not in form.buttons.hidden %}
+        {% if 'delete' not in form.buttons.hidden and checkAccess('delete_user', {'user': user }) %}
         <div class="col-xs-6 col-sm-3">
             <div class="vert-pad">
                 <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-user_name="{{user.user_name}}">
