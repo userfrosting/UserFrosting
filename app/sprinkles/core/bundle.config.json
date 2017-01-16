@@ -10,13 +10,16 @@
                 "vendor/icheck/icheck.min.js",
                 "vendor/fastclick/lib/fastclick.js",
                 "vendor/select2/dist/js/select2.full.js",
+                "vendor/clipboard/dist/clipboard.js",
                 "local/core/js/AdminLTE.js",
                 "local/core/js/AdminLTE-custom.js",
                 "local/core/js/fortress-jqueryvalidation-methods.js",
                 "local/core/js/uf-jqueryvalidation-config.js",
                 "local/core/js/uf-alerts.js",
                 "local/core/js/uf-form.js",
-                "local/core/js/uf-modal.js"
+                "local/core/js/uf-modal.js",
+                "local/core/js/uf-copy.js",
+                "local/core/js/uf-init.js"
             ],
             "options": {
                 "result": {

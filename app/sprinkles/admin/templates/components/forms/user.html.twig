@@ -57,11 +57,13 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label>{{translate('EMAIL')}}</label>
-                <div class="input-group">
+                <div class="input-group js-copy-container">
                     <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                    <input type="text" class="form-control" name="email" autocomplete="off" value="{{user.email}}" placeholder="Email goes here" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control js-copy-target" name="email" autocomplete="off" value="{{user.email}}" placeholder="Email goes here" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
                     {% if 'email' in form.fields.disabled %}
-                        <span class="input-group-addon"><a href="mailto: {{user.email}}"><i class="fa fa-send"></i></a></span>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default js-copy-trigger" type="button"><i class="fa fa-clipboard"></i></button>
+                        </span>
                     {% endif %}
                 </div>
             </div>
