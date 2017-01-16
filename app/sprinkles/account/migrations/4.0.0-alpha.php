@@ -2,6 +2,9 @@
 
     use Illuminate\Database\Capsule\Manager as Capsule;
     use Illuminate\Database\Schema\Blueprint;
+    use UserFrosting\Sprinkle\Account\Model\Group;
+    use UserFrosting\Sprinkle\Account\Model\Permission;
+    use UserFrosting\Sprinkle\Account\Model\Role;
 
     /**
      * User activity table.  Renames the "user events" table.
@@ -46,35 +49,30 @@
         });
 
         // Add default groups
-        Capsule::table('groups')->insert([
-            [
-                'id' => 1,
+        $groups = [
+            'terran' => new Group([
                 'slug' => 'terran',
                 'name' => 'Terran',
                 'description' => 'The terrans are a young species with psionic potential. The terrans of the Koprulu sector descend from the survivors of a disastrous 23rd century colonization mission from Earth.',
-                'icon' => 'sc sc-terran',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 2,
+                'icon' => 'sc sc-terran'
+            ]),
+            'zerg' => new Group([
                 'slug' => 'zerg',
                 'name' => 'Zerg',
                 'description' => 'Dedicated to the pursuit of genetic perfection, the zerg relentlessly hunt down and assimilate advanced species across the galaxy, incorporating useful genetic code into their own.',
-                'icon' => 'sc sc-zerg',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 3,
+                'icon' => 'sc sc-zerg'
+            ]),
+            'protoss' => new Group([
                 'slug' => 'protoss',
                 'name' => 'Protoss',
                 'description' => 'The protoss, a.k.a. the Firstborn, are a sapient humanoid race native to Aiur. Their advanced technology complements and enhances their psionic mastery.',
-                'icon' => 'sc sc-protoss',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ]
-        ]);
+                'icon' => 'sc sc-protoss'
+            ])
+        ];
+
+        foreach ($groups as $slug => $group) {
+            $group->save();
+        }
         echo "Created table 'groups'..." . PHP_EOL;
     } else {
         echo "Table 'groups' already exists.  Skipping..." . PHP_EOL;
@@ -105,111 +103,50 @@
         echo "Table 'password_resets' already exists.  Skipping..." . PHP_EOL;
     }
 
+
     /**
-     * Permissions now replace the 'authorize_group' and 'authorize_user' tables.
-     * Also, they now map many-to-many to roles.
+     * Roles replace "groups" in UF 0.3.x.  Users acquire permissions through roles.
      */
-    if (!$schema->hasTable('permissions')) {
-        $schema->create('permissions', function(Blueprint $table) {
+    if (!$schema->hasTable('roles')) {
+        $schema->create('roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('slug')->comment('A code that references a specific action or URI that an assignee of this permission has access to.');
+            $table->string('slug');
             $table->string('name');
-            $table->text('conditions')->comment('The conditions under which members of this group have access to this hook.');
             $table->text('description')->nullable();
             $table->timestamps();
 
             $table->engine = 'InnoDB';
             $table->collation = 'utf8_unicode_ci';
             $table->charset = 'utf8';
+            $table->unique('slug');
+            $table->index('slug');
         });
 
-        // Add default permissions
-        Capsule::table('permissions')->insert([
-            [
-                'id' => 1,
-                'slug' => 'uri_users',
-                'name' => 'User management page',
-                'conditions' => 'always()',
-                'description' => 'View a page containing a table of users.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 2,
-                'slug' => 'update_user_field',
-                'name' => 'Edit user',
-                'conditions' => '!has_role(user.id,2)&&subset(fields,["name","email","theme","locale","group","flag_enabled","flag_verified","password"])',
-                'description' => 'Edit users who are not Site Administrators.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 3,
-                'slug' => 'view_user_field',
-                'name' => 'View user',
-                'conditions' => 'in(property,["user_name","name","email","locale","theme","roles","group"])',
-                'description' => 'View certain properties of any user.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 4,
-                'slug' => 'delete_user',
-                'name' => 'Delete user',
-                'conditions' => '!has_role(user.id,2) && !is_master(user.id)',
-                'description' => 'Delete users who are not Site Administrators.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 5,
-                'slug' => 'create_user',
-                'name' => 'Create user',
-                'conditions' => 'always()',
-                'description' => 'Create a new user and assign default group and roles.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 6,
-                'slug' => 'uri_account_settings',
-                'name' => 'Account settings page',
-                'conditions' => 'always()',
-                'description' => 'View the account settings page.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 7,
-                'slug' => 'update_account_settings',
-                'name' => 'Edit user',
-                'conditions' => 'always()',
-                'description' => 'Edit your own account settings.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 8,
-                'slug' => 'uri_user',
-                'name' => 'View user',
-                'conditions' => 'always()',
-                'description' => 'View the user page of any user.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 9,
-                'slug' => 'uri_user',
-                'name' => 'View user',
-                'conditions' => 'equals_num(self.group_id,user.group_id)',
-                'description' => 'View the user page of any user in your group.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ]
-        ]);
-        echo "Created table 'permissions'..." . PHP_EOL;
+        // Add default roles
+        $roles = [
+            'user' => new Role([
+                'slug' => 'user',
+                'name' => 'User',
+                'description' => 'This role provides basic user functionality.'
+            ]),
+            'site-admin' => new Role([
+                'slug' => 'site-admin',
+                'name' => 'Site Administrator',
+                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.'
+            ]),
+            'group-admin' => new Role([
+                'slug' => 'group-admin',
+                'name' => 'Group Administrator',
+                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their own group, except other administrators of that group.'
+            ])
+        ];
+
+        foreach ($roles as $slug => $role) {
+            $role->save();
+        }
+        echo "Created table 'roles'..." . PHP_EOL;
     } else {
-        echo "Table 'permissions' already exists.  Skipping..." . PHP_EOL;
+        echo "Table 'roles' already exists.  Skipping..." . PHP_EOL;
     }
 
     /**
@@ -231,69 +168,122 @@
             $table->index('role_id');
         });
 
-        // Add default mappings
-        Capsule::table('permission_roles')->insert([
-            // Basic user permissions
-            [
-                'role_id' => 1,
-                'permission_id' => 6,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'role_id' => 1,
-                'permission_id' => 7,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            // Site admin permissions
-            [
-                'role_id' => 2,
-                'permission_id' => 1,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'role_id' => 2,
-                'permission_id' => 2,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'role_id' => 2,
-                'permission_id' => 3,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'role_id' => 2,
-                'permission_id' => 4,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'role_id' => 2,
-                'permission_id' => 5,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'role_id' => 2,
-                'permission_id' => 8,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            // Group admin permissions
-            [
-                'role_id' => 3,
-                'permission_id' => 9,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ]
-        ]);
         echo "Created table 'permission_roles'..." . PHP_EOL;
     } else {
         echo "Table 'permission_roles' already exists.  Skipping..." . PHP_EOL;
+    }
+
+    /**
+     * Permissions now replace the 'authorize_group' and 'authorize_user' tables.
+     * Also, they now map many-to-many to roles.
+     */
+    if (!$schema->hasTable('permissions')) {
+        $schema->create('permissions', function(Blueprint $table) {
+            $table->increments('id');
+            $table->string('slug')->comment('A code that references a specific action or URI that an assignee of this permission has access to.');
+            $table->string('name');
+            $table->text('conditions')->comment('The conditions under which members of this group have access to this hook.');
+            $table->text('description')->nullable();
+            $table->timestamps();
+
+            $table->engine = 'InnoDB';
+            $table->collation = 'utf8_unicode_ci';
+            $table->charset = 'utf8';
+        });
+
+        // Add default permissions
+        $permissions = [
+            'create_user' => new Permission([
+                'slug' => 'create_user',
+                'name' => 'Create user',
+                'conditions' => 'always()',
+                'description' => 'Create a new user and assign default group and roles.'
+            ]),
+            'delete_user' => new Permission([
+                'slug' => 'delete_user',
+                'name' => 'Delete user',
+                'conditions' => '!has_role(user.id,2) && !is_master(user.id)',
+                'description' => 'Delete users who are not Site Administrators.'
+            ]),
+            'update_account_settings' => new Permission([
+                'slug' => 'update_account_settings',
+                'name' => 'Edit user',
+                'conditions' => 'always()',
+                'description' => 'Edit your own account settings.'
+            ]),
+            'update_user_field' => new Permission([
+                'slug' => 'update_user_field',
+                'name' => 'Edit user',
+                'conditions' => '!has_role(user.id,2) && subset(fields,["name","email","theme","locale","group","flag_enabled","flag_verified","password"])',
+                'description' => 'Edit users who are not Site Administrators.'
+            ]),
+            'uri_account_settings' => new Permission([
+                'slug' => 'uri_account_settings',
+                'name' => 'Account settings page',
+                'conditions' => 'always()',
+                'description' => 'View the account settings page.'
+            ]),
+            'uri_user' => new Permission([
+                'slug' => 'uri_user',
+                'name' => 'View user',
+                'conditions' => 'always()',
+                'description' => 'View the user page of any user.'
+            ]),
+            'uri_user_in_group' => new Permission([
+                'slug' => 'uri_user',
+                'name' => 'View user',
+                'conditions' => 'equals_num(self.group_id,user.group_id)',
+                'description' => 'View the user page of any user in your group.'
+            ]),
+            'uri_users' => new Permission([
+                'slug' => 'uri_users',
+                'name' => 'User management page',
+                'conditions' => 'always()',
+                'description' => 'View a page containing a table of users.'
+            ]),
+            'view_user_field' => new Permission([
+                'slug' => 'view_user_field',
+                'name' => 'View user',
+                'conditions' => 'in(property,["user_name","name","email","locale","theme","roles","group"])',
+                'description' => 'View certain properties of any user.'
+            ])
+        ];
+
+        foreach ($permissions as $slug => $permission) {
+            $permission->save();
+        }
+
+        // Add default mappings to permissions
+        $roleUser = Role::where('slug', 'user')->first();
+        if ($roleUser) {
+            $roleUser->permissions()->sync([
+                $permissions['update_account_settings']->id,
+                $permissions['uri_account_settings']->id
+            ]);
+        }
+
+        $roleSiteAdmin = Role::where('slug', 'site-admin')->first();
+        if ($roleSiteAdmin) {
+            $roleSiteAdmin->permissions()->sync([
+                $permissions['create_user']->id,
+                $permissions['delete_user']->id,
+                $permissions['update_user_field']->id,
+                $permissions['uri_user']->id,
+                $permissions['uri_users']->id,
+                $permissions['view_user_field']->id
+            ]);
+        }
+
+        $roleGroupAdmin = Role::where('slug', 'group-admin')->first();
+        if ($roleGroupAdmin) {
+            $roleGroupAdmin->permissions()->sync([
+                $permissions['uri_user_in_group']->id
+            ]);
+        }
+
+        echo "Created table 'permissions'..." . PHP_EOL;
+    } else {
+        echo "Table 'permissions' already exists.  Skipping..." . PHP_EOL;
     }
 
     /**
@@ -319,56 +309,6 @@
         echo "Created table 'persistences'..." . PHP_EOL;
     } else {
         echo "Table 'persistences' already exists.  Skipping..." . PHP_EOL;
-    }
-
-    /**
-     * Roles replace "groups" in UF 0.3.x.  Users acquire permissions through roles.
-     */
-    if (!$schema->hasTable('roles')) {
-        $schema->create('roles', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('slug');
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->timestamps();
-
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_unicode_ci';
-            $table->charset = 'utf8';
-            $table->unique('slug');
-            $table->index('slug');
-        });
-
-        // Add default roles
-        Capsule::table('roles')->insert([
-            [
-                'id' => 1,
-                'slug' => 'user',
-                'name' => 'User',
-                'description' => 'This role provides basic user functionality.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 2,
-                'slug' => 'site-admin',
-                'name' => 'Site Administrator',
-                'description' => 'This role is meant for "site administrators", who can basically do anything except create, edit, or delete other administrators.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ],
-            [
-                'id' => 3,
-                'slug' => 'group-admin',
-                'name' => 'Group Administrator',
-                'description' => 'This role is meant for "group administrators", who can basically do anything with users in their same group, except other administrators of that group.',
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ]
-        ]);
-        echo "Created table 'roles'..." . PHP_EOL;
-    } else {
-        echo "Table 'roles' already exists.  Skipping..." . PHP_EOL;
     }
 
     /**

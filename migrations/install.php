@@ -9,6 +9,7 @@
     use Illuminate\Database\Schema\Blueprint;
     use Slim\Container;
     use Slim\Http\Uri;
+    use UserFrosting\Sprinkle\Account\Model\Role;
     use UserFrosting\Sprinkle\Account\Model\User;
     use UserFrosting\Sprinkle\Account\Util\Password;
     use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
@@ -251,6 +252,18 @@
         ]);
 
         $rootUser->save();
+
+        $defaultRoles = [
+            'user' => Role::where('slug', 'user')->first(),
+            'group-admin' => Role::where('slug', 'group-admin')->first(),
+            'site-admin' => Role::where('slug', 'site-admin')->first()
+        ];
+
+        foreach ($defaultRoles as $slug => $role) {
+            if ($role) {
+                $rootUser->roles()->attach($role->id);
+            }
+        }
     }
 
     /*

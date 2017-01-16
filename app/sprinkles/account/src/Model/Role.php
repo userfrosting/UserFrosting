@@ -77,7 +77,7 @@ class Role extends UFModel
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles');
+        return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles')->withTimestamps();
     }
 
     /**
