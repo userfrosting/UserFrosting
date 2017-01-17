@@ -77,7 +77,21 @@ function updateUser(userName, fieldName, fieldValue) {
         type: "PUT",
         url: url,
         data: data
-	});
+	}).fail(function (response) {
+        // Error messages
+        if ((typeof site !== "undefined") && site.debug.ajax && response.responseText) {
+            document.write(response.responseText);
+            document.close();
+        } else {
+            if (base.options.DEBUG) {
+                console.log("Error (" + response.status + "): " + response.responseText );
+            }
+        }
+
+        return response;
+    }).always(function (response) {
+        window.location.reload();
+    })
 }
 
 /**
@@ -203,29 +217,17 @@ function updateUser(userName, fieldName, fieldValue) {
      */
     el.find('.js-user-activate').click(function() {
         var btn = $(this);
-        updateUser(btn.data('user_name'), 'flag_verified', '1')
-        .always(function(response) {
-            // Reload page after updating user details
-            window.location.reload();
-        });
+        updateUser(btn.data('user_name'), 'flag_verified', '1');
     });
 
     el.find('.js-user-enable').click(function () {
         var btn = $(this);
-        updateUser(btn.data('user_name'), 'flag_enabled', '1')
-        .always(function(response) {
-            // Reload page after updating user details
-            window.location.reload();
-        });
+        updateUser(btn.data('user_name'), 'flag_enabled', '1');
     });
 
     el.find('.js-user-disable').click(function () {
         var btn = $(this);
-        updateUser(btn.data('user_name'), 'flag_enabled', '0')
-        .always(function(response) {
-            // Reload page after updating user details
-            window.location.reload();
-        });
+        updateUser(btn.data('user_name'), 'flag_enabled', '0');
     });
 }
 

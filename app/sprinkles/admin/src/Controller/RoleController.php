@@ -459,8 +459,9 @@ class RoleController extends SimpleController
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_role_permissions', [
-            'role' => $role
+        if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
+            'role' => $role,
+            'property' => 'permissions'
         ])) {
             throw new ForbiddenException();
         }

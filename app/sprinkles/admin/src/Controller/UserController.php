@@ -323,8 +323,9 @@ class UserController extends SimpleController
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user_activities', [
-            'user' => $user
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            'user' => $user,
+            'property' => 'activities'
         ])) {
             throw new ForbiddenException();
         }
@@ -740,8 +741,9 @@ class UserController extends SimpleController
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_user_roles', [
-            'user' => $user
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            'user' => $user,
+            'property' => 'roles'
         ])) {
             throw new ForbiddenException();
         }
@@ -804,6 +806,7 @@ class UserController extends SimpleController
             'disabled' => []
         ];
 
+        // Determine which fields should be hidden entirely
         foreach ($fieldNames as $field) {
             if ($authorizer->checkAccess($currentUser, 'view_user_field', [
                 'user' => $user,
@@ -839,6 +842,20 @@ class UserController extends SimpleController
             'fields' => ['flag_verified']
         ])) {
             $editButtons['hidden'][] = 'activate';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['password']
+        ])) {
+            $editButtons['hidden'][] = 'password';
+        }
+
+        if (!$authorizer->checkAccess($currentUser, 'update_user_field', [
+            'user' => $user,
+            'fields' => ['roles']
+        ])) {
+            $editButtons['hidden'][] = 'roles';
         }
 
         if (!$authorizer->checkAccess($currentUser, 'delete_user', [
@@ -1084,6 +1101,12 @@ class UserController extends SimpleController
             ) {
                 $e = new ForbiddenException();
                 $e->addUserMessage('DISABLE_MASTER');
+                throw $e;
+            } else if (($user->id == $currentUser->id) &&
+                ($fieldValue == '0')
+            ) {
+                $e = new ForbiddenException();
+                $e->addUserMessage('You cannot disable your own account!');
                 throw $e;
             }
             if ($fieldValue == '1') {

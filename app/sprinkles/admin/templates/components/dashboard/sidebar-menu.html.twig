@@ -14,17 +14,17 @@
         <a href="{{site.uri.public}}/admin/activities"><i class="fa fa-tasks fa-fw"></i> <span>{{ translate("ACTIVITY", 2) }}</span></a>
     </li>
     {% endif %}
-    {% if checkAccess('uri_manage_roles') %}
+    {% if checkAccess('uri_roles') %}
     <li>
         <a href="{{site.uri.public}}/admin/roles"><i class="fa fa-drivers-license fa-fw"></i> <span>{{ translate("ROLE", 2) }}</span></a>
     </li>
     {% endif %}
-    {% if checkAccess('uri_manage_permissions') %}
+    {% if checkAccess('uri_permissions') %}
     <li>
         <a href="{{site.uri.public}}/admin/permissions"><i class="fa fa-key fa-fw"></i> <span>{{ translate("PERMISSION", 2) }}</span></a>
     </li>
     {% endif %}
-    {% if checkAccess('uri_manage_groups') %}
+    {% if checkAccess('uri_groups') %}
     <li>
         <a href="{{site.uri.public}}/admin/groups"><i class="fa fa-users fa-fw"></i> <span>{{ translate("GROUP", 2) }}</span></a>
     </li>

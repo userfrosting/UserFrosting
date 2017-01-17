@@ -406,8 +406,9 @@ class GroupController extends SimpleController
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_group_users', [
-            'group' => $group
+        if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
+            'group' => $group,
+            'property' => 'users'
         ])) {
             throw new ForbiddenException();
         }
