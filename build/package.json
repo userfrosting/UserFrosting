@@ -13,12 +13,10 @@
     "gulp": "^3.9.1",
     "gulp-bundle-assets": "^2.27.1",
     "gulp-load-plugins": "^1.4.0",
-    "gulp-notify": "^2.2.0",
-    "gulp-install": "^0.6.0",
-    "gulp-debug": "^3.0.0",
     "merge-array-object": "^1.0.3",
     "recursive-copy": "^2.0.5",
     "del": "^2.2.2",
+    "shelljs": "0.7.6",
     "bower": "^1.8.0"
   },
   "scripts": {
