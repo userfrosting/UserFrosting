@@ -22,6 +22,7 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/components/#authentication
+ * Partially inspired by Laravel's Authentication component: https://github.com/laravel/framework/blob/5.3/src/Illuminate/Auth/SessionGuard.php
  */
 class Authenticator
 {
@@ -152,6 +153,26 @@ class Authenticator
     }
 
     /**
+     * Determine if the current user is authenticated.
+     *
+     * @return bool
+     */
+    public function check()
+    {
+        return !is_null($this->user());
+    }
+
+    /**
+     * Determine if the current user is a guest (unauthenticated).
+     *
+     * @return bool
+     */
+    public function guest()
+    {
+        return !$this->check();
+    }
+
+    /**
      * Process an account login request.
      *
      * This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.
@@ -180,52 +201,6 @@ class Authenticator
 
         // User login actions
         $user->onLogin();
-    }
-
-    /**
-     * Try to get the currently authenticated user, returning a guest user if none was found.
-     *
-     * Tries to re-establish a session for "remember-me" users who have been logged out due to an expired session.
-     * @return User
-     * @throws AuthExpiredException
-     * @throws AuthCompromisedException
-     * @throws AccountInvalidException
-     * @throws AccountDisabledException
-     */
-    public function user()
-    {
-        $user = null;
-
-        if (!$this->loggedOut) {
-
-            // Return any cached user
-            if (!is_null($this->user)) {
-                return $this->user;
-            }
-    
-            // If this throws a PDOException we catch it and return null than allowing the exception to propagate.
-            // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
-            // So, we really don't want this method to throw any database exceptions.
-            try {
-                // Now, check to see if we have a user in session
-                $user = $this->loginSessionUser();
-    
-                // If no user was found in the session, try to login via RememberMe cookie
-                if (!$user) {
-                    $user = $this->loginRememberedUser();
-                }
-            } catch (\PDOException $e) {
-                $user = null;
-            }
-        }
-
-        // If no authenticated user, create a 'guest' user object
-        if (!$user) {
-            $user = $this->classMapper->createInstance('user');
-            $user->id = $this->config['reserved_user_ids.guest'];
-        }
-
-        return $this->user = $user;
     }
 
     /**
@@ -266,7 +241,57 @@ class Authenticator
         // Restart the session service
         $this->session->start();
     }
-    
+
+    /**
+     * Try to get the currently authenticated user, returning a guest user if none was found.
+     *
+     * Tries to re-establish a session for "remember-me" users who have been logged out due to an expired session.
+     * @return User|null
+     * @throws AuthExpiredException
+     * @throws AuthCompromisedException
+     * @throws AccountInvalidException
+     * @throws AccountDisabledException
+     */
+    public function user()
+    {
+        $user = null;
+
+        if (!$this->loggedOut) {
+
+            // Return any cached user
+            if (!is_null($this->user)) {
+                return $this->user;
+            }
+
+            // If this throws a PDOException we catch it and return null than allowing the exception to propagate.
+            // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
+            // So, we really don't want this method to throw any database exceptions.
+            try {
+                // Now, check to see if we have a user in session
+                $user = $this->loginSessionUser();
+
+                // If no user was found in the session, try to login via RememberMe cookie
+                if (!$user) {
+                    $user = $this->loginRememberedUser();
+                }
+            } catch (\PDOException $e) {
+                $user = null;
+            }
+        }
+
+        return $this->user = $user;
+    }
+
+    /**
+     * Determine whether the current user was authenticated using a remember me cookie.
+     *
+     * This function is useful when users are performing sensitive operations, and you may want to force them to re-authenticate.
+     * @return bool
+     */
+    public function viaRemember()
+    {
+        return $this->viaRemember;
+    }
 
     /**
      * Attempt to log in the client from their rememberMe token (in their cookie).
@@ -318,11 +343,28 @@ class Authenticator
     }
 
     /**
+     * Determine if the cookie contains a valid rememberMe token.
+     *
+     * @return bool
+     */
+    protected function validateRememberMeCookie()
+    {
+        // Check, if the Rememberme cookie exists and is still valid.
+        // If not, we log out the current session and throw an exception.
+        if (!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Tries to load the specified user by id from the database.
      *
      * Checks that the account is valid and enabled, throwing an exception if not.
      * @param int $userId
      * @return User|null
+     * @throws AccountInvalidException
+     * @throws AccountDisabledException
      */
     protected function validateUserAccount($userId)
     {
@@ -343,18 +385,5 @@ class Authenticator
         } else {
             return null;
         }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function validateRememberMeCookie()
-    {
-        // Check, if the Rememberme cookie exists and is still valid.
-        // If not, we log out the current session and throw an exception.
-        if (!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
-            return false;
-        }
-        return true;
     }
 }

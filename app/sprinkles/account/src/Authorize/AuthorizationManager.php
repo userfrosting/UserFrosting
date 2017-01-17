@@ -71,7 +71,7 @@ class AuthorizationManager
             $this->ci->authLogger->debug("Checking authorization for user {$user->id} ('{$user->user_name}') on permission '$slug'...");
         }
 
-        if ($user->isGuest()) {   // TODO: do we sometimes want to allow access to protected resources for guests?  Should we model a "guest" group?
+        if ($this->ci->authenticator->guest()) {
             if ($debug) {
                 $this->ci->authLogger->debug("User is not logged in.  Access denied.");
             }

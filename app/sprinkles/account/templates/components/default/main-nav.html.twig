@@ -3,7 +3,7 @@
 
 {% block secondary_nav %}
     {{parent()}}
-    {% if current_user.isGuest() %}
+    {% if not checkAuthenticated() %}
         <li>
             <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">{{translate("SIGNIN")}}</a>
         </li>

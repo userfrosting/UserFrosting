@@ -43,14 +43,24 @@ class AccountExtension extends \Twig_Extension
                 $currentUser = $this->services->currentUser;
 
                 return $authorizer->checkAccess($currentUser, $slug, $params);
+            }),
+            new \Twig_SimpleFunction('checkAuthenticated', function () {
+                $authenticator = $this->services->authenticator;
+                return $authenticator->check();
             })
         );
     }
 
     public function getGlobals()
     {
+        try {
+            $currentUser = $this->services->currentUser;
+        } catch (\Exception $e) {
+            $currentUser = null;
+        }
+
         return [
-            'current_user'   => $this->services->currentUser
+            'current_user'   => $currentUser
         ];
     }
 }

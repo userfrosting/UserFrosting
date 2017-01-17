@@ -198,27 +198,6 @@ class User extends UFModel
     }
 
     /**
-     * Determine whether or not this User object is a guest user (id set to `user_id_guest`) or an authenticated user.
-     *
-     * @return boolean True if the user is a guest, false otherwise.
-     */
-    public function isGuest()
-    {
-        if (!isset($this->id) || $this->id == static::$ci->config['reserved_user_ids.guest'])   // Need to use loose comparison for now, because some DBs return `id` as a string
-            return true;
-        else
-            return false;
-    }
-
-    /**
-     * @todo
-     */
-    public static function isLoggedIn()
-    {
-        // TODO.  Not sure how to implement this right now.  Flag in DB?  Or, check sessions?
-    }
-
-    /**
      * Get the most recent activity for this user, based on the user's last_activity_id.
      */
     public function lastActivity()

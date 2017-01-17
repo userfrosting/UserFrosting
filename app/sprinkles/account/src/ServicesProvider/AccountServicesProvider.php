@@ -43,9 +43,18 @@ class AccountServicesProvider
          * Extend the asset manager service to see assets for the current user's theme.
          */
         $container->extend('assets', function ($assets, $c) {
+            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+            $authenticator = $c->authenticator;
+
             // Register paths for user theme, if a user is logged in
-            $currentUser = $c->currentUser;
-            if (!$currentUser->isGuest()) {
+            // We catch any authorization-related exceptions, so that error pages can be rendered.
+            try {
+                $currentUser = $c->currentUser;
+            } catch (\Exception $e) {
+                return $assets;
+            }
+
+            if ($authenticator->check()) {
                 $c->sprinkleManager->addAssets($currentUser->theme);
             }
 
@@ -86,10 +95,18 @@ class AccountServicesProvider
          * Also loads the actual translations for the user's locale.
          */
         $container->extend('translator', function ($translator, $c) {
-            // Add paths for user theme, if a user is logged in
-            $currentUser = $c->currentUser;
+            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+            $authenticator = $c->authenticator;
 
-            if (!$currentUser->isGuest()) {
+            // Add paths for user theme, if a user is logged in
+            // We catch any authorization-related exceptions, so that error pages can be rendered.
+            try {
+                $currentUser = $c->currentUser;
+            } catch (\Exception $e) {
+                return $translator;
+            }
+
+            if ($authenticator->check()) {
                 $themePath = $c->sprinkleManager->addLocale($currentUser->theme);
                 if ($themePath) {
                     // Add paths to locale files for user theme
@@ -113,9 +130,18 @@ class AccountServicesProvider
             $extension = new AccountExtension($c);
             $twig->addExtension($extension);
 
+            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+            $authenticator = $c->authenticator;
+
             // Add paths for user theme, if a user is logged in
-            $currentUser = $c->currentUser;
-            if (!$currentUser->isGuest()) {
+            // We catch any authorization-related exceptions, so that error pages can be rendered.
+            try {
+                $currentUser = $c->currentUser;
+            } catch (\Exception $e) {
+                return $view;
+            }
+
+            if ($authenticator->check()) {
                 $theme = $currentUser->theme;
                 $themePath = $c->sprinkleManager->addTemplates($theme);
                 if ($themePath) {

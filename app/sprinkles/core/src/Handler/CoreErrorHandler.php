@@ -198,12 +198,12 @@ class CoreErrorHandler extends \Slim\Handlers\Error
                             ->withHeader('Content-type', $contentType)
                             ->withBody($body);
         } else {
+            $response = $handler->standardHandler($request, $response, $exception);
+
             // Write exception to log, if enabled by the handler
             if ($handler->getLogFlag()) {
                 $this->writeToErrorLog($exception);
             }
-
-            $response = $handler->standardHandler($request, $response, $exception);
         }
 
         return $response;

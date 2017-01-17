@@ -227,8 +227,11 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+        $authenticator = $this->ci->authenticator;
+
         // Return 200 success if user is already logged in
-        if (!$currentUser->isGuest()) {
+        if ($authenticator->check()) {
             $ms->addMessageTranslated("warning", "LOGIN.ALREADY_COMPLETE");
             return $response->withStatus(200);
         }
@@ -466,10 +469,13 @@ class AccountController extends SimpleController
     {
         $config = $this->ci->config;
 
+        /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+        $authenticator = $this->ci->authenticator;
+
         // Forward to home page if user is already logged in
         // TODO: forward to user's landing page or last visited page
-        if (!$this->ci->currentUser->isGuest()) {
-            return $response->withStatus(302)->withHeader('Location', $config['site.uri.public']);
+        if ($authenticator->check()) {
+            return $response->withRedirect($config['site.uri.public'], 302);
         }
 
         // Load validation rules
@@ -537,8 +543,11 @@ class AccountController extends SimpleController
             return $response->withStatus(403);
         }
 
+        /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+        $authenticator = $this->ci->authenticator;
+
         // Prevent the user from registering if he/she is already logged in
-        if(!$this->ci->currentUser->isGuest()) {
+        if ($authenticator->check()) {
             $ms->addMessageTranslated("danger", "REGISTRATION.LOGOUT");
             return $response->withStatus(403);
         }
@@ -811,7 +820,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
-        if (!$currentUser->isGuest()) {
+        if ($authenticator->check()) {
             $authenticator->logout();
         }
 
