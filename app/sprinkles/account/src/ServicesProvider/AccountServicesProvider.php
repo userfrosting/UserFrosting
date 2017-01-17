@@ -292,32 +292,11 @@ class AccountServicesProvider
 
         /**
          * Loads the User object for the currently logged-in user.
-         *
-         * Tries to re-establish a session for "remember-me" users who have been logged out, or creates a guest user object if no one is logged in.
-         * @todo Move some of this logic to the Authenticate class.
          */
         $container['currentUser'] = function ($c) {
             $authenticator = $c->authenticator;
-            $classMapper = $c->classMapper;
-            $config = $c->config;
 
-            // If this throws a PDOException we catch it and generate a guest user rather than allowing the exception to propagate.
-            // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
-            // So, we really don't want this particular service to throw any exceptions.
-            try {
-                // Now, check to see if we have a user in session or rememberMe cookie
-                $currentUser = $authenticator->getSessionUser();
-            } catch (\PDOException $e) {
-                $currentUser = null;
-            }
-
-            // If no authenticated user, create a 'guest' user object
-            if (!$currentUser) {
-                $currentUser = $classMapper->createInstance('user');
-                $currentUser->id = $config['reserved_user_ids.guest'];
-            }
-
-            return $currentUser;
+            return $authenticator->user();
         };
 
         /**

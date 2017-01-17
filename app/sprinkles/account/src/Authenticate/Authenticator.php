@@ -41,6 +41,11 @@ class Authenticator
     protected $config;
 
     /**
+     * @var bool
+     */
+    protected $loggedOut = false;
+
+    /**
      * @var RememberMePDO
      */
     protected $rememberMeStorage;
@@ -49,6 +54,18 @@ class Authenticator
      * @var RememberMe
      */
     protected $rememberMe;
+
+    /**
+     * @var User
+     */
+    protected $user;
+
+    /**
+     * Indicates if the user was authenticated via a rememberMe cookie.
+     *
+     * @var bool
+     */
+    protected $viaRemember = false;
 
     /**
      * Create a new Authenticator object.
@@ -89,6 +106,10 @@ class Authenticator
         if ($this->config->has('remember_me.expire_time') && ($this->config->has('remember_me.expire_time') != null)) {
             $this->rememberMe->setExpireTime($this->config['remember_me.expire_time']);
         }
+
+        $this->user = null;
+
+        $this->viaRemember = false;
     }
 
     /**
@@ -144,79 +165,67 @@ class Authenticator
         $this->session->regenerateId(true);
 
         // If the user wants to be remembered, create Rememberme cookie
-        if($rememberMe) {
+        if ($rememberMe) {
             $this->rememberMe->createCookie($user->id);
         } else {
             $this->rememberMe->clearCookie();
         }
+
         // Assume identity
         $key = $this->config['session.keys.current_user_id'];
         $this->session[$key] = $user->id;
 
         // Set auth mode
-        $this->session[$this->config['session.keys.auth_mode']] = 'form';
+        $this->viaRemember = false;
 
         // User login actions
         $user->onLogin();
     }
 
     /**
-     * Try to get the currently authenticated user from the session.
+     * Try to get the currently authenticated user, returning a guest user if none was found.
      *
-     * @return User|null
+     * Tries to re-establish a session for "remember-me" users who have been logged out due to an expired session.
+     * @return User
      * @throws AuthExpiredException
      * @throws AuthCompromisedException
      * @throws AccountInvalidException
      * @throws AccountDisabledException
      */
-    public function getSessionUser()
+    public function user()
     {
-        // Determine if we are already logged in (user id exists in the session variable)
-        $currentUserIdKey = $this->config['session.keys.current_user_id'];
-        if($this->session->has($currentUserIdKey) && ($this->session[$currentUserIdKey] != null)) {
-            $currentUserId = $this->session[$currentUserIdKey];
+        $user = null;
 
-            // Check, if the Rememberme cookie exists and is still valid.
-            // If not, we log out the current session and throw an exception.
-            if(!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
-                $this->logout();
-                throw new AuthExpiredException();
+        if (!$this->loggedOut) {
+
+            // Return any cached user
+            if (!is_null($this->user)) {
+                return $this->user;
             }
-        // If not, try to login via RememberMe cookie
-        } else {
-            // Get the user id. If we can present the correct tokens from the cookie, remake the session and automatically log the user in
-            $currentUserId = $this->rememberMe->login();
-
-            if ($currentUserId) {
-                // Update in session
-                $this->session[$currentUserIdKey] = $currentUserId;
-                // There is a chance that an attacker has stolen the login token, so we store
-                // the fact that the user was logged in via RememberMe (instead of login form)
-                $this->session[$this->config['session.keys.auth_mode']] = 'cookie';
-            } else {
-                // If $rememberMe->login() returned false, check if the token was invalid.  This means the cookie was stolen.
-                if($this->rememberMe->loginTokenWasInvalid()) {
-                    throw new AuthCompromisedException();
+    
+            // If this throws a PDOException we catch it and return null than allowing the exception to propagate.
+            // This is because the error handler relies on Twig, which relies on a Twig Extension, which relies on the global current_user variable.
+            // So, we really don't want this method to throw any database exceptions.
+            try {
+                // Now, check to see if we have a user in session
+                $user = $this->loginSessionUser();
+    
+                // If no user was found in the session, try to login via RememberMe cookie
+                if (!$user) {
+                    $user = $this->loginRememberedUser();
                 }
+            } catch (\PDOException $e) {
+                $user = null;
             }
         }
 
-        // If a user id was retrieved from the session or rememberMe storage, try to load the user object from the DB
-        if ($currentUserId) {
-            $currentUser = $this->classMapper->staticMethod('user', 'find', $currentUserId);
-
-            // If the user doesn't exist any more, throw an exception.
-            if (!$currentUser)
-                throw new AccountInvalidException();
-
-            // If the user has been disabled since their last request, throw an exception.
-            if (!$currentUser->flag_enabled)
-                throw new AccountDisabledException();
-        } else {
-            return;
+        // If no authenticated user, create a 'guest' user object
+        if (!$user) {
+            $user = $this->classMapper->createInstance('user');
+            $user->id = $this->config['reserved_user_ids.guest'];
         }
 
-        return $currentUser;
+        return $this->user = $user;
     }
 
     /**
@@ -230,8 +239,7 @@ class Authenticator
      */
     public function logout($complete = false)
     {
-        $currentUserIdKey = $this->config['session.keys.current_user_id'];
-        $currentUserId = $this->session[$currentUserIdKey];
+        $currentUserId = $this->session->get($this->config['session.keys.current_user_id']);
 
         // This removes all of the user's persistent logins from the database
         if ($complete) {
@@ -239,9 +247,7 @@ class Authenticator
         }
 
         // Clear the rememberMe cookie
-        if ($this->rememberMe->clearCookie()) {
-            //error_log("Cleared cookie");
-        }
+        $this->rememberMe->clearCookie();
 
         // User logout actions
         if ($currentUserId) {
@@ -251,10 +257,104 @@ class Authenticator
             }
         }
 
+        $this->user = null;
+        $this->loggedOut = true;
+
         // Completely destroy the session
         $this->session->destroy();
 
         // Restart the session service
         $this->session->start();
+    }
+    
+
+    /**
+     * Attempt to log in the client from their rememberMe token (in their cookie).
+     *
+     * @return User|bool If successful, the User object of the remembered user.  Otherwise, return false.
+     * @throws AuthCompromisedException The client attempted to log in with an invalid rememberMe token.
+     */
+    protected function loginRememberedUser()
+    {
+        // Get the user id. If we can present the correct tokens from the cookie, remake the session and automatically log the user in
+        $userId = $this->rememberMe->login();
+
+        if ($userId) {
+            // Update in session
+            $this->session[$this->config['session.keys.current_user_id']] = $userId;
+            // There is a chance that an attacker has stolen the login token,
+            // so we store the fact that the user was logged in via RememberMe (instead of login form)
+            $this->viaRemember = true;
+        } else {
+            // If $rememberMe->login() returned false, check if the token was invalid as well.  This means the cookie was stolen.
+            if ($this->rememberMe->loginTokenWasInvalid()) {
+                throw new AuthCompromisedException();
+            }
+        }
+
+        return $this->validateUserAccount($userId);
+    }
+
+    /**
+     * Attempt to log in the client from the session.
+     *
+     * @return User|null If successful, the User object of the user in session.  Otherwise, return null.
+     * @throws AuthExpiredException The client attempted to use an expired rememberMe token.
+     */
+    protected function loginSessionUser()
+    {
+        $userId = $this->session->get($this->config['session.keys.current_user_id']);
+
+        // If a user_id was found in the session, check any rememberMe cookie that was submitted.
+        // If they submitted an expired rememberMe cookie, then we need to log them out.
+        if ($userId) {
+            if (!$this->validateRememberMeCookie()) {
+                $this->logout();
+                throw new AuthExpiredException();
+            }
+        }
+
+        return $this->validateUserAccount($userId);
+    }
+
+    /**
+     * Tries to load the specified user by id from the database.
+     *
+     * Checks that the account is valid and enabled, throwing an exception if not.
+     * @param int $userId
+     * @return User|null
+     */
+    protected function validateUserAccount($userId)
+    {
+        if ($userId) {
+            $user = $this->classMapper->staticMethod('user', 'find', $userId);
+
+            // If the user doesn't exist any more, throw an exception.
+            if (!$user) {
+                throw new AccountInvalidException();
+            }
+
+            // If the user has been disabled since their last request, throw an exception.
+            if (!$user->flag_enabled) {
+                throw new AccountDisabledException();
+            }
+
+            return $user;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function validateRememberMeCookie()
+    {
+        // Check, if the Rememberme cookie exists and is still valid.
+        // If not, we log out the current session and throw an exception.
+        if (!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
+            return false;
+        }
+        return true;
     }
 }
