@@ -30,22 +30,20 @@
     <div class="row">
         <div class="col-lg-6">
             <div id="view-user">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h2 class="panel-title pull-left"><i class="fa fa-fw fa-user"></i> {{user.user_name}}</h2>
-                        <div class="clearfix"></div>
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h2 class="box-title"><i class="fa fa-fw fa-user"></i> {{user.user_name}}</h2>
                     </div>
-                    <div class="panel-body">
+                    <div class="box-body">
                         {% include "components/forms/user.html.twig" %}
                     </div>
                 </div>
                 {% if form.edit_buttons %}
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h2 class="panel-title pull-left"><i class="fa fa-fw fa-wrench"></i> Account tools</h2>
-                        <div class="clearfix"></div>
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h2 class="box-title"><i class="fa fa-fw fa-wrench"></i> Account tools</h2>
                     </div>
-                    <div class="panel-body">
+                    <div class="box-body">
                         {% if 'password' not in form.edit_buttons.hidden %}
                         <div class="col-xs-6 col-sm-3">
                             <div class="vert-pad">
@@ -103,14 +101,14 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <div id="widget-user-activities" class="panel panel-primary">
-                <div class="panel-heading panel-heading-buttons clearfix">
-                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-tasks"></i> {{translate('ACTIVITY', 2)}}</h3>
+            <div id="widget-user-activities" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-fw fa-tasks"></i> {{translate('ACTIVITY', 2)}}</h3>
                     <div class="pull-right">
                         <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     {% include "components/tables/activities.html.twig" with {
                             "table" : {
                                 "id" : "table-user-activities"

@@ -13,14 +13,14 @@
 {% block body_matter %}
     <div class="row">
         <div class="col-md-12">
-            <div id="widget-permissions" class="panel panel-primary">
-                <div class="panel-heading panel-heading-buttons clearfix">
-                    <h3 class="panel-title pull-left"><i class="fa fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
+            <div id="widget-permissions" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title pull-left"><i class="fa fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
                     <div class="pull-right">
                         <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     {% include "components/tables/permissions.html.twig" with {
                             "table" : {
                                 "id" : "table-permissions"

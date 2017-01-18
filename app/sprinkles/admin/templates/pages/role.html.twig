@@ -13,25 +13,25 @@
 {% block body_matter %}
     <div class="row">
         <div class="col-lg-4">
-            <div id="view-role" class="panel panel-primary">
-                <div class="panel-heading">
-                    <h2 class="panel-title pull-left"><i class="fa fa-fw fa-drivers-license"></i> {{role.name}}</h2>
+            <div id="view-role" class="box box-primary">
+                <div class="box-header">
+                    <h2 class="box-title"><i class="fa fa-fw fa-drivers-license"></i> {{role.name}}</h2>
                     <div class="clearfix"></div>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     {% include "components/forms/role.html.twig" %}
                 </div>
             </div>
         </div>
         <div class="col-lg-8">
-            <div id="widget-role-permissions" class="panel panel-primary">
-                <div class="panel-heading panel-heading-buttons clearfix">
-                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-key"></i> {{translate('PERMISSION', 2)}}</h3>
+            <div id="widget-role-permissions" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('PERMISSION', 2)}}</h3>
                     <div class="pull-right">
                         <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     {% include "components/tables/permissions.html.twig" with {
                             "table" : {
                                 "id" : "table-role-permissions"

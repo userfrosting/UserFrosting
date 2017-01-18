@@ -13,27 +13,25 @@
 {% block body_matter %}
     <div class="row">
         <div class="col-md-12">
-            <div id="widget-groups" class="panel panel-primary">
-                <div class="panel-heading panel-heading-buttons clearfix">
-                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-users"></i> {{translate('GROUP', 2)}}</h3>
+            <div id="widget-groups" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-fw fa-users"></i> {{translate('GROUP', 2)}}</h3>
                     <div class="pull-right">
                         <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     {% include "components/tables/groups.html.twig" with {
                             "table" : {
                                 "id" : "table-groups"
                             }
                         }
                     %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-success js-group-create">
-                                <i class="fa fa-plus-square"></i>  Create New Group
-                            </button>
-                        </div>
-                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="button" class="btn btn-success js-group-create">
+                        <i class="fa fa-plus-square"></i>  Create New Group
+                    </button>
                 </div>
             </div>
         </div>

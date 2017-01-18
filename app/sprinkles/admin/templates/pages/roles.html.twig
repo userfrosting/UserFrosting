@@ -13,9 +13,9 @@
 {% block body_matter %}
     <div class="row">
         <div class="col-md-12">
-            <div id="widget-roles" class="panel panel-primary">
-                <div class="panel-heading panel-heading-buttons clearfix">
-                    <h3 class="panel-title pull-left"><i class="fa fa-fw fa-drivers-license"></i> {{translate('ROLE', 2)}}</h3>
+            <div id="widget-roles" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-fw fa-drivers-license"></i> {{translate('ROLE', 2)}}</h3>
                     <div class="pull-right">
                         <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
                     </div>
@@ -27,13 +27,11 @@
                             }
                         }
                     %}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-success js-role-create">
-                                <i class="fa fa-plus-square"></i>  Create New Role
-                            </button>
-                        </div>
-                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="button" class="btn btn-success js-role-create">
+                        <i class="fa fa-plus-square"></i>  Create New Role
+                    </button>
                 </div>
             </div>
         </div>
