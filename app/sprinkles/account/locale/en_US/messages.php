@@ -56,6 +56,8 @@ return [
 
     "LAST_NAME" => "Last name",
 
+    "LOCALE.ACCOUNT" => "The language and locale to use for your account",
+
     "LOGIN" => [
         "@TRANSLATION" => "Login",
 
@@ -79,9 +81,14 @@ return [
     "PASSWORD" => [
         "@TRANSLATION" => "Password",
 
-        "BETWEEN" => "Password ({{min}}-{{max}} characters)",
+        "BETWEEN" => "Between {{min}}-{{max}} characters",
         "CONFIRM" => "Confirm password",
         "CONFIRM_CURRENT" => "Please confirm your current password",
+        "CONFIRM_NEW" => "Confirm New Password",
+        "CONFIRM_NEW_EXPLAIN" => "Re-enter your new password",
+        "CONFIRM_NEW_HELP" => "Required only if selecting a new password",
+        "CURRENT" => "Current Password",
+        "CURRENT_EXPLAIN" => "You must confirm your current password to make changes",
         "FORGET" => [
             "@TRANSLATION" => "I forgot my password",
 
@@ -92,6 +99,7 @@ return [
         ],
         "HASH_FAILED" => "Password hashing failed. Please contact a site administrator.",
         "INVALID" => "Current password doesn't match the one we have on record",
+        "NEW" => "New Password",
         "NOTHING_TO_UPDATE" => "You cannot update with the same password",
         "UPDATED" => "Account password updated"
     ],
@@ -116,8 +124,8 @@ return [
     "SIGNIN_OR_REGISTER" => "Sign in or register",
     "SIGNUP" => "Sign Up",
 
-    "TOS" => "terms and conditions",
-    "TOS_AGREEMENT" => "By registering an account with {{site_title}}, you accept the {{&_LINK}}.",
+    "TOS" => "Terms and Conditions",
+    "TOS_AGREEMENT" => "By registering an account with {{site_title}}, you accept the <a {{link_attributes}}>terms and conditions</a>.",
 
     "USERNAME" => [
         "@TRANSLATION" => "Username",

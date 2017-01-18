@@ -28,7 +28,8 @@ return [
     "DB_INVALID" => "Impossible de se connecter à la base de données. Si vous êtes un administrateur, vérifiez votre journal d'erreurs.",
 
     "EMAIL" => [
-        "@TRANSLATION" => "Email"
+        "@TRANSLATION" => "Email",
+        "YOUR" => "Votre adresse email"
     ],
 
 	"FEATURE_DISABLED" => "Cette fonction est présentement désactivée",
@@ -68,9 +69,11 @@ return [
     "UPDATE" => "Mettre à jour",
     "YES" => "Oui",
     "NO" => "Non",
+    "OPTIONAL" => "Facultatif",
 
     // Misc.
-    "BUILT_WITH_UF" => "Créé avec <a href=\"http://www.userfrosting.com\">UserFrosting</a>.",
+    "BUILT_WITH_UF" => "Créé avec <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
+    "ADMINLTE_THEME_BY" => "Thème par <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> Tous droits réservés",
 
     // TOOLS
     "_LINK" => "<a {{link_attributes}}>{{link_text}}</a>"

@@ -56,6 +56,8 @@ return [
 
     "LAST_NAME" => "Nom de famille",
 
+    "LOCALE.ACCOUNT" => "La langue utilisé pour votre compte d'utilisateur",
+
     "LOGIN" => [
         "@TRANSLATION" => "Connexion",
 
@@ -79,9 +81,14 @@ return [
     "PASSWORD" => [
         "@TRANSLATION" => "Mot de passe",
 
-        "BETWEEN" => "Mot de passe ({{min}}-{{max}} characters)",
+        "BETWEEN" => "Entre {{min}} et {{max}} charactères",
         "CONFIRM" => "Confirmer le mot de passe",
         "CONFIRM_CURRENT" => "Veuillez confirmer votre mot de passe actuel",
+        "CONFIRM_NEW" => "Confirmer le nouveau mot de passe",
+        "CONFIRM_NEW_EXPLAIN" => "Confirmer le mot de passe",
+        "CONFIRM_NEW_HELP" => "Obligatoire uniquement si vous sélectionnez un nouveau mot de passe",
+        "CURRENT" => "Mot de passe actuel",
+        "CURRENT_EXPLAIN" => "Vous devez confirmer votre mot de passe actuel pour apporter des modifications",
         "FORGET" => [
             "@TRANSLATION" => "J'ai oublié mon mot de passe",
 
@@ -93,6 +100,7 @@ return [
         "HASH_FAILED" => "Le hachage du mot de passe a échoué. Veuillez contacter un administrateur de site.",
         "INVALID" => "Le mot de passe actuel ne correspond pas à celui que nous avons au dossier",
         "NOTHING_TO_UPDATE" => "Vous ne pouvez pas mettre à jour avec le même mot de passe",
+        "NEW" => "Nouveau mot de passe",
         "UPDATED" => "Mot de passe du compte mis à jour"
     ],
 
@@ -116,8 +124,8 @@ return [
     "SIGNIN_OR_REGISTER" => "Se connecter ou s'inscrire",
     "SIGNUP" => "S'inscrire",
 
-    "TOS" => "termes et conditions",
-    "TOS_AGREEMENT" => "En créant un compte avec {{site_title}}, vous acceptez {{LINK}}.",
+    "TOS" => "Termes et conditions",
+    "TOS_AGREEMENT" => "En créant un compte avec {{site_title}}, vous acceptez les <a {{link_attributes}}>termes et conditions</a>.",
 
     "USERNAME" => [
         "@TRANSLATION" => "Nom d'utilisateur",

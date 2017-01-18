@@ -1,8 +1,8 @@
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      Built with <a href="http://www.userfrosting.com">UserFrosting</a> &middot;
-      <a href="{{site.uri.public}}/legal">Terms and Conditions</a> &middot;
-      <a href="{{site.uri.public}}/privacy">Privacy Policy</a>
+      {{ translate("BUILT_WITH_UF") | raw }} &middot;
+      <a href="{{site.uri.public}}/legal">{{ translate("TOS") }}</a> &middot;
+      <a href="{{site.uri.public}}/privacy">{{ translate("PRIVACY") }}</a>
     </div>
-    &copy; <a href="{{site.uri.public}}">{{site.title}}</a>, {{ "now"|date("Y") }}. Theme by <strong><a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
+    &copy; <a href="{{site.uri.public}}">{{site.title}}</a>, {{ "now"|date("Y") }}. {{ translate("ADMINLTE_THEME_BY") | raw }}.
 </footer>

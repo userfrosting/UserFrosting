@@ -129,7 +129,7 @@
             'locales' =>  [
                 'available' => [
                     'en_US' => 'English',
-                    'fr_FR' => 'French'
+                    'fr_FR' => 'Français'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'

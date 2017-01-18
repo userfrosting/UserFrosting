@@ -28,7 +28,8 @@ return [
     "DB_INVALID" => "Cannot connect to the database.  If you are an administrator, please check your error log.",
 
     "EMAIL" => [
-        "@TRANSLATION" => "Email"
+        "@TRANSLATION" => "Email",
+        "YOUR" => "Your email address"
     ],
 
     "FEATURE_DISABLED" => "This feature is currently disabled",
@@ -71,9 +72,11 @@ return [
     "UPDATE" => "Update",
     "YES" => "Yes",
     "NO" => "No",
+    "OPTIONAL" => "Optional",
 
     // Misc.
-    "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>.",
+    "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
+    "ADMINLTE_THEME_BY" => "Theme by <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> All rights reserved",
 
     // TOOLS
     "_LINK" => "<a {{link_attributes}}>{{link_text}}</a>"

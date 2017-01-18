@@ -13,9 +13,6 @@ $(document).ready(function() {
     $("#alerts-page").ufAlerts();
     $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
 
-    // Set up select2 for locale
-    $("#input-locale").select2();
-
     $("#account-settings").ufForm({
         validators: page.validators.account_settings,
         msgTarget: $("#alerts-page")
