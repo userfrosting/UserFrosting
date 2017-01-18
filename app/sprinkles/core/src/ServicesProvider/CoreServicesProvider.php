@@ -124,7 +124,7 @@ class CoreServicesProvider
             }
 
             $am = new AssetManager($aub, $as);
-            
+
             return $am;
         };
 
@@ -214,7 +214,7 @@ class CoreServicesProvider
                     $base_uri['port'],
                     $base_uri['path']
                 );
-                
+
                 // Slim\Http\Uri likes to add trailing slashes when the path is empty, so this fixes that.
                 $config['site.uri.public'] = trim($public, '/');
             }
@@ -524,10 +524,19 @@ class CoreServicesProvider
 
             $config = $c->config;
 
+            // Make sure the locale config is a valid string
+            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == "") {
+                throw new \UnexpectedValueException("The locale config is not a valid string.");
+            }
+
             // Load the base locale file(s) as specified in the configuration
             $locales = explode(',', $config['site.locales.default']);
             foreach ($locales as $locale) {
-                $translator->loadLocaleFiles(trim($locale));
+
+                // Make sure it's a valid string before loading
+                if (is_string($locale) && $locale != "") {
+                    $translator->loadLocaleFiles(trim($locale));
+                }
             }
 
             return $translator;
