@@ -31,6 +31,18 @@
                 }
             }
         },
+        "js/pages/dashboard": {
+            "scripts": [
+                "local/pages/js/dashboard.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
         "js/pages/group": {
             "scripts": [
                 "local/widgets/js/users.js",

@@ -112,14 +112,14 @@
                     <dt>Loaded sprinkles</dt>
                     <dd>
                         {% for sprinkle in sprinkles %}
-                        <div>{{sprinkle}}</div>
+                        <div>{{sprinkle.name}}{% if sprinkle.version %} <small>({{sprinkle.version}})</small>{% endif %}</div>
                         {% endfor %}
                     </dd>
                   </dl>
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer text-center">
-                  <a href="javascript:void(0)" class="uppercase">Clear cache</a>
+                  <a href="javascript:void(0)" class="js-clear-cache uppercase">{{ translate("CACHE.CLEAR") }}</a>
                 </div>
                 <!-- /.box-footer -->
             </div>
@@ -128,4 +128,10 @@
         <!-- /.col -->
     </div>
     <!-- /.row -->
+{% endblock %}
+
+{% block scripts_page %}
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/dashboard') | raw }}
+
 {% endblock %}

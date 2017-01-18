@@ -1,0 +1,17 @@
+{% extends "layouts/modal.html.twig" %}
+
+{% block modal_title %}Clear cache{% endblock %}
+
+{% block modal_body %}
+<form class="js-form" method="post" action="{{site.uri.public}}/{{form.action}}">
+    {% include "components/csrf.html.twig" %}
+    <div class="js-form-alerts">
+    </div>
+    <h4>Are you sure you want to clear the site cache?<br><small>This action cannot be undone.</small></h4>
+    <br>
+    <div class="btn-group-action">
+        <button type="submit" class="btn btn-danger btn-lg btn-block">Yes, clear cache</button>
+        <button type="button" class="btn btn-default btn-lg btn-block" data-dismiss="modal">Cancel</button>
+    </div>
+</form>
+{% endblock %}

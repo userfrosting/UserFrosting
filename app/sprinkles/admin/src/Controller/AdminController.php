@@ -59,6 +59,33 @@ class AdminController extends SimpleController
         /** @var Config $config */
         $config = $this->ci->config;
 
+        /** @var Config $config */
+        $cache = $this->ci->cache;
+
+        // Load some system info from cache. If not present in cache, we cache them
+        $ufVersion = $cache->rememberForever('uf_version', function () {
+            return Version::where('sprinkle', 'core')->first()->version;
+        });
+
+        $sprinkles = $cache->rememberForever('uf_sprinklesVersion', function() {
+            $sprinkles = array();
+            foreach ($this->ci->sprinkleManager->getSprinkles() as $sprinkle) {
+
+                // Get sprinkle db version number
+                if ($sprinkleVersion = Version::where('sprinkle', $sprinkle)->first()) {
+                    $version = $sprinkleVersion->version;
+                } else {
+                    $version = null;
+                }
+
+                $sprinkles[] = [
+                    'name' => $sprinkle,
+                    'version' => $version
+                ];
+            }
+            return $sprinkles;
+        });
+
         return $this->ci->view->render($response, "pages/dashboard.html.twig", [
             'counter' => [
                 'users' => User::count(),
@@ -67,7 +94,7 @@ class AdminController extends SimpleController
             ],
             'info' => [
                 'version' => [
-                    'UF' => Version::where('sprinkle', 'core')->first()->version,
+                    'UF' => $ufVersion,
                     'php' => phpversion(),
                     'database' => EnvironmentInfo::database()
                 ],
@@ -79,8 +106,58 @@ class AdminController extends SimpleController
                     'project' => \UserFrosting\ROOT_DIR
                 ]
             ],
-            'sprinkles' => $this->ci->sprinkleManager->getSprinkles(),
+            'sprinkles' => $sprinkles,
             'users' => $users
+        ]);
+    }
+
+    /**
+     * Clear the site cache.
+     *
+     * This route requires authentication.
+     * Request type: POST
+     */
+    public function clearCache($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'clear_Cache')) {
+            throw new ForbiddenException();
+        }
+
+        // Flush cache
+        $this->ci->cache->flush();
+
+        /** @var MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        $ms->addMessageTranslated('success', 'CACHE.CLEARED');
+
+        return $response->withStatus(200);
+    }
+
+    public function getModalConfirmClearCache($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'clear_Cache')) {
+            throw new ForbiddenException();
+        }
+
+        return $this->ci->view->render($response, 'components/modals/confirm-clear-cache.html.twig', [
+            'form' => [
+                'action' => "api/admin/clear-cache",
+            ]
         ]);
     }
 }

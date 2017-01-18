@@ -68,6 +68,11 @@ return [
         "PANEL" => "Admin panel"
     ],
 
+    "CACHE" => [
+        "CLEAR" => "Clear cache",
+        "CLEARED" => "Cache cleared successfully !"
+    ],
+
     "GROUP" => [
         1 => "Group",
         2 => "Groups"
