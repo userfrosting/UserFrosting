@@ -9,9 +9,7 @@
     use Illuminate\Database\Schema\Blueprint;
     use Slim\Container;
     use Slim\Http\Uri;
-    use UserFrosting\Sprinkle\Account\Model\Role;
-    use UserFrosting\Sprinkle\Account\Model\User;
-    use UserFrosting\Sprinkle\Account\Util\Password;
+
     use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 
     if (!defined('STDIN')) {
@@ -166,102 +164,6 @@
                 echo PHP_EOL."Migrated sprinkle '$sprinkle' from $installedVersion to $version..." . PHP_EOL.PHP_EOL;
             } else {
                 echo "Sprinkle '$sprinkle' already up-to-date..." . PHP_EOL.PHP_EOL;
-            }
-        }
-    }
-
-    // Make sure that there are no users currently in the user table
-    // We setup the root account here so it can be done independent of the version check
-    if (User::count() > 0) {
-
-        echo PHP_EOL . "Table 'users' is not empty. Skipping root account setup. To set up the root account again, please truncate or drop the table and try again." . PHP_EOL;
-
-    } else {
-
-        echo PHP_EOL . 'To complete the installation process, you must set up a master (root) account.' . PHP_EOL;
-        echo 'Please answer the following questions to complete this process:' . PHP_EOL;
-
-        // Username
-        echo PHP_EOL . 'Please choose a username (1-50 characters, no leading or trailing whitespace): ';
-        $user_name = rtrim(fgets(STDIN), "\r\n");
-        while (strlen($user_name) < 1 || strlen($user_name) > 50 || !filter_var($user_name, FILTER_VALIDATE_REGEXP, [
-            'options' => [
-                'regexp' => "/^\S((.*\S)|)$/"
-            ]
-        ])) {
-            echo PHP_EOL . "Invalid username '$user_name', please try again: ";
-            $user_name = rtrim(fgets(STDIN), "\r\n");
-        }
-
-        // Email
-        echo PHP_EOL . 'Please choose a valid email address (1-254 characters, must be compatible with FILTER_VALIDATE_EMAIL): ';
-        $email = rtrim(fgets(STDIN), "\r\n");
-        while (strlen($email) < 1 || strlen($email) > 254 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo PHP_EOL . "Invalid email '$email', please try again: ";
-            $email = rtrim(fgets(STDIN), "\r\n");
-        }
-
-        // First name
-        echo PHP_EOL . 'Please enter your first name (1-20 characters): ';
-        $first_name = rtrim(fgets(STDIN), "\r\n");
-        while (strlen($first_name) < 1 || strlen($first_name) > 20) {
-            echo PHP_EOL . "Invalid first name '$first_name', please try again: ";
-            $first_name = rtrim(fgets(STDIN), "\r\n");
-        }
-
-        // Last name
-        echo PHP_EOL . 'Please enter your last name (1-30 characters): ';
-        $last_name = rtrim(fgets(STDIN), "\r\n");
-        while (strlen($last_name) < 1 || strlen($last_name) > 30) {
-            echo PHP_EOL . "Invalid last name '$last_name', please try again: ";
-            $last_name = rtrim(fgets(STDIN), "\r\n");
-        }
-
-        // Password
-        echo PHP_EOL . 'Please choose a password (12-255 characters): ';
-        $password = readPassword($detectedOS);
-        while (strlen($password) < 12 || strlen($password) > 255) {
-            echo PHP_EOL . 'Invalid password, please try again: ';
-            $password = readPassword($detectedOS);
-        }
-
-        // Confirm password
-        echo PHP_EOL . 'Please re-enter your chosen password: ';
-        $password_confirm = readPassword($detectedOS);
-        while ($password !== $password_confirm) {
-            echo PHP_EOL . 'Passwords do not match, please try again. ';
-            echo PHP_EOL . 'Please choose a password (12-255 characters): ';
-            $password = readPassword($detectedOS);
-            while (strlen($password) < 12 || strlen($password) > 255) {
-                echo PHP_EOL . 'Invalid password, please try again: ';
-                $password = readPassword($detectedOS);
-            }
-            echo PHP_EOL . 'Please re-enter your chosen password: ';
-            $password_confirm = readPassword($detectedOS);
-        }
-
-        // Ok, now we've got the info and we can create the new user.
-
-        $rootUser = new User([
-            "user_name" => $user_name,
-            "email" => $email,
-            "first_name" => $first_name,
-            "last_name" => $last_name,
-            "theme" => 'root',
-            "password" => Password::hash($password)
-        ]);
-
-        $rootUser->save();
-
-        $defaultRoles = [
-            'user' => Role::where('slug', 'user')->first(),
-            'group-admin' => Role::where('slug', 'group-admin')->first(),
-            'site-admin' => Role::where('slug', 'site-admin')->first()
-        ];
-
-        foreach ($defaultRoles as $slug => $role) {
-            if ($role) {
-                $rootUser->roles()->attach($role->id);
             }
         }
     }
