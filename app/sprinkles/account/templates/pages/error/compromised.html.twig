@@ -1,16 +1,7 @@
 {% extends "layouts/error.html.twig" %}
 
-{% block page_title %}Your account may have been compromised{% endblock %}
+{% block page_title %}{{ translate('ACCOUNT.SESSION_COMPROMISED_TITLE') }}{% endblock %}
 
-{% block page_description %}Your account may have been compromised.  You have been logged out for your safety.{% endblock %}
+{% block page_description %}{{ translate('ACCOUNT.SESSION_COMPROMISED_TITLE') }}{% endblock %}
 
-{% block content %}
-    <div class="container text-center">
-        <h1>Your account may have been compromised!</h1>
-        <img src="{{ assets.url('assets://images/compromised.jpg') }}">
-        <br><br>
-        <p class="lead">
-            Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{site.uri.public}}/account/sign-in-or-register">log in</a> and check your account for suspicious activity.  You may also wish to change your password.
-        </p>
-    </div> <!-- /container -->
-{% endblock %}
+{% block heading %}<i class="fa fa-warning text-yellow"></i> Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href="{{site.uri.public}}/account/sign-in-or-register">log in</a> and check your account for suspicious activity.  You may also wish to change your password.{% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'layouts/modal.html.twig' %}
 
 {% block modal_title %}
-    Terms and Conditions for {{site.title}}
+    {{translate("TOS_FOR", {title: site.title})}}
 {% endblock %}
 
 {% block modal_body %}

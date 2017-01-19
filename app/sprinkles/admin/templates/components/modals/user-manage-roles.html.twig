@@ -1,6 +1,6 @@
 {% extends "layouts/modal.html.twig" %}
 
-{% block modal_title %}Manage Roles{% endblock %}
+{% block modal_title %}{{translate("ROLE.MANAGE")}}{% endblock %}
 
 {% block modal_body %}
 <form class="js-form" method="PUT" action="{{site.uri.public}}/api/users/u/{{user.user_name}}/roles">
@@ -11,16 +11,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Remove</th>
+                    <th>{{translate("NAME")}}</th>
+                    <th>{{translate("DESCRIPTION")}}</th>
+                    <th>{{translate("REMOVE")}}</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
         <div class="padding-bottom">
-            <label>Assign new role:</label>
+            <label>{{translate("ROLE.ASSIGN_NEW")}}:</label>
             <select class="form-control select2 js-select-new" type="text">
             <option></option>
             </select>
@@ -31,7 +31,7 @@
         <div class="col-xs-8 col-sm-4">
             <div class="vert-pad">
                 <button type="submit" class="btn btn-block btn-lg btn-success">
-                    Update roles
+                    {{translate("ROLE.UPDATE")}}
                 </button>
             </div>
         </div>

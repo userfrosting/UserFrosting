@@ -13,9 +13,9 @@
             <tr>
                 <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">{{translate('USER')}} <i class="fa fa-sort"></i></th>
                 {% if 'last_activity' in table.columns %}
-                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">Last Activity <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
                 {% endif %}
-                <th data-column-name="flag_enabled" data-column-template="#user-table-column-actions">Status/Actions <i class="fa fa-sort"></i></th>
+                <th data-column-name="flag_enabled" data-column-template="#user-table-column-actions">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>

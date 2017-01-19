@@ -6,9 +6,9 @@
 {% endblock %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Activities{% endblock %}
+{% block page_title %}{{ translate("ACTIVITY", 2) }}{% endblock %}
 
-{% block page_description %}A listing of user activities.{% endblock %}
+{% block page_description %}{{ translate("ACTIVITY.PAGE") }}.{% endblock %}
 
 {% block body_matter %}
     <div class="row">
@@ -17,7 +17,7 @@
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
                     <div class="pull-right">
-                        <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+                        <button class="btn btn-sm btn-default js-download-table">{{ translate("DOWNLOAD.CSV") }}</button>
                     </div>
                 </div>
                 <div class="box-body">

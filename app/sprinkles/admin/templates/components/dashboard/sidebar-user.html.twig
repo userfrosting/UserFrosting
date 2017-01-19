@@ -4,7 +4,7 @@
     <img src="{{ current_user.avatar }}" class="img-circle" alt="User Image">
   </div>
   <div class="pull-left info">
-    <p>{{current_user.user_name}}</p>
-    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+    <p>{{current_user.first_name}} {{current_user.last_name}}</p>
+    <i class="{{current_user.group.icon}}"></i> {{current_user.group.name}}
   </div>
 </div>

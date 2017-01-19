@@ -26,13 +26,16 @@ return [
     "CSRF_MISSING" => "Missing CSRF token.  Try refreshing the page and then submitting again?",
 
     "DB_INVALID" => "Cannot connect to the database.  If you are an administrator, please check your error log.",
+    "DESCRIPTION"   => "Description",
+    "DOWNLOAD" => [
+        "@TRANSLATION" => "Download",
+        "CSV" => "Download CSV"
+    ],
 
     "EMAIL" => [
         "@TRANSLATION" => "Email",
         "YOUR" => "Your email address"
     ],
-
-    "FEATURE_DISABLED" => "This feature is currently disabled",
 
     "HOME"  => "Home",
 
@@ -42,9 +45,20 @@ return [
 
     "MAIL_ERROR" => "Fatal error attempting mail, contact your server administrator.  If you are the admin, please check the UF mail log.",
 
+    "NAME"  => "Name",
     "NAVIGATION" => "Navigation",
 
+    "PAGINATION" => [
+        "GOTO" => "Jump to Page",
+        "SHOW" => "Show"
+    ],
     "PRIVACY" => "Privacy Policy",
+
+    "SLUG" => "Slug",
+    "SLUG_CONDITION" => "Slug/Conditions",
+    "STATUS" => "Status",
+
+    "UNKNOWN" => "Unknown",
 
     // Actions words
     "ACTIONS" => "Actions",
@@ -64,11 +78,14 @@ return [
     "DISABLE" => "Disable",
     "EDIT" => "Edit",
     "ENABLE" => "Enable",
+    "OVERWRITE" => "Overwrite",
     "RESET" => "Reset",
     "SAVE" => "Save",
+    "SEARCH" => "Search",
     "SORT" => "Sort",
     "SUBMIT" => "Submit",
     "PRINT" => "Print",
+    "REMOVE" => "Remove",
     "UPDATE" => "Update",
     "YES" => "Yes",
     "NO" => "No",
@@ -76,8 +93,5 @@ return [
 
     // Misc.
     "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
-    "ADMINLTE_THEME_BY" => "Theme by <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> All rights reserved",
-
-    // TOOLS
-    "_LINK" => "<a {{link_attributes}}>{{link_text}}</a>"
+    "ADMINLTE_THEME_BY" => "Theme by <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> All rights reserved"
 ];

@@ -18,7 +18,7 @@
         <span class='pager-control next' title='Next page'><i class='fa fa-angle-right'></i></span>
         <span class='pager-control last' title= 'Last page'><i class='fa fa-angle-double-right'></i></span>
         <br><br>
-        Jump to Page: <select class='gotoPage'></select> &bull; Show:
+        {{translate("PAGINATION.GOTO")}}: <select class='gotoPage'></select> &bull; {{translate("PAGINATION.SHOW")}}:
         <select class='pagesize'>
         {% for count in pager.take|default([5, 10, 50, 100]) %}
             <option value="{{count}}">{{count}}</option>

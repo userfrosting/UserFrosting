@@ -26,7 +26,8 @@ return [
         "MASTER_NOT_EXISTS" => "You cannot register an account until the master account has been created!",
         "MY"                => "My Account",
 
-        "SESSION_COMPROMISED"   => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
+        "SESSION_COMPROMISED"       => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
+        "SESSION_COMPROMISED_TITLE" => "Your account may have been compromised",
         "SESSION_EXPIRED"       => "Your session has expired.  Please sign in again.",
 
         "SETTINGS" => [
@@ -35,12 +36,17 @@ return [
             "UPDATED"       => "Account settings updated"
         ],
 
+        "TOOLS" => "Account tools",
+
         "UNVERIFIED" => "Your account has not yet been verified. Check your emails / spam folder for account activation instructions.",
 
         "VERIFICATION" => [
             "NEW_LINK_SENT"     => "We have emailed a new verification link to {{email}}.  Please check your inbox and spam folders for this email.",
             "RESEND"            => "Resend verification email",
             "COMPLETE"          => "You have successfully verified your account. You can now login.",
+            "EMAIL"             => "Please enter the email address you used to sign up, and your verification email will be resent.",
+            "PAGE"              => "Resend the verification email for your new account.",
+            "SEND"              => "Email the verification link for my account",
             "TOKEN_NOT_FOUND"   => "Verification token does not exist / Account is already verified",
         ]
     ],
@@ -91,13 +97,24 @@ return [
         "CURRENT"               => "Current Password",
         "CURRENT_EXPLAIN"       => "You must confirm your current password to make changes",
 
+        "FORGOTTEN" => "Forgotten Password",
         "FORGET" => [
             "@TRANSLATION" => "I forgot my password",
 
             "COULD_NOT_UPDATE"  => "Couldn't update password.",
+            "EMAIL"             => "Please enter the email address you used to sign up. A link with instructions to reset your password will be emailed to you.",
+            "EMAIL_SEND"        => "Email Password Reset Link",
             "INVALID"           => "This password reset request could not be found, or has expired.  Please try <a href=\"{{url}}\">resubmitting your request<a>.",
+            "PAGE"              => "Get a link to reset your password.",
             "REQUEST_CANNED"    => "Lost password request cancelled.",
             "REQUEST_SENT"      => "A password reset link has been sent to {{email}}."
+        ],
+
+        "RESET" => [
+            "@TRANSLATION"      => "Reset Password",
+            "CHOOSE"            => "Please choose a new password to continue.",
+            "PAGE"              => "Choose a new password for your account.",
+            "SEND"              => "Set New Password and Sign In"
         ],
 
         "HASH_FAILED"       => "Password hashing failed. Please contact a site administrator.",
@@ -129,6 +146,7 @@ return [
 
     "TOS"           => "Terms and Conditions",
     "TOS_AGREEMENT" => "By registering an account with {{site_title}}, you accept the <a {{link_attributes}}>terms and conditions</a>.",
+    "TOS_FOR"       => "Terms and Conditions for {{title}}",
 
     "USERNAME" => [
         "@TRANSLATION" => "Username",

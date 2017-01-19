@@ -289,6 +289,8 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        $translator = $this->ci->translator;
+
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'create_group')) {
             throw new ForbiddenException();
@@ -318,7 +320,7 @@ class GroupController extends SimpleController
                 'action' => 'api/groups',
                 'method' => 'POST',
                 'fields' => $fields,
-                'submit_text' => 'Create group'
+                'submit_text' => $translator->translate("CREATE")
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)

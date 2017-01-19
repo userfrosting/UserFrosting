@@ -9,7 +9,7 @@
                 <label>{{translate('USERNAME')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="user_name" autocomplete="off" value="{{user.user_name}}" placeholder="User name" {% if 'user_name' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="user_name" autocomplete="off" value="{{user.user_name}}" placeholder="{{translate('USERNAME')}}" {% if 'user_name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                             <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
                             {% endfor %}
                         </select>
-                    {% endif %}    
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                 <label>{{translate('EMAIL')}}</label>
                 <div class="input-group js-copy-container">
                     <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                    <input type="text" class="form-control js-copy-target" name="email" autocomplete="off" value="{{user.email}}" placeholder="Email goes here" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control js-copy-target" name="email" autocomplete="off" value="{{user.email}}" placeholder="{{translate('EMAIL')}}" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
                     {% if 'email' in form.fields.disabled %}
                         <span class="input-group-btn">
                             <button class="btn btn-default js-copy-trigger" type="button"><i class="fa fa-clipboard"></i></button>
@@ -72,7 +72,7 @@
         {% if 'theme' not in form.fields.hidden %}
         <div class="col-sm-6">
             <div class="form-group">
-                <label for="input-theme">Theme</label>
+                <label for="input-theme">{{translate('THEME')}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
                     {% if 'theme' in form.fields.disabled %}

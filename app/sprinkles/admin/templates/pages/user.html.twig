@@ -6,9 +6,9 @@
 {% endblock %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Users | {{user.user_name}}{% endblock %}
+{% block page_title %}{{ translate("USER", 2)}} | {{user.user_name}}{% endblock %}
 
-{% block page_description %}User information page for {{user.user_name}}{% endblock %}
+{% block page_description %}{{ translate("USER.INFO_PAGE", {name: user.user_name}) }}{% endblock %}
 
 {% block body_matter %}
     <div class="row">
@@ -41,7 +41,7 @@
                 {% if form.edit_buttons %}
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h2 class="box-title"><i class="fa fa-fw fa-wrench"></i> Account tools</h2>
+                        <h2 class="box-title"><i class="fa fa-fw fa-wrench"></i> {{translate("ACCOUNT.TOOLS")}}</h2>
                     </div>
                     <div class="box-body">
                         {% if 'password' not in form.edit_buttons.hidden %}
@@ -105,7 +105,7 @@
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-tasks"></i> {{translate('ACTIVITY', 2)}}</h3>
                     <div class="pull-right">
-                        <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+                        <button class="btn btn-sm btn-default js-download-table">{{ translate("DOWNLOAD.CSV") }}</button>
                     </div>
                 </div>
                 <div class="box-body">

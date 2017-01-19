@@ -6,9 +6,9 @@
 {% endblock %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Roles | {{role.name}}{% endblock %}
+{% block page_title %}{{translate("ROLE", 2)}} | {{role.name}}{% endblock %}
 
-{% block page_description %}Role information page for {{role.name}}{% endblock %}
+{% block page_description %}{{translate("ROLE.INFO_PAGE", {name: role.name})}}{% endblock %}
 
 {% block body_matter %}
     <div class="row">
@@ -28,7 +28,7 @@
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('PERMISSION', 2)}}</h3>
                     <div class="pull-right">
-                        <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+                        <button class="btn btn-sm btn-default js-download-table">{{ translate("DOWNLOAD.CSV") }}</button>
                     </div>
                 </div>
                 <div class="box-body">

@@ -11,56 +11,12 @@
  */
 
 return [
-    "AUTH_HOOK_CHAR_LIMIT" => "Le nom des hooks d'autorisation doivent faire entre {{min}} et {{max}} caractères",
-
-    "CANNOT_DELETE_GROUP" => "Le groupe '{{name}}' ne peut pas être supprimé",
-    "CONFIG_PLUGIN_INVALID" => "Vous essayez de changer la configuration du plugin '{{plugin}}', mais il n'existe pas.",
-    "CONFIG_SETTING_INVALID" => "Vous essayez de changer le réglage '{{name}}' du plugin '{{plugin}}', mais il n'existe pas.",
-    "CONFIG_NAME_CHAR_LIMIT" => "Le nom du site doit faire entre {{min}} et {{max}} caractères",
-    "CONFIG_URL_CHAR_LIMIT" => "L'URL du site doit faire entre {{min}} et {{max}} caractères",
-    "CONFIG_EMAIL_CHAR_LIMIT" => "L'adresse e-mail du site doit faire entre {{min}} et {{max}} caractères",
-    "CONFIG_TITLE_CHAR_LIMIT" => "Le nouveau titre de l'utilisateur doit faire entre {{min}} et {{max}} caractères",
-    "CONFIG_ACTIVATION_TRUE_FALSE" => "L'activation par e-mail doit être soit `true` ou `false`",
-    "CONFIG_REGISTRATION_TRUE_FALSE" => "L'inscription doit être soit `true` ou `false`",
-    "CONFIG_ACTIVATION_RESEND_RANGE" => "La durée d'activation doit être entre {{min}} et {{max}} heures",
-    "CONFIG_EMAIL_INVALID" => "L'adresse e-mail entrée est invalide",
-    "CONFIG_UPDATE_SUCCESSFUL" => "La configuration du site a été mise à jour.",
-    "CREATION_COMPLETE" => "Le compte '{{user_name}}' a été créé avec succès.",
-
-    "DELETE_MASTER" => "Vous ne pouvez pas supprimer le compte principal !",
-    "DELETION_SUCCESSFUL" => "L'utilisateur '{{user_name}}' a été supprimé avec succès.",
-    "DETAILS_UPDATED" => "Les détails du compte de '{{user_name}}' ont été mis à jour",
-    "DISABLE_MASTER" => "Vous ne pouvez pas désactiver le compte principal !",
-    "DISABLE_SUCCESSFUL" => "Le compte de l'utilisateur '{{user_name}}' a été désactivé avec succès.",
-    "DISPLAYNAME_UPDATED" => "Le nom de {{user_name}} a été changé en '{{display_name}}'",
-
-    "ENABLE_SUCCESSFUL" => "Le compte de l'utilisateur '{{user_name}}' a été activé avec succès.",
-
-    "GROUP_ADDED" => "Utilisateur ajouté au groupe '{{name}}'.",
-    "GROUP_REMOVED" => "Utilisateur supprimé du groupe '{{name}}'.",
-    "GROUP_NOT_MEMBER" => "L'utilisateur n'est pas membre du groupe '{{name}}'.",
-    "GROUP_ALREADY_MEMBER" => "L'utilisateur est déjà membre du groupe '{{name}}'.",
-    "GROUP_INVALID_ID" => "Le groupe demandé n'existe pas",
-    "GROUP_NAME_CHAR_LIMIT" => "Le nom des groupes doit faire entre {{min}} et {{max}} caractères",
-    "GROUP_NAME_IN_USE" => "Le nom de groupe '{{name}}' est déjà pris",
-    "GROUP_DELETION_SUCCESSFUL" => "Le groupe '{{name}}' a été supprimé avec succès",
-    "GROUP_CREATION_SUCCESSFUL" => "Le groupe '{{name}}' a été créé avec succès",
-    "GROUP_UPDATE" => "Les détails du groupe '{{name}}' ont été mis à jour avec succès.",
-    "GROUP_CANNOT_DELETE_DEFAULT_PRIMARY" => "Le groupe '{{name}}' ne peut pas être supprimé car il correspond au groupe par défaut des nouveaux utilisateurs.",
-    "GROUP_AUTH_EXISTS" => "Le groupe '{{name}}' a déjà une règle configurée pour le hook '{{hook}}'.",
-    "GROUP_AUTH_CREATION_SUCCESSFUL" => "La règle du hook '{{hook}}' a été créée pour le groupe '{{name}}'.",
-    "GROUP_AUTH_UPDATE_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été mise à jour avec succès.",
-    "GROUP_AUTH_DELETION_SUCCESSFUL" => "La règle autorisant l'accès au groupe '{{name}}' pour le hook '{{hook}}' a été supprimée avec succès.",
-    "GROUP_DEFAULT_PRIMARY_NOT_DEFINED" => "Vous ne pouvez pas créer de nouvel utilisateur parce qu'il y a aucun groupe par défaut de défini. Veuillez vérifier vos paramètres de groupes.",
-
-    "INSTALLER_INCOMPLETE" => "Vous ne pouvez pas créer de compte root tant que l'installation n'est pas terminée !",
-
-    "MANUALLY_ACTIVATED" => "Le compte de {{user_name}} a été activé manuellement",
-    "MASTER_ACCOUNT_EXISTS" => "Le compte principal existe déjà !",
-
     "ACTIVITY" => [
         1 => "Activité",
-        2 => "Activités"
+        2 => "Activités",
+
+        "LAST" => "Dernière activité",
+        "TIME" => "Date de l'activité"
     ],
 
     "ADMIN" => [
@@ -68,25 +24,66 @@ return [
     ],
 
     "CACHE" => [
-        "CLEAR" => "Vider le cache",
-        "CLEARED" => "Cache cleared successfully !"
+        "CLEAR"             => "Vider le cache",
+        "CLEAR_CONFIRM"     => "Voulez-vous vraiment supprimer le cache du site?",
+        "CLEAR_CONFIRM_YES" => "Oui, vider le cache",
+        "CLEARED"           => "Cache effacé avec succès !"
     ],
 
-    "DASHBOARD" => "Tableau de bord",
+    "DASHBOARD"             => "Tableau de bord",
+    "DELETE_MASTER"         => "Vous ne pouvez pas supprimer le compte principal !",
+    "DELETION_SUCCESSFUL"   => "L'utilisateur '{{user_name}}' a été supprimé avec succès.",
+    "DETAILS_UPDATED"       => "Les détails du compte de '{{user_name}}' ont été mis à jour",
+    "DISABLE_MASTER"        => "Vous ne pouvez pas désactiver le compte principal !",
+    "DISABLE_SUCCESSFUL"    => "Le compte de l'utilisateur '{{user_name}}' a été désactivé avec succès.",
+
+    "ENABLE_SUCCESSFUL" => "Le compte de l'utilisateur '{{user_name}}' a été activé avec succès.",
 
     "GROUP" => [
         1 => "Groupe",
-        2 => "Groupes"
+        2 => "Groupes",
+
+        "CREATE"        => "Créer un groupe",
+        "DELETE"            => "Supprimer le groupe",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le groupe '{{name}}'?",
+        "DELETE_YES"        => "Oui, supprimer le groupe",
+        "ICON"          => "Icône",
+        "ICON_EXPLAIN"  => "Icône des membres du groupe",
+        "INFO_PAGE"     => "Informations sur le groupe {{name}}",
+        "NAME"          => "Nom du groupe",
+        "NAME_EXPLAIN"  => "Spécifiez le nom du groupe",
+        "PAGE_DESCRIPTION" => "Une liste des groupes pour votre site. Fournit des outils de gestion pour éditer et supprimer des groupes."
     ],
 
+    "MANUALLY_ACTIVATED"    => "Le compte de {{user_name}} a été activé manuellement",
+    "MASTER_ACCOUNT_EXISTS" => "Le compte principal existe déjà !",
+
     "PERMISSION" => [
-        1 => "Permission",
-        2 => "Permissions"
+        1 => "Autorisation",
+        2 => "Autorisations",
+
+        "ASSIGN_NEW"        => "Assigner une nouvelle autorisation",
+        "HOOK_CONDITION"    => "Hook/Conditions",
+        "MANAGE"            => "Gestion des autorisations",
+        "PAGE_DESCRIPTION"  => "Une liste des autorisations pour votre site. Fournit des outils de gestion pour modifier et supprimer des autorisations.",
+        "UPDATE"            => "Mettre à jour les autorisations"
     ],
 
     "ROLE" => [
         1 => "Rôle",
-        2 => "Rôles"
+        2 => "Rôles",
+
+        "ASSIGN_NEW"    => "Assigner un nouveau rôle",
+        "CREATE"        => "Créer un rôle",
+        "DELETE"            => "Supprimer le rôle",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le rôle '{{name}}'?",
+        "DELETE_YES"        => "Oui, supprimer le rôle",
+        "INFO_PAGE"     => "Page d'information pour le rôle {{name}}",
+        "MANAGE"        => "Gérer les rôles",
+        "NAME"          => "Nom du rôle",
+        "NAME_EXPLAIN"  => "Spécifiez le nom du rôle",
+        "PAGE_DESCRIPTION"  => "Une liste des rôles de votre site. Fournit des outils de gestion pour modifier et supprimer des rôles.",
+        "UPDATE"        => "Mise à jour des rôles"
     ],
 
     "SYSTEM_INFO" => [
@@ -106,8 +103,20 @@ return [
         1 => "Utilisateur",
         2 => "Utilisateurs",
 
-        "LATEST" => "Derniers utilisateurs",
-        "VIEW_ALL" => "Voir tous les utilisateurs"
+        "ADMIN" => [
+            "CHANGE_PASSWORD" => "Changer le mot de passe",
+            "SEND_PASSWORD_LINK" => "Envoyer à l'utilisateur un lien qui lui permettra de choisir son propre mot de passe",
+            "SET_PASSWORD" => "Définissez le mot de passe de l'utilisateur comme"
+        ],
+
+        "CREATE"            => "Créer un utilisateur",
+        "DELETE"            => "Supprimer l'utilisateur",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer l'utilisateur '{{name}}'?",
+        "DELETE_YES"        => "Oui, supprimer l'utilisateur",
+        "INFO_PAGE"         => "Page d'information de l'utilisateur pour {{name}}",
+        "PAGE_DESCRIPTION"  => "Une liste des utilisateurs de votre site. Fournit des outils de gestion incluant la possibilité de modifier les détails de l'utilisateur, d'activer manuellement les utilisateurs, d'activer / désactiver les utilisateurs et plus.",
+        "LATEST"    => "Derniers utilisateurs",
+        "VIEW_ALL"  => "Voir tous les utilisateurs"
     ],
     "X_USER" => [
         0 => "Aucun utilisateur",

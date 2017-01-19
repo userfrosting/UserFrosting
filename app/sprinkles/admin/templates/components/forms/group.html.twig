@@ -6,10 +6,10 @@
         {% if 'name' not in form.fields.hidden %}
         <div class="col-sm-12">
             <div class="form-group">
-                <label>Name</label>
+                <label>{{translate("GROUP.NAME")}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
-                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="Please enter a name for the group" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="{{translate("GROUP.NAME_EXPLAIN")}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -17,14 +17,14 @@
         {% if 'slug' not in form.fields.hidden %}
         <div class="col-sm-12">
             <div class="form-group">
-                <label>Slug</label>
+                <label>{{translate("SLUG")}}</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
-                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="Slug" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
+                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="{{translate("SLUG")}}" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
                     {% if 'slug' not in form.fields.disabled %}
                         <span class="input-group-btn" data-toggle="buttons">
                             <label class="btn btn-primary">
-                                <input type="checkbox" id="form-group-slug-override" autocomplete="off"> Override
+                                <input type="checkbox" id="form-group-slug-override" autocomplete="off"> {{translate("OVERWRITE")}}
                             </label>
                         </span>
                     {% endif %}
@@ -35,10 +35,10 @@
         {% if 'icon' not in fields.hidden %}
         <div class="col-sm-12">
             <div class="form-group">
-                <label>Icon</label>
+                <label>{{translate("GROUP.ICON")}}</label>
                 <div class="input-group">
                     <span class="input-group-addon icon-preview"><i class="{{group.icon}} fa-fw"></i></span>
-                    <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="Icon for group members" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
+                    <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="{{translate("GROUP.ICON_EXPLAIN")}}" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
         {% if 'description' not in fields.hidden %}
         <div class="col-sm-12">
             <div class="form-group">
-                <label for="input_description">Description</label>
+                <label for="input_description">{{translate("DESCRIPTION")}}</label>
                 <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{group.description}}</textarea>
             </div>
         </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="col-xs-4 col-sm-3 pull-right">
                 <div class="vert-pad">
-                    <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate("CANCEL")}}</button>
                 </div>
             </div>
         {% endif %}

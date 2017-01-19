@@ -482,6 +482,8 @@ class UserController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        $translator = $this->ci->translator;
+
         // Access-controlled page
         if (!$authorizer->checkAccess($currentUser, 'create_user')) {
             throw new ForbiddenException();
@@ -537,7 +539,7 @@ class UserController extends SimpleController
                 'action' => 'api/users',
                 'method' => 'POST',
                 'fields' => $fields,
-                'submit_text' => 'Create user'
+                'submit_text' => $translator->translate("CREATE")
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)

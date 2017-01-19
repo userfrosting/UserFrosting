@@ -26,8 +26,9 @@ return [
         "MASTER_NOT_EXISTS" => "Vous ne pouvez pas enregistrer un compte tant que le compte principal n'a pas été créé!",
         "MY"                => "Mon compte",
 
-        "SESSION_COMPROMISED"   => "Votre session a été compromise. Vous devez vous déconnecter de tous les périphériques, puis vous reconnecter et vous assurer que vos données n'ont pas été altérées.",
-        "SESSION_EXPIRED"       => "Votre session a expiré. Veuillez vous connecter à nouveau.",
+        "SESSION_COMPROMISED"       => "Votre session a été compromise. Vous devez vous déconnecter de tous les périphériques, puis vous reconnecter et vous assurer que vos données n'ont pas été altérées.",
+        "SESSION_COMPROMISED_TITLE" => "Votre compte peut avoir été compromis",
+        "SESSION_EXPIRED"           => "Votre session a expiré. Veuillez vous connecter à nouveau.",
 
         "SETTINGS" => [
             "@TRANSLATION"  => "Paramètres du compte",
@@ -35,12 +36,17 @@ return [
             "UPDATED"       => "Paramètres du compte mis à jour"
         ],
 
+        "TOOLS" => "Outils du compte",
+
         "UNVERIFIED" => "Votre compte n'a pas encore été vérifié. Vérifiez vos emails / dossier spam pour les instructions d'activation du compte.",
 
         "VERIFICATION" => [
             "NEW_LINK_SENT"     => "Nous avons envoyé un nouveau lien de vérification à {{email}}. Veuillez vérifier vos dossiers de boîte de réception et de spam pour ce courriel.",
             "RESEND"            => "Renvoyer le courriel de validation",
             "COMPLETE"          => "Votre compte a été validé. Vous pouvez maintenant vous connecter.",
+            "EMAIL"             => "Veuillez saisir l'adresse email que vous avez utilisée pour vous inscrire et votre courriel de vérification sera renvoyé.",
+            "PAGE"              => "Renvoyer l'email de validation de votre nouveau compte.",
+            "SEND"              => "Envoyer le lien de validation de mon compte",
             "TOKEN_NOT_FOUND"   => "Le jeton de vérification n'existe pas / Le compte est déjà vérifié",
         ]
     ],
@@ -91,13 +97,24 @@ return [
         "CURRENT"               => "Mot de passe actuel",
         "CURRENT_EXPLAIN"       => "Vous devez confirmer votre mot de passe actuel pour apporter des modifications",
 
+        "FORGOTTEN" => "Mot de passe oublié",
         "FORGET" => [
             "@TRANSLATION" => "J'ai oublié mon mot de passe",
 
             "COULD_NOT_UPDATE"  => "Impossible de mettre à jour le mot de passe.",
+            "EMAIL"             => "Veuillez saisir l'adresse e-mail que vous avez utilisée pour vous inscrire. Un lien avec les instructions pour réinitialiser votre mot de passe vous sera envoyé par email.",
+            "EMAIL_SEND"        => "Envoyer le lien de réinitialisation",
             "INVALID"           => "Cette requête de réinitialisation de mot de passe n'a pas pu être trouvée ou a expiré. Veuillez réessayer <a href=\"{{url}}\"> de soumettre votre demande <a>.",
+            "PAGE"              => "Obtenir un lien pour réinitialiser votre mot de passe.",
             "REQUEST_CANNED"    => "Demande de mot de passe perdu annulée.",
             "REQUEST_SENT"      => "Un lien de réinitialisation du mot de passe a été envoyé à {{email}}."
+        ],
+
+        "RESET" => [
+            "@TRANSLATION"      => "Réinitialiser le mot de passe",
+            "CHOOSE"            => "Veuillez choisir un nouveau mot de passe pour continuer.",
+            "PAGE"              => "Choisissez un nouveau mot de passe pour votre compte.",
+            "SEND"              => "Définir un nouveau mot de passe"
         ],
 
         "HASH_FAILED"       => "Le hachage du mot de passe a échoué. Veuillez contacter un administrateur de site.",
@@ -129,6 +146,7 @@ return [
 
     "TOS"           => "Termes et conditions",
     "TOS_AGREEMENT" => "En créant un compte avec {{site_title}}, vous acceptez les <a {{link_attributes}}>termes et conditions</a>.",
+    "TOS_FOR"       => "Termes et conditions pour {{title}}",
 
     "USERNAME" => [
         "@TRANSLATION" => "Nom d'utilisateur",
