@@ -49,6 +49,34 @@
         <!-- /.col -->
     </div>
     <!-- /.row -->
+    {% elseif checkAccess('uri_group', {
+        'group': current_user.group
+    }) %}
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="{{current_user.group.icon}}"></i></span>
+            <div class="info-box-content">
+              <h1>{{current_user.group.name}}</h1>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">{{ translate("USER", 2) }}</span>
+              <span class="info-box-number">{{counter.users}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+    </div>
     {% endif %}
     <!-- Info boxes -->
     <div class="row">
