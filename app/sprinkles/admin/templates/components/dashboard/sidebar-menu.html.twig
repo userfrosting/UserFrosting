@@ -1,7 +1,7 @@
 {% block navigation %}
     {% if checkAccess('uri_dashboard') %}
     <li>
-        <a href="{{site.uri.public}}/admin"><i class="fa fa-dashboard fa-fw"></i> <span>Dashboard</span></a>
+        <a href="{{site.uri.public}}/admin"><i class="fa fa-dashboard fa-fw"></i> <span>{{ translate("DASHBOARD") }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_users') %}

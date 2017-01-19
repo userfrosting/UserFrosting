@@ -57,25 +57,61 @@ return [
 
     "MANUALLY_ACTIVATED" => "Le compte de {{user_name}} a été activé manuellement",
     "MASTER_ACCOUNT_EXISTS" => "Le compte principal existe déjà !",
-    "MINIFICATION_SUCCESS" => "Le code CSS et JS a été compressé avec succès.",
 
-    "PRIMARY_GROUP_SET" => "Le groupe principal du compte '{{user_name}}' a été changé avec succès.",
-
-    "TITLE_UPDATED" => "{{user_name}}'s title changed to '{{title}}'",
+    "ACTIVITY" => [
+        1 => "Activité",
+        2 => "Activités"
+    ],
 
     "ADMIN" => [
         "PANEL" => "Panneau admin"
     ],
 
+    "CACHE" => [
+        "CLEAR" => "Vider le cache",
+        "CLEARED" => "Cache cleared successfully !"
+    ],
+
+    "DASHBOARD" => "Tableau de bord",
+
     "GROUP" => [
+        1 => "Groupe",
         2 => "Groupes"
     ],
 
+    "PERMISSION" => [
+        1 => "Permission",
+        2 => "Permissions"
+    ],
+
     "ROLE" => [
+        1 => "Rôle",
         2 => "Rôles"
     ],
 
+    "SYSTEM_INFO" => [
+        "@TRANSLATE" => "Informations sur le système",
+
+        "DB_NAME"       => "Base de donnée",
+        "DB_VERSION"    => "Version DB",
+        "DIRECTORY"     => "Répertoire du projet",
+        "PHP_VERSION"   => "Version de PHP",
+        "SERVER"        => "Logiciel server",
+        "SPRINKLES"     => "Sprinkles chargés",
+        "UF_VERSION"    => "Version de UserFrosting",
+        "URL"           => "Url racine"
+    ],
+
     "USER" => [
-        2 => "Utilisateurs"
+        1 => "Utilisateur",
+        2 => "Utilisateurs",
+
+        "LATEST" => "Derniers utilisateurs",
+        "VIEW_ALL" => "Voir tous les utilisateurs"
+    ],
+    "X_USER" => [
+        0 => "Aucun utilisateur",
+        1 => "{{plural}} utilisateur",
+        2 => "{{plural}} utilisateurs"
     ]
 ];
