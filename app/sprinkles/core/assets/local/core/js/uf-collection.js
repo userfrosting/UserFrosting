@@ -44,11 +44,14 @@
             {
                 dataUrl         : "",
                 dropdownTemplate: "",
+                ajaxDelay       : 250,
                 rowTemplate     : "",
                 dropdownTheme   : "bootstrap",
                 placeholder     : "Item",
                 dropdownControl : this.$T.find('.js-select-new'),
                 rowContainer    : this.$T.find('tbody').first(),
+                selectOnClose   : false,  // Make a selection when they click out of the box/press the next button
+                width           : '100%',
                 DEBUG: false
             },
             options
@@ -127,7 +130,7 @@
             ajax: {
                 url: base.options.dataUrl,
                 dataType: 'json',
-                delay: 250,
+                ajaxDelay: base.options.ajaxDelay,
                 data: function (params) {
                     return {
                         filters: {
@@ -152,10 +155,9 @@
                 },
                 cache: true
             },
-            selectOnClose: true,       // Make a selection when they click out of the box/press the next button
-            width: '100%',
+            selectOnClose: base.options.selectOnClose,
+            width: base.options.width,
             theme: base.options.dropdownTheme,
-            dropdownCssClass: "pillbox-options",
             placeholder: base.options.placeholder,
             templateResult: function(item) {
                 // Must wrap this in a jQuery selector to render as HTML
