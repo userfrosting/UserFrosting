@@ -24,7 +24,6 @@ return [
     "CONFIG_REGISTRATION_TRUE_FALSE" => "User registration must be either `true` or `false`",
     "CONFIG_ACTIVATION_RESEND_RANGE" => "Activation Threshold must be between {{min}} and {{max}} hours",
     "CONFIG_EMAIL_INVALID" => "The email you have entered is not valid",
-    "CONFIG_TOKEN_MISMATCH" => "Sorry, that configuration token is not correct.",
     "CONFIG_UPDATE_SUCCESSFUL" => "Your site's configuration has been updated. You may need to load a new page for all the settings to take effect",
     "CREATION_COMPLETE" => "Account for new user '{{user_name}}' has been created.",
 
@@ -73,6 +72,8 @@ return [
         "CLEARED" => "Cache cleared successfully !"
     ],
 
+    "DASHBOARD" => "Dashboard",
+
     "GROUP" => [
         1 => "Group",
         2 => "Groups"
@@ -88,11 +89,28 @@ return [
         2 => "Roles"
     ],
 
+    "SYSTEM_INFO" => [
+        "@TRANSLATE" => "System information",
+
+        "DB_NAME"       => "Database name",
+        "DB_VERSION"    => "Database version",
+        "DIRECTORY"     => "Project directory",
+        "PHP_VERSION"   => "PHP version",
+        "SERVER"        => "Webserver software",
+        "SPRINKLES"     => "Loaded sprinkles",
+        "UF_VERSION"    => "UserFrosting version",
+        "URL"           => "Site root url"
+    ],
+
     "USER" => [
         1 => "User",
-        2 => "Users"
+        2 => "Users",
+
+        "LATEST" => "Latest Users",
+        "VIEW_ALL" => "View all users"
     ],
     "X_USER" => [
+        0 => "No users",
         1 => "{{plural}} user",
         2 => "{{plural}} users"
     ]

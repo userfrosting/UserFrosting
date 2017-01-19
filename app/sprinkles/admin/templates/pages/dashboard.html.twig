@@ -1,7 +1,7 @@
 {% extends "layouts/dashboard.html.twig" %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Dashboard{% endblock %}
+{% block page_title %}{{ translate("DASHBOARD") }}{% endblock %}
 {% block page_description %}{% endblock %}
 
 {% block body_matter %}
@@ -56,7 +56,7 @@
           <!-- USERS LIST -->
           <div class="box box-info">
             <div class="box-header with-border">
-              <h3 class="box-title">Latest Users</h3>
+              <h3 class="box-title">{{translate("USER.LATEST")}}</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
@@ -73,7 +73,7 @@
             </div>
             <!-- /.box-body -->
             <div class="box-footer text-center">
-              <a href="{{site.uri.public}}/admin/users" class="uppercase">View All Users</a>
+              <a href="{{site.uri.public}}/admin/users" class="uppercase">{{translate("USER.VIEW_ALL")}}</a>
             </div>
             <!-- /.box-footer -->
           </div>
@@ -84,33 +84,33 @@
         <div class="col-sm-6 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">System information</h3>
+                    <h3 class="box-title">{{translate("SYSTEM_INFO")}}</h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                   <dl class="dl-horizontal">
-                    <dt>UserFrosting version</dt>
+                    <dt>{{translate("SYSTEM_INFO.UF_VERSION")}}</dt>
                     <dd>{{info.version.UF}}</dd>
 
-                    <dt>PHP version</dt>
+                    <dt>{{translate("SYSTEM_INFO.PHP_VERSION")}}</dt>
                     <dd>{{info.version.php}}</dd>
 
-                    <dt>Webserver software</dt>
+                    <dt>{{translate("SYSTEM_INFO.SERVER")}}</dt>
                     <dd>{{info.environment.SERVER_SOFTWARE}}</dd>
 
-                    <dt>Database version</dt>
+                    <dt>{{translate("SYSTEM_INFO.DB_VERSION")}}</dt>
                     <dd>{{info.version.database.type}} {{info.version.database.version}}</dd>
 
-                    <dt>Database name</dt>
+                    <dt>{{translate("SYSTEM_INFO.DB_NAME")}}</dt>
                     <dd>{{info.database.name}}</dd>
 
-                    <dt>Project directory</dt>
+                    <dt>{{translate("SYSTEM_INFO.DIRECTORY")}}</dt>
                     <dd>{{info.path.project}}</dd>
 
-                    <dt>Site root url</dt>
+                    <dt>{{translate("SYSTEM_INFO.URL")}}</dt>
                     <dd>{{site.uri.public}}</dd>
 
-                    <dt>Loaded sprinkles</dt>
+                    <dt>{{translate("SYSTEM_INFO.SPRINKLES")}}</dt>
                     <dd>
                         {% for sprinkle in sprinkles %}
                         <div>{{sprinkle.name}}{% if sprinkle.version %} <small>({{sprinkle.version}})</small>{% endif %}</div>
