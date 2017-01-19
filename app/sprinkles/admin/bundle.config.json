@@ -33,6 +33,7 @@
         },
         "js/pages/dashboard": {
             "scripts": [
+                "local/widgets/js/users.js",
                 "local/pages/js/dashboard.js"
             ],
             "options": {

@@ -26,4 +26,22 @@ $(document).ready(function() {
             });
         });
     });
+
+    // Table of site activities
+    $("#widget-activities").ufTable({
+        dataUrl: site.uri.public + "/api/activities"
+    });
+
+    // Table of users in current user's group
+    $("#widget-group-users").ufTable({
+        dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users'
+    });
+
+    // Bind user creation button
+    bindUserCreationButton($("#widget-group-users"));
+    
+    // Bind user table buttons
+    $("#widget-group-users").on("pagerComplete.ufTable", function () {
+        bindUserButtons($(this));
+    });
 });

@@ -69,7 +69,7 @@
             <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{ translate("USER", 2) }}</span>
-              <span class="info-box-number">{{counter.users}}</span>
+              <span class="info-box-number">{{current_user.group.users.count}}</span>
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -80,6 +80,7 @@
     {% endif %}
     <!-- Info boxes -->
     <div class="row">
+        {% if checkAccess('uri_users') %}
         <div class="col-sm-6 col-xs-12">
           <!-- USERS LIST -->
           <div class="box box-info">
@@ -108,7 +109,57 @@
           <!--/.box -->
         </div>
         <!-- /.col -->
+        {% endif %}
 
+        {% if checkAccess('uri_activities') %}
+        <div class="col-sm-6 col-xs-12">
+            <div id="widget-activities" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
+                    <div class="pull-right">
+                        <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {% include "components/tables/activities.html.twig" with {
+                            "table" : {
+                                "id" : "table-activities",
+                                "columns" : ["user"]
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        </div>
+        {% elseif checkAccess('view_group_field', {
+            'group': current_user.group,
+            'property': 'users'
+        }) %}
+        <div class="col-sm-6 col-xs-12">
+            <div id="widget-group-users" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
+                    <div class="pull-right">
+                        <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {% include "components/tables/users.html.twig" with {
+                            "table" : {
+                                "id" : "table-group-users"
+                            }
+                        }
+                    %}
+                </div>
+                <div class="box-footer">
+                    <button type="button" class="btn btn-success js-user-create">
+                        <i class="fa fa-plus-square"></i>  Create New User
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if checkAccess('view_system_info') %}
         <div class="col-sm-6 col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -155,11 +206,26 @@
             <!--/.box -->
         </div>
         <!-- /.col -->
+        {% endif %}
     </div>
     <!-- /.row -->
 {% endblock %}
 
 {% block scripts_page %}
+    <!-- Include page variables -->
+    <script>
+    {% include "components/page.js.twig" %}
+
+    // Add user name
+    page = $.extend(
+        true,               // deep extend
+        {
+            "group_slug": "{{current_user.group.slug}}"
+        },
+        page
+    );
+    </script>
+
     <!-- Include page-specific JS -->
     {{ assets.js('js/pages/dashboard') | raw }}
 

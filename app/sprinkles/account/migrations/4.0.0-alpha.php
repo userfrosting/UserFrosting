@@ -343,6 +343,7 @@
             $roleUser->permissions()->sync([
                 $permissions['update_account_settings']->id,
                 $permissions['uri_account_settings']->id,
+                $permissions['uri_dashboard']->id
             ]);
         }
 
@@ -357,7 +358,6 @@
                 $permissions['update_user_field']->id,
                 $permissions['update_group_field']->id,
                 $permissions['uri_activities']->id,
-                $permissions['uri_dashboard']->id,
                 $permissions['uri_group']->id,
                 $permissions['uri_groups']->id,
                 $permissions['uri_user']->id,
