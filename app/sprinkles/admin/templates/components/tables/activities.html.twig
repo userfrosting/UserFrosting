@@ -48,8 +48,9 @@
             <strong>
                 <a href="{{site.uri.public}}/admin/users/u/{{row.user.user_name}}">{{row.user.first_name}} {{row.user.last_name}} ({{row.user.user_name}})</a>
             </strong>
-            <div>
-                <i class="fa fa-envelope"></i> <a href="mailto:{{row.user.email}}">{{row.user.email}}</a>
+            <div class="js-copy-container">
+                <span class="js-copy-target">{{row.user.email}}</span>
+                <button class="btn btn-xs js-copy-trigger"><i class="fa fa-copy"></i></button>
             </div>
         </td>
     </script>

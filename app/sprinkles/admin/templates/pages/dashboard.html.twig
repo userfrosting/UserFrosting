@@ -158,6 +158,31 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="col-sm-4 col-sm-offset-4 col-xs-12">
+            <div class="box box-widget widget-user">
+                <!-- Add the bg color to the header using any of the bg-* classes -->
+                <div class="widget-user-header bg-black-active">
+                  <h3 class="widget-user-username">
+                    {{translate("WELCOME", {
+                          'first_name': current_user.first_name
+                    })}}
+                  </h3>
+                </div>
+                <div class="widget-user-image">
+                  <img class="img-circle" src="{{assets.url('assets://local/core/images/cupcake.png')}}" alt="User Avatar">
+                </div>
+                <div class="box-footer">
+                    <h4>Welcome to {{site.title}}!</h4>
+                    <p>
+                        It doesn't look like any features have been set up for this account...yet.  Maybe they haven't been implemented yet, or maybe someone forgot to give you access.  Either way, we're glad to have you aboard!
+                    </p>
+                </div>
+            </div>
+            <!-- /.widget-user -->
+
+
+        </div>
         {% endif %}
         {% if checkAccess('view_system_info') %}
         <div class="col-sm-6 col-xs-12">
