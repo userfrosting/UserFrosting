@@ -143,8 +143,11 @@ gulp.task('bundle-clean', () => {
 
 gulp.task('copy', function () {
     // TODO: Uglify JS and Minify CSS
+    let sprinkleAssets = []
     sprinkles.forEach((sprinkle) => {
-        gulp.src(`../app/sprinkles/${sprinkle}/assets/**/*`)
-            .pipe(gulp.dest(publicAssetsDir));
+        sprinkleAssets.push(`../app/sprinkles/${sprinkle}/assets/**/*`);
     });
+    // Gulp v4 src respects order, until it is released, use this alternative.
+    return plugins.srcOrderedGlobs(sprinkleAssets)
+            .pipe(plugins.copy('../public/assets/', {prefix: 5}));// And gulp.dest doesn't give us the control needed.
 });
