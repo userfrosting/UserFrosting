@@ -8,8 +8,7 @@
     <!-- Info boxes -->
     {% if checkAccess('uri_users') %}
     <div class="row">
-
-        <div class="col-sm-4 col-xs-12">
+        <div class="col-md-4 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
             <div class="info-box-content">
@@ -22,7 +21,7 @@
         </div>
         <!-- /.col -->
 
-        <div class="col-sm-4 col-xs-12">
+        <div class="col-md-4 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-red"><i class="fa fa-drivers-license"></i></span>
             <div class="info-box-content">
@@ -35,7 +34,7 @@
         </div>
         <!-- /.col -->
 
-        <div class="col-sm-4 col-xs-12">
+        <div class="col-md-4 col-sm-6 col-xs-12">
           <div class="info-box">
             <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
             <div class="info-box-content">
@@ -49,6 +48,7 @@
         <!-- /.col -->
     </div>
     <!-- /.row -->
+
     {% elseif checkAccess('uri_group', {
         'group': current_user.group
     }) %}
@@ -77,42 +77,102 @@
         </div>
         <!-- /.col -->
     </div>
+    <!-- /.row -->
     {% endif %}
+
     <!-- Info boxes -->
     <div class="row">
-        {% if checkAccess('uri_users') %}
-        <div class="col-sm-6 col-xs-12">
-          <!-- USERS LIST -->
-          <div class="box box-info">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{translate("USER.LATEST")}}</h3>
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            {% if checkAccess('uri_users') %}
+            <div class="row">
+                <div class="col-sm-12">
+                  <!-- USERS LIST -->
+                  <div class="box box-info">
+                    <div class="box-header with-border">
+                      <h3 class="box-title">{{translate("USER.LATEST")}}</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding">
+                      <ul class="users-list clearfix">
+                        {% for user in users %}
+                        <li>
+                          <img src="{{ user.avatar }}" alt="User Image">
+                          <a class="users-list-name" href="{{site.uri.public}}/admin/users/u/{{user.user_name}}">{{user.first_name}} {{user.last_name}}</a>
+                          <span class="users-list-date">{{ user.registered }}</span>
+                        </li>
+                        {% endfor %}
+                      </ul>
+                      <!-- /.users-list -->
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer text-center">
+                      <a href="{{site.uri.public}}/admin/users" class="uppercase">{{translate("USER.VIEW_ALL")}}</a>
+                    </div>
+                    <!-- /.box-footer -->
+                  </div>
+                  <!--/.box -->
+                </div>
+                <!-- /.col -->
             </div>
-            <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <ul class="users-list clearfix">
-                {% for user in users %}
-                <li>
-                  <img src="{{ user.avatar }}" alt="User Image">
-                  <a class="users-list-name" href="{{site.uri.public}}/admin/users/u/{{user.user_name}}">{{user.first_name}} {{user.last_name}}</a>
-                  <span class="users-list-date">{{ user.registered }}</span>
-                </li>
-                {% endfor %}
-              </ul>
-              <!-- /.users-list -->
+            <!-- /.row -->
+            {% endif %}
+
+            {% if checkAccess('view_system_info') %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{translate("SYSTEM_INFO")}}</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                          <dl class="dl-horizontal">
+                            <dt>{{translate("SYSTEM_INFO.UF_VERSION")}}</dt>
+                            <dd>{{info.version.UF}}</dd>
+
+                            <dt>{{translate("SYSTEM_INFO.PHP_VERSION")}}</dt>
+                            <dd>{{info.version.php}}</dd>
+
+                            <dt>{{translate("SYSTEM_INFO.SERVER")}}</dt>
+                            <dd>{{info.environment.SERVER_SOFTWARE}}</dd>
+
+                            <dt>{{translate("SYSTEM_INFO.DB_VERSION")}}</dt>
+                            <dd>{{info.version.database.type}} {{info.version.database.version}}</dd>
+
+                            <dt>{{translate("SYSTEM_INFO.DB_NAME")}}</dt>
+                            <dd>{{info.database.name}}</dd>
+
+                            <dt>{{translate("SYSTEM_INFO.DIRECTORY")}}</dt>
+                            <dd>{{info.path.project}}</dd>
+
+                            <dt>{{translate("SYSTEM_INFO.URL")}}</dt>
+                            <dd>{{site.uri.public}}</dd>
+
+                            <dt>{{translate("SYSTEM_INFO.SPRINKLES")}}</dt>
+                            <dd>
+                                {% for sprinkle in sprinkles %}
+                                <div>{{sprinkle.name}}{% if sprinkle.version %} <small>({{sprinkle.version}})</small>{% endif %}</div>
+                                {% endfor %}
+                            </dd>
+                          </dl>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer text-center">
+                          <a href="javascript:void(0)" class="js-clear-cache uppercase">{{ translate("CACHE.CLEAR") }}</a>
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!--/.box -->
+                </div>
+                <!-- /.col -->
             </div>
-            <!-- /.box-body -->
-            <div class="box-footer text-center">
-              <a href="{{site.uri.public}}/admin/users" class="uppercase">{{translate("USER.VIEW_ALL")}}</a>
-            </div>
-            <!-- /.box-footer -->
-          </div>
-          <!--/.box -->
+            <!-- /.row -->
+            {% endif %}
         </div>
         <!-- /.col -->
-        {% endif %}
 
         {% if checkAccess('uri_activities') %}
-        <div class="col-sm-6 col-xs-12">
+        <div class="col-md-6 col-sm-12 col-xs-12">
             <div id="widget-activities" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
@@ -135,7 +195,7 @@
             'group': current_user.group,
             'property': 'users'
         }) %}
-        <div class="col-sm-6 col-xs-12">
+        <div class="col-md-6 col-sm-12 col-xs-12">
             <div id="widget-group-users" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
@@ -183,54 +243,7 @@
 
 
         </div>
-        {% endif %}
-        {% if checkAccess('view_system_info') %}
-        <div class="col-sm-6 col-xs-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{translate("SYSTEM_INFO")}}</h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                  <dl class="dl-horizontal">
-                    <dt>{{translate("SYSTEM_INFO.UF_VERSION")}}</dt>
-                    <dd>{{info.version.UF}}</dd>
-
-                    <dt>{{translate("SYSTEM_INFO.PHP_VERSION")}}</dt>
-                    <dd>{{info.version.php}}</dd>
-
-                    <dt>{{translate("SYSTEM_INFO.SERVER")}}</dt>
-                    <dd>{{info.environment.SERVER_SOFTWARE}}</dd>
-
-                    <dt>{{translate("SYSTEM_INFO.DB_VERSION")}}</dt>
-                    <dd>{{info.version.database.type}} {{info.version.database.version}}</dd>
-
-                    <dt>{{translate("SYSTEM_INFO.DB_NAME")}}</dt>
-                    <dd>{{info.database.name}}</dd>
-
-                    <dt>{{translate("SYSTEM_INFO.DIRECTORY")}}</dt>
-                    <dd>{{info.path.project}}</dd>
-
-                    <dt>{{translate("SYSTEM_INFO.URL")}}</dt>
-                    <dd>{{site.uri.public}}</dd>
-
-                    <dt>{{translate("SYSTEM_INFO.SPRINKLES")}}</dt>
-                    <dd>
-                        {% for sprinkle in sprinkles %}
-                        <div>{{sprinkle.name}}{% if sprinkle.version %} <small>({{sprinkle.version}})</small>{% endif %}</div>
-                        {% endfor %}
-                    </dd>
-                  </dl>
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer text-center">
-                  <a href="javascript:void(0)" class="js-clear-cache uppercase">{{ translate("CACHE.CLEAR") }}</a>
-                </div>
-                <!-- /.box-footer -->
-            </div>
-            <!--/.box -->
-        </div>
-        <!-- /.col -->
+        <!-- /.row -->
         {% endif %}
     </div>
     <!-- /.row -->

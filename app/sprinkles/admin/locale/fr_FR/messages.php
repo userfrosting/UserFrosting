@@ -87,7 +87,7 @@ return [
     ],
 
     "SYSTEM_INFO" => [
-        "@TRANSLATE" => "Informations sur le système",
+        "@TRANSLATION"  => "Informations sur le système",
 
         "DB_NAME"       => "Base de donnée",
         "DB_VERSION"    => "Version DB",
