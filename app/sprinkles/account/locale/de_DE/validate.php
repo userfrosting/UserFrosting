@@ -11,7 +11,7 @@
  */
 
 return [
-	"VALIDATE" => [
-		"PASSWORD_MISMATCH" 		=> "Ihr Passwort und das Bestätigungspasswort müssen übereinstimmen."
-	]
+    "VALIDATE" => [
+        "PASSWORD_MISMATCH"             => "Ihr Passwort und das Bestätigungspasswort müssen übereinstimmen."
+    ]
 ];

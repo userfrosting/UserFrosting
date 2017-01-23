@@ -11,90 +11,90 @@
  */
 
 return [
-	"@PLURAL_RULE" => 1,
+    "@PLURAL_RULE" => 1,
 
-	"ABOUT" 						    => "Über",
+    "ABOUT"                             => "Über",
 
-	"CAPTCHA" => [
-		"@TRANSLATION" 				=> "Sicherheitscode",
-		"FAIL" 						    => "Sie haben den Sicherheitscode nicht korrekt eingegeben.",
-		"SPECIFY" 					  => "Geben Sie den Sicherheitscode ein",
-		"VERIFY" 					    => "Überprüfen Sie den Sicherheitscode"
-	],
+    "CAPTCHA" => [
+        "@TRANSLATION"                  => "Sicherheitscode",
+        "FAIL"                          => "Sie haben den Sicherheitscode nicht korrekt eingegeben.",
+        "SPECIFY"                       => "Geben Sie den Sicherheitscode ein",
+        "VERIFY"                        => "Überprüfen Sie den Sicherheitscode"
+    ],
 
-	"CSRF_MISSING" 					=> "Fehlender CSRF-Token. Versuchen, die Seite zu aktualisieren und erneut zu senden?",
+    "CSRF_MISSING"                      => "Fehlender CSRF-Token. Versuchen, die Seite zu aktualisieren und erneut zu senden?",
 
-	"DB_INVALID" 					  => "Keine Verbindung zur Datenbank möglich. Wenn Sie ein Administrator sind, überprüfen Sie bitte Ihr Fehlerprotokoll.",
-	"DESCRIPTION"   				=> "Beschreibung",
-	"DOWNLOAD" => [
-		"@TRANSLATION" 				=> "Herunterladen",
-		"CSV" 						    => "CSV herunterladen"
-	],
+    "DB_INVALID"                        => "Keine Verbindung zur Datenbank möglich. Wenn Sie ein Administrator sind, überprüfen Sie bitte Ihr Fehlerprotokoll.",
+    "DESCRIPTION"                       => "Beschreibung",
+    "DOWNLOAD" => [
+        "@TRANSLATION"                  => "Herunterladen",
+        "CSV"                           => "CSV herunterladen"
+    ],
 
-	"EMAIL" => [
-		"@TRANSLATION" 				=> "E-Mail",
-		"YOUR" 						    => "Ihre E-Mail-Adresse"
-	],
+    "EMAIL" => [
+        "@TRANSLATION"                  => "E-Mail",
+        "YOUR"                          => "Ihre E-Mail-Adresse"
+    ],
 
-	"HOME"  						    => "Startseite",
+    "HOME"                              => "Startseite",
 
-	"LEGAL" 						    => "Rechtsgrundsatz",
+    "LEGAL"                             => "Rechtsgrundsatz",
 
-	"LOCALE" 						    => "Sprache",
+    "LOCALE"                            => "Sprache",
 
-	"MAIL_ERROR" 					  => "Schwerwiegender Fehler beim Mailversand, wenden Sie sich an Ihren Serveradministrator. Wenn Sie der Administrator sind, überprüfen Sie bitte das UF-Mail-Protokoll.",
+    "MAIL_ERROR"                        => "Schwerwiegender Fehler beim Mailversand, wenden Sie sich an Ihren Serveradministrator. Wenn Sie der Administrator sind, überprüfen Sie bitte das UF-Mail-Protokoll.",
 
-	"NAME"  						    => "Name",
-	"NAVIGATION" 					  => "Navigation",
+    "NAME"                              => "Name",
+    "NAVIGATION"                        => "Navigation",
 
-	"PAGINATION" => [
-		"GOTO" 						    => "Gehe zu Seite",
-		"SHOW" 						    => "Anzeigen"
-	],
-	"PRIVACY" 						  => "Datenschutz-Bestimmungen",
+    "PAGINATION" => [
+        "GOTO"                          => "Gehe zu Seite",
+        "SHOW"                          => "Anzeigen"
+    ],
+    "PRIVACY"                           => "Datenschutz-Bestimmungen",
 
-	"SLUG" 							    => "Schnecke",
-	"SLUG_CONDITION" 				=> "Schnecke/Bedingungen",
-	"STATUS" 						    => "Status",
+    "SLUG"                              => "Schnecke",
+    "SLUG_CONDITION"                    => "Schnecke/Bedingungen",
+    "STATUS"                            => "Status",
 
-	"UNKNOWN" 						  => "Unbekannt",
+    "UNKNOWN"                           => "Unbekannt",
 
-	// Actions words
-	"ACTIONS" 						  => "Aktionen",
-	"ACTIVATE" 						  => "Aktivieren",
-	"ACTIVE" 						    => "Aktiv",
-	"ADD" 							    => "Hinzufügen",
-	"CANCEL" 						    => "Stornieren",
-	"CONFIRM" 						  => "Bestätigen",
-	"CREATE" 						    => "Erstellen",
-	"DELETE" 						    => "Löschen",
-	"DELETE_CONFIRM" 				=> "Möchten Sie diese wirklich löschen?",
-	"DELETE_CONFIRM_YES"	 	=> "Ja, löschen",
-	"DELETE_CONFIRM_NAMED" 	=> "Möchten Sie {{name}} wirklich löschen?",
-	"DELETE_CONFIRM_YES_NAMED" 	=> "Ja, {{name}} löschen",
-	"DELETE_CANNOT_UNDONE" 	=> "Diese Aktion kann nicht rückgängig gemacht werden.",
-	"DELETE_NAMED" 					=> "{{name}} löschen",
-	"DENY" 							    => "Verweigern",
-	"DISABLE" 						  => "Deaktivieren",
-	"DISABLED" 						  => "Deaktiviert",
-	"EDIT" 							    => "Bearbeiten",
-	"ENABLE" 						    => "Aktivieren",
-	"ENABLED" 						  => "Aktiviert",
-	"OVERWRITE"	 					  => "Überschreiben",
-	"RESET" 						    => "Zurücksetzen",
-	"SAVE" 							    => "Speichern",
-	"SEARCH" 						    => "Suchen",
-	"SORT" 							    => "Sortieren",
-	"SUBMIT" 						    => "Einreichen",
-	"PRINT" 						    => "Drucken",
-	"REMOVE" 						    => "Entfernen",
-	"UNACTIVATED" 					=> "Unaktiviert",
-	"UPDATE" 						    => "Aktualisieren",
-	"YES" 							    => "Ja",
-	"NO" 							      => "Nein",
-	"OPTIONAL" 						  => "Optional",
+    // Actions words
+    "ACTIONS"                           => "Aktionen",
+    "ACTIVATE"                          => "Aktivieren",
+    "ACTIVE"                            => "Aktiv",
+    "ADD"                               => "Hinzufügen",
+    "CANCEL"                            => "Stornieren",
+    "CONFIRM"                           => "Bestätigen",
+    "CREATE"                            => "Erstellen",
+    "DELETE"                            => "Löschen",
+    "DELETE_CONFIRM"                    => "Möchten Sie diese wirklich löschen?",
+    "DELETE_CONFIRM_YES"                => "Ja, löschen",
+    "DELETE_CONFIRM_NAMED"              => "Möchten Sie {{name}} wirklich löschen?",
+    "DELETE_CONFIRM_YES_NAMED"          => "Ja, {{name}} löschen",
+    "DELETE_CANNOT_UNDONE"              => "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "DELETE_NAMED"                      => "{{name}} löschen",
+    "DENY"                              => "Verweigern",
+    "DISABLE"                           => "Deaktivieren",
+    "DISABLED"                          => "Deaktiviert",
+    "EDIT"                              => "Bearbeiten",
+    "ENABLE"                            => "Aktivieren",
+    "ENABLED"                           => "Aktiviert",
+    "OVERWRITE"                         => "Überschreiben",
+    "RESET"                             => "Zurücksetzen",
+    "SAVE"                              => "Speichern",
+    "SEARCH"                            => "Suchen",
+    "SORT"                              => "Sortieren",
+    "SUBMIT"                            => "Einreichen",
+    "PRINT"                             => "Drucken",
+    "REMOVE"                            => "Entfernen",
+    "UNACTIVATED"                       => "Unaktiviert",
+    "UPDATE"                            => "Aktualisieren",
+    "YES"                               => "Ja",
+    "NO"                                => "Nein",
+    "OPTIONAL"                          => "Optional",
 
-	// Misc.
-	"BUILT_WITH_UF"         => "Errichtet mit <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
-	"ADMINLTE_THEME_BY"     => "Theme von <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten"
+    // Misc.
+    "BUILT_WITH_UF"                     => "Errichtet mit <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
+    "ADMINLTE_THEME_BY"                 => "Theme von <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten"
 ];
