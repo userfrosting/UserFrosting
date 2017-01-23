@@ -128,6 +128,7 @@
             ],
             'locales' =>  [
                 'available' => [
+                    'de_DE' => 'Deutsch',
                     'en_US' => 'English',
                     'fr_FR' => 'Français'
                 ],
