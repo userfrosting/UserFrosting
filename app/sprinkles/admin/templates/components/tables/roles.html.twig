@@ -47,23 +47,23 @@
         <td>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                    Actions
+                    {% endverbatim %}{{translate("ACTIONS")}}{% verbatim %}
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-role-permissions">
-                        <i class="fa fa-key"></i> Manage permissions
+                        <i class="fa fa-key"></i> {% endverbatim %}{{translate("PERMISSION.MANAGE")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-role-edit">
-                        <i class="fa fa-edit"></i> Edit role
+                        <i class="fa fa-edit"></i> {% endverbatim %}{{translate("ROLE.EDIT")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-role-delete">
-                        <i class="fa fa-trash-o"></i> Delete role
+                        <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("ROLE.DELETE")}}{% verbatim %}
                         </a>
                     </li>
                 </ul>

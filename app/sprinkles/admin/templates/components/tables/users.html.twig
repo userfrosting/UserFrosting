@@ -52,7 +52,7 @@
         </td>
         {{ else }}
         <td data-num="0">
-                <i>Unknown</i>
+                <i>{% endverbatim %}{{translate("UNKNOWN")}}{% verbatim %}</i>
         </td>
         {{/if }}
     </script>
@@ -62,18 +62,18 @@
             <div class="btn-group">
                 {{#ifCond row.flag_enabled 0 }}
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        Disabled
+                        {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
                         <span class="caret"></span>
                     </button>
                 {{ else }}
                     {{#ifCond row.flag_verified 0 }}
                         <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
-                            Unactivated
+                            {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
                             <span class="caret"></span>
                         </button>
                     {{ else }}
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                            Active
+                            {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
                             <span class="caret"></span>
                         </button>
                     {{/ifCond }}
@@ -82,39 +82,39 @@
                     {{#ifCond row.flag_verified 0 }}
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-activate">
-                        <i class="fa fa-bolt"></i> Activate user
+                        <i class="fa fa-bolt"></i> {% endverbatim %}{{translate("USER.ACTIVATE")}}{% verbatim %}
                         </a>
                     </li>
                     {{/ifCond }}
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-edit">
-                        <i class="fa fa-edit"></i> Edit user
+                        <i class="fa fa-edit"></i> {% endverbatim %}{{translate("USER.EDIT")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-roles">
-                        <i class="fa fa-drivers-license"></i> Manage roles
+                        <i class="fa fa-drivers-license"></i> {% endverbatim %}{{translate("ROLE.MANAGE")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-password">
-                        <i class="fa fa-key"></i> Change password
+                        <i class="fa fa-key"></i> {% endverbatim %}{{translate("USER.ADMIN.CHANGE_PASSWORD")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                     {{#ifCond row.flag_enabled 1 }}
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-disable">
-                        <i class="fa fa-minus-circle"></i> Disable user
+                        <i class="fa fa-minus-circle"></i> {% endverbatim %}{{translate("USER.DISABLE")}}{% verbatim %}
                         </a>
                     {{ else }}
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-enable">
-                        <i class="fa fa-plus-circle"></i> Enable user
+                        <i class="fa fa-plus-circle"></i> {% endverbatim %}{{translate("USER.ENABLE")}}{% verbatim %}
                         </a>
                     {{/ifCond }}
                     </li>
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-delete">
-                        <i class="fa fa-trash-o"></i> Delete user
+                        <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("USER.DELETE")}}{% verbatim %}
                         </a>
                     </li>
                 </ul>
