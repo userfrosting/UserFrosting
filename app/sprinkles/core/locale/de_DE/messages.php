@@ -40,7 +40,7 @@ return [
 
 	"LEGAL" 						    => "Rechtsgrundsatz",
 
-	"LOCALE" 						    => "Gebietsschema",
+	"LOCALE" 						    => "Sprache",
 
 	"MAIL_ERROR" 					  => "Schwerwiegender Fehler beim Mailversand, wenden Sie sich an Ihren Serveradministrator. Wenn Sie der Administrator sind, überprüfen Sie bitte das UF-Mail-Protokoll.",
 
