@@ -15,6 +15,7 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
 use UserFrosting\Sprinkle\Account\Log\UserActivityProcessor;
@@ -43,12 +44,12 @@ class AccountServicesProvider
          * Extend the asset manager service to see assets for the current user's theme.
          */
         $container->extend('assets', function ($assets, $c) {
-            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-            $authenticator = $c->authenticator;
 
             // Register paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
+                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
                 return $assets;
@@ -95,12 +96,11 @@ class AccountServicesProvider
          * Also loads the actual translations for the user's locale.
          */
         $container->extend('translator', function ($translator, $c) {
-            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-            $authenticator = $c->authenticator;
-
             // Add paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
+                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
                 return $translator;
@@ -130,12 +130,11 @@ class AccountServicesProvider
             $extension = new AccountExtension($c);
             $twig->addExtension($extension);
 
-            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-            $authenticator = $c->authenticator;
-
             // Add paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
+                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
                 return $view;
@@ -173,6 +172,11 @@ class AccountServicesProvider
 
             $authenticator = new Authenticator($classMapper, $session, $config);
             return $authenticator;
+        };
+
+        $container['authGuard'] = function ($c) {
+            $authenticator = $c->authenticator;
+            return new AuthGuard($authenticator);
         };
 
         /**

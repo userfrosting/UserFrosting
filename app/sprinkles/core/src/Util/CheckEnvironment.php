@@ -77,7 +77,7 @@ class CheckEnvironment
             $problemsFound = $this->checkAll();
         }
 
-        if ($problemsFound){
+        if ($problemsFound) {
             $response = $this->view->render($response, 'pages/error/config-errors.html.twig', [
                 "messages" => $this->results
             ]);
