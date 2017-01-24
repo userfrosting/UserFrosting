@@ -6,17 +6,17 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Authenticate;
+namespace UserFrosting\Sprinkle\Account\Authenticate\Exception;
 
 use UserFrosting\Support\Exception\HttpException;
 
 /**
- * Expired authentication exception.  Used when the user's session has expired due to an expired rememberMe cookie.
+ * Invalid account exception.  Used when an account has been removed during an active session.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AuthExpiredException extends HttpException
+class AccountInvalidException extends HttpException
 {
-    protected $default_message = 'ACCOUNT.SESSION_EXPIRED';
+    protected $default_message = 'ACCOUNT.INVALID';
     protected $http_error_code = 403;
 }

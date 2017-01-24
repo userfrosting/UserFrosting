@@ -6,17 +6,17 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Authenticate;
+namespace UserFrosting\Sprinkle\Account\Authenticate\Exception;
 
 use UserFrosting\Support\Exception\HttpException;
 
 /**
- * Unverified account exception.  Used when an account is required to complete email verification, but hasn't done so yet.
+ * Expired authentication exception.  Used when the user's session has expired due to an expired rememberMe cookie.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountNotVerifiedException extends HttpException
+class AuthExpiredException extends HttpException
 {
-    protected $default_message = 'ACCOUNT.UNVERIFIED';
+    protected $default_message = 'ACCOUNT.SESSION_EXPIRED';
     protected $http_error_code = 403;
 }
