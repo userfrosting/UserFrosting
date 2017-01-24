@@ -91,7 +91,7 @@ function updateUser(userName, fieldName, fieldValue) {
         return response;
     }).always(function (response) {
         window.location.reload();
-    })
+    });
 }
 
 /**

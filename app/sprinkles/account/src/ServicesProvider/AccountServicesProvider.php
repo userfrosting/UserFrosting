@@ -174,6 +174,9 @@ class AccountServicesProvider
             return $authenticator;
         };
 
+        /**
+         * Sets up the AuthGuard middleware, used to limit access to authenticated users for certain routes.
+         */
         $container['authGuard'] = function ($c) {
             $authenticator = $c->authenticator;
             return new AuthGuard($authenticator);
