@@ -35,7 +35,7 @@ class AuthExpiredExceptionHandler extends HttpExceptionHandler
         $messages = $exception->getUserMessages();
 
         // If the status code is 500, log the exception's message
-        if ($httpCode == 500) {
+        if ($exception->getHttpErrorCode() == 500) {
             $this->logFlag = true;
         } else {
             $this->logFlag = false;
@@ -45,7 +45,18 @@ class AuthExpiredExceptionHandler extends HttpExceptionHandler
             $this->ci->alerts->addMessageTranslated("danger", $message->message, $message->parameters);
         }
 
-        $loginPage = $this->ci->router->pathFor('login');
+        $uri = $request->getUri();
+        $path = $uri->getPath();
+        $query = $uri->getQuery();
+        $fragment = $uri->getFragment();
+
+        $path = $path
+            . ($query ? '?' . $query : '')
+            . ($fragment ? '#' . $fragment : '');
+
+        $loginPage = $this->ci->router->pathFor('login', [], [
+            'redirect' => $path
+        ]);
 
         return $response->withRedirect($loginPage);
     }

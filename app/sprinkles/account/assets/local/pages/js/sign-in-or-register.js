@@ -63,7 +63,15 @@ $(document).ready(function() {
         validators: page.validators.login,
         msgTarget: $("#alerts-login")
     }).on("submitSuccess.ufForm", function() {
-        // Forward to settings page on success
-        window.location.replace(site.uri.public);
+        // If there is a redirect parameter in the query string, redirect to that page.
+        // Otherwise, redirect to the home page.
+        var components = URI.parse(window.location.href);
+        var query = URI.parseQuery(components['query']);
+
+        if (query && query['redirect']) {
+            window.location.replace(site.uri.public + '/' + query['redirect']);
+        } else {
+            window.location.replace(site.uri.public);
+        }
     });
 });
