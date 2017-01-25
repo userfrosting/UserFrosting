@@ -8,7 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Handler;
 
-use UserFrosting\Sprinkle\Core\Handler\ExceptionHandler;
+use UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler;
 
 /**
  * Handler for AuthCompromisedExceptions.
@@ -16,28 +16,8 @@ use UserFrosting\Sprinkle\Core\Handler\ExceptionHandler;
  * Warns the user that their account may have been compromised due to a stolen "remember me" cookie.
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AuthCompromisedExceptionHandler extends ExceptionHandler
+class AuthCompromisedExceptionHandler extends HttpExceptionHandler
 {
-    /**
-     * Called when an exception is raised during AJAX requests.
-     *
-     * Add a message.
-     *
-     * @param ServerRequestInterface $request   The most recent Request object
-     * @param ResponseInterface      $response  The most recent Response object
-     * @param Exception              $exception The caught Exception object
-     *
-     * @return ResponseInterface
-     */
-    public function ajaxHandler($request, $response, $exception)
-    {
-        $this->logFlag = false;
-
-        $this->ci->alerts->addMessageTranslated('danger', 'ACCOUNT.SESSION_COMPROMISED');
-
-        return $response->withStatus($httpCode);
-    }
-
     /**
      * Handler for exceptions raised during "standard" requests.
      *
@@ -57,5 +37,4 @@ class AuthCompromisedExceptionHandler extends ExceptionHandler
             ->withStatus($exception->getHttpErrorCode())
             ->withHeader('Content-Type', 'text/html');
     }
-
 }

@@ -11,12 +11,12 @@ namespace UserFrosting\Sprinkle\Account\Authenticate\Exception;
 use UserFrosting\Support\Exception\HttpException;
 
 /**
- * Expired authentication exception.  Used when the user's session has expired due to an expired rememberMe cookie.
+ * Expired authentication exception.  Used when the user needs to authenticate/reauthenticate.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AuthExpiredException extends HttpException
 {
     protected $default_message = 'ACCOUNT.SESSION_EXPIRED';
-    protected $http_error_code = 403;
+    protected $http_error_code = 401;
 }
