@@ -23,7 +23,7 @@
     $container = new Container;
 
     // Attempt to fetch list of Sprinkles
-    $sprinklesFile = file_get_contents('../app/sprinkles/sprinkles.json');
+    $sprinklesFile = file_get_contents(UserFrosting\APP_DIR . '/' . UserFrosting\SPRINKLES_DIR_NAME . '/sprinkles.json');
     if ($sprinklesFile === false) {
         die(PHP_EOL . "File 'app/sprinkles/sprinkles.json' not found. Please create a 'sprinkles.json' file and try again." . PHP_EOL);
     }
