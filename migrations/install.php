@@ -43,12 +43,20 @@
 
     $container->db;
 
-    // Test database connection
+    $dbParams = $config['db.default'];
+
+    if (!$dbParams) {
+        die(PHP_EOL . "'default' database connection not found.  Please double-check your configuration.");
+    }
+
+    // Test database connection directly using PDO
     try {
-        Capsule::connection()->getPdo();
-    } catch (\Exception $e) {
-        $dbParams = $config['db.default'];
-        die(PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration." . PHP_EOL);
+        $dbh = new \PDO("{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}", $dbParams['username'], $dbParams['password']);
+    } catch (\PDOException $e) {
+        $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration." . PHP_EOL;
+        $message .= "Exception: " . $e->getMessage() . PHP_EOL;
+        $message .= "Trace: " . $e->getTraceAsString() . PHP_EOL;
+        die($message);
     }
 
     $schema = Capsule::schema();
