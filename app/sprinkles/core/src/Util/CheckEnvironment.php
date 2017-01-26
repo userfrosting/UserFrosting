@@ -25,9 +25,14 @@ class CheckEnvironment
     protected $locator;
 
     /**
-     * @var array The results of any checks performed.
+     * @var array The results of any failed checks performed.
      */
-    protected $results = array();
+    protected $resultsFailed = [];
+
+    /**
+     * @var array The results of any successful checks performed.
+     */
+    protected $resultsSuccess = [];
 
     /**
      * @var \Slim\Views\Twig The view object, needed for rendering error page.
@@ -64,22 +69,24 @@ class CheckEnvironment
     public function __invoke($request, $response, $next)
     {
         $problemsFound = false;
-        
+
         // If production environment and no cached checks, perform environment checks
-        if (getenv('UF_MODE') == 'production' && $this->cache->get('checkEnvironment') != 'pass') {
+        if ($this->isProduction() && $this->cache->get('checkEnvironment') != 'pass') {
             $problemsFound = $this->checkAll();
 
             // Cache if checks passed
             if (!$problemsFound) {
                 $this->cache->forever('checkEnvironment', 'pass');
             }
-        } elseif (getenv('UF_MODE') != 'production') {
+        } elseif (!$this->isProduction()) {
             $problemsFound = $this->checkAll();
         }
 
         if ($problemsFound) {
+            $results = array_merge($this->resultsFailed, $this->resultsSuccess);
+
             $response = $this->view->render($response, 'pages/error/config-errors.html.twig', [
-                "messages" => $this->results
+                "messages" => $results
             ]);
         } else {
             $response = $next($request, $response);
@@ -105,7 +112,7 @@ class CheckEnvironment
 
         if ($this->checkImageFunctions()) $problemsFound = true;
 
-        if ($this->checkPermissions() && getenv('UF_MODE') == 'production') $problemsFound = true;
+        if ($this->checkPermissions()) $problemsFound = true;
 
         return $problemsFound;
     }
@@ -128,13 +135,13 @@ class CheckEnvironment
             foreach ($require_apache_modules as $module) {
                 if (!in_array($module, $apache_modules)) {
                     $problemsFound = true;
-                    $this->results['apache-' . $module] = [
+                    $this->resultsFailed['apache-' . $module] = [
                         "title" => "<i class='fa fa-server fa-fw'></i> Missing Apache module <b>$module</b>.",
                         "message" => "Please make sure that the <code>$module</code> Apache module is installed and enabled.  If you use shared hosting, you will need to ask your web host to do this for you.",
                         "success" => false
                     ];
                 } else {
-                    $this->results['apache-' . $module] = [
+                    $this->resultsSuccess['apache-' . $module] = [
                         "title" => "<i class='fa fa-server fa-fw'></i> Apache module <b>$module</b> is installed and enabled.",
                         "message" => "Great, we found the <code>$module</code> Apache module!",
                         "success" => true
@@ -155,13 +162,13 @@ class CheckEnvironment
 
         if (!(extension_loaded('gd') && function_exists('gd_info'))) {
             $problemsFound = true;
-            $this->results['gd'] = [
+            $this->resultsFailed['gd'] = [
                 "title" => "<i class='fa fa-image fa-fw'></i> GD library not installed",
                 "message" => "We could not confirm that the <code>GD</code> library is installed and enabled.  GD is an image processing library that UserFrosting uses to generate captcha codes for user account registration.",
                 "success" => false
             ];
         } else {
-            $this->results['gd'] = [
+            $this->resultsSuccess['gd'] = [
                 "title" => "<i class='fa fa-image fa-fw'></i> GD library installed!",
                 "message" => "Great, you have <code>GD</code> installed and enabled.",
                 "success" => true
@@ -194,13 +201,13 @@ class CheckEnvironment
         foreach ($funcs as $func) {
             if (!function_exists($func)) {
                 $problemsFound = true;
-                $this->results['function-' . $func] = [
+                $this->resultsFailed['function-' . $func] = [
                     "title" => "<i class='fa fa-code fa-fw'></i> Missing image manipulation function.",
                     "message" => "It appears that function <code>$func</code> is not available.  UserFrosting needs this to render captchas.",
                     "success" => false
                 ];
             } else {
-                $this->results['function-' . $func] = [
+                $this->resultsSuccess['function-' . $func] = [
                     "title" => "<i class='fa fa-code fa-fw'></i> Function <b>$func</b> is available!",
                     "message" => "Sweet!",
                     "success" => true
@@ -220,13 +227,13 @@ class CheckEnvironment
 
         if (!class_exists('PDO')) {
             $problemsFound = true;
-            $this->results['pdo'] = [
+            $this->resultsFailed['pdo'] = [
                 "title" => "<i class='fa fa-database fa-fw'></i> PDO is not installed.",
                 "message" => "I'm sorry, you must have PDO installed and enabled in order for UserFrosting to access the database.  If you don't know what PDO is, please see <a href='http://php.net/manual/en/book.pdo.php'>http://php.net/manual/en/book.pdo.php</a>.",
                 "success" => false
             ];
         } else {
-            $this->results['pdo'] = [
+            $this->resultsSuccess['pdo'] = [
                 "title" => "<i class='fa fa-database fa-fw'></i> PDO is installed!",
                 "message" => "You've got PDO installed.  Good job!",
                 "success" => true
@@ -237,26 +244,30 @@ class CheckEnvironment
     }
 
     /**
-     * Check that log, cache, and session directories are writable, and that other directories are non-writable.
+     * Check that log, cache, and session directories are writable, and that other directories are set appropriately for the environment.
      */
     function checkPermissions()
     {
-        $problemsFound = false;
-
         $shouldBeWriteable = [
             $this->locator->findResource('log://') => true,
             $this->locator->findResource('cache://') => true,
-            $this->locator->findResource('session://') => true,
-            $this->locator->findResource('sprinkles://') => false,
-            \UserFrosting\VENDOR_DIR => false
+            $this->locator->findResource('session://') => true
         ];
+
+        if ($this->isProduction) {
+            // Should be write-protected in production!
+            $shouldBeWriteable = array_merge($shouldBeWriteable, [
+                $this->locator->findResource('sprinkles://') => false,
+                \UserFrosting\VENDOR_DIR => false
+            ]);
+        }
 
         // Check for essential files & perms
         foreach ($shouldBeWriteable as $file => $assertWriteable) {
             $is_dir = false;
             if (!file_exists($file)) {
                 $problemsFound = true;
-                $this->results['file-' . $file] = [
+                $this->resultsFailed['file-' . $file] = [
                     "title" => "<i class='fa fa-file-o fa-fw'></i> File or directory does not exist.",
                     "message" => "We could not find the file or directory <code>$file</code>.",
                     "success" => false
@@ -265,7 +276,7 @@ class CheckEnvironment
                 $writeable = is_writable($file);
                 if ($assertWriteable !== $writeable) {
                     $problemsFound = true;
-                    $this->results['file-' . $file] = [
+                    $this->resultsFailed['file-' . $file] = [
                         "title" => "<i class='fa fa-file-o fa-fw'></i> Incorrect permissions for file or directory.",
                         "message" => "<code>$file</code> is "
                             . ($writeable ? "writeable" : "not writeable")
@@ -277,7 +288,7 @@ class CheckEnvironment
                         "success" => false
                     ];
                 } else {
-                    $this->results['file-' . $file] = [
+                    $this->resultsSuccess['file-' . $file] = [
                         "title" => "<i class='fa fa-file-o fa-fw'></i> File/directory check passed!",
                         "message" => "<code>$file</code> exists and is correctly set as <b>"
                             . ($writeable ? "writeable" : "not writeable")
@@ -300,13 +311,13 @@ class CheckEnvironment
         // Check PHP version
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
             $problemsFound = true;
-            $this->results['phpVersion'] = [
+            $this->resultsFailed['phpVersion'] = [
                 "title" => "<i class='fa fa-code fa-fw'></i> You need to upgrade your PHP installation.",
                 "message" => "I'm sorry, UserFrosting requires version " . \UserFrosting\PHP_MIN_VERSION . " or greater.  Please upgrade your version of PHP, or contact your web hosting service and ask them to upgrade it for you.",
                 "success" => false
             ];
         } else {
-            $this->results['phpVersion'] = [
+            $this->resultsSuccess['phpVersion'] = [
                 "title" => "<i class='fa fa-code fa-fw'></i> PHP version checks out!",
                 "message" => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . ".  Great!",
                 "success" => true
@@ -314,5 +325,15 @@ class CheckEnvironment
         }
 
         return $problemsFound;
+    }
+
+    /**
+     * Determine whether or not we are running in production mode.
+     *
+     * @return bool
+     */
+    public function isProduction()
+    {
+        return (getenv('UF_MODE') == 'production');
     }
 }
