@@ -53,7 +53,7 @@
     try {
         $dbh = new \PDO("{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}", $dbParams['username'], $dbParams['password']);
     } catch (\PDOException $e) {
-        $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration." . PHP_EOL;
+        $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:" . PHP_EOL;
         $message .= "Exception: " . $e->getMessage() . PHP_EOL;
         $message .= "Trace: " . $e->getTraceAsString() . PHP_EOL;
         die($message);
