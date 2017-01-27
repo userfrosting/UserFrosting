@@ -9,15 +9,15 @@
     use Illuminate\Database\Schema\Blueprint;
     use Slim\Container;
     use Slim\Http\Uri;
-
     use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 
     if (!defined('STDIN')) {
         die('This program must be run from the command line.');
     }
 
-    // TODO: check PHP version
+    // 1° Pre-flight check and bootup
 
+    // TODO: check PHP version
 
     // First, we create our DI container
     $container = new Container;
@@ -29,6 +29,9 @@
     }
     $sprinkles = json_decode($sprinklesFile)->base;
 
+    // Add `core` at the beggening of sprinkles list
+    array_unshift($sprinkles , 'core');
+
     // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
     $container['sprinkleManager'] = function ($c) use ($sprinkles) {
         return new SprinkleManager($c, $sprinkles);
@@ -39,8 +42,10 @@
 
     $container->config['settings.displayErrorDetails'] = false;
 
+    // Get config
     $config = $container->config;
 
+    // Boot db
     $container->db;
 
     $dbParams = $config['db.default'];
@@ -63,8 +68,9 @@
 
     $installTime = Carbon::now();
 
-    $ufVersion = "4.0.0-alpha";
+    $ufVersion = UserFrosting\VERSION;
 
+    // 2° Check Operating system
     $detectedOS = php_uname('s');
 
     echo PHP_EOL . "Welcome to the UserFrosting installation tool!" . PHP_EOL;
@@ -89,6 +95,7 @@
         }
     }
 
+    // 3° Set-up version db table
     // Get the installed versions
     echo PHP_EOL . "Checking for Sprinkle's version table:" . PHP_EOL;
 
@@ -103,27 +110,16 @@
             $table->charset = 'utf8';
             $table->unique('sprinkle');
         });
-        Capsule::table('version')->insert([
-            [
-                'sprinkle' => 'core',
-                'version' => $ufVersion,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ]
-        ]);
 
-        echo "Installing UserFrosting $ufVersion for the first time..." . PHP_EOL;
         echo "Created table 'version'..." . PHP_EOL;
     } else {
         echo "Table 'version' found." . PHP_EOL;
     }
 
-    // Load the sprinkles list
+    // 4° Migrate each sprinkles
     echo PHP_EOL . "Migrating Sprinkle's:" . PHP_EOL;
 
     // Looping throught every sprinkle and running their migration
-    // N.B.: No migrations in core... yet. Add it manually if migration is added
-    // to core at some point
     foreach ($sprinkles as $sprinkle) {
 
         echo ">> $sprinkle" . PHP_EOL;
@@ -158,7 +154,7 @@
                     ]
                 ]);
 
-                echo "Migrated sprinkle '$sprinkle' to $version..." . PHP_EOL.PHP_EOL;
+                echo "Migrated sprinkle '$sprinkle' !" . PHP_EOL.PHP_EOL;
 
             } else if (version_compare($installedVersion, $version, "<")) {
                 Capsule::table('version')->where('sprinkle', $sprinkle)
@@ -169,7 +165,7 @@
                         ]
                     );
 
-                echo PHP_EOL."Migrated sprinkle '$sprinkle' from $installedVersion to $version..." . PHP_EOL.PHP_EOL;
+                echo PHP_EOL."Migrated sprinkle '$sprinkle' !" . PHP_EOL.PHP_EOL;
             } else {
                 echo "Sprinkle '$sprinkle' already up-to-date..." . PHP_EOL.PHP_EOL;
             }
@@ -187,14 +183,5 @@
     // Slim\Http\Uri likes to add trailing slashes when the path is empty, so this fixes that.
     $uri = trim($uri, '/');
     */
-
-    // Migrate the UF version
-    Capsule::table('version')->where('sprinkle', 'core')
-        ->update(
-            [
-                'version' => $ufVersion,
-                'updated_at' => $installTime
-            ]
-        );
 
     echo PHP_EOL.PHP_EOL."UserFrosting migrated to $ufVersion successfully !".PHP_EOL;
