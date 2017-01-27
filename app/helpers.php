@@ -8,7 +8,7 @@ function loadSprinkleSchema()
         ob_clean();
         $title = "UserFrosting Application Error";
         $errorMessage = "Unable to start site. Contact owner.<br/><br/>" .
-            "Version: UserFrosting 4 Pre-Alpha<br/>Error: Unable to determine Sprinkle load order.";
+            "Version: UserFrosting ".UserFrosting\VERSION."<br/>Error: Unable to determine Sprinkle load order.";
         $output = sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
             "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
