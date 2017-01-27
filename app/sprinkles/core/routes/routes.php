@@ -10,7 +10,9 @@
 global $app;
 $config = $app->getContainer()->get('config');
 
-$app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')->add('checkEnvironment');
+$app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')
+    ->add('checkEnvironment')
+    ->setName('index');
 
 $app->get('/about','UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
 

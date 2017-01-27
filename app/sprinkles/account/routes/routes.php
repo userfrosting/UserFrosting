@@ -42,7 +42,8 @@ $app->group('/account', function () {
     $this->post('/set-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:setPassword');
 
     $this->post('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:settings')
-        ->add('authGuard');
+        ->add('authGuard')
+        ->setName('settings');
 });
 
 $app->get('/modals/account/tos', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getModalAccountTos');

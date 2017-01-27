@@ -12,7 +12,7 @@
  */
 $app->group('/admin', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\AdminController:pageDashboard')
-         ->setName('uri_dashboard');
+         ->setName('dashboard');
 })->add('authGuard');
 
 $app->group('/api/admin', function () {

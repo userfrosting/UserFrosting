@@ -248,13 +248,15 @@ class CheckEnvironment
      */
     function checkPermissions()
     {
+        $problemsFound = false;
+
         $shouldBeWriteable = [
             $this->locator->findResource('log://') => true,
             $this->locator->findResource('cache://') => true,
             $this->locator->findResource('session://') => true
         ];
 
-        if ($this->isProduction) {
+        if ($this->isProduction()) {
             // Should be write-protected in production!
             $shouldBeWriteable = array_merge($shouldBeWriteable, [
                 $this->locator->findResource('sprinkles://') => false,

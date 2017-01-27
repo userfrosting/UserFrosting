@@ -334,6 +334,25 @@ class AccountServicesProvider
         };
 
         /**
+         * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
+         */
+        $container['determineRedirectOnLogin'] = function ($c) {
+            return function ($response) use ($c)
+            {
+                /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+                $authorizer = $c->authorizer;
+
+                $currentUser = $c->authenticator->user();
+
+                if ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
+                } else {
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));
+                }
+            };
+        };
+
+        /**
          * Repository for password reset requests.
          */
         $container['repoPasswordReset'] = function ($c) {

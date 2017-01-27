@@ -304,6 +304,11 @@ class AccountController extends SimpleController
         }
 
         $ms->addMessageTranslated("success", "WELCOME", $currentUser->export());
+
+        // Set redirect, if relevant
+        $determineRedirectOnLogin = $this->ci->determineRedirectOnLogin;
+        $response = $determineRedirectOnLogin($response);
+
         return $response->withStatus(200);
     }
 

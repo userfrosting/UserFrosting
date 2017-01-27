@@ -26,6 +26,24 @@ $(document).ready(function() {
 		});
     }
 
+    /**
+     * If there is a redirect parameter in the query string, redirect to that page.
+     * Otherwise, if there is a UF-Redirect header, redirect to that page.
+     * Otherwise, redirect to the home page.
+     */
+    function redirectOnLogin(jqXHR) {
+        var components = URI.parse(window.location.href);
+        var query = URI.parseQuery(components['query']);
+
+        if (query && query['redirect']) {
+            window.location.replace(site.uri.public + '/' + query['redirect']);
+        } else if (jqXHR.getResponseHeader('UF-Redirect')) {
+            window.location.replace(jqXHR.getResponseHeader('UF-Redirect'));
+        } else {
+            window.location.replace(site.uri.public);
+        }
+    }
+
     $('.show-register-form').on('click', toggleRegistrationForm);
 
     $('.show-login-form').on('click', toggleLoginForm);
@@ -62,16 +80,7 @@ $(document).ready(function() {
     $("#sign-in").ufForm({
         validators: page.validators.login,
         msgTarget: $("#alerts-login")
-    }).on("submitSuccess.ufForm", function() {
-        // If there is a redirect parameter in the query string, redirect to that page.
-        // Otherwise, redirect to the home page.
-        var components = URI.parse(window.location.href);
-        var query = URI.parseQuery(components['query']);
-
-        if (query && query['redirect']) {
-            window.location.replace(site.uri.public + '/' + query['redirect']);
-        } else {
-            window.location.replace(site.uri.public);
-        }
+    }).on("submitSuccess.ufForm", function(event, data, textStatus, jqXHR) {
+        redirectOnLogin(jqXHR);
     });
 });
