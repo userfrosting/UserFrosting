@@ -62,27 +62,48 @@ class AdminController extends SimpleController
         /** @var Config $config */
         $cache = $this->ci->cache;
 
-        // Load some system info from cache. If not present in cache, we cache them
-        $ufVersion = $cache->rememberForever('uf_version', function () {
-            return Version::where('sprinkle', 'core')->first()->version;
-        });
-
+        // Get each sprinkle db version
         $sprinkles = $cache->rememberForever('uf_sprinklesVersion', function() {
+
+            // The returned/cached data
             $sprinkles = array();
-            foreach ($this->ci->sprinkleManager->getSprinkles() as $sprinkle) {
+
+            // Get the sprinkles list
+            $sprinklesList = $this->ci->sprinkleManager->getSprinkles();
+
+            // Manually prepend the core sprinkle
+            array_unshift($sprinklesList , 'core');
+
+            // Get the data from the version table
+            $versions = Version::all();
+
+            // Load each sprinkle version
+            foreach ($sprinklesList as $sprinkle) {
 
                 // Get sprinkle db version number
-                if ($sprinkleVersion = Version::where('sprinkle', $sprinkle)->first()) {
+                if ($sprinkleVersion = $versions->where('sprinkle', $sprinkle)->first()) {
                     $version = $sprinkleVersion->version;
                 } else {
                     $version = null;
                 }
 
+                // Get the latest available migration in the file
+                $migrations = array_reverse(glob("../app/sprinkles/$sprinkle/migrations/*.php"));
+                if (!empty($migrations)) {
+                    $lastMigration = basename($migrations[0], ".php");
+                    $migration = ($version < $lastMigration);
+                } else {
+                    $migration = false;
+                }
+
+                // Put the sprinkle data in the cached data
                 $sprinkles[] = [
                     'name' => $sprinkle,
-                    'version' => $version
+                    'version' => $version,
+                    'migration' => $migration,
                 ];
             }
+
             return $sprinkles;
         });
 
@@ -94,7 +115,7 @@ class AdminController extends SimpleController
             ],
             'info' => [
                 'version' => [
-                    'UF' => $ufVersion,
+                    'UF' => \UserFrosting\VERSION,
                     'php' => phpversion(),
                     'database' => EnvironmentInfo::database()
                 ],

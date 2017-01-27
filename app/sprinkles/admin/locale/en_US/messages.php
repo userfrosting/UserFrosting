@@ -59,6 +59,9 @@ return [
 
     "MANUALLY_ACTIVATED"    => "{{user_name}}'s account has been manually activated",
     "MASTER_ACCOUNT_EXISTS" => "The master account already exists!",
+    "MIGRATION" => [
+        "REQUIRED"          => "Database update required"
+    ],
 
     "PERMISSION" => [
         1 => "Permission",

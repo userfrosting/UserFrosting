@@ -58,6 +58,9 @@ return [
 
     "MANUALLY_ACTIVATED"    => "Le compte de {{user_name}} a été activé manuellement",
     "MASTER_ACCOUNT_EXISTS" => "Le compte principal existe déjà !",
+    "MIGRATION" => [
+        "REQUIRED"          => "Mise à jour de la base de données requise"
+    ],
 
     "PERMISSION" => [
         1 => "Autorisation",

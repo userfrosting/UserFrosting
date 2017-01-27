@@ -59,6 +59,9 @@ return [
 
     "MANUALLY_ACTIVATED"                => "{{user_name}}'s Konto wurde manuell aktiviert.",
     "MASTER_ACCOUNT_EXISTS"             => "Das Root-Konto existiert bereits!",
+    "MIGRATION" => [
+        "REQUIRED"                      => "Datenbankaktualisierung erforderlich"
+    ],
 
     "PERMISSION" => [
         1                               => "Berechtigung",
