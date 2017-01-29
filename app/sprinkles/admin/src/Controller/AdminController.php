@@ -147,7 +147,7 @@ class AdminController extends SimpleController
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'clear_Cache')) {
+        if (!$authorizer->checkAccess($currentUser, 'clear_cache')) {
             throw new ForbiddenException();
         }
 
@@ -171,7 +171,7 @@ class AdminController extends SimpleController
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'clear_Cache')) {
+        if (!$authorizer->checkAccess($currentUser, 'clear_cache')) {
             throw new ForbiddenException();
         }
 

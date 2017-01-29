@@ -29,7 +29,7 @@
     }
     $sprinkles = json_decode($sprinklesFile)->base;
 
-    // Add `core` at the beggening of sprinkles list
+    // Add `core` at the beginning of sprinkles list
     array_unshift($sprinkles , 'core');
 
     // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.

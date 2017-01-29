@@ -1,6 +1,7 @@
 # Change Log
 
 ## v4.0.1-Alpha
+- Bump min version of PHP to 5.6
 - Added German translation (See [#625](https://github.com/userfrosting/UserFrosting/issues/625)) - Thanks @X-Anonymous-Y
 - Improved Gulp Build task
 - Remove site-dev from example sprinkles.json

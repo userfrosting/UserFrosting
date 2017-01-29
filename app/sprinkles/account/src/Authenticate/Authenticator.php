@@ -90,13 +90,13 @@ class Authenticator
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
 
-        // Catch the BindingResolutionException if we can't connect to the DB
-        try {
-            $pdo = Capsule::connection()->getPdo();
-        } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
-            $dbParams = $config['db.default'];
-            throw new \PDOException("Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration.");
-        }
+        $dbParams = $this->config['db.default'];
+
+        // Test database connection directly using PDO
+        $dbh = new \PDO("{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}", $dbParams['username'], $dbParams['password']);
+    
+        // Now get actual PDO instance for Eloquent
+        $pdo = Capsule::connection()->getPdo();
 
         $this->rememberMeStorage->setConnection($pdo);
 
