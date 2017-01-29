@@ -15,7 +15,7 @@ $app->group('/admin/roles', function () {
         ->setName('uri_roles');
 
     $this->get('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:pageInfo');
-});
+})->add('authGuard');
 
 $app->group('/api/roles', function () {
     $this->delete('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:delete');
@@ -31,7 +31,7 @@ $app->group('/api/roles', function () {
     $this->put('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateInfo');
 
     $this->put('/r/{slug}/{field}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateField');
-});
+})->add('authGuard');
 
 $app->group('/modals/roles', function () {
     $this->get('/confirm-delete', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalConfirmDelete');
@@ -41,4 +41,4 @@ $app->group('/modals/roles', function () {
     $this->get('/edit', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalEdit');
 
     $this->get('/permissions', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getModalEditPermissions');
-});
+})->add('authGuard');

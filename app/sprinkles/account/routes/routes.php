@@ -13,7 +13,8 @@ $app->group('/account', function () {
     $this->get('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageForgotPassword')
         ->setName('forgot-password');
 
-    $this->get('/logout', 'UserFrosting\Sprinkle\Account\Controller\AccountController:logout');
+    $this->get('/logout', 'UserFrosting\Sprinkle\Account\Controller\AccountController:logout')
+        ->add('authGuard');
 
     $this->get('/resend-verification', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageResendVerification');
 
@@ -21,7 +22,8 @@ $app->group('/account', function () {
 
     $this->get('/set-password/deny', 'UserFrosting\Sprinkle\Account\Controller\AccountController:denyResetPassword');
 
-    $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings');
+    $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings')
+        ->add('authGuard');
 
     $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')
         ->add('checkEnvironment')
@@ -39,7 +41,9 @@ $app->group('/account', function () {
 
     $this->post('/set-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:setPassword');
 
-    $this->post('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:settings');
+    $this->post('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:settings')
+        ->add('authGuard')
+        ->setName('settings');
 });
 
 $app->get('/modals/account/tos', 'UserFrosting\Sprinkle\Account\Controller\AccountController:getModalAccountTos');

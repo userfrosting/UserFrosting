@@ -10,6 +10,16 @@
 {% endblock %}
 
 {% block content %}
+    {# This needs to be here (early in the body) to make sure the animation doesn't fire #}
+    <script>
+        (function () {
+          if (Boolean(sessionStorage.getItem('sidebar-toggle-collapsed'))) {
+            var body = document.getElementsByTagName('body')[0];
+            body.className = body.className + ' sidebar-collapse';
+          }
+        })();
+    </script>
+
     <div class="wrapper">
 
       <header class="main-header">

@@ -111,31 +111,31 @@
                 })
                 .then(
                     // Submission successful
-                    function (data) {
+                    function (data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
                         if (submit_button) {
                             submit_button.prop( "disabled", false );
                             submit_button.html(submit_button_text);
                         }
 
-                        base.$T.trigger('submitSuccess.ufForm');
-                        return data;
+                        base.$T.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
+                        return jqXHR;
                     },
                     // Submission failed
-                    function (data) {
+                    function (jqXHR, textStatus, errorThrown) {
                         // Restore button text and re-enable submit button
                         if (submit_button) {
                             submit_button.prop( "disabled", false );
                             submit_button.html(submit_button_text);
                         }
                         // Error messages
-                        if ((typeof site !== "undefined") && site.debug.ajax && data.responseText) {
-                            base.$T.trigger('submitError.ufForm');
-                            document.write(data.responseText);
+                        if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
+                            base.$T.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
+                            document.write(jqXHR.responseText);
                             document.close();
                         } else {
                             if (base.options.DEBUG) {
-                                console.log("Error (" + data.status + "): " + data.responseText );
+                                console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
                             }
                             // Display errors on failure
                             // TODO: ufAlerts widget should have a 'destroy' method
@@ -147,10 +147,10 @@
 
                             base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
                             base.options.msgTarget.on("render.ufAlerts", function () {
-                                base.$T.trigger('submitError.ufForm');
+                                base.$T.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
                             });
                         }
-                        return data;
+                        return jqXHR;
                     }
                 );
             }

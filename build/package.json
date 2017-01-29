@@ -16,8 +16,10 @@
     "merge-array-object": "^1.0.3",
     "recursive-copy": "^2.0.5",
     "del": "^2.2.2",
-    "shelljs": "0.7.6",
-    "bower": "^1.8.0"
+    "shelljs": "^0.7.6",
+    "bower": "^1.8.0",
+    "gulp-src-ordered-globs": "^1.0.3",
+    "gulp-copy": "^1.0.0"
   },
   "scripts": {
     "uf-bundle-build": "gulp bundle-build",

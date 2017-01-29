@@ -1,7 +1,6 @@
 {
     "base": [
         "account",
-        "admin",
-        "site-dev"
+        "admin"
     ]
 }

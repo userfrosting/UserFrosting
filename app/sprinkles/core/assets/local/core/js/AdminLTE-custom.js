@@ -90,20 +90,28 @@ $.AdminLTE.initMenu = function (searchElement) {
 };
 
 $(function() {
+    //Init menu and trees
     $.AdminLTE.initMenu('ul.sidebar-menu a');
     $.AdminLTE.tree_UF('.sidebar');
-});
 
-// Globally apply select2
-$(function() {
+    // Globally apply select2
     $('select').select2({ minimumResultsForSearch: Infinity });
-});
 
-// Globally apply iCheck
-$(function() {
+    // Globally apply iCheck
     $('input').iCheck({
       checkboxClass: 'icheckbox_square-blue',
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' // optional
+    });
+
+    // Remember the sidebar collapse state
+    // See: https://github.com/almasaeed2010/AdminLTE/issues/896#issuecomment-264723101
+    $('.sidebar-toggle').click(function(event) {
+        event.preventDefault();
+        if (Boolean(sessionStorage.getItem('sidebar-toggle-collapsed'))) {
+            sessionStorage.setItem('sidebar-toggle-collapsed', '');
+        } else {
+            sessionStorage.setItem('sidebar-toggle-collapsed', '1');
+        }
     });
 });

@@ -9,25 +9,28 @@
     use Illuminate\Database\Schema\Blueprint;
     use Slim\Container;
     use Slim\Http\Uri;
-
     use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
 
     if (!defined('STDIN')) {
         die('This program must be run from the command line.');
     }
 
-    // TODO: check PHP version
+    // 1° Pre-flight check and bootup
 
+    // TODO: check PHP version
 
     // First, we create our DI container
     $container = new Container;
 
     // Attempt to fetch list of Sprinkles
-    $sprinklesFile = file_get_contents('../app/sprinkles/sprinkles.json');
+    $sprinklesFile = file_get_contents(UserFrosting\APP_DIR . '/' . UserFrosting\SPRINKLES_DIR_NAME . '/sprinkles.json');
     if ($sprinklesFile === false) {
         die(PHP_EOL . "File 'app/sprinkles/sprinkles.json' not found. Please create a 'sprinkles.json' file and try again." . PHP_EOL);
     }
     $sprinkles = json_decode($sprinklesFile)->base;
+
+    // Add `core` at the beginning of sprinkles list
+    array_unshift($sprinkles , 'core');
 
     // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
     $container['sprinkleManager'] = function ($c) use ($sprinkles) {
@@ -39,24 +42,35 @@
 
     $container->config['settings.displayErrorDetails'] = false;
 
+    // Get config
     $config = $container->config;
 
+    // Boot db
     $container->db;
 
-    // Test database connection
+    $dbParams = $config['db.default'];
+
+    if (!$dbParams) {
+        die(PHP_EOL . "'default' database connection not found.  Please double-check your configuration.");
+    }
+
+    // Test database connection directly using PDO
     try {
-        Capsule::connection()->getPdo();
-    } catch (\Exception $e) {
-        $dbParams = $config['db.default'];
-        die(PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration." . PHP_EOL);
+        $dbh = new \PDO("{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}", $dbParams['username'], $dbParams['password']);
+    } catch (\PDOException $e) {
+        $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:" . PHP_EOL;
+        $message .= "Exception: " . $e->getMessage() . PHP_EOL;
+        $message .= "Trace: " . $e->getTraceAsString() . PHP_EOL;
+        die($message);
     }
 
     $schema = Capsule::schema();
 
     $installTime = Carbon::now();
 
-    $ufVersion = "4.0.0-alpha";
+    $ufVersion = UserFrosting\VERSION;
 
+    // 2° Check Operating system
     $detectedOS = php_uname('s');
 
     echo PHP_EOL . "Welcome to the UserFrosting installation tool!" . PHP_EOL;
@@ -81,6 +95,7 @@
         }
     }
 
+    // 3° Set-up version db table
     // Get the installed versions
     echo PHP_EOL . "Checking for Sprinkle's version table:" . PHP_EOL;
 
@@ -95,27 +110,16 @@
             $table->charset = 'utf8';
             $table->unique('sprinkle');
         });
-        Capsule::table('version')->insert([
-            [
-                'sprinkle' => 'core',
-                'version' => $ufVersion,
-                'created_at' => $installTime,
-                'updated_at' => $installTime
-            ]
-        ]);
 
-        echo "Installing UserFrosting $ufVersion for the first time..." . PHP_EOL;
         echo "Created table 'version'..." . PHP_EOL;
     } else {
         echo "Table 'version' found." . PHP_EOL;
     }
 
-    // Load the sprinkles list
+    // 4° Migrate each sprinkles
     echo PHP_EOL . "Migrating Sprinkle's:" . PHP_EOL;
 
     // Looping throught every sprinkle and running their migration
-    // N.B.: No migrations in core... yet. Add it manually if migration is added
-    // to core at some point
     foreach ($sprinkles as $sprinkle) {
 
         echo ">> $sprinkle" . PHP_EOL;
@@ -150,7 +154,7 @@
                     ]
                 ]);
 
-                echo "Migrated sprinkle '$sprinkle' to $version..." . PHP_EOL.PHP_EOL;
+                echo "Migrated sprinkle '$sprinkle' !" . PHP_EOL.PHP_EOL;
 
             } else if (version_compare($installedVersion, $version, "<")) {
                 Capsule::table('version')->where('sprinkle', $sprinkle)
@@ -161,7 +165,7 @@
                         ]
                     );
 
-                echo PHP_EOL."Migrated sprinkle '$sprinkle' from $installedVersion to $version..." . PHP_EOL.PHP_EOL;
+                echo PHP_EOL."Migrated sprinkle '$sprinkle' !" . PHP_EOL.PHP_EOL;
             } else {
                 echo "Sprinkle '$sprinkle' already up-to-date..." . PHP_EOL.PHP_EOL;
             }
@@ -179,14 +183,5 @@
     // Slim\Http\Uri likes to add trailing slashes when the path is empty, so this fixes that.
     $uri = trim($uri, '/');
     */
-
-    // Migrate the UF version
-    Capsule::table('version')->where('sprinkle', 'core')
-        ->update(
-            [
-                'version' => $ufVersion,
-                'updated_at' => $installTime
-            ]
-        );
 
     echo PHP_EOL.PHP_EOL."UserFrosting migrated to $ufVersion successfully !".PHP_EOL;

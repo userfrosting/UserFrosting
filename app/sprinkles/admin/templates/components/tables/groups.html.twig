@@ -47,18 +47,18 @@
         <td>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                    Actions
+                    {% endverbatim %}{{translate("ACTIONS")}}{% verbatim %}
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-group-edit">
-                        <i class="fa fa-edit"></i> Edit group
+                        <i class="fa fa-edit"></i> {% endverbatim %}{{translate("GROUP.EDIT")}}{% verbatim %}
                         </a>
                     </li>
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-group-delete">
-                        <i class="fa fa-trash-o"></i> Delete group
+                        <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("GROUP.DELETE")}}{% verbatim %}
                         </a>
                     </li>
                 </ul>

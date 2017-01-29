@@ -47,6 +47,7 @@ return [
         "DELETE"            => "Supprimer le groupe",
         "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le groupe '{{name}}'?",
         "DELETE_YES"        => "Oui, supprimer le groupe",
+        "EDIT"          => "Modifier le groupe",
         "ICON"          => "Icône",
         "ICON_EXPLAIN"  => "Icône des membres du groupe",
         "INFO_PAGE"     => "Informations sur le groupe {{name}}",
@@ -57,6 +58,9 @@ return [
 
     "MANUALLY_ACTIVATED"    => "Le compte de {{user_name}} a été activé manuellement",
     "MASTER_ACCOUNT_EXISTS" => "Le compte principal existe déjà !",
+    "MIGRATION" => [
+        "REQUIRED"          => "Mise à jour de la base de données requise"
+    ],
 
     "PERMISSION" => [
         1 => "Autorisation",
@@ -78,6 +82,7 @@ return [
         "DELETE"            => "Supprimer le rôle",
         "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le rôle '{{name}}'?",
         "DELETE_YES"        => "Oui, supprimer le rôle",
+        "EDIT"          => "Modifier le rôle",
         "INFO_PAGE"     => "Page d'information pour le rôle {{name}}",
         "MANAGE"        => "Gérer les rôles",
         "NAME"          => "Nom du rôle",
@@ -87,7 +92,7 @@ return [
     ],
 
     "SYSTEM_INFO" => [
-        "@TRANSLATE" => "Informations sur le système",
+        "@TRANSLATION"  => "Informations sur le système",
 
         "DB_NAME"       => "Base de donnée",
         "DB_VERSION"    => "Version DB",
@@ -109,10 +114,14 @@ return [
             "SET_PASSWORD" => "Définissez le mot de passe de l'utilisateur comme"
         ],
 
+        "ACTIVATE"          => "Autoriser l'utilisateur",
         "CREATE"            => "Créer un utilisateur",
         "DELETE"            => "Supprimer l'utilisateur",
         "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer l'utilisateur '{{name}}'?",
         "DELETE_YES"        => "Oui, supprimer l'utilisateur",
+        "DISABLE"           => "Désactiver l'utilisateur",
+        "EDIT"              => "Modifier l'utilisateur",
+        "ENABLE"            => "Activer l'utilisateur",
         "INFO_PAGE"         => "Page d'information de l'utilisateur pour {{name}}",
         "PAGE_DESCRIPTION"  => "Une liste des utilisateurs de votre site. Fournit des outils de gestion incluant la possibilité de modifier les détails de l'utilisateur, d'activer manuellement les utilisateurs, d'activer / désactiver les utilisateurs et plus.",
         "LATEST"    => "Derniers utilisateurs",
