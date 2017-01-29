@@ -1,9 +1,13 @@
+{% block userCard %}
 <li class="dropdown user user-menu">
+    {% block userCard_nav %}
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
       <img src="{{ current_user.avatar }}" class="user-image" alt="User Image">
       <span class="hidden-xs">{{current_user.first_name}} {{current_user.last_name}}</span>
     </a>
+    {% endblock %}
     <ul class="dropdown-menu">
+      {% block userCard_userInfo %}
       <!-- User image -->
       <li class="user-header">
         <img src="{{ current_user.avatar }}" class="img-circle" alt="User Image">
@@ -13,25 +17,15 @@
           <small>({{current_user.user_name}})</small>
         </p>
       </li>
-      <!-- Menu Body -->
-      {% if checkAccess('uri_dashboard') %}
-      <li class="user-body">
-        <div class="row">
-          <div class="col-xs-12 text-center">
-            <a href="{{site.uri.public}}/admin">{{translate("ADMIN.PANEL")}}</a>
-          </div>
-        </div>
-        <!-- /.row -->
-      </li>
-      {% endif %}
+      {% endblock %}
+
       <!-- Menu Footer-->
       <li class="user-footer">
-        <div class="pull-left">
-          <a href="{{site.uri.public}}/account/settings" class="btn btn-default btn-flat">{{translate("ACCOUNT.MY")}}</a>
-        </div>
-        <div class="pull-right">
-          <a href="{{site.uri.public}}/account/logout" class="btn btn-default btn-flat">{{translate("LOGOUT")}}</a>
-        </div>
+          {% block userCard_menu %}
+              <a href="{{site.uri.public}}/account/settings" class="btn btn-default btn-flat btn-block">{{translate("ACCOUNT.MY")}}</a>
+              <a href="{{site.uri.public}}/account/logout" class="btn btn-default btn-flat btn-block">{{translate("LOGOUT")}}</a>
+          {% endblock %}
       </li>
     </ul>
 </li>
+{% endblock %}
