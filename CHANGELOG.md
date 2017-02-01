@@ -1,6 +1,7 @@
 # Change Log
 ## v4.0.2-Alpha
 - Database checks in installer and Authenticator now respect custom database ports. (See [#628](https://github.com/userfrosting/UserFrosting/issues/628))
+- Fixed edge case where `5%C` would appear in generated urls.
 
 ## v4.0.1-Alpha
 - Bump min version of PHP to 5.6
