@@ -56,7 +56,11 @@
 
     // Test database connection directly using PDO
     try {
-        $dbh = new \PDO("{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}", $dbParams['username'], $dbParams['password']);
+        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
+        if (isset($dbParams['port'])) {
+            $dsn .= ";port={$dbParams['port']}";
+        }
+        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
     } catch (\PDOException $e) {
         $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:" . PHP_EOL;
         $message .= "Exception: " . $e->getMessage() . PHP_EOL;
