@@ -583,6 +583,9 @@
             $password_confirm = readPassword($detectedOS);
         }
 
+        // To make output pretty...
+        echo PHP_EOL;
+
         // Ok, now we've got the info and we can create the new user.
 
         $rootUser = new User([

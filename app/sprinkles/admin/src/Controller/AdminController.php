@@ -14,7 +14,7 @@ use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Model\Role;
-use UserFrosting\Sprinkle\Admin\Model\Version;
+use UserFrosting\Sprinkle\Core\Model\Version;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 
 /**
@@ -91,7 +91,7 @@ class AdminController extends SimpleController
                 $migrations = array_reverse(glob("../app/sprinkles/$sprinkle/migrations/*.php"));
                 if (!empty($migrations)) {
                     $lastMigration = basename($migrations[0], ".php");
-                    $migration = ($version < $lastMigration);
+                    $migration = version_compare($version, $lastMigration, "<");
                 } else {
                     $migration = false;
                 }

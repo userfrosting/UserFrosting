@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Admin\Model;
+namespace UserFrosting\Sprinkle\Core\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
@@ -18,12 +18,9 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  *
  * @package UserFrosting
  * @author Alex Weissman
- * @see http://www.userfrosting.com/tutorials/lesson-3-data-model/
+ * @property string sprinkle
+ * @property string version
  *
- * @property string slug
- * @property string name
- * @property string description
- * @property string icon
  */
 class Version extends UFModel {
 
@@ -32,5 +29,21 @@ class Version extends UFModel {
      */
     protected $table = "version";
 
-    protected $fillable = [];
+    /**
+     * @var string custom primary key since this model doesn't have an `id` column
+     */
+    protected $primaryKey  = 'sprinkle';
+
+    /**
+     * @var bool Enable timestamps for this class.
+     */
+    public $timestamps = true;
+
+    /**
+     * @var array List of fields that can be edited by this model
+     */
+    protected $fillable = [
+        "sprinkle",
+        "version"
+    ];
 }
