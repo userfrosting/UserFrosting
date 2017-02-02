@@ -73,10 +73,6 @@
 
     $schema = Capsule::schema();
 
-    $installTime = Carbon::now();
-
-    $ufVersion = UserFrosting\VERSION;
-
     // 2° Check Operating system
     $detectedOS = php_uname('s');
 
