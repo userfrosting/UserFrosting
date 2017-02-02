@@ -32,9 +32,6 @@
     }
     $sprinkles = json_decode($sprinklesFile)->base;
 
-    // Add `core` at the beginning of sprinkles list
-    array_unshift($sprinkles , 'core');
-
     // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
     $container['sprinkleManager'] = function ($c) use ($sprinkles) {
         return new SprinkleManager($c, $sprinkles);
@@ -121,6 +118,9 @@
 
     // 4° Migrate each sprinkles
     echo PHP_EOL . "Migrating Sprinkle's:" . PHP_EOL;
+
+    // Add 'core'' to beginning sprinkles list for migration
+    array_unshift($sprinkles, 'core');
 
     // Looping throught every sprinkle and running their migration
     foreach ($sprinkles as $sprinkle) {
