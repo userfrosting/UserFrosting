@@ -58,11 +58,11 @@ return [
     "SLUG_CONDITION" => "Slug/Conditions",
     "STATUS" => "Statut",
 
-    "UNKNOWN" => "Inconu",
+    "UNKNOWN" => "Inconnu",
 
     // Actions words
-    "ACTIONS" => "Autoriser",
-    "ACTIVATE" => "Autorisé",
+    "ACTIONS" => "Actions",
+    "ACTIVATE" => "Autoriser",
     "ACTIVE" => "Activé",
     "ADD" => "Ajouter",
     "CANCEL" => "Annuler",
