@@ -2,6 +2,10 @@
 ## v4.0.2-Alpha
 - Database checks in installer and Authenticator now respect custom database ports. (See [#628](https://github.com/userfrosting/UserFrosting/issues/628))
 - Fixed edge case where `5%C` would appear in generated urls.
+- Improved stability and added php version check in `migrations/intall.php` 
+- Update ClassMapper to throw exception when class is not found
+- Fix minor errors in French locale
+- Fix translation error on the Legal page
 
 ## v4.0.1-Alpha
 - Bump min version of PHP to 5.6
