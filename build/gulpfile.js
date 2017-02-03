@@ -41,6 +41,7 @@ gulp.task('bower-clean', () => {
 
 // Gulp task to install vendor packages via bower
 gulp.task('bower-install', () => {
+    "use strict";
     shell.cd(`${sprinklesDir}`);
     sprinkles.forEach((sprinkle) => {
         if (fs.existsSync(`${sprinkle}/bower.json`)) {
@@ -57,6 +58,7 @@ gulp.task('bower-install', () => {
 // Executes bundleing tasks according to bundle.config.json files in each Sprinkle, as per Sprinkle load order.
 // Respects bundle collision rules.
 gulp.task('bundle-build', () => {
+    "use strict";
     let copy = require('recursive-copy');
     let merge = require('merge-array-object');
     let cleanup = (e) => {
@@ -125,6 +127,7 @@ gulp.task('bundle-build', () => {
 
 // Execute gulp-bundle-assets
 gulp.task('bundle', () => {
+    "use strict";
     gulp.src(bundleConfigFile)
         .pipe(plugins.bundleAssets({
             base: './temp'
@@ -142,6 +145,7 @@ gulp.task('bundle-clean', () => {
 });
 
 gulp.task('copy', function () {
+    "use strict";
     // TODO: Uglify JS and Minify CSS
     let sprinkleAssets = []
     sprinkles.forEach((sprinkle) => {
