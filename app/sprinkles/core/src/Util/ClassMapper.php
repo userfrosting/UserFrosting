@@ -54,8 +54,7 @@ class ClassMapper
         if (isset($this->classMappings[$identifier])) {
             return $this->classMappings[$identifier];
         } else {
-            // Throw exception
-
+            throw new \OutOfBoundsException("There is no class mapped to the identifier '$identifier'.");
         }
     }
 
