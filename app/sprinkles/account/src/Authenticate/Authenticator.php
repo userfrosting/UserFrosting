@@ -93,7 +93,11 @@ class Authenticator
         $dbParams = $this->config['db.default'];
 
         // Test database connection directly using PDO
-        $dbh = new \PDO("{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}", $dbParams['username'], $dbParams['password']);
+        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
+        if (isset($dbParams['port'])) {
+            $dsn .= ";port={$dbParams['port']}";
+        }
+        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
     
         // Now get actual PDO instance for Eloquent
         $pdo = Capsule::connection()->getPdo();

@@ -54,8 +54,7 @@ class ClassMapper
         if (isset($this->classMappings[$identifier])) {
             return $this->classMappings[$identifier];
         } else {
-            // Throw exception
-
+            throw new \OutOfBoundsException("There is no class mapped to the identifier '$identifier'.");
         }
     }
 
@@ -69,13 +68,11 @@ class ClassMapper
     public function setClassMapping($identifier, $className)
     {
         // Check that class exists
-        if (class_exists($className)) {
-            $this->classMappings[$identifier] = $className;
-        } else {
-            error_log('Unable to find a valid class of type \'' . $identifier . '\'.' );
-            // Throw exception
-
+        if (!class_exists($className)) {
+            throw new BadClassNameException("Unable to find the class '$className'." );
         }
+
+        $this->classMappings[$identifier] = $className;
 
         return $this;
     }
