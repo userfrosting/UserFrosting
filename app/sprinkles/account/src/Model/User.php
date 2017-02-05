@@ -124,7 +124,7 @@ class User extends UFModel
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        return $this->hasMany($classMapper->getClassMapping('activity'));
+        return $this->hasMany($classMapper->getClassMapping('activity'), 'user_id');
     }
 
     /**
