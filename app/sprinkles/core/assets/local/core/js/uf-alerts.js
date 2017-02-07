@@ -12,8 +12,8 @@
  * `options` is an object containing any of the following parameters:
  * @param {string} url The absolute URL from which to fetch flash alerts.
  * @param {bool} scrollToTop Whether to automatically scroll back to the top of the page after rendering alerts.
- * @param {string} alertContainerClass The CSS class(es) to be applied to the container for all alerts.
  * @param {string} alertMessageClass The CSS class(es) to be applied to each alert message.
+ * @param {string} alertTemplateId The CSS id(es) for the Handlebar alert template.
  * @param {bool} agglomerate Set to true to render all alerts together, applying styling for the highest-priority alert being rendered.
  *
  * == EVENTS ==
@@ -55,21 +55,28 @@
             {
                 url                : site.uri.public + "/alerts",
                 scrollToTop        : true,
-                alertContainerClass: "uf-alerts",
-                agglomerate        : true,
+                agglomerate        : false,
                 alertMessageClass  : "uf-alert-message",
+                alertTemplateId    : "uf-alert-template",
                 DEBUG: false
             },
             options
         );
 
-        this._alertMessageTemplateHtml = "<div class=\"" + this.options.alertMessageClass + " alert alert-{{ type }}\">{{ message }}</div>";
+        this._alertMessageTemplateHtml = $("#" + this.options.alertTemplateId).html();
 
         this._alertTypePriorities = {
             "danger" : 3,
             "warning": 2,
             "success": 1,
             "info"   : 0
+        };
+
+        this._alertTypeIcon = {
+            "danger" : "fa-ban",
+            "warning": "fa-warning",
+            "success": "fa-check",
+            "info"   : "fa-info"
         };
 
         this._init( target, options );
@@ -82,8 +89,6 @@
     {
         var base = this;
         var $el = $(target);
-
-        base.$T.toggleClass(base.options.alertContainerClass);
 
         base.messages = [];
 
@@ -186,31 +191,49 @@
         var base = this;
 
         $.when(base._newMessagesPromise).then( function () {
+
             // Display alerts
-            var alertHtml = "<ul>";
+            var alertHtml = "";
 
             // If agglomeration is enabled, set the container to the highest priority message type
             if (base.messages.length && base.options.agglomerate) {
+
+                var alertMessageTemplate = Handlebars.compile(base._alertMessageTemplateHtml, {noEscape: true});
+
+                var message = "<ul>";
                 var alertContainerType = "info";
+
                 jQuery.each(base.messages, function(alert_idx, alert) {
                     if (base._alertTypePriorities[alert["type"]] > base._alertTypePriorities[alertContainerType]) {
                         alertContainerType = alert["type"];
                     }
                 });
 
-                base.$T.toggleClass("alert alert-" + alertContainerType, true);
-
                 var aggTemplate = Handlebars.compile("<li class=" + base.options.alertMessageClass + ">{{ message }}</li>");
                 jQuery.each(base.messages, function(alert_idx, alert) {
-                    alertHtml += aggTemplate(alert);
+                    message += aggTemplate(alert);
                 });
-                alertHtml += "</ul>";
+
+                message += "</ul>";
+
+                // Render alert
+                alertHtml += alertMessageTemplate({
+                    "type": alertContainerType,
+                    "message": message,
+                    "icon": base._alertTypeIcon[alertContainerType]
+                });
+
+
             } else {
-                alertHtml = "";
 
                 var alertMessageTemplate = Handlebars.compile(base._alertMessageTemplateHtml);
 
                 jQuery.each(base.messages, function(alert_idx, alert) {
+
+                    // Inject icon
+                    alert["icon"] = base._alertTypeIcon[alert["type"]];
+
+                    // Render alert
                     alertHtml += alertMessageTemplate(alert);
                 });
             }

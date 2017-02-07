@@ -2,6 +2,7 @@
 
 ## v4.0.3-Alpha
 - Add translation for Portuguese (locale pt_PT) ([#639](https://github.com/userfrosting/UserFrosting/issues/639)) - Thanks @brunomnsilva
+- UfAlert style customization (See [#634](https://github.com/userfrosting/UserFrosting/issues/634))
 
 ## v4.0.2-Alpha
 - Specify foreign key explicitly in `User::activities()` relationship.
