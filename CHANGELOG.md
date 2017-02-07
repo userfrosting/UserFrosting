@@ -4,6 +4,7 @@
 - Add translation for Portuguese (locale pt_PT) ([#639](https://github.com/userfrosting/UserFrosting/issues/639)) - Thanks @brunomnsilva
 - UfAlert style customization (See [#634](https://github.com/userfrosting/UserFrosting/issues/634))
 - Message stream now support raw placeholder interpolation (See [#621](https://github.com/userfrosting/UserFrosting/issues/621))
+- Fix the "Root account" message breaking the UI on smaller screens (See [#641](https://github.com/userfrosting/UserFrosting/issues/641)) - Thanks @brunomnsilva !
 
 ## v4.0.2-Alpha
 - Specify foreign key explicitly in `User::activities()` relationship.
