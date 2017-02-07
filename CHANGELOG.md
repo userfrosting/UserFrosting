@@ -1,6 +1,5 @@
 # Change Log
 
-<<<<<<< HEAD
 =======
 ## v4.0.3-Alpha
 - Add translation for Portuguese (locale pt_PT) ([#639](https://github.com/userfrosting/UserFrosting/issues/639)) - Thanks @brunomnsilva

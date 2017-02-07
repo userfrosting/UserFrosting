@@ -3,7 +3,6 @@
 namespace UserFrosting;
 
 // Some standard defines
-<<<<<<< HEAD
 define('UserFrosting\VERSION', '4.0.2-alpha');
 =======
 define('UserFrosting\VERSION', '4.0.x-dev');
