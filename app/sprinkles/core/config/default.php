@@ -130,7 +130,8 @@
                 'available' => [
                     'de_DE' => 'Deutsch',
                     'en_US' => 'English',
-                    'fr_FR' => 'Français'
+                    'fr_FR' => 'Français',
+                    'pt_PT' => 'Português'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
