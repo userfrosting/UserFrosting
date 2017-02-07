@@ -92,6 +92,9 @@
                 {% endblock %}
 
                 {# Override this block to alter UfAlerts. #}
+                {% block ufAlertTemplate %}
+                    {% include "components/alerts.html.twig" %}
+                {% endblock %}
                 {% block scripts_UFAlert %}
                     <script>
                         $("#alerts-main").ufAlerts();
