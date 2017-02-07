@@ -226,7 +226,7 @@
 
             } else {
 
-                var alertMessageTemplate = Handlebars.compile(base._alertMessageTemplateHtml);
+                var alertMessageTemplate = Handlebars.compile(base._alertMessageTemplateHtml, {noEscape: true});
 
                 jQuery.each(base.messages, function(alert_idx, alert) {
 
