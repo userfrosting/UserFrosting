@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.0.3-Alpha
+- Add translation for Portuguese (locale pt_PT) ([#639](https://github.com/userfrosting/UserFrosting/issues/639)) - Thanks @brunomnsilva
+
 ## v4.0.2-Alpha
 - Specify foreign key explicitly in `User::activities()` relationship.
 - Database checks in installer and Authenticator now respect custom database ports. (See [#628](https://github.com/userfrosting/UserFrosting/issues/628))
