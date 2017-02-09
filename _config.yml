@@ -1,6 +1,6 @@
 name: UserFrosting
 highlighter: pygments
-url: http://www.userfrosting.com
+url: http://v3.userfrosting.com
 title: UserFrosting
 markdown: redcarpet
 redcarpet:
