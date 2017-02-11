@@ -50,3 +50,11 @@ Mike's a programmer and IT specialist for a small business in NH, and works on o
 ### Louis Charette
 
 Louis's a civil engineer who also has a passion for coding. He is one of the main contributors for SimpsonsCity.com and like to share is knowledge by helping other the same way he was helped when he first started coding.
+
+## API documentation
+
+To build the API documentation, install [ApiGen](http://www.apigen.org/) globally and then run:
+
+`apigen generate --source UserFrosting/app,userfrosting-assets/src,userfrosting-config/Config,userfrosting-fortress/Fortress,userfrosting-i18n/I18n,userfrosting-session/Session,userfrosting-support/Support --destination userfrosting-api --exclude *vendor*,*_meta* --template-theme "bootstrap"`
+
+from inside your dev directory.

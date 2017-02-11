@@ -83,9 +83,7 @@ function updateUser(userName, fieldName, fieldValue) {
             document.write(response.responseText);
             document.close();
         } else {
-            if (base.options.DEBUG) {
-                console.log("Error (" + response.status + "): " + response.responseText );
-            }
+            console.log("Error (" + response.status + "): " + response.responseText );
         }
 
         return response;

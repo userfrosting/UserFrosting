@@ -20,7 +20,6 @@ use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Model\Permission;
 use UserFrosting\Sprinkle\Account\Model\Role;
-use UserFrosting\Sprinkle\Admin\Sprunje\PermissionSprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -60,7 +59,7 @@ class PermissionController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $sprunje = new PermissionSprunje($classMapper, $params);
+        $sprunje = $classMapper->createInstance('permission_sprunje', $classMapper, $params);
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
