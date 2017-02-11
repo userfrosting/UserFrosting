@@ -301,7 +301,7 @@ class User extends UFModel
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        return $this->hasMany($classMapper->getClassMapping('password_reset'));
+        return $this->hasMany($classMapper->getClassMapping('password_reset'), 'user_id');
     }
 
     /**
@@ -341,7 +341,7 @@ class User extends UFModel
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users')->withTimestamps();
+        return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users', 'user_id', 'role_id')->withTimestamps();
     }
 
     /**

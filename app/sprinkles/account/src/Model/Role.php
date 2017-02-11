@@ -77,7 +77,7 @@ class Role extends UFModel
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles')->withTimestamps();
+        return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles', 'role_id', 'permission_id')->withTimestamps();
     }
 
     /**
@@ -103,6 +103,6 @@ class Role extends UFModel
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        return $this->belongsToMany($classMapper->getClassMapping('user'), 'role_users');
+        return $this->belongsToMany($classMapper->getClassMapping('user'), 'role_users', 'role_id', 'user_id');
     }
 }
