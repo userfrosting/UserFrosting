@@ -12,7 +12,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\NotFoundException;
-use UserFrosting\Sprinkle\Admin\Sprunje\ActivitySprunje;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -52,7 +51,7 @@ class ActivityController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $sprunje = new ActivitySprunje($classMapper, $params);
+        $sprunje = $classMapper->createInstance('activity_sprunje', $classMapper, $params);
         $sprunje->extendQuery(function ($query) {
             return $query->with('user');
         });

@@ -27,6 +27,20 @@ class AdminServicesProvider
     public function register($container)
     {
         /**
+         * Extend the 'classMapper' service to register sprunje classes.
+         *
+         * Mappings added: 'activity_sprunje', 'group_sprunje', 'permission_sprunje', 'role_sprunje', 'user_sprunje'
+         */
+        $container->extend('classMapper', function ($classMapper, $c) {
+            $classMapper->setClassMapping('activity_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\ActivitySprunje');
+            $classMapper->setClassMapping('group_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\GroupSprunje');
+            $classMapper->setClassMapping('permission_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\PermissionSprunje');
+            $classMapper->setClassMapping('role_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\RoleSprunje');
+            $classMapper->setClassMapping('user_sprunje', 'UserFrosting\Sprinkle\Admin\Sprunje\UserSprunje');
+            return $classMapper;
+        });
+
+        /**
          * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
          */
         $container['determineRedirectOnLogin'] = function ($c) {
