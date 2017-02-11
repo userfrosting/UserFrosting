@@ -88,14 +88,11 @@ class MessageStream
      * @param array[string] $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
      * @return MessageStream this MessageStream object.
      */
-    public function addMessageTranslated($type, $messageId, $placeholders = array(), $rawPlaceholders = array())
+    public function addMessageTranslated($type, $messageId, $placeholders = array())
     {
         if (!$this->messageTranslator){
             throw new \RuntimeException("No translator has been set!  Please call MessageStream::setTranslator first.");
         }
-
-        // Merge both placeholders while escaping the default one
-        $placeholders = array_replace_recursive($this->escapePlaceholders($placeholders), $rawPlaceholders);
 
         $message = $this->messageTranslator->translate($messageId, $placeholders);
         return $this->addMessage($type, $message);
@@ -155,23 +152,5 @@ class MessageStream
         $messages = $this->session[$this->messagesKey];
         $this->resetMessageStream();
         return $messages;
-    }
-
-    /**
-     * Escape placeholder values.
-     * This function recursively escape html entities inside messages placeholder values so it's safe to display them
-     * in the DOM
-     *
-     * @return array An array of placeholders with escaped values
-     */
-    protected function escapePlaceholders($placeholders) {
-        foreach ($placeholders as $name => $value) {
-            if (is_array($value)) {
-                $placeholders[$name] = $this->escapePlaceholders($value);
-            } else {
-                $placeholders[$name] = htmlentities($value);
-            }
-        }
-        return $placeholders;
     }
 }
