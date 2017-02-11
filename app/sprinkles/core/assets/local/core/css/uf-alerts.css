@@ -1,11 +1,17 @@
-.uf-alerts, .uf-alerts.alert
+.uf-alert
 {
-    text-align: left;
-    padding: 10px 0px;
-    margin: 20px 0px 0px 0px;
-    display: none;
+    margin: 10px 0px 0px 0px;
 }
 
-.uf-alerts.uf-alerts.alert {
-    display: block;
+.uf-alert .icon {
+    line-height: 20px;
+}
+
+.uf-alert-message-container {
+    margin-left: 30px;
+    line-height: 20px;
+}
+
+.uf-alert-message-container > ul {
+    margin-left: -20px;
 }
