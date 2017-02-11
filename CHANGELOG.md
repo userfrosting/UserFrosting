@@ -1,5 +1,9 @@
 # Change Log
 
+## v4.0.3-Alpha
+- Specify foreign keys explicitly in all relationships.
+- Use classMapper for admin Sprunjes.
+
 ## v4.0.2-Alpha
 - Specify foreign key explicitly in `User::activities()` relationship.
 - Database checks in installer and Authenticator now respect custom database ports. (See [#628](https://github.com/userfrosting/UserFrosting/issues/628))
