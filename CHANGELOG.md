@@ -1,6 +1,9 @@
 # Change Log
 
-## v4.0.3-Alpha
+## v4.0.3-Dev
+- Add Arabic (MSA) translations (thanks to @abdullah.seba!)
+- Specify foreign keys explicitly in all relationships.
+- Add Dispatcher to db service to allow registering model events.
 - Specify foreign keys explicitly in all relationships.
 - Use classMapper for admin Sprunjes.
 - Add translation for Portuguese (locale pt_PT) ([#639](https://github.com/userfrosting/UserFrosting/issues/639)) - Thanks @brunomnsilva
