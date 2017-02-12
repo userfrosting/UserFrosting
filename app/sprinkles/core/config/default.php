@@ -127,11 +127,14 @@
                 'info' => true
             ],
             'locales' =>  [
+                // Should be ordered according to https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers,
+                // with the exception of English, which as the default language comes first.
                 'available' => [
-                    'de_DE' => 'Deutsch',
                     'en_US' => 'English',
+                    'ar'    => 'العربية',
                     'fr_FR' => 'Français',
-                    'ar'    => 'العربية'
+                    'pt_PT' => 'Português',
+                    'de_DE' => 'Deutsch'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
