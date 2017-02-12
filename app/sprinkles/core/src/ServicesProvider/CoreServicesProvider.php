@@ -14,6 +14,7 @@ use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\MemcachedConnector;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\DatabaseSessionHandler;
 use Illuminate\Session\FileSessionHandler;
@@ -278,6 +279,8 @@ class CoreServicesProvider
             foreach ($config['db'] as $name => $dbConfig) {
                 $capsule->addConnection($dbConfig, $name);
             }
+
+            $capsule->setEventDispatcher(new Dispatcher(new Container));
 
             // Register as global connection
             $capsule->setAsGlobal();
