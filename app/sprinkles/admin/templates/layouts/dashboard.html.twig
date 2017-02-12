@@ -57,7 +57,7 @@
         {% block content_header %}
         <section class="content-header">
           <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
-          <h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>
+          {% if block('page_description') is not empty %}<h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>{% endif %}
           {% block breadcrumb %}
             {% include 'components/breadcrumb.html.twig' with {page_title: block('page_title')} %}
           {% endblock %}
