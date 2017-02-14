@@ -10,6 +10,8 @@
 - UfAlert style customization (See [#634](https://github.com/userfrosting/UserFrosting/issues/634))
 - Message stream can now display raw placeholder using the `|raw` filter in the placeholder name. Requires latest version of the [i18n](https://github.com/userfrosting/i18n) component (See [#621](https://github.com/userfrosting/UserFrosting/issues/621))
 - Fix the "Root account" message breaking the UI on smaller screens (See [#641](https://github.com/userfrosting/UserFrosting/issues/641)) - Thanks @brunomnsilva !
+- Added `DB_DRIVER` and `DB_PORT` as environment variables to allow better out-of-box database configuration support, and to provide addtional protection by obscurity.
+- Normalised default values to `null` for environment variables in configuration.
 
 ## v4.0.2-Alpha
 - Specify foreign key explicitly in `User::activities()` relationship.
