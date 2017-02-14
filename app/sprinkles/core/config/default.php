@@ -57,7 +57,7 @@
         ],
         'db'      =>  [
             'default' => [
-                'driver'    => getenv('DB_DRIVER') ?: null,
+                'driver'    => getenv('DB_DRIVER') ?: 'mysql',
                 'host'      => getenv('DB_HOST') ?: null,
                 'port'      => getenv('DB_PORT') ?: null,
                 'database'  => getenv('DB_NAME') ?: null,
