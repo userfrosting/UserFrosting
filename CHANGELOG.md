@@ -12,6 +12,7 @@
 - Fix the "Root account" message breaking the UI on smaller screens (See [#641](https://github.com/userfrosting/UserFrosting/issues/641)) - Thanks @brunomnsilva !
 - Added `DB_DRIVER` and `DB_PORT` as environment variables to allow better out-of-box database configuration support, and to provide addtional protection by obscurity.
 - Normalised default values to `null` for environment variables in configuration.
+- Added `getCallbacks` public method to `AuthorizationManager` to enable drop-in extensions to `AuthorizationManager`.
 
 ## v4.0.2-Alpha
 - Specify foreign key explicitly in `User::activities()` relationship.
