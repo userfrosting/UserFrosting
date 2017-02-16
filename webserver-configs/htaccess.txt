@@ -1,0 +1,185 @@
+# Enable this line to temporarily disable the Apache rewrite cache.
+#Header set Cache-Control "max-age=0, private, no-store, no-cache, must-revalidate"
+
+# Tell PHP that we are using Apache
+SetEnv SERVER_TYPE Apache
+
+<IfModule mod_rewrite.c>
+
+    # Tell PHP that the mod_rewrite module is ENABLED.
+    SetEnv HTTP_MOD_REWRITE On
+
+    RewriteEngine On
+
+    # Uncomment the next two lines to forward all HTTP to HTTPS
+    #RewriteCond %{HTTPS} !=on
+    #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    # Forward all www. to non-www.  Remove this rule if you want both available.
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+    
+    # Remove trailing slash from any non-directory path (canonicalization) - GET requests only
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_METHOD}  =GET
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+    
+    # Dynamically rewrite base directory (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
+    RewriteCond $0#%{REQUEST_URI} ^([^#]*)#(.*)\1$
+    RewriteRule ^.*$ - [E=BASE:%2]
+    
+    # Forward any requested URLs that specifically contain index.php (see http://stackoverflow.com/questions/31062479/301-redirect-urls-that-are-also-being-rewritten)
+    RewriteCond %{THE_REQUEST} /index\.php [NC]
+    RewriteRule ^index\.php(?:/(.*))?$ %{ENV:BASE}$1 [L,R=301,NC,NE]
+    
+    # Send the URI to index.php (Slim routing)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [QSA,L]
+
+</IfModule>
+    
+# Deny access to any php.ini files
+<Files php.ini>
+	Order allow,deny
+        Deny from all
+</Files>
+
+# Gzip Compression
+<IfModule mod_deflate.c>
+    # Force compression for mangled headers.
+    # http://developer.yahoo.com/blogs/ydn/posts/2010/12/pushing-beyond-gzipping
+    <IfModule mod_setenvif.c>
+        <IfModule mod_headers.c>
+            SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
+            RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
+        </IfModule>
+    </IfModule>
+      
+    # Compress all output labeled with one of the following MIME-types
+    # (for Apache versions below 2.3.7, you don't need to enable `mod_filter`
+    #  and can remove the `<IfModule mod_filter.c>` and `</IfModule>` lines
+    #  as `AddOutputFilterByType` is still in the core directives).
+    
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE application/atom+xml \
+        application/javascript \
+        application/json \
+        application/rss+xml \
+        application/vnd.ms-fontobject \
+        application/x-font-ttf \
+        application/x-web-app-manifest+json \
+        application/xhtml+xml \
+        application/xml \
+        font/opentype \
+        image/svg+xml \
+        image/x-icon \
+        text/css \
+        text/html \
+        text/plain \
+        text/x-component \
+        text/xml
+    </IfModule>
+
+</IfModule>
+
+# ----------------------------------------------------------------------
+# | Expires headers - enable this if you want browsers to cache content |
+# ----------------------------------------------------------------------
+
+# Serve resources with far-future expires headers.
+#
+# (!) If you don't control versioning with filename-based
+# cache busting, you should consider lowering the cache times
+# to something like one week.
+#
+# https://httpd.apache.org/docs/current/mod/mod_expires.html
+
+#<IfModule mod_expires.c>
+#
+#    ExpiresActive on
+#    ExpiresDefault                                      "access plus 1 month"
+#
+#  # CSS
+#
+#    ExpiresByType text/css                              "access plus 1 hour"
+#
+#
+#  # Data interchange
+#
+#    ExpiresByType application/atom+xml                  "access plus 1 hour"
+#    ExpiresByType application/rdf+xml                   "access plus 1 hour"
+#    ExpiresByType application/rss+xml                   "access plus 1 hour"
+#
+#    ExpiresByType application/json                      "access plus 0 seconds"
+#    ExpiresByType application/ld+json                   "access plus 0 seconds"
+#    ExpiresByType application/schema+json               "access plus 0 seconds"
+#    ExpiresByType application/vnd.geo+json              "access plus 0 seconds"
+#    ExpiresByType application/xml                       "access plus 0 seconds"
+#    ExpiresByType text/xml                              "access plus 0 seconds"
+#
+#
+#  # Favicon (cannot be renamed!) and cursor images
+#
+#    ExpiresByType image/vnd.microsoft.icon              "access plus 1 week"
+#    ExpiresByType image/x-icon                          "access plus 1 week"
+#
+#  # HTML
+#
+#    ExpiresByType text/html                             "access plus 0 seconds"
+#
+#
+#  # JavaScript
+#
+#    ExpiresByType application/javascript                "access plus 1 hour"
+#    ExpiresByType application/x-javascript              "access plus 1 hour"
+#    ExpiresByType text/javascript                       "access plus 1 hour"
+#
+#
+#  # Manifest files
+#
+#    ExpiresByType application/manifest+json             "access plus 1 week"
+#    ExpiresByType application/x-web-app-manifest+json   "access plus 0 seconds"
+#    ExpiresByType text/cache-manifest                   "access plus 0 seconds"
+#
+#
+#  # Media files
+#
+#    ExpiresByType audio/ogg                             "access plus 1 month"
+#    ExpiresByType image/bmp                             "access plus 1 month"
+#    ExpiresByType image/gif                             "access plus 1 month"
+#    ExpiresByType image/jpeg                            "access plus 1 month"
+#    ExpiresByType image/png                             "access plus 1 month"
+#    ExpiresByType image/svg+xml                         "access plus 1 month"
+#    ExpiresByType image/webp                            "access plus 1 month"
+#    ExpiresByType video/mp4                             "access plus 1 month"
+#    ExpiresByType video/ogg                             "access plus 1 month"
+#    ExpiresByType video/webm                            "access plus 1 month"
+#
+#
+#  # Web fonts
+#
+#    # Embedded OpenType (EOT)
+#    ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
+#    ExpiresByType font/eot                              "access plus 1 month"
+#
+#    # OpenType
+#    ExpiresByType font/opentype                         "access plus 1 month"
+#
+#    # TrueType
+#    ExpiresByType application/x-font-ttf                "access plus 1 month"
+#
+#    # Web Open Font Format (WOFF) 1.0
+#    ExpiresByType application/font-woff                 "access plus 1 month"
+#    ExpiresByType application/x-font-woff               "access plus 1 month"
+#    ExpiresByType font/woff                             "access plus 1 month"
+#
+#    # Web Open Font Format (WOFF) 2.0
+#    ExpiresByType application/font-woff2                "access plus 1 month"
+#
+#
+#  # Other
+#
+#    ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
+#
+#</IfModule>

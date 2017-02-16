@@ -1,6 +1,7 @@
 # Change Log
 
 ## v4.0.3-Alpha
+- Add config file for nginx (https://github.com/userfrosting/UserFrosting/issues/373)
 - Add Portuguese translations (thanks to @brunomnsilva!)
 - Add Arabic (MSA) translations (thanks to @abdullah.seba!)
 - Add Dispatcher to db service to allow registering model events.
