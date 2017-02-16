@@ -13,6 +13,9 @@
 - Added `DB_DRIVER` and `DB_PORT` as environment variables to allow better out-of-box database configuration support, and to provide addtional protection by obscurity.
 - Normalised default values to `null` for environment variables in configuration.
 - Added `getCallbacks` public method to `AuthorizationManager` to enable drop-in extensions to `AuthorizationManager`.
+- Fixed broken links in generated asset bundles.
+- Introduced `clean` gulp task to act as a shotcut for removing all frontend vendor packages, all generated asset bundles, and copied assets. Accessible via `npm run uf-clean`.
+- Merged `copy` task with `bundle-build`.
 
 ## v4.0.2-Alpha
 - Specify foreign key explicitly in `User::activities()` relationship.

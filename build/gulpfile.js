@@ -34,10 +34,9 @@ const bundleConfigFile = `./${bundleFile}`;
 // Destination directory for vendor assets
 const vendorAssetsDir = './assets/vendor';
 
-// Deletes assets fetched by bower-install
-gulp.task('bower-clean', () => {
-    return del(`${sprinklesDir}/*/assets/vendor`, { force: true });
-});
+/**
+ * Vendor asset task
+ */
 
 // Gulp task to install vendor packages via bower
 gulp.task('bower-install', () => {
@@ -54,6 +53,10 @@ gulp.task('bower-install', () => {
 
     return true;
 });
+
+/**
+ * Bundling tasks
+ */
 
 // Executes bundleing tasks according to bundle.config.json files in each Sprinkle, as per Sprinkle load order.
 // Respects bundle collision rules.
@@ -116,37 +119,11 @@ gulp.task('bundle-build', () => {
                 config.copy = new Set(config.copy, currentConfig.copy);
             }
         }
-        // Copy sprinkle assets to temporary directory, overwriting on conflict.
-        if (fs.existsSync(`${location}assets/`)) {
-            copy(location + "assets/", "./temp/", { overwrite: true });
-        }
     });
     // Save bundle rules to bundle.config.json
     fs.writeFileSync(bundleConfigFile, JSON.stringify(config));
-});
 
-// Execute gulp-bundle-assets
-gulp.task('bundle', () => {
-    "use strict";
-    gulp.src(bundleConfigFile)
-        .pipe(plugins.bundleAssets({
-            base: './temp'
-        }))
-        .pipe(plugins.bundleAssets.results({
-            dest: './'
-        }))
-        .pipe(gulp.dest(publicAssetsDir));
-});
-
-gulp.task('bundle-clean', () => {
-    // Clean up temporary files
-    del("./temp", { force: true });
-    del(bundleConfigFile, { force: true });
-});
-
-gulp.task('copy', function () {
-    "use strict";
-    // TODO: Uglify JS and Minify CSS
+    // Copy all assets in order of Sprinkle load order.
     let sprinkleAssets = []
     sprinkles.forEach((sprinkle) => {
         sprinkleAssets.push(`../app/sprinkles/${sprinkle}/assets/**/*`);
@@ -155,3 +132,47 @@ gulp.task('copy', function () {
     return plugins.srcOrderedGlobs(sprinkleAssets)
             .pipe(plugins.copy('../public/assets/', {prefix: 5}));// And gulp.dest doesn't give us the control needed.
 });
+
+// Execute gulp-bundle-assets
+gulp.task('bundle', () => {
+    "use strict";
+    return gulp.src(bundleConfigFile)
+        .pipe(plugins.ufBundleAssets({
+            base: publicAssetsDir
+        }))
+        .pipe(plugins.ufBundleAssets.results({
+            dest: './'
+        }))
+        .pipe(gulp.dest(publicAssetsDir));
+});
+
+/**
+ * Clean up tasks
+ */
+
+gulp.task('public-clean', () => {
+    "use strict";
+    return del(publicAssetsDir, { force: true });
+});
+
+// Clean up temporary bundling files
+gulp.task('bundle-clean', () => {
+    "use strict";
+    return del(bundleConfigFile, { force: true });
+});
+
+// Deletes assets fetched by bower-install
+gulp.task('bower-clean', () => {
+    "use strict";
+    return del(`${sprinklesDir}/*/assets/vendor`, { force: true });
+});
+
+// Deletes all generated, or acquired files.
+gulp.task('clean', () => {
+    "use strict";
+    del(publicAssetsDir, { force: true});
+    del(bundleConfigFile, { force: true });
+    del(`${sprinklesDir}/*/assets/vendor`, { force: true });
+
+    return true;
+})
