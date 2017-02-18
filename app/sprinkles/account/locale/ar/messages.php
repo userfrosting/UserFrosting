@@ -146,7 +146,7 @@ return [
     "SIGNUP"                => "تسجيل",
 
     "TOS"           => "الأحكام والشروط",
-    "TOS_AGREEMENT" => "من خلال تسجيل حساب جديد في {{site_title}}, انت تقبل <a {{link_attributes}}>الأحكام والشروط</a>",
+    "TOS_AGREEMENT" => "من خلال تسجيل حساب جديد في {{site_title}}, انت تقبل <a {{link_attributes | raw}}>الأحكام والشروط</a>",
     "TOS_FOR"       => "الأحكام والشروط ل {{title}}",
 
     "USERNAME" => [
