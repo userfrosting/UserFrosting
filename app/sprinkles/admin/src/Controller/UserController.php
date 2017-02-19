@@ -162,7 +162,7 @@ class UserController extends SimpleController
 
             $this->ci->mailer->send($message);
 
-            $ms->addMessageTranslated('success', 'ACCOUNT_CREATION_COMPLETE', $data);
+            $ms->addMessageTranslated('success', 'USER.CREATED', $data);
         });
 
         return $response->withStatus(200);

@@ -53,7 +53,8 @@ return [
         "INFO_PAGE"     => "Informations sur le groupe {{name}}",
         "NAME"          => "Nom du groupe",
         "NAME_EXPLAIN"  => "Spécifiez le nom du groupe",
-        "PAGE_DESCRIPTION" => "Une liste des groupes pour votre site. Fournit des outils de gestion pour éditer et supprimer des groupes."
+        "PAGE_DESCRIPTION" => "Une liste des groupes pour votre site. Fournit des outils de gestion pour éditer et supprimer des groupes.",
+        "UPDATE"           => "Les détails du groupe <strong>{{name}}</strong> ont été enregistrés"
     ],
 
     "MANUALLY_ACTIVATED"    => "Le compte de {{user_name}} a été activé manuellement",
@@ -116,6 +117,7 @@ return [
 
         "ACTIVATE"          => "Autoriser l'utilisateur",
         "CREATE"            => "Créer un utilisateur",
+        "CREATED"           => "L'utilisateur <strong>{{user_name}}</strong> a été créé avec succès",
         "DELETE"            => "Supprimer l'utilisateur",
         "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer l'utilisateur '{{name}}'?",
         "DELETE_YES"        => "Oui, supprimer l'utilisateur",

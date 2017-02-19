@@ -10,6 +10,7 @@
 - Fixed broken links in generated asset bundles.
 - Introduced `clean` gulp task to act as a shotcut for removing all frontend vendor packages, all generated asset bundles, and copied assets. Accessible via `npm run uf-clean`.
 - Merged `copy` task with `bundle-build`.
+- Fixed missing translations
 
 ## v4.0.3-Alpha
 - Add config file for nginx (https://github.com/userfrosting/UserFrosting/issues/373)

@@ -54,7 +54,8 @@ return [
         "INFO_PAGE"     => "Group information page for {{name}}",
         "NAME"          => "Group name",
         "NAME_EXPLAIN"  => "Please enter a name for the group",
-        "PAGE_DESCRIPTION" => "A listing of the groups for your site.  Provides management tools for editing and deleting groups."
+        "PAGE_DESCRIPTION" => "A listing of the groups for your site.  Provides management tools for editing and deleting groups.",
+        "UPDATE"           => "Details updated for group <strong>{{name}}</strong>"
     ],
 
     "MANUALLY_ACTIVATED"    => "{{user_name}}'s account has been manually activated",
@@ -117,6 +118,7 @@ return [
 
         "ACTIVATE"          => "Activate user",
         "CREATE"            => "Create user",
+        "CREATED"           => "User <strong>{{user_name}}</strong> has been successfully created",
         "DELETE"            => "Delete user",
         "DELETE_CONFIRM"    => "Are you sure you want to delete the user '{{name}}'?",
         "DELETE_YES"        => "Yes, delete user",
