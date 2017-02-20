@@ -8,6 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Controller;
 
+use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -167,7 +168,7 @@ class AccountController extends SimpleController
                         ->addParams([
                             "user" => $user,
                             "token" => $passwordReset->getToken(),
-                            "request_date" => date("Y-m-d H:i:s")
+                            "request_date" => Carbon::now()->format('Y-m-d H:i:s')
                         ]);
 
                 $this->ci->mailer->send($message);
@@ -303,6 +304,11 @@ class AccountController extends SimpleController
         }
 
         $ms->addMessageTranslated("success", "WELCOME", $currentUser->export());
+
+        // Set redirect, if relevant
+        $determineRedirectOnLogin = $this->ci->determineRedirectOnLogin;
+        $response = $determineRedirectOnLogin($response);
+
         return $response->withStatus(200);
     }
 

@@ -34,7 +34,7 @@ class SprinkleManager
     /**
      * @var string The full absolute base path to the sprinkles directory.
      */
-    protected $sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
+    protected $sprinklesPath;
 
     /**
      * Create a new SprinkleManager object.
@@ -44,6 +44,7 @@ class SprinkleManager
      */
     public function __construct(ContainerInterface $ci, $sprinkles = [])
     {
+        $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
         $this->ci = $ci;
         $this->setSprinkles($sprinkles);
     }

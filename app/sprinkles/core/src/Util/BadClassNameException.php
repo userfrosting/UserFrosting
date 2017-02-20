@@ -6,17 +6,14 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Authenticate;
-
-use UserFrosting\Support\Exception\HttpException;
+namespace UserFrosting\Sprinkle\Core\Util;
 
 /**
- * Disabled account exception.  Used when an account has been disabled.
+ * Bad class name exception.  Used when a class name is dynamically invoked, but the class does not exist.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountDisabledException extends HttpException
+class BadClassNameException extends \LogicException
 {
-    protected $default_message = 'ACCOUNT.DISABLED';
-    protected $http_error_code = 403;
+    //
 }

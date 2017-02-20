@@ -144,7 +144,7 @@ return [
     "SIGNUP"                            => "Anmelden",
 
     "TOS"                               => "Geschäftsbedingungen",
-    "TOS_AGREEMENT"                     => "Durch die Registrierung eines Kontos auf {{site_title}} akzeptieren Sie die <a {{link_attributes}}> Bedingungen </a>.",
+    "TOS_AGREEMENT"                     => "Durch die Registrierung eines Kontos auf {{site_title}} akzeptieren Sie die <a {{link_attributes | raw}}> Bedingungen </a>.",
     "TOS_FOR"                           => "Allgemeine Geschäftsbedingungen für {{title}}",
 
     "USERNAME" => [

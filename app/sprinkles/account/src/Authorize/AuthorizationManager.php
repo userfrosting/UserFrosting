@@ -53,6 +53,16 @@ class AuthorizationManager
     }
 
     /**
+     * Get all authorization callbacks.
+     *
+     * @return callable[]
+     */
+    public function getCallbacks()
+    {
+        return $this->callbacks;
+    }
+
+    /**
      * Checks whether or not a user has access on a particular permission slug.
      *
      * Determine if this user has access to the given $hook under the given $params.

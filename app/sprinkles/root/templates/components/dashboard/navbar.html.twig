@@ -1,11 +1,5 @@
 {% extends "@admin/components/dashboard/navbar.html.twig" %}
 
-{% block dashboard_navbar %}
-    <div class="navbar-menu">
-        <ul class="nav navbar-nav">
-          <li><a href="#">{{ translate("HEADER_MESSAGE_ROOT") | upper }}</a></li>
-        </ul>
-    </div>
-
-    {{ parent() }}
+{% block dashboard_navbar_extra %}
+  <li class="hidden-xs hidden-sm"><a href="#">{{ translate("HEADER_MESSAGE_ROOT") | upper }}</a></li>
 {% endblock %}

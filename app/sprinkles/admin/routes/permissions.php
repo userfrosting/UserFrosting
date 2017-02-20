@@ -15,10 +15,10 @@ $app->group('/admin/permissions', function () {
         ->setName('uri_permissions');
 
     $this->get('/p/{id}', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:pageInfo');
-});
+})->add('authGuard');
 
 $app->group('/api/permissions', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getList');
 
     $this->get('/p/{id}', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getInfo');
-});
+})->add('authGuard');

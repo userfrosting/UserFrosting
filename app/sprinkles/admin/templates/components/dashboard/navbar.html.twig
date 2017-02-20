@@ -1,6 +1,8 @@
 {% block dashboard_navbar %}
     <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
+          <!-- additional elements (e.g., menus, messages) before the user account drop down -->
+          {% block dashboard_navbar_extra %} {% endblock %}
           <!-- User Account: style can be found in dropdown.less -->
           {% include "components/user-card.html.twig" %}
         </ul>

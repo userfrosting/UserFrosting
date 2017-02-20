@@ -13,8 +13,8 @@
 $app->group('/admin/activities', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\ActivityController:pageList')
         ->setName('uri_activities');
-});
+})->add('authGuard');
 
 $app->group('/api/activities', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\ActivityController:getList');
-});
+})->add('authGuard');

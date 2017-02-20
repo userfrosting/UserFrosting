@@ -30,7 +30,8 @@
     "prefer-stable": true,
     "autoload": {
         "files" : [
-            "defines.php"
+            "defines.php",
+            "helpers.php"
         ]
     }
 }

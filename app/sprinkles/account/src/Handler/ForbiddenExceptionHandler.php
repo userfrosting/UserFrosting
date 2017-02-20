@@ -63,5 +63,4 @@ class ForbiddenExceptionHandler extends ExceptionHandler
                         ->withHeader('Content-Type', 'text/html')
                         ->write($template->render([]));
     }
-
 }

@@ -13,6 +13,12 @@ use Birke\Rememberme\Storage\PDO as RememberMePDO;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Session\Session;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountDisabledException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountInvalidException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
+use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
@@ -84,13 +90,17 @@ class Authenticator
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
 
-        // Catch the BindingResolutionException if we can't connect to the DB
-        try {
-            $pdo = Capsule::connection()->getPdo();
-        } catch (\Illuminate\Contracts\Container\BindingResolutionException $e) {
-            $dbParams = $config['db.default'];
-            throw new \PDOException("Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration.");
+        $dbParams = $this->config['db.default'];
+
+        // Test database connection directly using PDO
+        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
+        if (isset($dbParams['port'])) {
+            $dsn .= ";port={$dbParams['port']}";
         }
+        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
+    
+        // Now get actual PDO instance for Eloquent
+        $pdo = Capsule::connection()->getPdo();
 
         $this->rememberMeStorage->setConnection($pdo);
 

@@ -11,7 +11,7 @@
     return [
         'address_book' => [
             'admin' => [
-                'email' => getenv('SMTP_USER'),
+                'email' => getenv('SMTP_USER') ?: null,
                 'name'  => 'Site Administrator'
             ]
         ],
@@ -57,11 +57,12 @@
         ],
         'db'      =>  [
             'default' => [
-                'driver'    => 'mysql',
-                'host'      => getenv('DB_HOST'),
-                'database'  => getenv('DB_NAME'),
-                'username'  => getenv('DB_USER'),
-                'password'  => getenv('DB_PASSWORD'),
+                'driver'    => getenv('DB_DRIVER') ?: 'mysql',
+                'host'      => getenv('DB_HOST') ?: null,
+                'port'      => getenv('DB_PORT') ?: null,
+                'database'  => getenv('DB_NAME') ?: null,
+                'username'  => getenv('DB_USER') ?: null,
+                'password'  => getenv('DB_PASSWORD') ?: null,
                 'charset'   => 'utf8',
                 'collation' => 'utf8_unicode_ci',
                 'prefix'    => ''
@@ -73,12 +74,12 @@
         ],
         'mail'    => [
             'mailer'     => 'smtp',     // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
-            'host'       => getenv('SMTP_HOST'),
+            'host'       => getenv('SMTP_HOST') ?: null,
             'port'       => 587,
             'auth'       => true,
             'secure'     => 'tls',
-            'username'   => getenv('SMTP_USER'),
-            'password'   => getenv('SMTP_PASSWORD'),
+            'username'   => getenv('SMTP_USER') ?: null,
+            'password'   => getenv('SMTP_PASSWORD') ?: null,
             'smtp_debug' => 4,
             'message_options' => [
                 'isHtml' => true,
@@ -127,10 +128,14 @@
                 'info' => true
             ],
             'locales' =>  [
+                // Should be ordered according to https://en.wikipedia.org/wiki/List_of_languages_by_total_number_of_speakers,
+                // with the exception of English, which as the default language comes first.
                 'available' => [
-                    'de_DE' => 'Deutsch',
                     'en_US' => 'English',
-                    'fr_FR' => 'Français'
+                    'ar'    => 'العربية',
+                    'fr_FR' => 'Français',
+                    'pt_PT' => 'Português',
+                    'de_DE' => 'Deutsch'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
@@ -142,7 +147,7 @@
                     'host'              => isset($_SERVER['SERVER_NAME']) ? trim($_SERVER['SERVER_NAME'], '/') : 'localhost',
                     'scheme'            => empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off' ? 'http' : 'https',
                     'port'              => isset($_SERVER['SERVER_PORT']) ? (int) $_SERVER['SERVER_PORT'] : null,
-                    'path'              => isset($_SERVER['SCRIPT_NAME']) ? trim(dirname($_SERVER['SCRIPT_NAME']), '/') : ''
+                    'path'              => isset($_SERVER['SCRIPT_NAME']) ? trim(dirname($_SERVER['SCRIPT_NAME']), '/\\') : ''
                 ],
                 'author'            => 'http://www.userfrosting.com',
                 'publisher'         => ''

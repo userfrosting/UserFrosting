@@ -452,28 +452,6 @@
     }
 
     /**
-     * Keeps track of throttleable requests.
-     */
-    if (!$schema->hasTable('throttles')) {
-        $schema->create('throttles', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('type');
-            $table->string('ip')->nullable();
-            $table->text('request_data')->nullable();
-            $table->timestamps();
-
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_unicode_ci';
-            $table->charset = 'utf8';
-            $table->index('type');
-            $table->index('ip');
-        });
-        echo "Created table 'throttles'..." . PHP_EOL;
-    } else {
-        echo "Table 'throttles' already exists.  Skipping..." . PHP_EOL;
-    }
-
-    /**
      * Removed the 'display_name', 'title', 'secret_token', and 'flag_password_reset' fields, and added first and last name and 'last_activity_at'.
      */
     if (!$schema->hasTable('users')) {
@@ -604,6 +582,9 @@
             echo PHP_EOL . 'Please re-enter your chosen password: ';
             $password_confirm = readPassword($detectedOS);
         }
+
+        // To make output pretty...
+        echo PHP_EOL;
 
         // Ok, now we've got the info and we can create the new user.
 

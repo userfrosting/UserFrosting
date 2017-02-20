@@ -15,6 +15,7 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
+use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
 use UserFrosting\Sprinkle\Account\Log\UserActivityProcessor;
@@ -43,12 +44,12 @@ class AccountServicesProvider
          * Extend the asset manager service to see assets for the current user's theme.
          */
         $container->extend('assets', function ($assets, $c) {
-            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-            $authenticator = $c->authenticator;
 
             // Register paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
+                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
                 return $assets;
@@ -85,7 +86,8 @@ class AccountServicesProvider
         $container->extend('errorHandler', function ($handler, $c) {
             // Register the ForbiddenExceptionHandler.
             $handler->registerHandler('\UserFrosting\Support\Exception\ForbiddenException', '\UserFrosting\Sprinkle\Account\Handler\ForbiddenExceptionHandler');
-
+            // Register the AuthExpiredExceptionHandler
+            $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException', '\UserFrosting\Sprinkle\Account\Handler\AuthExpiredExceptionHandler');
             return $handler;
         });
 
@@ -95,12 +97,11 @@ class AccountServicesProvider
          * Also loads the actual translations for the user's locale.
          */
         $container->extend('translator', function ($translator, $c) {
-            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-            $authenticator = $c->authenticator;
-
             // Add paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
+                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
                 return $translator;
@@ -130,12 +131,11 @@ class AccountServicesProvider
             $extension = new AccountExtension($c);
             $twig->addExtension($extension);
 
-            /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-            $authenticator = $c->authenticator;
-
             // Add paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
+                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
                 return $view;
@@ -173,6 +173,14 @@ class AccountServicesProvider
 
             $authenticator = new Authenticator($classMapper, $session, $config);
             return $authenticator;
+        };
+
+        /**
+         * Sets up the AuthGuard middleware, used to limit access to authenticated users for certain routes.
+         */
+        $container['authGuard'] = function ($c) {
+            $authenticator = $c->authenticator;
+            return new AuthGuard($authenticator);
         };
 
         /**
@@ -323,6 +331,25 @@ class AccountServicesProvider
             $authenticator = $c->authenticator;
 
             return $authenticator->user();
+        };
+
+        /**
+         * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
+         */
+        $container['determineRedirectOnLogin'] = function ($c) {
+            return function ($response) use ($c)
+            {
+                /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+                $authorizer = $c->authorizer;
+
+                $currentUser = $c->authenticator->user();
+
+                if ($authorizer->checkAccess($currentUser, 'uri_account_settings')) {
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('settings'));
+                } else {
+                    return $response->withHeader('UF-Redirect', $c->router->pathFor('index'));
+                }
+            };
         };
 
         /**
