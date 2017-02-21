@@ -2,6 +2,11 @@
 
 ## v4.0.x-dev
 
+## v4.0.5-Alpha
+- Allow nulling out of throttle rules (to disable)
+- Disable Google Analytics by default (but enabled in production)
+- Other miscellaneous fixes
+
 ## v4.0.4-Alpha
 - UfAlert style customization (See [#634](https://github.com/userfrosting/UserFrosting/issues/634))
 - Translation function can now display raw placeholder using the `|raw` filter in the placeholder name. Other Twig filters are also avaiable. Requires latest version of the [i18n](https://github.com/userfrosting/i18n) component (See [#621](https://github.com/userfrosting/UserFrosting/issues/621)).
