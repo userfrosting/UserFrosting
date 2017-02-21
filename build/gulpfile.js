@@ -9,7 +9,7 @@
    To clean frontend vendor assets
     1. npm run uf-assets-clean
 */
-
+"use strict";
 const gulp = require('gulp');
 const del = require('del');
 const fs = require('fs');
@@ -65,6 +65,7 @@ gulp.task('bundle-build', () => {
     let copy = require('recursive-copy');
     let merge = require('merge-array-object');
     let cleanup = (e) => {
+        "use strict";
         // Delete temporary directory if exists
         fs.rmdirSync("./temp");
         // Delete created bundle.config.json file
@@ -77,6 +78,7 @@ gulp.task('bundle-build', () => {
         copy: []
     };
     sprinkles.forEach((sprinkle) => {
+        "use strict";
         let location = `${sprinklesDir}/${sprinkle}/`;
         if (fs.existsSync(`${location}${bundleFile}`)) {
             let currentConfig = require(`${location}${bundleFile}`);
@@ -126,6 +128,7 @@ gulp.task('bundle-build', () => {
     // Copy all assets in order of Sprinkle load order.
     let sprinkleAssets = []
     sprinkles.forEach((sprinkle) => {
+        "use strict";
         sprinkleAssets.push(`../app/sprinkles/${sprinkle}/assets/**/*`);
     });
     // Gulp v4 src respects order, until it is released, use this alternative.
