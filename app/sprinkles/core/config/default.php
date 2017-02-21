@@ -134,7 +134,8 @@
                     'ar'    => 'العربية',
                     'fr_FR' => 'Français',
                     'pt_PT' => 'Português',
-                    'de_DE' => 'Deutsch'
+                    'de_DE' => 'Deutsch',
+                    'th_TH' => 'ภาษาไทย'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
