@@ -59,6 +59,8 @@ New features that introduce some breaking changes should be created in a separat
 
 After every release, the `master` branch (and possibly `develop`, for minor/major releases) should immediately be version-bumped.  That way, new changes can be accumulated until the next release.
 
+When a new version is created, the version number need to be changed in `app/define.php`. `CHANGELOG.md` should also be updated and the associated tag should be created on Github.
+
 #### Alpha/beta releases
 
 During alpha/beta, a release candidate sits on the `master` branch.  Minor improvements should be treated as hotfixes, while major changes should be treated as features.  In alpha/beta, major changes can still be integrated into `master` from `develop`.  However, this should bump the revision number instead of the minor/major number.
