@@ -80,8 +80,9 @@
     <!-- /.row -->
     {% endif %}
 
-    <!-- Info boxes -->
+    <!-- Main panels -->
     <div class="row">
+        {% if checkAccess('uri_users') or checkAccess('view_system_info') %}
         <div class="col-md-6 col-sm-12 col-xs-12">
             {% if checkAccess('uri_users') %}
             <div class="row">
@@ -180,6 +181,7 @@
             {% endif %}
         </div>
         <!-- /.col -->
+        {% endif %}
 
         {% if checkAccess('uri_activities') %}
         <div class="col-md-6 col-sm-12 col-xs-12">
