@@ -903,7 +903,7 @@ class AccountController extends SimpleController
 
         // If new email was submitted, check that the email address is not in use
         if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
-            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $post);
+            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
             $error = true;
         }
 
