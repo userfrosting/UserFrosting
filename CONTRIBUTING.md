@@ -59,7 +59,12 @@ New features that introduce some breaking changes should be created in a separat
 
 ### Releases
 
-After every release, the `master` branch (and possibly `develop`, for minor/major releases) should immediately be version-bumped.  That way, new changes can be accumulated until the next release.
+After every release, the `master` branch (and possibly `develop`, for minor/major releases) should immediately be version-bumped.  That way, new changes can be accumulated until the next release.  
+
+#### Version bump
+Basic rule: A commit to the `master` branch = version bump.
+
+When a new version is created, the version number need to be changed in [app/define.php](https://github.com/userfrosting/UserFrosting/blob/master/app/defines.php#L6). The [Changelog](https://github.com/userfrosting/UserFrosting/blob/master/CHANGELOG.md) should also be updated and the associated [tag](https://github.com/userfrosting/UserFrosting/tags) should be created on Github.
 
 When a new version is created, the version number need to be changed in `app/define.php`. `CHANGELOG.md` should also be updated and the associated tag should be created on Github.
 
