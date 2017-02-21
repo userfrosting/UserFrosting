@@ -46,7 +46,7 @@
                 dropdownTemplate: "",
                 ajaxDelay       : 250,
                 rowTemplate     : "",
-                dropdownTheme   : "bootstrap",
+                dropdownTheme   : "default",
                 placeholder     : "Item",
                 dropdownControl : this.$T.find('.js-select-new'),
                 rowContainer    : this.$T.find('tbody').first(),
@@ -82,7 +82,7 @@
         $el.toggleClass("uf-collection", true);
 
         base._initDropdownField(base.options.dropdownControl);
-        
+
         base.options.dropdownControl.on("select2:select", function () {
            var item = $(this).select2("data");
            base.addRow(item);
@@ -99,7 +99,7 @@
             rownum: base._rownum
         };
         $.extend(true, params, options[0]);
-        
+
         var newRowTemplate = base._rowTemplateCompiled(params);
         var newRow = $(newRowTemplate).appendTo(base.options.rowContainer);
 

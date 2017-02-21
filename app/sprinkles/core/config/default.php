@@ -11,7 +11,7 @@
     return [
         'address_book' => [
             'admin' => [
-                'email' => getenv('SMTP_USER'),
+                'email' => getenv('SMTP_USER') ?: null,
                 'name'  => 'Site Administrator'
             ]
         ],
@@ -57,11 +57,12 @@
         ],
         'db'      =>  [
             'default' => [
-                'driver'    => 'mysql',
-                'host'      => getenv('DB_HOST'),
-                'database'  => getenv('DB_NAME'),
-                'username'  => getenv('DB_USER'),
-                'password'  => getenv('DB_PASSWORD'),
+                'driver'    => getenv('DB_DRIVER') ?: 'mysql',
+                'host'      => getenv('DB_HOST') ?: null,
+                'port'      => getenv('DB_PORT') ?: null,
+                'database'  => getenv('DB_NAME') ?: null,
+                'username'  => getenv('DB_USER') ?: null,
+                'password'  => getenv('DB_PASSWORD') ?: null,
                 'charset'   => 'utf8',
                 'collation' => 'utf8_unicode_ci',
                 'prefix'    => ''
@@ -73,12 +74,12 @@
         ],
         'mail'    => [
             'mailer'     => 'smtp',     // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
-            'host'       => getenv('SMTP_HOST'),
+            'host'       => getenv('SMTP_HOST') ?: null,
             'port'       => 587,
             'auth'       => true,
             'secure'     => 'tls',
-            'username'   => getenv('SMTP_USER'),
-            'password'   => getenv('SMTP_PASSWORD'),
+            'username'   => getenv('SMTP_USER') ?: null,
+            'password'   => getenv('SMTP_PASSWORD') ?: null,
             'smtp_debug' => 4,
             'message_options' => [
                 'isHtml' => true,

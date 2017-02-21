@@ -1,5 +1,13 @@
-<div id="userfrosting-alerts">
-    {% for alert in uf_page.alerts %}
-    <div class="alert alert-{{alert.type}}">{{alert.message}}</div>
-    {% endfor %}
-</div>
+{# This contains a client-side Handlebars template.
+ # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+ # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+ #}
+
+{% verbatim %}
+<script id="uf-alert-template" type="text/x-handlebars-template">
+    <div class="alert alert-{{type}} alert-dismissible uf-alert">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <i class="icon fa fa-fw {{icon}} pull-left"></i> <div class="uf-alert-message-container">{{message}}</div>
+    </div>
+</script>
+{% endverbatim %}

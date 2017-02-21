@@ -31,14 +31,14 @@ return [
         "CLEARED"                       => "Cache wurde erfolgreich gelöscht!"
     ],
 
-    "DASHBOARD"                         => "Dashboard",
-    "DELETE_MASTER"                     => "Sie können den Root-Account nicht löschen!",
+    "DASHBOARD"                         => "Übersicht",
+    "DELETE_MASTER"                     => "Sie können das Root-Konto nicht löschen!",
     "DELETION_SUCCESSFUL"               => "Benutzer '{{user_name}}' wurde erfolgreich gelöscht.",
-    "DETAILS_UPDATED"                   => "Account-Daten für '{{user_name}}' aktualisiert.",
-    "DISABLE_MASTER"                    => "Sie können den Root-Account nicht deaktivieren!",
-    "DISABLE_SUCCESSFUL"                => "Account von '{{user_name}}' wurde erfolgreich deaktiviert.",
+    "DETAILS_UPDATED"                   => "Konto-Daten für '{{user_name}}' aktualisiert.",
+    "DISABLE_MASTER"                    => "Sie können das Root-Konto nicht deaktivieren!",
+    "DISABLE_SUCCESSFUL"                => "Konto von '{{user_name}}' wurde erfolgreich deaktiviert.",
 
-    "ENABLE_SUCCESSFUL"                 => "Account von {{user_name}} wurde erfolgreich aktiviert.",
+    "ENABLE_SUCCESSFUL"                 => "Konto von {{user_name}} wurde erfolgreich aktiviert.",
 
     "GROUP" => [
         1                               => "Gruppe",
@@ -54,8 +54,9 @@ return [
         "INFO_PAGE"                     => "Gruppeninformationsseite für {{name}}",
         "NAME"                          => "Gruppenname",
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Gruppe ein",
-        "PAGE_DESCRIPTION"              => "Eine Liste der Gruppen für Ihre Website. Bietet Verwaltungstools für das Bearbeiten und Löschen von Gruppen."
-    ],
+        "PAGE_DESCRIPTION"              => "Eine Liste der Gruppen für Ihre Website. Bietet Verwaltungstools für das Bearbeiten und Löschen von Gruppen.",
+        "UPDATE"           				=> "Details für die Gruppe <strong>{{name}}</strong> aktualisiert"
+	],
 
     "MANUALLY_ACTIVATED"                => "{{user_name}}'s Konto wurde manuell aktiviert.",
     "MASTER_ACCOUNT_EXISTS"             => "Das Root-Konto existiert bereits!",
@@ -117,6 +118,7 @@ return [
 
         "ACTIVATE"                      => "Benutzer aktivieren",
         "CREATE"                        => "Benutzer erstellen",
+        "CREATED"                       => "Benutzer <strong>{{user_name}}</strong> wurde erfolgreich erstellt",
         "DELETE"                        => "Benutzer löschen",
         "DELETE_CONFIRM"                => "Sind Sie sicher, dass Sie den Benutzer '{{name}}' löschen möchten?",
         "DELETE_YES"                    => "Ja, Benutzer löschen",

@@ -145,7 +145,7 @@ return [
     "SIGNUP"             => "S'inscrire",
 
     "TOS"           => "Termes et conditions",
-    "TOS_AGREEMENT" => "En créant un compte avec {{site_title}}, vous acceptez les <a {{link_attributes}}>termes et conditions</a>.",
+    "TOS_AGREEMENT" => "En créant un compte avec {{site_title}}, vous acceptez les <a {{link_attributes | raw}}>termes et conditions</a>.",
     "TOS_FOR"       => "Termes et conditions pour {{title}}",
 
     "USERNAME" => [

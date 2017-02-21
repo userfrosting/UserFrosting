@@ -1,5 +1,18 @@
 # Change Log
 
+## v4.0.4-Alpha
+- UfAlert style customization (See [#634](https://github.com/userfrosting/UserFrosting/issues/634))
+- Translation function can now display raw placeholder using the `|raw` filter in the placeholder name. Other Twig filters are also avaiable. Requires latest version of the [i18n](https://github.com/userfrosting/i18n) component (See [#621](https://github.com/userfrosting/UserFrosting/issues/621)).
+- Fix the "Root account" message breaking the UI on smaller screens (See [#641](https://github.com/userfrosting/UserFrosting/issues/641)) - Thanks @brunomnsilva !
+- Added `DB_DRIVER` and `DB_PORT` as environment variables to allow better out-of-box database configuration support, and to provide additional protection by obscurity.
+- Normalised default values to `null` for environment variables in configuration.
+- Added `getCallbacks` public method to `AuthorizationManager` to enable drop-in extensions to `AuthorizationManager`.
+- Fixed broken links in generated asset bundles.
+- Introduced `clean` gulp task to act as a shotcut for removing all frontend vendor packages, all generated asset bundles, and copied assets. Accessible via `npm run uf-clean`.
+- Merged `copy` task with `bundle-build`.
+- Fixed missing translations
+- Added Thai translation - Thanks @popiazaza !
+
 ## v4.0.3-Alpha
 - Add config file for nginx (https://github.com/userfrosting/UserFrosting/issues/373)
 - Add Portuguese translations (thanks to @brunomnsilva!)

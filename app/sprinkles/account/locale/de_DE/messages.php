@@ -8,6 +8,7 @@
  * @package UserFrosting
  * @link http://www.userfrosting.com/components/#i18n
  * @author @X-Anonymous-Y
+ *
  */
 
 return [
@@ -16,13 +17,13 @@ return [
 
         "ACCESS_DENIED"                 => "Hmm, sieht aus als hätten Sie keine Berechtigung, um dies zu tun.",
 
-        "DISABLED"                      => "Dieser Account wurde deaktiviert. Bitte Kontaktieren Sie uns für weitere Informationen.",
+        "DISABLED"                      => "Dieses Konto wurde deaktiviert. Bitte Kontaktieren Sie uns für weitere Informationen.",
 
         "EMAIL_UPDATED"                 => "E-Mail-Adresse aktualisiert.",
 
         "INVALID"                       => "Dieses Konto existiert nicht. Es wurde möglicherweise gelöscht. Bitte kontaktieren Sie uns für weitere Informationen.",
 
-        "MASTER_NOT_EXISTS"             => "Du kannst kein neuen Account anlegen solange kein Root-Account angelegt wurde!",
+        "MASTER_NOT_EXISTS"             => "Sie können kein neues Konto anlegen solange kein Root-Konto angelegt wurde!",
         "MY"                            => "Mein Konto",
 
         "SESSION_COMPROMISED"           => "Ihre Sitzung wurde beeinträchtigt. Sie sollten sich auf allen Geräten abmelden, sich dann wieder anmelden und sicherstellen, dass Ihre Daten nicht manipuliert wurden.",
@@ -66,7 +67,7 @@ return [
     "LOGIN" => [
         "@TRANSLATION"                  => "Anmelden",
 
-        "ALREADY_COMPLETE"              => "Du bist bereits eingeloggt!",
+        "ALREADY_COMPLETE"              => "Sie sind bereits eingeloggt!",
         "SOCIAL"                        => "Oder loggen Sie sich ein mit",
         "REQUIRED"                      => "Sorry, Sie müssen angemeldet sein. Um auf diese Ressource zugreifen zu können."
     ],
@@ -144,7 +145,7 @@ return [
     "SIGNUP"                            => "Anmelden",
 
     "TOS"                               => "Geschäftsbedingungen",
-    "TOS_AGREEMENT"                     => "Durch die Registrierung eines Kontos auf {{site_title}} akzeptieren Sie die <a {{link_attributes}}> Bedingungen </a>.",
+    "TOS_AGREEMENT"                     => "Durch die Registrierung eines Kontos auf {{site_title}} akzeptieren Sie die <a {{link_attributes | raw}}> Bedingungen </a>.",
     "TOS_FOR"                           => "Allgemeine Geschäftsbedingungen für {{title}}",
 
     "USERNAME" => [

@@ -62,7 +62,9 @@ class CoreExtension extends \Twig_Extension
             }),
             new \Twig_SimpleFunction('translate', function ($hook, $params = array()) {
                 return $this->services['translator']->translate($hook, $params);
-            })
+            }, [
+                'is_safe' => ['html']
+            ])
         );
     }
 

@@ -145,7 +145,7 @@ return [
     "SIGNUP"                => "Registrar",
 
     "TOS"           => "Termos e Condições",
-    "TOS_AGREEMENT" => "Ao registrar uma conta em {{site_title}}, está a aceitar os <a {{link_attributes}}>termos e condições</a>.",
+    "TOS_AGREEMENT" => "Ao registrar uma conta em {{site_title}}, está a aceitar os <a {{link_attributes | raw}}>termos e condições</a>.",
     "TOS_FOR"       => "Termos e Condições para {{title}}",
 
     "USERNAME" => [
