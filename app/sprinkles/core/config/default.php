@@ -118,7 +118,7 @@
             'analytics' => [
                 'google' => [
                     'code' => '',
-                    'enabled' => true
+                    'enabled' => false
                 ]
             ],
             'author'    =>      'Author',

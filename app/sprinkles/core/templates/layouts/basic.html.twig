@@ -64,8 +64,13 @@
 
     {% block body %}
         <body {% block body_attributes %}{% endblock %}>
-            <!-- Page Content -->
+            {# Page Content #}
             {% block content %}{% endblock %}
+
+            {# Handlebars template for uf-alerts. #}
+            {% block uf_alerts_template %}
+                {% include "components/alerts.html.twig" %}
+            {% endblock %}
 
             <!-- Javascript configuration -->
             <script>
@@ -89,17 +94,6 @@
 
                 {# Override this block in a child layout template or page template to specify or override page-level scripts. #}
                 {% block scripts_page %}
-                {% endblock %}
-
-                {# Override this block to alter UfAlerts. #}
-                {% block ufAlertTemplate %}
-                    {% include "components/alerts.html.twig" %}
-                {% endblock %}
-                {% block scripts_UFAlert %}
-                    <script>
-                        $("#alerts-main").ufAlerts();
-                        $("#alerts-main").ufAlerts('fetch').ufAlerts('render');
-                    </script>
                 {% endblock %}
             {% endblock %}
 

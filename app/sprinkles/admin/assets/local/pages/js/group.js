@@ -8,10 +8,6 @@
  */
 
 $(document).ready(function() {
-    // Render any alerts
-    $("#alerts-page").ufAlerts();
-    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
-
     // Control buttons
     bindGroupButtons($("#view-group"));
 

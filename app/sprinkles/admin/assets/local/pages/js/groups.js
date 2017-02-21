@@ -8,9 +8,6 @@
  */
 
 $(document).ready(function() {
-    // Render any alerts
-    $("#alerts-page").ufAlerts();
-    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
 
     $("#widget-groups").ufTable({
         dataUrl: site.uri.public + "/api/groups"

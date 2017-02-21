@@ -8,10 +8,7 @@
  */
 
 $(document).ready(function() {
-    // Render any alerts
-    $("#alerts-page").ufAlerts();
-    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
-
+    // Set up table of roles
     $("#widget-roles").ufTable({
         dataUrl: site.uri.public + "/api/roles"
     });
