@@ -87,13 +87,13 @@ class Throttler
                 ->get();
 
             // Filter out only events that match the required JSON data
-            $events = $events->filter(function ($key, $item) use ($requestData) {
+            $events = $events->filter(function ($item, $key) use ($requestData) {
                 $data = json_decode($item->request_data);
 
                 // If a field is not specified in the logged data, or it doesn't match the value we're searching for,
                 // then filter out this event from the collection.
                 foreach ($requestData as $name => $value) {
-                    if (!isset($data[$name]) || $data[$name] != $value) {
+                    if (!isset($data->$name) || ($data->$name != $value)) {
                         return false;
                     }
                 }
