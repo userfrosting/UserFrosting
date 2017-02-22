@@ -3,7 +3,7 @@
 {# Overrides blocks in head of base template #}
 {% block page_title %}{{translate('SIGNIN_OR_REGISTER')}}{% endblock %}
 
-{% block page_description %}{{translate('LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
+{% block page_description %}{{translate('PAGE.LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
 
 {% block body_attributes %}
     class="hold-transition login-page"

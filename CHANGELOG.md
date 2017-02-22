@@ -2,6 +2,10 @@
 
 ## v4.0.x-dev
 
+## v4.0.6-Alpha
+- Fix throttling issue #656
+- Other miscellaneous fixes
+
 ## v4.0.5-Alpha
 - Allow nulling out of throttle rules (to disable)
 - Disable Google Analytics by default (but enabled in production)
