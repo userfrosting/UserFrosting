@@ -65,8 +65,8 @@ return [
     "LOCALE.ACCOUNT" => "The language and locale to use for your account",
 
     "LOGIN" => [
-        "@TRANSLATION" => "Login",
-
+        "@TRANSLATION"      => "Login",
+        "DESCRIPTION"       => "UserFrosting is a secure, modern user management system for PHP.",
         "ALREADY_COMPLETE"  => "You are already logged in!",
         "SOCIAL"            => "Or login with",
         "REQUIRED"          => "Sorry, you must be logged in to access this resource."
