@@ -62,7 +62,10 @@ return [
 
     "LAST_NAME" => "Last name",
 
-    "LOCALE.ACCOUNT" => "The language and locale to use for your account",
+    "LOCALE" => [
+        "ACCOUNT" => "The language and locale to use for your account",
+        "INVALID" => "'{{locale}}' is not a valid locale."
+    ],
 
     "LOGIN" => [
         "@TRANSLATION"      => "Login",
@@ -123,6 +126,11 @@ return [
         "UPDATED"           => "Account password updated"
     ],
 
+    "PROFILE"       => [
+        "SETTINGS"  => "Profile settings",
+        "UPDATED"   => "Profile settings updated"
+    ],
+    
     "REGISTER"      => "Register",
     "REGISTER_ME"   => "Sign me up",
 

@@ -1,0 +1,30 @@
+{
+    "first_name" : {
+        "validators" : {
+            "length" : {
+                "label" : "&FIRST_NAME",
+                "min" : 1,
+                "max" : 20,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },
+    "last_name" : {
+        "validators" : {
+            "length" : {
+                "label" : "&LAST_NAME",
+                "min" : 1,
+                "max" : 30,
+                "message" : "VALIDATE.LENGTH_RANGE"
+            }
+        }
+    },
+    "locale" : {
+        "validators" : {
+            "required" : {
+                "label" : "&LOCALE",
+                "message" : "VALIDATE.REQUIRED"
+            }
+        }
+    }
+}

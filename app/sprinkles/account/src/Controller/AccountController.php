@@ -445,7 +445,10 @@ class AccountController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema("schema://account-settings.json");
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        $validatorAccountSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        $schema = new RequestSchema("schema://profile-settings.json");
+        $validatorProfileSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         /** @var Config $config */
         $config = $this->ci->config;
@@ -457,7 +460,8 @@ class AccountController extends SimpleController
             "locales" => $locales,
             "page" => [
                 "validators" => [
-                    "account_settings"    => $validator->rules('json', false)
+                    "account_settings"    => $validatorAccountSettings->rules('json', false),
+                    "profile_settings"    => $validatorProfileSettings->rules('json', false)
                 ],
                 "visibility" => ($authorizer->checkAccess($currentUser, "update_account_settings") ? "" : "disabled")
             ]
@@ -499,6 +503,84 @@ class AccountController extends SimpleController
                 ]
             ]
         ]);
+    }
+
+    /**
+     * Processes a request to update a user's profile information.
+     *
+     * Processes the request from the user profile settings form, checking that:
+     * 1. They have the necessary permissions to update the posted field(s);
+     * 2. The submitted data is valid.
+     * This route requires authentication.
+     * Request type: POST
+     */
+    public function profile($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access control for entire resource - check that the current user has permission to modify themselves
+        // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
+        if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
+            $ms->addMessageTranslated("danger", "ACCOUNT.ACCESS_DENIED");
+            return $response->withStatus(403);
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        /** @var UserFrosting\Config\Config $config */
+        $config = $this->ci->config;
+
+        // POST parameters
+        $params = $request->getParsedBody();
+
+        // Load the request schema
+        $schema = new RequestSchema("schema://profile-settings.json");
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        $error = false;
+
+        // Validate, and halt on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            $ms->addValidationErrors($validator);
+            $error = true;
+        }
+
+        // Check that locale is valid
+        $locales = $config['site.locales.available'];
+        if (!array_key_exists($data['locale'], $locales)) {
+            $ms->addMessageTranslated("danger", "LOCALE.INVALID", $data);
+            $error = true;
+        }
+
+        if ($error) {
+            return $response->withStatus(400);
+        }
+
+        // Looks good, let's update with new values!
+        // Note that only fields listed in `profile-settings.json` will be permitted in $data, so this prevents the user from updating all columns in the DB
+        $currentUser->fill($data);
+
+        $currentUser->save();
+
+        // Create activity record
+        $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated their profile settings.", [
+            'type' => 'update_profile_settings'
+        ]);
+
+        $ms->addMessageTranslated("success", "PROFILE.UPDATED");
+        return $response->withStatus(200);
     }
 
     /**
@@ -906,8 +988,6 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
             $error = true;
         }
-
-        // TODO: check that new locale exists
 
         if ($error) {
             return $response->withStatus(400);
