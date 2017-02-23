@@ -14,4 +14,12 @@ $(document).ready(function() {
         // Reload the page on success
         window.location.reload();
     });
+
+    $("#profile-settings").ufForm({
+        validators: page.validators.profile_settings,
+        msgTarget: $("#alerts-page")
+    }).on("submitSuccess.ufForm", function() {
+        // Reload the page on success
+        window.location.reload();
+    });
 });

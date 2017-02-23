@@ -38,6 +38,8 @@ You should also try testing your code in a local development environment, to sep
 
 We welcome your technical expertise!  But first, please join us in [chat](https://chat.userfrosting.com) to discuss your proposed changes/fixes/enhancements before you get started.  At least one member of our development team will usually be around.
 
+Please also be sure to read our [style guidelines](STYLE-GUIDE.md).
+
 When it's time to integrate changes, our git flow more or less follows http://nvie.com/posts/a-successful-git-branching-model/.
 
 ### Branches
@@ -64,3 +66,11 @@ When a new version is created, the version number need to be changed in `app/def
 #### Alpha/beta releases
 
 During alpha/beta, a release candidate sits on the `master` branch.  Minor improvements should be treated as hotfixes, while major changes should be treated as features.  In alpha/beta, major changes can still be integrated into `master` from `develop`.  However, this should bump the revision number instead of the minor/major number.
+
+## Building the API documentation
+
+To build the API documentation, install [ApiGen](http://www.apigen.org/) globally and then run:
+
+`apigen generate --source UserFrosting/app,userfrosting-assets/src,userfrosting-config/Config,userfrosting-fortress/Fortress,userfrosting-i18n/I18n,userfrosting-session/Session,userfrosting-support/Support --destination userfrosting-api --exclude *vendor*,*_meta* --template-theme "bootstrap"`
+
+from inside your dev directory.
