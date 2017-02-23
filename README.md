@@ -1,6 +1,6 @@
 # UserFrosting 4.0
 
-http://www.userfrosting.com
+[http://www.userfrosting.com](http://www.userfrosting.com)
 
 If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository.  Forking is only for when you are ready to create your own copy of the code to work on.
 
@@ -14,6 +14,19 @@ Copyright (c) 2017, free to use in personal and commercial software as per the [
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.2/eloquent#introduction) ORM.
 
+## Features
+
+### User login screen
+![User login script](screenshots/login.png)
+
+### User management page
+![PHP user management script](screenshots/users.png)
+
+### Permissions management page
+![UserFrosting permissions management](screenshots/permissions.png)
+
+## [Demo](https://demo.userfrosting.com)
+
 ## Installation
 
 Please see our [installation guide](https://learn.userfrosting.com/basics/installation).
@@ -23,8 +36,6 @@ Please see our [installation guide](https://learn.userfrosting.com/basics/instal
 If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com).
 
 If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/basics/overview).  
-
-[Style Guidelines](STYLE-GUIDE.md)
 
 ## Mission Objectives
 
@@ -37,24 +48,34 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 - Build on existing, widely used server- and client-side components
 - Clean, consistent, and well-documented code
 
+## Documentation
+
+### [Learning UserFrosting](https://learn.userfrosting.com)
+
+### [API documentation](http://api.userfrosting.com)
+
 ## About the Developers
 
-### Alex Weissman
+### Alexander Weissman
 
-Alex is the founder and co-owner of two companies, one that does [math tutoring at IU](https://bloomingtontutors.com) in Bloomington, IN and another company that does [math tutoring at UMD](https://collegeparktutors.com) in College Park, MD.  He is also a PhD student in the School of Informatics and Computing at Indiana University.
-
-### Mike Jacobs
-
-Mike's a programmer and IT specialist for a small business in NH, and works on open source projects when he's not camping or traveling.
+Alex is the founder and co-owner of two companies, one that does [math tutoring at Indiana University](https://bloomingtontutors.com) in Bloomington, IN and another company that does [math tutoring at UMD](https://collegeparktutors.com) in College Park, MD. He is a PhD student in the School of Informatics and Computing at Indiana University.
 
 ### Louis Charette
 
-Louis's a civil engineer who also has a passion for coding. He is one of the main contributors for SimpsonsCity.com and like to share is knowledge by helping other the same way he was helped when he first started coding.
+Louis's a civil engineer in Montréal, Québec who also has a passion for coding. He is one of the main contributors for SimpsonsCity.com and likes to share his knowledge by helping others the same way he was helped when he first started coding.
 
-## API documentation
+### Jordan Mele
 
-To build the API documentation, install [ApiGen](http://www.apigen.org/) globally and then run:
+Jordan's a developer at Mayvin Training and a student studying Computer Science at the University of Wollongong. His passion is creating software-based solutions to overcomplicated problems, without taking control away from the user. He's also Australian.
 
-`apigen generate --source UserFrosting/app,userfrosting-assets/src,userfrosting-config/Config,userfrosting-fortress/Fortress,userfrosting-i18n/I18n,userfrosting-session/Session,userfrosting-support/Support --destination userfrosting-api --exclude *vendor*,*_meta* --template-theme "bootstrap"`
+### Mike Jacobs
 
-from inside your dev directory.
+Mike's a programmer and IT specialist for a small business in New Hampshire, and works on open source projects when he's not camping or traveling.    
+
+### Srinivas Nukala
+
+Srinivas's a web applications architect, with a passion for open source technologies. He is experienced in building SaaS (software as a service) web applications and enjoys working on open source projects and contributing to the community. He has a Masters in Computer Science from Pune University, India.    
+
+## Contributing
+
+Please see our [contributing guidelines](CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).

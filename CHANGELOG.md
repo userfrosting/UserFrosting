@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.0.7-Alpha
+- Separate "profile settings" from "account settings"
+
 ## v4.0.6-Alpha
 - Fix throttling issue #656
 - Other miscellaneous fixes
