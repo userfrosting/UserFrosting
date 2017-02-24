@@ -20,6 +20,16 @@ use UserFrosting\Cache\RedisStore;
 class CacheHelper
 {
 
+    /**
+     * Return a cache instance based on the global config values
+     *
+     * @access public
+     * @static
+     * @param string $namespace
+     * @param \UserFrosting\Config\Config $config
+     * @param \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator $locator Locator service for stream resources.
+     * @return Illuminate\\Cache\\*Store
+     */
     public static function getInstance($namespace, $config, $locator)
     {
         // Set namespace.

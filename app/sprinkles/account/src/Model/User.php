@@ -15,6 +15,7 @@ use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Core\Util\CacheHelper;
 
 /**
  * User Class
@@ -141,16 +142,16 @@ class User extends UFModel
         if ($hardDelete) {
             // Remove all role associations
             $this->roles()->detach();
-    
+
             // Remove all user activities
             $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
-    
+
             // Remove all user tokens
             $classMapper->staticMethod('password_reset', 'where', 'user_id', $this->id)->delete();
             $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
-    
+
             // TODO: remove any persistences
-    
+
             // Delete the user
             $result = parent::forceDelete();
         } else {
@@ -159,6 +160,15 @@ class User extends UFModel
         }
 
         return $result;
+    }
+
+    /**
+     * Return a cache instance specific to that user
+     *
+     * @return Illuminate\\Cache\\*Store
+     */
+    public function getCache() {
+        return CacheHelper::getInstance("_u".$this->id, static::$ci->config, static::$ci->locator);
     }
 
     /**
@@ -225,7 +235,7 @@ class User extends UFModel
 
         return $query->latest('occurred_at');
     }
-    
+
     /**
      * Get the most recent time for a specified activity type for this user.
      *
