@@ -134,7 +134,7 @@ class CoreServicesProvider
          * @todo Create an option somewhere to flush the cache
          */
         $container['cache'] = function ($c) {
-            return CacheHelper::getInstance($c->config, $c->locator);
+            return CacheHelper::getInstance("_global", $c->config, $c->locator);
         };
 
         /**

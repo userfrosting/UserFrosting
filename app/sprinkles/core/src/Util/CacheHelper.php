@@ -20,10 +20,10 @@ use UserFrosting\Cache\RedisStore;
 class CacheHelper
 {
 
-    public static function getInstance($config, $locator)
+    public static function getInstance($namespace, $config, $locator)
     {
         // Set namespace.
-        $namespace = $config['cache.prefix'] . "_global";
+        $namespace = $config['cache.prefix'] . $namespace;
 
         if ($config['cache.store'] == 'file') {
             $path = $locator->findResource('cache://', true, true);
