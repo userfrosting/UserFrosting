@@ -28,7 +28,7 @@
         ],
         'cache' => [
             'store' => 'file', //Set to one of `file`, `memcached`, `redis`
-    	    'prefix' => '', //When using multiple memcached or redis instance on the same server. No effect on `file`
+    	    'prefix' => '',
             'memcached' => [
                 'host' => '127.0.0.1',
                 'port' => 11211,

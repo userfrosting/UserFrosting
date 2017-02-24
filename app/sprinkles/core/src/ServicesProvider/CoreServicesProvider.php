@@ -34,9 +34,6 @@ use UserFrosting\Assets\AssetLoader;
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\UrlBuilder\AssetUrlBuilder;
 use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
-use UserFrosting\Cache\FileStore;
-use UserFrosting\Cache\MemcachedStore;
-use UserFrosting\Cache\RedisStore;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -50,6 +47,7 @@ use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
+use UserFrosting\Sprinkle\Core\Util\CacheHelper;
 use UserFrosting\Support\Exception\BadRequestException;
 
 /**
@@ -136,24 +134,7 @@ class CoreServicesProvider
          * @todo Create an option somewhere to flush the cache
          */
         $container['cache'] = function ($c) {
-
-            $config = $c->config;
-
-            // Set namespace.
-            $namespace = $config['cache.prefix'] . "_global";
-
-            if ($config['cache.store'] == 'file') {
-                $path = $c->locator->findResource('cache://', true, true);
-                $cacheStore = new FileStore($namespace, $path);
-            } else if ($config['cache.store'] == 'memcached') {
-                $cacheStore = new MemcachedStore($namespace, $config['cache.memcached']);
-            } else if ($config['cache.store'] == 'redis') {
-                $cacheStore = new RedisStore($namespace, $config['cache.redis']);
-            } else {
-                throw new \Exception("Bad cache store type '{$config['cache.store']}' specified in configuration file.");
-            }
-
-            return $cacheStore->instance();
+            return CacheHelper::getInstance($c->config, $c->locator);
         };
 
         /**
