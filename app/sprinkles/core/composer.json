@@ -24,12 +24,15 @@
         {
             "type": "vcs",
             "url": "https://github.com/userfrosting/assets"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/userfrosting/cache"
         }
     ],
     "require": {
         "illuminate/database": "^5.2",
         "illuminate/events": "^5.2",
-        "illuminate/cache": "^5.2",
         "illuminate/filesystem": "^5.2",
         "league/csv": "^8.1",
         "monolog/monolog": "^1",
@@ -43,6 +46,7 @@
         "twig/twig": "^1.18",
         "userfrosting/assets": "^4.0.0",
         "userfrosting/config": "^4.0.0",
+        "userfrosting/cache": "dev-master",
         "userfrosting/fortress": "^4.0.0",
         "userfrosting/i18n": "^4.0.1",
         "userfrosting/session": "^4.0.0",

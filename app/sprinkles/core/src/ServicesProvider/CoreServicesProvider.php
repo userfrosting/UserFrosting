@@ -10,8 +10,6 @@ namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
-use Illuminate\Cache\CacheManager;
-use Illuminate\Cache\MemcachedConnector;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
@@ -36,6 +34,9 @@ use UserFrosting\Assets\AssetLoader;
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\UrlBuilder\AssetUrlBuilder;
 use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
+use UserFrosting\Cache\FileStore;
+use UserFrosting\Cache\MemcachedStore;
+use UserFrosting\Cache\RedisStore;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -136,26 +137,23 @@ class CoreServicesProvider
          */
         $container['cache'] = function ($c) {
 
-            // Create dummy Illuminate Container
-            $app = new Container();
+            $config = $c->config;
 
-            $app->singleton('files', function() {
-                return new Filesystem();
-            });
+            // Set namespace.
+            $namespace = $config['cache.prefix'] . "_global";
 
-            $app->singleton('memcached.connector', function() {
-                return new MemcachedConnector;
-            });
+            if ($config['cache.store'] == 'file') {
+                $path = $c->locator->findResource('cache://', true, true);
+                $cacheStore = new FileStore($namespace, $path);
+            } else if ($config['cache.store'] == 'memcached') {
+                $cacheStore = new MemcachedStore($namespace, $config['cache.memcached']);
+            } else if ($config['cache.store'] == 'redis') {
+                $cacheStore = new RedisStore($namespace, $config['cache.redis']);
+            } else {
+                throw new \Exception("Bad cache store type '{$config['cache.store']}' specified in configuration file.");
+            }
 
-            $app->singleton('config', function() use ($c) {
-                $config = new \UserFrosting\Config\Config();
-                $config['cache'] = $c->config['cache.illuminate'];
-                $config['cache.stores.file.path'] = $c->locator->findResource('cache://illuminate', true, true);
-                return $config;
-            });
-
-            $cacheManager = new CacheManager($app);
-            return $cacheManager->driver();
+            return $cacheStore->instance();
         };
 
         /**

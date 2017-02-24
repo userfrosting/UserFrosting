@@ -27,26 +27,20 @@
             'use_raw'  => true
         ],
         'cache' => [
-            'twig' => false,
-            'illuminate' => [
-                'default' => 'file',
-        	    'prefix' => 'uf4',
-        	    'stores' => [
-                    'file' => [
-                        'driver' => 'file'
-                    ],
-                    'memcached' => [
-                        'driver' => 'memcached',
-                        'servers' => [
-                            [
-                                'host' => '127.0.0.1',
-                                'port' => 11211,
-                                'weight' => 100
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+            'store' => 'file', //Set to one of `file`, `memcached`, `redis`
+    	    'prefix' => '', //When using multiple memcached or redis instance on the same server. No effect on `file`
+            'memcached' => [
+                'host' => '127.0.0.1',
+                'port' => 11211,
+                'weight' => 100
+            ],
+            "redis" => [
+                'host' => '127.0.0.1',
+                'password' => null,
+                'port' => 6379,
+                'database' => 0
+            ],
+            'twig' => false
         ],
         // CSRF middleware settings (see https://github.com/slimphp/Slim-Csrf)
         'csrf' => [
