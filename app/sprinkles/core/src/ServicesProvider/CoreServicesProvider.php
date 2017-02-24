@@ -71,7 +71,7 @@ class CoreServicesProvider
          * Persists error/success messages between requests in the session.
          */
         $container['alerts'] = function ($c) {
-            return new MessageStream($c->session, $c->config['session.keys.alerts'], $c->translator);
+            return new MessageStream($c->session['cache'], $c->config['session.keys.alerts'], $c->translator);
         };
 
         /**
@@ -458,6 +458,10 @@ class CoreServicesProvider
             // Create, start and return a new wrapper for $_SESSION
             $session = new Session($handler, $config['session']);
             $session->start();
+
+            // Create the session cache
+            $session['cache'] = CacheHelper::getInstance("_s".session_id(), $c->config, $c->locator);
+
             return $session;
         };
 

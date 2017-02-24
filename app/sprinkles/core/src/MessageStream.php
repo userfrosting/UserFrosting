@@ -9,7 +9,6 @@
 namespace UserFrosting\Sprinkle\Core;
 
 use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Session\Session;
 
 /**
  * MessageStream Class
@@ -22,9 +21,9 @@ use UserFrosting\Session\Session;
 class MessageStream
 {
     /**
-     * @var UserFrosting\Session\Session We use the session object so that added messages will automatically appear in the session.
+     * @var Illuminate\\Cache\\*Store Object We use the cache object so that added messages will automatically appear in the cache.
      */
-    protected $session;
+    protected $cache;
 
     /**
      * @var string
@@ -39,14 +38,10 @@ class MessageStream
     /**
      * Create a new message stream.
      */
-    public function __construct($session, $messagesKey, $translator = null)
+    public function __construct($cache, $messagesKey, $translator = null)
     {
-        $this->session = $session;
+        $this->cache = $cache;
         $this->messagesKey = $messagesKey;
-
-        if (!$this->session->has($messagesKey)) {
-            $this->session[$messagesKey] = array();
-        }
 
         $this->setTranslator($translator);
     }
@@ -63,7 +58,7 @@ class MessageStream
     }
 
     /**
-     * Adds a raw text message to the session message stream.
+     * Adds a raw text message to the cache message stream.
      *
      * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
      * @param string $message The message to be added to the message stream.
@@ -71,17 +66,17 @@ class MessageStream
      */
     public function addMessage($type, $message)
     {
-        $messages = $this->session[$this->messagesKey];
+        $messages = $this->messages();
         $messages[] = array(
             "type" => $type,
             "message" => $message
         );
-        $this->session[$this->messagesKey] = $messages;
+        $this->cache->forever($this->messagesKey, $messages);
         return $this;
     }
 
     /**
-     * Adds a text message to the session message stream, translated into the currently selected language.
+     * Adds a text message to the cache message stream, translated into the currently selected language.
      *
      * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
      * @param string $messageId The message id for the message to be added to the message stream.
@@ -119,7 +114,12 @@ class MessageStream
      */
     public function messages()
     {
-        return $this->session[$this->messagesKey];
+        if ($this->cache->has($this->messagesKey))
+        {
+            return $this->cache->get($this->messagesKey);
+        } else {
+            return [];
+        }
     }
 
     /**
@@ -137,7 +137,7 @@ class MessageStream
      */
     public function resetMessageStream()
     {
-        $this->session[$this->messagesKey] = array();
+        $this->cache->forget($this->messagesKey);
     }
 
     /**
@@ -149,7 +149,7 @@ class MessageStream
      */
     public function getAndClearMessages()
     {
-        $messages = $this->session[$this->messagesKey];
+        $messages = $this->messages();
         $this->resetMessageStream();
         return $messages;
     }
