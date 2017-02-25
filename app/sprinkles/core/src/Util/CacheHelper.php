@@ -48,4 +48,73 @@ class CacheHelper
 
         return $cacheStore->instance();
     }
+
+    /**
+     * Register the namespace to the registery.
+     * The namespace registery is used to store the list of all cache namespace
+     * to enable to flush the cache of every namespace at once.
+     *
+     * @access public
+     * @static
+     * @param string $namespace
+     * @param \UserFrosting\Config\Config $config
+     * @param \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator $locator Locator service for stream resources.
+     */
+    public static function register($namespace, $config, $locator)
+    {
+        //Don't need to add the global namespace to the namespace repository
+        if ($namespace == $config['cache.global_namespace'])
+        {
+            return;
+        }
+
+        // The the list of current namespace in the repo
+        $globalCache = static::getInstance($config['cache.global_namespace'], $config, $locator);
+        $list = static::getNamepaceList($config, $locator, $globalCache);
+
+        // Of the namespace is not in the list, add it and save the list to cache
+        if (!in_array($namespace, $list)) {
+            $list[] = $namespace;
+            $globalCache->forever($config['cache.namespace_repository'], $list);
+        }
+    }
+
+    /**
+     * Return the list of currently registered namespaces
+     *
+     * @access public
+     * @static
+     * @param \UserFrosting\Config\Config $config
+     * @param \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator $locator Locator service for stream resources.
+     * @param Illuminate\\Cache\\*Store $instance (default: null)
+     */
+    public static function getNamepaceList($config, $locator, $instance = null) {
+
+        // Get the cache instance if not provided
+        if ($instance == null)
+        {
+            $instance = static::getInstance($config['cache.global_namespace'], $config, $locator);
+        }
+
+        // Returned the cached list, of create an empty one if none is currently cached
+        return $instance->get($config['cache.namespace_repository'], function () {
+            return [$config['cache.global_namespace']];
+        });
+    }
+
+    /**
+     * Flush the cache for every namespace registered
+     *
+     * @access public
+     * @static
+     * @param \UserFrosting\Config\Config $config
+     * @param \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator $locator Locator service for stream resources.
+     */
+    public static function flushAll($config, $locator) {
+        $namespaces = static::getNamepaceList($config, $locator);
+        foreach ($namespaces as $namespace) {
+            $cache = static::getInstance($namespace, $config, $locator);
+            $cache->flush();
+        }
+    }
 }

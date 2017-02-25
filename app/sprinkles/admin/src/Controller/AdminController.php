@@ -16,6 +16,7 @@ use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Model\Role;
 use UserFrosting\Sprinkle\Core\Model\Version;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
+use UserFrosting\Sprinkle\Core\Util\CacheHelper;
 
 /**
  * AdminController Class
@@ -152,7 +153,7 @@ class AdminController extends SimpleController
         }
 
         // Flush cache
-        $this->ci->cache->flush();
+        CacheHelper::flushAll($this->ci->config, $this->ci->locator);
 
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;

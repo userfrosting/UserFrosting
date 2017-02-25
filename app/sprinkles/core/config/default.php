@@ -27,8 +27,8 @@
             'use_raw'  => true
         ],
         'cache' => [
-            'store' => 'file', //Set to one of `file`, `memcached`, `redis`
-    	    'prefix' => '',
+            'store' => 'file', // Set to one of `file`, `memcached`, `redis`
+    	    'prefix' => '', // Prefix can be used when multiple instance of memcached/redis are used on the same server
             'memcached' => [
                 'host' => '127.0.0.1',
                 'port' => 11211,
@@ -40,6 +40,8 @@
                 'port' => 6379,
                 'database' => 0
             ],
+    	    'global_namespace' => '_global', // namespace of the global cache
+    	    'namespace_repository' => '_namespaceRepository', // cache key of the namespace repository
             'twig' => false
         ],
         // CSRF middleware settings (see https://github.com/slimphp/Slim-Csrf)

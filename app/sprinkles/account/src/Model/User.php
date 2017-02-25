@@ -168,7 +168,14 @@ class User extends UFModel
      * @return Illuminate\\Cache\\*Store
      */
     public function getCache() {
-        return CacheHelper::getInstance("_u".$this->id, static::$ci->config, static::$ci->locator);
+
+        // Get the cache
+        $cache = CacheHelper::getInstance("_u".$this->id, static::$ci->config, static::$ci->locator);
+
+        // Register the cache so it can be cleared by the flushAll function
+        CacheHelper::register("_u".$this->id, static::$ci->config, static::$ci->locator);
+
+        return $cache;
     }
 
     /**
