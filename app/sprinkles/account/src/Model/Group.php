@@ -25,8 +25,8 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property string description
  * @property string icon
  */
-class Group extends UFModel {
-
+class Group extends UFModel
+{
     /**
      * @var string The name of the table for the current model.
      */

@@ -56,6 +56,8 @@ return [
         "IN_USE"    => "Email '{{email}}' is already in use."
     ],
 
+    "EMAIL_OR_USERNAME" => "Username or email address",
+
     "FIRST_NAME" => "First name",
 
     "HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER",
@@ -165,7 +167,7 @@ return [
 
     "USER_ID_INVALID"       => "The requested user id does not exist.",
     "USER_OR_EMAIL_INVALID" => "Username or email address is invalid.",
-    "USER_OR_PASS_INVALID"  => "Username or password is invalid.",
+    "USER_OR_PASS_INVALID"  => "User not found or password is invalid.",
 
     "WELCOME" => "Welcome back, {{first_name}}"
 ];

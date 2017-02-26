@@ -265,15 +265,11 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
         $throttler = $this->ci->throttler;
 
-        if ($isEmail) {
-            $throttleData = [
-                'email' => $data['email']
-            ];
-        } else {
-            $throttleData = [
-                'user_name' => $data['user_name']
-            ];
-        }
+        $userIdentifier = $data['user_name'];
+
+        $throttleData = [
+            'user_identifier' => $userIdentifier
+        ];
 
         $delay = $throttler->getDelay('sign_in_attempt', $throttleData);
         if ($delay > 0) {
@@ -297,11 +293,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
-        if($isEmail) {
-            $currentUser = $authenticator->attempt('email', $data['email'], $data['password'], $data['rememberme']);
-        } else {
-            $currentUser = $authenticator->attempt('user_name', $data['user_name'], $data['password'], $data['rememberme']);
-        }
+        $currentUser = $authenticator->attempt(($isEmail ? 'email' : 'user_name'), $userIdentifier, $data['password'], $data['rememberme']);
 
         $ms->addMessageTranslated("success", "WELCOME", $currentUser->export());
 

@@ -24,7 +24,7 @@
         <form action="{{site.uri.public}}/account/login" id="sign-in" method="post">
           {% include "components/csrf.html.twig" %}
           <div class="form-group has-feedback">
-            <input type="text" class="form-control" placeholder="{{translate('USERNAME')}}" name="user_name">
+            <input type="text" class="form-control" placeholder="{% if site.login.enable_email %}{{translate('USERNAME_OR_EMAIL')}}{% else %}{{translate('USERNAME')}}{% endif %}" name="user_name">
             <span class="glyphicon glyphicon-user form-control-feedback" style=" margin-right: 0px"></span>
           </div>
           <div class="form-group has-feedback">
