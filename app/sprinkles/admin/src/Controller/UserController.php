@@ -277,10 +277,19 @@ class UserController extends SimpleController
             throw $e;
         }
 
-        $userName = $user->user_name;
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($user, $currentUser) {
+            $userName = $user->user_name;
 
-        $user->delete();
-        unset($user);
+            $user->delete();
+            unset($user);
+
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted the account for {$userName}.", [
+                'type' => 'account_delete',
+                'user_id' => $currentUser->id
+            ]);
+        });
 
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
@@ -449,6 +458,17 @@ class UserController extends SimpleController
             'user' => $user
         ])) {
             throw new ForbiddenException();
+        }
+
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        // Check that we are not deleting the master account
+        // Need to use loose comparison for now, because some DBs return `id` as a string
+        if ($user->id == $config['reserved_user_ids.master']) {
+            $e = new BadRequestException();
+            $e->addUserMessage('DELETE_MASTER');
+            throw $e;
         }
 
         return $this->ci->view->render($response, 'components/modals/confirm-delete-user.html.twig', [
@@ -992,14 +1012,23 @@ class UserController extends SimpleController
             return $response->withStatus(400);
         }
 
-        // Update the user and generate success messages
-        foreach ($data as $name => $value) {
-            if ($value != $user->$name){
-                $user->$name = $value;
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($data, $user, $currentUser) {
+            // Update the user and generate success messages
+            foreach ($data as $name => $value) {
+                if ($value != $user->$name) {
+                    $user->$name = $value;
+                }
             }
-        }
 
-        $user->save();
+            $user->save();
+
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated basic account info for user {$user->user_name}.", [
+                'type' => 'account_update_info',
+                'user_id' => $currentUser->id
+            ]);
+        });
 
         $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
             'user_name' => $user->user_name
@@ -1093,21 +1122,45 @@ class UserController extends SimpleController
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
+        // Special checks and transformations for certain fields
         if ($fieldName == 'flag_enabled') {
             // Check that we are not disabling the master account
             if (($user->id == $config['reserved_user_ids.master']) &&
                 ($fieldValue == '0')
             ) {
-                $e = new ForbiddenException();
+                $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_MASTER');
                 throw $e;
             } else if (($user->id == $currentUser->id) &&
                 ($fieldValue == '0')
             ) {
-                $e = new ForbiddenException();
-                $e->addUserMessage('You cannot disable your own account!');
+                $e = new BadRequestException();
+                $e->addUserMessage('DISABLE_SELF');
                 throw $e;
             }
+        } else if ($fieldName == 'password') {
+            $fieldValue = Password::hash($fieldValue);
+        }
+
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($fieldName, $fieldValue, $user, $currentUser) {
+            if ($fieldName == "roles") {
+                $newRoles = collect($fieldValue)->pluck('role_id')->all();
+                $user->roles()->sync($newRoles);
+            } else {
+                $user->$fieldName = $fieldValue;
+                $user->save();
+            }
+
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for user {$user->user_name}.", [
+                'type' => 'account_update_field',
+                'user_id' => $currentUser->id
+            ]);
+        });
+
+        // Add success messages
+        if ($fieldName == 'flag_enabled') {
             if ($fieldValue == '1') {
                 $ms->addMessageTranslated('success', 'ENABLE_SUCCESSFUL', [
                     'user_name' => $user->user_name
@@ -1121,23 +1174,10 @@ class UserController extends SimpleController
             $ms->addMessageTranslated('success', 'MANUALLY_ACTIVATED', [
                 'user_name' => $user->user_name
             ]);
-        } else if ($fieldName == 'password') {
-            $fieldValue = Password::hash($fieldValue);
-            $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
-                'user_name' => $user->user_name
-            ]);
         } else {
             $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
                 'user_name' => $user->user_name
             ]);
-        }
-
-        if ($fieldName == "roles") {
-            $newRoles = collect($fieldValue)->pluck('role_id')->all();
-            $user->roles()->sync($newRoles);
-        } else {
-            $user->$fieldName = $fieldValue;
-            $user->save();
         }
 
         return $response->withStatus(200);

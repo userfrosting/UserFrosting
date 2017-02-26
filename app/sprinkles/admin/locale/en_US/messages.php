@@ -36,6 +36,7 @@ return [
     "DELETION_SUCCESSFUL"   => "User '{{user_name}}' has been successfully deleted.",
     "DETAILS_UPDATED"       => "Account details updated for user '{{user_name}}'",
     "DISABLE_MASTER"        => "You cannot disable the master account!",
+    "DISABLE_SELF"          => "You cannot disable your own account!",
     "DISABLE_SUCCESSFUL"    => "Account for user '{{user_name}}' has been successfully disabled.",
 
     "ENABLE_SUCCESSFUL" => "Account for user '{{user_name}}' has been successfully enabled.",
