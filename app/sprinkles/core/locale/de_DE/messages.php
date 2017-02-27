@@ -82,7 +82,7 @@ return [
     "EDIT"                              => "Bearbeiten",
     "ENABLE"                            => "Aktivieren",
     "ENABLED"                           => "Aktiviert",
-    "OVERWRITE"                         => "Überschreiben",
+    "OVERRIDE"                          => "Überschreiben",
     "RESET"                             => "Zurücksetzen",
     "SAVE"                              => "Speichern",
     "SEARCH"                            => "Suchen",

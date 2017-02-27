@@ -16,7 +16,7 @@
     </div>
     <!-- /.login-logo -->
 
-    <div class="login-box-body login-form">
+    <div class="login-box-body login-form"  style="display:none;">
         <p class="login-box-msg">{{translate('SIGNIN')}}</p>
 
         <div class="alerts" id="alerts-login"></div>
@@ -24,7 +24,7 @@
         <form action="{{site.uri.public}}/account/login" id="sign-in" method="post">
           {% include "components/csrf.html.twig" %}
           <div class="form-group has-feedback">
-            <input type="text" class="form-control" placeholder="{% if site.login.enable_email %}{{translate('USERNAME_OR_EMAIL')}}{% else %}{{translate('USERNAME')}}{% endif %}" name="user_name">
+            <input type="text" class="form-control" placeholder="{% if site.login.enable_email %}{{translate('EMAIL_OR_USERNAME')}}{% else %}{{translate('USERNAME')}}{% endif %}" name="user_name">
             <span class="glyphicon glyphicon-user form-control-feedback" style=" margin-right: 0px"></span>
           </div>
           <div class="form-group has-feedback">
@@ -35,7 +35,7 @@
             <div class="col-xs-8">
               <div class="checkbox icheck">
                 <label>
-                  <input type="checkbox" name="rememberme"> {{translate('REMEMBER_ME')}}
+                  <input type="checkbox" class="js-icheck" name="rememberme"> {{translate('REMEMBER_ME')}}
                 </label>
               </div>
             </div>
@@ -55,25 +55,30 @@
     <!-- /.login-box-body -->
 
     {% if site.registration.enabled %}
-    <div class="login-box-body register-form" style="display:none;">
+    <div class="login-box-body register-form">
         <p class="login-box-msg">{{translate('REGISTER')}}</p>
 
         <div class="alerts" id="alerts-register"></div>
 
         <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
             {% include "components/csrf.html.twig" %}
-            <div class="form-group">
-                <label class="sr-only" for="r-form-username">{{translate('USERNAME')}}</label>
-                <input type="text" name="user_name" placeholder="{{translate('USERNAME.CHOOSE')}}" class="form-control" id="r-form-username">
-            </div>
             <div class="row">
                 <div class="col-md-6 form-group">
                     <label class="sr-only" for="r-form-first-name">{{translate('FIRST_NAME')}}</label>
-                    <input type="text" name="first_name" placeholder="{{translate('FIRST_NAME')}}" class="form-control" id="r-form-first-name">
+                    <input type="text" name="first_name" placeholder="{{translate('FIRST_NAME')}}" class="form-control" id="r-form-first-name" autocomplete="off">
                 </div>
                 <div class="col-md-6 form-group">
                     <label class="sr-only" for="r-form-last-name">{{translate('LAST_NAME')}}</label>
-                    <input type="text" name="last_name" placeholder="{{translate('LAST_NAME')}}" class="form-control" id="r-form-last-name">
+                    <input type="text" name="last_name" placeholder="{{translate('LAST_NAME')}}" class="form-control" id="r-form-last-name" autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="r-form-username">{{translate('USERNAME')}}</label>
+                <div class="input-group">
+                    <input type="text" name="user_name" placeholder="{{translate('USERNAME.CHOOSE')}}" class="form-control" id="r-form-username" autocomplete="off">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info btn-flat" id="form-register-username-suggest" autocomplete="off"> {{translate("SUGGEST")}}</button>
+                    </span>
                 </div>
             </div>
             <div class="form-group">

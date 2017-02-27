@@ -22,12 +22,14 @@ use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Model\Group;
 use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Account\Util\Util as AccountUtil;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
+use UserFrosting\Sprinkle\Core\Util\Util;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
 use UserFrosting\Support\Exception\HttpException;
@@ -40,6 +42,54 @@ use UserFrosting\Support\Exception\HttpException;
  */
 class AccountController extends SimpleController
 {
+    /**
+     * Check a username for availability.
+     *
+     * This route is throttled by default, to discourage abusing it for account enumeration.
+     * This route is "public access".
+     * Request type: GET
+     */
+    public function checkUsername($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        // Load request schema
+        $schema = new RequestSchema("schema://check-username.json");
+
+        // Whitelist and set parameter defaults
+        $transformer = new RequestDataTransformer($schema);
+        $data = $transformer->transform($params);
+
+        // Validate, and halt on validation errors.
+        $validator = new ServerSideValidator($schema, $this->ci->translator);
+        if (!$validator->validate($data)) {
+            // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
+            $e = new BadRequestException("Missing or malformed request data!");
+            foreach ($validator->errors() as $idx => $field) {
+                foreach($field as $eidx => $error) {
+                    $e->addUserMessage($error);
+                }
+            }
+            throw $e;
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $translator = $this->ci->translator;
+
+        if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
+            $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
+            return $response->write($message)->withStatus(200);
+        } else {
+            return $response->write('true')->withStatus(200);
+        }
+    }
+
     /**
      * Processes a request to cancel a password reset request.
      *
@@ -1006,6 +1056,30 @@ class AccountController extends SimpleController
 
         $ms->addMessageTranslated("success", "ACCOUNT.SETTINGS.UPDATED");
         return $response->withStatus(200);
+    }
+
+    /**
+     * Suggest an available username for a specified first/last name.
+     *
+     * This route is throttled by default, to discourage abusing it for account enumeration.
+     * This route is "public access".
+     * Request type: GET
+     */
+    public function suggestUsername($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
+        $ms = $this->ci->alerts;
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $suggestion = AccountUtil::randomUniqueUsername($classMapper, 50, 10);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson([
+            'user_name' => $suggestion
+        ], 200, JSON_PRETTY_PRINT);
     }
 
     /**

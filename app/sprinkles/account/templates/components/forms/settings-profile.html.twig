@@ -19,7 +19,7 @@
 
         <div class="form-group">
             <label for="input-locale" control-label">{{translate("LOCALE")}}</label>
-                <select id="input-locale" class="form-control select2" name="locale" {{page.visibility}}>
+                <select id="input-locale" class="form-control js-select2" name="locale" {{page.visibility}}>
                     {% for option, label in locales %}
                     <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
                     {% endfor %}

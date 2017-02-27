@@ -160,9 +160,10 @@ return [
     "USERNAME" => [
         "@TRANSLATION" => "Username",
 
-        "CHOOSE"  => "Choose a unique username",
-        "INVALID" => "Invalid username",
-        "IN_USE"  => "Username '{{user_name}}' is already in use."
+        "CHOOSE"        => "Choose a unique username",
+        "INVALID"       => "Invalid username",
+        "IN_USE"        => "Username '{{user_name}}' is already in use.",
+        "NOT_AVAILABLE" => "Username '{{user_name}}' is not available. Choose a different name, or click 'suggest'."
     ],
 
     "USER_ID_INVALID"       => "The requested user id does not exist.",

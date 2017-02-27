@@ -56,9 +56,63 @@ $(document).ready(function() {
         });
     });
 
+    // Auto-generate username when name is filled in
+    var autoGenerate = true;
+    $("#register").find('input[name=first_name], input[name=last_name]').on('input change', function() {
+        if (!autoGenerate) {
+            return;
+        }
+
+        var form = $("#register");
+
+        var firstName = form.find('input[name=first_name]').val().trim();
+        var lastName = form.find('input[name=last_name]').val().trim();
+
+        if (!(firstName && lastName)) {
+            return;
+        }
+
+        var userName = getSlug(firstName + ' ' + lastName, {
+            separator: '.'
+        });
+        // Set slug and instantly validate
+        form.find('input[name=user_name]').val(userName).valid();
+    });
+
+    // Enable/disable username suggestions in registration page
+    $("#register").find('#form-register-username-suggest').on('click', function() {
+        var form = $("#register");
+        $.getJSON(site.uri.public + '/account/suggest-username')
+        .done(function (data) {
+            // Set suggestion and instantly validate
+            form.find('input[name=user_name]').val(data.user_name).valid();
+        });
+    });
+
+    // Turn off autogenerate when someone enters stuff manually in user_name
+    $("#register").find('input[name=user_name]').on('input', function() {
+        autoGenerate = false;
+    });
+
+    // Add remote rule for checking usernames on the fly
+    var registrationValidators = $.extend(
+        true,               // deep extend
+        page.validators.register,
+        {
+            rules: {
+                user_name: {
+                    remote: {
+                        url: site.uri.public + '/account/check-username',
+                        dataType: 'text'
+                    }
+                }
+            }
+        }
+    );
+    
     // Handles form submission
     $("#register").ufForm({
-        validators: page.validators.register,
+        validators: registrationValidators,
         msgTarget: $("#alerts-register")
     }).on("submitSuccess.ufForm", function() {
         // Show login on success
