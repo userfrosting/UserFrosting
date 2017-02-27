@@ -6,24 +6,20 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Core;
+namespace UserFrosting\Sprinkle\Core\Alert;
 
 use UserFrosting\Fortress\ServerSideValidator;
 
 /**
- * MessageStream Class
+ * AlertStream Class
  *
- * Implements a message stream for use between HTTP requests, with i18n support via the MessageTranslator class
+ * Implements an alert stream for use between HTTP requests, with i18n support via the MessageTranslator class
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/components/#messages
  */
-class MessageStream
+abstract class AlertStream
 {
-    /**
-     * @var Illuminate\\Cache\\*Store Object We use the cache object so that added messages will automatically appear in the cache.
-     */
-    protected $cache;
 
     /**
      * @var string
@@ -38,9 +34,8 @@ class MessageStream
     /**
      * Create a new message stream.
      */
-    public function __construct($cache, $messagesKey, $translator = null)
+    public function __construct($messagesKey, $translator = null)
     {
-        $this->cache = $cache;
         $this->messagesKey = $messagesKey;
 
         $this->setTranslator($translator);
@@ -71,7 +66,7 @@ class MessageStream
             "type" => $type,
             "message" => $message
         );
-        $this->cache->forever($this->messagesKey, $messages);
+        $this->saveMessages($messages);
         return $this;
     }
 
@@ -94,6 +89,20 @@ class MessageStream
     }
 
     /**
+     * Get the messages and then clear the message stream.
+     * This function does the same thing as `messages()`, except that it also clears all messages afterwards.
+     * This is useful, because typically we don't want to view the same messages more than once.
+     *
+     * @return array An array of messages, each of which is itself an array containing "type" and "message" fields.
+     */
+    public function getAndClearMessages()
+    {
+        $messages = $this->messages();
+        $this->resetMessageStream();
+        return $messages;
+    }
+
+    /**
      * Add error messages from a ServerSideValidator object to the message stream.
      *
      * @param ServerSideValidator $validator
@@ -108,21 +117,6 @@ class MessageStream
     }
 
     /**
-     * Get the messages from this message stream.
-     *
-     * @return array An array of messages, each of which is itself an array containing "type" and "message" fields.
-     */
-    public function messages()
-    {
-        if ($this->cache->has($this->messagesKey))
-        {
-            return $this->cache->get($this->messagesKey);
-        } else {
-            return [];
-        }
-    }
-
-    /**
      * Return the translator for this message stream.
      *
      * @return MessageTranslator The translator for this message stream.
@@ -133,24 +127,19 @@ class MessageStream
     }
 
     /**
-     * Clear all messages from this message stream.
-     */
-    public function resetMessageStream()
-    {
-        $this->cache->forget($this->messagesKey);
-    }
-
-    /**
-     * Get the messages and then clear the message stream.
-     * This function does the same thing as `messages()`, except that it also clears all messages afterwards.
-     * This is useful, because typically we don't want to view the same messages more than once.
+     * Get the messages from this message stream.
      *
      * @return array An array of messages, each of which is itself an array containing "type" and "message" fields.
      */
-    public function getAndClearMessages()
-    {
-        $messages = $this->messages();
-        $this->resetMessageStream();
-        return $messages;
-    }
+    abstract public function messages();
+
+    /**
+     * Clear all messages from this message stream.
+     */
+    abstract public function resetMessageStream();
+
+    /**
+     * Save messages to the stream
+     */
+    abstract protected function saveMessages($message);
 }

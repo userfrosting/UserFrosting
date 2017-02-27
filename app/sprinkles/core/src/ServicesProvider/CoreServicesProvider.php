@@ -41,7 +41,8 @@ use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
 use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
-use UserFrosting\Sprinkle\Core\MessageStream;
+use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
+use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
@@ -71,7 +72,20 @@ class CoreServicesProvider
          * Persists error/success messages between requests in the session.
          */
         $container['alerts'] = function ($c) {
-            return new MessageStream($c->session['cache'], $c->config['session.keys.alerts'], $c->translator);
+            $config = $c->config;
+
+            if ($config['alert.storage'] == 'cache')
+            {
+                return new CacheAlertStream($config['alert.key'], $c->translator, $c->session['cache']);
+            }
+            else if ($config['alert.storage'] == 'session')
+            {
+                return new SessionAlertStream($config['alert.key'], $c->translator, $c->session);
+            }
+            else
+            {
+                throw new \Exception("Bad alert storage handler type '{$config['alert.storage']}' specified in configuration file.");
+            }
         };
 
         /**

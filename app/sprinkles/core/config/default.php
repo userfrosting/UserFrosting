@@ -15,6 +15,10 @@
                 'name'  => 'Site Administrator'
             ]
         ],
+        'alert' => [
+            'storage'   => 'session', // Set to one of `cache` or `session`
+            'key'       => 'site.alerts', // the key to use to store flash messages
+        ],
         'assets' => [
             'compiled' => [
                 'path'   => 'assets',
@@ -98,7 +102,6 @@
             'cache_limiter' => false,
             // Decouples the session keys used to store certain session info
             'keys' => [
-                'alerts'  => 'site.alerts',    // the key to use to store flash messages
                 'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
             ]
         ],
