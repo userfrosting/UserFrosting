@@ -68,7 +68,7 @@ $(document).ready(function() {
         var firstName = form.find('input[name=first_name]').val().trim();
         var lastName = form.find('input[name=last_name]').val().trim();
 
-        if (!(firstName && lastName)) {
+        if (!firstName && !lastName) {
             return;
         }
 
