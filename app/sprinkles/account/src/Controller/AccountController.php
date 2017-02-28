@@ -94,7 +94,7 @@ class AccountController extends SimpleController
         // Log throttleable event
         $throttler->logEvent('check_username_request');
 
-        if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
+        if ($classMapper->staticMethod('user', 'exists', $data['user_name'], 'user_name')) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
             return $response->write($message)->withStatus(200);
         } else {
@@ -640,6 +640,7 @@ class AccountController extends SimpleController
     /**
      * Processes an new account registration request.
      *
+     * This is throttled to prevent account enumeration, since it needs to divulge when a username/email has been used.
      * Processes the request from the form on the registration page, checking that:
      * 1. The honeypot was not modified;
      * 2. The master account has already been created (during installation);
@@ -652,7 +653,6 @@ class AccountController extends SimpleController
      * This route is "public access".
      * Request type: POST
      * Returns the User Object for the user record that was created.
-     * @todo we should probably throttle this as well to prevent account enumeration, especially since it needs to divulge when a username/email has been used.
      */
     public function register(Request $request, Response $response, $args)
     {
@@ -710,13 +710,22 @@ class AccountController extends SimpleController
             $error = true;
         }
 
+        /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
+        $throttler = $this->ci->throttler;
+        $delay = $throttler->getDelay('registration_attempt');
+
+        // Throttle requests
+        if ($delay > 0) {
+            return $response->withStatus(429);
+        }
+
         // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
+        if ($classMapper->staticMethod('user', 'exists', $data['user_name'], 'user_name')) {
             $ms->addMessageTranslated("danger", "USERNAME.IN_USE", $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
+        if ($classMapper->staticMethod('user', 'exists', $data['email'], 'email')) {
             $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
             $error = true;
         }
@@ -765,7 +774,10 @@ class AccountController extends SimpleController
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config) {
+        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $throttler) {
+            // Log throttleable event
+            $throttler->logEvent('registration_attempt');
+        
             // Create the user
             $user = $classMapper->createInstance('user', $data);
 
@@ -1038,7 +1050,7 @@ class AccountController extends SimpleController
         unset($data['passwordc']);
 
         // If new email was submitted, check that the email address is not in use
-        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'where', 'email', $data['email'])->first()) {
+        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'exists', $data['email'], 'email')) {
             $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
             $error = true;
         }
@@ -1073,9 +1085,9 @@ class AccountController extends SimpleController
     /**
      * Suggest an available username for a specified first/last name.
      *
-     * This route is throttled by default, to discourage abusing it for account enumeration.
      * This route is "public access".
      * Request type: GET
+     * @todo Can this route be abused for account enumeration?  If so we should throttle it as well.
      */
     public function suggestUsername($request, $response, $args)
     {
