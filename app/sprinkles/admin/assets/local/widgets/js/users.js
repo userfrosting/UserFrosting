@@ -11,7 +11,7 @@ function attachUserForm() {
         var form = modal.find('.js-form');
 
         // Set up any widgets inside the modal
-        form.find(".select2").select2({
+        form.find(".js-select2").select2({
             width: '100%'
         });
 

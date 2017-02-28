@@ -19,12 +19,12 @@
 
         <div class="form-group">
             <label for="input-locale" control-label">{{translate("LOCALE")}}</label>
-                <select id="input-locale" class="form-control js-select2" name="locale" {{page.visibility}}>
-                    {% for option, label in locales %}
-                    <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
-                    {% endfor %}
-                </select>
-                <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
+            <select id="input-locale" class="form-control js-select2" name="locale" {{page.visibility}}>
+                {% for option, label in locales %}
+                <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
+                {% endfor %}
+            </select>
+            <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
         </div>
     </div>
     <div class="box-footer text-center">
