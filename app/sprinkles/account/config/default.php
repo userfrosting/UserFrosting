@@ -65,6 +65,7 @@
             ]
         ],
         'throttles' => [
+            'check_username_request' => null,
             'password_reset_request' => null,
             'sign_in_attempt' => null,
             'verification_request' => null

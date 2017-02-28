@@ -77,10 +77,22 @@ class AccountController extends SimpleController
             throw $e;
         }
 
+        /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
+        $throttler = $this->ci->throttler;
+        $delay = $throttler->getDelay('check_username_request');
+
+        // Throttle requests
+        if ($delay > 0) {
+            return $response->withStatus(429);
+        }
+
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $translator = $this->ci->translator;
+
+        // Log throttleable event
+        $throttler->logEvent('check_username_request');
 
         if ($classMapper->staticMethod('user', 'where', 'user_name', $data['user_name'])->first()) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);

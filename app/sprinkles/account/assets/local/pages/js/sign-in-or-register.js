@@ -75,8 +75,17 @@ $(document).ready(function() {
         var userName = getSlug(firstName + ' ' + lastName, {
             separator: '.'
         });
-        // Set slug and instantly validate
-        form.find('input[name=user_name]').val(userName).valid();
+        // Set slug
+        form.find('input[name=user_name]').val(userName);
+    });
+
+    // Autovalidate username field on a delay
+    var timer;
+    $("#register").find('input[name=first_name], input[name=last_name], input[name=user_name]').on('input change', function() {
+        clearTimeout(timer); // Clear the timer so we don't end up with dupes.
+        timer = setTimeout(function() { // assign timer a new timeout 
+            $("#register").find('input[name=user_name]').valid();
+        }, 500);
     });
 
     // Enable/disable username suggestions in registration page
@@ -84,8 +93,8 @@ $(document).ready(function() {
         var form = $("#register");
         $.getJSON(site.uri.public + '/account/suggest-username')
         .done(function (data) {
-            // Set suggestion and instantly validate
-            form.find('input[name=user_name]').val(data.user_name).valid();
+            // Set suggestion
+            form.find('input[name=user_name]').val(data.user_name);
         });
     });
 
@@ -113,7 +122,8 @@ $(document).ready(function() {
     // Handles form submission
     $("#register").ufForm({
         validators: registrationValidators,
-        msgTarget: $("#alerts-register")
+        msgTarget: $("#alerts-register"),
+        keyupDelay: 500
     }).on("submitSuccess.ufForm", function() {
         // Show login on success
         toggleLoginForm();

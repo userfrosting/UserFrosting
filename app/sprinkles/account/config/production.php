@@ -8,6 +8,13 @@
     return [
         // See http://security.stackexchange.com/a/59550/74909 for the inspiration for our throttling system
         'throttles' => [
+            'check_username_request' => [
+                'method'   => 'ip',
+                'interval' => 3600,
+                'delays' => [
+                    40 => 1000
+                ]
+            ],
             'password_reset_request' => [
                 'method'   => 'ip',
                 'interval' => 3600,
