@@ -18,6 +18,10 @@
             "required" : {
                 "label" : "&USERNAME",
                 "message" : "VALIDATE.REQUIRED"
+            },
+            "username" : {
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.USERNAME"
             }
         }
     },

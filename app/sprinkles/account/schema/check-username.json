@@ -14,6 +14,10 @@
             "no_trailing_whitespace" : {
                 "label" : "&USERNAME",
                 "message" : "VALIDATE.NO_TRAIL_WS"
+            },
+            "username" : {
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.USERNAME"
             }
         }
     }

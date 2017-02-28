@@ -109,7 +109,7 @@ $(document).ready(function() {
             }
         }
     );
-    
+
     // Handles form submission
     $("#register").ufForm({
         validators: registrationValidators,

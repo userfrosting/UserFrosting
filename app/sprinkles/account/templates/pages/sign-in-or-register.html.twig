@@ -16,7 +16,7 @@
     </div>
     <!-- /.login-logo -->
 
-    <div class="login-box-body login-form"  style="display:none;">
+    <div class="login-box-body login-form">
         <p class="login-box-msg">{{translate('SIGNIN')}}</p>
 
         <div class="alerts" id="alerts-login"></div>
@@ -55,7 +55,7 @@
     <!-- /.login-box-body -->
 
     {% if site.registration.enabled %}
-    <div class="login-box-body register-form">
+    <div class="login-box-body register-form" style="display:none;">
         <p class="login-box-msg">{{translate('REGISTER')}}</p>
 
         <div class="alerts" id="alerts-register"></div>
