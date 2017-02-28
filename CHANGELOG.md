@@ -1,5 +1,16 @@
 # Change Log
 
+## v4.0.8-Alpha
+- Autogenerate and suggestion features for usernames during account registration (partially addresses https://github.com/userfrosting/UserFrosting/issues/569)
+- Restrict username characters to a-z0-9.-_
+- Require first name by default
+- Throttle registration attempts
+- Implement User::exists method
+- keyupDelay option in ufForm
+- More logging of group and role CRUD
+- Implement extra:// stream
+- Lots of missing translation keys
+
 ## v4.0.7-Alpha
 - Separate "profile settings" from "account settings"
 
