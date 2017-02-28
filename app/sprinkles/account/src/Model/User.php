@@ -169,7 +169,7 @@ class User extends UFModel
      * @param bool $checkDeleted set to true to include soft-deleted records
      * @return User|null
      */
-    public function exists($value, $identifier = 'user_name', $checkDeleted = true)
+    public static function exists($value, $identifier = 'user_name', $checkDeleted = true)
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
