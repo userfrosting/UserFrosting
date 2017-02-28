@@ -2,6 +2,9 @@
 
 ## v4.0.x-dev
 
+## v4.0.9-Alpha
+- Oops, `exists` needs to be static
+
 ## v4.0.8-Alpha
 - Autogenerate and suggestion features for usernames during account registration (partially addresses https://github.com/userfrosting/UserFrosting/issues/569)
 - Restrict username characters to a-z0-9.-_
