@@ -84,16 +84,19 @@ return [
 
         "ASSIGN_NEW"    => "Assign new role",
         "CREATE"        => "Create role",
+        "CREATION_SUCCESSFUL" => "Successfully created role <strong>{{name}}</strong>",
         "DELETE"            => "Delete role",
-        "DELETE_CONFIRM"    => "Are you sure you want to delete the role '{{name}}'?",
+        "DELETE_CONFIRM"    => "Are you sure you want to delete the role <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Yes, delete role",
+        "DELETION_SUCCESSFUL" => "Successfully deleted role <strong>{{name}}</strong>",
         "EDIT"          => "Edit role",
         "INFO_PAGE"     => "Role information page for {{name}}",
         "MANAGE"        => "Manage Roles",
         "NAME"          => "Name",
         "NAME_EXPLAIN"  => "Please enter a name for the role",
         "PAGE_DESCRIPTION"  => "A listing of the roles for your site.  Provides management tools for editing and deleting roles.",
-        "UPDATE"        => "Update roles"
+        "PERMISSIONS_UPDATED" => "Permissions updated for role <strong>{{name}}</strong>",
+        "UPDATE"        => "Details updated for role <strong>{{name}}</strong>"
     ],
 
     "SYSTEM_INFO" => [

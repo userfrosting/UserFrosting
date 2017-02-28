@@ -211,8 +211,17 @@ class RoleController extends SimpleController
 
         $roleName = $role->name;
 
-        $role->delete();
-        unset($role);
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($role, $roleName, $currentUser) {
+            $role->delete();
+            unset($role);
+
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} deleted role {$roleName}.", [
+                'type' => 'role_delete',
+                'user_id' => $currentUser->id
+            ]);
+        });
 
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
@@ -672,14 +681,23 @@ class RoleController extends SimpleController
             return $response->withStatus(400);
         }
 
-        // Update the role and generate success messages
-        foreach ($data as $name => $value) {
-            if ($value != $role->$name){
-                $role->$name = $value;
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($data, $role, $currentUser) {
+            // Update the role and generate success messages
+            foreach ($data as $name => $value) {
+                if ($value != $role->$name){
+                    $role->$name = $value;
+                }
             }
-        }
 
-        $role->save();
+            $role->save();
+
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated details for role {$role->name}.", [
+                'type' => 'role_update_info',
+                'user_id' => $currentUser->id
+            ]);
+        });
 
         $ms->addMessageTranslated('success', 'ROLE.UPDATE', [
             'name' => $role->name
@@ -765,17 +783,33 @@ class RoleController extends SimpleController
         /** @var MessageStream $ms */
         $ms = $this->ci->alerts;
 
-        if ($fieldName == "permissions") {
-            $newPermissions = collect($fieldValue)->pluck('permission_id')->all();
-            $role->permissions()->sync($newPermissions);
-        } else {
-            $role->$fieldName = $fieldValue;
-            $role->save();
-        }
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($fieldName, $fieldValue, $role, $currentUser) {
+            if ($fieldName == "permissions") {
+                $newPermissions = collect($fieldValue)->pluck('permission_id')->all();
+                $role->permissions()->sync($newPermissions);
+            } else {
+                $role->$fieldName = $fieldValue;
+                $role->save();
+            }
 
-        $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
-            'name' => $role->name
-        ]);
+            // Create activity record
+            $this->ci->userActivityLogger->info("User {$currentUser->user_name} updated property '$fieldName' for role {$role->name}.", [
+                'type' => 'role_update_field',
+                'user_id' => $currentUser->id
+            ]);
+        });
+
+        // Add success messages
+        if ($fieldName == 'permissions') {
+            $ms->addMessageTranslated('success', 'ROLE.PERMISSIONS_UPDATED', [
+                'name' => $role->name
+            ]);
+        } else {
+            $ms->addMessageTranslated('success', 'ROLE.UPDATE', [
+                'name' => $role->name
+            ]);
+        }
 
         return $response->withStatus(200);
     }

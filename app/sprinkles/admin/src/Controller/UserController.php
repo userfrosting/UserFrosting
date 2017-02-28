@@ -277,10 +277,10 @@ class UserController extends SimpleController
             throw $e;
         }
 
-        // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($user, $currentUser) {
-            $userName = $user->user_name;
+        $userName = $user->user_name;
 
+        // Begin transaction - DB will be rolled back if an exception occurs
+        Capsule::transaction( function() use ($user, $userName, $currentUser) {
             $user->delete();
             unset($user);
 
