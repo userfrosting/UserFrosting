@@ -46,9 +46,11 @@ return [
         2 => "Groups",
 
         "CREATE"        => "Create group",
+        "CREATION_SUCCESSFUL" => "Successfully created group <strong>{{name}}</strong>",
         "DELETE"            => "Delete group",
-        "DELETE_CONFIRM"    => "Are you sure you want to delete the group '{{name}}'?",
+        "DELETE_CONFIRM"    => "Are you sure you want to delete the group <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Yes, delete group",
+        "DELETION_SUCCESSFUL" => "Successfully deleted group <strong>{{name}}</strong>",
         "EDIT"          => "Edit group",
         "ICON"          => "Group icon",
         "ICON_EXPLAIN"  => "Icon for group members",
