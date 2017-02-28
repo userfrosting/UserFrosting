@@ -69,8 +69,8 @@ class Util
      */
     static public function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-')
     {
-        $adjectives = include('sprinkles://core/extra/adjectives.php');
-        $nouns = include('sprinkles://core/extra/nouns.php');
+        $adjectives = include('extra://adjectives.php');
+        $nouns = include('extra://nouns.php');
 
         for ($n = 0; $n < $maxTries; $n++) {
             $keys = array_rand($adjectives, $numAdjectives);
@@ -82,7 +82,7 @@ class Util
             if (strlen($result) < $maxLength) {
                 return $result;
             }
-        } 
+        }
 
         return '';
     }
