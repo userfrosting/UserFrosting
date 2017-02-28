@@ -113,6 +113,21 @@ class SprinkleManager
     }
 
     /**
+     * Adds extras for a specified Sprinkle to the locale (extra://) stream.
+     *
+     * @param string $name
+     * @return string|bool The full path to the Sprinkle's extras (if found).
+     */
+    public function addExtras($name)
+    {
+        $path = $this->sprinklesPath . $name . \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME;
+
+        $this->ci->locator->addPath('extra', '', $path);
+
+        return $this->ci->locator->findResource('extra://', true, false);
+    }
+
+    /**
      * Adds locales for a specified Sprinkle to the locale (locale://) stream.
      *
      * @param string $name
@@ -179,6 +194,7 @@ class SprinkleManager
     {
         $this->addConfig($name);
         $this->addAssets($name);
+        $this->addExtras($name);
         $this->addLocale($name);
         $this->addRoutes($name);
         $this->addSchema($name);

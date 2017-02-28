@@ -23,7 +23,6 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  */
 class Role extends UFModel
 {
-
     /**
      * @var string The name of the table for the current model.
      */

@@ -54,6 +54,7 @@
                 msgTarget           : this.$T.find('.js-form-alerts'),
                 beforeSubmitCallback: null,
                 binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
+                keyupDelay          : 0,
                 DEBUG: false
             },
             options
@@ -153,6 +154,36 @@
                         return jqXHR;
                     }
                 );
+            },
+            onkeyup: function( element, event ) {
+                // See http://stackoverflow.com/questions/41363409/jquery-validate-add-delay-to-keyup-validation
+                var form = this;
+                setTimeout(function() {
+                    // Avoid revalidate the field when pressing one of the following keys
+                    // Shift       => 16
+                    // Ctrl        => 17
+                    // Alt         => 18
+                    // Caps lock   => 20
+                    // End         => 35
+                    // Home        => 36
+                    // Left arrow  => 37
+                    // Up arrow    => 38
+                    // Right arrow => 39
+                    // Down arrow  => 40
+                    // Insert      => 45
+                    // Num lock    => 144
+                    // AltGr key   => 225
+                    var excludedKeys = [
+                        16, 17, 18, 20, 35, 36, 37,
+                        38, 39, 40, 45, 144, 225
+                    ];
+        
+                    if ( event.which === 9 && form.elementValue( element ) === "" || $.inArray( event.keyCode, excludedKeys ) !== -1 ) {
+                        return;
+                    } else if ( element.name in form.submitted || element.name in form.invalid ) {
+                        form.element( element );
+                    }
+                }, base.options.keyupDelay);
             }
         });
     };

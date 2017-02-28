@@ -25,6 +25,7 @@ define('UserFrosting\APP_DIR_NAME', basename(__DIR__));
 define('UserFrosting\ASSET_DIR_NAME', 'assets');
 define('UserFrosting\BUILD_DIR_NAME', 'build');
 define('UserFrosting\CACHE_DIR_NAME', 'cache');
+define('UserFrosting\EXTRA_DIR_NAME', 'extra');
 define('UserFrosting\SESSION_DIR_NAME', 'sessions');
 define('UserFrosting\CONFIG_DIR_NAME', 'config');
 define('UserFrosting\LOCALE_DIR_NAME', 'locale');

@@ -23,7 +23,7 @@
                     {% if 'group' in form.fields.disabled %}
                         <input type="text" class="form-control" name="theme" value="{{user.group.name}}" disabled>
                     {% else %}
-                        <select id="input-group" class="form-control select2" name="group_id">
+                        <select id="input-group" class="form-control js-select2" name="group_id">
                             {% for group in groups %}
                             <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
                             {% endfor %}
@@ -78,7 +78,7 @@
                     {% if 'theme' in form.fields.disabled %}
                         <input type="text" class="form-control" name="theme" value="{{themes[user.theme]}}" disabled>
                     {% else %}
-                        <select id="input-theme" class="form-control select2" name="theme">
+                        <select id="input-theme" class="form-control js-select2" name="theme">
                             {% for option, label in theme %}
                             <option value="{{option}}" {% if (option == user.theme) %}selected{% endif %}>{{label}}</option>
                             {% endfor %}
@@ -97,7 +97,7 @@
                     {% if 'locale' in form.fields.disabled %}
                         <input type="text" class="form-control" name="theme" value="{{locales[user.locale]}}" disabled>
                     {% else %}
-                        <select id="input-locale" class="form-control select2" name="locale">
+                        <select id="input-locale" class="form-control js-select2" name="locale">
                             {% for option, label in locales %}
                             <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
                             {% endfor %}

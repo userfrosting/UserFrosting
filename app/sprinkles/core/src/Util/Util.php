@@ -54,11 +54,36 @@ class Util
         $num = static::extractDigits($phone);
 
         $len = strlen($num);
-        if($len == 7)
+
+        if($len == 7) {
             $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
-        elseif ($len == 10)
+        } elseif ($len == 10) {
             $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
+        }
 
         return $num;
+    }
+
+    /**
+     * Generate a random phrase, consisting of a specified number of adjectives, followed by a noun.
+     */
+    static public function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-')
+    {
+        $adjectives = include('extra://adjectives.php');
+        $nouns = include('extra://nouns.php');
+
+        for ($n = 0; $n < $maxTries; $n++) {
+            $keys = array_rand($adjectives, $numAdjectives);
+            $matches = array_only($adjectives, $keys);
+
+            $result = implode($separator, $matches);
+            $result .= $separator . $nouns[array_rand($nouns)];
+            $result = str_slug($result, $separator);
+            if (strlen($result) < $maxLength) {
+                return $result;
+            }
+        }
+
+        return '';
     }
 }

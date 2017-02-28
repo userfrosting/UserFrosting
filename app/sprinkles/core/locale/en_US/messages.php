@@ -59,6 +59,7 @@ return [
     "SLUG" => "Slug",
     "SLUG_CONDITION" => "Slug/Conditions",
     "STATUS" => "Status",
+    "SUGGEST" => "Suggest",
 
     "UNKNOWN" => "Unknown",
 
@@ -83,7 +84,7 @@ return [
     "EDIT" => "Edit",
     "ENABLE" => "Enable",
     "ENABLED" => "Enabled",
-    "OVERWRITE" => "Overwrite",
+    "OVERRIDE" => "Override",
     "RESET" => "Reset",
     "SAVE" => "Save",
     "SEARCH" => "Search",

@@ -47,11 +47,17 @@ class PasswordReset extends UFModel
      */
     protected $token;
 
+    /**
+     * @return string
+     */
     public function getToken()
     {
         return $this->token;
     }
 
+    /**
+     * @param string $value
+     */
     public function setToken($value)
     {
         $this->token = $value;
