@@ -1,5 +1,5 @@
 User-agent: *
-Disallow: /tutorials/
-Disallow: /0.2.2/
-Disallow: /0.3.0/
+Disallow: /tutorials
+Disallow: /0.2.2
+Disallow: /0.3.0
 Disallow: /api/namespace-UserFrosting.html
