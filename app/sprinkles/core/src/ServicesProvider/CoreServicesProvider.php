@@ -476,9 +476,6 @@ class CoreServicesProvider
             // Create the session cache
             $session['cache'] = CacheHelper::getInstance("_s".session_id(), $c->config, $c->locator);
 
-            // Register the cache so it can be cleared by the flushAll function
-            CacheHelper::register("_s".session_id(), $c->config, $c->locator);
-
             return $session;
         };
 

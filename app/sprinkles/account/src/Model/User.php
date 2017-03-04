@@ -172,9 +172,6 @@ class User extends UFModel
         // Get the cache
         $cache = CacheHelper::getInstance("_u".$this->id, static::$ci->config, static::$ci->locator);
 
-        // Register the cache so it can be cleared by the flushAll function
-        CacheHelper::register("_u".$this->id, static::$ci->config, static::$ci->locator);
-
         return $cache;
     }
 
