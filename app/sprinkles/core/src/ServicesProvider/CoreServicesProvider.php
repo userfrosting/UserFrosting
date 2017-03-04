@@ -76,7 +76,7 @@ class CoreServicesProvider
 
             if ($config['alert.storage'] == 'cache')
             {
-                return new CacheAlertStream($config['alert.key'], $c->translator, $c->session['cache']);
+                return new CacheAlertStream($config['alert.key'], $c->translator, $c->sessionCache);
             }
             else if ($config['alert.storage'] == 'session')
             {
@@ -473,10 +473,14 @@ class CoreServicesProvider
             $session = new Session($handler, $config['session']);
             $session->start();
 
-            // Create the session cache
-            $session['cache'] = CacheHelper::getInstance("_s".session_id(), $c->config, $c->locator);
-
             return $session;
+        };
+
+        /**
+         * Start the PHP session, with the name and parameters specified in the configuration file.
+         */
+        $container['sessionCache'] = function ($c) {
+            return CacheHelper::getInstance("_s".session_id(), $c->config, $c->locator);
         };
 
         /**
