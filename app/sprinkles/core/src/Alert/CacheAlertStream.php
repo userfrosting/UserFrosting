@@ -12,7 +12,8 @@ namespace UserFrosting\Sprinkle\Core\Alert;
  * CacheAlertStream Class
  *
  * Implements a message stream for use between HTTP requests, with i18n support via the MessageTranslator class
- * Using the cache system to store the alerts
+ * Using the cache system to store the alerts. Note that the tags are added each time instead of the constructor
+ * since the session_id can change when the user logs in or out
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  * @see http://www.userfrosting.com/components/#messages
@@ -25,11 +26,17 @@ class CacheAlertStream extends AlertStream
     protected $cache;
 
     /**
+     * @var Illuminate\\Cache\\*Store Object We use the cache object so that added messages will automatically appear in the cache.
+     */
+    protected $config;
+
+    /**
      * Create a new message stream.
      */
-    public function __construct($messagesKey, $translator = null, $cache)
+    public function __construct($messagesKey, $translator = null, $cache, $config)
     {
         $this->cache = $cache;
+        $this->config = $config;
         parent::__construct($messagesKey, $translator);
     }
 
@@ -40,9 +47,9 @@ class CacheAlertStream extends AlertStream
      */
     public function messages()
     {
-        if ($this->cache->has($this->messagesKey))
+        if ($this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->has($this->messagesKey))
         {
-            return $this->cache->get($this->messagesKey);
+            return $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->get($this->messagesKey);
         } else {
             return [];
         }
@@ -53,7 +60,7 @@ class CacheAlertStream extends AlertStream
      */
     public function resetMessageStream()
     {
-        $this->cache->forget($this->messagesKey);
+        $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->forget($this->messagesKey);
     }
 
     /**
@@ -61,6 +68,6 @@ class CacheAlertStream extends AlertStream
      */
     protected function saveMessages($messages)
     {
-        $this->cache->forever($this->messagesKey, $messages);
+        $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->forever($this->messagesKey, $messages);
     }
 }

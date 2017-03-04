@@ -34,6 +34,9 @@ use UserFrosting\Assets\AssetLoader;
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\UrlBuilder\AssetUrlBuilder;
 use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
+use UserFrosting\Cache\TaggableFileStore;
+use UserFrosting\Cache\MemcachedStore;
+use UserFrosting\Cache\RedisStore;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -48,7 +51,6 @@ use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
-use UserFrosting\Sprinkle\Core\Util\CacheHelper;
 use UserFrosting\Support\Exception\BadRequestException;
 
 /**
@@ -76,7 +78,7 @@ class CoreServicesProvider
 
             if ($config['alert.storage'] == 'cache')
             {
-                return new CacheAlertStream($config['alert.key'], $c->translator, $c->sessionCache);
+                return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->config);
             }
             else if ($config['alert.storage'] == 'session')
             {
@@ -148,7 +150,29 @@ class CoreServicesProvider
          * @todo Create an option somewhere to flush the cache
          */
         $container['cache'] = function ($c) {
-            return CacheHelper::getInstance($c->config['cache.global_namespace'], $c->config, $c->locator);
+
+            $config = $c->config;
+
+            if ($config['cache.store'] == 'file')
+            {
+                $path = $c->locator->findResource('cache://', true, true);
+                $cacheStore = new TaggableFileStore($path);
+            }
+            else if ($config['cache.store'] == 'memcached')
+            {
+                $cacheStore = new MemcachedStore($config['cache.memcached']);
+            }
+            else if ($config['cache.store'] == 'redis')
+            {
+                $cacheStore = new RedisStore($config['cache.redis']);
+            }
+            else
+            {
+                throw new \Exception("Bad cache store type '{$config['cache.store']}' specified in configuration file.");
+            }
+
+            $cache = $cacheStore->instance();
+            return $cache->tags($config['cache.prefix']);
         };
 
         /**
@@ -474,13 +498,6 @@ class CoreServicesProvider
             $session->start();
 
             return $session;
-        };
-
-        /**
-         * Start the PHP session, with the name and parameters specified in the configuration file.
-         */
-        $container['sessionCache'] = function ($c) {
-            return CacheHelper::getInstance("_s".session_id(), $c->config, $c->locator);
         };
 
         /**

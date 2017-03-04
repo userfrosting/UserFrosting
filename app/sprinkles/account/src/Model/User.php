@@ -15,7 +15,6 @@ use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
-use UserFrosting\Sprinkle\Core\Util\CacheHelper;
 
 /**
  * User Class
@@ -168,11 +167,7 @@ class User extends UFModel
      * @return Illuminate\\Cache\\*Store
      */
     public function getCache() {
-
-        // Get the cache
-        $cache = CacheHelper::getInstance("_u".$this->id, static::$ci->config, static::$ci->locator);
-
-        return $cache;
+        return static::$ci->cache->tags([static::$ci->config['cache.prefix'], "_u".$this->id]);
     }
 
     /**

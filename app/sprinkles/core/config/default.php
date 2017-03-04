@@ -44,8 +44,6 @@
                 'port' => 6379,
                 'database' => 0
             ],
-    	    'global_namespace' => '_global', // namespace of the global cache
-    	    'namespace_repository' => '_namespaceRepository', // cache key of the namespace repository
             'twig' => false
         ],
         // CSRF middleware settings (see https://github.com/slimphp/Slim-Csrf)
