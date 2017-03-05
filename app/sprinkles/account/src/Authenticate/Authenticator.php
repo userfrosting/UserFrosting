@@ -48,6 +48,11 @@ class Authenticator
     protected $config;
 
     /**
+     * @var Cache
+     */
+    protected $cache;
+
+    /**
      * @var bool
      */
     protected $loggedOut = false;
@@ -81,11 +86,12 @@ class Authenticator
      * @param Session $session The session wrapper object that will store the user's id.
      * @param Config $config Config object that contains authentication settings.
      */
-    public function __construct(ClassMapper $classMapper, Session $session, $config)
+    public function __construct(ClassMapper $classMapper, Session $session, $config, $cache)
     {
         $this->classMapper = $classMapper;
         $this->session = $session;
         $this->config = $config;
+        $this->cache = $cache;
 
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
@@ -98,7 +104,7 @@ class Authenticator
             $dsn .= ";port={$dbParams['port']}";
         }
         $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
-    
+
         // Now get actual PDO instance for Eloquent
         $pdo = Capsule::connection()->getPdo();
 
@@ -193,7 +199,11 @@ class Authenticator
      */
     public function login($user, $rememberMe = false)
     {
+        $oldId = session_id();
         $this->session->regenerateId(true);
+
+        // Since regenerateId delete the old session, we'll do the same in cache
+        $this->cache->tags("_s".$oldId)->flush();
 
         // If the user wants to be remembered, create Rememberme cookie
         if ($rememberMe) {
@@ -245,8 +255,13 @@ class Authenticator
         $this->user = null;
         $this->loggedOut = true;
 
+        $oldId = session_id();
+
         // Completely destroy the session
         $this->session->destroy();
+
+        // Since regenerateId delete the old session, we'll do the same in cache
+        $this->cache->tags("_s".$oldId)->flush();
 
         // Restart the session service
         $this->session->start();
