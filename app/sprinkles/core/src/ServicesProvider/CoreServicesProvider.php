@@ -395,6 +395,7 @@ class CoreServicesProvider
                 'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'extra' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'

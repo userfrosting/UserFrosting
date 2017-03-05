@@ -50,6 +50,7 @@
         },
         "js/pages/sign-in-or-register": {
             "scripts": [
+                "vendor/speakingurl/speakingurl.min.js",
                 "vendor/urijs/src/URI.js",
                 "local/core/js/uf-captcha.js",
                 "local/pages/js/sign-in-or-register.js"

@@ -94,11 +94,11 @@ $(function() {
     $.AdminLTE.initMenu('ul.sidebar-menu a');
     $.AdminLTE.tree_UF('.sidebar');
 
-    // Globally apply select2
-    $('select').select2({ minimumResultsForSearch: Infinity });
+    // Apply select2 to all js-select2 elements
+    $('.js-select2').select2({ minimumResultsForSearch: Infinity });
 
-    // Globally apply iCheck
-    $('input').iCheck({
+    // Apply iCheck to all js-icheck elements
+    $('.js-icheck').iCheck({
       checkboxClass: 'icheckbox_square-blue',
       radioClass: 'iradio_square-blue',
       increaseArea: '20%' // optional

@@ -10,6 +10,8 @@
 $app->group('/account', function () {
     $this->get('/captcha', 'UserFrosting\Sprinkle\Account\Controller\AccountController:imageCaptcha');
 
+    $this->get('/check-username', 'UserFrosting\Sprinkle\Account\Controller\AccountController:checkUsername');
+
     $this->get('/forgot-password', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageForgotPassword')
         ->setName('forgot-password');
 
@@ -28,6 +30,8 @@ $app->group('/account', function () {
     $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')
         ->add('checkEnvironment')
         ->setName('login');
+
+    $this->get('/suggest-username', 'UserFrosting\Sprinkle\Account\Controller\AccountController:suggestUsername');
 
     $this->get('/verify', 'UserFrosting\Sprinkle\Account\Controller\AccountController:verify');
 

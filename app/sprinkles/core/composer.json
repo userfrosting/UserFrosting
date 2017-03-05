@@ -19,14 +19,6 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/userfrosting/i18n"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/userfrosting/assets"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/userfrosting/cache"
         }
     ],

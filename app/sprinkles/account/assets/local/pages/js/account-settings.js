@@ -7,6 +7,10 @@
  * Target page: account/settings
  */
 $(document).ready(function() {
+
+    // Apply select2 to locale field
+    $('.js-select2').select2();
+
     $("#account-settings").ufForm({
         validators: page.validators.account_settings,
         msgTarget: $("#alerts-page")

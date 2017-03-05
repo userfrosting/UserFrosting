@@ -83,7 +83,7 @@ return [
     "EDIT" => "แก้ไข",
     "ENABLE" => "เปิด",
     "ENABLED" => "เปิดอยู่",
-    "OVERWRITE" => "เขียนทับ",
+    "OVERRIDE" => "เขียนทับ",
     "RESET" => "รีเซ็ต",
     "SAVE" => "บันทึก",
     "SEARCH" => "ค้นหา",

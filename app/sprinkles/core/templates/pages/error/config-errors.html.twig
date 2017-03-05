@@ -7,7 +7,7 @@
 {% block heading %}<i class="fa fa-warning text-yellow"></i> {{ translate('ERROR.CONFIG.DETAIL') }}{% endblock %}
 
 {% block content %}
-    <p>{{ translate('ERROR.CONFIG.RETURN', {url: "#{site.uri.public}/install"})|raw }}</a>.</p>
+    <p>{{ translate('ERROR.CONFIG.RETURN', {url: "#{site.uri.public}"})|raw }}.</p>
 
     {% autoescape false %}
     {% for message in messages %}

@@ -18,6 +18,10 @@
             "required" : {
                 "label" : "&USERNAME",
                 "message" : "VALIDATE.REQUIRED"
+            },
+            "username" : {
+                "label" : "&USERNAME",
+                "message" : "VALIDATE.USERNAME"
             }
         }
     },
@@ -29,6 +33,10 @@
                 "max" : 20,
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
+        },
+        "required" : {
+            "label" : "&FIRST_NAME",
+            "message" : "VALIDATE.REQUIRED"
         },
         "transformations" : ["trim"]
     },

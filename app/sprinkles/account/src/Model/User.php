@@ -162,11 +162,34 @@ class User extends UFModel
     }
 
     /**
+     * Determines whether a user exists, including checking soft-deleted records
+     *
+     * @param mixed $value
+     * @param string $identifier
+     * @param bool $checkDeleted set to true to include soft-deleted records
+     * @return User|null
+     */
+    public static function exists($value, $identifier = 'user_name', $checkDeleted = true)
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        $query = $classMapper->staticMethod('user', 'where', $identifier, $value);
+
+        if ($checkDeleted) {
+            $query = $query->withTrashed();
+        }
+
+        return $query->first();
+    }
+
+    /**
      * Return a cache instance specific to that user
      *
      * @return Illuminate\\Cache\\*Store
      */
-    public function getCache() {
+    public function getCache()
+    {
         return static::$ci->cache->tags([static::$ci->config['cache.prefix'], "_u".$this->id]);
     }
 
