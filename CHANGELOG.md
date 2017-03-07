@@ -1,6 +1,10 @@
 # Change Log
 
-## v4.0.x-dev
+## v4.0.10-Alpha
+- Move suggestion button outta-da-way
+- Add email to registration success message
+- Separate out some page content into smaller blocks
+- Factor out select2 options in ufCollection, into the 'dropdown' key so that any select2 option can be set
 
 ## v4.0.9-Alpha
 - Oops, `exists` needs to be static

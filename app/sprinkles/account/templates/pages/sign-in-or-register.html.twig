@@ -74,12 +74,8 @@
             </div>
             <div class="form-group">
                 <label for="r-form-username">{{translate('USERNAME')}}</label>
-                <div class="input-group">
-                    <input type="text" name="user_name" placeholder="{{translate('USERNAME.CHOOSE')}}" class="form-control" id="r-form-username" autocomplete="off">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-info btn-flat" id="form-register-username-suggest" autocomplete="off"> {{translate("SUGGEST")}}</button>
-                    </span>
-                </div>
+                <span class="pull-right"><a href="#" id="form-register-username-suggest">[{{translate("SUGGEST")}}]</a></span>
+                <input type="text" name="user_name" placeholder="{{translate('USERNAME.CHOOSE')}}" class="form-control" id="r-form-username" autocomplete="off">
             </div>
             <div class="form-group">
                 <label class="sr-only" for="r-form-email">{{translate('EMAIL')}}</label>
