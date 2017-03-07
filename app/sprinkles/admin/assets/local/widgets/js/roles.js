@@ -68,10 +68,14 @@ function bindRoleButtons(el) {
             // Set up collection widget
             var permissionWidget = modal.find('.js-form-permissions');
             permissionWidget.ufCollection({
-                dataUrl         : site.uri.public + '/api/permissions',
+                dropdown: {
+                    ajax: {
+                        url     : site.uri.public + '/api/permissions'
+                    },
+                    placeholder : "Select a permission"
+                },
                 dropdownTemplate: modal.find('#role-permissions-select-option').html(),
-                rowTemplate     : modal.find('#role-permissions-row').html(),
-                placeholder     : "Select a permission"
+                rowTemplate     : modal.find('#role-permissions-row').html()
             });
 
             // Get current roles and add to widget
