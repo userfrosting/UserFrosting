@@ -699,7 +699,7 @@ class RoleController extends SimpleController
             ]);
         });
 
-        $ms->addMessageTranslated('success', 'ROLE.UPDATE', [
+        $ms->addMessageTranslated('success', 'ROLE.UPDATED', [
             'name' => $role->name
         ]);
 
@@ -806,7 +806,7 @@ class RoleController extends SimpleController
                 'name' => $role->name
             ]);
         } else {
-            $ms->addMessageTranslated('success', 'ROLE.UPDATE', [
+            $ms->addMessageTranslated('success', 'ROLE.UPDATED', [
                 'name' => $role->name
             ]);
         }

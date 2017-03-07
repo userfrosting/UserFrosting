@@ -89,7 +89,7 @@ return [
         "NAME"          => "اسم",
         "NAME_EXPLAIN"  => "أدخل اسما للدور",
         "PAGE_DESCRIPTION"  => "قائمة الوظائف لموقعك",
-        "UPDATE"        => "تحديث الوظائف"
+        "UPDATED"       => "تحديث الوظائف"
     ],
 
     "SYSTEM_INFO" => [

@@ -94,7 +94,7 @@ return [
         "NAME_EXPLAIN"  => "Por favor introduza um nome para o cargo",
         "PAGE_DESCRIPTION"  => "Lista de cargos do site.  Contém opções para editar e remover cargos.",
         "UPDATE"        => "Atualizar cargos",
-        "UPDATED"       => "Cargo atualizado"
+        "UPDATED"       => "Cargo <strong>{{name}}</strong> atualizado"
     ],
 
     "SYSTEM_INFO" => [

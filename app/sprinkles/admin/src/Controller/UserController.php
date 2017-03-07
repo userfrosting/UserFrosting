@@ -633,6 +633,8 @@ class UserController extends SimpleController
         $schema = new RequestSchema('schema://user/edit-info.json');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
+        $translator = $this->ci->translator;
+
         return $this->ci->view->render($response, 'components/modals/user.html.twig', [
             'user' => $user,
             'groups' => $groups,
@@ -641,7 +643,7 @@ class UserController extends SimpleController
                 'action' => "api/users/u/{$user->user_name}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'submit_text' => 'Update user'
+                'submit_text' => $translator->translate("UPDATE")
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)

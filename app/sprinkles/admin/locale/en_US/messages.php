@@ -100,7 +100,7 @@ return [
         "NAME_EXPLAIN"  => "Please enter a name for the role",
         "PAGE_DESCRIPTION"  => "A listing of the roles for your site.  Provides management tools for editing and deleting roles.",
         "PERMISSIONS_UPDATED" => "Permissions updated for role <strong>{{name}}</strong>",
-        "UPDATE"        => "Details updated for role <strong>{{name}}</strong>"
+        "UPDATED"       => "Details updated for role <strong>{{name}}</strong>"
     ],
 
     "SYSTEM_INFO" => [

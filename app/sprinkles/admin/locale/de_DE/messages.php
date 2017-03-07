@@ -90,7 +90,7 @@ return [
         "NAME"                          => "Name",
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Rolle ein",
         "PAGE_DESCRIPTION"              => "Eine Liste der Rollen für Ihre Website. Bietet Verwaltungstools zum Bearbeiten und Löschen von Rollen.",
-        "UPDATE"                        => "Rollen aktualisieren"
+        "UPDATED"                       => "Rollen aktualisieren"
     ],
 
     "SYSTEM_INFO" => [
