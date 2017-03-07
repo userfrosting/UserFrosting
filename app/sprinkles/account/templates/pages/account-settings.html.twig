@@ -16,14 +16,18 @@
 
     <div class="row">
         <div class="col-lg-6">
-            <div class="box box-primary">
-                {% include "components/forms/settings-profile.html.twig" %}
-            </div>
+            {% block settings_profile_box %}
+                <div class="box box-primary">
+                    {% include "components/forms/settings-profile.html.twig" %}
+                </div>
+            {% endblock %}
         </div>
         <div class="col-lg-6">
-            <div class="box box-primary">
-                {% include "components/forms/settings-account.html.twig" %}
-            </div>
+            {% block settings_account_box %}
+                <div class="box box-primary">
+                    {% include "components/forms/settings-account.html.twig" %}
+                </div>
+            {% endblock %}
         </div>
     </div>
 {% endblock %}

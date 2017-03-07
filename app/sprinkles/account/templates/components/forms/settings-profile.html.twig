@@ -6,7 +6,7 @@
         {% include "components/csrf.html.twig" %}
 
         <div class="form-group">
-            <label for="input-first-name" control-label">{{translate("NAME")}}</label>
+            <label for="input-first-name" class="control-label">{{translate("NAME")}}</label>
             <div class="row">
                 <div class="col-sm-6">
                     <input type="text" id="input-first-name" class="form-control" name="first_name" value="{{current_user.first_name}}" placeholder="{{translate("FIRST_NAME")}}" {{page.visibility}}>
@@ -18,7 +18,7 @@
         </div>
 
         <div class="form-group">
-            <label for="input-locale" control-label">{{translate("LOCALE")}}</label>
+            <label for="input-locale" class="control-label">{{translate("LOCALE")}}</label>
             <select id="input-locale" class="form-control js-select2" name="locale" {{page.visibility}}>
                 {% for option, label in locales %}
                 <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
