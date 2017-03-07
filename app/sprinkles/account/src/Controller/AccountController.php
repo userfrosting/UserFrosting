@@ -815,7 +815,7 @@ class AccountController extends SimpleController
 
                 $this->ci->mailer->send($message);
 
-                $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE2");
+                $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE2", $user->toArray());
             } else {
                 // No verification required
                 $ms->addMessageTranslated("success", "REGISTRATION.COMPLETE_TYPE1");

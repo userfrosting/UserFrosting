@@ -111,7 +111,7 @@ return [
             "INVALID"           => "This password reset request could not be found, or has expired.  Please try <a href=\"{{url}}\">resubmitting your request<a>.",
             "PAGE"              => "Get a link to reset your password.",
             "REQUEST_CANNED"    => "Lost password request cancelled.",
-            "REQUEST_SENT"      => "A password reset link has been sent to {{email}}."
+            "REQUEST_SENT"      => "A password reset link has been sent to <strong>{{email}}</strong>."
         ],
 
         "RESET" => [
@@ -139,7 +139,7 @@ return [
     "REGISTRATION" => [
         "BROKEN"            => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
         "COMPLETE_TYPE1"    => "You have successfully registered. You can now sign in.",
-        "COMPLETE_TYPE2"    => "You have successfully registered. You will soon receive a verification email containing a link to activate your account.  You will not be able to sign in until you complete this step.",
+        "COMPLETE_TYPE2"    => "You have successfully registered. A link to activate your account has been sent to <strong>{{email}}</strong>.  You will not be able to sign in until you complete this step.",
         "DISABLED"          => "We're sorry, account registration has been disabled.",
         "LOGOUT"            => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
         "WELCOME"           => "Registration is fast and simple."
