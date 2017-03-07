@@ -1,7 +1,7 @@
 name: UserFrosting
 highlighter: pygments
 url: http://v3.userfrosting.com
-title: UserFrosting
+title: UserFrosting | Version 0.3.x
 markdown: redcarpet
 redcarpet:
   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
