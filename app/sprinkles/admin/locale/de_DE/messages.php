@@ -36,6 +36,7 @@ return [
     "DELETION_SUCCESSFUL"               => "Benutzer '{{user_name}}' wurde erfolgreich gelöscht.",
     "DETAILS_UPDATED"                   => "Konto-Daten für '{{user_name}}' aktualisiert.",
     "DISABLE_MASTER"                    => "Sie können das Root-Konto nicht deaktivieren!",
+    "DISABLE_SELF"                      => "Sie können Ihr eigenes Konto nicht deaktivieren!",
     "DISABLE_SUCCESSFUL"                => "Konto von '{{user_name}}' wurde erfolgreich deaktiviert.",
 
     "ENABLE_SUCCESSFUL"                 => "Konto von {{user_name}} wurde erfolgreich aktiviert.",
@@ -45,18 +46,22 @@ return [
         2                               => "Gruppen",
 
         "CREATE"                        => "Gruppe erstellen",
+        "CREATION_SUCCESSFUL"           => "Die Gruppe <strong>{{name}}</strong> wurde erfolgreich erstellt",
         "DELETE"                        => "Gruppe löschen",
         "DELETE_CONFIRM"                => "Möchten Sie die Gruppe '{{name}}' wirklich löschen?",
+        "DELETE_DEFAULT"                => "Sie können die Gruppe <strong>{{name}}</strong> nicht löschen, da es die Standardgruppe für neu registrierte Benutzer ist.",
         "DELETE_YES"                    => "Ja, Gruppe löschen",
+        "DELETION_SUCCESSFUL"           => "Die Gruppe <strong>{{name}}</strong> wurde erfolgreich gelöscht",
         "EDIT"                          => "Gruppe bearbeiten",
         "ICON"                          => "Gruppensymbol",
         "ICON_EXPLAIN"                  => "Symbol für Gruppenmitglieder",
         "INFO_PAGE"                     => "Gruppeninformationsseite für {{name}}",
         "NAME"                          => "Gruppenname",
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Gruppe ein",
+        "NOT_EMPTY"                     => "Sie können das nicht tun, denn es sind noch Benutzer mit der Gruppe <strong>{{name}}</strong> verbunden.",
         "PAGE_DESCRIPTION"              => "Eine Liste der Gruppen für Ihre Website. Bietet Verwaltungstools für das Bearbeiten und Löschen von Gruppen.",
-        "UPDATE"           				=> "Details für die Gruppe <strong>{{name}}</strong> aktualisiert"
-	],
+        "UPDATE"                        => "Details für die Gruppe <strong>{{name}}</strong> aktualisiert"
+    ],
 
     "MANUALLY_ACTIVATED"                => "{{user_name}}'s Konto wurde manuell aktiviert.",
     "MASTER_ACCOUNT_EXISTS"             => "Das Root-Konto existiert bereits!",
@@ -81,15 +86,20 @@ return [
 
         "ASSIGN_NEW"                    => "Neue Rolle zuweisen",
         "CREATE"                        => "Rolle erstellen",
+        "CREATION_SUCCESSFUL"           => "Die Rolle <strong>{{name}}</strong> wurde erfolgreich erstellt",
         "DELETE"                        => "Rolle löschen",
         "DELETE_CONFIRM"                => "Sind Sie sicher, dass Sie die Rolle '{{name}}' löschen möchten?",
+        "DELETE_DEFAULT"                => "Sie können die Rolle <strong>{{name}}</strong> nicht löschen, da es eine Standardrolle für neu registrierte Benutzer ist.",
         "DELETE_YES"                    => "Ja, Rolle löschen",
+        "DELETION_SUCCESSFUL"           => "Die Rolle <strong>{{name}}</strong> wurde erfolgreich gelöscht",
         "EDIT"                          => "Rolle bearbeiten",
+        "HAS_USERS"                     => "Sie können das nicht machen weil es noch Benutzer gibt, die die Rolle <strong>{{name}}</strong> haben.",
         "INFO_PAGE"                     => "Rolleninformationsseite für {{name}}",
         "MANAGE"                        => "Rollen verwalten",
         "NAME"                          => "Name",
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Rolle ein",
         "PAGE_DESCRIPTION"              => "Eine Liste der Rollen für Ihre Website. Bietet Verwaltungstools zum Bearbeiten und Löschen von Rollen.",
+        "PERMISSIONS_UPDATED"           => "Berechtigungen für die Rolle <strong>{{name}}</strong> aktualisiert",
         "UPDATED"                       => "Rollen aktualisieren"
     ],
 
