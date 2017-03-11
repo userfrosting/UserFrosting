@@ -6,7 +6,9 @@
     {% include 'components/dashboard/sidebar-search.html.twig' %}
 {% endblock %}
 
+{% block sidebar_menu %}
 <ul class="sidebar-menu">
     <li class="header" style="text-transform: uppercase">{{translate('NAVIGATION')}}</li>
     {% include 'components/dashboard/sidebar-menu.html.twig' %}
 </ul>
+{% endblock %}
