@@ -13,7 +13,7 @@
             <tr>
                 <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info">{{translate('GROUP')}} <i class="fa fa-sort"></i></th>
                 <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description">{{translate("DESCRIPTION")}} <i class="fa fa-sort"></i></th>
-                <th data-column-template="#group-table-column-actions">{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
+                <th data-column-template="#group-table-column-actions" data-sorter="false" data-filter="false">{{translate("ACTIONS")}}</th>
             </tr>
         </thead>
         <tbody>
@@ -50,7 +50,7 @@
                     {% endverbatim %}{{translate("ACTIONS")}}{% verbatim %}
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-group-edit">
                         <i class="fa fa-edit"></i> {% endverbatim %}{{translate("GROUP.EDIT")}}{% verbatim %}

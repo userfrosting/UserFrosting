@@ -21,3 +21,10 @@
 .panel-heading-buttons h3 {
     padding-top: 7.5px;
 }
+
+/* Don't display tablesorter filter field when disabled
+   ========================================================================== */
+
+.tablesorter thead .disabled {
+    display: none
+}

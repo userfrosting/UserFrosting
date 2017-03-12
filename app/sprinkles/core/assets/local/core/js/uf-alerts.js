@@ -240,10 +240,10 @@
 
             base.$T.html(alertHtml);
 
-            // Scroll back to top of page
-            if (base.options.scrollToTop) {
+            // Scroll to alert location if new alerts output
+            if (base.options.scrollToTop && alertHtml != "") {
                 $("html, body").animate({
-                    scrollTop: 0
+                    scrollTop: base.$T.offset().top
                 }, "fast");
             }
 

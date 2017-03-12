@@ -3,110 +3,112 @@
     <div class="js-form-alerts">
     </div>
     <div class="row">
-        {% if 'user_name' not in form.fields.hidden %}
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label>{{translate('USERNAME')}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="user_name" autocomplete="off" value="{{user.user_name}}" placeholder="{{translate('USERNAME')}}" {% if 'user_name' in form.fields.disabled %}disabled{% endif %}>
+        {% block user_form %}
+            {% if 'user_name' not in form.fields.hidden %}
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>{{translate('USERNAME')}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                        <input type="text" class="form-control" name="user_name" autocomplete="off" value="{{user.user_name}}" placeholder="{{translate('USERNAME')}}" {% if 'user_name' in form.fields.disabled %}disabled{% endif %}>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'group' not in form.fields.hidden %}
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="input-group">{{translate('GROUP')}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-users"></i></span>
-                    {% if 'group' in form.fields.disabled %}
-                        <input type="text" class="form-control" name="theme" value="{{user.group.name}}" disabled>
-                    {% else %}
-                        <select id="input-group" class="form-control js-select2" name="group_id">
-                            {% for group in groups %}
-                            <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
+            {% endif %}
+            {% if 'group' not in form.fields.hidden %}
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="input-group">{{translate('GROUP')}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                        {% if 'group' in form.fields.disabled %}
+                            <input type="text" class="form-control" name="theme" value="{{user.group.name}}" disabled>
+                        {% else %}
+                            <select id="input-group" class="form-control js-select2" name="group_id">
+                                {% for group in groups %}
+                                <option value="{{group.id}}" {% if (group.id == user.group_id) %}selected{% endif %}>{{group.name}}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'name' not in form.fields.hidden %}
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label>{{translate('FIRST_NAME')}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="first_name" autocomplete="off" value="{{user.first_name}}" placeholder="{{translate('FIRST_NAME')}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+            {% endif %}
+            {% if 'name' not in form.fields.hidden %}
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>{{translate('FIRST_NAME')}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                        <input type="text" class="form-control" name="first_name" autocomplete="off" value="{{user.first_name}}" placeholder="{{translate('FIRST_NAME')}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label>{{translate('LAST_NAME')}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-edit"></i></span>
-                    <input type="text" class="form-control" name="last_name" autocomplete="off" value="{{user.last_name}}" placeholder="{{translate('LAST_NAME')}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>{{translate('LAST_NAME')}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-edit"></i></span>
+                        <input type="text" class="form-control" name="last_name" autocomplete="off" value="{{user.last_name}}" placeholder="{{translate('LAST_NAME')}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'email' not in form.fields.hidden %}
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label>{{translate('EMAIL')}}</label>
-                <div class="input-group js-copy-container">
-                    <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                    <input type="text" class="form-control js-copy-target" name="email" autocomplete="off" value="{{user.email}}" placeholder="{{translate('EMAIL')}}" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
-                    {% if 'email' in form.fields.disabled %}
-                        <span class="input-group-btn">
-                            <button class="btn btn-default js-copy-trigger" type="button"><i class="fa fa-clipboard"></i></button>
-                        </span>
-                    {% endif %}
+            {% endif %}
+            {% if 'email' not in form.fields.hidden %}
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>{{translate('EMAIL')}}</label>
+                    <div class="input-group js-copy-container">
+                        <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                        <input type="text" class="form-control js-copy-target" name="email" autocomplete="off" value="{{user.email}}" placeholder="{{translate('EMAIL')}}" {% if 'email' in form.fields.disabled %}disabled{% endif %}>
+                        {% if 'email' in form.fields.disabled %}
+                            <span class="input-group-btn">
+                                <button class="btn btn-default js-copy-trigger" type="button"><i class="fa fa-clipboard"></i></button>
+                            </span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'theme' not in form.fields.hidden %}
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="input-theme">{{translate('THEME')}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
-                    {% if 'theme' in form.fields.disabled %}
-                        <input type="text" class="form-control" name="theme" value="{{themes[user.theme]}}" disabled>
-                    {% else %}
-                        <select id="input-theme" class="form-control js-select2" name="theme">
-                            {% for option, label in theme %}
-                            <option value="{{option}}" {% if (option == user.theme) %}selected{% endif %}>{{label}}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
+            {% endif %}
+            {% if 'theme' not in form.fields.hidden %}
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="input-theme">{{translate('THEME')}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-puzzle-piece"></i></span>
+                        {% if 'theme' in form.fields.disabled %}
+                            <input type="text" class="form-control" name="theme" value="{{themes[user.theme]}}" disabled>
+                        {% else %}
+                            <select id="input-theme" class="form-control js-select2" name="theme">
+                                {% for option, label in theme %}
+                                <option value="{{option}}" {% if (option == user.theme) %}selected{% endif %}>{{label}}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'locale' not in form.fields.hidden %}
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="input-locale">{{translate('LOCALE')}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-language"></i></span>
-                    {% if 'locale' in form.fields.disabled %}
-                        <input type="text" class="form-control" name="theme" value="{{locales[user.locale]}}" disabled>
-                    {% else %}
-                        <select id="input-locale" class="form-control js-select2" name="locale">
-                            {% for option, label in locales %}
-                            <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
-                            {% endfor %}
-                        </select>
-                    {% endif %}
+            {% endif %}
+            {% if 'locale' not in form.fields.hidden %}
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="input-locale">{{translate('LOCALE')}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-language"></i></span>
+                        {% if 'locale' in form.fields.disabled %}
+                            <input type="text" class="form-control" name="theme" value="{{locales[user.locale]}}" disabled>
+                        {% else %}
+                            <select id="input-locale" class="form-control js-select2" name="locale">
+                                {% for option, label in locales %}
+                                <option value="{{option}}" {% if (option == user.locale) %}selected{% endif %}>{{label}}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
+            {% endif %}
+        {% endblock %}
     </div><br>
     <div class="row">
         {% if form.edit_buttons %}

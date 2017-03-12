@@ -20,7 +20,7 @@ return [
     ],
 
     "ADMIN" => [
-        "PANEL" => "Panneau admin"
+        "PANEL" => "Panneau d'administration"
     ],
 
     "CACHE" => [

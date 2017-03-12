@@ -8,25 +8,27 @@
         <input type="text" style="display:none">
         <input type="password" style="display:none">
 
-        <div class="form-group">
-            <label for="input-email" class="ccontrol-label">{{translate("EMAIL")}}</label>
-            <input type="text" id="input-email" class="form-control" name="email" value="{{current_user.email}}" autocomplete="off" placeholder="{{translate("EMAIL.YOUR")}}" {{page.visibility}}>
-        </div>
-        {% if page.visibility != "disabled" %}
+        {% block settings_account %}
             <div class="form-group">
-                <label for="input-password" class="control-label">{{translate("PASSWORD.NEW")}}</label>
-                <input type="password" id="input-password" class="form-control" name="password" placeholder="{{translate("PASSWORD.BETWEEN", {min: 12, max: 100})}} ({{translate("OPTIONAL")}})">
+                <label for="input-email" class="ccontrol-label">{{translate("EMAIL")}}</label>
+                <input type="text" id="input-email" class="form-control" name="email" value="{{current_user.email}}" autocomplete="off" placeholder="{{translate("EMAIL.YOUR")}}" {{page.visibility}}>
             </div>
-            <div class="form-group">
-                <label for="input-passwordc" class="control-label">{{translate("PASSWORD.CONFIRM_NEW")}}</label>
-                <input type="password" id="input-passwordc" class="form-control" name="passwordc" placeholder="{{translate("PASSWORD.CONFIRM_NEW_HELP")}}">
-            </div>
-            <hr>
-            <div class="form-group">
-                <label for="input-passwordcheck" class="control-label">{{translate("PASSWORD.CURRENT")}}</label>
-                <input type="password" id="input-passwordcheck" class="form-control" name="passwordcheck" placeholder="{{translate("PASSWORD.CURRENT_EXPLAIN")}}">
-            </div>
-        {% endif %}
+            {% if page.visibility != "disabled" %}
+                <div class="form-group">
+                    <label for="input-password" class="control-label">{{translate("PASSWORD.NEW")}}</label>
+                    <input type="password" id="input-password" class="form-control" name="password" placeholder="{{translate("PASSWORD.BETWEEN", {min: 12, max: 100})}} ({{translate("OPTIONAL")}})">
+                </div>
+                <div class="form-group">
+                    <label for="input-passwordc" class="control-label">{{translate("PASSWORD.CONFIRM_NEW")}}</label>
+                    <input type="password" id="input-passwordc" class="form-control" name="passwordc" placeholder="{{translate("PASSWORD.CONFIRM_NEW_HELP")}}">
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="input-passwordcheck" class="control-label">{{translate("PASSWORD.CURRENT")}}</label>
+                    <input type="password" id="input-passwordcheck" class="form-control" name="passwordcheck" placeholder="{{translate("PASSWORD.CURRENT_EXPLAIN")}}">
+                </div>
+            {% endif %}
+        {% endblock %}
     </div>
     <div class="box-footer text-center">
         <button type="reset" class="btn btn-default">{{translate('RESET')}}</button>

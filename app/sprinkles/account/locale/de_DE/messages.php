@@ -56,17 +56,21 @@ return [
         "IN_USE"                        => "E-Mail '{{email}}' wird bereits verwendet."
     ],
 
+    "EMAIL_OR_USERNAME"                 => "Benutzername oder E-mail Adresse",
+
     "FIRST_NAME"                        => "Vorname",
 
     "HEADER_MESSAGE_ROOT"               => "Sie sind als Root-Benutzer angemeldet.",
 
     "LAST_NAME"                         => "Nachname",
 
-    "LOCALE.ACCOUNT"                    => "Die Sprache und das Gebietsschema für Ihr Konto",
+    "LOCALE" => [
+        "ACCOUNT"                       => "Die Sprache und das Gebietsschema für Ihr Konto",
+        "INVALID"                       => "'{{locale}}' ist kein gültiges Gebietsschema."
+    ],
 
     "LOGIN" => [
         "@TRANSLATION"                  => "Anmelden",
-
         "ALREADY_COMPLETE"              => "Sie sind bereits eingeloggt!",
         "SOCIAL"                        => "Oder loggen Sie sich ein mit",
         "REQUIRED"                      => "Sorry, Sie müssen angemeldet sein. Um auf diese Ressource zugreifen zu können."
@@ -124,6 +128,11 @@ return [
         "UPDATED"                       => "Konto Passwort aktualisiert"
     ],
 
+    "PROFILE" => [
+        "SETTINGS"                      => "Profileinstellungen",
+        "UPDATED"                       => "Profileinstellungen aktualisiert"
+    ],
+
     "REGISTER"                          => "Registrieren",
     "REGISTER_ME"                       => "Melden Sie mich an",
 
@@ -153,7 +162,8 @@ return [
 
         "CHOOSE"                        => "Wählen Sie einen eindeutigen Benutzernamen",
         "INVALID"                       => "Ungültiger Benutzername",
-        "IN_USE"                        => "Benutzername '{{user_name}}' wird bereits verwendet."
+        "IN_USE"                        => "Benutzername '{{user_name}}' wird bereits verwendet.",
+        "NOT_AVAILABLE"                 => "Benutzername '{{user_name}}' ist nicht verfügbar. Wähle einen anderen Namen, der klicken Sie auf 'vorschlagen'."
     ],
 
     "USER_ID_INVALID"                   => "Die angeforderte Benutzer-ID existiert nicht.",
