@@ -1,5 +1,13 @@
 # Change Log
 
+## v4.0.11-Alpha
+- Fix [#663](https://github.com/userfrosting/UserFrosting/issues/663)
+- Adding more Twig `blocks`
+- ufAlerts now scroll to alert location, if and only if alerts are output.
+- Updated Dutch locale
+- Minor update in French locale
+- Added comments in `.env.example`
+
 ## v4.0.10-Alpha
 - Move suggestion button outta-da-way
 - Add email to registration success message
