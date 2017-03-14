@@ -39,6 +39,11 @@ abstract class Sprunje
         'format' => 'json'
     ];
 
+    /**
+     * Separator to use when splitting filter values to treat them as ORs.
+     */
+    protected $orSeparator = '||';
+
     protected $query;
 
     protected $sortable = [];
@@ -235,7 +240,15 @@ abstract class Sprunje
             if (method_exists($this, $filterMethodName)) {
                 $this->query = $this->$filterMethodName($this->query, $value);
             } else {
-                $this->query = $this->query->like($name, $value);
+                // Split value on separator for OR queries
+                $values = explode($this->orSeparator, $value);
+
+                $this->query = $this->query->where(function ($query) use ($name, $values) {
+                    foreach ($values as $value) {
+                        $query = $query->orLike($name, $value);
+                    }
+                    return $query;
+                });
             }
         }
 
