@@ -64,19 +64,6 @@
                 }
             }
         },
-        "css/guest": {
-            "styles": [
-                "local/start-bootstrap/css/modern-business.css",
-                "local/core/css/guest.css"
-            ],
-            "options": {
-                "result": {
-                    "type": {
-                        "styles": "plain"
-                    }
-                }
-            }
-        },
         "css/form-widgets": {
             "styles": [
                 "local/core/css/uf-collection.css"
