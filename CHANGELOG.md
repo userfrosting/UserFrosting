@@ -1,5 +1,9 @@
 # Change Log
 
+## v4.0.12-Alpha
+- Separate out the registration and sign-in pages (https://github.com/userfrosting/UserFrosting/issues/657) **BC**
+- Slightly change behavior of form validation icons
+
 ## v4.0.11-Alpha
 - Fix [#663](https://github.com/userfrosting/UserFrosting/issues/663)
 - Adding more Twig `blocks`

@@ -403,6 +403,41 @@ class AccountController extends SimpleController
         ]);
     }
 
+
+    /**
+     * Render the account registration page for UserFrosting.
+     *
+     * This allows new (non-authenticated) users to create a new account for themselves on your website (if enabled).
+     * By definition, this is a "public page" (does not require authentication).
+     * Request type: GET
+     */
+    public function pageRegister($request, $response, $args)
+    {
+        /** @var Config $config */
+        $config = $this->ci->config;
+
+        /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+        $authenticator = $this->ci->authenticator;
+
+        // Forward to dashboard if user is already logged in
+        // TODO: forward to user's landing page or last visited page
+        if ($authenticator->check()) {
+            return $response->withRedirect($this->ci->router->pathFor('dashboard'), 302);
+        }
+
+        // Load validation rules
+        $schema = new RequestSchema("schema://register.json");
+        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
+
+        return $this->ci->view->render($response, 'pages/register.html.twig', [
+            "page" => [
+                "validators" => [
+                    "register" => $validatorRegister->rules('json', false)
+                ]
+            ]
+        ]);
+    }
+
     /**
      * Render the "resend verification email" page.
      *
@@ -523,37 +558,33 @@ class AccountController extends SimpleController
     }
 
     /**
-     * Render the account registration/sign-in page for UserFrosting.
+     * Render the account sign-in page for UserFrosting.
      *
-     * This allows existing users to sign in, and new (non-authenticated) users to create a new account for themselves on your website (if enabled).
+     * This allows existing users to sign in.
      * By definition, this is a "public page" (does not require authentication).
      * Request type: GET
      */
-    public function pageSignInOrRegister($request, $response, $args)
+    public function pageSignIn($request, $response, $args)
     {
         $config = $this->ci->config;
 
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
         $authenticator = $this->ci->authenticator;
 
-        // Forward to home page if user is already logged in
+        // Forward to dashboard if user is already logged in
         // TODO: forward to user's landing page or last visited page
         if ($authenticator->check()) {
-            return $response->withRedirect($config['site.uri.public'], 302);
+            return $response->withRedirect($this->ci->router->pathFor('dashboard'), 302);
         }
 
         // Load validation rules
         $schema = new RequestSchema("schema://login.json");
         $validatorLogin = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        $schema = new RequestSchema("schema://register.json");
-        $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
-
-        return $this->ci->view->render($response, 'pages/sign-in-or-register.html.twig', [
+        return $this->ci->view->render($response, 'pages/sign-in.html.twig', [
             "page" => [
                 "validators" => [
-                    "login"    => $validatorLogin->rules('json', false),
-                    "register" => $validatorRegister->rules('json', false)
+                    "login"    => $validatorLogin->rules('json', false)
                 ]
             ]
         ]);

@@ -53,7 +53,8 @@
                 "local/core/css/uf-jqueryvalidation.css",
                 "local/core/css/uf-alerts.css",
                 "local/core/css/AdminLTE.css",
-                "local/core/css/AdminLTE-skins-all.css"
+                "local/core/css/AdminLTE-skins-all.css",
+                "local/core/css/userfrosting.css"
             ],
             "options": {
                 "result": {
