@@ -64,9 +64,16 @@ class PermissionSprunje extends Sprunje
      */
     protected function filterProperties($query, $value)
     {
-        return $query->like('slug', $value)
-                     ->orLike('conditions', $value)
-                     ->orLike('description', $value);
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        return $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query = $query->orLike('slug', $value)
+                                ->orLike('conditions', $value)
+                                ->orLike('description', $value);
+            }
+            return $query;
+        });
     }
 
     /**
