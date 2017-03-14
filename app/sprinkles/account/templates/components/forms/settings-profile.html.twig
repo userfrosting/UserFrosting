@@ -6,13 +6,15 @@
         {% include "components/csrf.html.twig" %}
 
         {% block settings_profile %}
-            <div class="form-group">
-                <label for="input-first-name" class="control-label">{{translate("NAME")}}</label>
-                <div class="row">
-                    <div class="col-sm-6">
+            <label for="input-first-name" class="control-label">{{translate("NAME")}}</label>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <input type="text" id="input-first-name" class="form-control" name="first_name" value="{{current_user.first_name}}" placeholder="{{translate("FIRST_NAME")}}" {{page.visibility}}>
                     </div>
-                    <div class="col-sm-6">
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <input type="text" id="input-last-name" class="form-control" name="last_name" value="{{current_user.last_name}}" placeholder="{{translate("LAST_NAME")}}" {{page.visibility}}>
                     </div>
                 </div>
