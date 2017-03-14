@@ -23,9 +23,17 @@ class UserSprunje extends Sprunje
 {
     protected $name = 'users';
 
-    protected $sortable = [];
+    protected $sortable = [
+        'name',
+        'last_activity',
+        'flag_enabled'
+    ];
 
-    protected $filterable = [];
+    protected $filterable = [
+        'name',
+        'last_activity',
+        'flag_enabled'
+    ];
 
     /**
      * {@inheritDoc}

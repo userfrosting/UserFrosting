@@ -23,9 +23,15 @@ class RoleSprunje extends Sprunje
 {
     protected $name = 'roles';
 
-    protected $sortable = [];
+    protected $sortable = [
+        'name',
+        'description'
+    ];
 
-    protected $filterable = [];
+    protected $filterable = [
+        'name',
+        'description'
+    ];
 
     /**
      * {@inheritDoc}

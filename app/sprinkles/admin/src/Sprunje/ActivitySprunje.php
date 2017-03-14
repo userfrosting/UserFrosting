@@ -21,6 +21,18 @@ use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
  */
 class ActivitySprunje extends Sprunje
 {
+    protected $sortable = [
+        'occurred_at',
+        'user',
+        'description'
+    ];
+
+    protected $filterable = [
+        'occurred_at',
+        'user',
+        'description'
+    ];
+
     protected $name = 'activities';
 
     /**

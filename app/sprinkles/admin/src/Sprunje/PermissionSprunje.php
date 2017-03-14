@@ -23,9 +23,15 @@ class PermissionSprunje extends Sprunje
 {
     protected $name = 'permissions';
 
-    protected $sortable = [];
+    protected $sortable = [
+        'name',
+        'properties'
+    ];
 
-    protected $filterable = [];
+    protected $filterable = [
+        'name',
+        'properties'
+    ];
 
     /**
      * {@inheritDoc}
