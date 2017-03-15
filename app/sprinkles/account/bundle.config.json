@@ -48,12 +48,24 @@
                 }
             }
         },
-        "js/pages/sign-in-or-register": {
+        "js/pages/register": {
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
-                "vendor/urijs/src/URI.js",
                 "local/core/js/uf-captcha.js",
-                "local/pages/js/sign-in-or-register.js"
+                "local/pages/js/register.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/sign-in": {
+            "scripts": [
+                "vendor/urijs/src/URI.js",
+                "local/pages/js/sign-in.js"
             ],
             "options": {
                 "result": {

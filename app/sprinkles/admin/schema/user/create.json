@@ -73,12 +73,14 @@
         "validators" : {
             "required" : {
                 "label" : "&LOCALE",
+                "domain": "server",
                 "message" : "VALIDATE.REQUIRED"
             },
             "length" : {
                 "label" : "&LOCALE",
                 "min" : 1,
                 "max" : 10,
+                "domain": "server",
                 "message" : "VALIDATE.LENGTH_RANGE"
             }
         }
@@ -87,6 +89,7 @@
         "validators" : {
             "integer" : {
                 "label" : "&GROUP",
+                "domain": "server",
                 "message" : "VALIDATE.INTEGER"
             }
         }

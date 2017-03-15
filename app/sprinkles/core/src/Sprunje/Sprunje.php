@@ -13,6 +13,8 @@ use League\Csv\Writer;
 use Psr\Http\Message\ResponseInterface as Response;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
+use UserFrosting\Support\Exception\BadRequestException;
+use Valitron\Validator;
 
 /**
  * Sprunje
@@ -37,6 +39,11 @@ abstract class Sprunje
         'format' => 'json'
     ];
 
+    /**
+     * Separator to use when splitting filter values to treat them as ORs.
+     */
+    protected $orSeparator = '||';
+
     protected $query;
 
     protected $sortable = [];
@@ -51,10 +58,27 @@ abstract class Sprunje
     {
         $this->classMapper = $classMapper;
 
+        // Validation on input data
+        $v = new Validator($options);
+        $v->rule('array', ['sorts', 'filters']);
+        $v->rule('regex', 'sorts.*', '/asc|desc/i');
+        $v->rule('regex', 'size', '/all|[0-9]+/i');
+        $v->rule('integer', 'page');
+        $v->rule('regex', 'format', '/json|csv/i');
+
+        // TODO: translated rules
+        if(!$v->validate()) {
+            $e = new BadRequestException();
+            foreach ($v->errors() as $idx => $field) {
+                foreach($field as $eidx => $error) {
+                    $e->addUserMessage($error);
+                }
+            }
+            throw $e;
+        }
+
         $this->options = array_replace_recursive($this->options, $options);
 
-        // TODO: validation on input data
-        
         $this->query = $this->baseQuery();
     }
 
@@ -203,13 +227,28 @@ abstract class Sprunje
     protected function applyFilters()
     {
         foreach ($this->options['filters'] as $name => $value) {
+            // Check that this filter is allowed
+            if (!in_array($name, $this->filterable)) {
+                $e = new BadRequestException();
+                $e->addUserMessage('VALIDATE.SPRUNJE.BAD_FILTER', ['name' => $name]);
+                throw $e;
+            }
+
             // Determine if a custom filter method has been defined
             $filterMethodName = 'filter'.studly_case($name);
 
             if (method_exists($this, $filterMethodName)) {
                 $this->query = $this->$filterMethodName($this->query, $value);
             } else {
-                $this->query = $this->query->like($name, $value);
+                // Split value on separator for OR queries
+                $values = explode($this->orSeparator, $value);
+
+                $this->query = $this->query->where(function ($query) use ($name, $values) {
+                    foreach ($values as $value) {
+                        $query = $query->orLike($name, $value);
+                    }
+                    return $query;
+                });
             }
         }
 
@@ -224,6 +263,13 @@ abstract class Sprunje
     protected function applySorts()
     {
         foreach ($this->options['sorts'] as $name => $direction) {
+            // Check that this sort is allowed
+            if (!in_array($name, $this->sortable)) {
+                $e = new BadRequestException();
+                $e->addUserMessage('VALIDATE.SPRUNJE.BAD_SORT', ['name' => $name]);
+                throw $e;
+            }
+
             // Determine if a custom filter method has been defined
             $methodName = 'sort'.studly_case($name);
 

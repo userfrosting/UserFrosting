@@ -121,6 +121,9 @@
         return base.$T;
     };
 
+    /**
+     * Completely destroy the ufAlerts plugin on the element.
+     */
     Plugin.prototype.destroy = function () {
         var base = this;
         var $el = base.$T;

@@ -23,9 +23,15 @@ class GroupSprunje extends Sprunje
 {
     protected $name = 'groups';
 
-    protected $sortable = [];
+    protected $sortable = [
+        'name',
+        'description'
+    ];
 
-    protected $filterable = [];
+    protected $filterable = [
+        'name',
+        'description'
+    ];
 
     /**
      * {@inheritDoc}

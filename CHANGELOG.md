@@ -1,5 +1,13 @@
 # Change Log
 
+## v4.0.12-Alpha
+- Separate out the registration and sign-in pages (https://github.com/userfrosting/UserFrosting/issues/657) **BC**
+- Slightly change behavior of form validation icons
+- Sprunje input validation (https://github.com/userfrosting/UserFrosting/issues/640)
+- Sprunje sort/filter fields now must be explicitly listed in a whitelist (https://github.com/userfrosting/UserFrosting/issues/640) **BC**
+- Errors from tablesorter now get displayed
+- Support for OR expressions using `||` in Sprunje filters (https://github.com/userfrosting/UserFrosting/issues/647)
+
 ## v4.0.11-Alpha
 - Fix [#663](https://github.com/userfrosting/UserFrosting/issues/663)
 - Adding more Twig `blocks`

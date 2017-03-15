@@ -3,21 +3,30 @@
  */
 jQuery.validator.setDefaults({
     highlight: function(element) {
-        jQuery(element).closest('.form-group').addClass('has-error');
-        jQuery(element).closest('.form-group').removeClass('has-success has-feedback');
-        jQuery(element).closest('.form-group').find('.form-control-feedback').remove();
+        var formGroup = jQuery(element).closest('.form-group');
+        formGroup.addClass('has-error has-feedback');
+        formGroup.removeClass('has-success');
+        formGroup.find('.form-control-feedback').remove();
+        formGroup.find('.form-control-icon').show();
 
         // Hide any help block text
-        jQuery(element).closest('.form-group').find('.help-block').hide();
+        formGroup.find('.help-block').hide();
     },
     unhighlight: function(element) {
-        jQuery(element).closest('.form-group').removeClass('has-error');
+        var formGroup = jQuery(element).closest('.form-group');
+
+        formGroup.removeClass('has-error');
 
         // Completely remove the error block, rather than just clearing the text (jqueryvalidation's default action)
-        jQuery(element).closest('.form-group').find('.error-block').remove();
+        formGroup.find('.error-block').remove();
 
         // Re-show any help block text
-        jQuery(element).closest('.form-group').find('.help-block').show();
+        formGroup.find('.help-block').show();
+
+        // Reshow any non-feedback icons if there is an error
+        if (formGroup.hasClass('has-error')) {
+            formGroup.find('.form-control-icon').show();
+        }
     },
     errorElement: 'p',
     errorClass: 'error-block',
@@ -29,7 +38,12 @@ jQuery.validator.setDefaults({
         }
     },
     success: function(element) {
-        jQuery(element).closest('.form-group').addClass('has-success has-feedback');
+        var formGroup = jQuery(element).closest('.form-group');
+        formGroup.addClass('has-success has-feedback');
+        formGroup.find('.form-control-feedback').remove();
+        // Hide any non-feedback icons
+        formGroup.find('.form-control-icon').hide();
+        // Add a new check mark
         jQuery(element).after('<i class="fa fa-check form-control-feedback" aria-hidden="true"></i>');
     }
 });
