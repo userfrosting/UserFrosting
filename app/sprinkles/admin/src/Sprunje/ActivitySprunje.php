@@ -21,6 +21,18 @@ use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
  */
 class ActivitySprunje extends Sprunje
 {
+    protected $sortable = [
+        'occurred_at',
+        'user',
+        'description'
+    ];
+
+    protected $filterable = [
+        'occurred_at',
+        'user',
+        'description'
+    ];
+
     protected $name = 'activities';
 
     /**
@@ -69,9 +81,16 @@ class ActivitySprunje extends Sprunje
 
         $this->joinedUsers = true;
 
-        return $query->like('users.first_name', $value)
-                     ->orLike('users.last_name', $value)
-                     ->orLike('users.email', $value);
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        return $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query = $query->orLike('users.first_name', $value)
+                                ->orLike('users.last_name', $value)
+                                ->orLike('users.email', $value);
+            }
+            return $query;
+        });
     }
 
     /**

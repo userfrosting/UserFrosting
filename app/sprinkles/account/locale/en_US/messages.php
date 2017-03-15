@@ -52,8 +52,9 @@ return [
     ],
 
     "EMAIL" => [
-        "INVALID"   => "There is no account for '{{email}}'.",
-        "IN_USE"    => "Email '{{email}}' is already in use."
+        "INVALID"               => "There is no account for '{{email}}'.",
+        "IN_USE"                => "Email '{{email}}' is already in use.",
+        "VERIFICATION_REQUIRED" => "Email (verification required - use a real address!)"
     ],
 
     "EMAIL_OR_USERNAME" => "Username or email address",
@@ -79,6 +80,8 @@ return [
     "LOGOUT" => "Logout",
 
     "NAME" => "Name",
+
+    "NAME_AND_EMAIL" => "Name and email",
 
     "PAGE" => [
         "LOGIN" => [

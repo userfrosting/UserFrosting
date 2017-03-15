@@ -5,7 +5,7 @@
     {{parent()}}
     {% if not checkAuthenticated() %}
         <li>
-            <a href="{{site.uri.public}}/account/sign-in-or-register" class="nav-highlight">{{translate("SIGNIN")}}</a>
+            <a href="{{site.uri.public}}/account/sign-in" class="nav-highlight">{{translate("SIGNIN")}}</a>
         </li>
     {% else %}
         {% include "components/user-card.html.twig" %}

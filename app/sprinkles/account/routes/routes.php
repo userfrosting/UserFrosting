@@ -24,10 +24,14 @@ $app->group('/account', function () {
 
     $this->get('/set-password/deny', 'UserFrosting\Sprinkle\Account\Controller\AccountController:denyResetPassword');
 
+    $this->get('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageRegister')
+        ->add('checkEnvironment')
+        ->setName('login');
+
     $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings')
         ->add('authGuard');
 
-    $this->get('/sign-in-or-register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignInOrRegister')
+    $this->get('/sign-in', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSignIn')
         ->add('checkEnvironment')
         ->setName('login');
 

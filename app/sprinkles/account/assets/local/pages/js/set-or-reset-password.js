@@ -14,6 +14,6 @@ $(document).ready(function() {
     }).on("submitSuccess.ufForm", function() {
         // Forward to home page on success
         // TODO: forward to landing/last page
-        window.location.replace(site.uri.public + "/account/sign-in-or-register");
+        window.location.replace(site.uri.public + "/account/sign-in");
     });
 });

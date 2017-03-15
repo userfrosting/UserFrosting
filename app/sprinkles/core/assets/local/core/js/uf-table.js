@@ -110,6 +110,7 @@
             {
                 DEBUG       : false,
                 dataUrl     : "",
+                msgTarget   : $('#alerts-page'),
                 addParams   : {},
                 tablesorter : {
                     debug: false,
@@ -121,6 +122,7 @@
                     widgets: ['saveSort','sort2Hash','filter'],
                     widgetOptions : {
                         filter_saveFilters : true,
+                        filter_serversideFiltering : true,
                         // hash prefix
                         sort2Hash_hash              : '#',
                         // don't '#' or '=' here
@@ -129,15 +131,6 @@
                         sort2Hash_tableId           : null,
                         // if true, show header cell text instead of a zero-based column index
                         sort2Hash_headerTextAttr    : 'data-column-name',
-                        // allow processing of text if sort2Hash_useHeaderText: true
-                        sort2Hash_processHeaderText : function( text, config, columnIndex ) {
-                            var column_name = $(config.headerList[columnIndex]).data("column-name");
-                            if (column_name) {
-                                return column_name;
-                            } else {
-                                return columnIndex;
-                            }
-                        },
                         sort2Hash_encodeHash : base._encodeHash,
                         sort2Hash_decodeHash : base._decodeHash,
                         sort2Hash_cleanHash : base._cleanHash,
@@ -209,7 +202,7 @@
         this._init( target, options );
 
         return this;
-    }
+    };
 
     /**
      * Get state variables for this table, as required by the AJAX data source: sorts, filters, size, page
@@ -253,7 +246,7 @@
         };
 
         return state;
-    }
+    };
 
     /** #### INITIALISER #### */
     Plugin.prototype._init = function ( target, options )
@@ -271,6 +264,11 @@
         // Callback to process the response from the AJAX request
         base.options.pager.ajaxProcessing = function ( data ) {
             return base._processAjax(base, data);
+        };
+
+        // Callback to display errors
+         base.options.pager.ajaxError = function ( config, xhr, settings, exception ) {
+            return base._ajaxError(base, config, xhr, settings, exception);
         };
 
         // Set up tablesorter and pager
@@ -312,7 +310,7 @@
         $.extend(table.config.pager.ajaxObject.data, base.options.addParams);
 
         return url;
-    }
+    };
 
     /**
      * Callback for processing data returned from the AJAX request and rendering the table cells.
@@ -361,8 +359,34 @@
         }
 
         return json;
-    }
+    };
 
+    Plugin.prototype._ajaxError = function(base, c, jqXHR, settings, exception) {
+        if (typeof jqXHR === 'object') {
+            // Error messages
+            if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
+                document.write(jqXHR.responseText);
+                document.close();
+            } else {
+                if (base.options.DEBUG) {
+                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                }
+                // Display errors on failure
+                // TODO: ufAlerts widget should have a 'destroy' method
+                if (!base.options.msgTarget.data('ufAlerts')) {
+                    base.options.msgTarget.ufAlerts();
+                } else {
+                    base.options.msgTarget.ufAlerts('clear');
+                }
+    
+                base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
+            }
+        }
+
+        // Let TS handle the in-table error message
+        return '';
+    };
+    
     /**
      * Private method used to encode the current table state variables into a URL hash.
      */
@@ -392,7 +416,7 @@
             return encodedFilters;
         }
         return false;
-    }
+    };
 
     /**
      * Private method used to decode the current table state variables from the URL hash.
@@ -428,7 +452,7 @@
             }
         }
         return false;
-    }
+    };
 
     /**
      * Private method used to clean up URL hash.
@@ -451,7 +475,7 @@
         // Convert modified JSON object back into serialized representation
         result = jQuery.param(urlObject);
         return result.length ? result : '';
-    }
+    };
 
     /**
      * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
@@ -462,11 +486,11 @@
         for (var i in arguments) {
             console.log( PLUGIN_NS + ': ', arguments[i] );
         }
-    }
+    };
     Plugin.prototype.DWARN = function ()
     {
         this.DEBUG && console.warn( arguments );
-    }
+    };
 
 
 /*###################################################################################

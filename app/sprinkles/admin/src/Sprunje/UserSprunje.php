@@ -23,9 +23,17 @@ class UserSprunje extends Sprunje
 {
     protected $name = 'users';
 
-    protected $sortable = [];
+    protected $sortable = [
+        'name',
+        'last_activity',
+        'flag_enabled'
+    ];
 
-    protected $filterable = [];
+    protected $filterable = [
+        'name',
+        'last_activity',
+        'flag_enabled'
+    ];
 
     /**
      * {@inheritDoc}
@@ -61,7 +69,14 @@ class UserSprunje extends Sprunje
      */
     protected function filterLastActivity($query, $value)
     {
-        return $query->like('activities.description', $value);
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        return $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query = $query->orLike('activities.description', $value);
+            }
+            return $query;
+        });
     }
 
     /**
@@ -73,9 +88,16 @@ class UserSprunje extends Sprunje
      */
     protected function filterName($query, $value)
     {
-        return $query->like('first_name', $value)
-                     ->orLike('last_name', $value)
-                     ->orLike('email', $value);
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        return $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                $query = $query->orLike('first_name', $value)
+                                ->orLike('last_name', $value)
+                                ->orLike('email', $value);
+            }
+            return $query;
+        });
     }
 
     /**
