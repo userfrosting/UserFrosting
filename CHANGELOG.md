@@ -6,6 +6,7 @@
 - Sprunje input validation (https://github.com/userfrosting/UserFrosting/issues/640)
 - Sprunje sort/filter fields now must be explicitly listed in a whitelist (https://github.com/userfrosting/UserFrosting/issues/640) **BC**
 - Errors from tablesorter now get displayed
+- Support for OR expressions using `||` in Sprunje filters (https://github.com/userfrosting/UserFrosting/issues/647)
 
 ## v4.0.11-Alpha
 - Fix [#663](https://github.com/userfrosting/UserFrosting/issues/663)
