@@ -290,6 +290,7 @@
         });
 
         base.ts.on("pagerComplete", function () {
+            $el.find(".tablesorter").trigger('update');
             $el.trigger("pagerComplete.ufTable");
         });
     };
@@ -378,7 +379,7 @@
                 } else {
                     base.options.msgTarget.ufAlerts('clear');
                 }
-    
+
                 base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
             }
         }
@@ -386,7 +387,7 @@
         // Let TS handle the in-table error message
         return '';
     };
-    
+
     /**
      * Private method used to encode the current table state variables into a URL hash.
      */
