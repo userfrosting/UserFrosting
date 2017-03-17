@@ -13,7 +13,7 @@
     ],
     "version": "4.0.0",
     "require": {
-        "birke/rememberme" : "1.0.4",
+        "birke/rememberme" : "2.0.1",
         "nikic/php-parser" : "^1",
         "php": ">=5.5.9"
     },
