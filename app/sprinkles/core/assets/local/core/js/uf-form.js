@@ -89,26 +89,18 @@
                     submit_button.html("<i class='fa fa-spinner fa-spin'></i>");
                 }
 
-                // Serialize and post to the backend script in ajax mode
-                if (base.options.binaryCheckboxes) {
-                    var serializedData = form.find(':input').not(':checkbox').serialize();
-                    // Get unchecked checkbox values, set them to 0
-                    form.find('input[type=checkbox]:enabled').each(function() {
-                        if ($(this).is(':checked'))
-                            serializedData += "&" + encodeURIComponent(this.name) + "=1";
-                        else
-                            serializedData += "&" + encodeURIComponent(this.name) + "=0";
-                    });
-                } else {
-                    var serializedData = form.find(':input').serialize();
-                }
+                var formData = new FormData(form[0]);
 
                 // Submit the form via AJAX
                 var url = form.attr('action');
                 $.ajax({
                   type: form.attr('method'),
                   url: url,
-                  data: serializedData
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
                 })
                 .then(
                     // Submission successful
