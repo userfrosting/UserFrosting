@@ -140,7 +140,8 @@
                         sort2Hash_overrideSaveSort  : true, // default = false
                         filter_selectSource: {
                             ".filter-metaselect": base._buildFilterSelect
-                        }
+                        },
+                        filter_cssFilter: 'form-control'
                     }
                 },
                 pager : {

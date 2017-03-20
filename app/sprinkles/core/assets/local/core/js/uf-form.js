@@ -63,57 +63,13 @@
         this._init( target, options );
 
         return this;
-    }
+    };
 
     /** #### INITIALISER #### */
     Plugin.prototype._init = function ( target, options )
     {
         var base = this;
         var $el = $(target);
-        
-        /**
-         * Helper functions for encoding data as Multipart/form-data or Urlencoded
-         */ 
-        
-        var urlencodeData = function (form) 
-        {
-            // Serialize and post to the backend script in ajax mode
-            if (base.options.binaryCheckboxes) {
-                var serializedData = form.find(':input').not(':checkbox').serialize();
-                // Get unchecked checkbox values, set them to 0
-                form.find('input[type=checkbox]:enabled').each(function() {
-                    if ($(this).is(':checked'))
-                        serializedData += "&" + encodeURIComponent(this.name) + "=1";
-                    else
-                        serializedData += "&" + encodeURIComponent(this.name) + "=0";
-                });
-            } else {
-                var serializedData = form.find(':input').serialize();
-            }
-
-            return serializedData ;
-        }
-
-        var multipartData = function (form)
-        {
-            // Use FormData to wrap form contents.
-            // https://developer.mozilla.org/en/docs/Web/API/FormData
-            var formData = new FormData(form[0]);
-            // Serialize and post to the backend script in ajax mode
-            if (base.options.binaryCheckboxes) {
-                // Get unchecked checkbox values, set them to 0
-                form.find('input[type=checkbox]:enabled').each(function() {
-                    if ($(this).is(':checked'))
-                        // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
-                        formData.set(this.name , 1);
-                        // this explicitly adds unchecked boxes.
-                    else
-                        formData.set(this.name , 0);
-                });
-            }
-
-            return formData ;
-        }
 
         var validator = $el.validate({
             rules:          base.options.validators.rules,
@@ -126,28 +82,30 @@
                 var form = $(f);
 
                 // Set "loading" text for submit button, if it exists, and disable button
-                var submit_button = form.find("button[type=submit]");
-                if (submit_button) {
-                    var submit_button_text = submit_button.html();
-                    submit_button.prop( "disabled", true );
-                    submit_button.html("<i class='fa fa-spinner fa-spin'></i>");
+                var submitButton = form.find("button[type=submit]");
+                if (submitButton) {
+                    var submitButtonText = submitButton.html();
+                    submitButton.prop( "disabled", true );
+                    submitButton.html("<i class='fa fa-spinner fa-spin'></i>");
                 }
                 
                 // common params
-                var req_params = {
-                  type: form.attr('method'),
-                  url: form.attr('action')
+                var reqParams = {
+                    type: form.attr('method'),
+                    url: form.attr('action')
                 };
-                
+
+                var encType = (typeof form.attr('enctype') !== 'undefined') ? form.attr('enctype') : '';
+
                 // Get the form encoding type from the users HTML, and chose an encoding form.
-                if (form.attr('enctype').toLowerCase() === "multipart/form-data" ){
-                    reqParams.data = multipartData(form);
+                if (encType.toLowerCase() === "multipart/form-data" ) {
+                    reqParams.data = base._multipartData(form);
                     // add additional params to fix jquery errors
                     reqParams.cache = false;
                     reqParams.contentType = false;
                     reqParams.processData = false;
                 } else {
-                    reqParams.data = urlencodeData(form);
+                    reqParams.data = base._urlencodeData(form);
                 }
 
                 // Submit the form via AJAX
@@ -155,9 +113,9 @@
                     // Submission successful
                     function (data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
-                        if (submit_button) {
-                            submit_button.prop( "disabled", false );
-                            submit_button.html(submit_button_text);
+                        if (submitButton) {
+                            submitButton.prop( "disabled", false );
+                            submitButton.html(submitButtonText);
                         }
 
                         base.$T.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
@@ -166,9 +124,9 @@
                     // Submission failed
                     function (jqXHR, textStatus, errorThrown) {
                         // Restore button text and re-enable submit button
-                        if (submit_button) {
-                            submit_button.prop( "disabled", false );
-                            submit_button.html(submit_button_text);
+                        if (submitButton) {
+                            submitButton.prop( "disabled", false );
+                            submitButton.html(submitButtonText);
                         }
                         // Error messages
                         if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
@@ -230,6 +188,57 @@
     };
 
     /**
+     * Helper function for encoding data as urlencoded
+     */
+    Plugin.prototype._urlencodeData = function (form) 
+    {
+        var base = this;
+
+        // Serialize and post to the backend script in ajax mode
+        if (base.options.binaryCheckboxes) {
+            var serializedData = form.find(':input').not(':checkbox').serialize();
+            // Get unchecked checkbox values, set them to 0
+            form.find('input[type=checkbox]:enabled').each(function() {
+                if ($(this).is(':checked')) {
+                    serializedData += "&" + encodeURIComponent(this.name) + "=1";
+                } else {
+                    serializedData += "&" + encodeURIComponent(this.name) + "=0";
+                }
+            });
+        } else {
+            var serializedData = form.find(':input').serialize();
+        }
+
+        return serializedData;
+    };
+
+    /**
+     * Helper function for encoding data as multipart/form-data
+     */
+    Plugin.prototype._multipartData = function (form)
+    {
+        var base = this;
+        // Use FormData to wrap form contents.
+        // https://developer.mozilla.org/en/docs/Web/API/FormData
+        var formData = new FormData(form[0]);
+        // Serialize and post to the backend script in ajax mode
+        if (base.options.binaryCheckboxes) {
+            // Get unchecked checkbox values, set them to 0
+            form.find('input[type=checkbox]:enabled').each(function() {
+                if ($(this).is(':checked')) {
+                    // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
+                    formData.set(this.name, 1);
+                    // this explicitly adds unchecked boxes.
+                } else {
+                    formData.set(this.name, 0);
+                }
+            });
+        }
+
+        return formData;
+    };
+
+    /**
      * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
      */
     Plugin.prototype.DLOG = function ()
@@ -238,11 +247,11 @@
         for (var i in arguments) {
             console.log( PLUGIN_NS + ': ', arguments[i] );
         }
-    }
+    };
     Plugin.prototype.DWARN = function ()
     {
         this.DEBUG && console.warn( arguments );
-    }
+    };
 
 
 /*###################################################################################
