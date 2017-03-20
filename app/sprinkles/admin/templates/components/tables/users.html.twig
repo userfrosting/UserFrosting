@@ -15,7 +15,7 @@
                 {% if 'last_activity' in table.columns %}
                     <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
                 {% endif %}
-                <th data-column-name="flag_enabled" data-column-template="#user-table-column-actions">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
+                <th class="filter-select filter-metaselect" data-column-name="flag_enabled" data-column-template="#user-table-column-actions">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -58,7 +58,17 @@
     </script>
 
     <script id="user-table-column-actions" type="text/x-handlebars-template">
-        <td>
+        <td data-value="{{row.flag_enabled}}" data-text="
+            {{#ifCond row.flag_enabled 0 }}
+                {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
+            {{ else }}
+                {{#ifCond row.flag_verified 0 }}
+                    {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
+                {{ else }}
+                    {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
+                {{/ifCond }}
+            {{/ifCond }}
+        ">
             <div class="btn-group">
                 {{#ifCond row.flag_enabled 0 }}
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

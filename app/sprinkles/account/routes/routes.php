@@ -26,7 +26,7 @@ $app->group('/account', function () {
 
     $this->get('/register', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageRegister')
         ->add('checkEnvironment')
-        ->setName('login');
+        ->setName('register');
 
     $this->get('/settings', 'UserFrosting\Sprinkle\Account\Controller\AccountController:pageSettings')
         ->add('authGuard');

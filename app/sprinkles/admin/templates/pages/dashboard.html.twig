@@ -9,41 +9,47 @@
     {% if checkAccess('uri_users') %}
     <div class="row">
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">{{ translate("USER", 2) }}</span>
-              <span class="info-box-number">{{counter.users}}</span>
+          <a href="{{site.uri.public}}/admin/users">
+            <div class="info-box">
+              <span class="info-box-icon bg-aqua"><i class="fa fa-user fa-fw"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">{{ translate("USER", 2) }}</span>
+                <span class="info-box-number">{{counter.users}}</span>
+              </div>
+              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
+          </a>
         </div>
         <!-- /.col -->
 
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-red"><i class="fa fa-drivers-license"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">{{ translate("ROLE", 2) }}</span>
-              <span class="info-box-number">{{counter.roles}}</span>
+          <a href="{{site.uri.public}}/admin/roles">
+            <div class="info-box">
+              <span class="info-box-icon bg-red"><i class="fa fa-drivers-license"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">{{ translate("ROLE", 2) }}</span>
+                <span class="info-box-number">{{counter.roles}}</span>
+              </div>
+              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
+          </a>
         </div>
         <!-- /.col -->
 
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">{{ translate("GROUP", 2) }}</span>
-              <span class="info-box-number">{{counter.groups}}</span>
+          <a href="{{site.uri.public}}/admin/groups">
+            <div class="info-box">
+              <span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">{{ translate("GROUP", 2) }}</span>
+                <span class="info-box-number">{{counter.groups}}</span>
+              </div>
+              <!-- /.info-box-content -->
             </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
+            <!-- /.info-box -->
+          </a>
         </div>
         <!-- /.col -->
     </div>

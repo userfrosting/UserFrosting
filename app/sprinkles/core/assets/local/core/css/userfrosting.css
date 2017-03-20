@@ -57,3 +57,14 @@ form textarea {
 .form-horizontal .has-feedback .form-control-icon {
   right: 15px;
 }
+
+/* Fix for select2 not resizing properly when the page is resized */
+.select2-container--default {
+    display: block;
+    width: 100% !important;
+}
+
+/* Fix for links on info-box */
+a .info-box {
+    color: black;
+}
