@@ -89,20 +89,59 @@
                     submit_button.html("<i class='fa fa-spinner fa-spin'></i>");
                 }
 
-                var formData = new FormData(form[0]);
+                var urlencode_data = function (form) {
+                      // Serialize and post to the backend script in ajax mode
+                    if (base.options.binaryCheckboxes) {
+                        var serializedData = form.find(':input').not(':checkbox').serialize();
+                        // Get unchecked checkbox values, set them to 0
+                        form.find('input[type=checkbox]:enabled').each(function() {
+                            if ($(this).is(':checked'))
+                                serializedData += "&" + encodeURIComponent(this.name) + "=1";
+                            else
+                                serializedData += "&" + encodeURIComponent(this.name) + "=0";
+                        });
+                    } else {
+                        var serializedData = form.find(':input').serialize();
+                    }
+                    return serializedData ;
+                }
+
+                var multipart_data = function (form) {
+                    // Use FormData to wrap form contents.
+                    // https://developer.mozilla.org/en/docs/Web/API/FormData
+                    var formData = new FormData(form[0]);
+                    // Serialize and post to the backend script in ajax mode
+                    if (base.options.binaryCheckboxes) {
+                        // Get unchecked checkbox values, set them to 0
+                        form.find('input[type=checkbox]:enabled').each(function() {
+                            if ($(this).is(':checked'))
+                                // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
+                                formData.set(this.name , 1);
+                                // this explicitly adds unchecked boxes.
+                            else
+                                formData.set(this.name , 0);
+                        });
+                    }
+                    return formData
+                }
+                // common params
+                var req_params = {
+                  type: form.attr('method'),
+                  url: form.attr('action')
+                };
+                // if form is using multipart (check lower case in case user used caps in their HTML)
+                if (form.attr('enctype').toLowerCase() === "multipart/form-data" ){
+                    req_params.data = multipart_data(form);
+                    // add additional params to fix jquery errors
+                    req_params.cache = false;
+                    req_params.contentType = false;
+                    req_params.processData = false;
+                } else {
+                    req_params.data = urlencode_data(form);
+                }
 
                 // Submit the form via AJAX
-                var url = form.attr('action');
-                $.ajax({
-                  type: form.attr('method'),
-                  url: url,
-                  data: formData,
-                  async: false,
-                  cache: false,
-                  contentType: false,
-                  processData: false
-                })
-                .then(
+                $.ajax(req_params).then(
                     // Submission successful
                     function (data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
