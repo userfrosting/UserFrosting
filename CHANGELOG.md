@@ -1,5 +1,10 @@
 # Change Log
 
+## v4.0.13-Alpha
+- Update to RememberMe 2.0 (https://github.com/userfrosting/UserFrosting/issues/635)
+- Remove database checks, as they are apparently no longer needed (https://github.com/userfrosting/UserFrosting/issues/655)
+- Bump dependencies
+
 ## v4.0.12-Alpha
 - Separate out the registration and sign-in pages (https://github.com/userfrosting/UserFrosting/issues/657) **BC**
 - Slightly change behavior of form validation icons

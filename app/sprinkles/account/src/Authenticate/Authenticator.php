@@ -90,17 +90,8 @@ class Authenticator
 
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
-
-        $dbParams = $this->config['db.default'];
-
-        // Test database connection directly using PDO
-        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
-        if (isset($dbParams['port'])) {
-            $dsn .= ";port={$dbParams['port']}";
-        }
-        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
     
-        // Now get actual PDO instance for Eloquent
+        // Get the actual PDO instance from Eloquent
         $pdo = Capsule::connection()->getPdo();
 
         $this->rememberMeStorage->setConnection($pdo);
