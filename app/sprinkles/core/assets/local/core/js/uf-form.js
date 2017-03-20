@@ -70,6 +70,50 @@
     {
         var base = this;
         var $el = $(target);
+        
+        /**
+         * Helper functions for encoding data as Multipart/form-data or Urlencoded
+         */ 
+        
+        var urlencodeData = function (form) 
+        {
+            // Serialize and post to the backend script in ajax mode
+            if (base.options.binaryCheckboxes) {
+                var serializedData = form.find(':input').not(':checkbox').serialize();
+                // Get unchecked checkbox values, set them to 0
+                form.find('input[type=checkbox]:enabled').each(function() {
+                    if ($(this).is(':checked'))
+                        serializedData += "&" + encodeURIComponent(this.name) + "=1";
+                    else
+                        serializedData += "&" + encodeURIComponent(this.name) + "=0";
+                });
+            } else {
+                var serializedData = form.find(':input').serialize();
+            }
+
+            return serializedData ;
+        }
+
+        var multipartData = function (form)
+        {
+            // Use FormData to wrap form contents.
+            // https://developer.mozilla.org/en/docs/Web/API/FormData
+            var formData = new FormData(form[0]);
+            // Serialize and post to the backend script in ajax mode
+            if (base.options.binaryCheckboxes) {
+                // Get unchecked checkbox values, set them to 0
+                form.find('input[type=checkbox]:enabled').each(function() {
+                    if ($(this).is(':checked'))
+                        // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
+                        formData.set(this.name , 1);
+                        // this explicitly adds unchecked boxes.
+                    else
+                        formData.set(this.name , 0);
+                });
+            }
+
+            return formData ;
+        }
 
         var validator = $el.validate({
             rules:          base.options.validators.rules,
@@ -88,29 +132,26 @@
                     submit_button.prop( "disabled", true );
                     submit_button.html("<i class='fa fa-spinner fa-spin'></i>");
                 }
-
-                // Serialize and post to the backend script in ajax mode
-                if (base.options.binaryCheckboxes) {
-                    var serializedData = form.find(':input').not(':checkbox').serialize();
-                    // Get unchecked checkbox values, set them to 0
-                    form.find('input[type=checkbox]:enabled').each(function() {
-                        if ($(this).is(':checked'))
-                            serializedData += "&" + encodeURIComponent(this.name) + "=1";
-                        else
-                            serializedData += "&" + encodeURIComponent(this.name) + "=0";
-                    });
+                
+                // common params
+                var req_params = {
+                  type: form.attr('method'),
+                  url: form.attr('action')
+                };
+                
+                // Get the form encoding type from the users HTML, and chose an encoding form.
+                if (form.attr('enctype').toLowerCase() === "multipart/form-data" ){
+                    reqParams.data = multipartData(form);
+                    // add additional params to fix jquery errors
+                    reqParams.cache = false;
+                    reqParams.contentType = false;
+                    reqParams.processData = false;
                 } else {
-                    var serializedData = form.find(':input').serialize();
+                    reqParams.data = urlencodeData(form);
                 }
 
                 // Submit the form via AJAX
-                var url = form.attr('action');
-                $.ajax({
-                  type: form.attr('method'),
-                  url: url,
-                  data: serializedData
-                })
-                .then(
+                $.ajax(reqParams).then(
                     // Submission successful
                     function (data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
