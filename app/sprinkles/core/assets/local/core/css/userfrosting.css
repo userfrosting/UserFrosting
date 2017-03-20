@@ -63,3 +63,8 @@ form textarea {
     display: block;
     width: 100% !important;
 }
+
+/* Fix for links on info-box */
+a .info-box {
+    color: black;
+}
