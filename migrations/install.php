@@ -74,6 +74,7 @@
     echo "Is this correct?  [Y/n]: ";
 
     $answer = trim(fgets(STDIN));
+    if(empty($answer)) { $answer = "Y" ; }
 
     if (!in_array(strtolower($answer), array('yes', 'y'))) {
         // OS
