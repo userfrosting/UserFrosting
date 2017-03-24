@@ -49,7 +49,7 @@ title: "UserFrosting | Tutorials | Lesson 3: Extending the Data Model"
         
         <p><strong>In UserFrosting, every table must have a primary key called <code>id</code>!</strong>  UserFrosting's base classes for loading and manipulating the database will not work otherwise.</p>
         
-        <p>Hopefully, you know how to create a database table in whichever system you are using.  If not, please consult your system's documentation.</p>
+        <p>Hopefully, you know how to create a database table in whichever system you are using. If not, please consult your system's documentation. Remember to use the same prefix on your new tables when you create them by yourself directly on the database but don't include the prefixes on your PHP code. (For example in the below tutorial you will use 'staff_event_user' in your code even though you would have created a table on the database with the name 'uf_staff_event_user’)</p>
         
         <p>A user can be assigned to more than one event, and events can have more than one user.  Thus, this constitutes a <strong>many-to-many</strong> relationship.  To model a many-to-many relationship, we need an additional table called the <strong>link table</strong>.  We will name the table using the convention of placing an underscore between the names of the tables to be linked.  Thus, we will call this table <code>staff_event_user</code> (or <code>uf_staff_event_user</code>, again if you want to stick with the default table prefix).  This table will have three columns:</p>
         
