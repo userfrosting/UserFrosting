@@ -574,7 +574,7 @@ class AccountController extends SimpleController
         // Forward to dashboard if user is already logged in
         // TODO: forward to user's landing page or last visited page
         if ($authenticator->check()) {
-            return $response->withRedirect($this->ci->router->pathFor('dashboard'), 302);
+            return $response->withRedirect($this->ci->router->pathFor('index'), 302);
         }
 
         // Load validation rules
