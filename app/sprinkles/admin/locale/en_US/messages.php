@@ -98,6 +98,7 @@ return [
         "MANAGE"        => "Manage Roles",
         "NAME"          => "Name",
         "NAME_EXPLAIN"  => "Please enter a name for the role",
+        "NAME_IN_USE"   => "A role named <strong>{{name}}</strong> already exist",
         "PAGE_DESCRIPTION"  => "A listing of the roles for your site.  Provides management tools for editing and deleting roles.",
         "PERMISSIONS_UPDATED" => "Permissions updated for role <strong>{{name}}</strong>",
         "UPDATED"       => "Details updated for role <strong>{{name}}</strong>"

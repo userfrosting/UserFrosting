@@ -88,6 +88,7 @@ return [
         "MANAGE"        => "Gérer les rôles",
         "NAME"          => "Nom du rôle",
         "NAME_EXPLAIN"  => "Spécifiez le nom du rôle",
+        "NAME_IN_USE"   => "Un rôle nommé <strong>{{name}}</strong> existe déjà",
         "PAGE_DESCRIPTION"  => "Une liste des rôles de votre site. Fournit des outils de gestion pour modifier et supprimer des rôles.",
         "UPDATED"       => "Mise à jour des rôles"
     ],
