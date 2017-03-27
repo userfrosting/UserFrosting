@@ -60,6 +60,7 @@ return [
     "SLUG_CONDITION" => "Jeton/Conditions",
     "SLUG_IN_USE" => "Un jeton <strong>{{slug}}</strong> existe déjà",
     "STATUS" => "Statut",
+    "SUGGEST" => "Suggérer",
 
     "UNKNOWN" => "Inconnu",
 
