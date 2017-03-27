@@ -33,12 +33,12 @@ return [
 
     "DASHBOARD"             => "แผงควบคุม",
     "DELETE_MASTER"         => "คุณไม่สามารถลบบัญชีหลักได้!",
-    "DELETION_SUCCESSFUL"   => "ลบผู้ใช้ '{{user_name}}' เรียบร้อยแล้ว",
-    "DETAILS_UPDATED"       => "ปรับปรุงรายระเอียดบัญชีให้กับ '{{user_name}}' แล้ว",
+    "DELETION_SUCCESSFUL"   => "ลบผู้ใช้ <strong>{{user_name}}</strong> เรียบร้อยแล้ว",
+    "DETAILS_UPDATED"       => "ปรับปรุงรายระเอียดบัญชีให้กับ <strong>{{user_name}}</strong> แล้ว",
     "DISABLE_MASTER"        => "คุณไม่สามารถปิดการใช้งานบัญชีหลัก!",
-    "DISABLE_SUCCESSFUL"    => "ปิดการใช้งานบัญชีของผู้ใช้ '{{user_name}}' เรียบร้อยแล้ว",
+    "DISABLE_SUCCESSFUL"    => "ปิดการใช้งานบัญชีของผู้ใช้ <strong>{{user_name}}</strong> เรียบร้อยแล้ว",
 
-    "ENABLE_SUCCESSFUL" => "เปิดการใช้งานบัญชีของผู้ใช้ '{{user_name}}' เรียบร้อยแล้ว",
+    "ENABLE_SUCCESSFUL" => "เปิดการใช้งานบัญชีของผู้ใช้ <strong>{{user_name}}</strong> เรียบร้อยแล้ว",
 
     "GROUP" => [
         1 => "กลุ่ม",
@@ -46,7 +46,7 @@ return [
 
         "CREATE"        => "สร้างกลุ่ม",
         "DELETE"            => "ลบกลุ่ม",
-        "DELETE_CONFIRM"    => "คุณแน่ใจหรือที่จะลบกลุ่ม '{{name}}'?",
+        "DELETE_CONFIRM"    => "คุณแน่ใจหรือที่จะลบกลุ่ม <strong>{{name}}</strong>?",
         "DELETE_YES"        => "ใช่ ลบกลุ่มนี้เลย",
         "EDIT"          => "แก้ไขกลุ่ม",
         "ICON"          => "ไอคอนกลุ่ม",
@@ -81,7 +81,7 @@ return [
         "ASSIGN_NEW"    => "กำหนดตำแหน่งใหม่",
         "CREATE"        => "สร้างตำแหน่ง",
         "DELETE"            => "ลบตำแหน่ง",
-        "DELETE_CONFIRM"    => "คุณแน่ใจหรือที่จะลบตำแหน่ง '{{name}}'?",
+        "DELETE_CONFIRM"    => "คุณแน่ใจหรือที่จะลบตำแหน่ง <strong>{{name}}</strong>?",
         "DELETE_YES"        => "ใช่ ลบตำแหน่งนี้เลย",
         "EDIT"          => "แก้ไขตำแหน่ง",
         "INFO_PAGE"     => "หน้าข้อมูลตำแหน่งสำหรับ {{name}}",
@@ -118,7 +118,7 @@ return [
         "ACTIVATE"          => "เปิดใช้งานผู้ใช้",
         "CREATE"            => "สร้างผู้ใช้",
         "DELETE"            => "ลบผู้ใช้",
-        "DELETE_CONFIRM"    => "คุณแน่ใจหรือที่จะลบผู้ใช้ '{{name}}'?",
+        "DELETE_CONFIRM"    => "คุณแน่ใจหรือที่จะลบผู้ใช้ <strong>{{name}}</strong>?",
         "DELETE_YES"        => "ใช่ ลบผู้ใช้นี้เลย",
         "DISABLE"           => "ปิดการใช้งานผู้ใช้",
         "EDIT"              => "แก้ไขผู้ใช้",

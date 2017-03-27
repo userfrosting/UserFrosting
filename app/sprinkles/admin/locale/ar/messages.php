@@ -33,12 +33,12 @@ return [
 
     "DASHBOARD"             => "لوحة القيادة",
     "DELETE_MASTER"         => "لا يمكنك حذف الحساب الرئيسي",
-    "DELETION_SUCCESSFUL"   => "المستعمل '{{user_name}}' حذف بنجاح",
-    "DETAILS_UPDATED"       => "جدد تفاصيل الحساب للمستخدم '{{user_name}}'",
+    "DELETION_SUCCESSFUL"   => "المستعمل <strong>{{user_name}}</strong> حذف بنجاح",
+    "DETAILS_UPDATED"       => "جدد تفاصيل الحساب للمستخدم <strong>{{user_name}}</strong>",
     "DISABLE_MASTER"        => "لا يمكنك تعطيل الحساب الرئيسي",
-    "DISABLE_SUCCESSFUL"    => "حساب المستخدم '{{user_name}}' عطيل بنجاح",
+    "DISABLE_SUCCESSFUL"    => "حساب المستخدم <strong>{{user_name}}</strong> عطيل بنجاح",
 
-    "ENABLE_SUCCESSFUL" => "حساب المستخدم '{{user_name}}' مكين بنجاح",
+    "ENABLE_SUCCESSFUL" => "حساب المستخدم <strong>{{user_name}}</strong> مكين بنجاح",
 
     "GROUP" => [
         1 => "مجموعة",
@@ -46,7 +46,7 @@ return [
 
         "CREATE"        => "إنشاء مجموعة",
         "DELETE"            => "حذف مجموعة",
-        "DELETE_CONFIRM"    => "هل أنت متأكد أنك تريد حذف مجموعة '{{name}}'?",
+        "DELETE_CONFIRM"    => "هل أنت متأكد أنك تريد حذف مجموعة <strong>{{name}}</strong>?",
         "DELETE_YES"        => "نعم، إحذف مجموعة",
         "EDIT"          => "تعديل مجموعة",
         "ICON"          => "رمز المجموعة",
@@ -81,7 +81,7 @@ return [
         "ASSIGN_NEW"    => "تعيين دور جديد",
         "CREATE"        => "إنشاء دور",
         "DELETE"            => "حذف دور",
-        "DELETE_CONFIRM"    => "هل أنت متأكد أنك تريد حذف الدور '{{name}}'?",
+        "DELETE_CONFIRM"    => "هل أنت متأكد أنك تريد حذف الدور <strong>{{name}}</strong>?",
         "DELETE_YES"        => "نعم، حذف دور",
         "EDIT"          => "إدارة دور",
         "INFO_PAGE"     => "صفحة معلومات دور {{name}}",
@@ -118,7 +118,7 @@ return [
         "ACTIVATE"          => "تفعيل المستخدم",
         "CREATE"            => "إنشاء مستخدم",
         "DELETE"            => "مسح المستخدم",
-        "DELETE_CONFIRM"    => "هل أنت متأكد أنك تريد حذف المستخدم '{{name}}'?",
+        "DELETE_CONFIRM"    => "هل أنت متأكد أنك تريد حذف المستخدم <strong>{{name}}</strong>?",
         "DELETE_YES"        => "نعم، حذف المستخدم",
         "DISABLE"           => "تعطيل المستخدم ",
         "EDIT"              => "إدارة المستخدم",

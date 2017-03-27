@@ -52,8 +52,8 @@ return [
     ],
 
     "EMAIL" => [
-        "INVALID" => "Il n'y a aucun compte pour '{{email}}'.",
-        "IN_USE"  => "Le email '{{email}}' est déjà utilisé."
+        "INVALID" => "Il n'y a aucun compte pour <strong>{{email}}</strong>.",
+        "IN_USE"  => "Le email <strong>{{email}}</strong> est déjà utilisé."
     ],
 
     "FIRST_NAME" => "Prénom",
@@ -62,7 +62,10 @@ return [
 
     "LAST_NAME" => "Nom de famille",
 
-    "LOCALE.ACCOUNT" => "La langue utilisé pour votre compte d'utilisateur",
+    "LOCALE" => [
+        "ACCOUNT" => "La langue utilisé pour votre compte d'utilisateur",
+        "INVALID" => "<strong>{{locale}}</strong> n'est pas une langue valide."
+    ],
 
     "LOGIN" => [
         "@TRANSLATION" => "Connexion",

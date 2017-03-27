@@ -52,8 +52,8 @@ return [
     ],
 
     "EMAIL" => [
-        "INVALID"   => "Não existe nenhuma conta para '{{email}}'.",
-        "IN_USE"    => "O email '{{email}}' já se encontra em uso."
+        "INVALID"   => "Não existe nenhuma conta para <strong>{{email}}</strong>.",
+        "IN_USE"    => "O email <strong>{{email}}</strong> já se encontra em uso."
     ],
 
     "FIRST_NAME" => "Primeiro nome",
@@ -153,7 +153,7 @@ return [
 
         "CHOOSE"  => "Escolha um nome de utilizador único",
         "INVALID" => "Nome de utilizador inválido",
-        "IN_USE"  => "O nome de utilizador '{{user_name}}' já se encontra em uso."
+        "IN_USE"  => "O nome de utilizador <strong>{{user_name}}</strong> já se encontra em uso."
     ],
 
     "USER_ID_INVALID"       => "O id de utilizador solicitado não existe.",

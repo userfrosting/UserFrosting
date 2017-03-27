@@ -32,12 +32,12 @@ return [
 
     "DASHBOARD"             => "Tableau de bord",
     "DELETE_MASTER"         => "Vous ne pouvez pas supprimer le compte principal !",
-    "DELETION_SUCCESSFUL"   => "L'utilisateur '{{user_name}}' a été supprimé avec succès.",
-    "DETAILS_UPDATED"       => "Les détails du compte de '{{user_name}}' ont été mis à jour",
+    "DELETION_SUCCESSFUL"   => "L'utilisateur <strong>{{user_name}}</strong> a été supprimé avec succès.",
+    "DETAILS_UPDATED"       => "Les détails du compte de <strong>{{user_name}}</strong> ont été mis à jour",
     "DISABLE_MASTER"        => "Vous ne pouvez pas désactiver le compte principal !",
-    "DISABLE_SUCCESSFUL"    => "Le compte de l'utilisateur '{{user_name}}' a été désactivé avec succès.",
+    "DISABLE_SUCCESSFUL"    => "Le compte de l'utilisateur <strong>{{user_name}}</strong> a été désactivé avec succès.",
 
-    "ENABLE_SUCCESSFUL" => "Le compte de l'utilisateur '{{user_name}}' a été activé avec succès.",
+    "ENABLE_SUCCESSFUL" => "Le compte de l'utilisateur <strong>{{user_name}}</strong> a été activé avec succès.",
 
     "GROUP" => [
         1 => "Groupe",
@@ -45,7 +45,7 @@ return [
 
         "CREATE"        => "Créer un groupe",
         "DELETE"            => "Supprimer le groupe",
-        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le groupe '{{name}}'?",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le groupe <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Oui, supprimer le groupe",
         "EDIT"          => "Modifier le groupe",
         "ICON"          => "Icône",
@@ -81,7 +81,7 @@ return [
         "ASSIGN_NEW"    => "Assigner un nouveau rôle",
         "CREATE"        => "Créer un rôle",
         "DELETE"            => "Supprimer le rôle",
-        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le rôle '{{name}}'?",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le rôle <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Oui, supprimer le rôle",
         "EDIT"          => "Modifier le rôle",
         "INFO_PAGE"     => "Page d'information pour le rôle {{name}}",
@@ -120,7 +120,7 @@ return [
         "CREATE"            => "Créer un utilisateur",
         "CREATED"           => "L'utilisateur <strong>{{user_name}}</strong> a été créé avec succès",
         "DELETE"            => "Supprimer l'utilisateur",
-        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer l'utilisateur '{{name}}'?",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer l'utilisateur <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Oui, supprimer l'utilisateur",
         "DISABLE"           => "Désactiver l'utilisateur",
         "EDIT"              => "Modifier l'utilisateur",
