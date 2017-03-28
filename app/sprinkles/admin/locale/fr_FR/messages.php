@@ -101,7 +101,7 @@ return [
         "NAME_IN_USE"   => "Un rôle nommé <strong>{{name}}</strong> existe déjà",
         "PAGE_DESCRIPTION"  => "Une liste des rôles de votre site. Fournit des outils de gestion pour modifier et supprimer des rôles.",
         "PERMISSIONS_UPDATED" => "Autorisations mises à jour pour le rôle <strong>{{name}}</strong>",
-        "UPDATED"       => "Mise à jour des rôles"
+        "UPDATED"       => "Détails mis à jour pour le rôle <strong>{{name}}</strong>"
     ],
 
     "SYSTEM_INFO" => [
