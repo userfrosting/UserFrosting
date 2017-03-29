@@ -1,5 +1,5 @@
 {
-    "name": "userfrosting/UserFrosting",
+    "name": "userfrosting/userfrosting",
     "type": "project",
     "description": "A secure, modern user management system for PHP.",
     "keywords": ["php user management", "usercake", "bootstrap"],
