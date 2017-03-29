@@ -28,7 +28,7 @@
     "extra": {
         "merge-plugin": {
             "include": [
-                "app/sprinkles/sprinkles.json",
+                "sprinkles.json",
                 "app/sprinkles/*/composer.json"
             ],
             "recurse": true,

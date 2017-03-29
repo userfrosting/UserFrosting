@@ -23,7 +23,7 @@ app/sessions/*
 /app/sprinkles/*/assets/vendor/
 
 # Ignore sprinkles.json config file
-app/sprinkles/sprinkles.json
+sprinkles.json
 
 # Ignore sample site sprinkle
 app/sprinkles/site-dev
