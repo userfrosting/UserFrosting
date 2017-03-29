@@ -33,12 +33,12 @@ return [
 
     "DASHBOARD"             => "Painel de Controlo",
     "DELETE_MASTER"         => "Não pode apagar a conta principal!",
-    "DELETION_SUCCESSFUL"   => "Utilizador '{{user_name}}' foi removido com sucesso.",
-    "DETAILS_UPDATED"       => "Detalhes de conta atualizados para o utilizador '{{user_name}}'",
+    "DELETION_SUCCESSFUL"   => "Utilizador <strong>{{user_name}}</strong> foi removido com sucesso.",
+    "DETAILS_UPDATED"       => "Detalhes de conta atualizados para o utilizador <strong>{{user_name}}</strong>",
     "DISABLE_MASTER"        => "Não pode desativar a conta principal!",
-    "DISABLE_SUCCESSFUL"    => "Conta do utilizador '{{user_name}}' foi desativada com sucesso.",
+    "DISABLE_SUCCESSFUL"    => "Conta do utilizador <strong>{{user_name}}</strong> foi desativada com sucesso.",
 
-    "ENABLE_SUCCESSFUL" => "Conta do utilizador '{{user_name}}' foi ativada com sucesso.",
+    "ENABLE_SUCCESSFUL" => "Conta do utilizador <strong>{{user_name}}</strong> foi ativada com sucesso.",
 
     "GROUP" => [
         1 => "Grupo",
@@ -48,7 +48,7 @@ return [
         "CREATION_SUCCESSFUL" => "Grupo criado com sucesso",
         "DELETE"            => "Remover grupo",
         "DELETION_SUCCESSFUL" => "Grupo removido com sucesso",
-        "DELETE_CONFIRM"    => "Tem a certeza que pretende remover o grupo '{{name}}'?",
+        "DELETE_CONFIRM"    => "Tem a certeza que pretende remover o grupo <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Sim, remover grupo",
         "EDIT"          => "Editar grupo",
         "ICON"          => "Icon do grupo",
@@ -85,7 +85,7 @@ return [
         "CREATION_SUCCESSFUL" => "Cargo criado com sucesso",
         "DELETE"            => "Remover cargo",
         "DELETION_SUCCESSFUL" => "Cargo removido com sucesso",
-        "DELETE_CONFIRM"    => "Tem a certeza que pretende remover o cargo '{{name}}'?",
+        "DELETE_CONFIRM"    => "Tem a certeza que pretende remover o cargo <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Sim, remover cargo",
         "EDIT"          => "Editar cargo",
         "INFO_PAGE"     => "Página informativa do cargo {{name}}",
@@ -123,7 +123,7 @@ return [
         "ACTIVATE"          => "Ativar utilizador",
         "CREATE"            => "Criar utilizador",
         "DELETE"            => "Remover utilizador",
-        "DELETE_CONFIRM"    => "Tem a certeza que pretende remover o utilizador '{{name}}'?",
+        "DELETE_CONFIRM"    => "Tem a certeza que pretende remover o utilizador <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Sim, remover utilizador",
         "DISABLE"           => "Desativar utilizador",
         "EDIT"              => "Editar utilizador",

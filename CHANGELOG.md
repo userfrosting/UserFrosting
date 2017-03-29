@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.0.14-Alpha
+- Fix ajax.delay in ufCollection
+- Fix missing translations
+- Minor fix in French translation
+- Fix alert margin when displayed inside a modal
+
 ## v4.0.13-Alpha
 - Update to RememberMe 2.0 (https://github.com/userfrosting/UserFrosting/issues/635)
 - Remove database checks, as they are apparently no longer needed (https://github.com/userfrosting/UserFrosting/issues/655)

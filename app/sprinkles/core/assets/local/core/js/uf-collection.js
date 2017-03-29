@@ -8,13 +8,14 @@
  * $("#myCollection").ufCollection(options);
  *
  * `options` is an object containing any of the following parameters:
- * @param {string} dataUrl The url from which to fetch options (as JSON data) in the dropdown selector menu.
- * @param {string} dropdownTemplate A Handlebars template to use for rendering the dropdown items.
- * @param {string} rowTemplate A Handlebars template to use for rendering each row in the table.
- * @param {string} dropdownTheme The select2 theme to use for the dropdown menu.  Defaults to "bootstrap".
- * @param {string} placeholder Placeholder text to use in the dropdown menu before a selection is made.  Defaults to "Item".
+ * @param {object} dropdown The options to pass to the select2 plugin for the add item dropdown.
+ * @param {string} dropdown.ajax.url The url from which to fetch options (as JSON data) in the dropdown selector menu.
+ * @param {string} dropdown.theme The select2 theme to use for the dropdown menu.  Defaults to "bootstrap".
+ * @param {string} dropdown.placeholder Placeholder text to use in the dropdown menu before a selection is made.  Defaults to "Item".
  * @param {Object} dropdownControl a jQuery selector specifying the dropdown select2 control.  Defaults to looking for a .js-select-new element inside the parent object.
+ * @param {string} dropdownTemplate A Handlebars template to use for rendering the dropdown items.
  * @param {Object} rowContainer a jQuery selector specifying the place where rows should be added.  Defaults to looking for the first tbody element inside the parent object.
+ * @param {string} rowTemplate A Handlebars template to use for rendering each row in the table.
  *
  * == EVENTS ==
  *
@@ -46,7 +47,7 @@
                     ajax: {
                         url: "",
                         dataType: "json",
-                        ajaxDelay: 250,
+                        delay: 250,
                         data: function (params) {
                             return {
                                 filters: {
@@ -165,7 +166,7 @@
             options.ajax.url = base.options.dataUrl;
         }
         if ("ajaxDelay" in base.options) {
-            options.ajax.ajaxDelay = base.options.ajaxDelay;
+            options.ajax.delay = base.options.ajaxDelay;
         }
         if ("dropdownTheme" in base.options) {
             options.theme = base.options.dropdownTheme;
