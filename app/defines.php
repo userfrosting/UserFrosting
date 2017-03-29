@@ -3,7 +3,7 @@
 namespace UserFrosting;
 
 // Some standard defines
-define('UserFrosting\VERSION', '4.0.x-dev');
+define('UserFrosting\VERSION', '4.1.x-dev');
 define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '5.6');
 define('UserFrosting\DEBUG_CONFIG', false);
