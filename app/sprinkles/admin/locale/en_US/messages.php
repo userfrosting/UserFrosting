@@ -33,13 +33,13 @@ return [
 
     "DASHBOARD"             => "Dashboard",
     "DELETE_MASTER"         => "You cannot delete the master account!",
-    "DELETION_SUCCESSFUL"   => "User '{{user_name}}' has been successfully deleted.",
-    "DETAILS_UPDATED"       => "Account details updated for user '{{user_name}}'",
+    "DELETION_SUCCESSFUL"   => "User <strong>{{user_name}}</strong> has been successfully deleted.",
+    "DETAILS_UPDATED"       => "Account details updated for user <strong>{{user_name}}</strong>",
     "DISABLE_MASTER"        => "You cannot disable the master account!",
     "DISABLE_SELF"          => "You cannot disable your own account!",
-    "DISABLE_SUCCESSFUL"    => "Account for user '{{user_name}}' has been successfully disabled.",
+    "DISABLE_SUCCESSFUL"    => "Account for user <strong>{{user_name}}</strong> has been successfully disabled.",
 
-    "ENABLE_SUCCESSFUL" => "Account for user '{{user_name}}' has been successfully enabled.",
+    "ENABLE_SUCCESSFUL" => "Account for user <strong>{{user_name}}</strong> has been successfully enabled.",
 
     "GROUP" => [
         1 => "Group",
@@ -98,6 +98,7 @@ return [
         "MANAGE"        => "Manage Roles",
         "NAME"          => "Name",
         "NAME_EXPLAIN"  => "Please enter a name for the role",
+        "NAME_IN_USE"   => "A role named <strong>{{name}}</strong> already exist",
         "PAGE_DESCRIPTION"  => "A listing of the roles for your site.  Provides management tools for editing and deleting roles.",
         "PERMISSIONS_UPDATED" => "Permissions updated for role <strong>{{name}}</strong>",
         "UPDATED"       => "Details updated for role <strong>{{name}}</strong>"
@@ -130,7 +131,7 @@ return [
         "CREATE"            => "Create user",
         "CREATED"           => "User <strong>{{user_name}}</strong> has been successfully created",
         "DELETE"            => "Delete user",
-        "DELETE_CONFIRM"    => "Are you sure you want to delete the user '{{name}}'?",
+        "DELETE_CONFIRM"    => "Are you sure you want to delete the user <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Yes, delete user",
         "DISABLE"           => "Disable user",
         "EDIT"              => "Edit user",
