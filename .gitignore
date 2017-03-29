@@ -11,8 +11,8 @@ _meta/*
 app/.env
 
 # Ignore composer-generated files
-app/composer.lock
-app/composer.phar
+composer.lock
+composer.phar
 
 # Ignore log, cache, and sessions directories
 app/cache/*
