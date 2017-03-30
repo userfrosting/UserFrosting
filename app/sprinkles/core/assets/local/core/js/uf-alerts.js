@@ -26,7 +26,7 @@
  * == METHODS ==
  *
  * `fetch()`: gets messages from the server.
- * `push(type, message)`: adds a message of a specified type (danger, warning, info, success) to the internal collection of alerts.
+ * `push(options)`: adds a message of a specified type (danger, warning, info, success) to the internal collection of alerts.
  * `clear()`: removes all messages from the internal collection.
  * `render()`: renders the collection of alerts to the container.
  *
@@ -173,13 +173,13 @@
      * Push a given message to the current uf-alerts collection.
      *
      */
-    Plugin.prototype.push = function (type, message)
+    Plugin.prototype.push = function (options)
     {
         var base = this;
 
         base.messages.push({
-            "type"   : type,
-            "message": message
+            "type"   : options[0],
+            "message": options[1]
         });
 
         return base.$T;
