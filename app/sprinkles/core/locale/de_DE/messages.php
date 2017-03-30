@@ -68,7 +68,7 @@ return [
     "ACTIVATE"                          => "Aktivieren",
     "ACTIVE"                            => "Aktiv",
     "ADD"                               => "Hinzufügen",
-    "CANCEL"                            => "Stornieren",
+    "CANCEL"                            => "Abbrechen",
     "CONFIRM"                           => "Bestätigen",
     "CREATE"                            => "Erstellen",
     "DELETE"                            => "Löschen",

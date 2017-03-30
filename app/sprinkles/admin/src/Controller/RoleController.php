@@ -395,7 +395,7 @@ class RoleController extends SimpleController
                 'action' => "api/roles/r/{$role->slug}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'submit_text' => 'Update role'
+                'submit_text' => $translator->translate("UPDATE")
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
