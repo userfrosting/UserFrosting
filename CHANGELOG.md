@@ -1,7 +1,5 @@
 # Change Log
 
-## v4.0.x-dev
-
 ## v4.0.12-Alpha
 - Separate out the registration and sign-in pages (https://github.com/userfrosting/UserFrosting/issues/657) **BC**
 - Slightly change behavior of form validation icons
