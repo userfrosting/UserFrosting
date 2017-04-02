@@ -53,8 +53,8 @@ return [
     ],
 
     "EMAIL" => [
-        "INVALID"   => "لا يوجد حساب ل '{{email}}'",
-        "IN_USE"    => "البريد الإلكتروني '{{email}}' قيد الاستخدام"
+        "INVALID"   => "لا يوجد حساب ل <strong>{{email}}</strong>",
+        "IN_USE"    => "البريد الإلكتروني <strong>{{email}}</strong> قيد الاستخدام"
     ],
 
     "FIRST_NAME" => "الاسم الاول",
@@ -154,7 +154,7 @@ return [
 
         "CHOOSE"  => "اختيار اسم مستخدم فريد",
         "INVALID" => "اسم المستخدم غير صالح",
-        "IN_USE"  => "اسم المستخدم '{{user_name}}' قيد الاستخدام"
+        "IN_USE"  => "اسم المستخدم <strong>{{user_name}}</strong> قيد الاستخدام"
     ],
 
     "USER_ID_INVALID"       => "عدم وجود هوية المستخدم المطلوب",

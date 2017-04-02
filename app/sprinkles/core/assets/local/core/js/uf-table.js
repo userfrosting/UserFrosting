@@ -137,7 +137,11 @@
                         // direction text shown in the URL e.g. [ 'asc', 'desc' ]
                         sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
                         // if true, override saveSort widget sort, if used & stored sort is available
-                        sort2Hash_overrideSaveSort  : true // default = false
+                        sort2Hash_overrideSaveSort  : true, // default = false
+                        filter_selectSource: {
+                            ".filter-metaselect": base._buildFilterSelect
+                        },
+                        filter_cssFilter: 'form-control'
                     }
                 },
                 pager : {
@@ -290,6 +294,7 @@
         });
 
         base.ts.on("pagerComplete", function () {
+            $el.find(".tablesorter").trigger('update');
             $el.trigger("pagerComplete.ufTable");
         });
     };
@@ -378,7 +383,7 @@
                 } else {
                     base.options.msgTarget.ufAlerts('clear');
                 }
-    
+
                 base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
             }
         }
@@ -386,7 +391,7 @@
         // Let TS handle the in-table error message
         return '';
     };
-    
+
     /**
      * Private method used to encode the current table state variables into a URL hash.
      */
@@ -476,6 +481,72 @@
         result = jQuery.param(urlObject);
         return result.length ? result : '';
     };
+
+    /**
+     * Private method used to build the filter select using data attributes for custom options
+     * Based on tablesorter.filter.getOptions
+     */
+    Plugin.prototype._buildFilterSelect = function (table, column, onlyAvail) {
+
+        table = $( table )[0];
+		var rowIndex, tbodyIndex, len, row, cache, indx, child, childLen, colData,
+			c = table.config,
+			wo = c.widgetOptions,
+			arry = [];
+		for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
+			cache = c.cache[tbodyIndex];
+			len = c.cache[tbodyIndex].normalized.length;
+			// loop through the rows
+			for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
+				// get cached row from cache.row ( old ) or row data object
+				// ( new; last item in normalized array )
+				row = cache.row ?
+					cache.row[ rowIndex ] :
+					cache.normalized[ rowIndex ][ c.columns ].$row[0];
+				// check if has class filtered
+				if ( onlyAvail && row.className.match( wo.filter_filteredRow ) ) {
+					continue;
+				}
+
+				// Get the column data attributes
+				if (row.getElementsByTagName('td')[column].getAttribute('data-value')) {
+    				colData = row.getElementsByTagName('td')[column].getAttribute('data-value');
+				} else {
+    				colData = false;
+				}
+
+				// get non-normalized cell content
+				if ( wo.filter_useParsedData ||
+					c.parsers[column].parsed ||
+					c.$headerIndexed[column].hasClass( 'filter-parsed' ) ) {
+
+					arry[ arry.length ] = {
+    					value : (colData) ? colData : cache.normalized[ rowIndex ][ column ],
+    					text : cache.normalized[ rowIndex ][ column ]
+    				};
+				} else {
+
+					arry[ arry.length ] = {
+    					value : (colData) ? colData : cache.normalized[ rowIndex ][ c.columns ].raw[ column ],
+    					text : cache.normalized[ rowIndex ][ c.columns ].raw[ column ]
+    				};
+				}
+			}
+		}
+
+		// Remove duplicates in `arry` since using an array of objects
+		// won't do it automatically
+		var arr = {};
+
+        for ( var i=0, len=arry.length; i < len; i++ )
+            arr[arry[i]['text']] = arry[i];
+
+        arry = new Array();
+        for ( var key in arr )
+            arry.push(arr[key]);
+
+		return arry;
+    }
 
     /**
      * EZ Logging/Warning (technically private but saving an '_' is worth it imo)

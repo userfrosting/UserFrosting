@@ -52,9 +52,12 @@ return [
     ],
 
     "EMAIL" => [
-        "INVALID" => "Il n'y a aucun compte pour '{{email}}'.",
-        "IN_USE"  => "Le email '{{email}}' est déjà utilisé."
+        "INVALID" => "Il n'y a aucun compte pour <strong>{{email}}</strong>.",
+        "IN_USE"  => "Le email <strong>{{email}}</strong> est déjà utilisé.",
+        "VERIFICATION_REQUIRED" => "Email (vérification requise - utiliser une adresse réelle!)"
     ],
+
+    "EMAIL_OR_USERNAME" => "Nom d'utilisateur ou adresse email",
 
     "FIRST_NAME" => "Prénom",
 
@@ -62,11 +65,13 @@ return [
 
     "LAST_NAME" => "Nom de famille",
 
-    "LOCALE.ACCOUNT" => "La langue utilisé pour votre compte d'utilisateur",
+    "LOCALE" => [
+        "ACCOUNT" => "La langue utilisé pour votre compte d'utilisateur",
+        "INVALID" => "<strong>{{locale}}</strong> n'est pas une langue valide."
+    ],
 
     "LOGIN" => [
         "@TRANSLATION" => "Connexion",
-
         "ALREADY_COMPLETE"  => "Vous êtes déjà connecté!",
         "SOCIAL"            => "Ou se connecter avec",
         "REQUIRED"          => "Désolé, vous devez être connecté pour accéder à cette ressource."
@@ -75,6 +80,8 @@ return [
     "LOGOUT" => "Déconnexion",
 
     "NAME" => "Nom",
+
+    "NAME_AND_EMAIL" => "Nom et email",
 
     "PAGE" => [
         "LOGIN" => [
@@ -119,9 +126,14 @@ return [
 
         "HASH_FAILED"       => "Le hachage du mot de passe a échoué. Veuillez contacter un administrateur de site.",
         "INVALID"           => "Le mot de passe actuel ne correspond pas à celui que nous avons au dossier",
-        "NOTHING_TO_UPDATE" => "Vous ne pouvez pas mettre à jour avec le même mot de passe",
         "NEW"               => "Nouveau mot de passe",
+        "NOTHING_TO_UPDATE" => "Vous ne pouvez pas mettre à jour avec le même mot de passe",
         "UPDATED"           => "Mot de passe du compte mis à jour"
+    ],
+
+    "PROFILE"       => [
+        "SETTINGS"  => "Paramètres du profil",
+        "UPDATED"   => "Paramètres du profil mis à jour"
     ],
 
     "REGISTER"      => "S'inscrire",
@@ -153,7 +165,8 @@ return [
 
         "CHOOSE"  => "Choisissez un nom d'utilisateur unique",
         "INVALID" => "Nom d'utilisateur invalide",
-        "IN_USE"  => "Le nom d'utilisateur '{{username}}' est déjà utilisé."
+        "IN_USE"  => "Le nom d'utilisateur '{{username}}' est déjà utilisé.",
+        "NOT_AVAILABLE" => "Le nom d'utilisateur <strong>{{user_name}}</strong> n'est pas disponible. Choisissez un autre nom, ou cliquez sur « suggérer »."
     ],
 
     "USER_ID_INVALID"       => "L'identifiant d'utilisateur demandé n'existe pas.",

@@ -9,7 +9,8 @@
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 use Birke\Rememberme\Authenticator as RememberMe;
-use Birke\Rememberme\Storage\PDO as RememberMePDO;
+use Birke\Rememberme\Storage\PDOStorage as RememberMePDO;
+use Birke\Rememberme\Triplet as RememberMeTriplet;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Interop\Container\ContainerInterface;
 use UserFrosting\Session\Session;
@@ -89,17 +90,8 @@ class Authenticator
 
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
-
-        $dbParams = $this->config['db.default'];
-
-        // Test database connection directly using PDO
-        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
-        if (isset($dbParams['port'])) {
-            $dsn .= ";port={$dbParams['port']}";
-        }
-        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
     
-        // Now get actual PDO instance for Eloquent
+        // Get the actual PDO instance from Eloquent
         $pdo = Capsule::connection()->getPdo();
 
         $this->rememberMeStorage->setConnection($pdo);
@@ -108,14 +100,14 @@ class Authenticator
         $this->rememberMe = new RememberMe($this->rememberMeStorage);
         // Set cookie name
         $cookieName = $this->config['session.name'] . '-' . $this->config['remember_me.cookie.name'];
-        $this->rememberMe->setCookieName($cookieName);
+        $this->rememberMe->getCookie()->setName($cookieName);
 
         // Change cookie path
         $this->rememberMe->getCookie()->setPath($this->config['remember_me.session.path']);
 
         // Set expire time, if specified
         if ($this->config->has('remember_me.expire_time') && ($this->config->has('remember_me.expire_time') != null)) {
-            $this->rememberMe->setExpireTime($this->config['remember_me.expire_time']);
+            $this->rememberMe->getCookie()->setExpireTime($this->config['remember_me.expire_time']);
         }
 
         $this->user = null;
@@ -311,23 +303,23 @@ class Authenticator
      */
     protected function loginRememberedUser()
     {
-        // Get the user id. If we can present the correct tokens from the cookie, remake the session and automatically log the user in
-        $userId = $this->rememberMe->login();
+        /** @var Birke\Rememberme\LoginResult $loginResult */
+        $loginResult = $this->rememberMe->login();
 
-        if ($userId) {
+        if ($loginResult->isSuccess()) {
             // Update in session
-            $this->session[$this->config['session.keys.current_user_id']] = $userId;
+            $this->session[$this->config['session.keys.current_user_id']] = $loginResult->getCredential();
             // There is a chance that an attacker has stolen the login token,
             // so we store the fact that the user was logged in via RememberMe (instead of login form)
             $this->viaRemember = true;
         } else {
-            // If $rememberMe->login() returned false, check if the token was invalid as well.  This means the cookie was stolen.
-            if ($this->rememberMe->loginTokenWasInvalid()) {
+            // If $rememberMe->login() was not successfull, check if the token was invalid as well.  This means the cookie was stolen.
+            if ($loginResult->hasPossibleManipulation()) {
                 throw new AuthCompromisedException();
             }
         }
 
-        return $this->validateUserAccount($userId);
+        return $this->validateUserAccount($loginResult->getCredential());
     }
 
     /**
@@ -359,11 +351,15 @@ class Authenticator
      */
     protected function validateRememberMeCookie()
     {
-        // Check, if the Rememberme cookie exists and is still valid.
-        // If not, we log out the current session and throw an exception.
-        if (!empty($_COOKIE[$this->rememberMe->getCookieName()]) && !$this->rememberMe->cookieIsValid()) {
+        $cookieValue = $this->rememberMe->getCookie()->getValue();
+        if (!$cookieValue) {
+            return true;
+        }
+        $triplet = RememberMeTriplet::fromString($cookieValue);
+        if (!$triplet->isValid()) {
             return false;
         }
+
         return true;
     }
 

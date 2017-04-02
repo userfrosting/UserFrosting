@@ -16,6 +16,7 @@ return [
         2 => "Activités",
 
         "LAST" => "Dernière activité",
+        "PAGE" => "Une liste des activités des utilisateurs",
         "TIME" => "Date de l'activité"
     ],
 
@@ -32,27 +33,32 @@ return [
 
     "DASHBOARD"             => "Tableau de bord",
     "DELETE_MASTER"         => "Vous ne pouvez pas supprimer le compte principal !",
-    "DELETION_SUCCESSFUL"   => "L'utilisateur '{{user_name}}' a été supprimé avec succès.",
-    "DETAILS_UPDATED"       => "Les détails du compte de '{{user_name}}' ont été mis à jour",
+    "DELETION_SUCCESSFUL"   => "L'utilisateur <strong>{{user_name}}</strong> a été supprimé avec succès.",
+    "DETAILS_UPDATED"       => "Les détails du compte de <strong>{{user_name}}</strong> ont été mis à jour",
     "DISABLE_MASTER"        => "Vous ne pouvez pas désactiver le compte principal !",
-    "DISABLE_SUCCESSFUL"    => "Le compte de l'utilisateur '{{user_name}}' a été désactivé avec succès.",
+    "DISABLE_SELF"          => "Vous ne pouvez pas désactiver votre propre compte !",
+    "DISABLE_SUCCESSFUL"    => "Le compte de l'utilisateur <strong>{{user_name}}</strong> a été désactivé avec succès.",
 
-    "ENABLE_SUCCESSFUL" => "Le compte de l'utilisateur '{{user_name}}' a été activé avec succès.",
+    "ENABLE_SUCCESSFUL" => "Le compte de l'utilisateur <strong>{{user_name}}</strong> a été activé avec succès.",
 
     "GROUP" => [
         1 => "Groupe",
         2 => "Groupes",
 
         "CREATE"        => "Créer un groupe",
+        "CREATION_SUCCESSFUL" => "Successfully created group <strong>{{name}}</strong>",
         "DELETE"            => "Supprimer le groupe",
-        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le groupe '{{name}}'?",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le groupe <strong>{{name}}</strong>?",
+        "DELETE_DEFAULT"    => "Vous ne pouvez pas supprimer le groupe <strong>{{name}}</strong> parce que c'est le groupe par défaut pour les utilisateurs nouvellement enregistrés.",
         "DELETE_YES"        => "Oui, supprimer le groupe",
+        "DELETION_SUCCESSFUL" => "Groupe <strong>{{name}}</strong> supprimé avec succès",
         "EDIT"          => "Modifier le groupe",
         "ICON"          => "Icône",
         "ICON_EXPLAIN"  => "Icône des membres du groupe",
         "INFO_PAGE"     => "Informations sur le groupe {{name}}",
         "NAME"          => "Nom du groupe",
         "NAME_EXPLAIN"  => "Spécifiez le nom du groupe",
+        "NOT_EMPTY"     => "Vous ne pouvez pas le faire car il y a encore des utilisateurs associés au groupe <strong>{{name}}</strong>.",
         "PAGE_DESCRIPTION" => "Une liste des groupes pour votre site. Fournit des outils de gestion pour éditer et supprimer des groupes.",
         "UPDATE"           => "Les détails du groupe <strong>{{name}}</strong> ont été enregistrés"
     ],
@@ -80,16 +86,22 @@ return [
 
         "ASSIGN_NEW"    => "Assigner un nouveau rôle",
         "CREATE"        => "Créer un rôle",
+        "CREATION_SUCCESSFUL" => "Rôle <strong>{{name}}</strong> créé avec succès",
         "DELETE"            => "Supprimer le rôle",
-        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le rôle '{{name}}'?",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer le rôle <strong>{{name}}</strong>?",
+        "DELETE_DEFAULT"    => "Vous ne pouvez pas supprimer le rôle <strong>{{name}}</strong> parce que c'est un rôle par défaut pour les utilisateurs nouvellement enregistrés.",
         "DELETE_YES"        => "Oui, supprimer le rôle",
+        "DELETION_SUCCESSFUL" => "Rôle <strong>{{name}}</strong> supprimé avec succès",
         "EDIT"          => "Modifier le rôle",
+        "HAS_USERS"     => "Vous ne pouvez pas le faire parce qu'il y a encore des utilisateurs qui ont le rôle <strong>{{name}}</strong>.",
         "INFO_PAGE"     => "Page d'information pour le rôle {{name}}",
         "MANAGE"        => "Gérer les rôles",
         "NAME"          => "Nom du rôle",
         "NAME_EXPLAIN"  => "Spécifiez le nom du rôle",
+        "NAME_IN_USE"   => "Un rôle nommé <strong>{{name}}</strong> existe déjà",
         "PAGE_DESCRIPTION"  => "Une liste des rôles de votre site. Fournit des outils de gestion pour modifier et supprimer des rôles.",
-        "UPDATED"       => "Mise à jour des rôles"
+        "PERMISSIONS_UPDATED" => "Autorisations mises à jour pour le rôle <strong>{{name}}</strong>",
+        "UPDATED"       => "Détails mis à jour pour le rôle <strong>{{name}}</strong>"
     ],
 
     "SYSTEM_INFO" => [
@@ -119,7 +131,7 @@ return [
         "CREATE"            => "Créer un utilisateur",
         "CREATED"           => "L'utilisateur <strong>{{user_name}}</strong> a été créé avec succès",
         "DELETE"            => "Supprimer l'utilisateur",
-        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer l'utilisateur '{{name}}'?",
+        "DELETE_CONFIRM"    => "Êtes-vous certain de vouloir supprimer l'utilisateur <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Oui, supprimer l'utilisateur",
         "DISABLE"           => "Désactiver l'utilisateur",
         "EDIT"              => "Modifier l'utilisateur",

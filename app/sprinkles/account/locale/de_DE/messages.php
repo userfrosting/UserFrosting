@@ -52,8 +52,8 @@ return [
     ],
 
     "EMAIL" => [
-        "INVALID"                       => "Es gibt kein Konto für '{{email}}'.",
-        "IN_USE"                        => "E-Mail '{{email}}' wird bereits verwendet."
+        "INVALID"                       => "Es gibt kein Konto für <strong>{{email}}</strong>.",
+        "IN_USE"                        => "E-Mail <strong>{{email}}</strong> wird bereits verwendet."
     ],
 
     "EMAIL_OR_USERNAME"                 => "Benutzername oder E-mail Adresse",
@@ -66,7 +66,7 @@ return [
 
     "LOCALE" => [
         "ACCOUNT"                       => "Die Sprache und das Gebietsschema für Ihr Konto",
-        "INVALID"                       => "'{{locale}}' ist kein gültiges Gebietsschema."
+        "INVALID"                       => "<strong>{{locale}}</strong> ist kein gültiges Gebietsschema."
     ],
 
     "LOGIN" => [
@@ -162,8 +162,8 @@ return [
 
         "CHOOSE"                        => "Wählen Sie einen eindeutigen Benutzernamen",
         "INVALID"                       => "Ungültiger Benutzername",
-        "IN_USE"                        => "Benutzername '{{user_name}}' wird bereits verwendet.",
-        "NOT_AVAILABLE"                 => "Benutzername '{{user_name}}' ist nicht verfügbar. Wähle einen anderen Namen, der klicken Sie auf 'vorschlagen'."
+        "IN_USE"                        => "Benutzername <strong>{{user_name}}</strong> wird bereits verwendet.",
+        "NOT_AVAILABLE"                 => "Benutzername <strong>{{user_name}}</strong> ist nicht verfügbar. Wähle einen anderen Namen, der klicken Sie auf 'vorschlagen'."
     ],
 
     "USER_ID_INVALID"                   => "Die angeforderte Benutzer-ID existiert nicht.",

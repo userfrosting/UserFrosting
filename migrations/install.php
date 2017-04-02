@@ -56,11 +56,7 @@
 
     // Test database connection directly using PDO
     try {
-        $dsn = "{$dbParams['driver']}:host={$dbParams['host']};dbname={$dbParams['database']}";
-        if (isset($dbParams['port'])) {
-            $dsn .= ";port={$dbParams['port']}";
-        }
-        $dbh = new \PDO($dsn, $dbParams['username'], $dbParams['password']);
+        Capsule::connection()->getPdo();
     } catch (\PDOException $e) {
         $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:" . PHP_EOL;
         $message .= "Exception: " . $e->getMessage() . PHP_EOL;
@@ -75,9 +71,10 @@
 
     echo PHP_EOL . "Welcome to the UserFrosting installation tool!" . PHP_EOL;
     echo "The detected operating system is '$detectedOS'." . PHP_EOL;
-    echo "Is this correct?  [Y/n]: ";
+    echo "Is this correct?  ([y]/n): ";
 
     $answer = trim(fgets(STDIN));
+    if(empty($answer)) { $answer = "y" ; }
 
     if (!in_array(strtolower($answer), array('yes', 'y'))) {
         // OS

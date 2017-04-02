@@ -84,12 +84,12 @@ class RoleController extends SimpleController
 
         // Check if name or slug already exists
         if ($classMapper->staticMethod('role', 'where', 'name', $data['name'])->first()) {
-            $ms->addMessageTranslated('danger', 'ROLE.NAME.IN_USE', $data);
+            $ms->addMessageTranslated('danger', 'ROLE.NAME_IN_USE', $data);
             $error = true;
         }
 
         if ($classMapper->staticMethod('role', 'where', 'slug', $data['slug'])->first()) {
-            $ms->addMessageTranslated('danger', 'ROLE.SLUG.IN_USE', $data);
+            $ms->addMessageTranslated('danger', 'SLUG_IN_USE', $data);
             $error = true;
         }
 
@@ -664,7 +664,7 @@ class RoleController extends SimpleController
             $data['name'] != $role->name &&
             $classMapper->staticMethod('role', 'where', 'name', $data['name'])->first()
         ) {
-            $ms->addMessageTranslated('danger', 'ROLE.NAME.IN_USE', $data);
+            $ms->addMessageTranslated('danger', 'ROLE.NAME_IN_USE', $data);
             $error = true;
         }
 
@@ -673,7 +673,7 @@ class RoleController extends SimpleController
             $data['slug'] != $role->slug &&
             $classMapper->staticMethod('role', 'where', 'slug', $data['slug'])->first()
         ) {
-            $ms->addMessageTranslated('danger', 'ROLE.SLUG.IN_USE', $data);
+            $ms->addMessageTranslated('danger', 'SLUG_IN_USE', $data);
             $error = true;
         }
 
