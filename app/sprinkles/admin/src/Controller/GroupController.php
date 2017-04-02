@@ -388,7 +388,7 @@ class GroupController extends SimpleController
                 'action' => "api/groups/g/{$group->slug}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'submit_text' => 'Update group'
+                'submit_text' => $translator->translate("UPDATE")
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
