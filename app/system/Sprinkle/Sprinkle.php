@@ -6,9 +6,11 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Core\Initialize;
+namespace UserFrosting\System\Sprinkle;
 
 use Interop\Container\ContainerInterface;
+use RocketTheme\Toolbox\Event\EventSubscriberInterface;
+use Slim\App;
 
 /**
  * Sprinkle class
@@ -17,12 +19,33 @@ use Interop\Container\ContainerInterface;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-abstract class Sprinkle
+class Sprinkle implements EventSubscriberInterface
 {
+    protected $app;
+
     /**
      * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
+
+    /**
+     * By default assign all methods as listeners using the default priority.
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        $methods = get_class_methods(get_called_class());
+
+        $list = [];
+        foreach ($methods as $method) {
+            if (strpos($method, 'on') === 0) {
+                $list[$method] = [$method, 0];
+            }
+        }
+
+        return $list;
+    }
 
     /**
      * Create a new Sprinkle object.
@@ -33,9 +56,4 @@ abstract class Sprinkle
     {
         $this->ci = $ci;
     }
-
-    /**
-     * Initialization function for the sprinkle.
-     */
-    public abstract function init();
 }

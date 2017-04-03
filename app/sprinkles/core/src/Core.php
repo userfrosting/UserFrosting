@@ -8,7 +8,8 @@
  */
 namespace UserFrosting\Sprinkle\Core;
 
-use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
+use RocketTheme\Toolbox\Event\Event;
+use UserFrosting\System\Sprinkle\Sprinkle;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 
@@ -22,12 +23,31 @@ class Core extends Sprinkle
     /**
      * Set static references to DI container in necessary classes.
      */
-    public function init()
+    public function onSprinklesInitialized()
     {
         // Set container for data model
         UFModel::$ci = $this->ci;
 
         // Set container for environment info class
         EnvironmentInfo::$ci = $this->ci;
+    }
+
+    public function onAddGlobalMiddleware(Event $event)
+    {
+        // Add CSRF middleware
+
+        // Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
+        // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
+        $request = $this->ci->request;
+        $path = $request->getUri()->getPath();
+
+        $csrfBlacklist = [
+            $this->ci->config['assets.raw.path']
+        ];
+
+        if (!$path || !starts_with($path, $csrfBlacklist)) {
+            $app = $event->getApp();
+            $app->add($this->ci->csrf);
+        }
     }
 }

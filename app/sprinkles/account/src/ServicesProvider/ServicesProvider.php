@@ -31,7 +31,7 @@ use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountServicesProvider
+class ServicesProvider
 {
     /**
      * Register UserFrosting's account services.

@@ -8,8 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Account;
 
-use UserFrosting\Sprinkle\Account\ServicesProvider\AccountServicesProvider;
-use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
+use UserFrosting\System\Sprinkle\Sprinkle;
 
 /**
  * Bootstrapper class for the 'account' sprinkle.
@@ -18,12 +17,5 @@ use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
  */
 class Account extends Sprinkle
 {
-    /**
-     * Register Account services.
-     */
-    public function init()
-    {
-        $serviceProvider = new AccountServicesProvider();
-        $serviceProvider->register($this->ci);
-    }
+
 }

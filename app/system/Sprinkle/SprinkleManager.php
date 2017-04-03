@@ -6,12 +6,12 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Core\Initialize;
+namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Core\Facades\Facade;
-use UserFrosting\Sprinkle\Core\ServicesProvider\CoreServicesProvider;
+use RocketTheme\Toolbox\Event\EventDispatcher;
+use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 
 /**
  * Sprinkle manager class.
@@ -21,9 +21,7 @@ use UserFrosting\Sprinkle\Core\ServicesProvider\CoreServicesProvider;
  */
 class SprinkleManager
 {
-    /**
-     * @var ContainerInterface The global container object, which holds all your services.
-     */
+
     protected $ci;
 
     /**
@@ -40,46 +38,95 @@ class SprinkleManager
      * Create a new SprinkleManager object.
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
-     * @param string[] $sprinkles An array of sprinkle names.
      */
-    public function __construct(ContainerInterface $ci, $sprinkles = [])
+    public function __construct(ContainerInterface $ci)
     {
-        $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
         $this->ci = $ci;
-        $this->setSprinkles($sprinkles);
+        $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
+    }
+
+    public function initFromSchema($schemaPath)
+    {
+        $baseSprinkleNames = $this->loadSchema($schemaPath);
+
+        foreach ($baseSprinkleNames as $sprinkleName) {
+            $sprinkle = $this->bootSprinkle($sprinkleName);
+
+            if ($sprinkle) {
+                // Subscribe the sprinkle to the event dispatcher
+                $this->ci->eventDispatcher->addSubscriber($sprinkle);
+            }
+
+            $this->sprinkles[$sprinkleName] = $sprinkle;
+        }
+    }
+
+    protected function loadSchema($schemaPath)
+    {
+        $sprinklesFile = file_get_contents($schemaPath);
+    
+        if ($sprinklesFile === false) {
+            ob_clean();
+            $title = "UserFrosting Application Error";
+            $errorMessage = "Unable to start site. Contact owner.<br/><br/>" .
+                "Version: UserFrosting ".UserFrosting\VERSION."<br/>Error: Unable to determine Sprinkle load order.";
+            $output = sprintf(
+                "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
+                "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
+                "sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{" .
+                "display:inline-block;width:65px;}</style></head><body><h1>%s</h1>%s</body></html>",
+                $title,
+                $title,
+                $errorMessage
+            );
+            exit($output);
+        }
+
+        return json_decode($sprinklesFile)->base;
     }
 
     /**
-     * Initialize the application.  Register core services and resources and load all sprinkles.
+     * Takes the name of a Sprinkle, and creates an instance of the initializer object (if defined).
+     *
+     * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
+     * Otherwise, returns null.
+     * @param $name The name of the Sprinkle to initialize.
      */
-    public function init()
+    public function bootSprinkle($name)
     {
-        // Set up facade reference to container.
-        Facade::setFacadeContainer($this->ci);
+        $className = Str::studly($name);
+        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
 
-        // Register core services
-        $serviceProvider = new CoreServicesProvider();
-        $serviceProvider->register($this->ci);
-
-        // Register core resources
-        $this->addSprinkleResources('core');
-
-        // Initialize the core sprinkle
-        $sprinkle = $this->initializeSprinkle('core');
-
-        // For each sprinkle (other than Core), register its resources and then run its initializer
-        foreach ($this->sprinkles as $name) {
-            $this->addSprinkleResources($name);
-
-            // Initialize the sprinkle
-            $sprinkle = $this->initializeSprinkle($name);
+        // Check that class exists.  If not, set to null
+        if (class_exists($fullClassName)) {
+            $sprinkle = new $fullClassName($this->ci);
+            return $sprinkle;
+        } else {
+            return null;
         }
+    }
 
-        // Set the configuration settings for Slim in the 'settings' service
-        $this->ci->settings = $this->ci->config['settings'];
+    public function registerAllServices()
+    {
+        foreach ($this->getSprinkleNames() as $sprinkleName) {
+            $this->registerServices($sprinkleName);
+        }
+    }
 
-        // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
-        $this->ci->shutdownHandler;
+    /**
+     * Register services for a specified Sprinkle.
+     */
+    public function registerServices($name)
+    {
+        $className = Str::studly($name);
+        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\ServicesProvider\\ServicesProvider";
+
+        // Check that class exists, and register services
+        if (class_exists($fullClassName)) {
+            // Register core services
+            $serviceProvider = new $fullClassName();
+            $serviceProvider->register($this->ci);
+        }
     }
 
     /**
@@ -188,17 +235,20 @@ class SprinkleManager
     }
 
     /**
-     * Register resource streams for a specified sprinkle.
+     * Register resource streams for all base sprinkles.
      */
-    public function addSprinkleResources($name)
+    public function addResources()
     {
-        $this->addConfig($name);
-        $this->addAssets($name);
-        $this->addExtras($name);
-        $this->addLocale($name);
-        $this->addRoutes($name);
-        $this->addSchema($name);
-        $this->addTemplates($name);
+        // For each sprinkle (other than Core), register its resources and then run its initializer
+        foreach ($this->sprinkles as $sprinkleName => $sprinkle) {
+            $this->addConfig($sprinkleName);
+            $this->addAssets($sprinkleName);
+            $this->addExtras($sprinkleName);
+            $this->addLocale($sprinkleName);
+            $this->addRoutes($sprinkleName);
+            $this->addSchema($sprinkleName);
+            $this->addTemplates($sprinkleName);
+        }
 
         /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
            Not sure if we need this.
@@ -244,26 +294,9 @@ class SprinkleManager
         return $this->sprinkles;
     }
 
-    /**
-     * Takes the name of a Sprinkle, and creates an instance of the initializer object (if defined).
-     *
-     * Creates an object of a subclass of UserFrosting\Sprinkle\Core\Initialize\Sprinkle if defined for the sprinkle (converting to StudlyCase).
-     * Otherwise, returns null.
-     * @param $name The name of the Sprinkle to initialize.
-     */
-    public function initializeSprinkle($name)
+    public function getSprinkleNames()
     {
-        $className = Str::studly($name);
-        $fullClassName = "\\UserFrosting\\Sprinkle\\$className\\$className";
-
-        // Check that class exists.  If not, set to null
-        if (class_exists($fullClassName)) {
-            $sprinkle = new $fullClassName($this->ci);
-            $sprinkle->init();
-            return $sprinkle;
-        } else {
-            return null;
-        }
+        return array_keys($this->sprinkles);
     }
 
     /**

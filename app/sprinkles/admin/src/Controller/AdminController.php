@@ -69,10 +69,7 @@ class AdminController extends SimpleController
             $sprinkles = array();
 
             // Get the sprinkles list
-            $sprinklesList = $this->ci->sprinkleManager->getSprinkles();
-
-            // Manually prepend the core sprinkle
-            array_unshift($sprinklesList , 'core');
+            $sprinklesList = $this->ci->sprinkleManager->getSprinkleNames();
 
             // Get the data from the version table
             $versions = Version::all();

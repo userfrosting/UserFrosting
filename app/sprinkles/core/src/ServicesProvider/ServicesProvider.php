@@ -57,7 +57,7 @@ use UserFrosting\Support\Exception\BadRequestException;
  * Registers core services for UserFrosting, such as config, database, asset manager, translator, etc.
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class CoreServicesProvider
+class ServicesProvider
 {
     /**
      * Register UserFrosting's core services.
@@ -109,7 +109,7 @@ class CoreServicesProvider
                 $as->loadRawSchemaFile($locator->findResource("sprinkles://core/" . $config['assets.raw.schema'], true, true));
 
                 // Extend for loaded sprinkles
-                $sprinkles = $c->sprinkleManager->getSprinkles();
+                $sprinkles = $c->sprinkleManager->getSprinkleNames();
                 foreach ($sprinkles as $sprinkle) {
                     $resource = $locator->findResource("sprinkles://$sprinkle/" . $config['assets.raw.schema'], true, true);
                     if (file_exists($resource)) {
@@ -352,42 +352,6 @@ class CoreServicesProvider
         };
 
         /**
-         * Path/file locator service.
-         *
-         * Register custom streams for the application, and add paths for app-level streams.
-         */
-        $container['locator'] = function ($c) {
-
-            $locator = new UniformResourceLocator(\UserFrosting\ROOT_DIR);
-
-            $locator->addPath('build', '', \UserFrosting\BUILD_DIR_NAME);
-            $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);
-            $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
-            $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
-            $locator->addPath('sprinkles', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME);
-
-            // Use locator to initialize streams
-            ReadOnlyStream::setLocator($locator);
-
-            $sb = new StreamBuilder([
-                'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'extra' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
-            ]);
-
-            return $locator;
-        };
-
-        /**
          * Mail service.
          */
         $container['mailer'] = function ($c) {
@@ -560,7 +524,7 @@ class CoreServicesProvider
 
             $loader = $view->getLoader();
 
-            $sprinkles = $c->sprinkleManager->getSprinkles();
+            $sprinkles = $c->sprinkleManager->getSprinkleNames();
             $sprinkles[] = 'core';
 
             // Add other Sprinkles' templates namespaces

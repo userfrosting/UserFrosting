@@ -30,8 +30,10 @@
     "prefer-stable": true,
     "autoload": {
         "files" : [
-            "defines.php",
-            "helpers.php"
-        ]
+            "defines.php"
+        ],
+        "psr-4": {
+            "UserFrosting\\System\\": "system/"
+        }
     }
 }
