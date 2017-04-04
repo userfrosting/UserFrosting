@@ -25,7 +25,7 @@
 
     // Create new UserFrosting object, which will set up our DI container and boot up Sprinkles
     $uf = new UserFrosting();
-    $uf->setupSprinkles(true);
+    $uf->setupSprinkles(false);
 
     $container = $uf->getContainer();
 

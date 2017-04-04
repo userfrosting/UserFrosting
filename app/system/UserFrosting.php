@@ -160,7 +160,6 @@ class UserFrosting
 
     protected function renderSprinkleErrorCli($errorMessage = "")
     {
-        ob_clean();
-        exit($errorMessage);
+        exit($errorMessage . PHP_EOL);
     }
 }
