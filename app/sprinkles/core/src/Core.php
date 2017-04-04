@@ -20,17 +20,6 @@ use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
  */
 class Core extends Sprinkle
 {
-    /**
-     * Set static references to DI container in necessary classes.
-     */
-    public function onSprinklesInitialized()
-    {
-        // Set container for data model
-        UFModel::$ci = $this->ci;
-
-        // Set container for environment info class
-        EnvironmentInfo::$ci = $this->ci;
-    }
 
     public function onAddGlobalMiddleware(Event $event)
     {
@@ -49,5 +38,23 @@ class Core extends Sprinkle
             $app = $event->getApp();
             $app->add($this->ci->csrf);
         }
+    }
+
+    /**
+     * Set static references to DI container in necessary classes.
+     */
+    public function onSprinklesInitialized()
+    {
+        // Set container for data model
+        UFModel::$ci = $this->ci;
+
+        // Set container for environment info class
+        EnvironmentInfo::$ci = $this->ci;
+    }
+
+    public function onSprinklesRegisterServices()
+    {
+        // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
+        $this->ci->shutdownHandler;
     }
 }

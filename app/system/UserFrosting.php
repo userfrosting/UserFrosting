@@ -12,8 +12,8 @@ use RocketTheme\Toolbox\Event\EventDispatcher;
 use RocketTheme\Toolbox\Event\Event;
 use Slim\App;
 use Slim\Container;
-use UserFrosting\Sprinkle\Core\Facades\Facade;
 use UserFrosting\Support\Exception\FileNotFoundException;
+use UserFrosting\System\Facade;
 
 class UserFrosting
 {
@@ -27,6 +27,9 @@ class UserFrosting
      */
     protected $app;
 
+    /**
+     * Create the UserFrosting application instance.
+     */
     public function __construct()
     {
         // First, we create our DI container
@@ -50,6 +53,11 @@ class UserFrosting
         $eventDispatcher = $this->ci->eventDispatcher;
         
         return $eventDispatcher->dispatch($eventName, $event);
+    }
+
+    public function getContainer()
+    {
+        return $this->ci;
     }
 
     /**
@@ -77,37 +85,10 @@ class UserFrosting
      */
     public function run()
     {
-        // Register system services
-        $serviceProvider = new ServicesProvider();
-        $serviceProvider->register($this->ci);
-
-        // Expected path to `sprinkles.json`
-        $schemaPath = \UserFrosting\APP_DIR . '/' . \UserFrosting\SPRINKLES_DIR_NAME . '/sprinkles.json';
-
-        // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
-        $sprinkleManager = $this->ci->sprinkleManager;
-
-        try {
-            $sprinkleManager->initFromSchema($schemaPath);
-        } catch (FileNotFoundException $e) {
-            $this->renderSprinkleErrorPage($e->getMessage());
-        }
-
-        $this->fireEvent('onSprinklesInitialized');
-
-        // Add Sprinkle resources (assets, templates, etc) to locator
-        $sprinkleManager->addResources();
-        $this->fireEvent('onSprinklesAddResources');
-
-        // Register Sprinkle services
-        $sprinkleManager->registerAllServices();
-        $this->fireEvent('onSprinklesRegisterServices');
+        $this->setupSprinkles();
 
         // Set the configuration settings for Slim in the 'settings' service
         $this->ci->settings = $this->ci->config['settings'];
-
-        // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
-        $this->ci->shutdownHandler;
 
         // Next, we'll instantiate the Slim application.  Note that the application is required for the SprinkleManager to set up routes.
         $this->app = new App($this->ci);
@@ -123,6 +104,39 @@ class UserFrosting
         $this->fireEvent('onAddGlobalMiddleware', $slimAppEvent);
 
         $this->app->run();
+    }
+
+    public function setupSprinkles($isWeb = true)
+    {
+        // Register system services
+        $serviceProvider = new ServicesProvider();
+        $serviceProvider->register($this->ci);
+
+        // Expected path to `sprinkles.json`
+        $schemaPath = \UserFrosting\APP_DIR . '/' . \UserFrosting\SPRINKLES_DIR_NAME . '/sprinkles.json';
+
+        // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
+        $sprinkleManager = $this->ci->sprinkleManager;
+
+        try {
+            $sprinkleManager->initFromSchema($schemaPath);
+        } catch (FileNotFoundException $e) {
+            if ($isWeb) {
+                $this->renderSprinkleErrorPage($e->getMessage());
+            } else {
+                $this->renderSprinkleErrorCli($e->getMessage());
+            }
+        }
+
+        $this->fireEvent('onSprinklesInitialized');
+
+        // Add Sprinkle resources (assets, templates, etc) to locator
+        $sprinkleManager->addResources();
+        $this->fireEvent('onSprinklesAddResources');
+
+        // Register Sprinkle services
+        $sprinkleManager->registerAllServices();
+        $this->fireEvent('onSprinklesRegisterServices');
     }
 
     protected function renderSprinkleErrorPage($errorMessage = "")
@@ -142,5 +156,11 @@ class UserFrosting
             $errorMessage
         );
         exit($output);
+    }
+
+    protected function renderSprinkleErrorCli($errorMessage = "")
+    {
+        ob_clean();
+        exit($errorMessage);
     }
 }

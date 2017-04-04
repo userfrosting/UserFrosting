@@ -56,7 +56,7 @@ class ServicesProvider
             }
 
             if ($authenticator->check()) {
-                $c->sprinkleManager->addAssets($currentUser->theme);
+                $c->sprinkleManager->addResource('assets', $currentUser->theme);
             }
 
             return $assets;
@@ -108,7 +108,7 @@ class ServicesProvider
             }
 
             if ($authenticator->check()) {
-                $themePath = $c->sprinkleManager->addLocale($currentUser->theme);
+                $themePath = $c->sprinkleManager->addResource('locale', $currentUser->theme);
                 if ($themePath) {
                     // Add paths to locale files for user theme
                     $translator->addPath($themePath);
@@ -143,7 +143,7 @@ class ServicesProvider
 
             if ($authenticator->check()) {
                 $theme = $currentUser->theme;
-                $themePath = $c->sprinkleManager->addTemplates($theme);
+                $themePath = $c->sprinkleManager->addResource('templates', $theme);
                 if ($themePath) {
                     $loader = $twig->getLoader();
                     $loader->prependPath($themePath);
