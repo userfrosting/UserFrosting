@@ -24,13 +24,15 @@ use UserFrosting\System\Sprinkle\SprinkleManager;
 class ServicesProvider
 {
     /**
-     * Register UserFrosting's core services.
+     * Register UserFrosting's system services.
      *
      * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
      */
     public function register(ContainerInterface $container)
     {
-        // Set up the event dispatcher
+        /**
+         * Set up the event dispatcher, required by Sprinkles to hook into the UF lifecycle.
+         */
         $container['eventDispatcher'] = function ($c) {
             return new EventDispatcher();
         };
@@ -71,7 +73,9 @@ class ServicesProvider
             return $locator;
         };
 
-        // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
+        /**
+         * Set up sprinkle manager service.
+         */
         $container['sprinkleManager'] = function ($c) {
             $sprinkleManager = new SprinkleManager($c);
             return $sprinkleManager;

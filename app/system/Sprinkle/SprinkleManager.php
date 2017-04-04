@@ -17,7 +17,8 @@ use UserFrosting\Support\Exception\FileNotFoundException;
 /**
  * Sprinkle manager class.
  *
- * Loads a series of sprinkles, running their bootstrapping code and including their routes.
+ * Manages a collection of loaded Sprinkles for the application.
+ * Handles Sprinkle class creation, event subscription, services registration, and resource stream registration.
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class SprinkleManager
@@ -78,6 +79,11 @@ class SprinkleManager
         $this->ci->locator->addPath($resourceName, '', $fullPath);
 
         return $this->ci->locator->findResource("$resourceName://", true, false);
+
+        /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
+           Not sure if we need this.
+           $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
+         */
     }
 
     /**
@@ -95,11 +101,6 @@ class SprinkleManager
             $this->addResource('schema', $sprinkleName);
             $this->addResource('templates', $sprinkleName);
         }
-
-        /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
-           Not sure if we need this.
-           $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
-         */
     }
 
     /**
@@ -124,16 +125,6 @@ class SprinkleManager
     }
 
     /**
-     * Returns a list of available sprinkles.
-     *
-     * @return Sprinkle[]
-     */
-    public function getSprinkles()
-    {
-        return $this->sprinkles;
-    }
-
-    /**
      * Returns a list of available sprinkle names.
      *
      * @return string[]
@@ -144,14 +135,13 @@ class SprinkleManager
     }
 
     /**
-     * Return if a Sprinkle is available
-     * Can be used by other Sprinkles to test if their dependencies are met
+     * Returns a list of available sprinkles.
      *
-     * @param $name The name of the Sprinkle
+     * @return Sprinkle[]
      */
-    public function isAvailable($name)
+    public function getSprinkles()
     {
-        return in_array($name, $this->getSprinkleNames());
+        return $this->sprinkles;
     }
 
     /**
@@ -186,6 +176,28 @@ class SprinkleManager
     }
 
     /**
+     * Return if a Sprinkle is available
+     * Can be used by other Sprinkles to test if their dependencies are met
+     *
+     * @param $name The name of the Sprinkle
+     */
+    public function isAvailable($name)
+    {
+        return in_array($name, $this->getSprinkleNames());
+    }
+
+
+    /**
+     * Interate through the list of loaded Sprinkles, and invoke their ServiceProvider classes.
+     */
+    public function registerAllServices()
+    {
+        foreach ($this->getSprinkleNames() as $sprinkleName) {
+            $this->registerServices($sprinkleName);
+        }
+    }
+
+    /**
      * Register services for a specified Sprinkle.
      */
     public function registerServices($name)
@@ -202,37 +214,17 @@ class SprinkleManager
     }
 
     /**
-     * Interate through the list of loaded Sprinkles, and invoke their ServiceProvider classes.
-     */
-    public function registerAllServices()
-    {
-        foreach ($this->getSprinkleNames() as $sprinkleName) {
-            $this->registerServices($sprinkleName);
-        }
-    }
-
-    /**
-     * Sets the list of sprinkles.
-     *
-     * @param Sprinkle[] $sprinkles An array of Sprinkle classes.
-     */
-    public function setSprinkles($sprinkles)
-    {
-        $this->sprinkles = $sprinkles;
-        return $this;
-    }
-
-    /**
      * Load list of Sprinkles from a JSON schema file (e.g. sprinkles.json).
      *
      * @param string $schemaPath
+     * @return string[]
      */
     protected function loadSchema($schemaPath)
     {
         $sprinklesFile = file_get_contents($schemaPath);
 
         if ($sprinklesFile === false) {
-            $errorMessage = "Error: Unable to determine Sprinkle load order.  File 'app/sprinkles/sprinkles.json' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
+            $errorMessage = "Error: Unable to determine Sprinkle load order.  File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
             throw new FileNotFoundException($errorMessage);
         }
 

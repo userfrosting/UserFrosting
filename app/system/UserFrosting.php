@@ -18,7 +18,7 @@ use UserFrosting\System\Facade;
 class UserFrosting
 {
     /**
-     * @var ContainerInterface The global container object, which holds all your services.
+     * @var Container The global container object, which holds all your services.
      */
     protected $ci;
 
@@ -51,10 +51,25 @@ class UserFrosting
     {
         /** @var EventDispatcher $events */
         $eventDispatcher = $this->ci->eventDispatcher;
-        
+
         return $eventDispatcher->dispatch($eventName, $event);
     }
 
+    /**
+     * Return the underlying Slim App instance, if available.
+     *
+     * @return Slim\App
+     */
+    public function getApp()
+    {
+        return $this->app;
+    }
+
+    /**
+     * Return the DI container.
+     *
+     * @return Slim\Container
+     */
     public function getContainer()
     {
         return $this->ci;
@@ -81,7 +96,7 @@ class UserFrosting
     }
 
     /**
-     * Initialize the application.  Register core services and resources and load all sprinkles.
+     * Initialize the application.  Set up Sprinkles and the Slim app, define routes, register global middleware, and run Slim.
      */
     public function run()
     {
@@ -106,6 +121,11 @@ class UserFrosting
         $this->app->run();
     }
 
+    /**
+     * Register system services, load all sprinkles, and add their resources and services.
+     *
+     * @param bool $isWeb Set to true if setting up in an HTTP/web environment, false if setting up for CLI scripts.
+     */
     public function setupSprinkles($isWeb = true)
     {
         // Register system services
@@ -139,6 +159,9 @@ class UserFrosting
         $this->fireEvent('onSprinklesRegisterServices');
     }
 
+    /**
+     * Render a basic error page for problems with loading Sprinkles.
+     */
     protected function renderSprinkleErrorPage($errorMessage = "")
     {
         ob_clean();
@@ -158,6 +181,9 @@ class UserFrosting
         exit($output);
     }
 
+    /**
+     * Render a CLI error message for problems with loading Sprinkles.
+     */
     protected function renderSprinkleErrorCli($errorMessage = "")
     {
         exit($errorMessage . PHP_EOL);

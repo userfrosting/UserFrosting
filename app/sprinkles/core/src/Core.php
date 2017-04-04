@@ -20,11 +20,23 @@ use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
  */
 class Core extends Sprinkle
 {
+    /**
+     * Defines which events in the UF lifecycle our Sprinkle should hook into.
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            'onAddGlobalMiddleware' => ['onAddGlobalMiddleware', 0],
+            'onSprinklesInitialized' => ['onSprinklesInitialized', 0],
+            'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0]
+        ];
+    }
 
+    /**
+     * Add CSRF middleware.
+     */
     public function onAddGlobalMiddleware(Event $event)
     {
-        // Add CSRF middleware
-
         // Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
         // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
         $request = $this->ci->request;
@@ -52,9 +64,11 @@ class Core extends Sprinkle
         EnvironmentInfo::$ci = $this->ci;
     }
 
+    /**
+     * Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
+     */
     public function onSprinklesRegisterServices()
     {
-        // Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
         $this->ci->shutdownHandler;
     }
 }
