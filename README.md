@@ -1,4 +1,4 @@
-# UserFrosting 4.0
+# UserFrosting 4.1
 
 [http://www.userfrosting.com](http://www.userfrosting.com)
 

@@ -9,8 +9,9 @@
     use Illuminate\Database\Schema\Blueprint;
     use Slim\Container;
     use Slim\Http\Uri;
-    use UserFrosting\Sprinkle\Core\Initialize\SprinkleManager;
     use UserFrosting\Sprinkle\Core\Model\Version;
+    use UserFrosting\System\Sprinkle\SprinkleManager;
+    use UserFrosting\System\UserFrosting;
 
     if (!defined('STDIN')) {
         die('This program must be run from the command line.');
@@ -18,32 +19,23 @@
 
     // 1° Pre-flight check and bootup
     // Check php version
-    if (version_compare(phpversion(), UserFrosting\PHP_MIN_VERSION, "<")) {
-        die('UserFrosting requires PHP version '.UserFrosting\PHP_MIN_VERSION.' or up.');
+    if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, "<")) {
+        die('UserFrosting requires PHP version '. \UserFrosting\PHP_MIN_VERSION.' or up.');
     }
 
-    // First, we create our DI container
-    $container = new Container;
+    // Create new UserFrosting object, which will set up our DI container and boot up Sprinkles
+    $uf = new UserFrosting();
+    $uf->setupSprinkles(false);
 
-    // Attempt to fetch list of Sprinkles
-    $sprinklesFile = file_get_contents(UserFrosting\ROOT_DIR . '/sprinkles.json');
-    if ($sprinklesFile === false) {
-        die(PHP_EOL . "File 'sprinkles.json' not found. Please create a 'sprinkles.json' file and try again." . PHP_EOL);
-    }
-    $sprinkles = json_decode($sprinklesFile)->base;
-
-    // Set up sprinkle manager service and list our Sprinkles.  Core sprinkle does not need to be explicitly listed.
-    $container['sprinkleManager'] = function ($c) use ($sprinkles) {
-        return new SprinkleManager($c, $sprinkles);
-    };
-
-    // Now, run the sprinkle manager to boot up all our sprinkles
-    $container->sprinkleManager->init();
+    $container = $uf->getContainer();
 
     $container->config['settings.displayErrorDetails'] = false;
 
     // Get config
     $config = $container->config;
+
+    // Get loaded sprinkles
+    $sprinkles = $container->sprinkleManager->getSprinkleNames();
 
     // Boot db
     $container->db;
@@ -114,9 +106,6 @@
 
     // 4° Migrate each sprinkles
     echo PHP_EOL . "Migrating Sprinkle's:" . PHP_EOL;
-
-    // Add 'core'' to beginning sprinkles list for migration
-    array_unshift($sprinkles, 'core');
 
     // Looping throught every sprinkle and running their migration
     foreach ($sprinkles as $sprinkle) {

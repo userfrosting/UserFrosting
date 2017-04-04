@@ -3,6 +3,7 @@
 
     },
     "base": [
+        "core",
         "account",
         "admin"
     ]

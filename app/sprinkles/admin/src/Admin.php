@@ -8,8 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Admin;
 
-use UserFrosting\Sprinkle\Admin\ServicesProvider\AdminServicesProvider;
-use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
+use UserFrosting\System\Sprinkle\Sprinkle;
 
 /**
  * Bootstrapper class for the 'admin' sprinkle.
@@ -18,12 +17,5 @@ use UserFrosting\Sprinkle\Core\Initialize\Sprinkle;
  */
 class Admin extends Sprinkle
 {
-    /**
-     * Register Admin services.
-     */
-    public function init()
-    {
-        $serviceProvider = new AdminServicesProvider();
-        $serviceProvider->register($this->ci);
-    }
+
 }

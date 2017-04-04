@@ -1,6 +1,15 @@
 # Change Log
 
 ## v4.1.x-dev
+- Move composer.json to root directory to allow installing UF via composer create-project
+- Move sprinkles.json to app directory to make it easier to find
+- Factor out "system" classes from core Sprinkle
+- Refactor overall application lifecycle; move main lifecycle into UserFrosting\System\UserFrosting
+- SprinkleManager now better focused on a single responsibility
+- Sprinkle initializer classes now use events to hook into application lifecycle
+- Support for allowing Sprinkles to register middleware (#617)
+- Automatically load Sprinkler service providers (see #636)
+- Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
 
 ## v4.0.14-Alpha
 - Fix ajax.delay in ufCollection

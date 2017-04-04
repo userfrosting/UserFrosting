@@ -11,7 +11,7 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.0.0",
+    "version": "4.1.0",
     "config": {
         "vendor-dir": "app/vendor"
     },
@@ -28,7 +28,7 @@
     "extra": {
         "merge-plugin": {
             "include": [
-                "sprinkles.json",
+                "app/sprinkles.json",
                 "app/sprinkles/*/composer.json"
             ],
             "recurse": true,
@@ -41,8 +41,10 @@
     "prefer-stable": true,
     "autoload": {
         "files" : [
-            "app/defines.php",
-            "app/helpers.php"
-        ]
+            "app/defines.php"
+        ],
+        "psr-4": {
+            "UserFrosting\\System\\": "app/system/"
+        }
     }
 }

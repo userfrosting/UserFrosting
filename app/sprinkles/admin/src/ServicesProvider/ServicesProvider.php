@@ -17,7 +17,7 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AdminServicesProvider
+class ServicesProvider
 {
     /**
      * Register UserFrosting's admin services.
