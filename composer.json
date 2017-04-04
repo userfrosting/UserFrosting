@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/lcharette/installers.git"
+            "url": "https://github.com/userfrosting/installers.git"
         }
     ],
     "require": {
