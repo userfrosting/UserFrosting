@@ -48,22 +48,6 @@ class SprinkleManager
         $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
     }
 
-    public function initFromSchema($schemaPath)
-    {
-        $baseSprinkleNames = $this->loadSchema($schemaPath);
-
-        foreach ($baseSprinkleNames as $sprinkleName) {
-            $sprinkle = $this->bootSprinkle($sprinkleName);
-
-            if ($sprinkle) {
-                // Subscribe the sprinkle to the event dispatcher
-                $this->ci->eventDispatcher->addSubscriber($sprinkle);
-            }
-
-            $this->sprinkles[$sprinkleName] = $sprinkle;
-        }
-    }
-
     /**
      * Takes the name of a Sprinkle, and creates an instance of the initializer object (if defined).
      *
@@ -82,6 +66,22 @@ class SprinkleManager
             return $sprinkle;
         } else {
             return null;
+        }
+    }
+
+    public function initFromSchema($schemaPath)
+    {
+        $baseSprinkleNames = $this->loadSchema($schemaPath);
+
+        foreach ($baseSprinkleNames as $sprinkleName) {
+            $sprinkle = $this->bootSprinkle($sprinkleName);
+
+            if ($sprinkle) {
+                // Subscribe the sprinkle to the event dispatcher
+                $this->ci->eventDispatcher->addSubscriber($sprinkle);
+            }
+
+            $this->sprinkles[$sprinkleName] = $sprinkle;
         }
     }
 

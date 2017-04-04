@@ -106,9 +106,8 @@ class ServicesProvider
                 $aub = new AssetUrlBuilder($locator, $baseUrl, $removePrefix, 'assets');
 
                 $as = new AssetBundleSchema($aub);
-                $as->loadRawSchemaFile($locator->findResource("sprinkles://core/" . $config['assets.raw.schema'], true, true));
 
-                // Extend for loaded sprinkles
+                // Load Sprinkle assets
                 $sprinkles = $c->sprinkleManager->getSprinkleNames();
                 foreach ($sprinkles as $sprinkle) {
                     $resource = $locator->findResource("sprinkles://$sprinkle/" . $config['assets.raw.schema'], true, true);
@@ -525,9 +524,8 @@ class ServicesProvider
             $loader = $view->getLoader();
 
             $sprinkles = $c->sprinkleManager->getSprinkleNames();
-            $sprinkles[] = 'core';
 
-            // Add other Sprinkles' templates namespaces
+            // Add Sprinkles' templates namespaces
             foreach ($sprinkles as $sprinkle) {
                 if ($path = $c->locator->findResource('sprinkles://'.$sprinkle.'/templates/', true, false)) {
                     $loader->addPath($path, $sprinkle);

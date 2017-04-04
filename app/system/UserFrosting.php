@@ -17,8 +17,14 @@ use UserFrosting\Support\Exception\FileNotFoundException;
 
 class UserFrosting
 {
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $ci;
 
+    /**
+     * @var App The Slim application instance.
+     */
     protected $app;
 
     public function __construct()
@@ -28,6 +34,42 @@ class UserFrosting
 
         // Set up facade reference to container.
         Facade::setFacadeContainer($this->ci);
+    }
+
+    /**
+     * Fires an event with optional parameters.
+     *
+     * @param  string $eventName
+     * @param  Event  $event
+     *
+     * @return Event
+     */
+    public function fireEvent($eventName, Event $event = null)
+    {
+        /** @var EventDispatcher $events */
+        $eventDispatcher = $this->ci->eventDispatcher;
+        
+        return $eventDispatcher->dispatch($eventName, $event);
+    }
+
+    /**
+     * Include all defined routes in route stream.
+     *
+     * Include them in reverse order to allow higher priority routes to override lower priority.
+     */
+    public function loadRoutes()
+    {
+        // Since routes aren't encapsulated in a class yet, we need this workaround :(
+        global $app;
+        $app = $this->app;
+
+        $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
+        foreach ($routePaths as $path) {
+            $routeFiles = glob($path . '/*.php');
+            foreach ($routeFiles as $routeFile) {
+                require_once $routeFile;
+            }
+        }
     }
 
     /**
@@ -81,42 +123,6 @@ class UserFrosting
         $this->fireEvent('onAddGlobalMiddleware', $slimAppEvent);
 
         $this->app->run();
-    }
-
-    /**
-     * Fires an event with optional parameters.
-     *
-     * @param  string $eventName
-     * @param  Event  $event
-     *
-     * @return Event
-     */
-    public function fireEvent($eventName, Event $event = null)
-    {
-        /** @var EventDispatcher $events */
-        $eventDispatcher = $this->ci->eventDispatcher;
-        
-        return $eventDispatcher->dispatch($eventName, $event);
-    }
-
-    /**
-     * Include all defined routes in route stream.
-     *
-     * Include them in reverse order to allow higher priority routes to override lower priority.
-     */
-    public function loadRoutes()
-    {
-        // Since routes aren't encapsulated in a class yet, we need this workaround :(
-        global $app;
-        $app = $this->app;
-
-        $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
-        foreach ($routePaths as $path) {
-            $routeFiles = glob($path . '/*.php');
-            foreach ($routeFiles as $routeFile) {
-                require_once $routeFile;
-            }
-        }
     }
 
     protected function renderSprinkleErrorPage($errorMessage = "")
