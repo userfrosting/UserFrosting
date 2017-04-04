@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventDispatcher;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
+use UserFrosting\Support\Exception\FileNotFoundException;
 
 /**
  * Sprinkle manager class.
@@ -63,30 +64,6 @@ class SprinkleManager
         }
     }
 
-    protected function loadSchema($schemaPath)
-    {
-        $sprinklesFile = file_get_contents($schemaPath);
-    
-        if ($sprinklesFile === false) {
-            ob_clean();
-            $title = "UserFrosting Application Error";
-            $errorMessage = "Unable to start site. Contact owner.<br/><br/>" .
-                "Version: UserFrosting ".UserFrosting\VERSION."<br/>Error: Unable to determine Sprinkle load order.";
-            $output = sprintf(
-                "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-                "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
-                "sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{" .
-                "display:inline-block;width:65px;}</style></head><body><h1>%s</h1>%s</body></html>",
-                $title,
-                $title,
-                $errorMessage
-            );
-            exit($output);
-        }
-
-        return json_decode($sprinklesFile)->base;
-    }
-
     /**
      * Takes the name of a Sprinkle, and creates an instance of the initializer object (if defined).
      *
@@ -108,13 +85,6 @@ class SprinkleManager
         }
     }
 
-    public function registerAllServices()
-    {
-        foreach ($this->getSprinkleNames() as $sprinkleName) {
-            $this->registerServices($sprinkleName);
-        }
-    }
-
     /**
      * Register services for a specified Sprinkle.
      */
@@ -128,6 +98,13 @@ class SprinkleManager
             // Register core services
             $serviceProvider = new $fullClassName();
             $serviceProvider->register($this->ci);
+        }
+    }
+
+    public function registerAllServices()
+    {
+        foreach ($this->getSprinkleNames() as $sprinkleName) {
+            $this->registerServices($sprinkleName);
         }
     }
 
@@ -298,5 +275,22 @@ class SprinkleManager
     public function isAvailable($name)
     {
         return in_array($name, $this->getSprinkleNames());
+    }
+
+    /**
+     * Load list of Sprinkles from a JSON schema file (e.g. sprinkles.json).
+     *
+     *
+     */
+    protected function loadSchema($schemaPath)
+    {
+        $sprinklesFile = file_get_contents($schemaPath);
+    
+        if ($sprinklesFile === false) {
+            $errorMessage = "Error: Unable to determine Sprinkle load order.";
+            throw new FileNotFoundException($errorMessage);
+        }
+
+        return json_decode($sprinklesFile)->base;
     }
 }

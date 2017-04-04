@@ -13,6 +13,7 @@ use RocketTheme\Toolbox\Event\Event;
 use Slim\App;
 use Slim\Container;
 use UserFrosting\Sprinkle\Core\Facades\Facade;
+use UserFrosting\Support\Exception\FileNotFoundException;
 
 class UserFrosting
 {
@@ -43,7 +44,13 @@ class UserFrosting
 
         // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
         $sprinkleManager = $this->ci->sprinkleManager;
-        $sprinkleManager->initFromSchema($schemaPath);
+
+        try {
+            $sprinkleManager->initFromSchema($schemaPath);
+        } catch (FileNotFoundException $e) {
+            $this->renderSprinkleErrorPage($e->getMessage());
+        }
+
         $this->fireEvent('onSprinklesInitialized');
 
         // Add Sprinkle resources (assets, templates, etc) to locator
@@ -110,5 +117,24 @@ class UserFrosting
                 require_once $routeFile;
             }
         }
+    }
+
+    protected function renderSprinkleErrorPage($errorMessage = "")
+    {
+        ob_clean();
+        $title = "UserFrosting Application Error";
+        $errorMessage = "Unable to start site. Contact owner.<br/><br/>" .
+            "Version: UserFrosting ".\UserFrosting\VERSION."<br/>" .
+            $errorMessage;
+        $output = sprintf(
+            "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
+            "<title>%s</title><style>body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana," .
+            "sans-serif;}h1{margin:0;font-size:48px;font-weight:normal;line-height:48px;}strong{" .
+            "display:inline-block;width:65px;}</style></head><body><h1>%s</h1>%s</body></html>",
+            $title,
+            $title,
+            $errorMessage
+        );
+        exit($output);
     }
 }
