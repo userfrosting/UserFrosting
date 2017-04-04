@@ -2,7 +2,7 @@
 
 function loadSprinkleSchema()
 {
-    $sprinklesFile = file_get_contents(UserFrosting\APP_DIR . '/' . UserFrosting\SPRINKLES_DIR_NAME . '/sprinkles.json');
+    $sprinklesFile = file_get_contents(UserFrosting\ROOT_DIR . '/sprinkles.json');
 
     if ($sprinklesFile === false) {
         ob_clean();

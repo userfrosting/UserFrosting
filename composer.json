@@ -1,5 +1,5 @@
 {
-    "name": "userfrosting/UserFrosting",
+    "name": "userfrosting/userfrosting",
     "type": "project",
     "description": "A secure, modern user management system for PHP.",
     "keywords": ["php user management", "usercake", "bootstrap"],
@@ -12,13 +12,24 @@
         }
     ],
     "version": "4.0.0",
+    "config": {
+        "vendor-dir": "app/vendor"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/lcharette/installers.git"
+        }
+    ],
     "require": {
+        "composer/installers": "dev-master",
         "wikimedia/composer-merge-plugin": "dev-master"
 	},
     "extra": {
         "merge-plugin": {
             "include": [
-                "sprinkles/*/composer.json"
+                "sprinkles.json",
+                "app/sprinkles/*/composer.json"
             ],
             "recurse": true,
             "replace": false,
@@ -30,8 +41,8 @@
     "prefer-stable": true,
     "autoload": {
         "files" : [
-            "defines.php",
-            "helpers.php"
+            "app/defines.php",
+            "app/helpers.php"
         ]
     }
 }
