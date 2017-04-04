@@ -21,11 +21,13 @@ use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
  */
 class SprinkleManager
 {
-
+    /**
+     * @var ContainerInterface The global container object, which holds all your services.
+     */
     protected $ci;
 
     /**
-     * @var string[] An array of sprinkle names.
+     * @var Sprinkle[] An array of sprinkles.
      */
     protected $sprinkles = [];
 
@@ -257,25 +259,9 @@ class SprinkleManager
     }
 
     /**
-     * Include all defined routes in route stream.
-     *
-     * Include them in reverse order to allow higher priority routes to override lower priority.
-     */
-    public function loadRoutes($app)
-    {
-        $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
-        foreach ($routePaths as $path) {
-            $routeFiles = glob($path . '/*.php');
-            foreach ($routeFiles as $routeFile) {
-                require_once $routeFile;
-            }
-        }
-    }
-
-    /**
      * Sets the list of sprinkles.
      *
-     * @param string[] $sprinkles An array of sprinkle names.
+     * @param Sprinkle[] $sprinkles An array of Sprinkle classes.
      */
     public function setSprinkles($sprinkles)
     {
@@ -286,14 +272,18 @@ class SprinkleManager
     /**
      * Returns a list of available sprinkles.
      *
-     * @return string[]
-     * @todo Should this automatically prepend the 'core' Sprinkle as well?
+     * @return Sprinkle[]
      */
     public function getSprinkles()
     {
         return $this->sprinkles;
     }
 
+    /**
+     * Returns a list of available sprinkle names.
+     *
+     * @return string[]
+     */
     public function getSprinkleNames()
     {
         return array_keys($this->sprinkles);
@@ -307,6 +297,6 @@ class SprinkleManager
      */
     public function isAvailable($name)
     {
-        return in_array($name, $this->getSprinkles());
+        return in_array($name, $this->getSprinkleNames());
     }
 }

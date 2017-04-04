@@ -61,21 +61,19 @@ class UserFrosting
         $this->ci->shutdownHandler;
 
         // Next, we'll instantiate the Slim application.  Note that the application is required for the SprinkleManager to set up routes.
-        global $app;
-        $app = new App($this->ci);
-        $this->app = $app;
+        $this->app = new App($this->ci);
 
         $slimAppEvent = new SlimAppEvent($this->app);
 
         $this->fireEvent('onAppInitialize', $slimAppEvent);
 
         // Set up all routes
-        $sprinkleManager->loadRoutes($this->app);
+        $this->loadRoutes();
 
         // Add global middleware
         $this->fireEvent('onAddGlobalMiddleware', $slimAppEvent);
 
-        $app->run();
+        $this->app->run();
     }
 
     /**
@@ -92,5 +90,25 @@ class UserFrosting
         $eventDispatcher = $this->ci->eventDispatcher;
         
         return $eventDispatcher->dispatch($eventName, $event);
+    }
+
+    /**
+     * Include all defined routes in route stream.
+     *
+     * Include them in reverse order to allow higher priority routes to override lower priority.
+     */
+    public function loadRoutes()
+    {
+        // Since routes aren't encapsulated in a class yet, we need this workaround :(
+        global $app;
+        $app = $this->app;
+
+        $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
+        foreach ($routePaths as $path) {
+            $routeFiles = glob($path . '/*.php');
+            foreach ($routeFiles as $routeFile) {
+                require_once $routeFile;
+            }
+        }
     }
 }

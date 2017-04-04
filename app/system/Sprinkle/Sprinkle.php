@@ -21,8 +21,6 @@ use Slim\App;
  */
 class Sprinkle implements EventSubscriberInterface
 {
-    protected $app;
-
     /**
      * @var ContainerInterface The global container object, which holds all your services.
      */
