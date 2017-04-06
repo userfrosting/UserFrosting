@@ -1,5 +1,7 @@
 # Ignores my text editor metadata
 *.komodoproject
+*.iml
+.idea/
 
 # Ignores Mac metadata.  You can configure this globally if you use a Mac: http://islegend.com/development/setting-global-gitignore-mac-windows/
 .DS_Store
@@ -20,7 +22,7 @@ app/logs/*
 app/sessions/*
 
 # Ignore bower vendor assets
-/app/sprinkles/*/assets/vendor/
+app/sprinkles/*/assets/vendor/
 
 # Ignore sprinkles.json config file
 app/sprinkles.json

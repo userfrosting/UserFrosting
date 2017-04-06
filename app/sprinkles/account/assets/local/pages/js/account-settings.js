@@ -14,9 +14,14 @@ $(document).ready(function() {
     $("#account-settings").ufForm({
         validators: page.validators.account_settings,
         msgTarget: $("#alerts-page")
-    }).on("submitSuccess.ufForm", function() {
-        // Reload the page on success
-        window.location.reload();
+    }).on("submitSuccess.ufForm", function(event, data, textStatus, jqXHR) {
+        if (jqXHR.getResponseHeader('UF-Redirect')) {
+            // Redirect to index page after email change
+            window.location.replace(jqXHR.getResponseHeader('UF-Redirect'));
+        } else {
+            // Reload the page on success
+            window.location.reload();
+        }
     });
 
     $("#profile-settings").ufForm({
