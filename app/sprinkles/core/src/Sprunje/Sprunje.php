@@ -53,6 +53,8 @@ abstract class Sprunje
      *
      * @param ClassMapper $classMapper
      * @param mixed[] $options
+     *
+     * @throws \UserFrosting\Support\Exception\BadRequestException
      */
     public function __construct($classMapper, $options)
     {
@@ -159,6 +161,7 @@ abstract class Sprunje
      *
      * Returns an array containing `count` (the total number of rows, before filtering), `count_filtered` (the total number of rows after filtering),
      * and `rows` (the filtered result set).
+     *
      * @return mixed[]
      */
     public function getResults()
@@ -196,8 +199,9 @@ abstract class Sprunje
     /**
      * Execute the query and build the results, and append them in the appropriate format to the response.
      *
-     * @param ResponseInterface $response
-     * @return ResponseInterface
+     * @param \Psr\Http\Message\ResponseInterface $response
+     *
+     * @return \UserFrosting\Support\Exception\BadRequestException
      */
     public function toResponse(Response $response)
     {
@@ -223,6 +227,8 @@ abstract class Sprunje
      * Apply any filters from the options, calling a custom filter callback when appropriate.
      *
      * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * @throws \UserFrosting\Support\Exception\BadRequestException
      */
     protected function applyFilters()
     {
@@ -259,6 +265,8 @@ abstract class Sprunje
      * Apply any sorts from the options, calling a custom sorter callback when appropriate.
      *
      * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * @throws \UserFrosting\Support\Exception\BadRequestException
      */
     protected function applySorts()
     {
@@ -308,6 +316,7 @@ abstract class Sprunje
      * Set any transformations you wish to apply to the collection, after the query is executed.
      *
      * @param \Illuminate\Database\Eloquent\Collection $collection
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     protected function applyTransformations($collection)
