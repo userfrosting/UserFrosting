@@ -6,6 +6,7 @@
 - Fixed error in ufAlerts push method
 - Fixed usage of hard coded path
 - Fixed default OS option in migration script
+- Prevents empty locale's from displaying as empty options in profile form
 - Unignore .gitkeeps of directories that need to exist
 
 ## v4.0.14-Alpha
