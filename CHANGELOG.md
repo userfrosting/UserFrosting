@@ -11,6 +11,15 @@
 - Automatically load Sprinkler service providers (see #636)
 - Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
 
+## v4.0.15-Alpha
+- Prevent mixed content on demo pages
+- Fixed some missing translations
+- Fixed error in ufAlerts push method
+- Fixed usage of hard coded path
+- Fixed default OS option in migration script
+- Prevents empty locale's from displaying as empty options in profile form
+- Unignore .gitkeeps of directories that need to exist
+
 ## v4.0.14-Alpha
 - Fix ajax.delay in ufCollection
 - Fix missing translations

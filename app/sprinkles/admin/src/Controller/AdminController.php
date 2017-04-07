@@ -85,10 +85,14 @@ class AdminController extends SimpleController
                 }
 
                 // Get the latest available migration in the file
-                $migrations = array_reverse(glob("../app/sprinkles/$sprinkle/migrations/*.php"));
+                $migrations = array_reverse(glob(\UserFrosting\APP_DIR . \UserFrosting\DS .
+                                                \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS .
+                                                $sprinkle . \UserFrosting\DS .
+                                                'migrations' . \UserFrosting\DS .
+                                                '*.php'));
                 if (!empty($migrations)) {
-                    $lastMigration = basename($migrations[0], ".php");
-                    $migration = version_compare($version, $lastMigration, "<");
+                    $lastMigration = basename($migrations[0], '.php');
+                    $migration = version_compare($version, $lastMigration, '<');
                 } else {
                     $migration = false;
                 }
@@ -104,7 +108,7 @@ class AdminController extends SimpleController
             return $sprinkles;
         });
 
-        return $this->ci->view->render($response, "pages/dashboard.html.twig", [
+        return $this->ci->view->render($response, 'pages/dashboard.html.twig', [
             'counter' => [
                 'users' => User::count(),
                 'roles' => Role::count(),
@@ -159,6 +163,13 @@ class AdminController extends SimpleController
         return $response->withStatus(200);
     }
 
+    /**
+     * Renders the modal form to confirm cache deletion.
+     *
+     * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
+     * This page requires authentication.
+     * Request type: GET
+     */
     public function getModalConfirmClearCache($request, $response, $args)
     {
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
@@ -174,7 +185,7 @@ class AdminController extends SimpleController
 
         return $this->ci->view->render($response, 'components/modals/confirm-clear-cache.html.twig', [
             'form' => [
-                'action' => "api/admin/clear-cache",
+                'action' => 'api/admin/clear-cache',
             ]
         ]);
     }
