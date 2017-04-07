@@ -1,5 +1,7 @@
 # Change Log
 
+## v4.0.16-Alpha
+
 ## v4.0.15-Alpha
 - Prevent mixed content on demo pages
 - Fixed some missing translations
@@ -93,7 +95,7 @@
 - Specify foreign key explicitly in `User::activities()` relationship.
 - Database checks in installer and Authenticator now respect custom database ports. (See [#628](https://github.com/userfrosting/UserFrosting/issues/628))
 - Fixed edge case where `5%C` would appear in generated urls.
-- Improved stability and added php version check in `migrations/intall.php` 
+- Improved stability and added php version check in `migrations/intall.php`
 - Update ClassMapper to throw exception when class is not found
 - Fix minor errors in French locale
 - Fix translation error on the Legal page
