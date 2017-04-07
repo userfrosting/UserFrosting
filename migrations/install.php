@@ -71,9 +71,10 @@
 
     echo PHP_EOL . "Welcome to the UserFrosting installation tool!" . PHP_EOL;
     echo "The detected operating system is '$detectedOS'." . PHP_EOL;
-    echo "Is this correct?  [Y/n]: ";
+    echo "Is this correct?  ([y]/n): ";
 
     $answer = trim(fgets(STDIN));
+    if(empty($answer)) { $answer = "y" ; }
 
     if (!in_array(strtolower($answer), array('yes', 'y'))) {
         // OS

@@ -19,6 +19,11 @@ app/cache/*
 app/logs/*
 app/sessions/*
 
+# Unignore log, cache, and sessions .gitkeeps
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+!app/sessions/.gitkeep
+
 # Ignore bower vendor assets
 /app/sprinkles/*/assets/vendor/
 

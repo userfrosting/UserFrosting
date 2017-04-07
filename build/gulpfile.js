@@ -1,5 +1,5 @@
 /* To build bundles...
-    1. npm run uf-build-bundle
+    1. npm run uf-bundle-build
     2. npm run uf-bundle
     3. npm run uf-bundle-cleanup
 

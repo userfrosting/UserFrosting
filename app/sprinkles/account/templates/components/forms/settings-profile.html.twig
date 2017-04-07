@@ -24,7 +24,9 @@
                 <label for="input-locale" class="control-label">{{translate("LOCALE")}}</label>
                 <select id="input-locale" class="form-control js-select2" name="locale" {{page.visibility}}>
                     {% for option, label in locales %}
-                    <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
+                        {% if label is not empty %}
+                            <option value="{{option}}" {% if (option == current_user.locale) %}selected{% endif %}>{{label}}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
                 <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
