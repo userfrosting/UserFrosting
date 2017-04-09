@@ -16,10 +16,12 @@ const fs = require('fs');
 const shell = require('shelljs');
 const plugins = require('gulp-load-plugins')();
 
-const sprinklesDir = '../app/';
+const sprinklesDir = '../app/sprinkles/';
+
+const sprinklesSchemaPath = '../app/sprinkles.json';
 
 // The Sprinkle load order from sprinkles.json
-const sprinkles = ['core'].concat(require(`${sprinklesDir}sprinkles.json`)['base']);
+const sprinkles = ['core'].concat(require(`${sprinklesSchemaPath}`)['base']);
 
 // The directory where the bundle task should place compiled assets.
 // The names of assets in bundle.result.json will be specified relative to this path.
