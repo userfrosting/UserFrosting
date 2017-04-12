@@ -363,6 +363,8 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
+        $translator = $this->ci->translator;
+
         // Access-controlled resource - check that currentUser has permission to edit basic fields "name", "slug", "icon", "description" for this group
         $fieldNames = ['name', 'slug', 'icon', 'description'];
         if (!$authorizer->checkAccess($currentUser, 'update_group_field', [
@@ -380,7 +382,7 @@ class GroupController extends SimpleController
 
         // Load validation rules
         $schema = new RequestSchema('schema://group/edit-info.json');
-        $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
+        $validator = new JqueryValidationAdapter($schema, $translator);
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
             'group' => $group,
@@ -388,7 +390,7 @@ class GroupController extends SimpleController
                 'action' => "api/groups/g/{$group->slug}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'submit_text' => $translator->translate("UPDATE")
+                'submit_text' => $translator->translate('UPDATE')
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
