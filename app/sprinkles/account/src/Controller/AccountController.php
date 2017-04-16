@@ -89,6 +89,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
+        /** @var UserFrosting\I18n\MessageTranslator $translator */
         $translator = $this->ci->translator;
 
         // Log throttleable event
@@ -413,7 +414,7 @@ class AccountController extends SimpleController
      */
     public function pageRegister($request, $response, $args)
     {
-        /** @var Config $config */
+        /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -539,7 +540,7 @@ class AccountController extends SimpleController
         $schema = new RequestSchema("schema://profile-settings.json");
         $validatorProfileSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        /** @var Config $config */
+        /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
         // Get a list of all locales
@@ -566,6 +567,7 @@ class AccountController extends SimpleController
      */
     public function pageSignIn($request, $response, $args)
     {
+        /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -693,7 +695,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var Config $config */
+        /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
 
         // Get POST parameters: user_name, first_name, last_name, email, password, passwordc, captcha, spiderbro, csrf_token
