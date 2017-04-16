@@ -16,11 +16,8 @@
         die('This program must be run from the command line.');
     }
 
-    // 1° Pre-flight check and bootup
-    // Check php version
-    if (version_compare(phpversion(), UserFrosting\PHP_MIN_VERSION, "<")) {
-        die('UserFrosting requires PHP version '.UserFrosting\PHP_MIN_VERSION.' or up.');
-    }
+    // Welcome message
+    echo "/****************************/\n/* UserFrosting's Migration */\n/****************************/";
 
     // First, we create our DI container
     $container = new Container;
@@ -28,7 +25,8 @@
     // Attempt to fetch list of Sprinkles
     $sprinklesFile = file_get_contents(UserFrosting\APP_DIR . '/' . UserFrosting\SPRINKLES_DIR_NAME . '/sprinkles.json');
     if ($sprinklesFile === false) {
-        die(PHP_EOL . "File 'app/sprinkles/sprinkles.json' not found. Please create a 'sprinkles.json' file and try again." . PHP_EOL);
+        echo (PHP_EOL . "File 'app/sprinkles/sprinkles.json' not found. Please create a 'sprinkles.json' file and try again." . PHP_EOL);
+        exit(1);
     }
     $sprinkles = json_decode($sprinklesFile)->base;
 
@@ -51,7 +49,8 @@
     $dbParams = $config['db.default'];
 
     if (!$dbParams) {
-        die(PHP_EOL . "'default' database connection not found.  Please double-check your configuration.");
+        echo(PHP_EOL . "'default' database connection not found.  Please double-check your configuration.");
+        exit(1);
     }
 
     // Test database connection directly using PDO
@@ -61,7 +60,8 @@
         $message = PHP_EOL . "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:" . PHP_EOL;
         $message .= "Exception: " . $e->getMessage() . PHP_EOL;
         $message .= "Trace: " . $e->getTraceAsString() . PHP_EOL;
-        die($message);
+        echo($message);
+        exit(1);
     }
 
     $schema = Capsule::schema();
@@ -163,4 +163,4 @@
     $uri = trim($uri, '/');
     */
 
-    echo "UserFrosting migrated successfully !".PHP_EOL;
+    echo "UserFrosting migrated successfully !".PHP_EOL.PHP_EOL;

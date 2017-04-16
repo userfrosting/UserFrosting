@@ -33,5 +33,15 @@
             "defines.php",
             "helpers.php"
         ]
+    },
+    "scripts": {
+        "migrate" : "php ../migrations/install.php",
+        "debug" : "php ../bakery/bakery.php",
+        "build-assets" : "php ../build/build.php",
+        "bake" : [
+            "@composer update",
+            "@debug",
+            "@build-assets"
+        ]
     }
 }
