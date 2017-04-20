@@ -37,10 +37,17 @@ services:
 
   composer:
     image: composer/composer
-    volumes_from: 
+    volumes_from:
       - php
     working_dir: /app/app
     command: -V
+
+  node:
+    image: node:alpine
+    volumes_from:
+      - php
+    working_dir: /app/build
+    command: npm run uf-assets-install
 
 volumes:
   userfrosting-db:
