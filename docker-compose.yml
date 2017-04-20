@@ -35,6 +35,13 @@ services:
     volumes:
       - userfrosting-db:/var/lib/mysql
 
+  composer:
+    image: composer/composer
+    volumes_from: 
+      - php
+    working_dir: /app/app
+    command: -V
+
 volumes:
   userfrosting-db:
 
