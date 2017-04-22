@@ -1,6 +1,12 @@
 # Change Log
 
 ## v4.0.16-Alpha
+- Add Docker configuration files
+- Begin work on Bakery, the command-line debug tool
+- Lock version of tablesorter due to breaking changes
+- Fix bugs in GroupController and RoleController
+- Fix bug in URLs for redirect-on-login
+- Added UTF-8 as default mail charset
 
 ## v4.0.15-Alpha
 - Prevent mixed content on demo pages
