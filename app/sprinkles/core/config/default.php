@@ -82,6 +82,7 @@
             'password'   => getenv('SMTP_PASSWORD') ?: null,
             'smtp_debug' => 4,
             'message_options' => [
+                'CharSet' => 'UTF-8',
                 'isHtml' => true,
                 'Timeout' => 15
             ]
