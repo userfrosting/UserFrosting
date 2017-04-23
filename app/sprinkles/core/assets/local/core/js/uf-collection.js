@@ -157,6 +157,9 @@
 
         if (!("templateResult" in options)) {
             options.templateResult = function(item) {
+                // Display loading text if the item is marked as "loading"
+                if (item.loading) return item.text;
+
                 // Must wrap this in a jQuery selector to render as HTML
                 return $(base._dropdownTemplateCompiled(item));
             };
