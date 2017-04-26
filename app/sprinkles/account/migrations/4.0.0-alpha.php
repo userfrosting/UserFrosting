@@ -435,23 +435,6 @@
     }
 
     /**
-     * Table for database sessions.
-     */
-    if (!$schema->hasTable('sessions')) {
-        $schema->create('sessions', function (Blueprint $table) {
-            $table->string('id')->unique();
-            $table->integer('user_id')->nullable();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->text('payload');
-            $table->integer('last_activity');
-        });
-        echo "Created table 'sessions'..." . PHP_EOL;
-    } else {
-        echo "Table 'sessions' already exists.  Skipping..." . PHP_EOL;
-    }
-
-    /**
      * Removed the 'display_name', 'title', 'secret_token', and 'flag_password_reset' fields, and added first and last name and 'last_activity_at'.
      */
     if (!$schema->hasTable('users')) {
