@@ -1,5 +1,7 @@
+# See docker/README.md for usage instructions
 version: '2'
 services:
+
   php:
     build:
       context: ./docker/php
@@ -9,29 +11,31 @@ services:
       - DB_PORT=3306
       - DB_NAME=userfrosting
       - DB_USER=userfrosting
-      - DB_PASSWORD=password
+      - DB_PASSWORD=9rw46T1AucpTQrFs
     volumes:
       - .:/app
     links:
       - mysql
+
   nginx:
     build:
       context: ./docker/nginx
     ports:
-      - 8570:80
+      - 127.0.0.1:8570:80
     volumes:
       - .:/app
     links:
       - php
+
   mysql:
     image: mysql:5.7
     environment:
+      - MYSQL_ROOT_PASSWORD=JbIREUJlTI40Twft
       - MYSQL_DATABASE=userfrosting
-      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=userfrosting
-      - MYSQL_PASSWORD=password
+      - MYSQL_PASSWORD=9rw46T1AucpTQrFs
     ports:
-      - 8571:3306
+      - 127.0.0.1:8571:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
 
