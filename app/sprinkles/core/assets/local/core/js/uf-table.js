@@ -121,8 +121,12 @@
                     // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
                     widgets: ['saveSort','sort2Hash','filter'],
                     widgetOptions : {
+                        filter_cssFilter: 'form-control',
                         filter_saveFilters : true,
                         filter_serversideFiltering : true,
+                        filter_selectSource: {
+                            ".filter-metaselect": base._buildFilterSelect
+                        },
                         // hash prefix
                         sort2Hash_hash              : '#',
                         // don't '#' or '=' here
@@ -138,10 +142,6 @@
                         sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
                         // if true, override saveSort widget sort, if used & stored sort is available
                         sort2Hash_overrideSaveSort  : true, // default = false
-                        filter_selectSource: {
-                            ".filter-metaselect": base._buildFilterSelect
-                        },
-                        filter_cssFilter: 'form-control'
                     }
                 },
                 pager : {

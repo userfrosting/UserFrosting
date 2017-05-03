@@ -17,7 +17,12 @@ $(document).ready(function() {
         var query = URI.parseQuery(components['query']);
 
         if (query && query['redirect']) {
-            window.location.replace(site.uri.public + '/' + query['redirect']);
+            // Strip leading slashes from redirect strings           
+            var redirectString = site.uri.public + '/' + query['redirect'].replace(/^\/+/, "");
+            // Strip excess trailing slashes for clean URLs. e.g. if redirect=%2F
+            redirectString = redirectString.replace(/\/+$/, "/");
+            // Redirect
+            window.location.replace(redirectString);
         } else if (jqXHR.getResponseHeader('UF-Redirect')) {
             window.location.replace(jqXHR.getResponseHeader('UF-Redirect'));
         } else {

@@ -46,5 +46,15 @@
         "psr-4": {
             "UserFrosting\\System\\": "app/system/"
         }
+    },
+    "scripts": {
+        "migrate" : "php ../migrations/install.php",
+        "debug" : "php ../bakery/bakery.php",
+        "build-assets" : "php ../build/build.php",
+        "bake" : [
+            "@composer update",
+            "@debug",
+            "@build-assets"
+        ]
     }
 }

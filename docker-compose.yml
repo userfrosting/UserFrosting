@@ -1,0 +1,54 @@
+version: '2'
+services:
+  php:
+    build:
+      context: ./docker/php
+    environment:
+      - DB_DRIVER=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=userfrosting
+      - DB_USER=userfrosting
+      - DB_PASSWORD=password
+    volumes:
+      - .:/app
+    links:
+      - mysql
+  nginx:
+    build:
+      context: ./docker/nginx
+    ports:
+      - 8570:80
+    volumes:
+      - .:/app
+    links:
+      - php
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=userfrosting
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=userfrosting
+      - MYSQL_PASSWORD=password
+    ports:
+      - 8571:3306
+    volumes:
+      - userfrosting-db:/var/lib/mysql
+
+  composer:
+    image: composer/composer
+    volumes_from:
+      - php
+    working_dir: /app/app
+    command: -V
+
+  node:
+    image: node:alpine
+    volumes_from:
+      - php
+    working_dir: /app/build
+    command: npm run uf-assets-install
+
+volumes:
+  userfrosting-db:
+
