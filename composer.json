@@ -11,7 +11,7 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.1.0",
+    "version": "4.1.0-dev",
     "config": {
         "vendor-dir": "app/vendor"
     },
@@ -22,6 +22,8 @@
         }
     ],
     "require": {
+        "php": ">=5.6",
+        "ext-gd": "*",
         "composer/installers": "dev-master",
         "wikimedia/composer-merge-plugin": "dev-master"
 	},
@@ -44,17 +46,22 @@
             "app/defines.php"
         ],
         "psr-4": {
-            "UserFrosting\\System\\": "app/system/"
+            "UserFrosting\\System\\": "app/system/",
+            "UserFrosting\\Bakery\\": "app/bakery/"
         }
     },
     "scripts": {
-        "migrate" : "php ../migrations/install.php",
-        "debug" : "php ../bakery/bakery.php",
-        "build-assets" : "php ../build/build.php",
+        "migrate" : "UserFrosting\\Bakery\\Migration::run",
+        "debug" : "UserFrosting\\Bakery\\Debug::run",
+        "build-assets" : "UserFrosting\\Bakery\\Assets::run",
         "bake" : [
             "@composer update",
             "@debug",
             "@build-assets"
+        ],
+        "post-create-project-cmd" : [
+            "@bake",
+            "@migrate"
         ]
     }
 }
