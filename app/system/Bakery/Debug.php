@@ -6,10 +6,10 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Bakery;
+namespace UserFrosting\System\Bakery;
 
 use Composer\Script\Event;
-use UserFrosting\Bakery\Bakery;
+use UserFrosting\System\Bakery\Bakery;
 use UserFrosting\System\UserFrosting;
 
 /**

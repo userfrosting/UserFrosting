@@ -47,13 +47,13 @@
         ],
         "psr-4": {
             "UserFrosting\\System\\": "app/system/",
-            "UserFrosting\\Bakery\\": "app/bakery/"
+            "UserFrosting\\System\\Bakery\\": "app/system/Bakery/"
         }
     },
     "scripts": {
-        "migrate" : "UserFrosting\\Bakery\\Migration::run",
-        "debug" : "UserFrosting\\Bakery\\Debug::run",
-        "build-assets" : "UserFrosting\\Bakery\\Assets::run",
+        "migrate" : "UserFrosting\\System\\Bakery\\Migration::run",
+        "debug" : "UserFrosting\\System\\Bakery\\Debug::run",
+        "build-assets" : "UserFrosting\\System\\Bakery\\Assets::run",
         "bake" : [
             "@composer update",
             "@debug",
