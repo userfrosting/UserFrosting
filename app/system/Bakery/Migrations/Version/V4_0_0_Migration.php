@@ -10,7 +10,7 @@ namespace UserFrosting\System\Bakery\Migrations\Version;
 
 use UserFrosting\System\Bakery\Migrations\MigrationInterface;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\MySqlBuilder;
+use Illuminate\Database\Schema\Builder;
 
 /**
  * Version table migration
@@ -22,7 +22,7 @@ use Illuminate\Database\Schema\MySqlBuilder;
  */
 class V4_0_0_Migration implements MigrationInterface
 {
-    public function up(MySqlBuilder $schema) {
+    public function up(Builder $schema) {
         $schema->create('version', function (Blueprint $table) {
             $table->string('sprinkle', 45);
             $table->string('version', 25);
@@ -35,7 +35,7 @@ class V4_0_0_Migration implements MigrationInterface
         });
     }
 
-    public function down(MySqlBuilder $schema) {
+    public function down(Builder $schema) {
         $schema->drop('version');
     }
 }

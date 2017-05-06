@@ -10,7 +10,7 @@ namespace UserFrosting\System\Bakery\Migrations\Version;
 
 use UserFrosting\System\Bakery\Migrations\MigrationInterface;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\MySqlBuilder;
+use Illuminate\Database\Schema\Builder;
 
 /**
  * Version table migration
@@ -22,14 +22,14 @@ use Illuminate\Database\Schema\MySqlBuilder;
  */
 class V4_1_0_Migration implements MigrationInterface
 {
-    public function up(MySqlBuilder $schema) {
+    public function up(Builder $schema) {
         $schema->table('version', function (Blueprint $table) {
             $table->dropUnique(['sprinkle']);
             $table->increments('id')->first();
         });
     }
 
-    public function down(MySqlBuilder $schema) {
+    public function down(Builder $schema) {
         // N.B.: While this may work when no data is in the table, it won't
         // work once there new data inserted into that table. This is not called by the Migration
         // system anyway, and only serves as an example

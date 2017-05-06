@@ -8,7 +8,7 @@
  */
 namespace UserFrosting\System\Bakery\Migrations;
 
-use Illuminate\Database\Schema\MySqlBuilder;
+use Illuminate\Database\Schema\Builder;
 
 /**
  * MigrationInterface interface.
@@ -18,6 +18,6 @@ use Illuminate\Database\Schema\MySqlBuilder;
  */
 interface MigrationInterface
 {
-    public function up(MySqlBuilder $schema);
-    public function down(MySqlBuilder $schema);
+    public function up(Builder $schema);
+    public function down(Builder $schema);
 }
