@@ -25,7 +25,7 @@ use UserFrosting\Sprinkle\Core\Model\Version;
 class Migration extends Debug
 {
     /**
-     * @var DB Schema
+     * @var @Illuminate\Database\Schema
      */
     protected $schema;
 
@@ -65,7 +65,7 @@ class Migration extends Debug
         $sprinkles = $bakery->ci->sprinkleManager->getSprinkleNames();
 
         // If all went well and there's no fatal errors, we are ready to bake
-        $bakery->io->write("\n<fg=black;bg=green>Migrated successfully !</>\n");
+        $bakery->io->write("\n<fg=black;bg=green>Migration successful !</>\n");
     }
 
     /**
@@ -155,14 +155,14 @@ class Migration extends Debug
         if (!$this->schema->hasTable($this->table)) {
             $migration = new \UserFrosting\System\Bakery\Migrations\Version\V4_0_0_Migration($this->schema);
             $migration->up();
-            $messages[] = "Table `{$this->table}` created successfully";
+            $messages[] = "Table `{$this->table}` created";
         }
 
         // Run 4.1.0 migration
         if (!$this->schema->hasColumn($this->table, 'id')) {
             $migration = new \UserFrosting\System\Bakery\Migrations\Version\V4_1_0_Migration($this->schema);
             $migration->up();
-            $messages[] = "Table `{$this->table}` migrated to `4.1.0` successfully";
+            $messages[] = "Table `{$this->table}` migrated to `4.1.0`";
         }
 
         // Temps debug & tests
@@ -171,7 +171,7 @@ class Migration extends Debug
 
         // Show message if no migrations were run
         if (empty($messages)) {
-            $messages[] = "Table `{$this->table}` found and up to date";
+            $messages[] = "Table `{$this->table}` found";
         }
 
         // Write messages
