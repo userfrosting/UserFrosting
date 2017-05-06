@@ -8,7 +8,7 @@
  */
 namespace UserFrosting\System\Bakery\Migrations\Version;
 
-use UserFrosting\System\Bakery\Migrations\MigrationInterface;
+use UserFrosting\System\Bakery\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 
@@ -17,13 +17,13 @@ use Illuminate\Database\Schema\Builder;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @implements MigrationInterface
+ * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class V4_0_0_Migration implements MigrationInterface
+class V4_0_0_Migration extends Migration
 {
-    public function up(Builder $schema) {
-        $schema->create('version', function (Blueprint $table) {
+    public function up() {
+        $this->schema->create('version', function (Blueprint $table) {
             $table->string('sprinkle', 45);
             $table->string('version', 25);
             $table->timestamps();
@@ -35,7 +35,7 @@ class V4_0_0_Migration implements MigrationInterface
         });
     }
 
-    public function down(Builder $schema) {
-        $schema->drop('version');
+    public function down() {
+        $this->schema->drop('version');
     }
 }

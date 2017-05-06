@@ -153,17 +153,21 @@ class Migration extends Debug
 
         // Run 4.0.0 migration
         if (!$this->schema->hasTable($this->table)) {
-            $migration = new \UserFrosting\System\Bakery\Migrations\Version\V4_0_0_Migration;
-            $migration->up($this->schema);
+            $migration = new \UserFrosting\System\Bakery\Migrations\Version\V4_0_0_Migration($this->schema);
+            $migration->up();
             $messages[] = "Table `{$this->table}` created successfully";
         }
 
         // Run 4.1.0 migration
         if (!$this->schema->hasColumn($this->table, 'id')) {
-            $migration = new \UserFrosting\System\Bakery\Migrations\Version\V4_1_0_Migration;
-            $migration->up($this->schema);
+            $migration = new \UserFrosting\System\Bakery\Migrations\Version\V4_1_0_Migration($this->schema);
+            $migration->up();
             $messages[] = "Table `{$this->table}` migrated to `4.1.0` successfully";
         }
+
+        // Temps debug & tests
+        //$migration = new \UserFrosting\System\Bakery\Migrations\Version\V4_1_0_Migration($this->schema);
+        //$migration->down();
 
         // Show message if no migrations were run
         if (empty($messages)) {
