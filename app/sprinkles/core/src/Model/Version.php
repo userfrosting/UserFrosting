@@ -30,11 +30,6 @@ class Version extends UFModel {
     protected $table = "version";
 
     /**
-     * @var string custom primary key since this model doesn't have an `id` column
-     */
-    protected $primaryKey  = 'sprinkle';
-
-    /**
      * @var bool Enable timestamps for this class.
      */
     public $timestamps = true;
@@ -46,4 +41,17 @@ class Version extends UFModel {
         "sprinkle",
         "version"
     ];
+
+    /**
+     * scopeForSprinkle function.
+     *
+     * @access protected
+     * @param mixed $query
+     * @param string $sprinkleName
+     * @return void
+     */
+    protected function scopeForSprinkle($query, $sprinkleName)
+    {
+        return $query->where('sprinkle', $sprinkleName);
+    }
 }

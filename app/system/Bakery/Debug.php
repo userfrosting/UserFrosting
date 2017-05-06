@@ -10,7 +10,7 @@ namespace UserFrosting\System\Bakery;
 
 use Composer\Script\Event;
 use UserFrosting\System\Bakery\Bakery;
-use UserFrosting\System\UserFrosting;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * Debug CLI Tools.
@@ -45,7 +45,14 @@ class Debug extends Bakery
         $bakery->checkNpmVersion();
         $bakery->checkEnv();
         $bakery->listSprinkles();
+
+        // Before goin further, will try to load the UF Container
+        $bakery->getContainer();
+
+        // Now that we have the container, we can test it and try to get the configs values
+        // And test the db
         $bakery->showConfig();
+        $bakery->testDB();
 
         // If all went well and there's no fatal errors, we are ready to bake
         $bakery->io->write("\n<fg=black;bg=green>Ready to bake !</>\n");
@@ -138,6 +145,12 @@ class Debug extends Bakery
         foreach ($sprinkles as $sprinkle) {
             $this->io->write("  - ".$sprinkle);
         }
+
+        // Throw fatal error if the `core` sprinkle is missing
+        if (!in_array("core", $sprinkles)) {
+            $this->io->write("\n<error>FATAL ERROR :: The `core` sprinkle is missing from the 'sprinkles.json' file.</error>");
+            exit(1);
+        }
     }
 
     /**
@@ -148,15 +161,8 @@ class Debug extends Bakery
      */
     protected function showConfig()
     {
-        // Setup the sprinkles
-        $uf = new UserFrosting();
-        $uf->setupSprinkles(false);
-
-        // Get the container
-        $container = $uf->getContainer();
-
         // Get config
-        $config = $container->config;
+        $config = $this->ci->config;
 
         // Display database info
         $this->io->write("\n<info>Database config :</info>");
@@ -166,5 +172,39 @@ class Debug extends Bakery
         $this->io->write(" DATABASE : " . $config['db.default.database']);
         $this->io->write(" USERNAME : " . $config['db.default.username']);
         $this->io->write(" PASSWORD : " . ($config['db.default.password'] ? "*********" : ""));
+    }
+
+    protected function testDB()
+    {
+        $this->io->write("\n<info>Testing database connexion :</info>");
+
+        // Boot db
+        $this->ci->db;
+
+        // Get config
+        $config = $this->ci->config;
+
+        // Check params are valids
+        $dbParams = $config['db.default'];
+
+        if (!$dbParams) {
+            $this->io->write("\n<error>'default' database connection not found.  Please double-check your configuration.</error>");
+            exit(1);
+        }
+
+        // Test database connection directly using PDO
+        try {
+            Capsule::connection()->getPdo();
+        } catch (\PDOException $e) {
+
+            $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:".PHP_EOL;
+            $message .= "Exception: " . $e->getMessage() . PHP_EOL;
+            $message .= "Trace: " . $e->getTraceAsString() . PHP_EOL;
+
+            $this->io->write("\n<error>$message</error>");
+            exit(1);
+        }
+
+        $this->io->write("Database connexion successful");
     }
 }

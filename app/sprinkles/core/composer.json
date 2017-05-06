@@ -13,6 +13,7 @@
     ],
     "version": "4.1.0-dev",
     "require": {
+        "doctrine/dbal": "^2.5",
         "illuminate/cache": "^5.3",
         "illuminate/database": "^5.3",
         "illuminate/events": "^5.3",

@@ -11,7 +11,7 @@ namespace UserFrosting\System\Bakery;
 use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\IOInterface;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use UserFrosting\System\UserFrosting;
 
 /**
  * Base class for UserFrosting Bakery CLI tools.
@@ -36,6 +36,11 @@ abstract class Bakery
     protected $projectRoot;
 
     /**
+     * @var ContainerInterface $ci The global container object, which holds all of UserFristing services.
+     */
+    protected $ci;
+
+    /**
      * @param IOInterface $io
      * @param Composer $composer
      */
@@ -56,7 +61,8 @@ abstract class Bakery
     }
 
     /**
-     * autoload function.
+     * Load the composer autoload file
+     * This is not loaded by default, even when running CLI from composer
      *
      * @access private
      * @return void
@@ -70,5 +76,25 @@ abstract class Bakery
         } else {
             require_once $this->projectRoot . 'app/vendor/autoload.php';
         }
+    }
+
+    /**
+     * Function that set the UF container, loading all the sprinkles in the process
+     * This is not loaded by default by the Bakery, since some commands doesn't requires it
+     * And it may also cause error to define it too early in the install/debug process
+     *
+     * @access protected
+     * @return void
+     */
+    protected function getContainer()
+    {
+        // Setup the sprinkles
+        $uf = new UserFrosting();
+
+        // Set argument as false, we are using the CLI
+        $uf->setupSprinkles(false);
+
+        // Get the container
+        $this->ci = $uf->getContainer();
     }
 }
