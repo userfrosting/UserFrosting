@@ -35,6 +35,19 @@ abstract class Migration
         $this->schema = $schema;
     }
 
+    /**
+     * List of dependencies for this migration.
+     * Should return an array of class required to be run before this migration
+     *
+     * @access public
+     * @static
+     * @return array list of dependencies for this migration
+     */
+    public static function dependencies()
+    {
+        return [];
+    }
+
     abstract public function up();
     abstract public function down();
 }

@@ -34,23 +34,33 @@ class Assets extends Bakery
      * @param Event $event
      * @return void
      */
-    public static function run(Event $event)
+    public static function main(Event $event)
     {
         $bakery = new self($event->getIO(), $event->getComposer());
+        $bakery->run();
+    }
 
+    /**
+     * Run the build scripts.
+     *
+     * @access public
+     * @return void
+     */
+    public function run()
+    {
         // Display header,
-        $bakery->io->write("\n<info>/*********************************/\n/* UserFrosting's Assets Builder */\n/*********************************/</info>");
+        $this->io->write("\n<info>/*********************************/\n/* UserFrosting's Assets Builder */\n/*********************************/</info>");
 
         // Set $path
-        $bakery->buildPath = $bakery->projectRoot . "build";
+        $this->buildPath = $this->projectRoot . "build";
 
         // Perform tasks
-        $bakery->npmInstall();
-        $bakery->assetsInstall();
-        $bakery->checkAssets();
+        $this->npmInstall();
+        $this->assetsInstall();
+        $this->checkAssets();
 
         // If all went well and there's no fatal errors, we are ready to bake
-        $bakery->io->write("\n<fg=black;bg=green>Assets install looks successful !</>\n");
+        $this->io->write("\n<fg=black;bg=green>Assets install looks successful !</>\n");
     }
 
     /**

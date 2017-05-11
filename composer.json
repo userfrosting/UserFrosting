@@ -51,9 +51,9 @@
         }
     },
     "scripts": {
-        "migrate" : "UserFrosting\\System\\Bakery\\Migration::run",
-        "debug" : "UserFrosting\\System\\Bakery\\Debug::run",
-        "build-assets" : "UserFrosting\\System\\Bakery\\Assets::run",
+        "migrate" : "UserFrosting\\System\\Bakery\\Migration::main",
+        "debug" : "UserFrosting\\System\\Bakery\\Debug::main",
+        "build-assets" : "UserFrosting\\System\\Bakery\\Assets::main",
         "bake" : [
             "@composer update",
             "@debug",

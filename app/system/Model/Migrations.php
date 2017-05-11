@@ -6,15 +6,15 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Core\Model;
+namespace UserFrosting\System\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Model\UFModel;
+use Illuminate\Database\Eloquent\Model;
 
 /**
- * Version Class
+ * Migration Model
  *
- * Represents a Version object as stored in the database.
+ * Represents the model for the `migrations` table
  *
  * @package UserFrosting
  * @author Alex Weissman
@@ -22,12 +22,12 @@ use UserFrosting\Sprinkle\Core\Model\UFModel;
  * @property string version
  *
  */
-class Version extends UFModel {
+class Migrations extends Model {
 
     /**
      * @var string The name of the table for the current model.
      */
-    protected $table = "version";
+    protected $table = "migrations";
 
     /**
      * @var bool Enable timestamps for this class.
@@ -39,7 +39,8 @@ class Version extends UFModel {
      */
     protected $fillable = [
         "sprinkle",
-        "version"
+        "migration",
+        "batch"
     ];
 
     /**

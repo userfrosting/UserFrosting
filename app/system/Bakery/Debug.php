@@ -29,33 +29,43 @@ class Debug extends Bakery
      * @param Event $event
      * @return void
      */
-    public static function run(Event $event)
+    public static function main(Event $event)
     {
         $bakery = new self($event->getIO(), $event->getComposer());
+        $bakery->run();
+    }
 
+    /**
+     * Run the debug script.
+     *
+     * @access public
+     * @return void
+     */
+    public function run()
+    {
         // Display header,
-        $bakery->io->write("\n<info>/*************************/\n/* UserFrosting's Bakery */\n/*************************/</info>");
-        $bakery->io->write("UserFrosing version : " . \UserFrosting\VERSION);
-        $bakery->io->write("OS Name : " . php_uname('s'));
-        $bakery->io->write("Project Root : {$bakery->projectRoot}");
+        $this->io->write("\n<info>/*************************/\n/* UserFrosting's Bakery */\n/*************************/</info>");
+        $this->io->write("UserFrosing version : " . \UserFrosting\VERSION);
+        $this->io->write("OS Name : " . php_uname('s'));
+        $this->io->write("Project Root : {$this->projectRoot}");
 
         // Perform tasks
-        $bakery->checkPhpVersion();
-        $bakery->checkNodeVersion();
-        $bakery->checkNpmVersion();
-        $bakery->checkEnv();
-        $bakery->listSprinkles();
+        $this->checkPhpVersion();
+        $this->checkNodeVersion();
+        $this->checkNpmVersion();
+        $this->checkEnv();
+        $this->listSprinkles();
 
         // Before goin further, will try to load the UF Container
-        $bakery->getContainer();
+        $this->getContainer();
 
         // Now that we have the container, we can test it and try to get the configs values
         // And test the db
-        $bakery->showConfig();
-        $bakery->testDB();
+        $this->showConfig();
+        $this->testDB();
 
         // If all went well and there's no fatal errors, we are ready to bake
-        $bakery->io->write("\n<fg=black;bg=green>Ready to bake !</>\n");
+        $this->io->write("\n<fg=black;bg=green>Ready to bake !</>\n");
     }
 
     /**
@@ -176,7 +186,7 @@ class Debug extends Bakery
 
     protected function testDB()
     {
-        $this->io->write("\n<info>Testing database connexion :</info>");
+        $this->io->write("\n<info>Testing database connexion...</info>");
 
         // Boot db
         $this->ci->db;
