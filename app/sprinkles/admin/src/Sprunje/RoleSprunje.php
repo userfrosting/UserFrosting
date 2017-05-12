@@ -30,7 +30,8 @@ class RoleSprunje extends Sprunje
 
     protected $filterable = [
         'name',
-        'description'
+        'description',
+        'info'
     ];
 
     /**
