@@ -8,10 +8,13 @@
  * $("#myCollection").ufCollection(options);
  *
  * `options` is an object containing any of the following parameters:
- * @param {object} dropdown The options to pass to the select2 plugin for the add item dropdown.
+ * @param {bool}   useDropDown Set to true if rows should be added using a select2 dropdown, false for free text inputs (see https://ux.stackexchange.com/a/15637/53990).
+ * @param {Object} dropdown The options to pass to the select2 plugin for the add item dropdown.
  * @param {string} dropdown.ajax.url The url from which to fetch options (as JSON data) in the dropdown selector menu.
+ * @param {bool}   selectOnClose Set to true if you want the currently highlighted dropdown item to be automatically added when the dropdown is closed for any reason.
  * @param {string} dropdown.theme The select2 theme to use for the dropdown menu.  Defaults to "bootstrap".
  * @param {string} dropdown.placeholder Placeholder text to use in the dropdown menu before a selection is made.  Defaults to "Item".
+ * @param {string} dropdown.width Width of the dropdown selector, when used.  Defaults to "100%".
  * @param {Object} dropdownControl a jQuery selector specifying the dropdown select2 control.  Defaults to looking for a .js-select-new element inside the parent object.
  * @param {string} dropdownTemplate A Handlebars template to use for rendering the dropdown items.
  * @param {Object} rowContainer a jQuery selector specifying the place where rows should be added.  Defaults to looking for the first tbody element inside the parent object.
@@ -23,6 +26,7 @@
  *
  * `rowAdd.ufCollection`: triggered when a new row is added to the collection.
  * `rowDelete.ufCollection`: triggered when a row is removed from the collection.
+ * `rowTouch.ufCollection`: triggered when any inputs in a row are brought into focus.
  *
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman https://alexanderweissman.com
@@ -43,6 +47,7 @@
         this.options= $.extend(
             true,               // deep extend
             {
+                useDropdown: true,
                 dropdown: {
                     ajax: {
                         url: "",
@@ -102,7 +107,57 @@
         return this;
     }
 
-    /** #### INITIALISER #### */
+    /**
+     * Add a new row to the collection, optionally passing in prepopulated template data.
+     */
+    Plugin.prototype.addRow = function (options) {
+        var base = this;
+
+        base._createRow(options);
+
+        return base.$T;
+    };
+
+    /**
+     * Add a new 'virgin' row to the collection, optionally passing in prepopulated template data.
+     * Virgin rows are rows that have not yet been brought into focus by the user.
+     * When a virgin row is brought into focus, it loses its virgin status and a new virgin row is created.
+     */
+    Plugin.prototype.addVirginRow = function (options) {
+        var base = this;
+
+        base._createVirginRow(options);
+
+        return base.$T;
+    };
+
+    /**
+     * Delete a target row.
+     */
+    Plugin.prototype.deleteRow = function (row) {
+        var base = this;
+
+        base._deleteRow(row);
+
+        return base.$T;
+    };
+
+    /**
+     * Touch a target row.
+     */
+    Plugin.prototype.touchRow = function (row) {
+        var base = this;
+
+        base._touchRow(row);
+
+        return base.$T;
+    };
+
+    /** #### PRIVATE METHODS #### */
+
+    /**
+     * Initialize the ufCollection widget.
+     */
     Plugin.prototype._init = function ( target, options ) {
         var base = this;
         var $el = $(target);
@@ -110,47 +165,137 @@
         // Add container class
         $el.toggleClass("uf-collection", true);
 
-        base._initDropdownField(base.options.dropdownControl);
-
-        base.options.dropdownControl.on("select2:select", function () {
-           var item = $(this).select2("data");
-           base.addRow(item);
+        // Add bindings for any rows already present in the DOM
+        $.each(base.options.rowContainer.find('.uf-collection-row'), function (idx, row) {
+            base._onNewRow($(row));
         });
+
+        // If we're using dropdown options, create the select2 and add bindings to add a new row when an option is selected
+        if (base.options.useDropdown) {
+            base._initDropdownField(base.options.dropdownControl);
+    
+            base.options.dropdownControl.on("select2:select", function () {
+               var item = $(this).select2("data");
+               base.addRow(item);
+            });
+        } else {
+            // Otherwise, add a new virgin row
+            base.addVirginRow();
+        }
 
         return this;
     };
 
-    Plugin.prototype.addRow = function (options) {
+    /**
+     * Create a new row and attach the handler for deletion to the js-delete-row button
+     */
+    Plugin.prototype._createRow = function (options) {
         var base = this;
 
         var params = {
             id : "",
             rownum: base._rownum
         };
-        $.extend(true, params, options[0]);
 
+        // Merge in any prepopulated values for the row
+        if (typeof options !== 'undefined') {
+            $.extend(true, params, options[0]);
+        }
+
+        // Generate the row and append to table
         var newRowTemplate = base._rowTemplateCompiled(params);
-        var newRow = $(newRowTemplate).appendTo(base.options.rowContainer);
+        var newRow;
+
+        // Add the new row before any virgin rows in the table.
+        var virginRows = base.options.rowContainer.find('.uf-collection-row-virgin').length;
+        if (virginRows) {
+            newRow = $(newRowTemplate).insertBefore(base.options.rowContainer.find('.uf-collection-row-virgin:first'));
+        } else {
+            newRow = $(newRowTemplate).appendTo(base.options.rowContainer);
+        }
+
+        // Add bindings and fire event
+        base._onNewRow(newRow);
+
+        return newRow;
+    };
+
+    /**
+     * Create a new, blank row with the 'virgin' status.
+     */
+    Plugin.prototype._createVirginRow = function () {
+        var base = this;
+
+        var params = {
+            id : '',
+            rownum: base._rownum
+        };
+
+        // Generate the row and append to table
+        var newRow = base._createRow(params);
+
+        // Set the row's 'virgin' status
+        newRow.addClass('uf-collection-row-virgin');
+        newRow.find('.js-delete-row').hide();
+
+        return newRow;
+    };
+
+    /**
+     * Delete a row from the collection.
+     */
+    Plugin.prototype._deleteRow = function (row) {
+        var base = this;
+        row.remove();
+        base.$T.trigger('rowDelete.ufCollection');
+        var index = base._addedIds.indexOf(5);
+        if (index > -1) {
+            base._addedIds.splice(index, 1);
+        }
+    };
+
+    /**
+     * Add delete and touch bindings for a row, increment the internal row counter, and fire the rowAdd event
+     */
+    Plugin.prototype._onNewRow = function (row) {
+        var base = this;
 
         // Trigger to delete row
-        $(newRow).find(".js-delete-row").on("click", function() {
-            $(this).closest('.uf-collection-row').remove();
-            base.$T.trigger('rowDelete.ufCollection');
-            var index = base._addedIds.indexOf(5);
-            if (index > -1) {
-                base._addedIds.splice(index, 1);
-            }
+        row.find('.js-delete-row').on('click', function() {
+            base._deleteRow($(this).closest('.uf-collection-row'));
+        });
+
+        // Once the new row comes into focus for the first time, it has been "touched"
+        row.find('input').on('focus', function () {
+            base._touchRow(row);
         });
 
         base._rownum += 1;
 
         // Fire event when row has been constructed
-        base.$T.trigger('rowAdd.ufCollection');
-
-        return base.$T;
+        base.$T.trigger('rowAdd.ufCollection', row);
     };
 
-    /** #### PRIVATE METHODS #### */
+    /**
+     * Remove a row's virgin status, show the delete button, and add a new virgin row if needed
+     */
+    Plugin.prototype._touchRow = function (row) {
+        var base = this;
+
+        row.removeClass('uf-collection-row-virgin');
+        row.find('.js-delete-row').show();
+
+        base.$T.trigger('rowTouch.ufCollection', row);
+
+        // If we're not using dropdowns, assert that the table doesn't already have a virgin row.  If not, create a new virgin row.
+        if (!base.options.useDropdown) {
+            var virginRows = base.options.rowContainer.find('.uf-collection-row-virgin').length;
+            if (!virginRows) {    
+                base._createVirginRow();
+            }
+        }
+    };
+
     Plugin.prototype._initDropdownField = function (field) {
         var base = this;
         var options = base.options.dropdown;
