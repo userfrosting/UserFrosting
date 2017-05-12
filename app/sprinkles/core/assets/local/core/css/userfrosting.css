@@ -68,3 +68,13 @@ form textarea {
 a .info-box {
     color: black;
 }
+
+/* Custom styling for trash buttons */
+.btn-trash {
+    padding: 0 10px;
+    color: #777;
+}
+
+.btn-trash:hover {
+    color: #d73925;
+}
