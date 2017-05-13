@@ -9,6 +9,8 @@
 namespace UserFrosting\System\Bakery;
 
 use Composer\Script\Event;
+use Composer\Composer;
+use Composer\IO\IOInterface;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Str;
 use UserFrosting\System\Bakery\Bakery;
@@ -85,13 +87,40 @@ class Migration extends Debug
     }
 
     /**
-     * Run all the migrations available
+     * Run the `migrate:rollback` composer script
      *
      * @access public
+     * @static
+     * @param Event $event
      * @return void
      */
-    public function runUp()
+    public static function rollback(Event $event)
     {
+        $bakery = new self($event->getIO(), $event->getComposer());
+
+        // Handling parameter
+        $args = collect($event->getArguments());
+        $args = $args->mapWithKeys(function ($item) {
+            $item = explode("=", $item);
+            $arg = $item[0];
+            $param = (count($item) > 1) ? $item[1] : true;
+
+            return [$arg => $param];
+        });
+
+        $step = $args->get('step', 1);
+        $sprinkle = $args->get('sprinkle');
+
+        $bakery->runDown($step, $sprinkle);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(IOInterface $io, Composer $composer)
+    {
+        parent::__construct($io, $composer);
+
         // Display header,
         $this->io->write("\n<info>/****************************/\n/* UserFrosting's Migration */\n/****************************/</info>");
 
@@ -104,8 +133,24 @@ class Migration extends Debug
         // Get schema required to run the table blueprints
         $this->schema = Capsule::schema();
 
-        // Get installed migrations
-        $this->installed = $this->getInstalledMigrations();
+        // Make sure the setup table exist
+        $this->setupVersionTable();
+    }
+
+    /**
+     * Run all the migrations available
+     *
+     * @access public
+     * @return void
+     */
+    public function runUp()
+    {
+        // Get installed migrations and pluck by class name. We only need this for now
+        $migrations = Migrations::get();
+        $this->installed = $migrations->pluck('migration');
+
+        $this->io->debug("\n<info>Installed migrations:</info>");
+        $this->io->debug($this->installed->toArray());
 
         // Get pending migrations
         $this->io->write("\n<info>Fetching available migrations...</info>");
@@ -150,27 +195,75 @@ class Migration extends Debug
     }
 
     /**
-     * Get a list of all ran migration from the database history
-     * Return the list grouped by sprinkles
+     * Rollback the last migrations.
      *
-     * @access protected
+     * @access public
+     * @param int $step (default: 1)
+     * @param string $sprinkle (default: "")
      * @return void
      */
-    protected function getInstalledMigrations()
+    public function runDown($step = 1, $sprinkle = "")
     {
-        // Make sure the setup table exist
-        $this->setupVersionTable();
+        // Can't go furhter down than 1 step
+        if ($step <= 0) {
+            throw new \InvalidArgumentException("Step can't be less than 1");
+        }
 
-        // Load from the database
-        $migrations = Migrations::orderBy('created_at', 'asc')->get();
+        // Get last batch number
+        $batch = $this->getNextBatchNumber();
 
-        // Pluck by class name. We only need this for now
-        $mgirations = $migrations->pluck('migration');
+        // Calculate the number of steps back we need to take
+        $stepsBack = max($batch - $step, 1);
+        $this->io->debug("\nRolling back $step steps to batch $stepsBack");
 
-        $this->io->debug("\n<info>Installed migrations:</info>");
-        $this->io->debug($mgirations->toArray());
+        // Get installed migrations
+        $migrations = Migrations::orderBy("created_at", "desc")->where('batch', '>=', $stepsBack);
 
-        return $mgirations;
+        // Add the sprinkle requirement too
+        if ($sprinkle != "") {
+            $this->io->debug("Rolling back sprinkle `$sprinkle`");
+            $migrations->where('sprinkle', $sprinkle);
+        }
+
+        // Run query
+        $migrations = $migrations->get();
+
+        // If there's nothing to rollback, stop here
+        if ($migrations->isEmpty()) {
+            $this->io->write("\n<info>Nothing to rollback</info>");
+            exit(1);
+        }
+
+        // Get pending migrations
+        $this->io->write("\n<info>Migration to rollback:</info>");
+        $this->io->write($migrations->pluck('migration')->toArray());
+
+        // Ask confirmation to continue.
+        if (!$this->io->askConfirmation("\nContinue? [y/N]", false)) {
+            exit(1);
+        }
+
+        // Only thing we have to check here before going further is if those migration class are available
+        // We do it before running anything down to be sure not to break anything
+        foreach ($migrations as $migration) {
+            if (!class_exists($migration->migration)) {
+                $this->io->error("Migration class {$migration->migration} doesn't exist.");
+                exit(1);
+            }
+        }
+
+        // Loop again to run down each migration
+        foreach ($migrations as $migration) {
+            $this->io->write("> Rolling back {$migration->migration}...", false);
+            $migrationClass = $migration->migration;
+            $instance = new $migrationClass($this->schema);
+            $instance->down();
+            $migration->delete();
+            $this->io->write(" Done!");
+        }
+
+        // If all went well and there's no fatal errors, we are ready to bake
+        $this->io->write("\n<fg=black;bg=green>Rollback successful !</>\n");
     }
 
     /**
@@ -390,17 +483,12 @@ class Migration extends Debug
     }
 
     /**
-     * Remove a migration from the log.
+     * Return the next batch number from the db.
+     * Batch number is used to group together migration run in the same operation
      *
      * @access public
-     * @param mixed $migration
-     * @return void
+     * @return int the next batch number
      */
-    public function delete($migration)
-    {
-        //TODO
-    }
-
     public function getNextBatchNumber()
     {
         $batch = Migrations::max('batch');
@@ -417,10 +505,6 @@ class Migration extends Debug
      */
     protected function setupVersionTable()
     {
-        // Temp, for debug & tests
-        //$migration = new \UserFrosting\System\Bakery\Migrations\v410\MigrationTable($this->schema);
-        //$migration->down();
-
         // Check if the `migrations` table exist. Create it manually otherwise
         if (!$this->schema->hasColumn($this->table, 'id')) {
             $this->io->write("\n<info>Creating the `{$this->table}` table...</info>");
