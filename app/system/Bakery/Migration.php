@@ -14,20 +14,21 @@ use Composer\IO\IOInterface;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Str;
 use UserFrosting\System\Bakery\Bakery;
-use UserFrosting\System\Bakery\Debug;
+use UserFrosting\System\Bakery\Traits\DatabaseTest;
 use UserFrosting\System\Model\Migrations;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
  * Migration CLI Tools.
  * Perform database migrations commands
- * N.B.: This class extends `Debug` since we'll reuse debug db testing
  *
  * @extends Debug
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Migration extends Debug
+class Migration extends Bakery
 {
+    use Traits\DatabaseTest;
+
     /**
      * @var @Illuminate\Database\Schema
      */

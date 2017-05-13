@@ -10,6 +10,7 @@ namespace UserFrosting\System\Bakery;
 
 use Composer\Script\Event;
 use UserFrosting\System\Bakery\Bakery;
+use UserFrosting\System\Bakery\Traits\DatabaseTest;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
@@ -21,6 +22,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  */
 class Debug extends Bakery
 {
+    use Traits\DatabaseTest;
+
     /**
      * Run the `debug` composer script
      *
@@ -62,7 +65,7 @@ class Debug extends Bakery
         // Now that we have the container, we can test it and try to get the configs values
         // And test the db
         $this->showConfig();
-        $this->testDB();
+        $this->testDB(true);
 
         // If all went well and there's no fatal errors, we are ready to bake
         $this->io->write("\n<fg=black;bg=green>Ready to bake !</>\n");
