@@ -53,39 +53,12 @@
         {% endif %}
     </div><br>
     <div class="row">
-        {% if form.edit_buttons %}
-            {% if "edit" not in form.edit_buttons.hidden %}
-            <div class="col-xs-6 col-sm-4">
-                <div class="vert-pad">
-                    <button type="button" class="btn btn-block btn-md btn-primary js-group-edit" data-slug="{{group.slug}}">
-                        <i class="fa fa-edit"></i> {{translate('EDIT')}}
-                    </button>
-                </div>
-            </div>
-            {% endif %}
-            {% if "delete" not in form.edit_buttons.hidden %}
-            <div class="col-xs-6 col-sm-4">
-                <div class="vert-pad">
-                    <button type="button" class="btn btn-block btn-md btn-danger js-group-delete" data-slug="{{group.slug}}">
-                        <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
-                    </button>
-                </div>
-            </div>
-            {% endif %}
-        {% else %}
-            <div class="col-xs-6 col-sm-4">
-                <div class="vert-pad">
-                    <button type="submit" class="btn btn-block btn-lg btn-success">
-                        {{form.submit_text}}
-                    </button>
-                </div>
-            </div>
-            <div class="col-xs-4 col-sm-3 pull-right">
-                <div class="vert-pad">
-                    <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate("CANCEL")}}</button>
-                </div>
-            </div>
-        {% endif %}
+        <div class="col-xs-6 col-sm-4">
+            <button type="submit" class="btn btn-block btn-lg btn-success">{{form.submit_text}}</button>
+        </div>
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate("CANCEL")}}</button>
+        </div>
     </div>
 </form>
 <!-- Include validation rules -->

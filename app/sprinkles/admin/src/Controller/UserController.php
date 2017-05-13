@@ -819,23 +819,20 @@ class UserController extends SimpleController
         $locales = $config['site.locales.available'];
 
         // Determine fields that currentUser is authorized to view
-        $fieldNames = ['name', 'email', 'locale'];
+        $fieldNames = ['user_name', 'name', 'email', 'locale', 'group', 'roles'];
 
         // Generate form
         $fields = [
             // Always hide these
-            'hidden' => ['user_name', 'group', 'theme'],
-            'disabled' => []
+            'hidden' => ['theme']
         ];
 
-        // Determine which fields should be hidden entirely
+        // Determine which fields should be hidden
         foreach ($fieldNames as $field) {
-            if ($authorizer->checkAccess($currentUser, 'view_user_field', [
+            if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
                 'user' => $user,
                 'property' => $field
             ])) {
-                $fields['disabled'][] = $field;
-            } else {
                 $fields['hidden'][] = $field;
             }
         }
@@ -889,10 +886,8 @@ class UserController extends SimpleController
         return $this->ci->view->render($response, 'pages/user.html.twig', [
             'user' => $user,
             'locales' => $locales,
-            'form' => [
-                'fields' => $fields,
-                'edit_buttons' => $editButtons
-            ]
+            'fields' => $fields,
+            'tools' => $editButtons
         ]);
     }
 

@@ -11,6 +11,12 @@
 - Automatically load Sprinkler service providers (see #636)
 - Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
 
+## v4.0.17-Alpha
+- Add IIS config file (#371)
+- New ufCollection now supports free text input mode
+- New design and layout for user, group, and role summary boxes (also fixes #703)
+- Registration page returns 404 when registration disabled (#705)
+
 ## v4.0.16-Alpha
 - Add Docker configuration files
 - Begin work on Bakery, the command-line debug tool

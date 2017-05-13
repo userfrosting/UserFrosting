@@ -29,16 +29,10 @@
     <br>
     <div class="row">
         <div class="col-xs-8 col-sm-4">
-            <div class="vert-pad">
-                <button type="submit" class="btn btn-block btn-lg btn-success">
-                    {{translate("UPDATE")}}
-                </button>
-            </div>
+            <button type="submit" class="btn btn-block btn-lg btn-success">{{translate("UPDATE")}}</button>
         </div>
         <div class="col-xs-4 col-sm-3 pull-right">
-            <div class="vert-pad">
-                <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
-            </div>
+            <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
         </div>
     </div>
 </form>
@@ -70,7 +64,7 @@
             {{description}}
         </td>
         <td>
-            <button type="button" class="btn btn-sm btn-danger js-delete-row" title="Delete"> <i class="fa fa-times"></i> </button>
+            <button type="button" class="btn btn-link btn-trash js-delete-row pull-right" title="Delete"> <i class="fa fa-trash"></i> </button>
         </td>
     </tr>
 </script>
