@@ -23,6 +23,9 @@ use Illuminate\Database\Schema\Builder;
  */
 class PersistencesTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('persistences')) {
@@ -45,6 +48,9 @@ class PersistencesTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('persistences');

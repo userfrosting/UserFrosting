@@ -24,6 +24,9 @@ use UserFrosting\Sprinkle\Account\Model\Group;
  */
 class GroupsTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('groups')) {
@@ -70,6 +73,9 @@ class GroupsTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('groups');

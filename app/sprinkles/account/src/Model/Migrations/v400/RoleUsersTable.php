@@ -23,7 +23,10 @@ use Illuminate\Database\Schema\Builder;
  */
 class RoleUsersTable extends Migration
 {
-   public function up()
+    /**
+     * {@inheritDoc}
+     */
+    public function up()
     {
         if (!$this->schema->hasTable('role_users')) {
             $this->schema->create('role_users', function (Blueprint $table) {
@@ -43,6 +46,9 @@ class RoleUsersTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('role_users');

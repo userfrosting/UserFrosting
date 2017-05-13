@@ -23,6 +23,9 @@ use Illuminate\Database\Schema\Builder;
  */
 class VerificationsTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('verifications')) {
@@ -45,6 +48,9 @@ class VerificationsTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('verifications');

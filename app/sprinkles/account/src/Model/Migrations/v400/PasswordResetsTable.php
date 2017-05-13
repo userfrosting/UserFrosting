@@ -23,6 +23,9 @@ use Illuminate\Database\Schema\Builder;
  */
 class passwordResetsTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('password_resets')) {
@@ -45,6 +48,9 @@ class passwordResetsTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('password_resets');

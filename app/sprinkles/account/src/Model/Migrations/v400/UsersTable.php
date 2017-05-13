@@ -23,6 +23,9 @@ use Illuminate\Database\Schema\Builder;
  */
 class UsersTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('users')) {
@@ -57,6 +60,9 @@ class UsersTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('users');

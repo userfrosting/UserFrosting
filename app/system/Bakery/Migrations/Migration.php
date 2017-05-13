@@ -24,6 +24,12 @@ abstract class Migration
     protected $schema;
 
     /**
+     * List of dependencies for this migration.
+     * Should return an array of class required to be run before this migration
+     */
+    public $dependencies = [];
+
+    /**
      * __construct function.
      *
      * @access public
@@ -33,19 +39,6 @@ abstract class Migration
     public function __construct(Builder $schema)
     {
         $this->schema = $schema;
-    }
-
-    /**
-     * List of dependencies for this migration.
-     * Should return an array of class required to be run before this migration
-     *
-     * @access public
-     * @static
-     * @return array list of dependencies for this migration
-     */
-    public static function dependencies()
-    {
-        return [];
     }
 
     abstract public function up();

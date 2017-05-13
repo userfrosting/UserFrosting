@@ -32,12 +32,12 @@ class Migration extends Debug
     protected $schema;
 
      /**
-     * @var table The name of the migration table
+     * @var String table The name of the migration table
      */
     protected $table = "migrations";
 
     /**
-     * @var sprinkles The list of defined sprinkles
+     * @var Array sprinkles The list of defined sprinkles
      */
     protected $sprinkles;
 
@@ -47,22 +47,26 @@ class Migration extends Debug
     protected $batch;
 
     /**
-     * @var List of pending migration that require installation
+     * @var Collection List of pending migration that require installation
      */
     protected $pending;
 
     /**
-     * @var List of installed migration
+     * @var Collection List of installed migration. This is built from the log data in the database
      */
     protected $installed;
 
     /**
      * @var List of fulfillable migration (Migration that needs to be run and their dependencies are met)
+     * This list is very important. While `pending` is a list of migrations that needs to be run, `fulfillable`
+     * contain the order in which they are required to be run. When resolving the dependencies, this list will
+     * automatically be sorted to make sure the dependencies are run in the correct order
      */
     protected $fulfillable;
 
     /**
      * @var List of unfulfillable migration (Migration that needs to be run and their dependencies are NOT met)
+     * Note : An error could be thrown when an unfulfillable migration is met, but it makes much nicer cli error this way
      */
     protected $unfulfillable;
 
@@ -103,42 +107,31 @@ class Migration extends Debug
         // Get installed migrations
         $this->installed = $this->getInstalledMigrations();
 
-        $this->io->debug("\n<info>Installed migrations:</info>");
-        $this->io->debug($this->installed->toArray());
-
         // Get pending migrations
         $this->io->write("\n<info>Fetching available migrations...</info>");
         $this->pending = $this->getPendingMigrations();
 
-        $this->io->debug("\n<info>Pending migrations:</info>");
-        $this->io->debug($this->pending->toArray());
-
-        // Checkpoint n° 1
         // If there's no pending migration, don't need to go further
         if ($this->pending->isEmpty()) {
             $this->io->write("\n<fg=black;bg=green>Nothing to migrate !</>\n");
             return;
         }
 
-        // Reset fulfillable/unfulfillable lists
-        $this->fulfillable = collect([]);
-        $this->unfulfillable = collect([]);
-
-        // Loop pending and check for dependencies
-        foreach ($this->pending as $migration) {
-            $this->checkDependencies($migration);
-        }
-
-        $this->io->debug("\n<info>Fulfillable migrations:</info>");
-        $this->io->debug($this->fulfillable->toArray());
-
-        $this->io->debug("\n<info>Unfulfillable migrations:</info>");
-        $this->io->debug($this->unfulfillable->toArray());
+        // Resolve the dependencies
+        $this->resolveDependencies();
 
         // If there are any unfulfillable migration, we can't continue
         if (!$this->unfulfillable->isEmpty()) {
-            $this->io->write("\n<error>Some migrations dependencies can't be met. Check those migrations for unmet dependencies and try again:</error>");
-            $this->io->write($this->unfulfillable->toArray());
+
+            $msg = "\nSome migrations dependencies can't be met. Check those migrations for unmet dependencies and try again:";
+
+            foreach ($this->unfulfillable as $migration) {
+                $msg .= "\n{$migration->className} depends on \n  - ";
+                $msg .= implode("\n  - ", $migration->dependencies);
+                $msg .= "\n";
+            }
+
+            $this->io->error($msg);
             exit(1);
         }
 
@@ -146,15 +139,10 @@ class Migration extends Debug
 
         // We have a list of fulfillable migration, we run them up!
         foreach ($this->fulfillable as $migration) {
-
-            $this->io->write("> $migration");
-
-            // Running up
-            //$migrationClass = new $migration($this->schema);
-            //$migrationClass->up();
-
-            // Log that migrations
-            //$this->log($migration, d'oh);
+            $this->io->write("> Migrating {$migration->className}...", false);
+            $migration->up();
+            $this->log($migration);
+            $this->io->write(" Done!");
         }
 
         // If all went well and there's no fatal errors, we are ready to bake
@@ -176,8 +164,13 @@ class Migration extends Debug
         // Load from the database
         $migrations = Migrations::orderBy('created_at', 'asc')->get();
 
-        // Load the list of ran migrations, pluck by sprinkle and class name
-        return $migrations->pluck('migration');
+        // Pluck by class name. We only need this for now
+        $mgirations = $migrations->pluck('migration');
+
+        $this->io->debug("\n<info>Installed migrations:</info>");
+        $this->io->debug($mgirations->toArray());
+
+        return $mgirations;
     }
 
     /**
@@ -191,42 +184,50 @@ class Migration extends Debug
     {
         $pending = collect([]);
 
-        // Load sprinkles if not already done
-        if (empty($this->sprinkles)) {
-            $this->loadSprinkles();
-        }
+        // Get the sprinkle list
+        $sprinkles = $this->ci->sprinkleManager->getSprinkleNames();
 
         // Loop all the sprinkles to find their pending migrations
-        foreach ($this->sprinkles as $sprinkle) {
+        foreach ($sprinkles as $sprinkle) {
 
-            $sprinkleName = Str::studly($sprinkle);
+            $this->io->write("> Fetching from `$sprinkle`");
 
-            $this->io->write("- Fetching from `$sprinkleName` sprinkle");
-
-            // We get all the available migrations class
-            $availableMigrations = $this->getMigrationsClass($sprinkle);
+            // We get all the migrations. This will return them as a colleciton of class names
+            $migrations = $this->getMigrations($sprinkle);
 
             // We filter the available migration by removing the one that have already been run
-            $newMigrations = $availableMigrations->reject(function ($value, $key) {
+            // This reject the class name found in the installed collection
+            $migrations = $migrations->reject(function ($value, $key) {
                 return $this->installed->contains($value);
             });
 
-            //Merge the filtered migrations back into "pending"
-            $pending = $pending->merge($newMigrations);
+            // Load each class
+            foreach ($migrations as $migrationClass) {
+
+                // Make sure the class exist
+                if (!class_exists($migrationClass)) {
+                    throw new BadClassNameException("Unable to find the migration class '$migration'." );
+                }
+
+                // Load the migration class
+                $migration = new $migrationClass($this->schema);
+
+                //Set the sprinkle
+                $migration->sprinkle = $sprinkle;
+
+                // Also set the class name. We could find it using ::class, but this
+                // will make it easier to manipulate the collection
+                $migration->className = $migrationClass;
+
+                // Add it to the pending list
+                $pending->push($migration);
+            }
         }
 
-        return $pending;
-    }
+        $this->io->debug("\n<info>Pending migrations:</info>");
+        $this->io->debug($pending->pluck('className')->toArray());
 
-    /**
-     * Get the list of all sprinkles.
-     *
-     * @access protected
-     * @return void
-     */
-    protected function loadSprinkles()
-    {
-        $this->sprinkles = $this->ci->sprinkleManager->getSprinkleNames();
+        return $pending;
     }
 
     /**
@@ -237,7 +238,7 @@ class Migration extends Debug
      * @param mixed $sprinkleName
      * @return void
      */
-    public function getMigrationsClass($sprinkle)
+    public function getMigrations($sprinkle)
     {
         // Find all the migration files
         $path = $this->migrationDirectoryPath($sprinkle);
@@ -247,26 +248,47 @@ class Migration extends Debug
         $migrations = collect($files);
 
         // We transform the path into a migration object
-        $migrations->transform(function ($item, $key) use ($path, $sprinkle) {
-
+        $migrations->transform(function ($file) use ($sprinkle, $path) {
             // Deconstruct the path
-            $migration = str_replace($path, "", $item);
-            $className = basename($item, '.php');
+            $migration = str_replace($path, "", $file);
+            $className = basename($file, '.php');
             $sprinkleName = Str::studly($sprinkle);
             $version = str_replace("/$className.php", "", $migration);
 
             // Reconstruct the classname
             $className = "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Model\Migrations\\".$version."\\".$className;
 
-            // Make sure the class exist
-            if (!class_exists($className)) {
-                throw new BadClassNameException("Unable to find the migration class '$className'." );
-            }
-
             return $className;
         });
 
         return $migrations;
+    }
+
+    /**
+     * Resolve all the dependencies for all the pending migrations
+     * This function fills in the `fullfillable` and `unfulfillable` list
+     *
+     * @access protected
+     * @return void
+     */
+    protected function resolveDependencies()
+    {
+        $this->io->debug("\n<info>Resolving migrations dependencies...</info>");
+
+        // Reset fulfillable/unfulfillable lists
+        $this->fulfillable = collect([]);
+        $this->unfulfillable = collect([]);
+
+        // Loop pending and check for dependencies
+        foreach ($this->pending as $migration) {
+            $this->validateClassDependencies($migration);
+        }
+
+        $this->io->debug("\n<info>Fulfillable migrations:</info>");
+        $this->io->debug($this->fulfillable->pluck('className')->toArray());
+
+        $this->io->debug("\n<info>Unfulfillable migrations:</info>");
+        $this->io->debug($this->unfulfillable->pluck('className')->toArray());
     }
 
     /**
@@ -278,36 +300,37 @@ class Migration extends Debug
      * @param mixed $migration
      * @return bool true/false if all conditions are met
      */
-    protected function checkDependencies($migration)
+    protected function validateClassDependencies($migration)
     {
+        $this->io->debug("> Checking dependencies for {$migration->className}");
+
         // If it's already marked as fulfillable, it's fulfillable
-        // Return true directly, it's already marked
+        // Return true directly (it's already marked)
         if ($this->fulfillable->contains($migration)) {
             return true;
         }
 
         // If it's already marked as unfulfillable, it's unfulfillable
-        // Return true directly, it's already marked
+        // Return false directly (it's already marked)
         if ($this->unfulfillable->contains($migration)) {
             return false;
         }
 
         // If it's already run, it's fulfillable
+        // Mark it as such for next time it comes up in this loop
         if ($this->installed->contains($migration)) {
             return $this->markAsFulfillable($migration);
         }
 
-        // If class is in neither of those, we check it's in pending.
-        // If it's not, then it certainly doesn't exist and it's unfulfillable
-        // Since it's a dependencies that doesn't exist, we won't add it to the list
-        // of unfulfillable migration (it's not a migration to begin with)
-        if (!$this->pending->contains($migration)) {
-            return false;
-        }
-
         // Loop dependencies. If one is not fulfillable, then this one is not either
-        foreach ($migration::dependencies() as $dependency) {
-            if (!$this->checkDependencies($dependency)) {
+        foreach ($migration->dependencies as $dependencyClass) {
+
+            // Try to find it in the `pending` list. Cant' find it? Then it's not fulfillable
+            $dependency = $this->pending->where('className', $dependencyClass)->first();
+
+            // Check migration dependencies of this one right now
+            // If ti's not fullfillable, then this one isn't either
+            if (!$dependency || !$this->validateClassDependencies($dependency)) {
                 return $this->markAsUnfulfillable($migration);
             }
         }
@@ -326,7 +349,6 @@ class Migration extends Debug
      */
     protected function markAsFulfillable($migration)
     {
-        $this->pending->pull($migration);
         $this->fulfillable->push($migration);
         return true;
     }
@@ -341,7 +363,6 @@ class Migration extends Debug
      */
     protected function markAsUnfulfillable($migration)
     {
-        $this->pending->pull($migration);
         $this->unfulfillable->push($migration);
         return false;
     }
@@ -350,22 +371,22 @@ class Migration extends Debug
      * Log that a migration was run.
      *
      * @access public
-     * @param string $sprinkle
-     * @param string $version
+     * @param mixed $migration
      * @return void
      */
-    protected function log($migration, $sprinkleName)
+    protected function log($migration)
     {
         // Get the next batch number if not defined
         if (!$this->batch) {
             $this->batch = $this->getNextBatchNumber();
         }
 
-        new Migrations([
-            'sprinkle' => $sprinkleName,
-            'migration' => $migration,
+        $log = new Migrations([
+            'sprinkle' => $migration->sprinkle,
+            'migration' => $migration->className,
             'batch' => $this->batch
         ]);
+        $log->save();
     }
 
     /**
@@ -382,7 +403,8 @@ class Migration extends Debug
 
     public function getNextBatchNumber()
     {
-        return Migrations::max('batch');
+        $batch = Migrations::max('batch');
+        return ($batch) ?: 0;
     }
 
     /**

@@ -24,7 +24,10 @@ use UserFrosting\Sprinkle\Account\Model\Role;
  */
 class RolesTable extends Migration
 {
-   public function up()
+    /**
+     * {@inheritDoc}
+     */
+    public function up()
     {
         if (!$this->schema->hasTable('roles')) {
             $this->schema->create('roles', function (Blueprint $table) {
@@ -66,6 +69,9 @@ class RolesTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('roles');

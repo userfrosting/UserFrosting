@@ -21,6 +21,9 @@ use Illuminate\Database\Schema\Builder;
  */
 class ThrottlesTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('throttles')) {
@@ -40,6 +43,9 @@ class ThrottlesTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('throttles');

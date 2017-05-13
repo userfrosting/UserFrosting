@@ -22,6 +22,9 @@ use Illuminate\Database\Schema\Builder;
  */
 class ActivitiesTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('activities')) {
@@ -42,6 +45,9 @@ class ActivitiesTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('activities');

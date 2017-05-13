@@ -23,6 +23,9 @@ use Illuminate\Database\Schema\Builder;
  */
 class PermissionRolesTable extends Migration
 {
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('permission_roles')) {
@@ -43,6 +46,9 @@ class PermissionRolesTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('permission_roles');

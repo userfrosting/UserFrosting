@@ -22,8 +22,14 @@ use Illuminate\Database\Schema\Builder;
  */
 class MigrationTable extends Migration
 {
-    public static function dependencies() {}
+    /**
+     * {@inheritDoc}
+     */
+    public $dependencies = [];
 
+    /**
+     * {@inheritDoc}
+     */
     public function up() {
         $this->schema->create('migrations', function (Blueprint $table) {
             $table->increments('id');
@@ -43,6 +49,9 @@ class MigrationTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down() {
         $this->schema->drop('migrations');
     }

@@ -26,14 +26,17 @@ use UserFrosting\Sprinkle\Account\Model\Role;
  */
 class PermissionsTable extends Migration
 {
-    public static function dependencies()
-    {
-        return [
-            '\UserFrosting\Sprinkle\Account\Model\Migrations\v400\RolesTable',
-            '\UserFrosting\Sprinkle\Account\Model\Migrations\v400\PermissionRolesTable'
-        ];
-    }
+    /**
+     * {@inheritDoc}
+     */
+    public $dependencies = [
+        '\UserFrosting\Sprinkle\Account\Model\Migrations\v400\RolesTable',
+        '\UserFrosting\Sprinkle\Account\Model\Migrations\v400\PermissionRolesTable'
+    ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function up()
     {
         if (!$this->schema->hasTable('permissions')) {
@@ -240,6 +243,9 @@ class PermissionsTable extends Migration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function down()
     {
         $this->schema->drop('permissions');
