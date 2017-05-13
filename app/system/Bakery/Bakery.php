@@ -11,6 +11,7 @@ namespace UserFrosting\System\Bakery;
 use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\IOInterface;
+use Composer\Script\Event;
 use UserFrosting\System\UserFrosting;
 
 /**
@@ -96,5 +97,26 @@ abstract class Bakery
 
         // Get the container
         $this->ci = $uf->getContainer();
+    }
+
+    /**
+     * Process the arguments passed with the composer run-script and return them in a nice collection.
+     *
+     * @access protected
+     * @param @Composer\Script\Event $event
+     * @return void
+     */
+    protected function getArguments(Event $event)
+    {
+        $args = collect($event->getArguments());
+        $args = $args->mapWithKeys(function ($item) {
+            $item = explode("=", $item);
+            $arg = $item[0];
+            $param = (count($item) > 1) ? $item[1] : true;
+
+            return [$arg => $param];
+        });
+
+        return $args;
     }
 }

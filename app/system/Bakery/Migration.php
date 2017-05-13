@@ -78,7 +78,7 @@ class Migration extends Bakery
      *
      * @access public
      * @static
-     * @param Event $event
+     * @param @Composer\Script\Event $event
      * @return void
      */
     public static function main(Event $event)
@@ -99,16 +99,8 @@ class Migration extends Bakery
     {
         $bakery = new self($event->getIO(), $event->getComposer());
 
-        // Handling parameter
-        $args = collect($event->getArguments());
-        $args = $args->mapWithKeys(function ($item) {
-            $item = explode("=", $item);
-            $arg = $item[0];
-            $param = (count($item) > 1) ? $item[1] : true;
-
-            return [$arg => $param];
-        });
-
+        // Get the arguments
+        $args = $bakery->getArguments($event);
         $step = $args->get('step', 1);
         $sprinkle = $args->get('sprinkle');
 
