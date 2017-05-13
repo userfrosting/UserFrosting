@@ -53,6 +53,8 @@
     "scripts": {
         "migrate" : "UserFrosting\\System\\Bakery\\Migration::main",
         "migrate:rollback" : "UserFrosting\\System\\Bakery\\Migration::rollback",
+        "migrate:reset" : "UserFrosting\\System\\Bakery\\Migration::reset",
+        "migrate:refresh" : "UserFrosting\\System\\Bakery\\Migration::refresh",
         "debug" : "UserFrosting\\System\\Bakery\\Debug::main",
         "build-assets" : "UserFrosting\\System\\Bakery\\Assets::main",
         "bake" : [

@@ -89,6 +89,9 @@ class Migration extends Bakery
 
     /**
      * Run the `migrate:rollback` composer script
+     * Available CLI arguments:
+     *  - step={int} (Number of steps to rollback)
+     *  - sprinkle={string} (Limit to this sprinkle)
      *
      * @access public
      * @static
@@ -105,6 +108,54 @@ class Migration extends Bakery
         $sprinkle = $args->get('sprinkle');
 
         $bakery->runDown($step, $sprinkle);
+    }
+
+    /**
+     * Run the `migrate:reset` composer script
+     * The migrate:reset command will roll back all migrations
+     * Available CLI arguments:
+     *  - sprinkle={string} (Limit to this sprinkle)
+     *
+     * @access public
+     * @static
+     * @param Event $event
+     * @return void
+     */
+    public static function reset(Event $event)
+    {
+        $bakery = new self($event->getIO(), $event->getComposer());
+
+        // Get the arguments
+        $args = $bakery->getArguments($event);
+        $sprinkle = $args->get('sprinkle');
+
+        $bakery->runDown(-1, $sprinkle);
+    }
+
+    /**
+     * Run the `migrate:refresh` composer script
+     * Roll back all migrations and then execute the migrate command.
+     * This command effectively re-creates the entire database
+     * Available CLI arguments:
+     *  - step={int} (Number of steps to refresh)
+     *  - sprinkle={string} (Limit to this sprinkle)
+     *
+     * @access public
+     * @static
+     * @param Event $event
+     * @return void
+     */
+    public static function refresh(Event $event)
+    {
+        $bakery = new self($event->getIO(), $event->getComposer());
+
+        // Get the arguments
+        $args = $bakery->getArguments($event);
+        $step = $args->get('step', 1);
+        $sprinkle = $args->get('sprinkle');
+
+        $bakery->runDown($step, $sprinkle);
+        $bakery->runUp();
     }
 
     /**
@@ -188,26 +239,31 @@ class Migration extends Bakery
     }
 
     /**
-     * Rollback the last migrations.
+     * Rollback the last btach of migrations.
      *
      * @access public
-     * @param int $step (default: 1)
-     * @param string $sprinkle (default: "")
+     * @param int $step (default: 1). Number of batch we will be going back. -1 revert all migrations
+     * @param string $sprinkle (default: "") Limit rollback to a specific sprinkle
      * @return void
      */
     public function runDown($step = 1, $sprinkle = "")
     {
         // Can't go furhter down than 1 step
-        if ($step <= 0) {
-            throw new \InvalidArgumentException("Step can't be less than 1");
+        if ($step <= 0 && $step != -1) {
+            throw new \InvalidArgumentException("Step can't be 0 or less");
         }
 
         // Get last batch number
         $batch = $this->getNextBatchNumber();
 
         // Calculate the number of steps back we need to take
-        $stepsBack = max($batch - $step, 1);
-        $this->io->debug("\nRolling back $step steps to batch $stepsBack");
+        if ($step == -1) {
+            $stepsBack = 1;
+            $this->io->warning("\nRolling back all migrations");
+        } else {
+            $stepsBack = max($batch - $step, 1);
+            $this->io->debug("\nRolling back $step steps to batch $stepsBack");
+        }
 
         // Get installed migrations
         $migrations = Migrations::orderBy("created_at", "desc")->where('batch', '>=', $stepsBack);
