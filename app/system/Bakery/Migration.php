@@ -404,7 +404,7 @@ class Migration extends Debug
     public function getNextBatchNumber()
     {
         $batch = Migrations::max('batch');
-        return ($batch) ?: 0;
+        return ($batch) ? $batch + 1 : 1;
     }
 
     /**
