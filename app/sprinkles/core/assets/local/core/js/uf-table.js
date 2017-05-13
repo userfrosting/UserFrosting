@@ -226,7 +226,7 @@
         for (i = 0; i < sortList.length; i++) {
             var columnIndex = sortList[i][0];
             var columnDirection = sortOrders[sortList[i][1]];   // Converts to 'asc' or 'desc'
-            if (sortList[i]) {
+            if (sortList[i] === 1) {
                 var columnName = $(table.config.headerList[columnIndex]).data("column-name");
                 sorts[columnName] = columnDirection;
             }
