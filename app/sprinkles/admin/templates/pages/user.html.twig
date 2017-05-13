@@ -6,107 +6,121 @@
 {% endblock %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}{{ translate("USER", 2)}} | {{user.user_name}}{% endblock %}
+{% block page_title %}{{ translate("USER", 2)}} | {{user.full_name}}{% endblock %}
 
 {% block page_description %}{{ translate("USER.INFO_PAGE", {name: user.user_name}) }}{% endblock %}
 
 {% block body_matter %}
     {% block group_box %}
-        {% if 'group' not in fields.hidden %}
-        <div class="row">
-            <div class="col-sm-6 col-xs-12">
-              <div class="info-box">
-                <span class="info-box-icon bg-aqua"><i class="{{user.group.icon}}"></i></span>
-                <div class="info-box-content">
-                  <span class="info-box-number">{{user.user_name}}</span>
-                  <span class="info-box-text">{{user.group.name}}</span>
-                </div>
-                <!-- /.info-box-content -->
-              </div>
-              <!-- /.info-box -->
-            </div>
-            <!-- /.col -->
-        </div>
-        {% endif %}
     {% endblock %}
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div id="view-user">
                 {% block user_box %}
                     <div class="box box-primary">
-                        <div class="box-header">
-                            <h2 class="box-title"><i class="fa fa-fw fa-user"></i> {{user.user_name}}</h2>
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{translate('USER.SUMMARY')}}</h3>
+                            {% if 'tools' not in tools.hidden %}
+                                <div class="box-tools pull-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fa fa-gear"></i> <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu box-tool-menu">
+                                            {% block tools %}
+                                                <li>
+                                                    <a href="#" class="js-user-edit" data-user_name="{{user.user_name}}">
+                                                        <i class="fa fa-edit fa-fw"></i> {{translate('EDIT')}}
+                                                    </a>
+                                                </li>
+                                                {% if 'password' not in tools.hidden %}
+                                                    <li>
+                                                        <a href="#" class="js-user-password" data-user_name="{{user.user_name}}">
+                                                            <i class="fa fa-lock fa-fw"></i> {{translate('PASSWORD')}}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if 'roles' not in tools.hidden %}
+                                                    <li>
+                                                        <a href="#" class="js-user-roles" data-user_name="{{user.user_name}}">
+                                                            <i class="fa fa-drivers-license fa-fw"></i> {{translate('ROLE', 2)}}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if 'activate' not in tools.hidden and user.flag_verified == "0" %}
+                                                    <li>
+                                                        <a href="#" class="js-user-activate" data-user_name="{{user.user_name}}">
+                                                            <i class="fa fa-bolt fa-fw"></i> {{translate('ACTIVATE')}}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if 'enable' not in tools.hidden %}
+                                                    {% if user.flag_enabled == "1" %}
+                                                        <li>
+                                                            <a href="#" class="js-user-disable" data-user_name="{{user.user_name}}">
+                                                                <i class="fa fa-minus-circle fa-fw"></i> {{translate('DISABLE')}}
+                                                            </a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li>
+                                                            <a href="#" class="js-user-enable" data-user_name="{{user.user_name}}">
+                                                                <i class="fa fa-plus-circle fa-fw"></i> {{translate('ENABLE')}}
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endif %}
+                                                {% if 'delete' not in tools.hidden %}
+                                                    <li>
+                                                        <a href="#" class="js-user-delete" data-user_name="{{user.user_name}}">
+                                                            <i class="fa fa-trash-o fa-fw"></i> {{translate('DELETE')}}
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endblock %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
-                        <div class="box-body">
-                            {% include "components/forms/user.html.twig" %}
+                        <div class="box-body box-profile">
+                            <img class="profile-user-img img-responsive img-circle" src="{{user.avatar}}" alt="{{user.user_name}}">
+              
+                            <h3 class="profile-username text-center">{{user.full_name}}</h3>
+
+                            <p class="text-muted text-center">{{user.user_name}}{% if 'group' not in fields.hidden %} • {{user.group.name}}{% endif %}</p>
+                            <hr>
+
+                            {% if 'email' not in fields.hidden %}
+                                <strong><i class="fa fa-envelope margin-r-5"></i> {{translate("EMAIL")}}</strong>
+                                <p class="text-muted box-profile-property js-copy-container">
+                                    <i class="fa fa-copy js-copy-trigger"></i>
+                                    <span class="js-copy-target">{{user.email}}</span>
+                                </p>
+                                <hr>
+                            {% endif %}
+
+                            {% if 'locale' not in fields.hidden %}
+                                <strong><i class="fa fa-language margin-r-5"></i> {{translate("LOCALE")}}</strong>
+                                <p class="text-muted box-profile-property">
+                                    {{locales[user.locale]}}
+                                </p>
+                                <hr>
+                            {% endif %}
+
+                            {% if 'roles' not in fields.hidden %}
+                                <strong><i class="fa fa-drivers-license margin-r-5"></i> {{translate("ROLE", 2)}}</strong>
+                                <p class="box-profile-property">
+                                    {% for role in user.roles %}
+                                        <span class="label label-primary" title="{{role.description}}">{{role.name}}</span>
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
-                {% endblock %}
-                {% block edit_buttons_box %}
-                    {% if form.edit_buttons %}
-                    <div class="box box-primary">
-                        <div class="box-header">
-                            <h2 class="box-title"><i class="fa fa-fw fa-wrench"></i> {{translate("ACCOUNT.TOOLS")}}</h2>
-                        </div>
-                        <div class="box-body">
-                            {% if 'password' not in form.edit_buttons.hidden %}
-                            <div class="col-xs-6 col-sm-3">
-                                <div class="vert-pad">
-                                    <button type="button" class="btn btn-block btn-md btn-primary js-user-password" data-user_name="{{user.user_name}}">
-                                        <i class="fa fa-lock"></i> {{translate('PASSWORD')}}
-                                    </button>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if 'roles' not in form.edit_buttons.hidden %}
-                            <div class="col-xs-6 col-sm-3">
-                                <div class="vert-pad">
-                                    <button type="button" class="btn btn-block btn-md btn-primary js-user-roles" data-user_name="{{user.user_name}}">
-                                        <i class="fa fa-drivers-license"></i> {{translate('ROLE', 2)}}
-                                    </button>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if 'activate' not in form.edit_buttons.hidden and user.flag_verified == "0" %}
-                            <div class="col-xs-6 col-sm-3">
-                                <div class="vert-pad">
-                                    <button type="button" class="btn btn-block btn-md btn-warning js-user-activate" data-user_name="{{user.user_name}}">
-                                        <i class="fa fa-bolt"></i> {{translate('ACTIVATE')}}
-                                    </button>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if 'enable' not in form.edit_buttons.hidden %}
-                            <div class="col-xs-6 col-sm-3">
-                                <div class="vert-pad">
-                                    {% if user.flag_enabled == "1" %}
-                                        <button type="button" class="btn btn-block btn-md btn-warning js-user-disable" data-user_name="{{user.user_name}}">
-                                            <i class="fa fa-minus-circle"></i> {{translate('DISABLE')}}
-                                        </button>
-                                    {% else %}
-                                        <button type="button" class="btn btn-block btn-md btn-warning js-user-enable" data-user_name="{{user.user_name}}">
-                                            <i class="fa fa-plus-circle"></i> {{translate('ENABLE')}}
-                                        </button>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if 'delete' not in form.edit_buttons.hidden %}
-                            <div class="col-xs-6 col-sm-3">
-                                <div class="vert-pad">
-                                    <button type="button" class="btn btn-block btn-md btn-danger js-user-delete" data-user_name="{{user.user_name}}">
-                                        <i class="fa fa-trash-o"></i> {{translate('DELETE')}}
-                                    </button>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endif %}
                 {% endblock %}
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             {% block activity_box %}
                 <div id="widget-user-activities" class="box box-primary">
                     <div class="box-header">

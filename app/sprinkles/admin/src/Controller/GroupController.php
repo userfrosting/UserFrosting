@@ -476,17 +476,14 @@ class GroupController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => [],
-            'disabled' => []
+            'hidden' => []
         ];
 
         foreach ($fieldNames as $field) {
-            if ($authorizer->checkAccess($currentUser, 'view_group_field', [
+            if (!$authorizer->checkAccess($currentUser, 'view_group_field', [
                 'group' => $group,
                 'property' => $field
             ])) {
-                $fields['disabled'][] = $field;
-            } else {
                 $fields['hidden'][] = $field;
             }
         }
@@ -511,10 +508,8 @@ class GroupController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/group.html.twig', [
             'group' => $group,
-            'form' => [
-                'fields' => $fields,
-                'edit_buttons' => $editButtons
-            ]
+            'fields' => $fields,
+            'tools' => $editButtons
         ]);
     }
 

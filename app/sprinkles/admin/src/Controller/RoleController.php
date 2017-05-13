@@ -528,17 +528,14 @@ class RoleController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => [],
-            'disabled' => []
+            'hidden' => []
         ];
 
         foreach ($fieldNames as $field) {
-            if ($authorizer->checkAccess($currentUser, 'view_role_field', [
+            if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
                 'role' => $role,
                 'property' => $field
             ])) {
-                $fields['disabled'][] = $field;
-            } else {
                 $fields['hidden'][] = $field;
             }
         }
@@ -563,10 +560,8 @@ class RoleController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/role.html.twig', [
             'role' => $role,
-            'form' => [
-                'fields' => $fields,
-                'edit_buttons' => $editButtons
-            ]
+            'fields' => $fields,
+            'tools' => $editButtons
         ]);
     }
 

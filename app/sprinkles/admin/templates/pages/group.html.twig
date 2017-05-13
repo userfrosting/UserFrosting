@@ -12,34 +12,59 @@
 
 {% block body_matter %}
     <div class="row">
-        {% if 'group' not in fields.hidden %}
-        <div class="col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="{{group.icon}}"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-number">{{group.name}}</span>
-              <span class="info-box-text">{{ translate('X_USER', group.users.count)}}</span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <!-- /.col -->
-        {% endif %}
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
             <div id="view-group" class="box box-primary">
-                <div class="box-header">
-                    <h2 class="box-title"><i class="fa fa-fw fa-users"></i> {{group.name}}</h2>
-                    <div class="clearfix"></div>
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{translate('GROUP.SUMMARY')}}</h3>
+                    {% if 'tools' not in tools.hidden %}
+                        <div class="box-tools pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-gear"></i> <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu box-tool-menu">
+                                    {% block tools %}
+                                        <li>
+                                            <a href="#" class="js-group-edit" data-slug="{{group.slug}}">
+                                                <i class="fa fa-edit fa-fw"></i> {{translate('EDIT')}}
+                                            </a>
+                                        </li>
+                                        {% if 'delete' not in tools.hidden %}
+                                            <li>
+                                                <a href="#" class="js-group-delete" data-slug="{{group.slug}}">
+                                                    <i class="fa fa-trash-o fa-fw"></i> {{translate('DELETE')}}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endblock %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-                <div class="box-body">
-                    {% include "components/forms/group.html.twig" %}
+                <div class="box-body box-profile">
+                    <div class="text-center">
+                        <i class="{{group.icon}} fa-5x"></i>
+                    </div>
+      
+                    <h3 class="profile-username text-center">{{group.name}}</h3>
+
+                    {% if 'description' not in fields.hidden %}
+                        <p class="text-muted">
+                            {{group.description}}
+                        </p>
+                    {% endif %}
+                    {% if 'users' not in fields.hidden %}
+                        <hr>
+                        <strong><i class="fa fa-users margin-r-5"></i> {{ translate('USER', 2)}}</strong>
+                        <p class="badge bg-blue box-profile-property">
+                            {{group.users.count}}
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
             <div id="widget-group-users" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>

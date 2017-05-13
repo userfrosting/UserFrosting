@@ -111,30 +111,12 @@
         {% endblock %}
     </div><br>
     <div class="row">
-        {% if form.edit_buttons %}
-            {% if 'edit' not in form.edit_buttons.hidden %}
-            <div class="col-xs-6 col-sm-3">
-                <div class="vert-pad">
-                    <button type="button" class="btn btn-block btn-md btn-primary js-user-edit" data-user_name="{{user.user_name}}">
-                        <i class="fa fa-edit"></i> {{translate('EDIT')}}
-                    </button>
-                </div>
-            </div>
-            {% endif %}
-        {% else %}
-            <div class="col-xs-8 col-sm-4">
-                <div class="vert-pad">
-                    <button type="submit" class="btn btn-block btn-lg btn-success">
-                        {{form.submit_text}}
-                    </button>
-                </div>
-            </div>
-            <div class="col-xs-4 col-sm-3 pull-right">
-                <div class="vert-pad">
-                    <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
-                </div>
-            </div>
-        {% endif %}
+        <div class="col-xs-8 col-sm-4">
+            <button type="submit" class="btn btn-block btn-lg btn-success">{{form.submit_text}}</button>
+        </div>
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
+        </div>
     </div>
 </form>
 <!-- Include validation rules -->
