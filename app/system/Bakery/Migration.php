@@ -171,7 +171,13 @@ class Migration extends Bakery
         $this->getContainer();
 
         // Start by testing the DB connexion, just in case
-        $this->testDB();
+        try {
+            $this->io->debug("\n<info>Testing database connexion...</info>");
+            $this->testDB();
+        } catch (\Exception $e) {
+            $this->io->error($e->getMessage());
+            exit(1);
+        }
 
         // Get schema required to run the table blueprints
         $this->schema = Capsule::schema();

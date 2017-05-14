@@ -23,18 +23,10 @@ trait DatabaseTest
      * Function to test the db connexion.
      *
      * @access protected
-     * @param bool $verbose (default: false)
-     * @return void
+     * @return bool True if success
      */
-    protected function testDB($verbose = false)
+    protected function testDB()
     {
-        $message = "\n<info>Testing database connexion...</info>";
-        if ($verbose) {
-            $this->io->write($message);
-        } else {
-            $this->io->debug($message);
-        }
-
         // Boot db
         $this->ci->db;
 
@@ -43,28 +35,19 @@ trait DatabaseTest
 
         // Check params are valids
         $dbParams = $config['db.default'];
-
         if (!$dbParams) {
-            $this->io->write("\n<error>'default' database connection not found.  Please double-check your configuration.</error>");
-            exit(1);
+            throw new \Exception("'default' database connection not found.  Please double-check your configuration.");
         }
 
         // Test database connection directly using PDO
         try {
             Capsule::connection()->getPdo();
         } catch (\PDOException $e) {
-
             $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:".PHP_EOL;
             $message .= "Exception: " . $e->getMessage() . PHP_EOL;
-            $this->io->error("$message");
-            exit(1);
+            throw new \Exception($message);
         }
 
-        $message = "Database connexion successful";
-        if ($verbose) {
-            $this->io->write($message);
-        } else {
-            $this->io->debug($message);
-        }
+        return true;
     }
 }
