@@ -10,7 +10,7 @@ namespace UserFrosting\System\Bakery;
 
 use Composer\Script\Event;
 use UserFrosting\System\Bakery\Bakery;
-use UserFrosting\System\Bakery\Traits\DatabaseTest;
+use UserFrosting\System\Bakery\EnvSetup;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
@@ -56,10 +56,10 @@ class Debug extends Bakery
         $this->checkPhpVersion();
         $this->checkNodeVersion();
         $this->checkNpmVersion();
-        $this->checkEnv();
         $this->listSprinkles();
+        $this->checkEnv();
 
-        // Before goin further, will try to load the UF Container
+        // Before going further, will try to load the UF Container
         $this->getContainer();
 
         // Now that we have the container, we can test it and try to get the configs values
@@ -129,9 +129,23 @@ class Debug extends Bakery
      */
     protected function checkEnv()
     {
+        // Check if the .env file is define. If it it, we'll go directly to testing the database.
         $path = \UserFrosting\APP_DIR. '/.env';
         if (!file_exists($path)) {
-            $this->io->warning("\nFile `$path` not found. This file is used to define your database credentials, but you might have global environment values set on your machine. Make sure the database config below are right.");
+
+            // File wasn't found. Not fatal yet, just show a warning for now
+            $this->io->warning("\nFile `$path` not found. ");
+            $this->io->write("This file is used to define your database credentials and other environment variables.\nNote: You might have global environment values defined on this machine instead.");
+
+            // Ask if we should setup .env
+            $setupEnv = $this->io->askConfirmation("Do you want to setup a `.env` file now? [y/N] ", false);
+
+            if ($setupEnv) {
+
+                $envSetup = new EnvSetup($this->io, $this->composer);
+                $envSetup->setupEnv();
+                $this->io->write("\n<comment>If you can't connect to the database, edit the parameters in your newly created `.env` file or run `composer run-script setup-env`.</>");
+            }
         }
     }
 

@@ -56,9 +56,7 @@ trait DatabaseTest
 
             $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:".PHP_EOL;
             $message .= "Exception: " . $e->getMessage() . PHP_EOL;
-            $message .= "Trace: " . $e->getTraceAsString() . PHP_EOL;
-
-            $this->io->write("\n<error>$message</error>");
+            $this->io->error("$message");
             exit(1);
         }
 

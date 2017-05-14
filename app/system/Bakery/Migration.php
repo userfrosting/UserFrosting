@@ -14,7 +14,6 @@ use Composer\IO\IOInterface;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Str;
 use UserFrosting\System\Bakery\Bakery;
-use UserFrosting\System\Bakery\Traits\DatabaseTest;
 use UserFrosting\System\Model\Migrations;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
