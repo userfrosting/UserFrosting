@@ -305,7 +305,7 @@ class Migration extends Bakery
         foreach ($migrations as $migration) {
             $this->io->write("> Rolling back {$migration->migration}...", false);
             $migrationClass = $migration->migration;
-            $instance = new $migrationClass($this->schema);
+            $instance = new $migrationClass($this->schema, $this->io);
             $instance->down();
             $migration->delete();
             $this->io->write(" Done!");
@@ -352,7 +352,7 @@ class Migration extends Bakery
                 }
 
                 // Load the migration class
-                $migration = new $migrationClass($this->schema);
+                $migration = new $migrationClass($this->schema, $this->io);
 
                 //Set the sprinkle
                 $migration->sprinkle = $sprinkle;
@@ -460,12 +460,18 @@ class Migration extends Bakery
 
         // If it's already run, it's fulfillable
         // Mark it as such for next time it comes up in this loop
-        if ($this->installed->contains($migration)) {
+        if ($this->installed->contains($migration->className)) {
+            $this->io->warning("markAsFulfillable");
             return $this->markAsFulfillable($migration);
         }
 
         // Loop dependencies. If one is not fulfillable, then this one is not either
         foreach ($migration->dependencies as $dependencyClass) {
+
+            // The dependency might already be installed. Check that first
+            if ($this->installed->contains($dependencyClass)) {
+                continue;
+            }
 
             // Try to find it in the `pending` list. Cant' find it? Then it's not fulfillable
             $dependency = $this->pending->where('className', $dependencyClass)->first();
@@ -558,7 +564,7 @@ class Migration extends Bakery
         if (!$this->schema->hasColumn($this->table, 'id')) {
             $this->io->write("\n<info>Creating the `{$this->table}` table...</info>");
 
-            $migration = new \UserFrosting\System\Bakery\Migrations\v410\MigrationTable($this->schema);
+            $migration = new \UserFrosting\System\Bakery\Migrations\v410\MigrationTable($this->schema, $this->io);
             $migration->up();
 
             $this->io->write("Table `{$this->table}` created");

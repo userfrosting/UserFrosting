@@ -22,17 +22,17 @@ use UserFrosting\System\UserFrosting;
 abstract class Bakery
 {
     /**
-     * @var Composer
+     * @var @Composer\Composer
      */
     protected $composer;
 
     /**
-     * @var IOInterface
+     * @var @Composer\IO\IOInterface
      */
     protected $io;
 
     /**
-     * @var string
+     * @var string Path to the project root folder
      */
     protected $projectRoot;
 
