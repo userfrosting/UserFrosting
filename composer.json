@@ -59,13 +59,20 @@
         "debug" : "UserFrosting\\System\\Bakery\\Debug::main",
         "build-assets" : "UserFrosting\\System\\Bakery\\Assets::main",
         "bake" : [
-            "@composer update",
             "@debug",
+            "@migrate",
             "@build-assets"
         ],
         "post-create-project-cmd" : [
-            "@bake",
-            "@migrate"
+            "@bake"
+        ],
+        "post-update-cmd" : [
+            "@migrate",
+            "@build-assets"
+        ],
+        "post-install-cmd" : [
+            "@migrate",
+            "@build-assets"
         ]
     }
 }
