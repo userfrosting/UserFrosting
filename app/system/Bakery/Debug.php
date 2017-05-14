@@ -47,7 +47,7 @@ class Debug extends Bakery
     public function run()
     {
         // Display header,
-        $this->io->write("\n<info>/*************************/\n/* UserFrosting's Bakery */\n/*************************/</info>");
+        $this->io->write("<info>{$this->title()}</info>");
         $this->io->write("UserFrosing version : " . \UserFrosting\VERSION);
         $this->io->write("OS Name : " . php_uname('s'));
         $this->io->write("Project Root : {$this->projectRoot}");
