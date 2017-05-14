@@ -132,8 +132,7 @@ class Debug extends Bakery
         $path = \UserFrosting\APP_DIR . '/sprinkles.json';
         $sprinklesFile = @file_get_contents($path);
         if ($sprinklesFile === false) {
-            $this->io->error("\nFATAL ERROR :: File `$path` not found. Please create a 'sprinkles.json' file and try again.");
-            exit(1);
+            $sprinklesFile = $this->setupBaseSprinkleList();
         }
 
         // List installed sprinkles
@@ -148,6 +147,21 @@ class Debug extends Bakery
             $this->io->error("\nFATAL ERROR :: The `core` sprinkle is missing from the 'sprinkles.json' file.");
             exit(1);
         }
+    }
+
+    protected function setupBaseSprinkleList()
+    {
+        $model = \UserFrosting\APP_DIR . '/sprinkles.example.json';
+        $destination = \UserFrosting\APP_DIR . '/sprinkles.json';
+        $sprinklesModelFile = @file_get_contents($model);
+        if ($sprinklesModelFile === false) {
+            $this->io->error("\nFATAL ERROR :: File `$sprinklesModelFile` not found. Please create '$destination' manually and try again.");
+            exit(1);
+        }
+
+        file_put_contents($destination, $sprinklesModelFile);
+
+        return $sprinklesModelFile;
     }
 
     /**

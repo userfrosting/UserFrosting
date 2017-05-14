@@ -78,10 +78,6 @@
         "post-update-cmd" : [
             "@migrate",
             "@build-assets"
-        ],
-        "post-install-cmd" : [
-            "@migrate",
-            "@build-assets"
         ]
     }
 }
