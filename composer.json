@@ -64,7 +64,6 @@
         "migrate:rollback" : "UserFrosting\\System\\Bakery\\Migration::rollback",
         "migrate:reset" : "UserFrosting\\System\\Bakery\\Migration::reset",
         "migrate:refresh" : "UserFrosting\\System\\Bakery\\Migration::refresh",
-        "setup-env" : "UserFrosting\\System\\Bakery\\EnvSetup::main",
         "debug" : "UserFrosting\\System\\Bakery\\Debug::main",
         "build-assets" : "UserFrosting\\System\\Bakery\\Assets::main",
         "test" : "phpunit --colors=always",

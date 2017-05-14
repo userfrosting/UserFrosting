@@ -10,8 +10,9 @@ namespace UserFrosting\System\Bakery;
 
 use Composer\Script\Event;
 use UserFrosting\System\Bakery\Bakery;
-use UserFrosting\System\Bakery\EnvSetup;
+use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Events\Dispatcher;
 
 /**
  * Debug CLI Tools.
@@ -57,23 +58,12 @@ class Debug extends Bakery
         $this->checkNodeVersion();
         $this->checkNpmVersion();
         $this->listSprinkles();
-        $this->checkEnv();
 
         // Before going further, will try to load the UF Container
         $this->getContainer();
 
-        // Now that we have the container, we can test it and try to get the configs values
-        $this->showConfig();
-
-        // Test the db connexion
-        try {
-            $this->io->write("\n<info>Testing database connexion...</info>");
-            $this->testDB();
-            $this->io->write("Database connexion successful");
-        } catch (\Exception $e) {
-            $this->io->error($e->getMessage());
-            exit(1);
-        }
+        // Go to the env setup
+        $this->checkDatabase();
 
         // If all went well and there's no fatal errors, we are ready to bake
         $this->io->write("\n<fg=black;bg=green>Ready to bake !</>\n");
@@ -130,34 +120,6 @@ class Debug extends Bakery
     }
 
     /**
-     * Check if `app/.env` exist. Throw warning if not
-     *
-     * @access public
-     * @return void
-     */
-    protected function checkEnv()
-    {
-        // Check if the .env file is define. If it it, we'll go directly to testing the database.
-        $path = \UserFrosting\APP_DIR. '/.env';
-        if (!file_exists($path)) {
-
-            // File wasn't found. Not fatal yet, just show a warning for now
-            $this->io->warning("\nFile `$path` not found. ");
-            $this->io->write("This file is used to define your database credentials and other environment variables.\nNote: You might have global environment values defined on this machine instead.");
-
-            // Ask if we should setup .env
-            $setupEnv = $this->io->askConfirmation("Do you want to setup a `.env` file now? [y/N] ", false);
-
-            if ($setupEnv) {
-
-                $envSetup = new EnvSetup($this->io, $this->composer);
-                $envSetup->setupEnv();
-                $this->io->write("\n<comment>If you can't connect to the database, edit the parameters in your newly created `.env` file or run `composer run-script setup-env`.</>");
-            }
-        }
-    }
-
-    /**
      * List all sprinkles defined in the `sprinkles.json` file,
      * making sure this file exist at the same time
      *
@@ -186,6 +148,124 @@ class Debug extends Bakery
             $this->io->error("\nFATAL ERROR :: The `core` sprinkle is missing from the 'sprinkles.json' file.");
             exit(1);
         }
+    }
+
+    /**
+     * Check the database connexion and setup the `.env` file if we can't
+     * connect and there's no one found.
+     *
+     * @access protected
+     * @return void
+     */
+    protected function checkDatabase()
+    {
+        // First thing, silently test database. If it works, our job is done here
+        try {
+            $this->testDB();
+            $this->showConfig();
+            $this->io->write("\n<info>Testing database connexion...</info>");
+            $this->io->write("Database connexion successful");
+            return;
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        $config = $this->ci->config;
+
+        // Check if the .env file exist. At this point, we can't connect and
+        // there's no .env, we're gonna have a bad time
+        $path = \UserFrosting\APP_DIR. '/.env';
+        if (!file_exists($path)) {
+
+            // If  the configs are empty, we'll assume nothing is defined and go strait to setup.
+            // Otherwise, we'll ask first. There may be some custom config or global env values defined here that are not right
+            if ($config["db.default.host"] == "" || $config["db.default.database"] == "" || $config["db.default.username"] == "") {
+                $setupEnv = true;
+            } else {
+                $this->io->warning("\nFile `$path` not found. ");
+                $this->io->write("This file is used to define your database credentials and other environment variables. You may also have another means of (direct config values or global environment vars).");
+                $setupEnv = $this->io->askConfirmation("Do you want to setup a `.env` file now? [y/N] ", false);
+            }
+
+            if ($setupEnv) {
+                $this->setupEnv();
+                return;
+            }
+        }
+
+        // We have an error message. We'll display the current config then the error message
+        $this->showConfig();
+        $this->io->write("\n<info>Testing database connexion...</info>");
+        $this->io->error($e->getMessage());
+        exit(1);
+    }
+
+    /**
+     * Setup the `.env` file.
+     *
+     * @access public
+     * @return void
+     */
+    public function setupEnv()
+    {
+        // Get config
+        $config = $this->ci->config;
+
+        $success = false;
+
+        while (!$success) {
+
+            // Ask the questions
+            $this->io->write("\n<info>Enter your database credentials :</info>");
+            $host = $this->io->ask("Hostname [localhost]: ", "localhost");
+            $port = $this->io->ask("Port [3306]: ", "3306");
+            $name = $this->io->ask("Database name [userfrosting]: ", "userfrosting");
+            $user = $this->io->ask("Username [userfrosting]: ", "userfrosting");
+            $password = $this->io->askAndHideAnswer("Password: ");
+
+            // Setup a new db connection
+            $capsule = new Capsule;
+            $dbParams = [
+                'driver' => "mysql",
+                'host' => $host,
+                'port' => $port,
+                'database' => $name,
+                'username' => $user,
+                'password' => $password
+            ];
+            $capsule->addConnection($dbParams);
+
+            // Test the db connexion.
+            try {
+                $conn = $capsule->getConnection();
+                $conn->getPdo();
+                $this->io->write("Database connexion successful");
+                $success = true;
+            } catch (\PDOException $e) {
+                $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:".PHP_EOL;
+                $message .= "Exception: " . $e->getMessage() . PHP_EOL;
+                $this->io->error($message);
+            }
+        }
+
+        // Ask for the smtp values now
+        //!TODO
+
+        $fileContent = [
+            "UF_MODE=\"\"\n",
+            "DB_DRIVER=\"{$dbParams['driver']}\"\n",
+            "DB_HOST=\"{$dbParams['host']}\"\n",
+            "DB_PORT=\"{$dbParams['port']}\"\n",
+            "DB_NAME=\"{$dbParams['database']}\"\n",
+            "DB_USER=\"{$dbParams['username']}\"\n",
+            "DB_PASSWORD=\"{$dbParams['password']}\"\n",
+            "SMTP_HOST=\"host.example.com\"\n",
+            "SMTP_USER=\"relay@example.com\"\n",
+            "SMTP_PASSWORD=\"password\"\n"
+        ];
+
+        // Let's save this config
+        file_put_contents(\UserFrosting\APP_DIR. '/.env', $fileContent);
     }
 
     /**
