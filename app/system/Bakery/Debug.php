@@ -82,7 +82,7 @@ class Debug extends Bakery
     {
         $this->io->write("PHP Version : " . phpversion());
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->write("\n<error>FATAL ERROR :: UserFrosting requires php version ".\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue</error>");
+            $this->io->error("\nFATAL ERROR :: UserFrosting requires php version ".\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
             exit(1);
         }
     }
@@ -99,7 +99,7 @@ class Debug extends Bakery
         $this->io->write("Node Version : $npmVersion");
 
         if (version_compare($npmVersion, 'v4', '<')) {
-            $this->io->writeError("\n<error>FATAL ERROR :: UserFrosting requires Node version 4.x or above. Check the documentation for more details.</error>");
+            $this->io->error("\nFATAL ERROR :: UserFrosting requires Node version 4.x or above. Check the documentation for more details.");
             exit(1);
         }
     }
@@ -116,7 +116,7 @@ class Debug extends Bakery
         $this->io->write("NPM Version : $npmVersion");
 
         if (version_compare($npmVersion, '3', '<')) {
-            $this->io->write("\n<error>FATAL ERROR :: UserFrosting requires npm version 3.x or above. Check the documentation for more details.</error>");
+            $this->io->error("\nFATAL ERROR :: UserFrosting requires npm version 3.x or above. Check the documentation for more details.");
             exit(1);
         }
     }
@@ -131,7 +131,7 @@ class Debug extends Bakery
     {
         $path = \UserFrosting\APP_DIR. '/.env';
         if (!file_exists($path)) {
-            $this->io->write("\n<warning>File `$path` not found. This file is used to define your database credentials, but you might have global environment values set on your machine. Make sure the database config below are right.</warning>");
+            $this->io->warning("\nFile `$path` not found. This file is used to define your database credentials, but you might have global environment values set on your machine. Make sure the database config below are right.");
         }
     }
 
@@ -148,7 +148,7 @@ class Debug extends Bakery
         $path = \UserFrosting\APP_DIR . '/sprinkles.json';
         $sprinklesFile = @file_get_contents($path);
         if ($sprinklesFile === false) {
-            $this->io->write("\n<error>FATAL ERROR :: File `$path` not found. Please create a 'sprinkles.json' file and try again.</error>");
+            $this->io->error("\nFATAL ERROR :: File `$path` not found. Please create a 'sprinkles.json' file and try again.");
             exit(1);
         }
 
@@ -161,7 +161,7 @@ class Debug extends Bakery
 
         // Throw fatal error if the `core` sprinkle is missing
         if (!in_array("core", $sprinkles)) {
-            $this->io->write("\n<error>FATAL ERROR :: The `core` sprinkle is missing from the 'sprinkles.json' file.</error>");
+            $this->io->error("\nFATAL ERROR :: The `core` sprinkle is missing from the 'sprinkles.json' file.");
             exit(1);
         }
     }
@@ -185,39 +185,5 @@ class Debug extends Bakery
         $this->io->write(" DATABASE : " . $config['db.default.database']);
         $this->io->write(" USERNAME : " . $config['db.default.username']);
         $this->io->write(" PASSWORD : " . ($config['db.default.password'] ? "*********" : ""));
-    }
-
-    protected function testDB()
-    {
-        $this->io->write("\n<info>Testing database connexion...</info>");
-
-        // Boot db
-        $this->ci->db;
-
-        // Get config
-        $config = $this->ci->config;
-
-        // Check params are valids
-        $dbParams = $config['db.default'];
-
-        if (!$dbParams) {
-            $this->io->write("\n<error>'default' database connection not found.  Please double-check your configuration.</error>");
-            exit(1);
-        }
-
-        // Test database connection directly using PDO
-        try {
-            Capsule::connection()->getPdo();
-        } catch (\PDOException $e) {
-
-            $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:".PHP_EOL;
-            $message .= "Exception: " . $e->getMessage() . PHP_EOL;
-            $message .= "Trace: " . $e->getTraceAsString() . PHP_EOL;
-
-            $this->io->write("\n<error>$message</error>");
-            exit(1);
-        }
-
-        $this->io->write("Database connexion successful");
     }
 }

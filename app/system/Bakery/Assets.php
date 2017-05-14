@@ -104,7 +104,7 @@ class Assets extends Bakery
         $coreVendorFiles = glob($vendorPath);
 
         if (!$coreVendorFiles){
-            $this->io->write("\n<error>FATAL ERROR :: NPM bundle failed. Directory `$vendorPath` is empty.</error>");
+            $this->io->error("\nFATAL ERROR :: NPM bundle failed. Directory `$vendorPath` is empty.");
             exit(1);
         }
     }

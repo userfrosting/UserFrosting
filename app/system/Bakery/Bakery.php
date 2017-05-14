@@ -72,7 +72,7 @@ abstract class Bakery
     {
         // Require composer autoload file. Not having this file means Composer might not be installed / run
         if (!file_exists($this->projectRoot . 'app/vendor/autoload.php')) {
-            $this->io->write("<error>ERROR :: File `app/vendor/autoload.php` not found. This indicate that composer has not yet been run on this install. Install composer and run `composer install` from the `app/` directory. Check the documentation for more details.</error>");
+            $this->io->error("ERROR :: File `app/vendor/autoload.php` not found. This indicate that composer has not yet been run on this install. Install composer and run `composer install` from the `app/` directory. Check the documentation for more details.");
             exit(1);
         } else {
             require_once $this->projectRoot . 'app/vendor/autoload.php';
