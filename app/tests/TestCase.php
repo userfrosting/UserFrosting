@@ -125,14 +125,6 @@ class TestCase extends BaseTestCase
                 call_user_func($callback);
             }
 
-            // Need to manually remove locator streams
-            // PHP native stream_wrapper_register won't allow wrappers to be redefined on the next test otherwise
-            // We use `StreamBuilder` remove function to remove each defined scheme
-            $streamBuilder = $this->ci->streamBuilder;
-            foreach ($streamBuilder->getStreams() as $scheme => $handler) {
-                $streamBuilder->remove($scheme);
-            }
-
             $this->app = null;
             $this->ci = null;
         }

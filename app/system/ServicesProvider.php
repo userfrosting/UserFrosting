@@ -65,7 +65,8 @@ class ServicesProvider
          * StreamBuilder, to fire up our custom StreamWrapper defined in the locator service.
          */
         $container['streamBuilder'] = function ($c) {
-            $sb = new StreamBuilder([
+
+            $streams = [
                 'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
                 'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
                 'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
@@ -79,7 +80,17 @@ class ServicesProvider
                 'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'factories' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
-            ]);
+            ];
+
+            // Before registering them, we need to unregister any that where previously registered.
+            // This will cause error when two scripts are run in succession from the CLI
+            foreach ($streams as $scheme => $handler) {
+                if (in_array($scheme, stream_get_wrappers())) {
+                    stream_wrapper_unregister($scheme);
+                }
+            }
+
+            $sb = new StreamBuilder($streams);
 
             return $sb;
         };
