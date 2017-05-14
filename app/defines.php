@@ -35,3 +35,4 @@ define('UserFrosting\SCHEMA_DIR_NAME', 'schema');
 define('UserFrosting\SRC_DIR_NAME', 'src');
 define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
 define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');
+define('UserFrosting\FACTORY_DIR_NAME', 'factories');

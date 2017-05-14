@@ -55,6 +55,16 @@ class ServicesProvider
             // Use locator to initialize streams
             ReadOnlyStream::setLocator($locator);
 
+            // Fire up StreamBuilder
+            $c->streamBuilder;
+
+            return $locator;
+        };
+
+        /**
+         * StreamBuilder, to fire up our custom StreamWrapper defined in the locator service.
+         */
+        $container['streamBuilder'] = function ($c) {
             $sb = new StreamBuilder([
                 'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
                 'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
@@ -67,10 +77,11 @@ class ServicesProvider
                 'extra' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
                 'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
+                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
+                'factories' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
             ]);
 
-            return $locator;
+            return $sb;
         };
 
         /**

@@ -54,6 +54,10 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 
 ### [API documentation](http://api.userfrosting.com)
 
+## Running tests
+
+From the `app/` directory, run `vendor/bin/phpunit`. Any tests included in `sprinkles/*/tests` will also be run.
+
 ## About the Developers
 
 ### Alexander Weissman

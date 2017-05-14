@@ -27,6 +27,11 @@
         "composer/installers": "dev-master",
         "wikimedia/composer-merge-plugin": "dev-master"
 	},
+	"require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "league/factory-muffin": "^3.0",
+        "league/factory-muffin-faker": "^2.0"
+    },
     "extra": {
         "merge-plugin": {
             "include": [
@@ -46,8 +51,12 @@
             "app/defines.php"
         ],
         "psr-4": {
-            "UserFrosting\\System\\": "app/system/",
-            "UserFrosting\\System\\Bakery\\": "app/system/Bakery/"
+            "UserFrosting\\System\\": "app/system/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UserFrosting\\Tests\\": "app/tests/"
         }
     },
     "scripts": {
@@ -58,6 +67,7 @@
         "setup-env" : "UserFrosting\\System\\Bakery\\EnvSetup::main",
         "debug" : "UserFrosting\\System\\Bakery\\Debug::main",
         "build-assets" : "UserFrosting\\System\\Bakery\\Assets::main",
+        "test" : "phpunit --colors=always",
         "bake" : [
             "@debug",
             "@migrate",
