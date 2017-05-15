@@ -66,7 +66,7 @@
                             if (data && data['rows']) {
                                 jQuery.each(data['rows'], function(idx, row) {
                                     //if (jQuery.inArray(row.id, base._addedIds)) {
-                                        row.text = row.name;
+                                        //row.text = row.name;
                                         suggestions.push(row);
                                     //}
                                 });
@@ -223,16 +223,11 @@
     /**
      * Create a new, blank row with the 'virgin' status.
      */
-    Plugin.prototype._createVirginRow = function () {
+    Plugin.prototype._createVirginRow = function (options) {
         var base = this;
 
-        var params = {
-            id : '',
-            rownum: base._rownum
-        };
-
         // Generate the row and append to table
-        var newRow = base._createRow(params);
+        var newRow = base._createRow(options);
 
         // Set the row's 'virgin' status
         newRow.addClass('uf-collection-row-virgin');
@@ -248,10 +243,12 @@
         var base = this;
         row.remove();
         base.$T.trigger('rowDelete.ufCollection');
+        /*
         var index = base._addedIds.indexOf(5);
         if (index > -1) {
             base._addedIds.splice(index, 1);
         }
+        */
     };
 
     /**
@@ -266,7 +263,7 @@
         });
 
         // Once the new row comes into focus for the first time, it has been "touched"
-        row.find('input').on('focus', function () {
+        row.find(':input').on('focus', function () {
             base._touchRow(row);
         });
 
