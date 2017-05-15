@@ -63,50 +63,7 @@ class AdminController extends SimpleController
         $cache = $this->ci->cache;
 
         // Get each sprinkle db version
-        $sprinkles = $cache->rememberForever('uf_sprinklesVersion', function() {
-
-            // The returned/cached data
-            $sprinkles = array();
-
-            // Get the sprinkles list
-            $sprinklesList = $this->ci->sprinkleManager->getSprinkleNames();
-
-            // Get the data from the version table
-            $versions = Version::all();
-
-            // Load each sprinkle version
-            foreach ($sprinklesList as $sprinkle) {
-
-                // Get sprinkle db version number
-                if ($sprinkleVersion = $versions->where('sprinkle', $sprinkle)->first()) {
-                    $version = $sprinkleVersion->version;
-                } else {
-                    $version = null;
-                }
-
-                // Get the latest available migration in the file
-                $migrations = array_reverse(glob(\UserFrosting\APP_DIR . \UserFrosting\DS .
-                                                \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS .
-                                                $sprinkle . \UserFrosting\DS .
-                                                'migrations' . \UserFrosting\DS .
-                                                '*.php'));
-                if (!empty($migrations)) {
-                    $lastMigration = basename($migrations[0], '.php');
-                    $migration = version_compare($version, $lastMigration, '<');
-                } else {
-                    $migration = false;
-                }
-
-                // Put the sprinkle data in the cached data
-                $sprinkles[] = [
-                    'name' => $sprinkle,
-                    'version' => $version,
-                    'migration' => $migration,
-                ];
-            }
-
-            return $sprinkles;
-        });
+        $sprinkles = $this->ci->sprinkleManager->getSprinkleNames();
 
         return $this->ci->view->render($response, 'pages/dashboard.html.twig', [
             'counter' => [

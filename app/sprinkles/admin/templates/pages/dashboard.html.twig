@@ -160,13 +160,7 @@
                                 <ul class="list-unstyled">
                                 {% for sprinkle in sprinkles %}
                                 <li>
-                                    {{sprinkle.name}}
-                                    {% if sprinkle.migration %}
-                                        &nbsp;
-                                        <span class="label label-warning">
-                                            <i class="fa fa-exclamation-triangle"></i> {{translate("MIGRATION.REQUIRED")}}
-                                        </span>
-                                    {% endif %}
+                                    {{sprinkle}}
                                 </li>
                                 {% endfor %}
                                 </ul>
