@@ -47,11 +47,17 @@
         this.options= $.extend(
             true,               // deep extend
             {
-                validators          : {
+                reqParams: {
+                    type: this.$T.attr('method'),
+                    url:  this.$T.attr('action')
+                },
+                encType: (typeof this.$T.attr('enctype') !== 'undefined') ? this.$T.attr('enctype') : '',
+                validators: {
                     'rules'   : {},
                     'messages': {}
                 },
-                msgTarget           : this.$T.find('.js-form-alerts'),
+                msgTarget           : this.$T.find('.js-form-alerts:first'),
+                submittingText      : "<i class='fa fa-spinner fa-spin'></i>",
                 beforeSubmitCallback: null,
                 binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
                 keyupDelay          : 0,
@@ -76,8 +82,9 @@
             messages :      base.options.validators.messages,
             submitHandler:  function (f, e) {
                 // Execute any "before submit" callback
-                if (base.options.beforeSubmitCallback)
+                if (base.options.beforeSubmitCallback) {
                     base.options.beforeSubmitCallback();
+                }
 
                 var form = $(f);
 
@@ -86,30 +93,22 @@
                 if (submitButton) {
                     var submitButtonText = submitButton.html();
                     submitButton.prop( "disabled", true );
-                    submitButton.html("<i class='fa fa-spinner fa-spin'></i>");
+                    submitButton.html(base.options.submittingText);
                 }
-                
-                // common params
-                var reqParams = {
-                    type: form.attr('method'),
-                    url: form.attr('action')
-                };
-
-                var encType = (typeof form.attr('enctype') !== 'undefined') ? form.attr('enctype') : '';
 
                 // Get the form encoding type from the users HTML, and chose an encoding form.
-                if (encType.toLowerCase() === "multipart/form-data" ) {
-                    reqParams.data = base._multipartData(form);
+                if (base.options.encType.toLowerCase() === "multipart/form-data" ) {
+                    base.options.reqParams.data = base._multipartData(form);
                     // add additional params to fix jquery errors
-                    reqParams.cache = false;
-                    reqParams.contentType = false;
-                    reqParams.processData = false;
+                    base.options.reqParams.cache = false;
+                    base.options.reqParams.contentType = false;
+                    base.options.reqParams.processData = false;
                 } else {
-                    reqParams.data = base._urlencodeData(form);
+                    base.options.reqParams.data = base._urlencodeData(form);
                 }
 
                 // Submit the form via AJAX
-                $.ajax(reqParams).then(
+                $.ajax(base.options.reqParams).then(
                     // Submission successful
                     function (data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
