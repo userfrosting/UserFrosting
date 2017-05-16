@@ -227,12 +227,21 @@ class Debug extends Bakery
 
         $success = false;
 
+        // Get the db driver choices
+        $drivers = $this->databaseDrivers();
+
         while (!$success) {
 
             // Ask the questions
             $this->io->write("\n<info>Enter your database credentials :</info>");
+
+            $driver = $this->io->select("Database type [MySQL]: ", $drivers->pluck('name')->toArray(), 0);
+            $driver = $drivers->get($driver);
+            $driverName = $driver['driver'];
+            $defaultPort = $driver['defaultPort'];
+
             $host = $this->io->ask("Hostname [localhost]: ", "localhost");
-            $port = $this->io->ask("Port [3306]: ", "3306");
+            $port = $this->io->ask("Port [$defaultPort]: ", $defaultPort);
             $name = $this->io->ask("Database name [userfrosting]: ", "userfrosting");
             $user = $this->io->ask("Username [userfrosting]: ", "userfrosting");
             $password = $this->io->askAndHideAnswer("Password: ");
@@ -240,7 +249,7 @@ class Debug extends Bakery
             // Setup a new db connection
             $capsule = new Capsule;
             $dbParams = [
-                'driver' => "mysql",
+                'driver' => $driverName,
                 'host' => $host,
                 'port' => $port,
                 'database' => $name,
@@ -280,6 +289,33 @@ class Debug extends Bakery
 
         // Let's save this config
         file_put_contents(\UserFrosting\APP_DIR. '/.env', $fileContent);
+    }
+
+    /**
+     * Return the database choices for the env setup.
+     *
+     * @access protected
+     * @return void
+     */
+    protected function databaseDrivers()
+    {
+        return collect([
+            [
+                "driver" => "mysql",
+                "name" => "MySQL / MariaDB",
+                "defaultPort" => 3306
+            ],
+            [
+                "driver" => "pgsql",
+                "name" => "ProgreSQL",
+                "defaultPort" => 5432
+            ],
+            [
+                "driver" => "sqlsrv",
+                "name" => "SQL Server",
+                "defaultPort" => 1433
+            ]
+        ]);
     }
 
     /**
