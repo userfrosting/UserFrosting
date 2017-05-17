@@ -50,14 +50,14 @@
        </script>
 
        <div class="pager pager-lg tablesorter-pager">
-           <span class='pager-control first' title='First page'><i class='fa fa-angle-double-left'></i></span>
-           <span class='pager-control prev' title='Previous page'><i class='fa fa-angle-left'></i></span>
-           <span class='pagedisplay'></span>
-           <span class='pager-control next' title='Next page'><i class='fa fa-angle-right'></i></span>
-           <span class='pager-control last' title= 'Last page'><i class='fa fa-angle-double-right'></i></span>
+           <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
+           <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
+           <span class="pagedisplay"></span>
+           <span class="pager-control next" title="Next page"><i class="fa fa-angle-right"></i></span>
+           <span class="pager-control last" title= "Last page"><i class="fa fa-angle-double-right"></i></span>
            <br><br>
-           Jump to Page: <select class='gotoPage'></select> &bull; Show:
-           <select class='pagesize'>
+           Jump to Page: <select class="gotoPage"></select> &bull; Show:
+           <select class="pagesize">
                <option value="5">5</option>
                <option value="10">10</option>
            </select>
@@ -216,8 +216,8 @@
 
         // Get sort column and order
         var sortOrders = {
-            "0" : "asc",
-            "1" : "desc"
+            '0' : 'asc',
+            '1' : 'desc'
         };
 
         // Set sorts in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
@@ -227,7 +227,7 @@
             var columnIndex = sortList[i][0];
             var columnDirection = sortOrders[sortList[i][1]];   // Converts to 'asc' or 'desc'
             if (sortList[i]) {
-                var columnName = $(table.config.headerList[columnIndex]).data("column-name");
+                var columnName = $(table.config.headerList[columnIndex]).data('column-name');
                 sorts[columnName] = columnDirection;
             }
         }
@@ -237,7 +237,7 @@
         var filters = {};
         for (i = 0; i < filterList.length; i++) {
             if (filterList[i]) {
-                var columnName = $(table.config.headerList[i]).data("column-name");
+                var columnName = $(table.config.headerList[i]).data('column-name');
                 filters[columnName] = filterList[i];
             }
         }
@@ -276,13 +276,13 @@
         };
 
         // Set up tablesorter and pager
-        base.ts = $el.find(".tablesorter").tablesorter(base.options.tablesorter);
+        base.ts = $el.find('.tablesorter').tablesorter(base.options.tablesorter);
         base.ts.tablesorterPager(base.options.pager);
 
         // Link CSV download button
-        $el.find(".js-download-table").on("click", function () {
+        $el.find('.js-download-table').on('click', function () {
             var tableState = base.getTableStateVars(base.ts[0]);
-            tableState['format'] = "csv";
+            tableState['format'] = 'csv';
             delete tableState['page'];
             delete tableState['size'];
 
@@ -293,9 +293,9 @@
             window.location = base.options.dataUrl + '?' + $.param( tableState );
         });
 
-        base.ts.on("pagerComplete", function () {
-            $el.find(".tablesorter").trigger('update');
-            $el.trigger("pagerComplete.ufTable");
+        base.ts.on('pagerComplete', function () {
+            $el.find('.tablesorter').trigger('update');
+            $el.trigger('pagerComplete.ufTable');
         });
     };
 
@@ -329,13 +329,13 @@
             rows = '';
 
         if (data) {
-            size = data['rows'].length;
+            size = data.rows.length;
 
             // Build Handlebars templates based on column-template attribute in each column header
             var columns = ts.config.headerList;
             var templates = [];
             for (i = 0; i < columns.length; i++) {
-                var columnName = $(columns[i]).data("column-template");
+                var columnName = $(columns[i]).data('column-template');
                 templates.push(Handlebars.compile($(columnName).html()));
             }
 
@@ -343,8 +343,8 @@
             for (row = 0; row < size; row++) {
                 rows += '<tr>';
                 var cellData = {
-                    "row"  : data['rows'][ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
-                    "site" : site
+                    'row'  : data.rows[ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
+                    'site' : site
                 };
 
                 for (i = 0; i < columns.length; i++) {
@@ -354,8 +354,8 @@
                 rows += '</tr>';
             }
 
-            json.total = data['count'];  // Get total rows without pagination
-            json.filteredRows = data['count_filtered']; // no filtering
+            json.total = data.count;  // Get total rows without pagination
+            json.filteredRows = data.count_filtered; // no filtering
             json.rows = $(rows);
         } else {
             json.total = 0;
@@ -369,7 +369,7 @@
     Plugin.prototype._ajaxError = function(base, c, jqXHR, settings, exception) {
         if (typeof jqXHR === 'object') {
             // Error messages
-            if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
+            if ((typeof site !== 'undefined') && site.debug.ajax && jqXHR.responseText) {
                 document.write(jqXHR.responseText);
                 document.close();
             } else {
@@ -435,7 +435,7 @@
         if ( component === 'filter' ) {
             var decodedFilters = [];
             // Extract filter names and values for the specified table
-            var filters = urlObject['filter'] ? urlObject['filter'] : [];
+            var filters = urlObject.filter ? urlObject.filter : [];
             if (filters[tableId]) {
                 var filters = filters[tableId];
                 // Build a numerically indexed array of filter values
@@ -538,12 +538,14 @@
 		// won't do it automatically
 		var arr = {};
 
-        for ( var i=0, len=arry.length; i < len; i++ )
-            arr[arry[i]['text']] = arry[i];
+        for ( var i=0, len=arry.length; i < len; i++ ) {
+            arr[arry[i].text] = arry[i];
+        }
 
         arry = new Array();
-        for ( var key in arr )
+        for ( var key in arr ) {
             arry.push(arr[key]);
+        }
 
 		return arry;
     }
