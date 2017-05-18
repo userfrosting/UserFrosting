@@ -233,7 +233,8 @@ class Debug extends Bakery
         while (!$success) {
 
             // Ask the questions
-            $this->io->write("\n<info>Enter your database credentials :</info>");
+            $this->io->write("\n<info>Setting up `app/.env`</info>");
+            $this->io->write("<info>Enter your database credentials :</info>");
 
             $driver = $this->io->select("Database type [MySQL]: ", $drivers->pluck('name')->toArray(), 0);
             $driver = $drivers->get($driver);
@@ -272,7 +273,12 @@ class Debug extends Bakery
         }
 
         // Ask for the smtp values now
-        //!TODO
+        $this->io->write("\n<info>Enter your SMTP credentials:</info>");
+        $this->io->write("This is use to send emails from the system. Edit `app/.env` if you have problem with this later.");
+        $smtpHost = $this->io->ask("SMTP Host : ", "");
+        $smtpUser = $this->io->ask("SMTP User : ", "");
+        $smtpPassword = $this->io->ask("SMTP Password : ", "");
+
 
         $fileContent = [
             "UF_MODE=\"\"\n",
@@ -282,9 +288,9 @@ class Debug extends Bakery
             "DB_NAME=\"{$dbParams['database']}\"\n",
             "DB_USER=\"{$dbParams['username']}\"\n",
             "DB_PASSWORD=\"{$dbParams['password']}\"\n",
-            "SMTP_HOST=\"host.example.com\"\n",
-            "SMTP_USER=\"relay@example.com\"\n",
-            "SMTP_PASSWORD=\"password\"\n"
+            "SMTP_HOST=\"$smtpHost\"\n",
+            "SMTP_USER=\"$smtpUser\"\n",
+            "SMTP_PASSWORD=\"$smtpPassword\"\n"
         ];
 
         // Let's save this config
