@@ -288,6 +288,12 @@ class CoreServicesProvider
             // Start Eloquent
             $capsule->bootEloquent();
 
+            if ($config['debug.queries']) {
+                foreach ($config['db'] as $name => $dbConfig) {
+                    $capsule->connection($name)->enableQueryLog();
+                }
+            }
+
             return $capsule;
         };
 

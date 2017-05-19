@@ -366,6 +366,35 @@ class User extends UFModel
         return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users', 'user_id', 'role_id')->withTimestamps();
     }
 
+    public function rolesWithPermission()
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        // Constrain this relationship, only loading a user's roles that have a particular permission
+        $query = $this->belongsToManyConstrained($classMapper->getClassMapping('role'), 'permission_id', 'role_users');
+
+        // Need to make sure we add the `permission_id` pivot for BelongsToManyConstrained to match
+        $query = $query->withPivot('permission_id');
+
+        return $query;
+    }
+
+    /**
+     * Query scope to get all users who have a specific role.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $roleId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForRole($query, $roleId)
+    {
+        return $query->join('role_users', function ($join) use ($roleId) {
+            $join->on('role_users.user_id', 'users.id')
+                 ->where('role_id', $roleId);
+        });
+    }
+
     /**
      * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
      */

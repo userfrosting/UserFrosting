@@ -164,13 +164,13 @@ abstract class Sprunje
     public function getResults()
     {
         // Count unfiltered total
-        $total = $this->query->count();
+        $total = $this->count();
 
         // Apply filters
         $this->applyFilters();
 
         // Count filtered total
-        $totalFiltered = $this->query->count();
+        $totalFiltered = $this->countFiltered();
 
         // Apply sorts
         $this->applySorts();
@@ -313,6 +313,26 @@ abstract class Sprunje
     protected function applyTransformations($collection)
     {
         return $collection;
+    }
+
+    /**
+     * Get the unpaginated count of items (before filtering) in this query.
+     *
+     * @return int
+     */
+    protected function count()
+    {
+        return $this->query->count();
+    }
+
+    /**
+     * Get the unpaginated count of items (after filtering) in this query.
+     *
+     * @return int
+     */
+    protected function countFiltered()
+    {
+        return $this->query->count();
     }
 
     /**

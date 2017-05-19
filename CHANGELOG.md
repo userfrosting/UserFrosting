@@ -1,5 +1,10 @@
 # Change Log
 
+## v4.0.18-Alpha
+- New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
+- New ufForm options: setting reqParams, encType, submittingText
+- ufCollection now looks for _any_ control to be touched
+
 ## v4.0.17-Alpha
 - Add IIS config file (#371)
 - New ufCollection now supports free text input mode

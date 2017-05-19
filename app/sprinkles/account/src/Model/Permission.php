@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Account\Model;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough;
 
 /**
  * Permission Class.
@@ -95,5 +96,34 @@ class Permission extends UFModel
             $join->on('permission_roles.permission_id', 'permissions.id')
                  ->where('role_id', '!=', $roleId);
         });
+    }
+
+    /**
+     * Get a list of users who have this permission, along with a list of roles through which each user has the permission.
+     */
+    public function users()
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        // This relationship maps the permission to its roles.
+        $intermediateRelationship = $this->belongsToMany($classMapper->getClassMapping('role'), 'permission_roles', 'permission_id', 'role_id', 'roles')
+            ->withPivot('permission_id');
+
+        // Next, we need to find the users who have each of these roles.
+        
+        // If no relationship name was passed, we will pull backtraces to get the
+        // name of the calling function. We will use that function name as the
+        // title of this relation since that is a great convention to apply.
+        $relation = $this->guessBelongsToManyRelation();
+
+        // Now pass this query in to create a new `BelongsToManyThrough` relationship on this parent permission
+        $instance = $this->newRelatedInstance($classMapper->getClassMapping('user'));
+
+        $query = new BelongsToManyThrough(
+            $instance->newQuery(), $this, $intermediateRelationship, 'role_users', 'role_id', 'user_id', $relation
+        );
+
+        return $query;
     }
 }

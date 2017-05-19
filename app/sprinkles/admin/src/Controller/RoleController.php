@@ -492,6 +492,51 @@ class RoleController extends SimpleController
     }
 
     /**
+     * Returns users associated with a single role.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getUsers($request, $response, $args)
+    {
+        $role = $this->getRoleFromParams($args);
+
+        // If the role doesn't exist, return 404
+        if (!$role) {
+            throw new NotFoundException($request, $response);
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'view_role_field', [
+            'role' => $role,
+            'property' => 'users'
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $params);
+        $sprunje->extendQuery(function ($query) use ($role) {
+            return $query->forRole($role->id);
+        });
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $sprunje->toResponse($response);
+    }
+
+    /**
      * Renders a page displaying a role's information, in read-only mode.
      *
      * This checks that the currently logged-in user has permission to view the requested role's info.
