@@ -58,6 +58,18 @@
                 }
             }
         },
+        "js/pages/permission": {
+            "scripts": [
+                "local/pages/js/permission.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
         "js/pages/role": {
             "scripts": [
                 "local/widgets/js/roles.js",

@@ -1,0 +1,92 @@
+{% extends "layouts/dashboard.html.twig" %}
+
+{% block stylesheets_page %}
+    <!-- Page-group-specific CSS asset bundle -->
+    {{ assets.css('css/form-widgets') | raw }}
+{% endblock %}
+
+{# Overrides blocks in head of base template #}
+{% block page_title %}{{translate("PERMISSION", 2)}} | {{permission.name}}{% endblock %}
+
+{% block page_description %}{{translate("PERMISSION.INFO_PAGE", {name: permission.name})}}{% endblock %}
+
+{% block body_matter %}
+    <div class="row">
+        <div class="col-lg-4">
+            <div id="view-permission" class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{translate('PERMISSION.SUMMARY')}}</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <div class="text-center">
+                        <i class="fa fa-key fa-5x"></i>
+                    </div>
+
+                    <h3 class="profile-username text-center">{{permission.name}}</h3>
+
+                    <p class="text-muted">
+                        {{permission.description}}
+                    </p>
+                    <hr>
+                    <strong>{{translate("PERMISSION.ID")}}: </strong>
+                    <span class="js-copy-container">
+                        <span class="js-copy-target" style="margin: 0 5px;">{{permission.id}}</span>
+                        <i class="fa fa-copy text-blue js-copy-trigger"></i>
+                    </span>
+                    <hr>
+                    <strong>Slug/conditions</strong>
+                    <br>
+                    <br>
+                    <p>
+                        <code>{{permission.slug}}</code>
+                    </p>
+                    <p>
+                        ↳ <code>{{permission.conditions}}</code>
+                    </p>
+                </div>
+                <div class="box-footer">
+                    {{translate('PERMISSION.NOTE_READ_ONLY')}}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div id="widget-permission-users" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('USER.WITH_PERMISSION')}}</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-sm btn-default js-download-table"><i class="fa fa-table"></i> {{ translate("DOWNLOAD.CSV") }}</button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {% include "components/tables/permission-users.html.twig" with {
+                            "table" : {
+                                "id" : "table-permission-users"
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts_page %}
+    <!-- Include page variables -->
+    <script>
+    {% include "components/page.js.twig" %}
+
+    // Add user name
+    page = $.extend(
+        true,               // deep extend
+        {
+            "permission_id": "{{permission.id}}"
+        },
+        page
+    );
+    </script>
+
+    <!-- Include form widgets JS -->
+    {{ assets.js('js/form-widgets') | raw }}
+
+    <!-- Include page-specific JS -->
+    {{ assets.js('js/pages/permission') | raw }}
+{% endblock %}

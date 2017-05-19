@@ -151,6 +151,45 @@ class PermissionController extends SimpleController
     }
 
     /**
+     * Renders a page displaying a permission's information, in read-only mode.
+     *
+     * This checks that the currently logged-in user has permission to view permissions.
+     * Note that permissions cannot be modified through the interface.  This is because
+     * permissions are tighly coupled to the code and should only be modified by developers.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function pageInfo($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_permissions')) {
+            throw new ForbiddenException();
+        }
+
+        $permissionId = $args['id'];
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
+
+        // If the permission doesn't exist, return 404
+        if (!$permission) {
+            throw new NotFoundException($request, $response);
+        }
+
+        return $this->ci->view->render($response, 'pages/permission.html.twig', [
+            'permission' => $permission
+        ]);
+    }
+
+    /**
      * Renders the permission listing page.
      *
      * This page renders a table of permissions, with dropdown menus for admin actions for each permission.

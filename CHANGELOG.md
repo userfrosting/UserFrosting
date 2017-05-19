@@ -1,6 +1,7 @@
 # Change Log
 
 ## v4.0.18-Alpha
+- Permission info page (#638)
 - New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
 - New ufForm options: setting reqParams, encType, submittingText
 - ufCollection now looks for _any_ control to be touched

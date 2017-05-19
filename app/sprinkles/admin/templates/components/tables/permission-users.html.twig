@@ -1,0 +1,51 @@
+{# This partial template renders a table of users for a specified permission, to be populated with rows via an AJAX request.
+ # This extends a generic template for paginated tables.
+ #
+ # Note that this template contains a "skeleton" table with an empty table body, and then a block of Handlebars templates which are used
+ # to render the table cells with the data from the AJAX request.
+#}
+
+{% extends "components/tables/table-paginated.html.twig" %}
+
+{% block table %}
+    <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
+        <thead>
+            <tr>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">{{translate('USER')}} <i class="fa fa-sort"></i></th>
+                <th data-column-template="#user-table-column-via-roles" data-sorter="false" data-filter="false">{{translate('PERMISSION.VIA_ROLES')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block table_cell_templates %}
+    {# This contains a series of <script> blocks, each of which is a client-side Handlebars template.
+     # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+     # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+     #
+     # These templates require handlebars-helpers.js, moment.js
+    #}
+    {% verbatim %}
+    <script id="user-table-column-info" type="text/x-handlebars-template">
+        <td data-text="{{row.last_name}}">
+            <strong>
+                <a href="{{site.uri.public}}/admin/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
+            </strong>
+            <div class="js-copy-container">
+                <span class="js-copy-target">{{row.email}}</span>
+                <button class="btn btn-xs js-copy-trigger"><i class="fa fa-copy"></i></button>
+            </div>
+        </td>
+    </script>
+
+    <script id="user-table-column-via-roles" type="text/x-handlebars-template">
+        <td>
+            {{#each row.roles_via }}
+                <a href="{{site.uri.public}}/admin/roles/r/{{this.slug}}" class="label label-primary" title="{{this.description}}">{{this.name}}</a>
+            {{/each}}
+        </td>
+    </script>
+    {% endverbatim %}
+{% endblock %}

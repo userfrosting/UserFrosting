@@ -316,6 +316,11 @@ abstract class Sprunje
     }
 
     /**
+     * Set the initial query used by your Sprunje.
+     */
+    abstract protected function baseQuery();
+
+    /**
      * Get the unpaginated count of items (before filtering) in this query.
      *
      * @return int
@@ -334,9 +339,4 @@ abstract class Sprunje
     {
         return $this->query->count();
     }
-
-    /**
-     * Set the initial query used by your Sprunje.
-     */
-    abstract protected function baseQuery();
 }
