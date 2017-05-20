@@ -131,7 +131,9 @@ abstract class Sprunje
         $collection->each(function ($item) use ($csv, $columnNames) {
             $row = [];
             foreach ($columnNames as $itemKey) {
-                if (isset($item[$itemKey])) {
+                // Only add the value if it is set and not an array.  Laravel's array_dot sometimes creates empty child arrays :(
+                // See https://github.com/laravel/framework/pull/13009
+                if (isset($item[$itemKey]) && !is_array($item[$itemKey])) {
                     $row[] = $item[$itemKey];
                 } else {
                     $row[] = '';

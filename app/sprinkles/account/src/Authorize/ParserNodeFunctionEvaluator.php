@@ -75,23 +75,52 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             $argNodes = $node->args;
 
             $args = [];
+            $argsInfo = [];
             foreach ($argNodes as $arg) {
-                $arg_string = $this->prettyPrinter->prettyPrintExpr($arg->value);
-                // Resolve variables (placeholders and array paths)
+                $argString = $this->prettyPrinter->prettyPrintExpr($arg->value);
+
+                // Debugger info
+                $currentArgInfo = [
+                    'expression' => $argString
+                ];
+                // Resolve parameter placeholders ('variable' names (either single-word or array-dot identifiers))
                 if (($arg->value instanceof \PhpParser\Node\Expr\BinaryOp\Concat) || ($arg->value instanceof \PhpParser\Node\Expr\ConstFetch)) {
-                    $value = $this->resolveParamPath($arg_string);
+                    $value = $this->resolveParamPath($argString);
+                    $currentArgInfo['type'] = "parameter";
+                    $currentArgInfo['resolved_value'] = $value;
                 // Resolve arrays
-                } else if ($arg->value instanceof \PhpParser\Node\Expr\Array_) {
+                } elseif ($arg->value instanceof \PhpParser\Node\Expr\Array_) {
                     $value = $this->resolveArray($arg);
+                    $currentArgInfo['type'] = "array";
+                    $currentArgInfo['resolved_value'] = print_r($value, true);
+                // Resolve strings
+                } elseif ($arg->value instanceof \PhpParser\Node\Scalar\String_) {
+                    $value = $arg->value->value;
+                    $currentArgInfo['type'] = "string";
+                    $currentArgInfo['resolved_value'] = $value;
+                // Resolve numbers
+                } elseif ($arg->value instanceof \PhpParser\Node\Scalar\DNumber) {
+                    $value = $arg->value->value;
+                    $currentArgInfo['type'] = "float";
+                    $currentArgInfo['resolved_value'] = $value;
+                } elseif ($arg->value instanceof \PhpParser\Node\Scalar\LNumber) {
+                    $value = $arg->value->value;
+                    $currentArgInfo['type'] = "integer";
+                    $currentArgInfo['resolved_value'] = $value;
+                // Anything else is simply interpreted as its literal string value
                 } else {
-                    $value = $arg_string;
+                    $value = $argString;
+                    $currentArgInfo['type'] = "unknown";
+                    $currentArgInfo['resolved_value'] = $value;
                 }
+
                 $args[] = $value;
+                $argsInfo[] = $currentArgInfo;
             }
 
             if ($this->debug) {
                 if (count($args)) {
-                    $this->logger->debug("Evaluating callback '$callbackName' on: ", $args);
+                    $this->logger->debug("Evaluating callback '$callbackName' on: ", $argsInfo);
                 } else {
                     $this->logger->debug("Evaluating callback '$callbackName'...");
                 }
@@ -153,7 +182,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
             if (is_array($value) && isset($value[$token])) {
                 $value = $value[$token];
                 continue;
-            } else if (is_object($value) && isset($value->$token)) {
+            } elseif (is_object($value) && isset($value->$token)) {
                 $value = $value->$token;
                 continue;
             } else {
