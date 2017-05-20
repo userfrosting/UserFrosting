@@ -71,7 +71,7 @@ class AccessConditionExpression
      * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.
      */
-    public function __construct($nodeVisitor, $user, $logger, $debug = false)
+    public function __construct(ParserNodeFunctionEvaluator $nodeVisitor, User $user, Logger $logger, $debug = false)
     {
         $this->nodeVisitor   = $nodeVisitor;
         $this->user          = $user;

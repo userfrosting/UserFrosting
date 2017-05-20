@@ -9,6 +9,7 @@
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Interop\Container\ContainerInterface;
+use UserFrosting\Sprinkle\Account\Model\User;
 
 /**
  * AuthorizationManager class.
@@ -33,7 +34,7 @@ class AuthorizationManager
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci, $callbacks = [])
+    public function __construct(ContainerInterface $ci, array $callbacks = [])
     {
         $this->ci = $ci;
         $this->callbacks = $callbacks;
@@ -65,13 +66,15 @@ class AuthorizationManager
     /**
      * Checks whether or not a user has access on a particular permission slug.
      *
-     * Determine if this user has access to the given $hook under the given $params.
-     * @param string $hook The authorization hook to check for access.
+     * Determine if this user has access to the given $slug under the given $params.
+     *
+     * @param UserFrosting\Sprinkle\Account\Model\User $user
+     * @param string $slug The permission slug to check for access.
      * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.
      * @return boolean True if the user has access, false otherwise.
      */
-    public function checkAccess($user, $slug, $params = [])
+    public function checkAccess(User $user, $slug, array $params = [])
     {
         $debug = $this->ci->config['debug.auth'];
 
@@ -99,10 +102,6 @@ class AuthorizationManager
         }
 
         // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
-
-        $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $debug);
-        $ace = new AccessConditionExpression($nodeVisitor, $user, $this->ci->authLogger, $debug);
-
         $permissions = $user->permissions($slug)->get();
 
         if (!count($permissions)) {
@@ -115,6 +114,9 @@ class AuthorizationManager
         if ($debug) {
             $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($permissions->toArray(), true));
         }
+
+        $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $debug);
+        $ace = new AccessConditionExpression($nodeVisitor, $user, $this->ci->authLogger, $debug);
 
         foreach ($permissions as $permission) {
             $pass = $ace->evaluateCondition($permission->conditions, $params);
