@@ -11,6 +11,7 @@
 - Authorizer now correctly interprets numeric types in access conditions.  **Caution**: this causes the `equals()` callback to return true in situations where it would have (incorrectly) returned false before.  For example, `equals(self.group_id,2)` would have returned false for users in group 2, because it was interpreting `2` as a string and then performing its strict comparison.  It now (correctly) returns true.  Notice that `equals(self.group_id,'2')`, on the other hand, will now return `false`.
 - User object caches permissions loaded from DB to reduce number of queries (#612)
 - Type declarations in authorization classes (#652)
+- Fix issue with Twig debug (#356)
 - Show disabled/unactivated badges on user info page
 
 ## v4.0.17-Alpha
