@@ -61,15 +61,10 @@
                             };
                         },
                         processResults: function (data, params) {
-                            var suggestions = [];
                             // Process the data into dropdown options
-                            if (data && data['rows']) {
-                                jQuery.each(data['rows'], function(idx, row) {
-                                    //if (jQuery.inArray(row.id, base._addedIds)) {
-                                        row.text = row.name;
-                                        suggestions.push(row);
-                                    //}
-                                });
+                            var suggestions = [];
+                            if (data && data.rows) {
+                                suggestions = data.rows;
                             }
                             return {
                                 results: suggestions
@@ -93,9 +88,6 @@
 
         // Internal counter for adding rows to the collection.  Gets updated every time `addRow` is called.
         this._rownum = 0;
-
-        // Keeps track of which ids already exist in the collection
-        this._addedIds = [];
 
         // Handlebars template method
         this._dropdownTemplateCompiled = Handlebars.compile(this.options.dropdownTemplate);
@@ -140,6 +132,13 @@
         base._deleteRow(row);
 
         return base.$T;
+    };
+
+    /**
+     * Get the dropdown control for the collection, if one exists.
+     */
+    Plugin.prototype.getDropdown = function () {
+        return this.options.dropdownControl;
     };
 
     /**
@@ -223,16 +222,11 @@
     /**
      * Create a new, blank row with the 'virgin' status.
      */
-    Plugin.prototype._createVirginRow = function () {
+    Plugin.prototype._createVirginRow = function (options) {
         var base = this;
 
-        var params = {
-            id : '',
-            rownum: base._rownum
-        };
-
         // Generate the row and append to table
-        var newRow = base._createRow(params);
+        var newRow = base._createRow(options);
 
         // Set the row's 'virgin' status
         newRow.addClass('uf-collection-row-virgin');
@@ -248,10 +242,6 @@
         var base = this;
         row.remove();
         base.$T.trigger('rowDelete.ufCollection');
-        var index = base._addedIds.indexOf(5);
-        if (index > -1) {
-            base._addedIds.splice(index, 1);
-        }
     };
 
     /**
@@ -266,7 +256,7 @@
         });
 
         // Once the new row comes into focus for the first time, it has been "touched"
-        row.find('input').on('focus', function () {
+        row.find(':input').on('focus', function () {
             base._touchRow(row);
         });
 
@@ -296,6 +286,9 @@
         }
     };
 
+    /**
+     * Initialize the select2 dropdown for this collection on a specified control element.
+     */
     Plugin.prototype._initDropdownField = function (field) {
         var base = this;
         var options = base.options.dropdown;

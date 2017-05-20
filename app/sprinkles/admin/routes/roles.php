@@ -26,6 +26,8 @@ $app->group('/api/roles', function () {
 
     $this->get('/r/{slug}/permissions', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getPermissions');
 
+    $this->get('/r/{slug}/users', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:getUsers');
+
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:create');
 
     $this->put('/r/{slug}', 'UserFrosting\Sprinkle\Admin\Controller\RoleController:updateInfo');

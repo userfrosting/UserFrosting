@@ -69,8 +69,9 @@
             ]
         ],
         'debug' => [
-            'twig' => false,
-            'smtp' => true
+            'queries' => false,
+            'smtp' => true,
+            'twig' => false
         ],
         'mail'    => [
             'mailer'     => 'smtp',     // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'

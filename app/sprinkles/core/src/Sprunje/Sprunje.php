@@ -131,7 +131,9 @@ abstract class Sprunje
         $collection->each(function ($item) use ($csv, $columnNames) {
             $row = [];
             foreach ($columnNames as $itemKey) {
-                if (isset($item[$itemKey])) {
+                // Only add the value if it is set and not an array.  Laravel's array_dot sometimes creates empty child arrays :(
+                // See https://github.com/laravel/framework/pull/13009
+                if (isset($item[$itemKey]) && !is_array($item[$itemKey])) {
                     $row[] = $item[$itemKey];
                 } else {
                     $row[] = '';
@@ -164,13 +166,13 @@ abstract class Sprunje
     public function getResults()
     {
         // Count unfiltered total
-        $total = $this->query->count();
+        $total = $this->count();
 
         // Apply filters
         $this->applyFilters();
 
         // Count filtered total
-        $totalFiltered = $this->query->count();
+        $totalFiltered = $this->countFiltered();
 
         // Apply sorts
         $this->applySorts();
@@ -319,4 +321,24 @@ abstract class Sprunje
      * Set the initial query used by your Sprunje.
      */
     abstract protected function baseQuery();
+
+    /**
+     * Get the unpaginated count of items (before filtering) in this query.
+     *
+     * @return int
+     */
+    protected function count()
+    {
+        return $this->query->count();
+    }
+
+    /**
+     * Get the unpaginated count of items (after filtering) in this query.
+     *
+     * @return int
+     */
+    protected function countFiltered()
+    {
+        return $this->query->count();
+    }
 }

@@ -3,7 +3,7 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Model;
@@ -95,5 +95,24 @@ class Permission extends UFModel
             $join->on('permission_roles.permission_id', 'permissions.id')
                  ->where('role_id', '!=', $roleId);
         });
+    }
+
+    /**
+     * Get a list of users who have this permission, along with a list of roles through which each user has the permission.
+     *
+     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough
+     */
+    public function users()
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        return $this->belongsToManyThrough(
+            $classMapper->getClassMapping('user'),
+            $classMapper->getClassMapping('role'),
+            'permission_roles',
+            null,
+            null,
+            'role_users');
     }
 }

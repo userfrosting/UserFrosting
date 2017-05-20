@@ -3,7 +3,7 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Model;
@@ -71,6 +71,13 @@ class User extends UFModel
     protected $dates = ['deleted_at'];
 
     /**
+     * Cached dictionary of permissions for the user.
+     *
+     * @var array
+     */
+    protected $cachedPermissions;
+
+    /**
      * @var bool Enable timestamps for Users.
      */
     public $timestamps = true;
@@ -118,6 +125,8 @@ class User extends UFModel
 
     /**
      * Get all activities for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function activities()
     {
@@ -141,16 +150,16 @@ class User extends UFModel
         if ($hardDelete) {
             // Remove all role associations
             $this->roles()->detach();
-    
+
             // Remove all user activities
             $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
-    
+
             // Remove all user tokens
             $classMapper->staticMethod('password_reset', 'where', 'user_id', $this->id)->delete();
             $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
-    
+
             // TODO: remove any persistences
-    
+
             // Delete the user
             $result = parent::forceDelete();
         } else {
@@ -194,6 +203,32 @@ class User extends UFModel
     }
 
     /**
+     * Retrieve the cached permissions dictionary for this user.
+     *
+     * @return array
+     */
+    public function getCachedPermissions()
+    {
+        if (!isset($this->cachedPermissions)) {
+            $this->reloadCachedPermissions();
+        }
+
+        return $this->cachedPermissions;
+    }
+
+    /**
+     * Retrieve the cached permissions dictionary for this user.
+     *
+     * @return User
+     */
+    public function reloadCachedPermissions()
+    {
+        $this->cachedPermissions = $this->buildPermissionsDictionary();
+
+        return $this;
+    }
+
+    /**
      * Get the amount of time, in seconds, that has elapsed since the last activity of a certain time for this user.
      *
      * @param string $type The type of activity to search for.
@@ -210,6 +245,8 @@ class User extends UFModel
 
     /**
      * Return this user's group.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function group()
     {
@@ -221,14 +258,15 @@ class User extends UFModel
 
     /**
      * Get the most recent activity for this user, based on the user's last_activity_id.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function lastActivity()
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
-        $query = $this->belongsTo($classMapper->getClassMapping('activity'), 'last_activity_id');
-        return $query;
+        return $this->belongsTo($classMapper->getClassMapping('activity'), 'last_activity_id');
     }
 
     /**
@@ -247,7 +285,7 @@ class User extends UFModel
 
         return $query->latest('occurred_at');
     }
-    
+
     /**
      * Get the most recent time for a specified activity type for this user.
      *
@@ -317,6 +355,8 @@ class User extends UFModel
 
     /**
      * Get all password reset requests for this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function passwordResets()
     {
@@ -329,34 +369,26 @@ class User extends UFModel
     /**
      * Get all of the permissions this user has, via its roles.
      *
-     * @param string|null $slug If specified, filters by a specific slug.
-     * @todo Turn this into a full-fledged custom relation?
+     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough
      */
-    public function permissions($slug = null)
+    public function permissions()
     {
-        $result = Capsule::table('permissions')
-            ->select(
-                'permissions.id as id',
-                'roles.id as role_id',
-                'permissions.slug as slug',
-                'permissions.name as name',
-                'conditions',
-                'permissions.description as description')
-            ->join('permission_roles', 'permissions.id', '=', 'permission_roles.permission_id')
-            ->join('roles', 'permission_roles.role_id', '=', 'roles.id')
-            ->join('role_users', 'role_users.role_id', '=', 'roles.id')
-            ->where('role_users.user_id', '=', $this->id);
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
 
-        if ($slug) {
-            $result = $result->where('permissions.slug', $slug);
-        }
-
-        return $result;
+        return $this->belongsToManyThrough(
+            $classMapper->getClassMapping('permission'),
+            $classMapper->getClassMapping('role'),
+            'role_users',
+            null,
+            null,
+            'permission_roles');
     }
 
     /**
      * Get all roles to which this user belongs.
      *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
     {
@@ -367,7 +399,44 @@ class User extends UFModel
     }
 
     /**
+     * Get this user's roles, but only those that have a particular permission (specified elsewhere in the query).
+     *
+     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyConstrained
+     */
+    public function rolesWithPermission()
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        // Constrain this relationship, only loading a user's roles that have a particular permission
+        $query = $this->belongsToManyConstrained($classMapper->getClassMapping('role'), 'permission_id', 'role_users');
+
+        // Need to make sure we add the `permission_id` pivot for BelongsToManyConstrained to match
+        $query = $query->withPivot('permission_id');
+
+        return $query;
+    }
+
+    /**
+     * Query scope to get all users who have a specific role.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $roleId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeForRole($query, $roleId)
+    {
+        return $query->join('role_users', function ($join) use ($roleId) {
+            $join->on('role_users.user_id', 'users.id')
+                 ->where('role_id', $roleId);
+        });
+    }
+
+    /**
      * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeJoinLastActivity($query)
     {
@@ -376,5 +445,23 @@ class User extends UFModel
         $query = $query->leftJoin('activities', 'activities.id', '=', 'users.last_activity_id');
 
         return $query;
+    }
+
+    /**
+     * Loads permissions for this user into a cached dictionary of slugs -> arrays of permissions,
+     * so we don't need to keep requerying the DB for every call of checkAccess.
+     *
+     * @return array
+     */
+    protected function buildPermissionsDictionary()
+    {
+        $permissions = $this->permissions()->get();
+        $cachedPermissions = [];
+
+        foreach ($permissions as $permission) {
+            $cachedPermissions[$permission->slug][] = $permission;
+        }
+
+        return $cachedPermissions;
     }
 }

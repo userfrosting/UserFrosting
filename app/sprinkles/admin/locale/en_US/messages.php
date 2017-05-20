@@ -76,9 +76,14 @@ return [
 
         "ASSIGN_NEW"        => "Assign new permission",
         "HOOK_CONDITION"    => "Hook/Conditions",
+        "ID"                => "Permission ID",
+        "INFO_PAGE"         => "Permission information page for '{{name}}'",
         "MANAGE"            => "Manage permissions",
+        "NOTE_READ_ONLY"    => "<strong>Please note:</strong> permissions are considered \"part of the code\" and cannot be modified through the interface.  To add, remove, or modify permissions, the site maintainers will need to use a <a href=\"https://learn.userfrosting.com/database/extending-the-database\" target=\"about:_blank\">database migration.</a>",
         "PAGE_DESCRIPTION"  => "A listing of the permissions for your site.  Provides management tools for editing and deleting permissions.",
-        "UPDATE"            => "Update permissions"
+        "SUMMARY"           => "Permission Summary",
+        "UPDATE"            => "Update permissions",
+        "VIA_ROLES"         => "Has permission via roles"
     ],
 
     "ROLE" => [
@@ -142,7 +147,8 @@ return [
         "LATEST"            => "Latest Users",
         "PAGE_DESCRIPTION"  => "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
         "SUMMARY"           => "Account Summary",
-        "VIEW_ALL"          => "View all users"
+        "VIEW_ALL"          => "View all users",
+        "WITH_PERMISSION"   => "Users with this permission"
     ],
     "X_USER" => [
         0 => "No users",

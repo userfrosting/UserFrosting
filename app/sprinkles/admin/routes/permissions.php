@@ -21,4 +21,6 @@ $app->group('/api/permissions', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getList');
 
     $this->get('/p/{id}', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getInfo');
+
+    $this->get('/p/{id}/users', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:getUsers');
 })->add('authGuard');

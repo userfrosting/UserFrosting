@@ -3,12 +3,13 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Interop\Container\ContainerInterface;
+use UserFrosting\Sprinkle\Account\Model\User;
 
 /**
  * AuthorizationManager class.
@@ -33,7 +34,7 @@ class AuthorizationManager
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
      */
-    public function __construct(ContainerInterface $ci, $callbacks = [])
+    public function __construct(ContainerInterface $ci, array $callbacks = [])
     {
         $this->ci = $ci;
         $this->callbacks = $callbacks;
@@ -65,13 +66,15 @@ class AuthorizationManager
     /**
      * Checks whether or not a user has access on a particular permission slug.
      *
-     * Determine if this user has access to the given $hook under the given $params.
-     * @param string $hook The authorization hook to check for access.
+     * Determine if this user has access to the given $slug under the given $params.
+     *
+     * @param UserFrosting\Sprinkle\Account\Model\User $user
+     * @param string $slug The permission slug to check for access.
      * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.
      * @return boolean True if the user has access, false otherwise.
      */
-    public function checkAccess($user, $slug, $params = [])
+    public function checkAccess(User $user, $slug, array $params = [])
     {
         $debug = $this->ci->config['debug.auth'];
 
@@ -99,22 +102,23 @@ class AuthorizationManager
         }
 
         // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
+        $permissions = $user->getCachedPermissions();
 
-        $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $debug);
-        $ace = new AccessConditionExpression($nodeVisitor, $user, $this->ci->authLogger, $debug);
-
-        $permissions = $user->permissions($slug)->get();
-
-        if (!count($permissions)) {
+        if (empty($permissions) || !isset($permissions[$slug])) {
             if ($debug) {
                 $this->ci->authLogger->debug("No matching permissions found.  Access denied.");
             }
             return false;
         }
 
+        $permissions = $permissions[$slug];
+
         if ($debug) {
-            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($permissions->toArray(), true));
+            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($this->getPermissionsArrayDebugInfo($permissions), true));
         }
+
+        $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $debug);
+        $ace = new AccessConditionExpression($nodeVisitor, $user, $this->ci->authLogger, $debug);
 
         foreach ($permissions as $permission) {
             $pass = $ace->evaluateCondition($permission->conditions, $params);
@@ -131,5 +135,23 @@ class AuthorizationManager
         }
 
         return false;
+    }
+
+    /**
+     * Remove extraneous information from the permission to reduce verbosity.
+     *
+     * @param  array
+     * @return array
+     */
+    protected function getPermissionsArrayDebugInfo($permissions)
+    {
+        $permissionsInfo = [];
+        foreach ($permissions as $permission) {
+            $permissionData = array_only($permission->toArray(), ['id', 'slug', 'name', 'conditions', 'description']);
+            $permissionData['roles_via'] = $permission->roles_via->pluck('id')->all();
+            $permissionsInfo[] = $permissionData;
+        }
+
+        return $permissionsInfo;
     }
 }
