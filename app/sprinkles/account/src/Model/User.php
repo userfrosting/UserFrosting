@@ -71,6 +71,13 @@ class User extends UFModel
     protected $dates = ['deleted_at'];
 
     /**
+     * Cached dictionary of permissions for the user.
+     *
+     * @var array
+     */
+    protected $cachedPermissions;
+
+    /**
      * @var bool Enable timestamps for Users.
      */
     public $timestamps = true;
@@ -141,16 +148,16 @@ class User extends UFModel
         if ($hardDelete) {
             // Remove all role associations
             $this->roles()->detach();
-    
+
             // Remove all user activities
             $classMapper->staticMethod('activity', 'where', 'user_id', $this->id)->delete();
-    
+
             // Remove all user tokens
             $classMapper->staticMethod('password_reset', 'where', 'user_id', $this->id)->delete();
             $classMapper->staticMethod('verification', 'where', 'user_id', $this->id)->delete();
-    
+
             // TODO: remove any persistences
-    
+
             // Delete the user
             $result = parent::forceDelete();
         } else {
@@ -191,6 +198,32 @@ class User extends UFModel
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * Retrieve the cached permissions dictionary for this user.
+     *
+     * @return array
+     */
+    public function getCachedPermissions()
+    {
+        if (!isset($this->cachedPermissions)) {
+            $this->reloadCachedPermissions();
+        }
+
+        return $this->cachedPermissions;
+    }
+
+    /**
+     * Retrieve the cached permissions dictionary for this user.
+     *
+     * @return User
+     */
+    public function reloadCachedPermissions()
+    {
+        $this->cachedPermissions = $this->buildPermissionsDictionary();
+
+        return $this;
     }
 
     /**
@@ -247,7 +280,7 @@ class User extends UFModel
 
         return $query->latest('occurred_at');
     }
-    
+
     /**
      * Get the most recent time for a specified activity type for this user.
      *
@@ -405,5 +438,23 @@ class User extends UFModel
         $query = $query->leftJoin('activities', 'activities.id', '=', 'users.last_activity_id');
 
         return $query;
+    }
+
+    /**
+     * Loads permissions for this user into a cached dictionary of slugs -> arrays of permissions,
+     * so we don't need to keep requerying the DB for every call of checkAccess.
+     *
+     * @return array
+     */
+    protected function buildPermissionsDictionary()
+    {
+        $permissions = $this->permissions()->get();
+        $cachedPermissions = [];
+
+        foreach ($permissions as $permission) {
+            $cachedPermissions[$permission->slug][] = $permission;
+        }
+
+        return $cachedPermissions;
     }
 }

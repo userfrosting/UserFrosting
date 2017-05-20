@@ -102,17 +102,19 @@ class AuthorizationManager
         }
 
         // Find all permissions that apply to this user (via roles), and check if any evaluate to true.
-        $permissions = $user->permissions($slug)->get();
+        $permissions = $user->getCachedPermissions();
 
-        if (!count($permissions)) {
+        if (empty($permissions) || !isset($permissions[$slug])) {
             if ($debug) {
                 $this->ci->authLogger->debug("No matching permissions found.  Access denied.");
             }
             return false;
         }
 
+        $permissions = $permissions[$slug];
+
         if ($debug) {
-            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($permissions->toArray(), true));
+            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($permissions, true));
         }
 
         $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $debug);
