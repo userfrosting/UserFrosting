@@ -3,7 +3,7 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Model;
@@ -11,6 +11,7 @@ namespace UserFrosting\Sprinkle\Core\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model;
 use UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyConstrained;
+use UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough;
 use UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyUnique;
 use UserFrosting\Sprinkle\Core\Model\Relations\HasManySyncable;
 use UserFrosting\Sprinkle\Core\Model\Relations\MorphManySyncable;
@@ -66,7 +67,7 @@ abstract class UFModel extends Model
      * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyConstrained
      */
     public function belongsToManyConstrained($related, $constraintKey, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
-    {        
+    {
         // If no relationship name was passed, we will pull backtraces to get the
         // name of the calling function. We will use that function name as the
         // title of this relation since that is a great convention to apply.
@@ -93,6 +94,78 @@ abstract class UFModel extends Model
         return new BelongsToManyConstrained(
             $instance->newQuery(), $this, $constraintKey, $table, $foreignKey, $relatedKey, $relation
         );
+    }
+
+    /**
+     * Define a many-to-many 'through' relationship.
+     * This is basically hasManyThrough for many-to-many relationships.
+     *
+     * @param  string  $related
+     * @param  string  $through
+     * @param  string  $firstJoiningTable
+     * @param  string  $firstForeignKey
+     * @param  string  $firstRelatedKey
+     * @param  string  $secondJoiningTable
+     * @param  string  $secondForeignKey
+     * @param  string  $secondRelatedKey
+     * @param  string  $throughRelation
+     * @param  string  $relation
+     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough
+     */
+    public function belongsToManyThrough(
+        $related,
+        $through,
+        $firstJoiningTable = null,
+        $firstForeignKey = null,
+        $firstRelatedKey = null,
+        $secondJoiningTable = null,
+        $secondForeignKey = null,
+        $secondRelatedKey = null,
+        $throughRelation = null,
+        $relation = null
+    )
+    {
+        // If no relationship name was passed, we will pull backtraces to get the
+        // name of the calling function. We will use that function name as the
+        // title of this relation since that is a great convention to apply.
+        if (is_null($relation)) {
+            $relation = $this->guessBelongsToManyRelation();
+        }
+
+        // Create models for through and related
+        $through = new $through;
+        $related = $this->newRelatedInstance($related);
+
+        if (is_null($throughRelation)) {
+            $throughRelation = $through->getTable();
+        }
+
+        // If no table names were provided, we can guess it by concatenating the parent
+        // and through table names. The two model names are transformed to snake case
+        // from their default CamelCase also.
+        if (is_null($firstJoiningTable)) {
+            $firstJoiningTable = $this->joiningTable($through);
+        }
+
+        if (is_null($secondJoiningTable)) {
+            $secondJoiningTable = $through->joiningTable($related);
+        }
+
+        $firstForeignKey = $firstForeignKey ?: $this->getForeignKey();
+        $firstRelatedKey = $firstRelatedKey ?: $through->getForeignKey();
+        $secondForeignKey = $secondForeignKey ?: $through->getForeignKey();
+        $secondRelatedKey = $secondRelatedKey ?: $related->getForeignKey();
+
+        // This relationship maps the top model (this) to the through model.
+        $intermediateRelationship = $this->belongsToMany($through, $firstJoiningTable, $firstForeignKey, $firstRelatedKey, $throughRelation)
+            ->withPivot($firstForeignKey);
+
+        // Now we set up the relationship with the related model.
+        $query = new BelongsToManyThrough(
+            $related->newQuery(), $this, $intermediateRelationship, $secondJoiningTable, $secondForeignKey, $secondRelatedKey, $relation
+        );
+
+        return $query;
     }
 
     /**

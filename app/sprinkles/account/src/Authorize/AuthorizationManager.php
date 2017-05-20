@@ -3,7 +3,7 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Authorize;
@@ -114,7 +114,7 @@ class AuthorizationManager
         $permissions = $permissions[$slug];
 
         if ($debug) {
-            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($permissions, true));
+            $this->ci->authLogger->debug("Found matching permissions: \n" . print_r($this->getPermissionsArrayDebugInfo($permissions), true));
         }
 
         $nodeVisitor = new ParserNodeFunctionEvaluator($this->callbacks, $this->ci->authLogger, $debug);
@@ -135,5 +135,23 @@ class AuthorizationManager
         }
 
         return false;
+    }
+
+    /**
+     * Remove extraneous information from the permission to reduce verbosity.
+     *
+     * @param  array
+     * @return array
+     */
+    protected function getPermissionsArrayDebugInfo($permissions)
+    {
+        $permissionsInfo = [];
+        foreach ($permissions as $permission) {
+            $permissionData = array_only($permission->toArray(), ['id', 'slug', 'name', 'conditions', 'description']);
+            $permissionData['roles_via'] = $permission->roles_via->pluck('id')->all();
+            $permissionsInfo[] = $permissionData;
+        }
+
+        return $permissionsInfo;
     }
 }

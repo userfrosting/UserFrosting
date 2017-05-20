@@ -3,6 +3,7 @@
 ## v4.0.18-Alpha
 - Permission info page (#638)
 - New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
+- Change implementation of User::permissions() to use BelongsToManyThrough
 - New ufForm options: setting reqParams, encType, submittingText
 - ufCollection now triggers a check for virgin rows when _any_ control is touched 
 - Fix issue with Sprunje when generating CSV with empty child collections (#697)
