@@ -289,8 +289,19 @@ class CoreServicesProvider
             $capsule->bootEloquent();
 
             if ($config['debug.queries']) {
+                $logger = $c->queryLogger;
+
                 foreach ($config['db'] as $name => $dbConfig) {
                     $capsule->connection($name)->enableQueryLog();
+
+                    // Register listener
+                    $capsule->connection($name)->listen(function ($query) use ($logger) {
+                        $logger->debug("Query executed on database [{$query->connectionName}]:", [
+                            'query'    => $query->sql,
+                            'bindings' => $query->bindings,
+                            'time'     => $query->time . ' ms'
+                        ]);
+                    });
                 }
             }
 
@@ -451,6 +462,26 @@ class CoreServicesProvider
                                 ->write($template->render([]));
                 }
             };
+        };
+
+        /**
+         * Laravel query logging with Monolog.
+         *
+         * Extend this service to push additional handlers onto the 'query' log stack.
+         */
+        $container['queryLogger'] = function ($c) {
+            $logger = new Logger('query');
+
+            $logFile = $c->locator->findResource('log://queries.log', true, true);
+
+            $handler = new StreamHandler($logFile);
+
+            $formatter = new MixedFormatter(null, null, true);
+
+            $handler->setFormatter($formatter);
+            $logger->pushHandler($handler);
+
+            return $logger;
         };
 
         /**
