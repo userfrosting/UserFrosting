@@ -584,6 +584,7 @@ class CoreServicesProvider
 
             if ($c->config['debug.twig']) {
                 $twig->enableDebug();
+                $view->addExtension(new \Twig_Extension_Debug());
             }
 
             // Register the Slim extension with Twig
