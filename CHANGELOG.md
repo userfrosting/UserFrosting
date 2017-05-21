@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.0.19-Alpha
+- Explicit column names in new user permissions relations
+
 ## v4.0.18-Alpha
 - Permission info page (#638)
 - New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
