@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.0.20-Alpha
+- Remove pivot columns from pagination subquery in BelongsToManyThrough, to deal with MySQL's `only_full_group_by` warning
+
 ## v4.0.19-Alpha
 - Explicit column names in new user permissions relations
 
