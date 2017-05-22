@@ -353,7 +353,7 @@ class Migration extends Bakery
 
                 // Make sure the class exist
                 if (!class_exists($migrationClass)) {
-                    throw new BadClassNameException("Unable to find the migration class '$migration'." );
+                    throw new BadClassNameException("Unable to find the migration class '$migrationClass'." );
                 }
 
                 // Load the migration class
