@@ -58,6 +58,8 @@ class Permission extends UFModel
 
     /**
      * Get a list of roles to which this permission is assigned.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
     {
@@ -111,8 +113,11 @@ class Permission extends UFModel
             $classMapper->getClassMapping('user'),
             $classMapper->getClassMapping('role'),
             'permission_roles',
-            null,
-            null,
-            'role_users');
+            'permission_id',
+            'role_id',
+            'role_users',
+            'role_id',
+            'user_id'
+        );
     }
 }

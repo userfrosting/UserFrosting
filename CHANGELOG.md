@@ -11,12 +11,15 @@
 - Automatically load Sprinkler service providers (see #636)
 - Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
 
+## v4.0.19-Alpha
+- Explicit column names in new user permissions relations
+
 ## v4.0.18-Alpha
 - Permission info page (#638)
 - New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
 - Change implementation of User::permissions() to use BelongsToManyThrough
 - New ufForm options: setting reqParams, encType, submittingText
-- ufCollection now triggers a check for virgin rows when _any_ control is touched 
+- ufCollection now triggers a check for virgin rows when _any_ control is touched
 - Fix issue with Sprunje when generating CSV with empty child collections (#697)
 - Authorizer now correctly interprets string literals (#482)
 - Authorizer now correctly interprets numeric types in access conditions.  **Caution**: this causes the `equals()` callback to return true in situations where it would have (incorrectly) returned false before.  For example, `equals(self.group_id,2)` would have returned false for users in group 2, because it was interpreting `2` as a string and then performing its strict comparison.  It now (correctly) returns true.  Notice that `equals(self.group_id,'2')`, on the other hand, will now return `false`.

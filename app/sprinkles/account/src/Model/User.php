@@ -271,6 +271,9 @@ class User extends UFModel
 
     /**
      * Find the most recent activity for this user of a particular type.
+     *
+     * @param  string $type
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function lastActivityOfType($type = null)
     {
@@ -289,6 +292,7 @@ class User extends UFModel
     /**
      * Get the most recent time for a specified activity type for this user.
      *
+     * @param  string $type
      * @return string|null The last activity time, as a SQL formatted time (YYYY-MM-DD HH:MM:SS), or null if an activity of this type doesn't exist.
      */
     public function lastActivityTime($type)
@@ -380,9 +384,12 @@ class User extends UFModel
             $classMapper->getClassMapping('permission'),
             $classMapper->getClassMapping('role'),
             'role_users',
-            null,
-            null,
-            'permission_roles');
+            'user_id',
+            'role_id',
+            'permission_roles',
+            'role_id',
+            'permission_id'
+        );
     }
 
     /**
