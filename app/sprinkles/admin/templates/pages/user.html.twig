@@ -84,7 +84,7 @@
                         </div>
                         <div class="box-body box-profile">
                             <img class="profile-user-img img-responsive img-circle" src="{{user.avatar}}" alt="{{user.user_name}}">
-              
+
                             <h3 class="profile-username text-center">{{user.full_name}}</h3>
                             <div class="text-center">
                                 {% if user.flag_enabled == 0 %}
@@ -95,26 +95,28 @@
                                 {% endif %}
                             </div>
                             <h4 class="text-muted text-center">{{user.user_name}}{% if 'group' not in fields.hidden %} • {{user.group.name}}{% endif %}</h4>
-                            <hr>
 
                             {% if 'email' not in fields.hidden %}
+                                <hr>
                                 <strong><i class="fa fa-envelope margin-r-5"></i> {{translate("EMAIL")}}</strong>
                                 <p class="text-muted box-profile-property js-copy-container">
                                     <i class="fa fa-copy js-copy-trigger"></i>
                                     <span class="js-copy-target">{{user.email}}</span>
                                 </p>
-                                <hr>
                             {% endif %}
 
                             {% if 'locale' not in fields.hidden %}
+                                <hr>
                                 <strong><i class="fa fa-language margin-r-5"></i> {{translate("LOCALE")}}</strong>
                                 <p class="text-muted box-profile-property">
                                     {{locales[user.locale]}}
                                 </p>
-                                <hr>
                             {% endif %}
 
+                            {% block user_profile %}{% endblock %}
+
                             {% if 'roles' not in fields.hidden %}
+                                <hr>
                                 <strong><i class="fa fa-drivers-license margin-r-5"></i> {{translate("ROLE", 2)}}</strong>
                                 <p class="box-profile-property">
                                     {% for role in user.roles %}
