@@ -181,8 +181,8 @@ class BelongsToManyThrough extends BelongsToMany
     public function getPaginatedQuery(Builder $query, $limit = null, $offset = null)
     {
         $constrainedBuilder = clone $query;
-        
-        $constrainedBuilder = $constrainedBuilder->groupBy($this->relatedKey);
+
+        $constrainedBuilder = $constrainedBuilder->select($this->related->getQualifiedKeyName())->groupBy($this->relatedKey);
 
         if ($limit) {
             $constrainedBuilder = $constrainedBuilder->limit($limit);
