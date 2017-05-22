@@ -3,54 +3,56 @@
     <div class="js-form-alerts">
     </div>
     <div class="row">
-        {% if 'name' not in form.fields.hidden %}
-        <div class="col-sm-12">
-            <div class="form-group">
-                <label>{{translate("GROUP.NAME")}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
-                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="{{translate("GROUP.NAME_EXPLAIN")}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+        {% block group_form %}
+            {% if 'name' not in form.fields.hidden %}
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>{{translate("GROUP.NAME")}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
+                        <input type="text" class="form-control" name="name" autocomplete="off" value="{{group.name}}" placeholder="{{translate("GROUP.NAME_EXPLAIN")}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'slug' not in form.fields.hidden %}
-        <div class="col-sm-12">
-            <div class="form-group">
-                <label>{{translate("SLUG")}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
-                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="{{translate("SLUG")}}" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
-                    {% if 'slug' not in form.fields.disabled %}
-                        <span class="input-group-btn" data-toggle="buttons">
-                            <label class="btn btn-primary">
-                                <input type="checkbox" id="form-group-slug-override" autocomplete="off"> {{translate("OVERRIDE")}}
-                            </label>
-                        </span>
-                    {% endif %}
+            {% endif %}
+            {% if 'slug' not in form.fields.hidden %}
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>{{translate("SLUG")}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
+                        <input type="text" class="form-control" name="slug" autocomplete="off" value="{{group.slug}}" placeholder="{{translate("SLUG")}}" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
+                        {% if 'slug' not in form.fields.disabled %}
+                            <span class="input-group-btn" data-toggle="buttons">
+                                <label class="btn btn-primary">
+                                    <input type="checkbox" id="form-group-slug-override" autocomplete="off"> {{translate("OVERRIDE")}}
+                                </label>
+                            </span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'icon' not in fields.hidden %}
-        <div class="col-sm-12">
-            <div class="form-group">
-                <label>{{translate("GROUP.ICON")}}</label>
-                <div class="input-group">
-                    <span class="input-group-addon icon-preview"><i class="{{group.icon}} fa-fw"></i></span>
-                    <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="{{translate("GROUP.ICON_EXPLAIN")}}" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
+            {% endif %}
+            {% if 'icon' not in fields.hidden %}
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>{{translate("GROUP.ICON")}}</label>
+                    <div class="input-group">
+                        <span class="input-group-addon icon-preview"><i class="{{group.icon}} fa-fw"></i></span>
+                        <input type="text" class="form-control" name="icon" autocomplete="off" value="{{group.icon}}" placeholder="{{translate("GROUP.ICON_EXPLAIN")}}" {% if 'icon' in form.fields.disabled %}disabled{% endif %}>
+                    </div>
                 </div>
             </div>
-        </div>
-        {% endif %}
-        {% if 'description' not in fields.hidden %}
-        <div class="col-sm-12">
-            <div class="form-group">
-                <label for="input_description">{{translate("DESCRIPTION")}}</label>
-                <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{group.description}}</textarea>
+            {% endif %}
+            {% if 'description' not in fields.hidden %}
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="input_description">{{translate("DESCRIPTION")}}</label>
+                    <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{group.description}}</textarea>
+                </div>
             </div>
-        </div>
-        {% endif %}
+            {% endif %}
+        {% endblock %}
     </div><br>
     <div class="row">
         <div class="col-xs-6 col-sm-4">

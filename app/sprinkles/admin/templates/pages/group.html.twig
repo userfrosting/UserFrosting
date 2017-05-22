@@ -46,7 +46,7 @@
                     <div class="text-center">
                         <i class="{{group.icon}} fa-5x"></i>
                     </div>
-      
+
                     <h3 class="profile-username text-center">{{group.name}}</h3>
 
                     {% if 'description' not in fields.hidden %}
@@ -61,6 +61,7 @@
                             {{group.users.count}}
                         </p>
                     {% endif %}
+                    {% block group_profile %}{% endblock %}
                 </div>
             </div>
         </div>
