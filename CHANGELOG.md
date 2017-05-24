@@ -1,9 +1,12 @@
 # Change Log
 
-## v.4.0.20-Alpha
+## v.4.0.21-Alpha
 - Misc UI update
 - Added Twig blocks
 - Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
+
+## v4.0.20-Alpha
+- Remove pivot columns from pagination subquery in BelongsToManyThrough, to deal with MySQL's `only_full_group_by` warning
 
 ## v4.0.19-Alpha
 - Explicit column names in new user permissions relations
