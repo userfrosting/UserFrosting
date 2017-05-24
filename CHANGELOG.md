@@ -5,6 +5,7 @@
 - Added Twig blocks
 - Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
 - ufAlerts will only auto-scroll when outside the viewport (even if only partially). Can be overriden with `scrollWhenVisible: true`. (#714)
+- Rebased ufCollection with new jQuery plugin template. (part of #646)
 
 ## v4.0.20-Alpha
 - Remove pivot columns from pagination subquery in BelongsToManyThrough, to deal with MySQL's `only_full_group_by` warning
