@@ -2,7 +2,8 @@
 
 ## v.4.0.20-Alpha
 - Misc UI update
-- Added Twig blocks 
+- Added Twig blocks
+- Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
 
 ## v4.0.19-Alpha
 - Explicit column names in new user permissions relations
