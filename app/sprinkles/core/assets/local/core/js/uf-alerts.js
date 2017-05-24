@@ -41,6 +41,7 @@
         defaults = {
             url                 : site.uri.public + "/alerts",
             scrollToTop         : true,
+            scrollWhenVisible   : false,
             agglomerate         : false,
             alertMessageClass   : "uf-alert-message",
             alertTemplateId     : "uf-alert-template",
@@ -49,8 +50,8 @@
 
     // Constructor
     function Plugin (element, options) {
-        this.element = element;
-        this.$element = $(element);
+        this.element = element[0];
+        this.$element = $(this.element);
         this.settings = $.extend(true, {}, defaults, options);
         this._defaults = defaults;
         this._name = pluginName;
@@ -211,13 +212,26 @@
 
             // Scroll to top of alert location is new alerts output, and auto scrolling is enabled
             if (this.settings.scrollToTop && alertHtml != "") {
-                $("html, body").animate({
-                    scrollTop: this.$element.offset().top
-                }, "fast");
+                // Don't scroll if already visible, unless scrollWhenVisible is true
+                if (!this._alertsVisible() || this.settings.scrollWhenVisible) {
+                    $("html, body").animate({ scrollTop: this.$element.offset().top }, "fast");
+                }
             }
 
             // Trigger render events
             this.$element.trigger("render." + this.pluginName);
+        },
+        /**
+         * Returns true if alerts container is completely within the viewport.
+         */
+        _alertsVisible: function() {
+            var rect = this.element.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&     
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
         },
         /**
          * Completely destroy the ufAlerts plugin on the element.
