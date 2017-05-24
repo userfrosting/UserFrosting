@@ -1,5 +1,9 @@
 # Change Log
 
+## v.4.0.20-Alpha
+- Misc UI update
+- Added Twig blocks 
+
 ## v4.0.19-Alpha
 - Explicit column names in new user permissions relations
 
