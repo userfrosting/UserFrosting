@@ -27,63 +27,54 @@
  * and displaying any error messages.
  *
  * UserFrosting https://www.userfrosting.com
- * @author Alexander Weissman https://alexanderweissman.com
+ * @author Alexander Weissman <https://alexanderweissman.com>
+ * 
+ * @todo Implement proper fallback for when `set` function isn't supported by FormData.
  */
+;(function($, window, document, undefined) {
+	"use strict";
 
-(function( $ )
-{
-    /**
-     * The plugin namespace, ie for $('.selector').ufForm(options)
-     *
-     * Also the id for storing the object state via $('.selector').data()
-     */
-    var PLUGIN_NS = 'ufForm';
-
-    var Plugin = function ( target, options )
-    {
-        this.$T = $(target);
-
-        /** #### OPTIONS #### */
-        this.options= $.extend(
-            true,               // deep extend
-            {
-                reqParams: {
-                    type: this.$T.attr('method'),
-                    url:  this.$T.attr('action')
-                },
-                encType: (typeof this.$T.attr('enctype') !== 'undefined') ? this.$T.attr('enctype') : '',
-                validators: {
-                    'rules'   : {},
-                    'messages': {}
-                },
-                msgTarget           : this.$T.find('.js-form-alerts:first'),
-                submittingText      : "<i class='fa fa-spinner fa-spin'></i>",
-                beforeSubmitCallback: null,
-                binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
-                keyupDelay          : 0,
-                DEBUG: false
+    // Define plugin name and defaults.
+    var pluginName = "ufForm",
+        defaults = {
+            validators: {
+                'rules'   : {},
+                'messages': {}
             },
-            options
-        );
+            submittingText      : "<i class='fa fa-spinner fa-spin'></i>",
+            beforeSubmitCallback: null,
+            binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
+            keyupDelay          : 0,
+            DEBUG: false
+        };
 
-        this._init( target, options );
+    // Constructor
+    function Plugin (element, options) {
+        this.element = element[0];
+        this.$element = $(this.element);
+        var lateDefaults = {
+            reqParams: {
+                type    : this.$element.attr('method'),
+                url     : this.$element.attr('action')
+            },
+            encType  : (typeof this.$element.attr('enctype') !== 'undefined') ? this.$element.attr('enctype') : '',
+            msgTarget: this.$element.find('.js-form-alerts:first')
+        };
+        this.settings = $.extend(true, {}, defaults, lateDefaults, options);
+        this._defaults = defaults;
+        this._name = pluginName;
 
-        return this;
-    };
+        // Expose settings for 'onkeyup' until a better more event driven apporch is adopted.
+        var settings = this.settings;
 
-    /** #### INITIALISER #### */
-    Plugin.prototype._init = function ( target, options )
-    {
-        var base = this;
-        var $el = $(target);
-
-        var validator = $el.validate({
-            rules:          base.options.validators.rules,
-            messages :      base.options.validators.messages,
-            submitHandler:  function (f, e) {
+        // Setup validator
+        var validator = this.$element.validate({
+            rules:          this.settings.validators.rules,
+            messages :      this.settings.validators.messages,
+            submitHandler:  $.proxy(function(f, e) {
                 // Execute any "before submit" callback
-                if (base.options.beforeSubmitCallback) {
-                    base.options.beforeSubmitCallback();
+                if (this.settings.beforeSubmitCallback) {
+                    this.settings.beforeSubmitCallback();
                 }
 
                 var form = $(f);
@@ -93,35 +84,35 @@
                 if (submitButton) {
                     var submitButtonText = submitButton.html();
                     submitButton.prop( "disabled", true );
-                    submitButton.html(base.options.submittingText);
+                    submitButton.html(this.settings.submittingText);
                 }
 
                 // Get the form encoding type from the users HTML, and chose an encoding form.
-                if (base.options.encType.toLowerCase() === "multipart/form-data" ) {
-                    base.options.reqParams.data = base._multipartData(form);
+                if (this.settings.encType.toLowerCase() === "multipart/form-data" ) {
+                    this.settings.reqParams.data = this._multipartData(form);
                     // add additional params to fix jquery errors
-                    base.options.reqParams.cache = false;
-                    base.options.reqParams.contentType = false;
-                    base.options.reqParams.processData = false;
+                    this.settings.reqParams.cache = false;
+                    this.settings.reqParams.contentType = false;
+                    this.settings.reqParams.processData = false;
                 } else {
-                    base.options.reqParams.data = base._urlencodeData(form);
+                    this.settings.reqParams.data = this._urlencodeData(form);
                 }
 
                 // Submit the form via AJAX
-                $.ajax(base.options.reqParams).then(
+                $.ajax(this.settings.reqParams).then(
                     // Submission successful
-                    function (data, textStatus, jqXHR) {
+                    $.proxy(function(data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
                         if (submitButton) {
                             submitButton.prop( "disabled", false );
                             submitButton.html(submitButtonText);
                         }
 
-                        base.$T.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
+                        this.$element.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
                         return jqXHR;
-                    },
+                    }, this),
                     // Submission failed
-                    function (jqXHR, textStatus, errorThrown) {
+                    $.proxy(function(jqXHR, textStatus, errorThrown) {
                         // Restore button text and re-enable submit button
                         if (submitButton) {
                             submitButton.prop( "disabled", false );
@@ -129,31 +120,31 @@
                         }
                         // Error messages
                         if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
-                            base.$T.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
+                            this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
                             document.write(jqXHR.responseText);
                             document.close();
                         } else {
-                            if (base.options.DEBUG) {
+                            if (this.settings.DEBUG) {
                                 console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
                             }
                             // Display errors on failure
                             // TODO: ufAlerts widget should have a 'destroy' method
-                            if (!base.options.msgTarget.data('ufAlerts')) {
-                                base.options.msgTarget.ufAlerts();
+                            if (!this.settings.msgTarget.data('ufAlerts')) {
+                                this.settings.msgTarget.ufAlerts();
                             } else {
-                                base.options.msgTarget.ufAlerts('clear');
+                                this.settings.msgTarget.ufAlerts('clear');
                             }
 
-                            base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
-                            base.options.msgTarget.on("render.ufAlerts", function () {
-                                base.$T.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
+                            this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
+                            this.settings.msgTarget.on("render.ufAlerts", function () {
+                                this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
                             });
                         }
                         return jqXHR;
-                    }
+                    }, this)
                 );
-            },
-            onkeyup: function( element, event ) {
+            }, this),
+            onkeyup: function(element, event) {
                 // See http://stackoverflow.com/questions/41363409/jquery-validate-add-delay-to-keyup-validation
                 var form = this;
                 setTimeout(function() {
@@ -181,121 +172,110 @@
                     } else if ( element.name in form.submitted || element.name in form.invalid ) {
                         form.element( element );
                     }
-                }, base.options.keyupDelay);
+                }, settings.keyupDelay);
             }
         });
-    };
 
-    /**
-     * Helper function for encoding data as urlencoded
-     */
-    Plugin.prototype._urlencodeData = function (form) 
-    {
-        var base = this;
+        return this;
+    }
 
-        // Serialize and post to the backend script in ajax mode
-        if (base.options.binaryCheckboxes) {
-            var serializedData = form.find(':input').not(':checkbox').serialize();
-            // Get unchecked checkbox values, set them to 0
-            form.find('input[type=checkbox]:enabled').each(function() {
-                if ($(this).is(':checked')) {
-                    serializedData += "&" + encodeURIComponent(this.name) + "=1";
-                } else {
-                    serializedData += "&" + encodeURIComponent(this.name) + "=0";
+    // Functions
+    $.extend(Plugin.prototype, {
+        /**
+         * Helper function for encoding data as urlencoded
+         */
+        _urlencodeData: function(form) {
+            // Serialize and post to the backend script in ajax mode
+            if (this.settings.binaryCheckboxes) {
+                var serializedData = form.find(':input').not(':checkbox').serialize();
+                // Get unchecked checkbox values, set them to 0
+                form.find('input[type=checkbox]:enabled').each(function() {
+                    if ($(this).is(':checked')) {
+                        serializedData += "&" + encodeURIComponent(this.name) + "=1";
+                    } else {
+                        serializedData += "&" + encodeURIComponent(this.name) + "=0";
+                    }
+                });
+            }
+            else {
+                var serializedData = form.find(':input').serialize();
+            }
+
+            return serializedData;
+        },
+        /**
+         * Helper function for encoding data as multipart/form-data
+         */
+        _multipartData: function(form) {
+            // Use FormData to wrap form contents.
+            // https://developer.mozilla.org/en/docs/Web/API/FormData
+            var formData = new FormData(form[0]);
+            // Serialize and post to the backend script in ajax mode
+            if (this.settings.binaryCheckboxes) {
+                // Get unchecked checkbox values, set them to 0.
+                var checkboxes = form.find('input[type=checkbox]:enabled');
+                // Feature detection. Several browsers don't support `set`
+                if (typeof formData.set !== 'function') {
+                    this.settings.msgTarget.ufAlerts("push", "danger", "Your browser is missing a required feature. This form will still attempt to submit, but if it fails, you'll need to use Chrome for desktop or FireFox for desktop.")
                 }
-            });
-        } else {
-            var serializedData = form.find(':input').serialize();
-        }
-
-        return serializedData;
-    };
-
-    /**
-     * Helper function for encoding data as multipart/form-data
-     */
-    Plugin.prototype._multipartData = function (form)
-    {
-        var base = this;
-        // Use FormData to wrap form contents.
-        // https://developer.mozilla.org/en/docs/Web/API/FormData
-        var formData = new FormData(form[0]);
-        // Serialize and post to the backend script in ajax mode
-        if (base.options.binaryCheckboxes) {
-            // Get unchecked checkbox values, set them to 0
-            form.find('input[type=checkbox]:enabled').each(function() {
-                if ($(this).is(':checked')) {
-                    // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
-                    formData.set(this.name, 1);
-                    // this explicitly adds unchecked boxes.
-                } else {
-                    formData.set(this.name, 0);
+                else {
+                    checkboxes.each(function() {
+                        if ($(this).is(':checked')) {
+                            // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
+                            formData.set(this.name, 1);
+                            // this explicitly adds unchecked boxes.
+                        } else {
+                            formData.set(this.name, 0);
+                        }
+                    });
                 }
-            });
+            }
+
+            return formData;
         }
+    });
 
-        return formData;
-    };
-
-    /**
-     * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
-     */
-    Plugin.prototype.DLOG = function ()
-    {
-        if (!this.DEBUG) return;
-        for (var i in arguments) {
-            console.log( PLUGIN_NS + ': ', arguments[i] );
+    // Handles instantiation and access to non-private methods.
+    $.fn[pluginName] = function(methodOrOptions) {
+        // Grab plugin instance
+        var instance = $(this).data(pluginName);
+        // If undefined or object, initalise plugin.
+        if (methodOrOptions === undefined || typeof methodOrOptions === 'object') {
+            // Only initalise if not previously done.
+            if (!instance) {
+                $(this).data(pluginName, new Plugin(this, methodOrOptions));
+            }
+            return this;
         }
-    };
-    Plugin.prototype.DWARN = function ()
-    {
-        this.DEBUG && console.warn( arguments );
-    };
-
-
-/*###################################################################################
- * JQUERY HOOK
- ###################################################################################*/
-
-    /**
-     * Generic jQuery plugin instantiation method call logic
-     *
-     * Method options are stored via jQuery's data() method in the relevant element(s)
-     * Notice, myActionMethod mustn't start with an underscore (_) as this is used to
-     * indicate private methods on the PLUGIN class.
-     */
-    $.fn[ PLUGIN_NS ] = function( methodOrOptions )
-    {
-        if (!$(this).length) {
-            return $(this);
+        // Otherwise ensure first parameter is a valid string, and is the name of an actual function.
+        else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
+            // Ensure not a private function
+            if (methodOrOptions.indexOf('_') !== 0) {
+                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+            }
+            else {
+                $.error( 'Method ' +  methodOrOptions + ' is private!' );
+            }
         }
-        var instance = $(this).data(PLUGIN_NS);
-
-        // CASE: action method (public method on PLUGIN class)
-        if ( instance
-                && methodOrOptions.indexOf('_') != 0
-                && instance[ methodOrOptions ]
-                && typeof( instance[ methodOrOptions ] ) == 'function' ) {
-
-            return instance[ methodOrOptions ]( Array.prototype.slice.call( arguments, 1 ) );
-
-
-        // CASE: argument is options object or empty = initialise
-        } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
-
-            instance = new Plugin( $(this), methodOrOptions );    // ok to overwrite if this is a re-init
-            $(this).data( PLUGIN_NS, instance );
-            return $(this);
-
-        // CASE: method called before init
-        } else if ( !instance ) {
-            $.error( 'Plugin must be initialised before using method: ' + methodOrOptions );
-
-        // CASE: invalid method
-        } else if ( methodOrOptions.indexOf('_') == 0 ) {
-            $.error( 'Method ' +  methodOrOptions + ' is private!' );
-        } else {
+        else {
             $.error( 'Method ' +  methodOrOptions + ' does not exist.' );
         }
     };
-})(jQuery);
+})(jQuery, window, document);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
