@@ -1,10 +1,10 @@
 /**
- * ufAlerts plugin.  Fetches and renders alerts from the UF alert stream.
- *
- * jQuery plugin template adapted from https://gist.github.com/Air-Craft/1300890
+ * ufAlerts jQuery plugin. Fetches and renders alerts from the UF alert stream.
+ * 
+ * Based on template from https://github.com/jquery-boilerplate/jquery-boilerplate
  *
  * === USAGE ===
- *
+
  * ufAlerts can be initialized on any container element as follows:
  *
  * $("#myDiv").ufAlerts(options);
@@ -25,298 +25,255 @@
  *
  * == METHODS ==
  *
- * `fetch()`: gets messages from the server.
- * `push(options)`: adds a message of a specified type (danger, warning, info, success) to the internal collection of alerts.
- * `clear()`: removes all messages from the internal collection.
- * `render()`: renders the collection of alerts to the container.
+ * `fetch()`: Asynchronously gets alerts from the server.
+ * `push(options)`: Adds a alert of a specified type (danger, warning, info, success) to the internal collection of alerts.
+ * `clear()`: Removes all messages from the internal collection.
+ * `render()`: Renders the collection of alerts to the container, awaiting results of `fetch()` if required.
  *
  * UserFrosting https://www.userfrosting.com
- * @author Alexander Weissman https://alexanderweissman.com
+ * @author Alexander Weissman <https://alexanderweissman.com>
  */
+;(function($, window, document, undefined) {
+	"use strict";
 
-// if (!window.L) { window.L = function () { console.log(arguments);} } // optional EZ quick logging for debugging
+    // Define plugin name and defaults.
+    var pluginName = "ufAlerts",
+        defaults = {
+            url                 : site.uri.public + "/alerts",
+            scrollToTop         : true,
+            scrollWhenVisible   : false,
+            agglomerate         : false,
+            alertMessageClass   : "uf-alert-message",
+            alertTemplateId     : "uf-alert-template",
+            DEBUG               : false
+        };
 
-(function( $ )
-{
-    /**
-     * The plugin namespace, ie for $('.selector').ufAlerts(options)
-     *
-     * Also the id for storing the object state via $('.selector').data()
-     */
-    var PLUGIN_NS = 'ufAlerts';
+    // Constructor
+    function Plugin (element, options) {
+        this.element = element[0];
+        this.$element = $(this.element);
+        this.settings = $.extend(true, {}, defaults, options);
+        this._defaults = defaults;
+        this._name = pluginName;
 
-    var Plugin = function ( target, options )
-    {
-        this.$T = $(target);
-
-        /** #### OPTIONS #### */
-        this.options= $.extend(
-            true,               // deep extend
-            {
-                url                : site.uri.public + "/alerts",
-                scrollToTop        : true,
-                agglomerate        : false,
-                alertMessageClass  : "uf-alert-message",
-                alertTemplateId    : "uf-alert-template",
-                DEBUG: false
-            },
-            options
-        );
-
-        this._alertMessageTemplateHtml = $("#" + this.options.alertTemplateId).html();
-
+        // Plugin variables
+        this.alerts = [];
+        this._newAlertsPromise = $.Deferred().resolve();
+        this._alertTemplateHtml = $("#" + this.settings.alertTemplateId).html();
         this._alertTypePriorities = {
-            "danger" : 3,
-            "warning": 2,
-            "success": 1,
-            "info"   : 0
+            danger : 3,
+            warning: 2,
+            success: 1,
+            info   : 0
         };
-
         this._alertTypeIcon = {
-            "danger" : "fa-ban",
-            "warning": "fa-warning",
-            "success": "fa-check",
-            "info"   : "fa-info"
+            danger : "fa-ban",
+            warning: "fa-warning",
+            success: "fa-check",
+            info   : "fa-info"
         };
-
-        this._init( target, options );
 
         return this;
     }
 
-    /** #### INITIALISER #### */
-    Plugin.prototype._init = function ( target, options )
-    {
-        var base = this;
-        var $el = $(target);
+    // Functions
+    $.extend(Plugin.prototype, {
+        /**
+         * Clear all alerts from the current uf-alerts collection.
+         */
+        clear: function() {
+            // See http://stackoverflow.com/a/1232046/2970321
+            this.alerts.length = 0;
 
-        base.messages = [];
-
-        base._newMessagesPromise = $.Deferred();
-
-        return base.$T;
-    };
-
-    /**
-     * Clear all messages from the current uf-alerts collection.
-     *
-     */
-    Plugin.prototype.clear = function ()
-    {
-        var base = this;
-
-        // See http://stackoverflow.com/a/1232046/2970321
-        base.messages.length = 0;
-
-        // Also, turn off all alert styling in agglomerate container
-        if (base.options.agglomerate) {
-
-            base.$T.toggleClass("alert", false)
-                .toggleClass("alert-info", false)
-                .toggleClass("alert-success", false)
-                .toggleClass("alert-warning", false)
-                .toggleClass("alert-danger", false);
-        }
-
-        return base.$T;
-    };
-
-    /**
-     * Completely destroy the ufAlerts plugin on the element.
-     */
-    Plugin.prototype.destroy = function () {
-        var base = this;
-        var $el = base.$T;
-
-        // Delete the plugin object
-        base.delete;
-
-        // Unbind any bound events
-        $el.off('.ufAlerts');
-
-        // Remove plugin name from data-* attribute
-        $el.removeData(PLUGIN_NS);
-    };
-
-    /**
-     * Fetches messages from the alert stream
-     *
-     */
-    Plugin.prototype.fetch = function ()
-    {
-        var base = this;
-
-        // Set a promise, so that any chained calls after fetch can wait until the messages have been retrieved
-        base._newMessagesPromise = $.getJSON( base.options.url )
-        .done(function ( data ) {
-            if (data) {
-                base.messages = $.merge(base.messages, data);
+            if (this.settings.agglomerate) {
+                this.element.toggleClass("alert", false)
+                    .toggleClass("alert-info", false)
+                    .toggleClass("alert-success", false)
+                    .toggleClass("alert-warning", false)
+                    .toggleClass("alert-danger", false);
             }
 
-            base.$T.trigger("fetch.ufAlerts");
-        }).fail(function ( data ) {
-            base.$T.trigger('error.ufAlerts');
-            if ((typeof site !== "undefined") && site.debug.ajax && data.responseText) {
-                document.write(data.responseText);
+            // Clear any alert HTML
+            this.$element.empty();
+
+            return this.$element;
+        },
+        /**
+         * Fetches alerts from the alert stream
+         */
+        fetch: function() {
+            // Set a promise, so that any chained calls after fetch can wait until the messages have been retrieved
+            this._newAlertsPromise = $.getJSON(this.settings.url)
+                .done($.proxy(this._fetchSuccess, this))
+                .fail($.proxy(this._fetchFailure, this));
+            
+            return this.$element;
+        },
+        /**
+         * Success callback for fetch
+         */
+        _fetchSuccess: function(alerts) {
+            this.alerts = $.merge(this.alerts, alerts);
+            this.$element.trigger("fetch." + this.pluginName);
+        },
+        /**
+         * Failure callback for fetch
+         */
+        _fetchFailure: function(response) {
+            this.$element.trigger("error." + this.pluginName);
+            if ((typeof site !== "undefined") && site.debug.ajax && response.responseText) {
+                document.write(response.responseText);
                 document.close();
             } else {
-                if (base.options.DEBUG) {
-                    console.log("Error (" + data.status + "): " + data.responseText );
+                if (this.settings.DEBUG) {
+                    $.error("Error (" + response.status + "): " + response.responseText );
                 }
             }
-        });
+        },
+        /**
+         * Push a given message to the current uf-alerts collection.
+         */
+        push: function(options) {
+            this.alerts.push({
+                "type"   : options[0],
+                "message": options[1]
+            });
 
-        return base.$T;
-    };
+            return this.$element;
+        },
+        /**
+         * Renders the alerts.
+         */
+        render: function() {
+            // Wait for promise completion, only if promise is unresolved.
+            if (this._newAlertsPromise.state() == "resolved" || this._newAlertsPromise.state() == "rejected") {
+                this._render();
+            }
+            else {
+                $.when(this._newAlertsPromise).then($.proxy(this._render, this));
+            }
 
-    /**
-     * Push a given message to the current uf-alerts collection.
-     *
-     */
-    Plugin.prototype.push = function (options)
-    {
-        var base = this;
-
-        base.messages.push({
-            "type"   : options[0],
-            "message": options[1]
-        });
-
-        return base.$T;
-    };
-
-    /**
-     * Renders the messages.
-     *
-     */
-    Plugin.prototype.render = function ()
-    {
-        var base = this;
-
-        $.when(base._newMessagesPromise).then( function () {
-
-            // Display alerts
+            return this.$element;
+        },
+        /*
+         * Internal private method that physically handles rendering operation.
+         */
+        _render: function() {
+            // Holds generated HTML
             var alertHtml = "";
+            // Only compile alerts if there are alerts to display
+            if (this.alerts.length > 0) {
+                // Prepare template
+                var alertTemplate = Handlebars.compile(this._alertTemplateHtml, {noEscape: true});
 
-            // If agglomeration is enabled, set the container to the highest priority message type
-            if (base.messages.length && base.options.agglomerate) {
+                // If agglomeration is enabled, set the container to the highest priority alert type
+                if (this.settings.agglomerate) {
+                    // Holds generated agglomerated alerts
+                    var alertMessage = "<ul>";
 
-                var alertMessageTemplate = Handlebars.compile(base._alertMessageTemplateHtml, {noEscape: true});
-
-                var message = "<ul>";
-                var alertContainerType = "info";
-
-                jQuery.each(base.messages, function(alert_idx, alert) {
-                    if (base._alertTypePriorities[alert["type"]] > base._alertTypePriorities[alertContainerType]) {
-                        alertContainerType = alert["type"];
+                    // Determine overall alert priority
+                    var alertContainerType = "info";
+                    for (var i = 0; i < this.alerts.length; i++) {
+                        if (this._alertTypePriorities[this.alerts[i].type] > this._alertTypePriorities[alertContainerType]) {
+                            alertContainerType = this.alerts[i].type;
+                        }
                     }
-                });
 
-                var aggTemplate = Handlebars.compile("<li class=" + base.options.alertMessageClass + ">{{ message }}</li>");
-                jQuery.each(base.messages, function(alert_idx, alert) {
-                    message += aggTemplate(alert);
-                });
+                    // Compile each alert
+                    var aggTemplate = Handlebars.compile("<li class=" + this.settings.alertMessageClass + ">{{ message }}</li>");
+                    for (var i = 0; i < this.alerts.length; i++) {
+                        alertMessage += aggTemplate(this.alerts[i]);
+                    }
 
-                message += "</ul>";
+                    alertMessage += "</ul>";
 
-                // Render alert
-                alertHtml += alertMessageTemplate({
-                    "type": alertContainerType,
-                    "message": message,
-                    "icon": base._alertTypeIcon[alertContainerType]
-                });
+                    // Generate complete alert HTML
+                    alertHtml = alertTemplate({
+                        type   : alertContainerType,
+                        message: alertMessage,
+                        icon   : this._alertTypeIcon[alertContainerType]
+                    });
+                }
+                else {
+                    // Compile each alert.
+                    for (var i = 0; i < this.alerts.length; i++) {
+                        alert = this.alerts[i];
 
+                        // Inject icon
+                        alert.icon = this._alertTypeIcon[alert.type];
 
-            } else {
+                        // Compile alert
+                        alertHtml += alertTemplate(alert);
+                    }
+                } 
+            }
+            // Show alerts
+            this.$element.html(alertHtml);
 
-                var alertMessageTemplate = Handlebars.compile(base._alertMessageTemplateHtml, {noEscape: true});
-
-                jQuery.each(base.messages, function(alert_idx, alert) {
-
-                    // Inject icon
-                    alert["icon"] = base._alertTypeIcon[alert["type"]];
-
-                    // Render alert
-                    alertHtml += alertMessageTemplate(alert);
-                });
+            // Scroll to top of alert location is new alerts output, and auto scrolling is enabled
+            if (this.settings.scrollToTop && alertHtml != "") {
+                // Don't scroll if already visible, unless scrollWhenVisible is true
+                if (!this._alertsVisible() || this.settings.scrollWhenVisible) {
+                    $("html, body").animate({ scrollTop: this.$element.offset().top }, "fast");
+                }
             }
 
-            base.$T.html(alertHtml);
+            // Trigger render events
+            this.$element.trigger("render." + this.pluginName);
+        },
+        /**
+         * Returns true if alerts container is completely within the viewport.
+         */
+        _alertsVisible: function() {
+            var rect = this.element.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&     
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        },
+        /**
+         * Completely destroy the ufAlerts plugin on the element.
+         */
+        destroy: function() {
+            // Unbind any bound events
+            this.$element.off('.' + this.pluginName);
 
-            // Scroll to alert location if new alerts output
-            if (base.options.scrollToTop && alertHtml != "") {
-                $("html, body").animate({
-                    scrollTop: base.$T.offset().top
-                }, "fast");
+            // Grab jQuery wrapped element before plugin destruction
+            var $element = this.$element;
+
+            // Remove plugin from element
+            this.$element.removeData(this.pluginName);
+
+            return $element;
+        }
+    });
+
+    // Handles instantiation and access to non-private methods.
+    $.fn[pluginName] = function(methodOrOptions) {
+        // Grab plugin instance
+        var instance = $(this).data(pluginName);
+        // If undefined or object, initalise plugin.
+        if (methodOrOptions === undefined || typeof methodOrOptions === 'object') {
+            // Only initalise if not previously done.
+            if (!instance) {
+                $(this).data(pluginName, new Plugin(this, methodOrOptions));
             }
-
-            base.$T.trigger("render.ufAlerts");
-
-            return base.$T;
-        });
-    };
-
-    /** #### PRIVATE METHODS #### */
-
-    /**
-     * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
-     */
-    Plugin.prototype.DLOG = function ()
-    {
-        if (!this.DEBUG) return;
-        for (var i in arguments) {
-            console.log( PLUGIN_NS + ': ', arguments[i] );
+            return this;
         }
-    }
-    Plugin.prototype.DWARN = function ()
-    {
-        this.DEBUG && console.warn( arguments );
-    }
-
-
-/*###################################################################################
- * JQUERY HOOK
- ###################################################################################*/
-
-    /**
-     * Generic jQuery plugin instantiation method call logic
-     *
-     * Method options are stored via jQuery's data() method in the relevant element(s)
-     * Notice, myActionMethod mustn't start with an underscore (_) as this is used to
-     * indicate private methods on the PLUGIN class.
-     */
-    $.fn[ PLUGIN_NS ] = function( methodOrOptions )
-    {
-        if (!$(this).length) {
-            return $(this);
+        // Otherwise ensure first parameter is a valid string, and is the name of an actual function.
+        else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
+            // Ensure not a private function
+            if (methodOrOptions.indexOf('_') !== 0) {
+                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+            }
+            else {
+                $.error( 'Method ' +  methodOrOptions + ' is private!' );
+            }
         }
-        var instance = $(this).data(PLUGIN_NS);
-
-        // CASE: action method (public method on PLUGIN class)
-        if ( instance
-                && methodOrOptions.indexOf('_') != 0
-                && instance[ methodOrOptions ]
-                && typeof( instance[ methodOrOptions ] ) == 'function' ) {
-
-            return instance[ methodOrOptions ]( Array.prototype.slice.call( arguments, 1 ) );
-
-
-        // CASE: argument is options object or empty = initialise
-        } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
-
-            instance = new Plugin( $(this), methodOrOptions );    // ok to overwrite if this is a re-init
-            $(this).data( PLUGIN_NS, instance );
-            return $(this);
-
-        // CASE: method called before init
-        } else if ( !instance ) {
-            $.error( 'Plugin must be initialised before using method: ' + methodOrOptions );
-
-        // CASE: invalid method
-        } else if ( methodOrOptions.indexOf('_') == 0 ) {
-            $.error( 'Method ' +  methodOrOptions + ' is private!' );
-        } else {
+        else {
             $.error( 'Method ' +  methodOrOptions + ' does not exist.' );
         }
     };
-})(jQuery);
+})(jQuery, window, document);

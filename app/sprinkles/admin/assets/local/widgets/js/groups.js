@@ -13,6 +13,10 @@ function attachGroupForm() {
         /**
          * Set up modal widgets
          */
+        // Set up any widgets inside the modal
+        form.find(".js-select2").select2({
+            width: '100%'
+        });
 
         // Auto-generate slug
         form.find('input[name=name]').on('input change', function() {
