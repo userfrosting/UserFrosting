@@ -14,6 +14,7 @@ use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\MemcachedConnector;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\DatabaseSessionHandler;
@@ -280,7 +281,9 @@ class CoreServicesProvider
                 $capsule->addConnection($dbConfig, $name);
             }
 
-            $capsule->setEventDispatcher(new Dispatcher(new Container));
+            $queryEventDispatcher = new Dispatcher(new Container);
+
+            $capsule->setEventDispatcher($queryEventDispatcher);
 
             // Register as global connection
             $capsule->setAsGlobal();
@@ -293,16 +296,16 @@ class CoreServicesProvider
 
                 foreach ($config['db'] as $name => $dbConfig) {
                     $capsule->connection($name)->enableQueryLog();
-
-                    // Register listener
-                    $capsule->connection($name)->listen(function ($query) use ($logger) {
-                        $logger->debug("Query executed on database [{$query->connectionName}]:", [
-                            'query'    => $query->sql,
-                            'bindings' => $query->bindings,
-                            'time'     => $query->time . ' ms'
-                        ]);
-                    });
                 }
+
+                // Register listener
+                $queryEventDispatcher->listen(QueryExecuted::class, function ($query) use ($logger) {
+                    $logger->debug("Query executed on database [{$query->connectionName}]:", [
+                        'query'    => $query->sql,
+                        'bindings' => $query->bindings,
+                        'time'     => $query->time . ' ms'
+                    ]);
+                });
             }
 
             return $capsule;
