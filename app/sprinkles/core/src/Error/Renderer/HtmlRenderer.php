@@ -12,10 +12,6 @@ class HtmlRenderer extends ErrorRenderer
     /**
      * Render HTML error report.
      *
-     * @param ServerRequestInterface $request   The most recent Request object
-     * @param ResponseInterface      $response  The most recent Response object
-     * @param Exception              $exception The caught Exception object
-     *
      * @return string
      */
     public function render()
@@ -33,7 +29,8 @@ class HtmlRenderer extends ErrorRenderer
             $html .= '<h2>Response headers</h2>';
             $html .= $this->renderResponseHeaders();
 
-            while ($exception = $this->exception->getPrevious()) {
+            $exception = $this->exception;
+            while ($exception = $exception->getPrevious()) {
                 $html .= '<h2>Previous exception</h2>';
                 $html .= $this->renderException($exception);
             }

@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use UserFrosting\Sprinkle\Core\Error\Renderer\HtmlRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\JsonRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\PlainTextRenderer;
+use UserFrosting\Sprinkle\Core\Error\Renderer\WhoopsRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\XmlRenderer;
 use UserFrosting\Support\Message\UserMessage;
 
@@ -283,7 +284,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
                 default:
                 case 'text/html':
-                    $renderer = HtmlRenderer::class;
+                    $renderer = WhoopsRenderer::class;
                     break;
             }
         }
