@@ -45,8 +45,6 @@ return [
         "@TRANSLATION" => "Langue"
     ],
 
-    "MAIL_ERROR" => "Erreur fatale lors de l'envoie du courriel. Contactez votre administrateur. Si vous être administrateur, consultez les logs.",
-
     "NAME"  => "Nom",
     "NAVIGATION" => "Menu principal",
 
