@@ -10,12 +10,8 @@
 $(document).ready(function() {
     // Set up table of users
     $("#widget-users").ufTable({
-        dataUrl: site.uri.public + "/api/users"
-        /*
-        addParams: {
-            "group": "terran"
-        }
-        */
+        dataUrl: site.uri.public + "/api/users",
+        selectOptionsUrl: site.uri.public + "/api/users/values"
     });
 
     // Bind creation button

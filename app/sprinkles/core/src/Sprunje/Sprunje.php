@@ -29,11 +29,14 @@ abstract class Sprunje
 
     protected $filterable = [];
 
+    protected $listable = [];
+
     protected $name = '';
 
     protected $options = [
         'sorts' => [],
         'filters' => [],
+        'lists' => [],
         'size' => 'all',
         'page' => null,
         'format' => 'json'
@@ -60,7 +63,7 @@ abstract class Sprunje
 
         // Validation on input data
         $v = new Validator($options);
-        $v->rule('array', ['sorts', 'filters']);
+        $v->rule('array', ['sorts', 'filters', 'lists']);
         $v->rule('regex', 'sorts.*', '/asc|desc/i');
         $v->rule('regex', 'size', '/all|[0-9]+/i');
         $v->rule('integer', 'page');
@@ -144,6 +147,36 @@ abstract class Sprunje
         });
 
         return $csv;
+    }
+
+
+    /**
+     * Get lists of values for specified fields in 'lists' option, calling a custom lister callback when appropriate.
+     *
+     * @return array
+     */
+    public function getValues()
+    {
+        $result = [];
+        foreach ($this->options['lists'] as $name) {
+            // Check that this list is allowed
+            if (!in_array($name, $this->listable)) {
+                $e = new BadRequestException();
+                $e->addUserMessage('VALIDATE.SPRUNJE.BAD_LIST', ['name' => $name]);
+                throw $e;
+            }
+
+            // Determine if a custom filter method has been defined
+            $methodName = 'list'.studly_case($name);
+
+            if (method_exists($this, $methodName)) {
+                $result[$name] = $this->$methodName();
+            } else {
+                $result[$name] = $this->getColumnValues($name);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -340,5 +373,25 @@ abstract class Sprunje
     protected function countFiltered()
     {
         return $this->query->count();
+    }
+
+    /**
+     * Returns a list of distinct values for a specified column.
+     * Formats results to have a "value" and "text" attribute.
+     *
+     * @param string $column
+     * @return array
+     */
+    protected function getColumnValues($column)
+    {
+        $rawValues = $this->query->select($column)->distinct()->orderBy($column, 'asc')->get();
+        $values = [];
+        foreach ($rawValues as $raw) {
+            $values[] = [
+                'value' => $raw[$column],
+                'text' => $raw[$column]
+            ];
+        }
+        return $values;
     }
 }

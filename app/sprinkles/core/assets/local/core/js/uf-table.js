@@ -108,25 +108,75 @@
         this.options= $.extend(
             true,               // deep extend
             {
-                DEBUG       : false,
-                dataUrl     : "",
-                msgTarget   : $('#alerts-page'),
-                addParams   : {},
-                tablesorter : {
+                DEBUG           : false,
+                dataUrl         : "",
+                selectOptionsUrl: null,
+                msgTarget       : $('#alerts-page'),
+                addParams       : {},
+                tablesorter     : {
                     debug: false,
                     theme     : 'bootstrap',
                     widthFixed: true,
                     // Set up pagination of data via an AJAX source
                     // See http://jsfiddle.net/Mottie/uwZc2/
                     // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
-                    widgets: ['saveSort','sort2Hash','filter'],
+                    widgets: ['saveSort', 'sort2Hash', 'filter', 'pager'],
                     widgetOptions : {
                         filter_cssFilter: 'form-control',
                         filter_saveFilters : true,
                         filter_serversideFiltering : true,
-                        filter_selectSource: {
-                            ".filter-metaselect": base._buildFilterSelect
+                        filter_selectSource : {
+                            '.filter-select' : function() { return null; }
                         },
+                        // output default: '{page}/{totalPages}'
+                        // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+                        // also {page:input} & {startRow:input} will add a modifiable input in place of the value
+                        pager_output: '{startRow} to {endRow} of {filteredRows} ({totalRows})', // '{page}/{totalPages}'
+
+                        // apply disabled classname to the pager arrows when the rows at either extreme is visible
+                        pager_updateArrows: true,
+
+                        // starting page of the pager (zero based index)
+                        pager_startPage: 0,
+
+                        // Number of visible rows
+                        pager_size: 10,
+
+                        // Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
+                        pager_savePages: true,
+
+                        // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+                        // table row set to a height to compensate; default is false
+                        pager_fixedHeight: true,
+
+                        // remove rows from the table to speed up the sort of large tables.
+                        // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                        pager_removeRows: false, // removing rows in larger tables speeds up the sort
+
+                        // target the pager markup - see the HTML block below
+                        pager_css: {
+                            container: this.$T.find('.tablesorter-pager'),
+                            errorRow    : 'tablesorter-errorRow', // error information row
+                            disabled    : 'disabled' // Note there is no period "." in front of this class name
+                        },
+
+                        // Must be initialized with a 'data' key
+                        pager_ajaxObject: {
+                            data: {},
+                            dataType: 'json'
+                        },
+                        // jQuery selectors
+                        pager_selectors: {
+                          container   : '.pager',       // target the pager markup (wrapper)
+                          first       : '.first',       // go to first page arrow
+                          prev        : '.prev',        // previous page arrow
+                          next        : '.next',        // next page arrow
+                          last        : '.last',        // go to last page arrow
+                          gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
+                          pageDisplay : '.pagedisplay', // location of where the "output" is displayed
+                          pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
+                        },
+
                         // hash prefix
                         sort2Hash_hash              : '#',
                         // don't '#' or '=' here
@@ -143,61 +193,6 @@
                         // if true, override saveSort widget sort, if used & stored sort is available
                         sort2Hash_overrideSaveSort  : true, // default = false
                     }
-                },
-                pager : {
-                    // target the pager markup - see the HTML block below
-                    container: this.$T.find(".tablesorter-pager"),
-
-                    // Must be initialized with a 'data' key
-                    ajaxObject: {
-                        data: {}
-                    },
-
-                    // Saves the current pager page size and number (requires storage widget)
-                    savePages: true,
-
-                    output: '{startRow} to {endRow} of {filteredRows} ({totalRows})',
-
-                    // apply disabled classname (cssDisabled option) to the pager arrows when the rows
-                    // are at either extreme is visible; default is true
-                    updateArrows: true,
-
-                    // starting page of the pager (zero based index)
-                    page: 0,
-
-                    // Number of visible rows - default is 10
-                    size: 10,
-
-                    // Reset pager to this page after filtering; set to desired page number (zero-based index),
-                    // or false to not change page at filter start
-                    pageReset: 0,
-
-                    // if true, the table will remain the same height no matter how many records are displayed.
-                    // The space is made up by an empty table row set to a height to compensate; default is false
-                    fixedHeight: false,
-
-                    // remove rows from the table to speed up the sort of large tables.
-                    // setting this to false, only hides the non-visible rows; needed if you plan to
-                    // add/remove rows with the pager enabled.
-                    removeRows: false,
-
-                    // If true, child rows will be counted towards the pager set size
-                    countChildRows: false,
-
-                    // css class names of pager arrows
-                    cssNext        : '.next',  // next page arrow
-                    cssPrev        : '.prev',  // previous page arrow
-                    cssFirst       : '.first', // go to first page arrow
-                    cssLast        : '.last',  // go to last page arrow
-                    cssGoto        : '.gotoPage', // page select dropdown - select dropdown that set the "page" option
-
-                    cssPageDisplay : '.pagedisplay', // location of where the "output" is displayed
-                    cssPageSize    : '.pagesize', // page size selector - select dropdown that sets the "size" option
-
-                    // class added to arrows when at the extremes; see the "updateArrows" option
-                    // (i.e. prev/first arrows are "disabled" when on the first page)
-                    cssDisabled    : 'disabled', // Note there is no period "." in front of this class name
-                    cssErrorRow    : 'tablesorter-errorRow' // error information row
                 }
             },
             options
@@ -258,26 +253,25 @@
         var base = this;
         var $el = $(target);
 
-        base.options.pager.ajaxUrl = base.options.dataUrl;
+        base.options.tablesorter.widgetOptions.pager_ajaxUrl = base.options.dataUrl;
 
         // Generate the URL for the AJAX request, with the relevant parameters
-        base.options.pager.customAjaxUrl = function ( table, url ) {
+        base.options.tablesorter.widgetOptions.pager_customAjaxUrl = function ( table, url ) {
             return base._generateUrl(base, table, url);
         };
 
         // Callback to process the response from the AJAX request
-        base.options.pager.ajaxProcessing = function ( data ) {
+        base.options.tablesorter.widgetOptions.pager_ajaxProcessing = function ( data ) {
             return base._processAjax(base, data);
         };
 
         // Callback to display errors
-         base.options.pager.ajaxError = function ( config, xhr, settings, exception ) {
-            return base._ajaxError(base, config, xhr, settings, exception);
+         base.options.tablesorter.widgetOptions.pager_ajaxError = function ( config, xhr, settings, exception ) {
+            return base._pagerAjaxError(base, config, xhr, settings, exception);
         };
 
-        // Set up tablesorter and pager
+        // Set up tablesorter with widgets
         base.ts = $el.find('.tablesorter').tablesorter(base.options.tablesorter);
-        base.ts.tablesorterPager(base.options.pager);
 
         // Link CSV download button
         $el.find('.js-download-table').on('click', function () {
@@ -293,8 +287,12 @@
             window.location = base.options.dataUrl + '?' + $.param( tableState );
         });
 
+        // Set up filter selects
+        base.ts.on('filterInit', function () {
+            base._buildFilterSelect(base.ts);
+        });
+
         base.ts.on('pagerComplete', function () {
-            $el.find('.tablesorter').trigger('update');
             $el.trigger('pagerComplete.ufTable');
         });
     };
@@ -366,7 +364,16 @@
         return json;
     };
 
-    Plugin.prototype._ajaxError = function(base, c, jqXHR, settings, exception) {
+    Plugin.prototype._pagerAjaxError = function(base, c, jqXHR, settings, exception) {
+        base._ajaxError(jqXHR);
+
+        // Let TS handle the in-table error message
+        return '';
+    };
+
+    Plugin.prototype._ajaxError = function(jqXHR) {
+        base = this;
+
         if (typeof jqXHR === 'object') {
             // Error messages
             if ((typeof site !== 'undefined') && site.debug.ajax && jqXHR.responseText) {
@@ -387,9 +394,6 @@
                 base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
             }
         }
-
-        // Let TS handle the in-table error message
-        return '';
     };
 
     /**
@@ -486,69 +490,40 @@
      * Private method used to build the filter select using data attributes for custom options
      * Based on tablesorter.filter.getOptions
      */
-    Plugin.prototype._buildFilterSelect = function (table, column, onlyAvail) {
+    Plugin.prototype._buildFilterSelect = function (table) {
+        var base = this;
 
-        table = $( table )[0];
-		var rowIndex, tbodyIndex, len, row, cache, indx, child, childLen, colData,
-			c = table.config,
-			wo = c.widgetOptions,
-			arry = [];
-		for ( tbodyIndex = 0; tbodyIndex < c.$tbodies.length; tbodyIndex++ ) {
-			cache = c.cache[tbodyIndex];
-			len = c.cache[tbodyIndex].normalized.length;
-			// loop through the rows
-			for ( rowIndex = 0; rowIndex < len; rowIndex++ ) {
-				// get cached row from cache.row ( old ) or row data object
-				// ( new; last item in normalized array )
-				row = cache.row ?
-					cache.row[ rowIndex ] :
-					cache.normalized[ rowIndex ][ c.columns ].$row[0];
-				// check if has class filtered
-				if ( onlyAvail && row.className.match( wo.filter_filteredRow ) ) {
-					continue;
-				}
+        if (base.options.selectOptionsUrl) {
+            // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
+            var columns = table[0].config.headerList;
+            var selectColumnNames = [];
+            var selectColumnNumbers = {};
+            for (i = 0; i < columns.length; i++) {
+                var column = $(columns[i]);
+                // If the column is designated for filter-select, add it to the list of listables and map the column number
+                if (column.hasClass('filter-select')) {
+                    var columnName = column.data('column-name');
+                    selectColumnNames.push(columnName);
+                    selectColumnNumbers[columnName] = i;
+                }
+            }
 
-				// Get the column data attributes
-				if (row.getElementsByTagName('td')[column].getAttribute('data-value')) {
-    				colData = row.getElementsByTagName('td')[column].getAttribute('data-value');
-				} else {
-    				colData = false;
-				}
-
-				// get non-normalized cell content
-				if ( wo.filter_useParsedData ||
-					c.parsers[column].parsed ||
-					c.$headerIndexed[column].hasClass( 'filter-parsed' ) ) {
-
-					arry[ arry.length ] = {
-    					value : (colData) ? colData : cache.normalized[ rowIndex ][ column ],
-    					text : cache.normalized[ rowIndex ][ column ]
-    				};
-				} else {
-
-					arry[ arry.length ] = {
-    					value : (colData) ? colData : cache.normalized[ rowIndex ][ c.columns ].raw[ column ],
-    					text : cache.normalized[ rowIndex ][ c.columns ].raw[ column ]
-    				};
-				}
-			}
-		}
-
-		// Remove duplicates in `arry` since using an array of objects
-		// won't do it automatically
-		var arr = {};
-
-        for ( var i=0, len=arry.length; i < len; i++ ) {
-            arr[arry[i].text] = arry[i];
+            // Make AJAX request for column select options
+            $.getJSON(base.options.selectOptionsUrl, {
+                lists: selectColumnNames
+            }).done(function(data, textStatus, jqXHR) {
+                // For each filter-select column, try to build the select menu from the corresponding entry in the AJAX response
+                $.each(selectColumnNumbers, function (columnName, columnNumber) {
+                    if (data[columnName]) {
+                        $.tablesorter.filter.buildSelect(table, columnNumber, data[columnName], true);
+                    }
+                });
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                base._ajaxError(jqXHR);
+            });
         }
-
-        arry = new Array();
-        for ( var key in arr ) {
-            arry.push(arr[key]);
-        }
-
-		return arry;
-    }
+        return false;
+    };
 
     /**
      * EZ Logging/Warning (technically private but saving an '_' is worth it imo)

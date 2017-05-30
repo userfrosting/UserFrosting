@@ -7,7 +7,7 @@
                  "vendor/tablesorter/dist/js/jquery.tablesorter.js",
                  "vendor/tablesorter/dist/js/jquery.tablesorter.widgets.js",
                  "vendor/tablesorter/dist/js/widgets/widget-sort2Hash.min.js",
-                 "vendor/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js",
+                 "vendor/tablesorter/dist/js/widgets/widget-pager.min.js",
                  "local/core/js/query-string.js",
                  "local/core/js/uf-table.js"
             ],

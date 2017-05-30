@@ -23,16 +23,20 @@ class UserSprunje extends Sprunje
 {
     protected $name = 'users';
 
+    protected $listable = [
+        'status'
+    ];
+
     protected $sortable = [
         'name',
         'last_activity',
-        'flag_enabled'
+        'status'
     ];
 
     protected $filterable = [
         'name',
         'last_activity',
-        'flag_enabled'
+        'status'
     ];
 
     /**
@@ -101,6 +105,56 @@ class UserSprunje extends Sprunje
     }
 
     /**
+     * Filter by status (active, disabled, unactivated)
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function filterStatus($query, $value)
+    {
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        return $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                if ($value == 'disabled') {
+                    $query = $query->orWhere('flag_enabled', 0);
+                } elseif ($value == 'unactivated') {
+                    $query = $query->orWhere('flag_verified', 0);
+                } elseif ($value == 'active') {
+                    $query = $query->orWhere(function ($query) {
+                        return $query->where('flag_enabled', 1)->where('flag_verified', 1);
+                    });
+                }
+            }
+            return $query;
+        });
+    }
+
+    /**
+     * Return a list of possible user statuses.
+     *
+     * @return array
+     */
+    protected function listStatus()
+    {
+        return [
+            [
+                'value' => 'active',
+                'text' => 'Active'
+            ],
+            [
+                'value' => 'unactivated',
+                'text' => 'Unactivated'
+            ],
+            [
+                'value' => 'disabled',
+                'text' => 'Disabled'
+            ]
+        ];
+    }
+
+    /**
      * Sort based on last activity time.
      *
      * @param Builder $query
@@ -122,5 +176,17 @@ class UserSprunje extends Sprunje
     protected function sortName($query, $direction)
     {
         return $query->orderBy('last_name', $direction);
+    }
+
+    /**
+     * Sort active, unactivated, disabled
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return Builder
+     */
+    protected function sortStatus($query, $direction)
+    {
+        return $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
     }
 }
