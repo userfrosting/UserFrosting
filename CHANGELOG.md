@@ -1,6 +1,7 @@
 # Change Log
 
 ## v4.1.x-dev
+- Implement `WhoopsRenderer` for pretty debug pages.  See #674.
 - Refactor error handling.  Move responsibility for displayErrorDetails to handlers, and factor our ErrorRenderers.  Addresses #702.
 - Move composer.json to root directory to allow installing UF via composer create-project
 - Move sprinkles.json to app directory to make it easier to find
