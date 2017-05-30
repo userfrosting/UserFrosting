@@ -45,8 +45,6 @@ return [
         "@TRANSLATION" => "Localização"
     ],
 
-    "MAIL_ERROR" => "Erro fatal ao tentar enviar email, contate o administrator do servidor.  Se é administrador, por favor consulte o log de mail do UF.",
-
     "NAME"  => "Nome",
     "NAVIGATION" => "Navegação",
 

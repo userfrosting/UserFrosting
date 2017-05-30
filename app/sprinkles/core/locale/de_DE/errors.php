@@ -14,14 +14,6 @@ return [
     "ERROR" => [
         "@TRANSLATION"                  => "Fehler",
 
-        "TITLE"                         => "Störung in der Kraft",
-        "DESCRIPTION"                   => "Wir haben eine große Störung in der Macht erkannt.",
-        "ENCOUNTERED"                   => "Uhhh ... etwas ist passiert. Wir wissen nicht was.",
-        "DETAIL"                        => "Hier haben wir:",
-        "RETURN"                        => "Klicken Sie <a href='{{url}}'>Hier</a>, um zur Startseite zurückzukehren.",
-
-        "SERVER"                        => "Hoppla, sieht aus als hätte der Server möglicherweise gepatzt. Wenn Sie ein Administrator sind, überprüfen Sie bitte die PHP- oder UF-Fehlerprotokolle.",
-
         "400" => [
             "TITLE"                     => "Fehler 400: Ungültige Anforderung",
             "DESCRIPTION"               => "Die Anfrage-Nachricht war fehlerhaft aufgebaut.",
@@ -40,6 +32,19 @@ return [
             "DESCRIPTION"               => "Einige UserFrosting-Konfigurationsanforderungen wurden nicht erfüllt.",
             "DETAIL"                    => "Etwas stimmt hier nicht.",
             "RETURN"                    => "Bitte beheben Sie die folgenden Fehler dann laden Sie die <a href='{{url}}'>Website</a> neu."
-        ]
+        ],
+
+        "DESCRIPTION"                   => "Wir haben eine große Störung in der Macht erkannt.",
+        "DETAIL"                        => "Hier haben wir:",
+
+        "ENCOUNTERED"                   => "Uhhh ... etwas ist passiert. Wir wissen nicht was.",
+
+        "MAIL"                        => "Schwerwiegender Fehler beim Mailversand, wenden Sie sich an Ihren Serveradministrator. Wenn Sie der Administrator sind, überprüfen Sie bitte das UF-Mail-Protokoll.",
+
+        "RETURN"                        => "Klicken Sie <a href='{{url}}'>Hier</a>, um zur Startseite zurückzukehren.",
+
+        "SERVER"                        => "Hoppla, sieht aus als hätte der Server möglicherweise gepatzt. Wenn Sie ein Administrator sind, überprüfen Sie bitte die PHP- oder UF-Fehlerprotokolle.",
+
+        "TITLE"                         => "Störung in der Kraft"
     ]
 ];
