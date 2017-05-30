@@ -85,9 +85,11 @@ class ServicesProvider
          */
         $container->extend('errorHandler', function ($handler, $c) {
             // Register the ForbiddenExceptionHandler.
-            $handler->registerHandler('\UserFrosting\Support\Exception\ForbiddenException', '\UserFrosting\Sprinkle\Account\Handler\ForbiddenExceptionHandler');
+            $handler->registerHandler('\UserFrosting\Support\Exception\ForbiddenException', '\UserFrosting\Sprinkle\Account\Error\Handler\ForbiddenExceptionHandler');
             // Register the AuthExpiredExceptionHandler
-            $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException', '\UserFrosting\Sprinkle\Account\Handler\AuthExpiredExceptionHandler');
+            $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException', '\UserFrosting\Sprinkle\Account\Error\Handler\AuthExpiredExceptionHandler');
+            // Register the AuthCompromisedExceptionHandler.
+            $handler->registerHandler('\UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException', '\UserFrosting\Sprinkle\Account\Error\Handler\AuthCompromisedExceptionHandler');
             return $handler;
         });
 

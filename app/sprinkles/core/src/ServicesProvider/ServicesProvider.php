@@ -37,17 +37,17 @@ use UserFrosting\Assets\UrlBuilder\AssetUrlBuilder;
 use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
-use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
-use UserFrosting\Sprinkle\Core\Handler\ShutdownHandler;
-use UserFrosting\Sprinkle\Core\Handler\CoreErrorHandler;
+use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\MessageStream;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
+use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
+use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\Support\Exception\BadRequestException;
 
 /**
@@ -332,16 +332,13 @@ class ServicesProvider
         $container['errorHandler'] = function ($c) {
             $settings = $c->settings;
 
-            $handler = new CoreErrorHandler($c, $settings['displayErrorDetails']);
+            $handler = new ExceptionHandlerManager($c, $settings['displayErrorDetails']);
 
             // Register the HttpExceptionHandler.
-            $handler->registerHandler('\UserFrosting\Support\Exception\HttpException', '\UserFrosting\Sprinkle\Core\Handler\HttpExceptionHandler');
-
-            // Register the PDOExceptionHandler.
-            $handler->registerHandler('\PDOException', '\UserFrosting\Sprinkle\Core\Handler\PDOExceptionHandler');
+            $handler->registerHandler('\UserFrosting\Support\Exception\HttpException', '\UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler');
 
             // Register the PhpMailerExceptionHandler.
-            $handler->registerHandler('\phpmailerException', '\UserFrosting\Sprinkle\Core\Handler\PhpMailerExceptionHandler');
+            $handler->registerHandler('\phpmailerException', '\UserFrosting\Sprinkle\Core\Error\Handler\PhpMailerExceptionHandler');
 
             return $handler;
         };
