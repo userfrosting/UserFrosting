@@ -1,0 +1,45 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ *  _   _              ______             _   _
+ * | | | |             |  ___|           | | (_)
+ * | | | |___  ___ _ __| |_ _ __ ___  ___| |_ _ _ __   __ _
+ * | | | / __|/ _ \ '__|  _| '__/ _ \/ __| __| | '_ \ / _` |
+ * | |_| \__ \  __/ |  | | | | | (_) \__ \ |_| | | | | (_| |
+ *  \___/|___/\___|_|  \_| |_|  \___/|___/\__|_|_| |_|\__, |
+ *                                                     __/ |
+ *                                                    |___/
+ * http://www.userfrosting.com
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2016 Alexander Weissman
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
+ */
+
+/**
+ * Require composer autoload file. Not having this file means Composer might not be installed / run
+ */
+if (!file_exists(__DIR__ . '/app/vendor/autoload.php')) {
+    die("ERROR :: File `".__DIR__."/app/vendor/autoload.php` not found. This indicate that composer has not yet been run on this install. Install composer and run `composer install` from the project root directory. Check the documentation for more details.\n");
+} else {
+    require_once __DIR__ . '/app/vendor/autoload.php';
+}
+
+use Symfony\Component\Console\Application;
+use UserFrosting\System\Bakery;
+
+/**
+ * Get and run CLI App
+ */
+$app = new Application("UserFrosting Bakery", \UserFrosting\VERSION);
+$app->add(new Bakery\DebugCommand());
+$app->add(new Bakery\AssetsCommand());
+$app->add(new Bakery\BakeCommand());
+$app->add(new Bakery\MigrationCommand());
+$app->add(new Bakery\MigrationRollbackCommand());
+$app->add(new Bakery\MigrationResetCommand());
+$app->add(new Bakery\MigrationRefreshCommand());
+$app->run();
+
+//http://symfony.com/doc/current/console/calling_commands.html

@@ -25,6 +25,7 @@
         "php": ">=5.6",
         "ext-gd": "*",
         "composer/installers": "dev-master",
+        "symfony/console": "^3.3",
         "wikimedia/composer-merge-plugin": "dev-master"
 	},
 	"require-dev": {
@@ -60,20 +61,6 @@
         }
     },
     "scripts": {
-        "migrate" : "UserFrosting\\System\\Bakery\\Migration::main",
-        "migrate:rollback" : "UserFrosting\\System\\Bakery\\Migration::rollback",
-        "migrate:reset" : "UserFrosting\\System\\Bakery\\Migration::reset",
-        "migrate:refresh" : "UserFrosting\\System\\Bakery\\Migration::refresh",
-        "debug" : "UserFrosting\\System\\Bakery\\Debug::main",
-        "build-assets" : "UserFrosting\\System\\Bakery\\Assets::main",
-        "test" : "phpunit --colors=always",
-        "bake" : [
-            "@debug",
-            "@migrate",
-            "@build-assets"
-        ],
-        "post-create-project-cmd" : [
-            "@bake"
-        ]
+        "test" : "phpunit --colors=always"
     }
 }

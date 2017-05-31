@@ -8,7 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Model\Migrations\v400;
 
-use UserFrosting\System\Bakery\Migrations\Migration;
+use UserFrosting\System\Bakery\Migrations\UFMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Model\User;
@@ -21,10 +21,10 @@ use UserFrosting\Sprinkle\Account\Util\Password;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends Migration
+ * @extends UFMigration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class CreateAdminUser extends Migration
+class CreateAdminUser extends UFMigration
 {
     /**
      * {@inheritDoc}
@@ -40,7 +40,7 @@ class CreateAdminUser extends Migration
      */
     public function up()
     {
-        $this->io->write("\n\n<info>Root account setup</info>");
+        $this->io->section("Root account setup");
 
         // Make sure that there are no users currently in the user table
         // We setup the root account here so it can be done independent of the version check
@@ -50,8 +50,8 @@ class CreateAdminUser extends Migration
 
         } else {
 
-            $this->io->write("To complete the installation process, you must set up a master (root) account.");
-            $this->io->write("Please answer the following questions to complete this process:\n");
+            $this->io->writeln("To complete the installation process, you must set up a master (root) account.");
+            $this->io->writeln("Please answer the following questions to complete this process:\n");
 
             // Get the account details
             $user_name = $this->askUsername();
@@ -61,7 +61,7 @@ class CreateAdminUser extends Migration
             $password = $this->askPassword();
 
             // Ok, now we've got the info and we can create the new user.
-            $this->io->write("\n<info>Saving the root user details...</info>", false);
+            $this->io->write("\n<info>Saving the root user details...</info>");
             $rootUser = new User([
                 "user_name" => $user_name,
                 "email" => $email,
@@ -242,7 +242,7 @@ class CreateAdminUser extends Migration
     protected function askPassword()
     {
         while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password)) {
-            $password = $this->io->askAndHideAnswer("Enter password (12-255 characters): ");
+            $password = $this->io->askHidden("Enter password (12-255 characters): ");
         }
         return $password;
     }
@@ -274,7 +274,7 @@ class CreateAdminUser extends Migration
     protected function confirmPassword($passwordToConfirm)
     {
         while (!isset($password)) {
-            $password = $this->io->askAndHideAnswer("Please re-enter the chosen password: ");
+            $password = $this->io->askHidden("Please re-enter the chosen password: ");
         }
         return $this->validatePasswordConfirmation($password, $passwordToConfirm);
     }

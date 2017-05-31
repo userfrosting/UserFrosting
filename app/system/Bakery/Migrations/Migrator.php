@@ -6,15 +6,18 @@
  * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\System\Bakery;
+namespace UserFrosting\System\Bakery\Migrations;
 
-use Composer\Script\Event;
-use Composer\Composer;
-use Composer\IO\IOInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Str;
-use UserFrosting\System\Bakery\Bakery;
+use Interop\Container\ContainerInterface;
 use UserFrosting\System\Model\Migrations;
+use UserFrosting\System\Bakery\Traits\DatabaseTest;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
@@ -24,9 +27,20 @@ use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
  * @extends Debug
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Migration extends Bakery
+class Migrator
 {
-    use Traits\DatabaseTest;
+    use DatabaseTest;
+
+    /**
+     * @var @Symfony\Component\Console\Style\SymfonyStyle
+     * See http://symfony.com/doc/current/console/style.html
+     */
+    protected $io;
+
+    /**
+     * @var ContainerInterface $ci The global container object, which holds all of UserFristing services.
+     */
+    protected $ci;
 
     /**
      * @var @Illuminate\Database\Schema
@@ -73,107 +87,23 @@ class Migration extends Bakery
     protected $unfulfillable;
 
     /**
-     * Run the `migrate` composer script
+     * Constructor.
      *
      * @access public
-     * @static
-     * @param @Composer\Script\Event $event
+     * @param SymfonyStyle $io
+     * @param ContainerInterface $ci
      * @return void
      */
-    public static function main(Event $event)
+    public function __construct(SymfonyStyle $io, ContainerInterface $ci)
     {
-        $bakery = new self($event->getIO(), $event->getComposer());
-        $bakery->runUp();
-    }
-
-    /**
-     * Run the `migrate:rollback` composer script
-     * Available CLI arguments:
-     *  - step={int} (Number of steps to rollback)
-     *  - sprinkle={string} (Limit to this sprinkle)
-     *
-     * @access public
-     * @static
-     * @param Event $event
-     * @return void
-     */
-    public static function rollback(Event $event)
-    {
-        $bakery = new self($event->getIO(), $event->getComposer());
-
-        // Get the arguments
-        $args = $bakery->getArguments($event);
-        $step = $args->get('step', 1);
-        $sprinkle = $args->get('sprinkle');
-
-        $bakery->runDown($step, $sprinkle);
-    }
-
-    /**
-     * Run the `migrate:reset` composer script
-     * The migrate:reset command will roll back all migrations
-     * Available CLI arguments:
-     *  - sprinkle={string} (Limit to this sprinkle)
-     *
-     * @access public
-     * @static
-     * @param Event $event
-     * @return void
-     */
-    public static function reset(Event $event)
-    {
-        $bakery = new self($event->getIO(), $event->getComposer());
-
-        // Get the arguments
-        $args = $bakery->getArguments($event);
-        $sprinkle = $args->get('sprinkle');
-
-        $bakery->runDown(-1, $sprinkle);
-    }
-
-    /**
-     * Run the `migrate:refresh` composer script
-     * Roll back all migrations and then execute the migrate command.
-     * This command effectively re-creates the entire database
-     * Available CLI arguments:
-     *  - step={int} (Number of steps to refresh)
-     *  - sprinkle={string} (Limit to this sprinkle)
-     *
-     * @access public
-     * @static
-     * @param Event $event
-     * @return void
-     */
-    public static function refresh(Event $event)
-    {
-        $bakery = new self($event->getIO(), $event->getComposer());
-
-        // Get the arguments
-        $args = $bakery->getArguments($event);
-        $step = $args->get('step', 1);
-        $sprinkle = $args->get('sprinkle');
-
-        $bakery->runDown($step, $sprinkle);
-        $bakery->runUp();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct(IOInterface $io, Composer $composer)
-    {
-        parent::__construct($io, $composer);
-
-        // Display header,
-        $this->io->write("\n<info>/****************************/\n/* UserFrosting's Migration */\n/****************************/</info>");
-
-        // First we need to container to load all the sprinkles
-        $this->getContainer();
+        $this->io = $io;
+        $this->ci = $ci;
 
         // Start by testing the DB connexion, just in case
         try {
-            $this->io->debug("\n<info>Testing database connexion...</info>");
+            $this->io->writeln("<info>Testing database connexion</info>", OutputInterface::VERBOSITY_VERBOSE);
             $this->testDB();
+            $this->io->writeln("Ok", OutputInterface::VERBOSITY_VERBOSE);
         } catch (\Exception $e) {
             $this->io->error($e->getMessage());
             exit(1);
@@ -198,16 +128,16 @@ class Migration extends Bakery
         $migrations = Migrations::get();
         $this->installed = $migrations->pluck('migration');
 
-        $this->io->debug("\n<info>Installed migrations:</info>");
-        $this->io->debug($this->installed->toArray());
+        $this->io->writeln("\n<info>Installed migrations:</info>", OutputInterface::VERBOSITY_VERBOSE);
+        $this->io->writeln($this->installed->toArray(), OutputInterface::VERBOSITY_VERBOSE);
 
         // Get pending migrations
-        $this->io->write("\n<info>Fetching available migrations...</info>");
+        $this->io->section("Fetching available migrations");
         $this->pending = $this->getPendingMigrations();
 
         // If there's no pending migration, don't need to go further
         if ($this->pending->isEmpty()) {
-            $this->io->write("\n<fg=black;bg=green>Nothing to migrate !</>\n");
+            $this->io->success("Nothing to migrate !");
             return;
         }
 
@@ -229,18 +159,19 @@ class Migration extends Bakery
             exit(1);
         }
 
-        $this->io->write("\n<info>Running migrations...</info>");
+        $this->io->section("Running migrations");
 
         // We have a list of fulfillable migration, we run them up!
         foreach ($this->fulfillable as $migration) {
-            $this->io->write("> Migrating {$migration->className}...", false);
+            $this->io->write("> Migrating {$migration->className}...");
             $migration->up();
             $this->log($migration);
             $this->io->write(" Done!");
+            $this->io->newLine();
         }
 
         // If all went well and there's no fatal errors, we are ready to bake
-        $this->io->write("\n<fg=black;bg=green>Migration successful !</>\n");
+        $this->io->success("Migration successful !");
     }
 
     /**
@@ -264,10 +195,10 @@ class Migration extends Bakery
         // Calculate the number of steps back we need to take
         if ($step == -1) {
             $stepsBack = 1;
-            $this->io->warning("\nRolling back all migrations");
+            $this->io->warning("Rolling back all migrations");
         } else {
             $stepsBack = max($batch - $step, 1);
-            $this->io->debug("\nRolling back $step steps to batch $stepsBack");
+            $this->io->note("Rolling back $step steps to batch $stepsBack", OutputInterface::VERBOSITY_VERBOSE);
         }
 
         // Get installed migrations
@@ -275,7 +206,7 @@ class Migration extends Bakery
 
         // Add the sprinkle requirement too
         if ($sprinkle != "") {
-            $this->io->debug("Rolling back sprinkle `$sprinkle`");
+            $this->io->note("Rolling back sprinkle `$sprinkle`", OutputInterface::VERBOSITY_VERBOSE);
             $migrations->where('sprinkle', $sprinkle);
         }
 
@@ -284,16 +215,16 @@ class Migration extends Bakery
 
         // If there's nothing to rollback, stop here
         if ($migrations->isEmpty()) {
-            $this->io->write("\n<info>Nothing to rollback</info>");
+            $this->io->writeln("<info>Nothing to rollback</info>");
             exit(1);
         }
 
         // Get pending migrations
-        $this->io->write("\n<info>Migration to rollback:</info>");
-        $this->io->write($migrations->pluck('migration')->toArray());
+        $this->io->writeln("<info>Migration to rollback:</info>");
+        $this->io->listing($migrations->pluck('migration')->toArray());
 
         // Ask confirmation to continue.
-        if (!$this->io->askConfirmation("\nContinue? [y/N]", false)) {
+        if (!$this->io->confirm("Continue?", false)) {
             exit(1);
         }
 
@@ -308,16 +239,17 @@ class Migration extends Bakery
 
         // Loop again to run down each migration
         foreach ($migrations as $migration) {
-            $this->io->write("> Rolling back {$migration->migration}...", false);
+            $this->io->write("> Rolling back {$migration->migration}...");
             $migrationClass = $migration->migration;
             $instance = new $migrationClass($this->schema, $this->io);
             $instance->down();
             $migration->delete();
             $this->io->write(" Done!");
+            $this->io->newLine();
         }
 
         // If all went well and there's no fatal errors, we are ready to bake
-        $this->io->write("\n<fg=black;bg=green>Rollback successful !</>\n");
+        $this->io->success("Rollback successful !");
     }
 
     /**
@@ -337,7 +269,7 @@ class Migration extends Bakery
         // Loop all the sprinkles to find their pending migrations
         foreach ($sprinkles as $sprinkle) {
 
-            $this->io->write("> Fetching from `$sprinkle`");
+            $this->io->writeln("> Fetching from `$sprinkle`");
 
             // We get all the migrations. This will return them as a colleciton of class names
             $migrations = $this->getMigrations($sprinkle);
@@ -371,8 +303,10 @@ class Migration extends Bakery
             }
         }
 
-        $this->io->debug("\n<info>Pending migrations:</info>");
-        $this->io->debug($pending->pluck('className')->toArray());
+        // Get pending migrations
+        $pendingArray = ($pending->pluck('className')->toArray()) ?: "";
+        $this->io->writeln("\n<info>Pending migrations:</info>", OutputInterface::VERBOSITY_VERBOSE);
+        $this->io->writeln($pendingArray, OutputInterface::VERBOSITY_VERBOSE);
 
         return $pending;
     }
@@ -420,7 +354,7 @@ class Migration extends Bakery
      */
     protected function resolveDependencies()
     {
-        $this->io->debug("\n<info>Resolving migrations dependencies...</info>");
+        $this->io->writeln("\n<info>Resolving migrations dependencies...</info>", OutputInterface::VERBOSITY_VERBOSE);
 
         // Reset fulfillable/unfulfillable lists
         $this->fulfillable = collect([]);
@@ -431,11 +365,13 @@ class Migration extends Bakery
             $this->validateClassDependencies($migration);
         }
 
-        $this->io->debug("\n<info>Fulfillable migrations:</info>");
-        $this->io->debug($this->fulfillable->pluck('className')->toArray());
+        $fulfillable = ($this->fulfillable->pluck('className')->toArray()) ?: "";
+        $this->io->writeln("\n<info>Fulfillable migrations:</info>", OutputInterface::VERBOSITY_VERBOSE);
+        $this->io->writeln($fulfillable, OutputInterface::VERBOSITY_VERBOSE);
 
-        $this->io->debug("\n<info>Unfulfillable migrations:</info>");
-        $this->io->debug($this->unfulfillable->pluck('className')->toArray());
+        $unfulfillable = ($this->unfulfillable->pluck('className')->toArray()) ?: "";
+        $this->io->writeln("\n<info>Unfulfillable migrations:</info>", OutputInterface::VERBOSITY_VERBOSE);
+        $this->io->writeln($unfulfillable, OutputInterface::VERBOSITY_VERBOSE);
     }
 
     /**
@@ -449,7 +385,7 @@ class Migration extends Bakery
      */
     protected function validateClassDependencies($migration)
     {
-        $this->io->debug("> Checking dependencies for {$migration->className}");
+        $this->io->writeln("> Checking dependencies for {$migration->className}", OutputInterface::VERBOSITY_VERBOSE);
 
         // If it's already marked as fulfillable, it's fulfillable
         // Return true directly (it's already marked)
@@ -466,7 +402,6 @@ class Migration extends Bakery
         // If it's already run, it's fulfillable
         // Mark it as such for next time it comes up in this loop
         if ($this->installed->contains($migration->className)) {
-            $this->io->warning("markAsFulfillable");
             return $this->markAsFulfillable($migration);
         }
 
@@ -567,12 +502,12 @@ class Migration extends Bakery
     {
         // Check if the `migrations` table exist. Create it manually otherwise
         if (!$this->schema->hasColumn($this->table, 'id')) {
-            $this->io->write("\n<info>Creating the `{$this->table}` table...</info>");
+            $this->io->section("Creating the `{$this->table}` table");
 
             $migration = new \UserFrosting\System\Bakery\Migrations\v410\MigrationTable($this->schema, $this->io);
             $migration->up();
 
-            $this->io->write("Table `{$this->table}` created");
+            $this->io->success("Table `{$this->table}` created");
         }
     }
 

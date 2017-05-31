@@ -9,7 +9,7 @@
 namespace UserFrosting\System\Bakery\Migrations;
 
 use Illuminate\Database\Schema\Builder;
-use Composer\IO\IOInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Abstract Migration class.
@@ -17,7 +17,7 @@ use Composer\IO\IOInterface;
  * @abstract
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-abstract class Migration
+abstract class UFMigration
 {
     /**
      * @var Illuminate\Database\Schema\Builder $schema
@@ -42,7 +42,7 @@ abstract class Migration
      * @param Illuminate\Database\Schema\Builder $schema
      * @return void
      */
-    public function __construct(Builder $schema, IOInterface $io)
+    public function __construct(Builder $schema, SymfonyStyle $io)
     {
         $this->schema = $schema;
         $this->io = $io;

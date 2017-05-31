@@ -8,7 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Core\Model\Migrations\v400;
 
-use UserFrosting\System\Bakery\Migrations\Migration;
+use UserFrosting\System\Bakery\Migrations\UFMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 
@@ -16,10 +16,10 @@ use Illuminate\Database\Schema\Builder;
  * Throttles table migration
  * Version 4.0.0
  *
- * @extends Migration
+ * @extends UFMigration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class ThrottlesTable extends Migration
+class ThrottlesTable extends UFMigration
 {
     /**
      * {@inheritDoc}

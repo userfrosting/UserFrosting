@@ -8,7 +8,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Model\Migrations\v400;
 
-use UserFrosting\System\Bakery\Migrations\Migration;
+use UserFrosting\System\Bakery\Migrations\UFMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 
@@ -18,10 +18,10 @@ use Illuminate\Database\Schema\Builder;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends Migration
+ * @extends UFMigration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class RoleUsersTable extends Migration
+class RoleUsersTable extends UFMigration
 {
     /**
      * {@inheritDoc}

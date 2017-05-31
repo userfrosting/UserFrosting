@@ -8,10 +8,13 @@
  */
 namespace UserFrosting\System\Bakery;
 
-use Composer\Composer;
-use Composer\Factory;
-use Composer\IO\IOInterface;
-use Composer\Script\Event;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use UserFrosting\System\UserFrosting;
 
 /**
@@ -19,15 +22,11 @@ use UserFrosting\System\UserFrosting;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-abstract class Bakery
+abstract class Bakery extends Command
 {
     /**
-     * @var @Composer\Composer
-     */
-    protected $composer;
-
-    /**
-     * @var @Composer\IO\IOInterface
+     * @var @Symfony\Component\Console\Style\SymfonyStyle
+     * See http://symfony.com/doc/current/console/style.html
      */
     protected $io;
 
@@ -42,53 +41,12 @@ abstract class Bakery
     protected $ci;
 
     /**
-     * @param IOInterface $io
-     * @param Composer $composer
+     * {@inheritDoc}
      */
-    public function __construct(IOInterface $io, Composer $composer)
+    protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->io = $io;
-        $this->composer = $composer;
+        $this->io = new SymfonyStyle($input, $output);
 
-        // Get composer.json location
-        $composerFile = Factory::getComposerFile();
-
-        // Calculate project root from composer.json, if necessary
-        $this->projectRoot = realpath(dirname($composerFile));
-        $this->projectRoot = rtrim($this->projectRoot, '/\\') . '/';
-
-        // Autoload UF stuff
-        $this->autoload();
-    }
-
-    /**
-     * Load the composer autoload file
-     * This is not loaded by default, even when running CLI from composer
-     *
-     * @access private
-     * @return void
-     */
-    private function autoload()
-    {
-        // Require composer autoload file. Not having this file means Composer might not be installed / run
-        if (!file_exists($this->projectRoot . 'app/vendor/autoload.php')) {
-            $this->io->error("ERROR :: File `app/vendor/autoload.php` not found. This indicate that composer has not yet been run on this install. Install composer and run `composer install` from the `app/` directory. Check the documentation for more details.");
-            exit(1);
-        } else {
-            require_once $this->projectRoot . 'app/vendor/autoload.php';
-        }
-    }
-
-    /**
-     * Function that set the UF container, loading all the sprinkles in the process
-     * This is not loaded by default by the Bakery, since some commands doesn't requires it
-     * And it may also cause error to define it too early in the install/debug process
-     *
-     * @access protected
-     * @return void
-     */
-    protected function getContainer()
-    {
         // Setup the sprinkles
         $uf = new UserFrosting();
 
@@ -97,45 +55,8 @@ abstract class Bakery
 
         // Get the container
         $this->ci = $uf->getContainer();
-    }
 
-    /**
-     * Process the arguments passed with the composer run-script and return them in a nice collection.
-     *
-     * @access protected
-     * @param @Composer\Script\Event $event
-     * @return void
-     */
-    protected function getArguments(Event $event)
-    {
-        $args = collect($event->getArguments());
-        $args = $args->mapWithKeys(function ($item) {
-            $item = explode("=", $item);
-            $arg = $item[0];
-            $param = (count($item) > 1) ? $item[1] : true;
-
-            return [$arg => $param];
-        });
-
-        return $args;
-    }
-
-    /**
-     * UF ASCII Title.
-     *
-     * @access protected
-     * @return void
-     */
-    protected function title()
-    {
-        return "
- _   _              ______             _   _
-| | | |             |  ___|           | | (_)
-| | | |___  ___ _ __| |_ _ __ ___  ___| |_ _ _ __   __ _
-| | | / __|/ _ \ '__|  _| '__/ _ \/ __| __| | '_ \ / _` |
-| |_| \__ \  __/ |  | | | | | (_) \__ \ |_| | | | | (_| |
- \___/|___/\___|_|  \_| |_|  \___/|___/\__|_|_| |_|\__, |
-                                                    __/ |
-                                                   |___/";
+        // Setup project root
+        $this->projectRoot = dirname(__FILE__, 4) . "/";
     }
 }

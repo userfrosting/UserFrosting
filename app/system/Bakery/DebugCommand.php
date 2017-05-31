@@ -8,11 +8,12 @@
  */
 namespace UserFrosting\System\Bakery;
 
-use Composer\Script\Event;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\Bakery;
-use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Events\Dispatcher;
 
 /**
  * Debug CLI Tools.
@@ -21,37 +22,43 @@ use Illuminate\Events\Dispatcher;
  * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Debug extends Bakery
+class DebugCommand extends Bakery
 {
     use Traits\DatabaseTest;
 
     /**
-     * Run the `debug` composer script
-     *
-     * @access public
-     * @static
-     * @param Event $event
-     * @return void
+     * @var String $ufArt The UserFrosting ASCII art.
      */
-    public static function main(Event $event)
+    public $title = "
+ _   _              ______             _   _
+| | | |             |  ___|           | | (_)
+| | | |___  ___ _ __| |_ _ __ ___  ___| |_ _ _ __   __ _
+| | | / __|/ _ \ '__|  _| '__/ _ \/ __| __| | '_ \ / _` |
+| |_| \__ \  __/ |  | | | | | (_) \__ \ |_| | | | | (_| |
+ \___/|___/\___|_|  \_| |_|  \___/|___/\__|_|_| |_|\__, |
+                                                    __/ |
+                                                   |___/";
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function configure()
     {
-        $bakery = new self($event->getIO(), $event->getComposer());
-        $bakery->run();
+        $this->setName("debug")
+             ->setDescription("Test the UserFrosting installation and setup the database")
+             ->setHelp("This command is used to check if the various dependencies of UserFrosting are met and display useful debugging information. \nIf any error occurs, check out the online documentation for more info about that error. \nThis command also provide the necessary tools to setup the database credentials");
     }
 
     /**
-     * Run the debug script.
-     *
-     * @access public
-     * @return void
+     * {@inheritDoc}
      */
-    public function run()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Display header,
-        $this->io->write("<info>{$this->title()}</info>");
-        $this->io->write("UserFrosing version : " . \UserFrosting\VERSION);
-        $this->io->write("OS Name : " . php_uname('s'));
-        $this->io->write("Project Root : {$this->projectRoot}");
+        $this->io->writeln("<info>{$this->title}</info>");
+        $this->io->writeln("UserFrosing version : " . \UserFrosting\VERSION);
+        $this->io->writeln("OS Name : " . php_uname('s'));
+        $this->io->writeln("Project Root : {$this->projectRoot}");
 
         // Perform tasks
         $this->checkPhpVersion();
@@ -59,14 +66,11 @@ class Debug extends Bakery
         $this->checkNpmVersion();
         $this->listSprinkles();
 
-        // Before going further, will try to load the UF Container
-        $this->getContainer();
-
         // Go to the env setup
         $this->checkDatabase();
 
         // If all went well and there's no fatal errors, we are ready to bake
-        $this->io->write("\n<fg=black;bg=green>Ready to bake !</>\n");
+        $this->io->success("Ready to bake !");
     }
 
     /**
@@ -78,9 +82,9 @@ class Debug extends Bakery
      */
     protected function checkPhpVersion()
     {
-        $this->io->write("PHP Version : " . phpversion());
+        $this->io->writeln("PHP Version : " . phpversion());
         if (version_compare(phpversion(), \UserFrosting\PHP_MIN_VERSION, '<')) {
-            $this->io->error("\nFATAL ERROR :: UserFrosting requires php version ".\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
+            $this->io->error("UserFrosting requires php version ".\UserFrosting\PHP_MIN_VERSION." or above. You'll need to update you PHP version before you can continue.");
             exit(1);
         }
     }
@@ -94,10 +98,10 @@ class Debug extends Bakery
     protected function checkNodeVersion()
     {
         $npmVersion = trim(exec('node -v'));
-        $this->io->write("Node Version : $npmVersion");
+        $this->io->writeln("Node Version : $npmVersion");
 
         if (version_compare($npmVersion, 'v4', '<')) {
-            $this->io->error("\nFATAL ERROR :: UserFrosting requires Node version 4.x or above. Check the documentation for more details.");
+            $this->io->error("UserFrosting requires Node version 4.x or above. Check the documentation for more details.");
             exit(1);
         }
     }
@@ -111,10 +115,10 @@ class Debug extends Bakery
     protected function checkNpmVersion()
     {
         $npmVersion = trim(exec('npm -v'));
-        $this->io->write("NPM Version : $npmVersion");
+        $this->io->writeln("NPM Version : $npmVersion");
 
         if (version_compare($npmVersion, '3', '<')) {
-            $this->io->error("\nFATAL ERROR :: UserFrosting requires npm version 3.x or above. Check the documentation for more details.");
+            $this->io->error("UserFrosting requires npm version 3.x or above. Check the documentation for more details.");
             exit(1);
         }
     }
@@ -137,25 +141,29 @@ class Debug extends Bakery
 
         // List installed sprinkles
         $sprinkles = json_decode($sprinklesFile)->base;
-        $this->io->write("\n<info>Loaded sprinkles :</info>");
-        foreach ($sprinkles as $sprinkle) {
-            $this->io->write("  - ".$sprinkle);
-        }
+        $this->io->section("Loaded sprinkles");
+        $this->io->listing($sprinkles);
 
         // Throw fatal error if the `core` sprinkle is missing
         if (!in_array("core", $sprinkles)) {
-            $this->io->error("\nFATAL ERROR :: The `core` sprinkle is missing from the 'sprinkles.json' file.");
+            $this->io->error("The `core` sprinkle is missing from the 'sprinkles.json' file.");
             exit(1);
         }
     }
 
+    /**
+     * Write the base `sprinkle.json` file if none exist.
+     *
+     * @access protected
+     * @return void
+     */
     protected function setupBaseSprinkleList()
     {
         $model = \UserFrosting\APP_DIR . '/sprinkles.example.json';
         $destination = \UserFrosting\APP_DIR . '/sprinkles.json';
         $sprinklesModelFile = @file_get_contents($model);
         if ($sprinklesModelFile === false) {
-            $this->io->error("\nFATAL ERROR :: File `$sprinklesModelFile` not found. Please create '$destination' manually and try again.");
+            $this->io->error("File `$sprinklesModelFile` not found. Please create '$destination' manually and try again.");
             exit(1);
         }
 
@@ -177,8 +185,8 @@ class Debug extends Bakery
         try {
             $this->testDB();
             $this->showConfig();
-            $this->io->write("\n<info>Testing database connexion...</info>");
-            $this->io->write("Database connexion successful");
+            $this->io->section("Testing database connexion...");
+            $this->io->writeln("Database connexion successful");
             return;
         } catch (\Exception $e) {
             $error = $e->getMessage();
@@ -197,8 +205,8 @@ class Debug extends Bakery
                 $setupEnv = true;
             } else {
                 $this->io->warning("\nFile `$path` not found. ");
-                $this->io->write("This file is used to define your database credentials and other environment variables. You may also have another means of (direct config values or global environment vars).");
-                $setupEnv = $this->io->askConfirmation("Do you want to setup a `.env` file now? [y/N] ", false);
+                $this->io->writeln("This file is used to define your database credentials and other environment variables. You may also have another means of (direct config values or global environment vars).");
+                $setupEnv = $this->io->confirm("Do you want to setup a `.env` file now? [y/N] ", false);
             }
 
             if ($setupEnv) {
@@ -209,7 +217,7 @@ class Debug extends Bakery
 
         // We have an error message. We'll display the current config then the error message
         $this->showConfig();
-        $this->io->write("\n<info>Testing database connexion...</info>");
+        $this->io->section("Testing database connexion...");
         $this->io->error($e->getMessage());
         exit(1);
     }
@@ -233,19 +241,20 @@ class Debug extends Bakery
         while (!$success) {
 
             // Ask the questions
-            $this->io->write("\n<info>Setting up `app/.env`</info>");
-            $this->io->write("<info>Enter your database credentials :</info>");
+            $this->io->section("Setting up database");
+            $this->io->note("Database credentials will be saved in `app/.env`");
 
-            $driver = $this->io->select("Database type [MySQL]: ", $drivers->pluck('name')->toArray(), 0);
-            $driver = $drivers->get($driver);
+            $driver = $this->io->choice("Database type", $drivers->pluck('name')->toArray());
+            $driver = $drivers->where('name', $driver)->first();
+
             $driverName = $driver['driver'];
             $defaultPort = $driver['defaultPort'];
 
-            $host = $this->io->ask("Hostname [localhost]: ", "localhost");
-            $port = $this->io->ask("Port [$defaultPort]: ", $defaultPort);
-            $name = $this->io->ask("Database name [userfrosting]: ", "userfrosting");
-            $user = $this->io->ask("Username [userfrosting]: ", "userfrosting");
-            $password = $this->io->askAndHideAnswer("Password: ");
+            $host = $this->io->ask("Hostname", "localhost");
+            $port = $this->io->ask("Port", $defaultPort);
+            $name = $this->io->ask("Database name", "userfrosting");
+            $user = $this->io->ask("Username", "userfrosting");
+            $password = $this->io->askHidden("Password: ");
 
             // Setup a new db connection
             $capsule = new Capsule;
@@ -263,7 +272,7 @@ class Debug extends Bakery
             try {
                 $conn = $capsule->getConnection();
                 $conn->getPdo();
-                $this->io->write("Database connexion successful");
+                $this->io->success("Database connexion successful");
                 $success = true;
             } catch (\PDOException $e) {
                 $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:".PHP_EOL;
@@ -273,11 +282,11 @@ class Debug extends Bakery
         }
 
         // Ask for the smtp values now
-        $this->io->write("\n<info>Enter your SMTP credentials:</info>");
+        $this->io->section("Enter your SMTP credentials");
         $this->io->write("This is use to send emails from the system. Edit `app/.env` if you have problem with this later.");
-        $smtpHost = $this->io->ask("SMTP Host : ", "");
-        $smtpUser = $this->io->ask("SMTP User : ", "");
-        $smtpPassword = $this->io->ask("SMTP Password : ", "");
+        $smtpHost = $this->io->ask("SMTP Host", "");
+        $smtpUser = $this->io->ask("SMTP User", "");
+        $smtpPassword = $this->io->askHidden("SMTP Password");
 
 
         $fileContent = [
@@ -336,12 +345,14 @@ class Debug extends Bakery
         $config = $this->ci->config;
 
         // Display database info
-        $this->io->write("\n<info>Database config :</info>");
-        $this->io->write(" DRIVER : " . $config['db.default.driver']);
-        $this->io->write(" HOST : " . $config['db.default.host']);
-        $this->io->write(" PORT : " . $config['db.default.port']);
-        $this->io->write(" DATABASE : " . $config['db.default.database']);
-        $this->io->write(" USERNAME : " . $config['db.default.username']);
-        $this->io->write(" PASSWORD : " . ($config['db.default.password'] ? "*********" : ""));
+        $this->io->section("Database config :");
+        $this->io->writeln([
+            "DRIVER : " . $config['db.default.driver'],
+            "HOST : " . $config['db.default.host'],
+            "PORT : " . $config['db.default.port'],
+            "DATABASE : " . $config['db.default.database'],
+            "USERNAME : " . $config['db.default.username'],
+            "PASSWORD : " . ($config['db.default.password'] ? "*********" : "")
+        ]);
     }
 }
