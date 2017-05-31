@@ -254,7 +254,10 @@ class DebugCommand extends Bakery
             $port = $this->io->ask("Port", $defaultPort);
             $name = $this->io->ask("Database name", "userfrosting");
             $user = $this->io->ask("Username", "userfrosting");
-            $password = $this->io->askHidden("Password: ");
+            $password = $this->io->askHidden("Password", function ($password) {
+                // Use custom validator to accept empty password
+                return $password;
+            });
 
             // Setup a new db connection
             $capsule = new Capsule;
@@ -284,9 +287,12 @@ class DebugCommand extends Bakery
         // Ask for the smtp values now
         $this->io->section("Enter your SMTP credentials");
         $this->io->write("This is use to send emails from the system. Edit `app/.env` if you have problem with this later.");
-        $smtpHost = $this->io->ask("SMTP Host", "");
-        $smtpUser = $this->io->ask("SMTP User", "");
-        $smtpPassword = $this->io->askHidden("SMTP Password");
+        $smtpHost = $this->io->ask("SMTP Host", "host.example.com");
+        $smtpUser = $this->io->ask("SMTP User", "relay@example.com");
+        $smtpPassword = $this->io->askHidden("SMTP Password", function ($password) {
+            // Use custom validator to accept empty password
+            return $password;
+        });
 
 
         $fileContent = [
