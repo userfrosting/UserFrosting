@@ -36,18 +36,13 @@ class ActivitySprunje extends Sprunje
     protected $name = 'activities';
 
     /**
-     * @var bool Keep track of whether the users table has already been joined on the query.
-     */
-    protected $joinedUsers = false;
-
-    /**
      * Set the initial query used by your Sprunje.
      */
     protected function baseQuery()
     {
         $query = $this->classMapper->createInstance('activity');
 
-        return $query;
+        return $query->joinUser();
     }
 
     /**
@@ -75,12 +70,6 @@ class ActivitySprunje extends Sprunje
      */
     protected function filterUser($query, $value)
     {
-        if (!$this->joinedUsers) {
-            $query = $query->joinUser();
-        }
-
-        $this->joinedUsers = true;
-
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
         return $query->where(function ($query) use ($values) {
@@ -102,12 +91,6 @@ class ActivitySprunje extends Sprunje
      */
     protected function sortUser($query, $direction)
     {
-        if (!$this->joinedUsers) {
-            $query = $query->joinUser();
-        }
-
-        $this->joinedUsers = true;
-
         return $query->orderBy('users.last_name', $direction);
     }
 }

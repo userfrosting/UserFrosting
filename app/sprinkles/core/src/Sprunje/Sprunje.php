@@ -267,8 +267,10 @@ abstract class Sprunje
                 $e->addUserMessage('VALIDATE.SPRUNJE.BAD_FILTER', ['name' => $name]);
                 throw $e;
             }
-            // Set orFilter to 'false' to require a match on _all_ fields
-            $this->query = $this->buildFilterQuery($this->query, $name, $value, false);
+            // Since we want to match _all_ of the fields, we wrap the field callback in a 'where' callback
+            $this->query = $this->query->where(function ($fieldQuery) use ($name, $value) {
+                return $this->buildFilterQuery($fieldQuery, $name, $value);
+            });
         }
 
         return $this->query;
@@ -285,7 +287,10 @@ abstract class Sprunje
     {
         foreach ($this->filterable as $name) {
             if (studly_case($name) != 'all' && !in_array($name, $this->excludeForAll)) {
-                $query = $this->buildFilterQuery($query, $name, $value, true);
+                // Since we want to match _any_ of the fields, we wrap the field callback in a 'orWhere' callback
+                $query = $query->orWhere(function ($fieldQuery) use ($name, $value) {
+                    return $this->buildFilterQuery($fieldQuery, $name, $value);
+                });
             }
         }
 
@@ -300,7 +305,7 @@ abstract class Sprunje
      * @param mixed $value
      * @return Builder
      */
-    protected function buildFilterQuery($query, $name, $value, $orFilter = true)
+    protected function buildFilterQuery($query, $name, $value)
     {
         $methodName = 'filter'.studly_case($name);
 
@@ -308,17 +313,7 @@ abstract class Sprunje
         if (method_exists($this, $methodName)) {
             $query = $this->$methodName($query, $value);
         } else {
-            if ($orFilter) {
-                // Since we want to match _any_ of the fields, we wrap the field callback in a 'orWhere' callback
-                $query = $query->orWhere(function ($fieldQuery) use ($name, $value) {
-                    return $this->buildFilterDefaultFieldQuery($fieldQuery, $name, $value);
-                });
-            } else {
-                // Since we want to match _all_ of the fields, we wrap the field callback in a 'where' callback
-                $query = $query->where(function ($fieldQuery) use ($name, $value) {
-                    return $this->buildFilterDefaultFieldQuery($fieldQuery, $name, $value);
-                });
-            }
+            return $this->buildFilterDefaultFieldQuery($query, $name, $value);
         }
 
         return $query;
