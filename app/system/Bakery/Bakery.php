@@ -57,6 +57,6 @@ abstract class Bakery extends Command
         $this->ci = $uf->getContainer();
 
         // Setup project root
-        $this->projectRoot = dirname(__FILE__, 4) . "/";
+        $this->projectRoot = \UserFrosting\ROOT_DIR;
     }
 }

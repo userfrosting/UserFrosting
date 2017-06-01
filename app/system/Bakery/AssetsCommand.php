@@ -48,7 +48,7 @@ class AssetsCommand extends Bakery
         $this->io->title("UserFrosting's Assets Builder");
 
         // Set $path
-        $this->buildPath = $this->projectRoot . "build";
+        $this->buildPath = $this->projectRoot . "/build";
 
         // Perform tasks
         $this->npmInstall();
