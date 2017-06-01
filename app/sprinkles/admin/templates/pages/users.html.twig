@@ -17,7 +17,27 @@
                 <div class="box-header">
                     <h3 class="box-title pull-left"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
                     <div class="box-tools pull-right">
-                        <button class="btn btn-sm btn-default js-download-table"><i class="fa fa-table"></i> {{ translate("DOWNLOAD.CSV") }}</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-gear"></i> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu box-tool-menu">
+                                <li>
+                                    <a href="#" class="js-download-table">
+                                        <i class="fa fa-table fa-fw"></i> {{ translate("DOWNLOAD.CSV") }}
+                                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <div class="menu-table-column-selector-title">
+                                        Toggle Columns:
+                                    </div>
+                                    <div class="menu-table-column-selector-options">
+                                    
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="box-body">

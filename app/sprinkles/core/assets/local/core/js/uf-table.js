@@ -108,10 +108,11 @@
         this.options= $.extend(
             true,               // deep extend
             {
-                DEBUG       : false,
-                dataUrl     : "",
-                msgTarget   : $('#alerts-page'),
-                addParams   : {},
+                DEBUG         : false,
+                dataUrl       : "",
+                msgTarget     : $('#alerts-page'),
+                addParams     : {},
+                filterAllField: '_all',
                 tablesorter : {
                     debug: false,
                     theme     : 'bootstrap',
@@ -119,9 +120,12 @@
                     // Set up pagination of data via an AJAX source
                     // See http://jsfiddle.net/Mottie/uwZc2/
                     // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
-                    widgets: ['saveSort','sort2Hash','filter'],
+                    widgets: ['saveSort','sort2Hash','filter', 'columnSelector', 'reflow2'],
                     widgetOptions : {
+                        columnSelector_container : this.$T.find('.menu-table-column-selector-options'),
+                        columnSelector_layout : '<label><input type="checkbox"> <span>{name}</span></label>',
                         filter_cssFilter: 'form-control',
+                        filter_external : this.$T.find('.table-search input'),
                         filter_saveFilters : true,
                         filter_serversideFiltering : true,
                         filter_selectSource: {
@@ -135,9 +139,6 @@
                         sort2Hash_tableId           : null,
                         // if true, show header cell text instead of a zero-based column index
                         sort2Hash_headerTextAttr    : 'data-column-name',
-                        sort2Hash_encodeHash : base._encodeHash,
-                        sort2Hash_decodeHash : base._decodeHash,
-                        sort2Hash_cleanHash : base._cleanHash,
                         // direction text shown in the URL e.g. [ 'asc', 'desc' ]
                         sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
                         // if true, override saveSort widget sort, if used & stored sort is available
@@ -237,7 +238,12 @@
         var filters = {};
         for (i = 0; i < filterList.length; i++) {
             if (filterList[i]) {
-                var columnName = $(table.config.headerList[i]).data('column-name');
+                if (table.config.headerList[i]) {
+                    var columnName = $(table.config.headerList[i]).data('column-name');
+                } else {
+                    var columnName = base.options.filterAllField;
+                }
+                
                 filters[columnName] = filterList[i];
             }
         }
@@ -271,8 +277,20 @@
         };
 
         // Callback to display errors
-         base.options.pager.ajaxError = function ( config, xhr, settings, exception ) {
+        base.options.pager.ajaxError = function ( config, xhr, settings, exception ) {
             return base._ajaxError(base, config, xhr, settings, exception);
+        };
+
+        base.options.tablesorter.widgetOptions.sort2Hash_encodeHash = function (config, tableId, component, value, rawValue) {
+            return base._encodeHash(base, config, tableId, component, value, rawValue);
+        };
+
+        base.options.tablesorter.widgetOptions.sort2Hash_decodeHash = function (config, tableId, component) {
+            return base._decodeHash(base, config, tableId, component);
+        };
+
+        base.options.tablesorter.widgetOptions.sort2Hash_cleanHash = function (config, tableId, component, hash ) {
+            return base._cleanHash(base, config, tableId, component, hash);
         };
 
         // Set up tablesorter and pager
@@ -291,6 +309,11 @@
 
             // Causes download to begin
             window.location = base.options.dataUrl + '?' + $.param( tableState );
+        });
+
+        // Allow clicking on the labels in the table menu without closing the menu
+        $(base.options.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
+            e.stopPropagation();
         });
 
         base.ts.on('pagerComplete', function () {
@@ -395,7 +418,7 @@
     /**
      * Private method used to encode the current table state variables into a URL hash.
      */
-    Plugin.prototype._encodeHash = function ( config, tableId, component, value, rawValue ) {
+    Plugin.prototype._encodeHash = function (base, config, tableId, component, value, rawValue) {
         var wo = config.widgetOptions;
         if ( component === 'filter' ) {
             // rawValue is an array of filter values, numerically indexed
@@ -403,7 +426,11 @@
             var len = rawValue.length;
             for ( index = 0; index < len; index++ ) {
                 if (rawValue[index]) {
-                    var columnName = $(config.$headerIndexed[ index ][0]).attr(wo.sort2Hash_headerTextAttr);
+                    if (config.$headerIndexed[index]) {
+                        var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
+                    } else {
+                        var columnName = base.options.filterAllField;
+                    }
                     encodedFilters += '&filter[' + tableId + '][' + columnName + ']=' + encodeURIComponent(rawValue[index]);
                 }
             }
@@ -426,7 +453,8 @@
     /**
      * Private method used to decode the current table state variables from the URL hash.
      */
-    Plugin.prototype._decodeHash = function ( config, tableId, component ) {
+    Plugin.prototype._decodeHash = function (base, config, tableId, component ) {
+        base = this;
         var wo = config.widgetOptions;
         var result;
         // Convert hash into JSON object
@@ -441,9 +469,9 @@
                 // Build a numerically indexed array of filter values
                 var len = config.$headerIndexed.length;
                 for ( index = 0; index < len; index++ ) {
-                    var column_name = $(config.$headerIndexed[ index ][0]).attr(wo.sort2Hash_headerTextAttr);
-                    if (filters[column_name]) {
-                        decodedFilters.push(filters[column_name]);
+                    var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
+                    if (filters[columnName] && filters[columnName] != base.options.filterAllField) {
+                        decodedFilters.push(filters[columnName]);
                     } else {
                         decodedFilters.push('');
                     }
@@ -462,7 +490,7 @@
     /**
      * Private method used to clean up URL hash.
      */
-    Plugin.prototype._cleanHash = function ( config, tableId, component, hash ) {
+    Plugin.prototype._cleanHash = function (base, config, tableId, component, hash ) {
         var wo = config.widgetOptions;
         // Convert hash to JSON object
         var urlObject = $.String.deparam(hash);

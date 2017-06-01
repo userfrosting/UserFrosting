@@ -25,12 +25,33 @@ use Valitron\Validator;
  */
 abstract class Sprunje
 {
+    /**
+     * @var UserFrosting\Sprinkle\Core\Util\ClassMapper
+     */
     protected $classMapper;
 
-    protected $filterable = [];
-
+    /**
+     * Name of this Sprunje, used when generating output files.
+     *
+     * @var string
+     */
     protected $name = '';
 
+    /**
+     * Separator to use when splitting filter values to treat them as ORs.
+     */
+    protected $orSeparator = '||';
+
+    /**
+     * @var \Illuminate\Database\Eloquent\Builder
+     */
+    protected $query;
+
+    /**
+     * Default HTTP request parameters
+     *
+     * @var array[string]
+     */
     protected $options = [
         'sorts' => [],
         'filters' => [],
@@ -40,12 +61,17 @@ abstract class Sprunje
     ];
 
     /**
-     * Separator to use when splitting filter values to treat them as ORs.
+     * Fields to allow filtering upon.
+     *
+     * @var array[string]
      */
-    protected $orSeparator = '||';
+    protected $filterable = [];
 
-    protected $query;
-
+    /**
+     * Fields to allow sorting upon.
+     *
+     * @var array[string]
+     */
     protected $sortable = [];
 
     /**
@@ -230,17 +256,17 @@ abstract class Sprunje
     {
         foreach ($this->options['filters'] as $name => $value) {
             // Check that this filter is allowed
-            if (!in_array($name, $this->filterable)) {
+            if (($name != '_all') && !in_array($name, $this->filterable)) {
                 $e = new BadRequestException();
                 $e->addUserMessage('VALIDATE.SPRUNJE.BAD_FILTER', ['name' => $name]);
                 throw $e;
             }
 
             // Determine if a custom filter method has been defined
-            $filterMethodName = 'filter'.studly_case($name);
+            $methodName = 'filter'.studly_case($name);
 
-            if (method_exists($this, $filterMethodName)) {
-                $this->query = $this->$filterMethodName($this->query, $value);
+            if (method_exists($this, $methodName)) {
+                $this->query = $this->$methodName($this->query, $value);
             } else {
                 // Split value on separator for OR queries
                 $values = explode($this->orSeparator, $value);
@@ -340,5 +366,36 @@ abstract class Sprunje
     protected function countFiltered()
     {
         return $this->query->count();
+    }
+
+    /**
+     * Match any filter in `filterable`.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function filterAll($query, $value)
+    {
+        foreach ($this->filterable as $name) {
+            $methodName = 'filter'.studly_case($name);
+            if ($methodName != 'filterAll') {
+                $query = $query->orWhere(function ($likeQuery) use ($name, $methodName, $value) {
+
+                    if (method_exists($this, $methodName)) {
+                        $likeQuery = $this->$methodName($likeQuery, $value);
+                    } else {
+                        // Split value on separator for OR queries
+                        $values = explode($this->orSeparator, $value);
+                        foreach ($values as $value) {
+                            $likeQuery = $likeQuery->orLike($name, $value);
+                        }
+                    }
+                    return $likeQuery;
+                });
+            }
+        }
+
+        return $query;
     }
 }

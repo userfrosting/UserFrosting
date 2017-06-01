@@ -38,6 +38,32 @@ form textarea {
     float: right !important;
 }
 
+/* Styles for table column selectors */
+
+.menu-table-column-selector-title {
+    padding: 0px 20px;
+    font-weight: bold;
+}
+
+.menu-table-column-selector-options {
+    padding: 3px 20px;
+}
+
+.menu-table-column-selector-options label {
+    width: 100%;
+    font-weight: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.menu-table-column-selector-options label span {
+    padding-left: 10px;
+}
+
+.table-search {
+    display: none;
+}
+
 /* Special wrapper for alerts on public form pages (sign-in, register, etc) */
 .form-alerts {
     margin-bottom: 10px !important;
