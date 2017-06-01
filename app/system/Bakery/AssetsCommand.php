@@ -92,6 +92,12 @@ class AssetsCommand extends Bakery
         passthru("npm run uf-assets-install --prefix " . $this->buildPath);
     }
 
+    /**
+     * Build the production bundle.
+     *
+     * @access protected
+     * @return void
+     */
     protected function buildAssets()
     {
         $this->io->section("Building assets");
