@@ -1,7 +1,7 @@
 {% extends "layouts/basic.html.twig" %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Register for a new account{% endblock %}
+{% block page_title %}{{translate('REGISTER')}}{% endblock %}
 
 {% block page_description %}{{translate('PAGE.LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
 
@@ -17,7 +17,7 @@
     <!-- /.login-logo -->
 
     <div class="login-box-body register-form">
-        <p class="login-box-msg">{{translate('REGISTER')}}</p>
+        <p class="login-box-msg"><strong>{{translate('REGISTER')}}</strong></p>
         <div class="form-alerts" id="alerts-page"></div>
 
         <form id="register" role="form" action="{{site.uri.public}}/account/register" method="post" class="r-form">
@@ -82,7 +82,7 @@
                 <button type="submit" class="btn btn-block btn-primary">{{translate('REGISTER_ME')}}</button>
             </div>
             <div style="padding-top: 10px;">
-                Already have an account? <a href="{{site.uri.public}}/account/sign-in">Sign in here.</a>
+                {{translate('SIGN_IN_HERE', {'url' : "#{site.uri.public}/account/sign-in"}) | raw}}
             </div>
         </form>
     </div>

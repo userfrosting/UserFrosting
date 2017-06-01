@@ -32,6 +32,7 @@ return [
     ],
 
     "DASHBOARD"             => "Dashboard",
+    "NO_FEATURES_YET"       => "It doesn't look like any features have been set up for this account...yet.  Maybe they haven't been implemented yet, or maybe someone forgot to give you access.  Either way, we're glad to have you aboard!",
     "DELETE_MASTER"         => "You cannot delete the master account!",
     "DELETION_SUCCESSFUL"   => "User <strong>{{user_name}}</strong> has been successfully deleted.",
     "DETAILS_UPDATED"       => "Account details updated for user <strong>{{user_name}}</strong>",

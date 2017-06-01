@@ -50,12 +50,17 @@ return [
 
     "PAGINATION" => [
         "GOTO"                          => "Gehe zu Seite",
-        "SHOW"                          => "Anzeigen"
+        "SHOW"                          => "Anzeigen",
+        "NEXT"                          => "Nächste Seite",
+        "PREVIOUS"                      => "Vorherige Seite",
+        "FIRST"                         => "Erste Seite",
+        "LAST"                          => "Letzte Seite"
     ],
     "PRIVACY"                           => "Datenschutz-Bestimmungen",
 
     "SLUG"                              => "Schnecke",
     "SLUG_CONDITION"                    => "Schnecke/Bedingungen",
+    "SLUG_IN_USE"                       => "Die Schnecke <strong>{{slug}}</strong> existiert bereits",
     "STATUS"                            => "Status",
     "SUGGEST"                           => "Vorschlagen",
 
@@ -98,5 +103,6 @@ return [
 
     // Misc.
     "BUILT_WITH_UF"                     => "Errichtet mit <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
-    "ADMINLTE_THEME_BY"                 => "Theme von <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten"
+    "ADMINLTE_THEME_BY"                 => "Theme von <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten",
+    "WELCOME_TO"                        => "Willkommen auf {{title}}!"
 ];

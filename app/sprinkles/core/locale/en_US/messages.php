@@ -50,7 +50,11 @@ return [
 
     "PAGINATION" => [
         "GOTO" => "Jump to Page",
-        "SHOW" => "Show"
+        "SHOW" => "Show",
+        "NEXT" => "Next page",
+        "PREVIOUS" => "Previous page",
+        "FIRST" => "First page",
+        "LAST" => "Last page"
     ],
     "PRIVACY" => "Privacy Policy",
 
@@ -99,5 +103,6 @@ return [
 
     // Misc.
     "BUILT_WITH_UF" => "Built with <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
-    "ADMINLTE_THEME_BY" => "Theme by <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> All rights reserved"
+    "ADMINLTE_THEME_BY" => "Theme by <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> All rights reserved",
+    "WELCOME_TO" => "Welcome to {{title}}!"
 ];

@@ -12,11 +12,11 @@
     {% endblock %}
 
     <div class="pager pager-lg tablesorter-pager">
-        <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
-        <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
+        <span class="pager-control first" title="{{translate("PAGINATION.FIRST")}}"><i class="fa fa-angle-double-left"></i></span>
+        <span class="pager-control prev" title="{{translate("PAGINATION.PREVIOUS")}}"><i class="fa fa-angle-left"></i></span>
         <span class="pagedisplay"></span> {# this can be any element, including an input #}
-        <span class="pager-control next" title="Next page"><i class="fa fa-angle-right"></i></span>
-        <span class="pager-control last" title= "Last page"><i class="fa fa-angle-double-right"></i></span>
+        <span class="pager-control next" title="{{translate("PAGINATION.NEXT")}}"><i class="fa fa-angle-right"></i></span>
+        <span class="pager-control last" title= "{{translate("PAGINATION.LAST")}}"><i class="fa fa-angle-double-right"></i></span>
         <br><br>
         {{translate("PAGINATION.GOTO")}}: <select class="gotoPage"></select> &bull; {{translate("PAGINATION.SHOW")}}:
         <select class="pagesize">

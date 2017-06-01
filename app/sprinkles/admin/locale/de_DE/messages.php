@@ -32,6 +32,7 @@ return [
     ],
 
     "DASHBOARD"                         => "Übersicht",
+    "NO_FEATURES_YET"                   => "Es sieht aus, als wären für Ihren Account noch keine Funktionen aktiviert... bisher. Entweder sie wurden bisher noch nicht implementiert, oder Ihnen fehlen noch die Berechtigungen. Trotzdem ist es schön, dass Sie auf unsere Seite gekommen sind!",
     "DELETE_MASTER"                     => "Sie können das Root-Konto nicht löschen!",
     "DELETION_SUCCESSFUL"               => "Benutzer <strong>{{user_name}}</strong> wurde erfolgreich gelöscht.",
     "DETAILS_UPDATED"                   => "Konto-Daten für <strong>{{user_name}}</strong> aktualisiert.",
@@ -60,6 +61,7 @@ return [
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Gruppe ein",
         "NOT_EMPTY"                     => "Sie können das nicht tun, denn es sind noch Benutzer mit der Gruppe <strong>{{name}}</strong> verbunden.",
         "PAGE_DESCRIPTION"              => "Eine Liste der Gruppen für Ihre Website. Bietet Verwaltungstools für das Bearbeiten und Löschen von Gruppen.",
+        "SUMMARY"                       => "Gruppen Zusammenfassung",
         "UPDATE"                        => "Details für die Gruppe <strong>{{name}}</strong> aktualisiert"
     ],
 
@@ -75,9 +77,14 @@ return [
 
         "ASSIGN_NEW"                    => "Neue Berechtigung zuweisen",
         "HOOK_CONDITION"                => "Haken/Bedingungen",
+        "ID"                            => "Berechtigungs-ID",
+        "INFO_PAGE"                     => "Berechtigungs Informationen für '{{name}}'",
         "MANAGE"                        => "Berechtigungen verwalten",
+        "NOTE_READ_ONLY"                => "<strong>Bitte beachten Sie:</strong> Berechtigungen werden als \"Teil des Quelltexts\" gesehen und können hier nicht bearbeitet werden. Um Berechtigungen hinzuzufügen, zu bearbeiten, oder zu löschen, benutzen Sie bitte folgende Dokumentation zur <a href=\"https://learn.userfrosting.com/database/extending-the-database\" target=\"about:_blank\">Datenbank Migration.</a>",
         "PAGE_DESCRIPTION"              => "Eine Liste der Berechtigungen für Ihre Website. Bietet Verwaltungstools zum Bearbeiten und Löschen von Berechtigungen.",
-        "UPDATE"                        => "Berechtigungen aktualisieren"
+        "SUMMARY"                       => "Berechtigungs Zusammenfassung",
+        "UPDATE"                        => "Berechtigungen aktualisieren",
+        "VIA_ROLES"                     => "Besitzt die Berechtigung durch die Rolle"
     ],
 
     "ROLE" => [
@@ -98,8 +105,10 @@ return [
         "MANAGE"                        => "Rollen verwalten",
         "NAME"                          => "Name",
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Rolle ein",
+        "NAME_IN_USE"                   => "Eine Rolle mit dem Namen <strong>{{name}}</strong> existiert bereits",
         "PAGE_DESCRIPTION"              => "Eine Liste der Rollen für Ihre Website. Bietet Verwaltungstools zum Bearbeiten und Löschen von Rollen.",
         "PERMISSIONS_UPDATED"           => "Berechtigungen für die Rolle <strong>{{name}}</strong> aktualisiert",
+        "SUMMARY"                       => "Rollen Zusammenfassung",
         "UPDATED"                       => "Rollen aktualisieren"
     ],
 
@@ -136,9 +145,11 @@ return [
         "EDIT"                          => "Benutzer bearbeiten",
         "ENABLE"                        => "Benutzer aktivieren",
         "INFO_PAGE"                     => "Benutzerinformationsseite für {{name}}",
-        "PAGE_DESCRIPTION"              => "Eine Liste der Benutzer für Ihre Website. Bietet Management-Tools, einschließlich der Möglichkeit, Benutzerdaten bearbeiten, manuell aktivieren, Benutzer aktivieren/deaktivieren, und vieles mehr.",
         "LATEST"                        => "Neueste Benutzer",
-        "VIEW_ALL"                      => "Alle Benutzer anzeigen"
+        "PAGE_DESCRIPTION"              => "Eine Liste der Benutzer für Ihre Website. Bietet Management-Tools, einschließlich der Möglichkeit, Benutzerdaten bearbeiten, manuell aktivieren, Benutzer aktivieren/deaktivieren, und vieles mehr.",
+        "SUMMARY"                       => "Benutzer Zusammenfassung",
+        "VIEW_ALL"                      => "Alle Benutzer anzeigen",
+        "WITH_PERMISSION"               => "Benutzer mit dieser Berechtigung"
     ],
     "X_USER" => [
         0                               => "Keine Benutzer",

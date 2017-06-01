@@ -46,14 +46,15 @@ return [
             "COMPLETE"                  => "Sie haben Ihr Konto erfolgreich Verifiziert. Sie können sich jetzt anmelden.",
             "EMAIL"                     => "Bitte geben Sie die E-Mail-Adresse ein, mit der Sie sich registriert haben, Überprüfen Sie Ihr E-Mails/Spam-Ordner für die Bestätigungs-E-Mail.",
             "PAGE"                      => "Senden Sie die Bestätigungs-E-Mail erneut für Ihr neues Konto.",
-            "SEND"                      => "Senden Sie eine neue E-Mail mit dem Bestätigungslink für mein Konto",
-            "TOKEN_NOT_FOUND"           => "Verifizierungstoken existiert nicht / Konto wurde bereits verifiziert",
+            "SEND"                      => "Bestätigungslink erneut per E-Mail zusenden",
+            "TOKEN_NOT_FOUND"           => "Verifizierungstoken existiert nicht / Konto wurde bereits verifiziert"
         ]
     ],
 
     "EMAIL" => [
         "INVALID"                       => "Es gibt kein Konto für <strong>{{email}}</strong>.",
-        "IN_USE"                        => "E-Mail <strong>{{email}}</strong> wird bereits verwendet."
+        "IN_USE"                        => "Die E-Mail Adresse <strong>{{email}}</strong> wird bereits verwendet.",
+        "VERIFICATION_REQUIRED"         => "E-Mail (Bestätigung benötigt - Benutzen Sie eine echte E-Mail Adresse!)"
     ],
 
     "EMAIL_OR_USERNAME"                 => "Benutzername oder E-mail Adresse",
@@ -80,11 +81,13 @@ return [
 
     "NAME"                              => "Name",
 
+    "NAME_AND_EMAIL"                    => "Name und E-Mail",
+
     "PAGE" => [
         "LOGIN" => [
             "DESCRIPTION"               => "Melden Sie sich in Ihr {{site_name}} Konto an oder registrieren Sie sich für ein neues Konto.",
             "SUBTITLE"                  => "Registrieren Sie sich kostenlos oder melden Sie sich mit einem bestehenden Konto an.",
-            "TITLE"                     => "Lass uns anfangen!",
+            "TITLE"                     => "Lass uns anfangen!"
         ]
     ],
 
@@ -118,14 +121,20 @@ return [
             "@TRANSLATION"              => "Passwort zurücksetzen",
             "CHOOSE"                    => "Bitte wählen Sie ein neues Passwort, um fortzufahren.",
             "PAGE"                      => "Wählen Sie ein neues Passwort für Ihr Konto.",
-            "SEND"                      => "Neues Passwort festlegen und Anmelden"
+            "SEND"                      => "Neues Passwort festlegen und anmelden"
         ],
 
         "HASH_FAILED"                   => "Passwort Hashing fehlgeschlagen. Bitte kontaktieren Sie einen Administrator.",
         "INVALID"                       => "Das aktuelle Passwort stimmt nicht mit dem Datensatz überein",
         "NEW"                           => "Neues Passwort",
         "NOTHING_TO_UPDATE"             => "Sie können nicht das gleiche Passwort zum Aktualisieren verwenden",
-        "UPDATED"                       => "Konto Passwort aktualisiert"
+        "UPDATED"                       => "Konto Passwort aktualisiert",
+
+        "CREATE" => [
+            "@TRANSLATION"              => "Passwort setzen",
+            "PAGE"                      => "Setzen Sie ein Passwort für den Account.",
+            "SET"                       => "Passwort setzen und anmelden"
+        ]
     ],
 
     "PROFILE" => [
@@ -135,6 +144,7 @@ return [
 
     "REGISTER"                          => "Registrieren",
     "REGISTER_ME"                       => "Melden Sie mich an",
+    "SIGN_IN_HERE"                      => "Sie haben bereits einen Account? <a href=\"{{url}}\">Melden Sie sich hier an.</a>",
 
     "REGISTRATION" => [
         "BROKEN"                        => "Es tut uns leid, es gibt ein Problem mit unserer Registrierung. Bitte kontaktieren Sie uns direkt für Hilfe.",

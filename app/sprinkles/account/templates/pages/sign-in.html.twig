@@ -1,7 +1,7 @@
 {% extends "layouts/basic.html.twig" %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Sign in{% endblock %}
+{% block page_title %}{{translate('SIGNIN')}}{% endblock %}
 
 {% block page_description %}{{translate('PAGE.LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
 
@@ -17,7 +17,7 @@
     <!-- /.login-logo -->
 
     <div class="login-box-body login-form">
-        <p class="login-box-msg">{{translate('SIGNIN')}}</p>
+        <p class="login-box-msg"><strong>{{translate('SIGNIN')}}</strong></p>
 
         <div class="form-alerts" id="alerts-page"></div>
 
