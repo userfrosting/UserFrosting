@@ -25,7 +25,8 @@ class UserSprunje extends Sprunje
     protected $sortable = [
         'name',
         'last_activity',
-        'flag_enabled'
+        'flag_enabled',
+        'status'
     ];
 
     protected $filterable = [
@@ -126,5 +127,17 @@ class UserSprunje extends Sprunje
     protected function sortName($query, $direction)
     {
         return $query->orderBy('last_name', $direction);
+    }
+
+    /**
+     * Sort active, unactivated, disabled
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return Builder
+     */
+    protected function sortStatus($query, $direction)
+    {
+        return $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
     }
 }

@@ -317,7 +317,6 @@
         });
 
         base.ts.on('pagerComplete', function () {
-            $el.find('.tablesorter').trigger('update');
             $el.trigger('pagerComplete.ufTable');
         });
     };

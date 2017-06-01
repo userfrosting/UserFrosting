@@ -15,7 +15,7 @@
                 {% if 'last_activity' in table.columns %}
                     <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="2">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
                 {% endif %}
-                <th class="filter-select filter-metaselect" data-column-name="flag_enabled" data-column-template="#user-table-column-actions" data-priority="1">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
+                <th class="filter-false" data-column-name="status" data-column-template="#user-table-column-actions" data-priority="1">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
