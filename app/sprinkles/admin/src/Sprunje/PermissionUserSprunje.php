@@ -26,11 +26,16 @@ class PermissionUserSprunje extends Sprunje
 
     protected $sortable = [
         'name',
-        'flag_enabled'
+        'flag_enabled',
+        'status'
     ];
 
     protected $filterable = [
         'name',
+        'flag_enabled'
+    ];
+
+    protected $excludeForAll = [
         'flag_enabled'
     ];
 
@@ -132,5 +137,17 @@ class PermissionUserSprunje extends Sprunje
     protected function sortName($query, $direction)
     {
         return $query->orderBy('last_name', $direction);
+    }
+
+    /**
+     * Sort active, unactivated, disabled
+     *
+     * @param Builder $query
+     * @param string $direction
+     * @return Builder
+     */
+    protected function sortStatus($query, $direction)
+    {
+        return $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
     }
 }
