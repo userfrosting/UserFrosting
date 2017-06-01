@@ -37,6 +37,7 @@ $app->add(new Bakery\DebugCommand());
 $app->add(new Bakery\AssetsCommand());
 $app->add(new Bakery\BakeCommand());
 $app->add(new Bakery\SetupCommand());
+$app->add(new Bakery\TestCommand());
 $app->add(new Bakery\MigrationCommand());
 $app->add(new Bakery\MigrationRollbackCommand());
 $app->add(new Bakery\MigrationResetCommand());
