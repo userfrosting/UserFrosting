@@ -13,7 +13,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\Bakery;
-use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * Debug CLI Tools.
@@ -65,8 +64,7 @@ class DebugCommand extends Bakery
         $this->checkNodeVersion();
         $this->checkNpmVersion();
         $this->listSprinkles();
-
-        // Go to the env setup
+        $this->showConfig();
         $this->checkDatabase();
 
         // If all went well and there's no fatal errors, we are ready to bake
@@ -181,162 +179,17 @@ class DebugCommand extends Bakery
      */
     protected function checkDatabase()
     {
-        // First thing, silently test database. If it works, our job is done here
+        $this->io->section("Testing database connexion...");
+
         try {
             $this->testDB();
-            $this->showConfig();
-            $this->io->section("Testing database connexion...");
             $this->io->writeln("Database connexion successful");
             return;
         } catch (\Exception $e) {
             $error = $e->getMessage();
+            $this->io->error($error);
+            exit(1);
         }
-
-        $config = $this->ci->config;
-
-        // Check if the .env file exist. At this point, we can't connect and
-        // there's no .env, we're gonna have a bad time
-        $path = \UserFrosting\APP_DIR. '/.env';
-        if (!file_exists($path)) {
-
-            // If  the configs are empty, we'll assume nothing is defined and go strait to setup.
-            // Otherwise, we'll ask first. There may be some custom config or global env values defined here that are not right
-            if ($config["db.default.host"] == "" || $config["db.default.database"] == "" || $config["db.default.username"] == "") {
-                $setupEnv = true;
-            } else {
-                $this->io->warning("\nFile `$path` not found. ");
-                $this->io->writeln("This file is used to define your database credentials and other environment variables. You may also have another means of (direct config values or global environment vars).");
-                $setupEnv = $this->io->confirm("Do you want to setup a `.env` file now? [y/N] ", false);
-            }
-
-            if ($setupEnv) {
-                $this->setupEnv();
-                return;
-            }
-        }
-
-        // We have an error message. We'll display the current config then the error message
-        $this->showConfig();
-        $this->io->section("Testing database connexion...");
-        $this->io->error($e->getMessage());
-        exit(1);
-    }
-
-    /**
-     * Setup the `.env` file.
-     *
-     * @access public
-     * @return void
-     */
-    public function setupEnv()
-    {
-        // Get config
-        $config = $this->ci->config;
-
-        $success = false;
-
-        // Get the db driver choices
-        $drivers = $this->databaseDrivers();
-
-        while (!$success) {
-
-            // Ask the questions
-            $this->io->section("Setting up database");
-            $this->io->note("Database credentials will be saved in `app/.env`");
-
-            $driver = $this->io->choice("Database type", $drivers->pluck('name')->toArray());
-            $driver = $drivers->where('name', $driver)->first();
-
-            $driverName = $driver['driver'];
-            $defaultPort = $driver['defaultPort'];
-
-            $host = $this->io->ask("Hostname", "localhost");
-            $port = $this->io->ask("Port", $defaultPort);
-            $name = $this->io->ask("Database name", "userfrosting");
-            $user = $this->io->ask("Username", "userfrosting");
-            $password = $this->io->askHidden("Password", function ($password) {
-                // Use custom validator to accept empty password
-                return $password;
-            });
-
-            // Setup a new db connection
-            $capsule = new Capsule;
-            $dbParams = [
-                'driver' => $driverName,
-                'host' => $host,
-                'port' => $port,
-                'database' => $name,
-                'username' => $user,
-                'password' => $password
-            ];
-            $capsule->addConnection($dbParams);
-
-            // Test the db connexion.
-            try {
-                $conn = $capsule->getConnection();
-                $conn->getPdo();
-                $this->io->success("Database connexion successful");
-                $success = true;
-            } catch (\PDOException $e) {
-                $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below:".PHP_EOL;
-                $message .= "Exception: " . $e->getMessage() . PHP_EOL;
-                $this->io->error($message);
-            }
-        }
-
-        // Ask for the smtp values now
-        $this->io->section("Enter your SMTP credentials");
-        $this->io->write("This is use to send emails from the system. Edit `app/.env` if you have problem with this later.");
-        $smtpHost = $this->io->ask("SMTP Host", "host.example.com");
-        $smtpUser = $this->io->ask("SMTP User", "relay@example.com");
-        $smtpPassword = $this->io->askHidden("SMTP Password", function ($password) {
-            // Use custom validator to accept empty password
-            return $password;
-        });
-
-
-        $fileContent = [
-            "UF_MODE=\"\"\n",
-            "DB_DRIVER=\"{$dbParams['driver']}\"\n",
-            "DB_HOST=\"{$dbParams['host']}\"\n",
-            "DB_PORT=\"{$dbParams['port']}\"\n",
-            "DB_NAME=\"{$dbParams['database']}\"\n",
-            "DB_USER=\"{$dbParams['username']}\"\n",
-            "DB_PASSWORD=\"{$dbParams['password']}\"\n",
-            "SMTP_HOST=\"$smtpHost\"\n",
-            "SMTP_USER=\"$smtpUser\"\n",
-            "SMTP_PASSWORD=\"$smtpPassword\"\n"
-        ];
-
-        // Let's save this config
-        file_put_contents(\UserFrosting\APP_DIR. '/.env', $fileContent);
-    }
-
-    /**
-     * Return the database choices for the env setup.
-     *
-     * @access protected
-     * @return void
-     */
-    protected function databaseDrivers()
-    {
-        return collect([
-            [
-                "driver" => "mysql",
-                "name" => "MySQL / MariaDB",
-                "defaultPort" => 3306
-            ],
-            [
-                "driver" => "pgsql",
-                "name" => "ProgreSQL",
-                "defaultPort" => 5432
-            ],
-            [
-                "driver" => "sqlsrv",
-                "name" => "SQL Server",
-                "defaultPort" => 1433
-            ]
-        ]);
     }
 
     /**
@@ -351,7 +204,7 @@ class DebugCommand extends Bakery
         $config = $this->ci->config;
 
         // Display database info
-        $this->io->section("Database config :");
+        $this->io->section("Database config");
         $this->io->writeln([
             "DRIVER : " . $config['db.default.driver'],
             "HOST : " . $config['db.default.host'],

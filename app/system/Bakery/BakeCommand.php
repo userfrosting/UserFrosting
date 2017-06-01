@@ -43,6 +43,9 @@ class BakeCommand extends Bakery
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $command = $this->getApplication()->find('setup');
+        $command->run($input, $output);
+
         $command = $this->getApplication()->find('debug');
         $command->run($input, $output);
 
