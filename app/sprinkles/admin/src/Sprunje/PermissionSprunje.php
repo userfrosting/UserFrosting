@@ -34,6 +34,10 @@ class PermissionSprunje extends Sprunje
         'info'
     ];
 
+    protected $excludeForAll = [
+        'info'
+    ];
+
     /**
      * {@inheritDoc}
      */

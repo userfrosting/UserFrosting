@@ -124,6 +124,8 @@ return [
         "URL"           => "Site root url"
     ],
 
+    "TOGGLE_COLUMNS" => "Toggle columns",
+
     "USER" => [
         1 => "User",
         2 => "Users",
