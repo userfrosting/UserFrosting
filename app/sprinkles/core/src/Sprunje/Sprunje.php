@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Sprunje;
@@ -38,11 +37,6 @@ abstract class Sprunje
     protected $name = '';
 
     /**
-     * Separator to use when splitting filter values to treat them as ORs.
-     */
-    protected $orSeparator = '||';
-
-    /**
      * @var \Illuminate\Database\Eloquent\Builder
      */
     protected $query;
@@ -73,6 +67,18 @@ abstract class Sprunje
      * @var array[string]
      */
     protected $sortable = [];
+
+    /**
+     * List of fields to exclude when processing an "_all" filter.
+     *
+     * @var array[string]
+     */
+    protected $excludeForAll = [];
+
+    /**
+     * Separator to use when splitting filter values to treat them as ORs.
+     */
+    protected $orSeparator = '||';
 
     /**
      * Constructor.
@@ -261,26 +267,82 @@ abstract class Sprunje
                 $e->addUserMessage('VALIDATE.SPRUNJE.BAD_FILTER', ['name' => $name]);
                 throw $e;
             }
+            // Set orFilter to 'false' to require a match on _all_ fields
+            $this->query = $this->buildFilterQuery($this->query, $name, $value, false);
+        }
 
-            // Determine if a custom filter method has been defined
-            $methodName = 'filter'.studly_case($name);
+        return $this->query;
+    }
 
-            if (method_exists($this, $methodName)) {
-                $this->query = $this->$methodName($this->query, $value);
+    /**
+     * Match any filter in `filterable`.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function filterAll($query, $value)
+    {
+        foreach ($this->filterable as $name) {
+            if (studly_case($name) != 'all' && !in_array($name, $this->excludeForAll)) {
+                $query = $this->buildFilterQuery($query, $name, $value, true);
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Build the filter query for a single field.
+     *
+     * @param Builder $query
+     * @param string $name
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function buildFilterQuery($query, $name, $value, $orFilter = true)
+    {
+        $methodName = 'filter'.studly_case($name);
+
+        // Determine if a custom filter method has been defined
+        if (method_exists($this, $methodName)) {
+            $query = $this->$methodName($query, $value);
+        } else {
+            if ($orFilter) {
+                // Since we want to match _any_ of the fields, we wrap the field callback in a 'orWhere' callback
+                $query = $query->orWhere(function ($fieldQuery) use ($name, $value) {
+                    return $this->buildFilterDefaultFieldQuery($fieldQuery, $name, $value);
+                });
             } else {
-                // Split value on separator for OR queries
-                $values = explode($this->orSeparator, $value);
-
-                $this->query = $this->query->where(function ($query) use ($name, $values) {
-                    foreach ($values as $value) {
-                        $query = $query->orLike($name, $value);
-                    }
-                    return $query;
+                // Since we want to match _all_ of the fields, we wrap the field callback in a 'where' callback
+                $query = $query->where(function ($fieldQuery) use ($name, $value) {
+                    return $this->buildFilterDefaultFieldQuery($fieldQuery, $name, $value);
                 });
             }
         }
 
-        return $this->query;
+        return $query;
+    }
+
+    /**
+     * Perform a 'like' query on a single field, separating the value string on the or separator and
+     * matching any of the supplied values.
+     *
+     * @param Builder $query
+     * @param string $name
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function buildFilterDefaultFieldQuery($query, $name, $value)
+    {
+        // Default filter - split value on separator for OR queries
+        // and search by column name
+        $values = explode($this->orSeparator, $value);
+        foreach ($values as $value) {
+            $query = $query->orLike($name, $value);
+        }
+
+        return $query;
     }
 
     /**
@@ -366,36 +428,5 @@ abstract class Sprunje
     protected function countFiltered()
     {
         return $this->query->count();
-    }
-
-    /**
-     * Match any filter in `filterable`.
-     *
-     * @param Builder $query
-     * @param mixed $value
-     * @return Builder
-     */
-    protected function filterAll($query, $value)
-    {
-        foreach ($this->filterable as $name) {
-            $methodName = 'filter'.studly_case($name);
-            if ($methodName != 'filterAll') {
-                $query = $query->orWhere(function ($likeQuery) use ($name, $methodName, $value) {
-
-                    if (method_exists($this, $methodName)) {
-                        $likeQuery = $this->$methodName($likeQuery, $value);
-                    } else {
-                        // Split value on separator for OR queries
-                        $values = explode($this->orSeparator, $value);
-                        foreach ($values as $value) {
-                            $likeQuery = $likeQuery->orLike($name, $value);
-                        }
-                    }
-                    return $likeQuery;
-                });
-            }
-        }
-
-        return $query;
     }
 }
