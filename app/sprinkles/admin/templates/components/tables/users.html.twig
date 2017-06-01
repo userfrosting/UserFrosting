@@ -11,11 +11,11 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">{{translate('USER')}} <i class="fa fa-sort"></i></th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info" data-priority="1">{{translate('USER')}} <i class="fa fa-sort"></i></th>
                 {% if 'last_activity' in table.columns %}
-                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
+                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="2">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
                 {% endif %}
-                <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-actions">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
+                <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-actions" data-priority="1">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>

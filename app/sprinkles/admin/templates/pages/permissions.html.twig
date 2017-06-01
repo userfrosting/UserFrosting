@@ -16,9 +16,7 @@
             <div id="widget-permissions" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title pull-left"><i class="fa fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-sm btn-default js-download-table"><i class="fa fa-table"></i> {{ translate("DOWNLOAD.CSV") }}</button>
-                    </div>
+                    {% include "components/tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
                     {% include "components/tables/permissions.html.twig" with {

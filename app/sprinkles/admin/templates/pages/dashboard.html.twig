@@ -188,9 +188,7 @@
             <div id="widget-activities" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-tasks fa-fw"></i> {{translate('ACTIVITY', 2)}}</h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-sm btn-default js-download-table"><i class="fa fa-table"></i> {{translate("DOWNLOAD.CSV")}}</button>
-                    </div>
+                    {% include "components/tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
                     {% include "components/tables/activities.html.twig" with {
@@ -211,9 +209,7 @@
             <div id="widget-group-users" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-user"></i> {{translate('USER', 2)}}</h3>
-                    <div class="box-tools pull-right">
-                        <button class="btn btn-sm btn-default js-download-table"><i class="fa fa-table"></i> {{translate("DOWNLOAD.CSV")}}</button>
-                    </div>
+                    {% include "components/tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
                     {% include "components/tables/users.html.twig" with {

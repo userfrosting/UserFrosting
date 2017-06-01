@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Sprunje;
@@ -25,14 +24,28 @@ use Valitron\Validator;
  */
 abstract class Sprunje
 {
+    /**
+     * @var UserFrosting\Sprinkle\Core\Util\ClassMapper
+     */
     protected $classMapper;
 
-    protected $filterable = [];
-
-    protected $listable = [];
-
+    /**
+     * Name of this Sprunje, used when generating output files.
+     *
+     * @var string
+     */
     protected $name = '';
 
+    /**
+     * @var \Illuminate\Database\Eloquent\Builder
+     */
+    protected $query;
+
+    /**
+     * Default HTTP request parameters
+     *
+     * @var array[string]
+     */
     protected $options = [
         'sorts' => [],
         'filters' => [],
@@ -43,13 +56,37 @@ abstract class Sprunje
     ];
 
     /**
+     * Fields to allow filtering upon.
+     *
+     * @var array[string]
+     */
+    protected $filterable = [];
+
+    /**
+     * Fields to allow listing (enumeration) upon.
+     *
+     * @var array[string]
+     */
+    protected $listable = [];
+
+    /**
+     * Fields to allow sorting upon.
+     *
+     * @var array[string]
+     */
+    protected $sortable = [];
+
+    /**
+     * List of fields to exclude when processing an "_all" filter.
+     *
+     * @var array[string]
+     */
+    protected $excludeForAll = [];
+
+    /**
      * Separator to use when splitting filter values to treat them as ORs.
      */
     protected $orSeparator = '||';
-
-    protected $query;
-
-    protected $sortable = [];
 
     /**
      * Constructor.
@@ -263,31 +300,82 @@ abstract class Sprunje
     {
         foreach ($this->options['filters'] as $name => $value) {
             // Check that this filter is allowed
-            if (!in_array($name, $this->filterable)) {
+            if (($name != '_all') && !in_array($name, $this->filterable)) {
                 $e = new BadRequestException();
                 $e->addUserMessage('VALIDATE.SPRUNJE.BAD_FILTER', ['name' => $name]);
                 throw $e;
             }
+            // Since we want to match _all_ of the fields, we wrap the field callback in a 'where' callback
+            $this->query = $this->query->where(function ($fieldQuery) use ($name, $value) {
+                return $this->buildFilterQuery($fieldQuery, $name, $value);
+            });
+        }
 
-            // Determine if a custom filter method has been defined
-            $filterMethodName = 'filter'.studly_case($name);
+        return $this->query;
+    }
 
-            if (method_exists($this, $filterMethodName)) {
-                $this->query = $this->$filterMethodName($this->query, $value);
-            } else {
-                // Split value on separator for OR queries
-                $values = explode($this->orSeparator, $value);
-
-                $this->query = $this->query->where(function ($query) use ($name, $values) {
-                    foreach ($values as $value) {
-                        $query = $query->orLike($name, $value);
-                    }
-                    return $query;
+    /**
+     * Match any filter in `filterable`.
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function filterAll($query, $value)
+    {
+        foreach ($this->filterable as $name) {
+            if (studly_case($name) != 'all' && !in_array($name, $this->excludeForAll)) {
+                // Since we want to match _any_ of the fields, we wrap the field callback in a 'orWhere' callback
+                $query = $query->orWhere(function ($fieldQuery) use ($name, $value) {
+                    return $this->buildFilterQuery($fieldQuery, $name, $value);
                 });
             }
         }
 
-        return $this->query;
+        return $query;
+    }
+
+    /**
+     * Build the filter query for a single field.
+     *
+     * @param Builder $query
+     * @param string $name
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function buildFilterQuery($query, $name, $value)
+    {
+        $methodName = 'filter'.studly_case($name);
+
+        // Determine if a custom filter method has been defined
+        if (method_exists($this, $methodName)) {
+            $query = $this->$methodName($query, $value);
+        } else {
+            return $this->buildFilterDefaultFieldQuery($query, $name, $value);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Perform a 'like' query on a single field, separating the value string on the or separator and
+     * matching any of the supplied values.
+     *
+     * @param Builder $query
+     * @param string $name
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function buildFilterDefaultFieldQuery($query, $name, $value)
+    {
+        // Default filter - split value on separator for OR queries
+        // and search by column name
+        $values = explode($this->orSeparator, $value);
+        foreach ($values as $value) {
+            $query = $query->orLike($name, $value);
+        }
+
+        return $query;
     }
 
     /**

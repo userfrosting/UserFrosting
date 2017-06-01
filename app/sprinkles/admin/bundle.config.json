@@ -4,12 +4,14 @@
             "scripts": [
                 "vendor/moment/moment.js",
                 "local/core/js/handlebars-helpers.js",
-                 "vendor/tablesorter/dist/js/jquery.tablesorter.js",
-                 "vendor/tablesorter/dist/js/jquery.tablesorter.widgets.js",
-                 "vendor/tablesorter/dist/js/widgets/widget-sort2Hash.min.js",
-                 "vendor/tablesorter/dist/js/widgets/widget-pager.min.js",
-                 "local/core/js/query-string.js",
-                 "local/core/js/uf-table.js"
+                "vendor/tablesorter/dist/js/jquery.tablesorter.js",
+                "vendor/tablesorter/dist/js/jquery.tablesorter.widgets.js",
+                "vendor/tablesorter/dist/js/widgets/widget-sort2Hash.min.js",
+                "vendor/tablesorter/dist/js/widgets/widget-columnSelector.min.js",
+                "vendor/tablesorter/dist/js/widgets/widget-reflow.min.js",
+                "vendor/tablesorter/dist/js/widgets/widget-pager.min.js",
+                "local/core/js/query-string.js",
+                "local/core/js/uf-table.js"
             ],
             "options": {
                 "result": {
@@ -152,6 +154,7 @@
                 "local/font-starcraft/css/font-starcraft.css",
                 "vendor/tablesorter/dist/css/theme.bootstrap.min.css",
                 "vendor/tablesorter/dist/css/jquery.tablesorter.pager.min.css",
+                "local/core/css/tablesorter-reflow.css",
                 "local/pages/css/tablesorter-custom.css"
             ],
             "options": {

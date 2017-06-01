@@ -2,7 +2,11 @@
  # Requires tablesorter-custom.css for proper styling of pager elements.
 #}
 
-<div class="table-responsive">
+<div class="table-search form-group has-feedback">
+    <input type="search" class="form-control" data-column="all">
+    <i class="fa fa-search form-control-icon" aria-hidden="true"></i>
+</div>
+<div class="table">
     {% block table %}
         {# Define your table skeleton in this block in your child template #}
     {% endblock %}
