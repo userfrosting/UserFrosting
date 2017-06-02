@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
@@ -17,9 +16,9 @@ use Monolog\Logger;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
 use UserFrosting\Sprinkle\Account\Log\UserActivityProcessor;
-use UserFrosting\Sprinkle\Account\Model\User;
 use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
@@ -68,13 +67,13 @@ class ServicesProvider
          * Mappings added: User, Group, Role, Permission, Activity, PasswordReset, Verification
          */
         $container->extend('classMapper', function ($classMapper, $c) {
-            $classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Model\User');
-            $classMapper->setClassMapping('group', 'UserFrosting\Sprinkle\Account\Model\Group');
-            $classMapper->setClassMapping('role', 'UserFrosting\Sprinkle\Account\Model\Role');
-            $classMapper->setClassMapping('permission', 'UserFrosting\Sprinkle\Account\Model\Permission');
-            $classMapper->setClassMapping('activity', 'UserFrosting\Sprinkle\Account\Model\Activity');
-            $classMapper->setClassMapping('password_reset', 'UserFrosting\Sprinkle\Account\Model\PasswordReset');
-            $classMapper->setClassMapping('verification', 'UserFrosting\Sprinkle\Account\Model\Verification');
+            $classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Database\Models\User');
+            $classMapper->setClassMapping('group', 'UserFrosting\Sprinkle\Account\Database\Models\Group');
+            $classMapper->setClassMapping('role', 'UserFrosting\Sprinkle\Account\Database\Models\Role');
+            $classMapper->setClassMapping('permission', 'UserFrosting\Sprinkle\Account\Database\Models\Permission');
+            $classMapper->setClassMapping('activity', 'UserFrosting\Sprinkle\Account\Database\Models\Activity');
+            $classMapper->setClassMapping('password_reset', 'UserFrosting\Sprinkle\Account\Database\Models\PasswordReset');
+            $classMapper->setClassMapping('verification', 'UserFrosting\Sprinkle\Account\Database\Models\Verification');
             return $classMapper;
         });
 

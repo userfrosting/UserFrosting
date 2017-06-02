@@ -3,15 +3,14 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core;
 
 use RocketTheme\Toolbox\Event\Event;
-use UserFrosting\System\Sprinkle\Sprinkle;
-use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
+use UserFrosting\System\Sprinkle\Sprinkle;
 
 /**
  * Bootstrapper class for the core sprinkle.
@@ -58,7 +57,7 @@ class Core extends Sprinkle
     public function onSprinklesInitialized()
     {
         // Set container for data model
-        UFModel::$ci = $this->ci;
+        Model::$ci = $this->ci;
 
         // Set container for environment info class
         EnvironmentInfo::$ci = $this->ci;

@@ -3,27 +3,25 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
-use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Sprinkle\Account\Model\Group;
-use UserFrosting\Sprinkle\Account\Model\User;
-use UserFrosting\Sprinkle\Account\Model\Role;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Core\Model\Version;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
+use UserFrosting\Support\Exception\ForbiddenException;
 
 /**
  * AdminController Class
  *
  * Controller class for /admin URL.  Handles admin-related activities
  *
- * @author Alex Weissman
- * @link http://www.userfrosting.com/navigating/#structure
+ * @author Alex Weissman (https://alexanderweissman.com)
  */
 class AdminController extends SimpleController
 {
@@ -37,7 +35,7 @@ class AdminController extends SimpleController
         //** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -101,7 +99,7 @@ class AdminController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -132,7 +130,7 @@ class AdminController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page

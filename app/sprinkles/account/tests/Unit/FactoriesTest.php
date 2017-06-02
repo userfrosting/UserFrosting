@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Tests\Unit;
@@ -26,7 +25,7 @@ class FactoriesTest extends TestCase
     {
         $fm = $this->ci->factory;
 
-        $user = $fm->create('UserFrosting\Sprinkle\Account\Model\User');
-        $this->assertInstanceOf('UserFrosting\Sprinkle\Account\Model\User', $user);
+        $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
+        $this->assertInstanceOf('UserFrosting\Sprinkle\Account\Database\Models\User', $user);
     }
 }

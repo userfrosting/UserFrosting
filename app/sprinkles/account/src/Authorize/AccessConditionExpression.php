@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Authorize;
@@ -16,7 +15,7 @@ use PhpParser\Parser as Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\Error as PhpParserException;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 
 /**
  * AccessConditionExpression class
@@ -25,7 +24,6 @@ use UserFrosting\Sprinkle\Account\Model\User;
  * A condition is built as a boolean expression composed of AccessCondition method calls.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/components/#authorization
  */
 class AccessConditionExpression
 {

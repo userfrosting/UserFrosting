@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Controller;
@@ -20,8 +19,8 @@ use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
-use UserFrosting\Sprinkle\Account\Model\Group;
-use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Account\Util\Util as AccountUtil;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
@@ -289,7 +288,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\MessageStream $ms */
         $ms = $this->ci->alerts;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -530,7 +529,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -614,7 +613,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access control for entire resource - check that the current user has permission to modify themselves
@@ -1006,7 +1005,7 @@ class AccountController extends SimpleController
 
         // Log out any existing user, and create a new session
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -1042,7 +1041,7 @@ class AccountController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access control for entire resource - check that the current user has permission to modify themselves

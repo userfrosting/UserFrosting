@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\ServicesProvider;
@@ -174,7 +173,7 @@ class ServicesProvider
          */
         $container['classMapper'] = function ($c) {
             $classMapper = new ClassMapper();
-            $classMapper->setClassMapping('throttle', 'UserFrosting\Sprinkle\Core\Model\Throttle');
+            $classMapper->setClassMapping('throttle', 'UserFrosting\Sprinkle\Core\Database\Models\Throttle');
             return $classMapper;
         };
 

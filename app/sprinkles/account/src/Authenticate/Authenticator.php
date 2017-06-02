@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Authenticate;
@@ -20,7 +19,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedExcep
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
-use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
@@ -28,7 +27,6 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  * Handles authentication tasks.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/components/#authentication
  * Partially inspired by Laravel's Authentication component: https://github.com/laravel/framework/blob/5.3/src/Illuminate/Auth/SessionGuard.php
  */
 class Authenticator

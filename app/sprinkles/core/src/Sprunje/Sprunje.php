@@ -440,6 +440,8 @@ abstract class Sprunje
 
     /**
      * Set the initial query used by your Sprunje.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     abstract protected function baseQuery();
 
