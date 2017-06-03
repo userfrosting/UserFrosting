@@ -36,7 +36,7 @@ class SetupCommand extends Bakery
     {
         $this->setName("setup")
              ->setDescription("UserFrosting configuration wizard")
-             ->setHelp("Helper command to setup the database and email configuration. This can be done manually by editing the <comment>app/.env</comment> file or using global server environment varaibles.")
+             ->setHelp("Helper command to setup the database and email configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.")
              ->addOption("force", "f", InputOption::VALUE_NONE, "If `.env` file exist, force setup to run again");
     }
 
