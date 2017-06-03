@@ -87,28 +87,15 @@
  * `getTableStateVars( table )`: fetches the current page size, page number, sort order, sort field, and column filters.
  *
  * UserFrosting https://www.userfrosting.com
- * @author Alexander Weissman https://alexanderweissman.com
+ * @author Alexander Weissman <https://alexanderweissman.com>
  */
+;(function($, window, document, undefined) {
+	"use strict";
 
-(function( $ )
-{
-    /**
-     * The plugin namespace, ie for $('.selector').ufTable(options)
-     *
-     * Also the id for storing the object state via $('.selector').data()
-     */
-    var PLUGIN_NS = 'ufTable';
-
-    var Plugin = function ( target, options )
-    {
-        this.$T = $(target);
-        var base = this;
-
-        /** #### OPTIONS #### */
-        this.options= $.extend(
-            true,               // deep extend
-            {
-                DEBUG           : false,
+    // Define plugin name and defaults.
+    var pluginName = "ufTable",
+        defaults = {
+            DEBUG           : false,
                 dataUrl         : "",
                 selectOptionsUrl: null,
                 msgTarget       : $('#alerts-page'),
@@ -123,10 +110,8 @@
                     // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
                     widgets: ['saveSort', 'sort2Hash', 'filter', 'pager', 'columnSelector', 'reflow2'],
                     widgetOptions : {
-                        columnSelector_container : this.$T.find('.menu-table-column-selector-options'),
                         columnSelector_layout : '<label><input type="checkbox"> <span>{name}</span></label>',
                         filter_cssFilter: 'form-control',
-                        filter_external : this.$T.find('.table-search input'),
                         filter_saveFilters : true,
                         filter_serversideFiltering : true,
                         filter_selectSource : {
@@ -159,7 +144,6 @@
 
                         // target the pager markup - see the HTML block below
                         pager_css: {
-                            container: this.$T.find('.tablesorter-pager'),
                             errorRow    : 'tablesorter-errorRow', // error information row
                             disabled    : 'disabled' // Note there is no period "." in front of this class name
                         },
@@ -195,423 +179,390 @@
                         sort2Hash_overrideSaveSort  : true, // default = false
                     }
                 }
-            },
-            options
-        );
-
-        this._init( target, options );
-
-        return this;
-    };
-
-    /**
-     * Get state variables for this table, as required by the AJAX data source: sorts, filters, size, page
-     */
-    Plugin.prototype.getTableStateVars = function ( table ) {
-        var base = this;
-
-        // Get sort column and order
-        var sortOrders = {
-            '0' : 'asc',
-            '1' : 'desc'
         };
 
-        // Set sorts in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
-        var sortList = table.config.sortList;
-        var sorts = {};
-        for (i = 0; i < sortList.length; i++) {
-            var columnIndex = sortList[i][0];
-            var columnDirection = sortOrders[sortList[i][1]];   // Converts to 'asc' or 'desc'
-            if (sortList[i]) {
-                var columnName = $(table.config.headerList[columnIndex]).data('column-name');
-                sorts[columnName] = columnDirection;
-            }
-        }
-
-        // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
-        var filterList = $.tablesorter.getFilters(table);
-        var filters = {};
-        for (i = 0; i < filterList.length; i++) {
-            if (filterList[i]) {
-                if (table.config.headerList[i]) {
-                    var columnName = $(table.config.headerList[i]).data('column-name');
-                } else {
-                    var columnName = base.options.filterAllField;
+    // Constructor
+    function Plugin (element, options) {
+        this.element = element[0];
+        this.$element = $(this.element);
+        var lateDefaults = {
+            tablesorter: {
+                widgetOptions: {
+                    columnSelector_container : this.$element.find('.menu-table-column-selector-options'),
+                    filter_external          : this.$element.find('.table-search input'),
+                    pager_css: {
+                        container: this.$element.find('.tablesorter-pager')
+                    }
                 }
-                
-                filters[columnName] = filterList[i];
             }
-        }
-
-        var state = {
-            size: table.config.pager.size,
-            page: table.config.pager.page,
-            sorts: sorts,
-            filters: filters
         };
+        this.settings = $.extend(true, {}, defaults, lateDefaults, options);
+        this._defaults = defaults;
+        this._name = pluginName;
 
-        return state;
-    };
-
-    /** #### INITIALISER #### */
-    Plugin.prototype._init = function ( target, options )
-    {
-        var base = this;
-        var $el = $(target);
-
-        base.options.tablesorter.widgetOptions.pager_ajaxUrl = base.options.dataUrl;
+        this.settings.tablesorter.widgetOptions.pager_ajaxUrl = this.settings.dataUrl;
 
         // Generate the URL for the AJAX request, with the relevant parameters
-        base.options.tablesorter.widgetOptions.pager_customAjaxUrl = function ( table, url ) {
-            return base._generateUrl(base, table, url);
-        };
+        this.settings.tablesorter.widgetOptions.pager_customAjaxUrl = $.proxy(function (table, url) {
+            return this._generateUrl(this, table, url);
+        }, this);
 
         // Callback to process the response from the AJAX request
-        base.options.tablesorter.widgetOptions.pager_ajaxProcessing = function ( data ) {
-            return base._processAjax(base, data);
-        };
+        this.settings.tablesorter.widgetOptions.pager_ajaxProcessing = $.proxy(function (data) {
+            return this._processAjax(this, data);
+        }, this);
 
         // Callback to display errors
-        base.options.tablesorter.widgetOptions.pager_ajaxError = function ( config, xhr, settings, exception ) {
-            return base._pagerAjaxError(base, config, xhr, settings, exception);
-        };
+        this.settings.tablesorter.widgetOptions.pager_ajaxError = $.proxy(function (config, xhr, settings, exception) {
+            return this._pagerAjaxError(this, config, xhr, settings, exception);
+        }, this);
 
-        base.options.tablesorter.widgetOptions.sort2Hash_encodeHash = function (config, tableId, component, value, rawValue) {
-            return base._encodeHash(base, config, tableId, component, value, rawValue);
-        };
+        this.settings.tablesorter.widgetOptions.sort2Hash_encodeHash = $.proxy(function (config, tableId, component, value, rawValue) {
+            return this._encodeHash(this, config, tableId, component, value, rawValue);
+        }, this);
 
-        base.options.tablesorter.widgetOptions.sort2Hash_decodeHash = function (config, tableId, component) {
-            return base._decodeHash(base, config, tableId, component);
-        };
+        this.settings.tablesorter.widgetOptions.sort2Hash_decodeHash = $.proxy(function (config, tableId, component) {
+            return this._decodeHash(this, config, tableId, component);
+        }, this);
 
-        base.options.tablesorter.widgetOptions.sort2Hash_cleanHash = function (config, tableId, component, hash ) {
-            return base._cleanHash(base, config, tableId, component, hash);
-        };
+        this.settings.tablesorter.widgetOptions.sort2Hash_cleanHash = $.proxy(function (config, tableId, component, hash) {
+            return this._cleanHash(this, config, tableId, component, hash);
+        }, this);
 
         // Set up tablesorter and pager
-        base.ts = $el.find('.tablesorter').tablesorter(base.options.tablesorter);
+        this.ts = this.$element.find('.tablesorter').tablesorter(this.settings.tablesorter);
 
         // Link CSV download button
-        $el.find('.js-download-table').on('click', function () {
-            var tableState = base.getTableStateVars(base.ts[0]);
+        this.$element.find('.js-download-table').on('click', $.proxy(function () {
+            var tableState = this.getTableStateVars(this.ts[0]);
             tableState['format'] = 'csv';
             delete tableState['page'];
             delete tableState['size'];
 
             // Merge in any additional request parameters
-            $.extend(tableState, base.options.addParams);
+            $.extend(tableState, this.settings.addParams);
 
             // Causes download to begin
-            window.location = base.options.dataUrl + '?' + $.param( tableState );
-        });
-
-        // Set up filter selects
-        base.ts.on('filterInit', function () {
-            base._buildFilterSelect(base.ts);
-        });
+            window.location = this.settings.dataUrl + '?' + $.param(tableState);
+        }, this));
 
         // Allow clicking on the labels in the table menu without closing the menu
-        $(base.options.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
+        $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
             e.stopPropagation();
         });
 
-        base.ts.on('pagerComplete', function () {
-            $el.trigger('pagerComplete.ufTable');
-        });
-    };
+        this.ts.on('pagerComplete', $.proxy(function () {
+            this.$element.trigger('pagerComplete.ufTable');
+        }, this));
 
-    /**
-     * Callback for generating the AJAX url.
-     */
-    Plugin.prototype._generateUrl = function ( base, table, url ) {
-        var tableState = base.getTableStateVars(table);
+        return this;
+    }
 
-        if (base.options.DEBUG) {
-            console.log(tableState);
-        }
+    // Functions
+    $.extend(Plugin.prototype, {
+        /**
+         * Get state variables for this table, as required by the AJAX data source: sorts, filters, size, page
+         */
+        getTableStateVars: function(table) {
+            var base = this;
 
-        $.extend(table.config.pager.ajaxObject.data, tableState);
+            // Get sort column and order
+            var sortOrders = {
+                '0' : 'asc',
+                '1' : 'desc'
+            };
 
-        // Merge in any additional parameters
-        $.extend(table.config.pager.ajaxObject.data, base.options.addParams);
-
-        return url;
-    };
-
-    /**
-     * Callback for processing data returned from the AJAX request and rendering the table cells.
-     */
-    Plugin.prototype._processAjax = function ( base, data ) {
-        var ts = base.ts[0];
-        var col, row, txt,
-            // make # column show correct value
-            index = ts.config.pager.page,
-            json = {},
-            rows = '';
-
-        if (data) {
-            size = data.rows.length;
-
-            // Build Handlebars templates based on column-template attribute in each column header
-            var columns = ts.config.headerList;
-            var templates = [];
-            for (i = 0; i < columns.length; i++) {
-                var columnName = $(columns[i]).data('column-template');
-                templates.push(Handlebars.compile($(columnName).html()));
+            // Set sorts in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
+            var sortList = table.config.sortList;
+            var sorts = {};
+            for (var i = 0; i < sortList.length; i++) {
+                var columnIndex = sortList[i][0];
+                var columnDirection = sortOrders[sortList[i][1]];   // Converts to 'asc' or 'desc'
+                if (sortList[i]) {
+                    var columnName = $(table.config.headerList[columnIndex]).data('column-name');
+                    sorts[columnName] = columnDirection;
+                }
             }
 
-            // Render table cells via Handlebars
-            for (row = 0; row < size; row++) {
-                rows += '<tr>';
-                var cellData = {
-                    'row'  : data.rows[ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
-                    'site' : site
-                };
+            // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
+            var filterList = $.tablesorter.getFilters(table);
+            var filters = {};
+            for (i = 0; i < filterList.length; i++) {
+                if (filterList[i]) {
+                    if (table.config.headerList[i]) {
+                        var columnName = $(table.config.headerList[i]).data('column-name');
+                    } else {
+                        var columnName = base.settings.filterAllField;
+                    }
+                    
+                    filters[columnName] = filterList[i];
+                }
+            }
 
-                for (i = 0; i < columns.length; i++) {
-                    rows += templates[i](cellData);
+            var state = {
+                size: table.config.pager.size,
+                page: table.config.pager.page,
+                sorts: sorts,
+                filters: filters
+            };
+
+            return state;
+        },
+        /**
+         * Callback for generating the AJAX url.
+         */
+        _generateUrl: function(base, table, url) {
+            var tableState = base.getTableStateVars(table);
+
+            if (base.settings.DEBUG) {
+                console.log(tableState);
+            }
+
+            $.extend(table.config.pager.ajaxObject.data, tableState);
+
+            // Merge in any additional parameters
+            $.extend(table.config.pager.ajaxObject.data, base.settings.addParams);
+
+            return url;
+        },
+        /**
+         * Callback for processing data returned from the AJAX request and rendering the table cells.
+         */
+        _processAjax: function(base, data) {
+            var ts = base.ts[0];
+            var col, row, txt,
+                // make # column show correct value
+                index = ts.config.pager.page,
+                json = {},
+                rows = '';
+
+            if (data) {
+                var size = data.rows.length;
+
+                // Build Handlebars templates based on column-template attribute in each column header
+                var columns = ts.config.headerList;
+                var templates = [];
+                for (var i = 0; i < columns.length; i++) {
+                    var columnName = $(columns[i]).data('column-template');
+                    templates.push(Handlebars.compile($(columnName).html()));
                 }
 
-                rows += '</tr>';
-            }
+                // Render table cells via Handlebars
+                for (var row = 0; row < size; row++) {
+                    rows += '<tr>';
+                    var cellData = {
+                        'row'  : data.rows[ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
+                        'site' : site
+                    };
 
-            json.total = data.count;  // Get total rows without pagination
-            json.filteredRows = data.count_filtered; // no filtering
-            json.rows = $(rows);
-        } else {
-            json.total = 0;
-            json.filteredRows = 0;
-            json.rows = "";
-        }
+                    for (i = 0; i < columns.length; i++) {
+                        rows += templates[i](cellData);
+                    }
 
-        return json;
-    };
+                    rows += '</tr>';
+                }
 
-    Plugin.prototype._pagerAjaxError = function(base, c, jqXHR, settings, exception) {
-        base._ajaxError(jqXHR);
-
-        // Let TS handle the in-table error message
-        return '';
-    };
-
-    Plugin.prototype._ajaxError = function(jqXHR) {
-        base = this;
-
-        if (typeof jqXHR === 'object') {
-            // Error messages
-            if ((typeof site !== 'undefined') && site.debug.ajax && jqXHR.responseText) {
-                document.write(jqXHR.responseText);
-                document.close();
+                json.total = data.count;  // Get total rows without pagination
+                json.filteredRows = data.count_filtered; // no filtering
+                json.rows = $(rows);
             } else {
-                if (base.options.DEBUG) {
-                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
-                }
-                // Display errors on failure
-                // TODO: ufAlerts widget should have a 'destroy' method
-                if (!base.options.msgTarget.data('ufAlerts')) {
-                    base.options.msgTarget.ufAlerts();
+                json.total = 0;
+                json.filteredRows = 0;
+                json.rows = "";
+            }
+
+            return json;
+        },
+        /**
+         * Handle pager ajax error
+         */
+        _pagerAjaxError: function(base, c, jqXHR, settings, exception) {
+            base._ajaxError(jqXHR);
+
+            // Let TS handle the in-table error message
+            return '';
+        },
+        /**
+         * Handle ajax error
+         */
+        _ajaxError: function(jqXHR) {
+            if (typeof jqXHR === 'object') {
+                // Error messages
+                if ((typeof site !== 'undefined') && site.debug.ajax && jqXHR.responseText) {
+                    document.write(jqXHR.responseText);
+                    document.close();
                 } else {
-                    base.options.msgTarget.ufAlerts('clear');
-                }
-
-                base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
-            }
-        }
-    };
-
-    /**
-     * Private method used to encode the current table state variables into a URL hash.
-     */
-    Plugin.prototype._encodeHash = function (base, config, tableId, component, value, rawValue) {
-        var wo = config.widgetOptions;
-        if ( component === 'filter' ) {
-            // rawValue is an array of filter values, numerically indexed
-            var encodedFilters = "";
-            var len = rawValue.length;
-            for ( index = 0; index < len; index++ ) {
-                if (rawValue[index]) {
-                    if (config.$headerIndexed[index]) {
-                        var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
-                    } else {
-                        var columnName = base.options.filterAllField;
+                    if (this.settings.DEBUG) {
+                        console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
                     }
-                    encodedFilters += '&filter[' + tableId + '][' + columnName + ']=' + encodeURIComponent(rawValue[index]);
+                    // Display errors on failure
+                    // TODO: ufAlerts widget should have a 'destroy' method
+                    if (!this.settings.msgTarget.data('ufAlerts')) {
+                        this.settings.msgTarget.ufAlerts();
+                    } else {
+                        this.settings.msgTarget.ufAlerts('clear');
+                    }
+
+                    this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
                 }
             }
-            return encodedFilters;
-        } else if ( component === 'sort' ) {
-            // rawValue is an array of sort pairs [columnNum, sortDirection]
-            var encodedFilters = "";
-            var len = rawValue.length;
-            for ( index = 0; index < len; index++ ) {
-                var columnNum = rawValue[index][0];
-                var sortDirection = rawValue[index][1];
-                var columnName = $(config.$headerIndexed[columnNum][0]).attr(wo.sort2Hash_headerTextAttr);
-                encodedFilters += '&sort[' + tableId + '][' + columnName + ']=' + wo.sort2Hash_directionText[sortDirection];
-            }
-            return encodedFilters;
-        }
-        return false;
-    };
-
-    /**
-     * Private method used to decode the current table state variables from the URL hash.
-     */
-    Plugin.prototype._decodeHash = function (base, config, tableId, component ) {
-        base = this;
-        var wo = config.widgetOptions;
-        var result;
-        // Convert hash into JSON object
-        var urlObject = $.String.deparam(window.location.hash);
-        delete urlObject[wo.sort2Hash_hash];  // Remove hash character
-        if ( component === 'filter' ) {
-            var decodedFilters = [];
-            // Extract filter names and values for the specified table
-            var filters = urlObject.filter ? urlObject.filter : [];
-            if (filters[tableId]) {
-                var filters = filters[tableId];
-                // Build a numerically indexed array of filter values
-                var len = config.$headerIndexed.length;
+        },
+        /**
+         * Private method used to encode the current table state variables into a URL hash.
+         */
+        _encodeHash: function(base, config, tableId, component, value, rawValue) {
+            var wo = config.widgetOptions;
+            if ( component === 'filter' ) {
+                // rawValue is an array of filter values, numerically indexed
+                var encodedFilters = "";
+                var len = rawValue.length;
                 for ( index = 0; index < len; index++ ) {
-                    var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
-                    if (filters[columnName] && filters[columnName] != base.options.filterAllField) {
-                        decodedFilters.push(filters[columnName]);
-                    } else {
-                        decodedFilters.push('');
+                    if (rawValue[index]) {
+                        if (config.$headerIndexed[index]) {
+                            var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
+                        } else {
+                            var columnName = base.settings.filterAllField;
+                        }
+                        encodedFilters += '&filter[' + tableId + '][' + columnName + ']=' + encodeURIComponent(rawValue[index]);
                     }
                 }
-                // Convert array of filter values to a delimited string
-                result = decodedFilters.join(wo.sort2Hash_separator);
-                // make sure to use decodeURIComponent on the result
-                return decodeURIComponent( result );
-            } else {
-                return '';
+                return encodedFilters;
+            } else if ( component === 'sort' ) {
+                // rawValue is an array of sort pairs [columnNum, sortDirection]
+                var encodedFilters = "";
+                var len = rawValue.length;
+                for (var index = 0; index < len; index++) {
+                    var columnNum = rawValue[index][0];
+                    var sortDirection = rawValue[index][1];
+                    var columnName = $(config.$headerIndexed[columnNum][0]).attr(wo.sort2Hash_headerTextAttr);
+                    encodedFilters += '&sort[' + tableId + '][' + columnName + ']=' + wo.sort2Hash_directionText[sortDirection];
+                }
+                return encodedFilters;
             }
-        }
-        return false;
-    };
-
-    /**
-     * Private method used to clean up URL hash.
-     */
-    Plugin.prototype._cleanHash = function (base, config, tableId, component, hash ) {
-        var wo = config.widgetOptions;
-        // Convert hash to JSON object
-        var urlObject = $.String.deparam(hash);
-        delete urlObject[wo.sort2Hash_hash];  // Remove hash character
-        // Remove specified component for specified table
-        if (urlObject[component]) {
-            if (urlObject[component][tableId]) {
-                delete urlObject[component][tableId];
-            }
-            // Delete entire component if no other tables remaining
-            if (jQuery.isEmptyObject(urlObject[component])) {
-                delete urlObject[component];
-            }
-        }
-        // Convert modified JSON object back into serialized representation
-        result = jQuery.param(urlObject);
-        return result.length ? result : '';
-    };
-
-    /**
-     * Private method used to build the filter select using data attributes for custom options
-     * Based on tablesorter.filter.getOptions
-     */
-    Plugin.prototype._buildFilterSelect = function (table) {
-        var base = this;
-
-        if (base.options.selectOptionsUrl) {
-            // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
-            var columns = table[0].config.headerList;
-            var selectColumnNames = [];
-            var selectColumnNumbers = {};
-            for (i = 0; i < columns.length; i++) {
-                var column = $(columns[i]);
-                // If the column is designated for filter-select, add it to the list of listables and map the column number
-                if (column.hasClass('filter-select')) {
-                    var columnName = column.data('column-name');
-                    selectColumnNames.push(columnName);
-                    selectColumnNumbers[columnName] = i;
+            return false;
+        },
+        /**
+         * Private method used to decode the current table state variables from the URL hash.
+         */
+        _decodeHash: function(base, config, tableId, component) {
+            base = this;
+            var wo = config.widgetOptions;
+            var result;
+            // Convert hash into JSON object
+            var urlObject = $.String.deparam(window.location.hash);
+            delete urlObject[wo.sort2Hash_hash];  // Remove hash character
+            if ( component === 'filter' ) {
+                var decodedFilters = [];
+                // Extract filter names and values for the specified table
+                var filters = urlObject.filter ? urlObject.filter : [];
+                if (filters[tableId]) {
+                    var filters = filters[tableId];
+                    // Build a numerically indexed array of filter values
+                    var len = config.$headerIndexed.length;
+                    for ( index = 0; index < len; index++ ) {
+                        var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
+                        if (filters[columnName] && filters[columnName] != base.settings.filterAllField) {
+                            decodedFilters.push(filters[columnName]);
+                        } else {
+                            decodedFilters.push('');
+                        }
+                    }
+                    // Convert array of filter values to a delimited string
+                    result = decodedFilters.join(wo.sort2Hash_separator);
+                    // make sure to use decodeURIComponent on the result
+                    return decodeURIComponent( result );
+                } else {
+                    return '';
                 }
             }
+            return false;
+        },
+        /**
+         * Private method used to clean up URL hash.
+         */
+        _cleanHash: function(base, config, tableId, component, hash) {
+            var wo = config.widgetOptions;
+            // Convert hash to JSON object
+            var urlObject = $.String.deparam(hash);
+            delete urlObject[wo.sort2Hash_hash];  // Remove hash character
+            // Remove specified component for specified table
+            if (urlObject[component]) {
+                if (urlObject[component][tableId]) {
+                    delete urlObject[component][tableId];
+                }
+                // Delete entire component if no other tables remaining
+                if (jQuery.isEmptyObject(urlObject[component])) {
+                    delete urlObject[component];
+                }
+            }
+            // Convert modified JSON object back into serialized representation
+            var result = jQuery.param(urlObject);
+            return result.length ? result : '';
+        },
+        /**
+         * Private method used to build the filter select using data attributes for custom options
+         * Based on tablesorter.filter.getOptions
+         */
+        _buildFilterSelect: function(table) {
+            var base = this;
 
-            // Make AJAX request for column select options
-            $.getJSON(base.options.selectOptionsUrl, {
-                lists: selectColumnNames
-            }).done(function(data, textStatus, jqXHR) {
-                // For each filter-select column, try to build the select menu from the corresponding entry in the AJAX response
-                $.each(selectColumnNumbers, function (columnName, columnNumber) {
-                    if (data[columnName]) {
-                        $.tablesorter.filter.buildSelect(table, columnNumber, data[columnName], true);
+            if (base.settings.selectOptionsUrl) {
+                // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
+                var columns = table[0].config.headerList;
+                var selectColumnNames = [];
+                var selectColumnNumbers = {};
+                for (i = 0; i < columns.length; i++) {
+                    var column = $(columns[i]);
+                    // If the column is designated for filter-select, add it to the list of listables and map the column number
+                    if (column.hasClass('filter-select')) {
+                        var columnName = column.data('column-name');
+                        selectColumnNames.push(columnName);
+                        selectColumnNumbers[columnName] = i;
                     }
+                }
+
+                // Make AJAX request for column select options
+                $.getJSON(base.settings.selectOptionsUrl, {
+                    lists: selectColumnNames
+                }).done(function(data, textStatus, jqXHR) {
+                    // For each filter-select column, try to build the select menu from the corresponding entry in the AJAX response
+                    $.each(selectColumnNumbers, function (columnName, columnNumber) {
+                        if (data[columnName]) {
+                            $.tablesorter.filter.buildSelect(table, columnNumber, data[columnName], true);
+                        }
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    base._ajaxError(jqXHR);
                 });
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                base._ajaxError(jqXHR);
-            });
+            }
+            return false;
         }
-        return false;
-    };
+    });
 
-    /**
-     * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
-     */
-    Plugin.prototype.DLOG = function ()
-    {
-        if (!this.DEBUG) return;
-        for (var i in arguments) {
-            console.log( PLUGIN_NS + ': ', arguments[i] );
+    // Handles instantiation and access to non-private methods.
+    $.fn[pluginName] = function(methodOrOptions) {
+        // Grab plugin instance
+        var instance = $(this).data(pluginName);
+        // If undefined or object, initalise plugin.
+        if (methodOrOptions === undefined || typeof methodOrOptions === 'object') {
+            // Only initalise if not previously done.
+            if (!instance) {
+                $(this).data(pluginName, new Plugin(this, methodOrOptions));
+            }
+            return this;
         }
-    };
-    Plugin.prototype.DWARN = function ()
-    {
-        this.DEBUG && console.warn( arguments );
-    };
-
-
-/*###################################################################################
- * JQUERY HOOK
- ###################################################################################*/
-
-    /**
-     * Generic jQuery plugin instantiation method call logic
-     *
-     * Method options are stored via jQuery's data() method in the relevant element(s)
-     * Notice, myActionMethod mustn't start with an underscore (_) as this is used to
-     * indicate private methods on the PLUGIN class.
-     */
-    $.fn[ PLUGIN_NS ] = function( methodOrOptions )
-    {
-        if (!$(this).length) {
-            return $(this);
+        // Otherwise ensure first parameter is a valid string, and is the name of an actual function.
+        else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
+            // Ensure not a private function
+            if (methodOrOptions.indexOf('_') !== 0) {
+                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+            }
+            else {
+                $.error( 'Method ' +  methodOrOptions + ' is private!' );
+            }
         }
-        var instance = $(this).data(PLUGIN_NS);
-
-        // CASE: action method (public method on PLUGIN class)
-        if ( instance
-                && methodOrOptions.indexOf('_') != 0
-                && instance[ methodOrOptions ]
-                && typeof( instance[ methodOrOptions ] ) == 'function' ) {
-
-            return instance[ methodOrOptions ]( Array.prototype.slice.call( arguments, 1 ) );
-
-
-        // CASE: argument is options object or empty = initialise
-        } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
-
-            instance = new Plugin( $(this), methodOrOptions );    // ok to overwrite if this is a re-init
-            $(this).data( PLUGIN_NS, instance );
-            return $(this);
-
-        // CASE: method called before init
-        } else if ( !instance ) {
-            $.error( 'Plugin must be initialised before using method: ' + methodOrOptions );
-
-        // CASE: invalid method
-        } else if ( methodOrOptions.indexOf('_') == 0 ) {
-            $.error( 'Method ' +  methodOrOptions + ' is private!' );
-        } else {
+        else {
             $.error( 'Method ' +  methodOrOptions + ' does not exist.' );
         }
     };
-})(jQuery);
+})(jQuery, window, document);

@@ -18,7 +18,7 @@
 - Implement reflow and column selector for tables (#670)
 - Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
 - ufAlerts will only auto-scroll when outside the viewport (even if only partially). Can be overriden with `scrollWhenVisible: true`. (#714)
-- Rebased ufCollection, and ufForm with new jQuery plugin template. (part of #646)
+- Rebased ufCollection, ufForm, ufModal, and ufTable with new jQuery plugin template. (part of #646)
 - Misc UI update
 - Added Twig blocks
 - Fix issue with duplicate query logs when using multiple databases
