@@ -67,6 +67,17 @@ class SprunjeTest extends TestCase
 
     function testSprunjeCallsBuilderWhereMethod()
     {
+        $connection = $this->getMockBuilder('Illuminate\Database\ConnectionInterface')->getMock();
+        $grammar = new \Illuminate\Database\Query\Grammars\Grammar;
+        $processor = $this->getMockBuilder('Illuminate\Database\Query\Processors\Processor')->getMock();
+        $builder = $this->getMockBuilder(Builder::class)
+                    ->setConstructorArgs([$connection, $grammar, $processor])
+                    ->setMethods(['orLike'])
+                    ->getMock();
+        
+        $builder->expects($this->once())->method('where');
+        //$builder->expects($this->once())->method('orLike');
+        /*
         $connection = m::mock('Illuminate\Database\ConnectionInterface');
         $grammar = new \Illuminate\Database\Query\Grammars\Grammar;
         $processor = m::mock('Illuminate\Database\Query\Processors\Processor');
@@ -75,6 +86,7 @@ class SprunjeTest extends TestCase
             
         $builder->shouldReceive('from')->atLeast()->times(0);
         $builder->shouldReceive('where')->atLeast()->times(1);
+        */
 
         $sprunje = new SprunjeWithFiltersStub([
             'filters' => [
