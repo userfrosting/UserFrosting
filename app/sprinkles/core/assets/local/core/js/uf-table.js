@@ -451,7 +451,7 @@
             // Convert hash into JSON object
             var urlObject = $.String.deparam(window.location.hash);
             delete urlObject[wo.sort2Hash_hash];  // Remove hash character
-            if ( component === 'filter' ) {
+            if (component === 'filter') {
                 var decodedFilters = [];
                 // Extract filter names and values for the specified table
                 var filters = urlObject.filter ? urlObject.filter : [];
@@ -459,7 +459,7 @@
                     var filters = filters[tableId];
                     // Build a numerically indexed array of filter values
                     var len = config.$headerIndexed.length;
-                    for ( index = 0; index < len; index++ ) {
+                    for (var index = 0; index < len; index++) {
                         var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
                         if (filters[columnName] && filters[columnName] != base.settings.filterAllField) {
                             decodedFilters.push(filters[columnName]);
@@ -511,7 +511,7 @@
                 var columns = table[0].config.headerList;
                 var selectColumnNames = [];
                 var selectColumnNumbers = {};
-                for (i = 0; i < columns.length; i++) {
+                for (var i = 0; i < columns.length; i++) {
                     var column = $(columns[i]);
                     // If the column is designated for filter-select, add it to the list of listables and map the column number
                     if (column.hasClass('filter-select')) {
