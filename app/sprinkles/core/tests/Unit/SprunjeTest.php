@@ -7,7 +7,6 @@
  */
 namespace UserFrosting\Tests\Unit;
 
-
 use Mockery as m;
 use UserFrosting\Tests\TestCase;
 use UserFrosting\Tests\DatabaseTransactions;

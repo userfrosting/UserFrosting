@@ -3,24 +3,23 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\System\Bakery\Migrations\v410;
 
-use UserFrosting\System\Bakery\Migrations\UFMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
+use UserFrosting\System\Bakery\Migrations\Migration;
 
 /**
  * Migration table migration
  * Version 4.1.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends UFMigration
+ * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class MigrationTable extends UFMigration
+class MigrationTable extends Migration
 {
     /**
      * {@inheritDoc}
@@ -30,7 +29,8 @@ class MigrationTable extends UFMigration
     /**
      * {@inheritDoc}
      */
-    public function up() {
+    public function up()
+    {
         $this->schema->create('migrations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('sprinkle');
@@ -52,7 +52,8 @@ class MigrationTable extends UFMigration
     /**
      * {@inheritDoc}
      */
-    public function down() {
+    public function down()
+    {
         $this->schema->drop('migrations');
     }
 }

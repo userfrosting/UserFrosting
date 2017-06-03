@@ -10,7 +10,7 @@ namespace UserFrosting\Sprinkle\Account\Model\Migrations\v400;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
-use UserFrosting\System\Bakery\Migrations\UFMigration;
+use UserFrosting\System\Bakery\Migrations\Migration;
 
 /**
  * Groups table migration
@@ -18,10 +18,10 @@ use UserFrosting\System\Bakery\Migrations\UFMigration;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends UFMigration
+ * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class GroupsTable extends UFMigration
+class GroupsTable extends Migration
 {
     /**
      * {@inheritDoc}

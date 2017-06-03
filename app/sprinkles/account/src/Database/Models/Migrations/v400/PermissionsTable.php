@@ -7,11 +7,11 @@
  */
 namespace UserFrosting\Sprinkle\Account\Model\Migrations\v400;
 
-use UserFrosting\System\Bakery\Migrations\UFMigration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\System\Bakery\Migrations\Migration;
 
 /**
  * Permissions table migration
@@ -20,10 +20,10 @@ use UserFrosting\Sprinkle\Account\Database\Models\Role;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends UFMigration
+ * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class PermissionsTable extends UFMigration
+class PermissionsTable extends Migration
 {
     /**
      * {@inheritDoc}
