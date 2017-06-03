@@ -3,22 +3,21 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\System\Bakery\Migrations;
 
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 use UserFrosting\System\Model\Migrations;
 use UserFrosting\System\Bakery\Traits\DatabaseTest;
-use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
  * Migration CLI Tools.

@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\System\Bakery\Migrations;
@@ -17,7 +16,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @abstract
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-abstract class UFMigration
+abstract class Migration
 {
     /**
      * @var Illuminate\Database\Schema\Builder $schema
@@ -46,7 +45,7 @@ abstract class UFMigration
     {
         $this->schema = $schema;
         $this->io = $io;
-   }
+    }
 
     abstract public function up();
     abstract public function down();

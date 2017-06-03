@@ -7,7 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Model\Migrations\v400;
 
-use UserFrosting\System\Bakery\Migrations\UFMigration;
+use UserFrosting\System\Bakery\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 
@@ -16,10 +16,10 @@ use Illuminate\Database\Schema\Builder;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends UFMigration
+ * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class ActivitiesTable extends UFMigration
+class ActivitiesTable extends Migration
 {
     /**
      * {@inheritDoc}
