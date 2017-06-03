@@ -26,8 +26,11 @@ return [
         "MASTER_NOT_EXISTS" => "You cannot register an account until the master account has been created!",
         "MY"                => "My Account",
 
-        "SESSION_COMPROMISED"       => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
-        "SESSION_COMPROMISED_TITLE" => "Your account may have been compromised",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"  => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
+            "TITLE"         => "Your account may have been compromised",
+            "TEXT"          => "Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href=\"{{url}}\">log in</a> and check your account for suspicious activity.  You may also wish to change your password."
+        ],
         "SESSION_EXPIRED"       => "Your session has expired.  Please sign in again.",
 
         "SETTINGS" => [

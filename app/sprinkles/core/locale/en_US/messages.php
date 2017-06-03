@@ -39,7 +39,10 @@ return [
 
     "HOME"  => "Home",
 
-    "LEGAL" => "Legal Policy",
+    "LEGAL" => [
+        "@TRANSLATION" => "Legal Policy",
+        "DESCRIPTION" => "Our legal policy applies to your usage of this website and our services."
+    ],
 
     "LOCALE" => [
         "@TRANSLATION" => "Locale"
@@ -56,7 +59,10 @@ return [
         "FIRST" => "First page",
         "LAST" => "Last page"
     ],
-    "PRIVACY" => "Privacy Policy",
+    "PRIVACY" => [
+        "@TRANSLATION" => "Privacy Policy",
+        "DESCRIPTION" => "Our privacy policy outlines what kind of information we collect from you and how we will use it."
+    ],
 
     "SLUG" => "Slug",
     "SLUG_CONDITION" => "Slug/Conditions",

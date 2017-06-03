@@ -5,7 +5,7 @@
 {# Overrides blocks in head of base template #}
 {% block page_title %}{{translate("HOME")}}{% endblock %}
 
-{% block page_description %}Welcome to UserFrosting!{% endblock %}
+{% block page_description %}{{translate("WELCOME_TO", {'title': site.title})}}{% endblock %}
 
 {% block body_matter %}
 

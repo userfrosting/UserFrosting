@@ -26,8 +26,11 @@ return [
         "MASTER_NOT_EXISTS"             => "Sie können kein neues Konto anlegen solange kein Root-Konto angelegt wurde!",
         "MY"                            => "Mein Konto",
 
-        "SESSION_COMPROMISED"           => "Ihre Sitzung wurde beeinträchtigt. Sie sollten sich auf allen Geräten abmelden, sich dann wieder anmelden und sicherstellen, dass Ihre Daten nicht manipuliert wurden.",
-        "SESSION_COMPROMISED_TITLE"     => "Ihr Konto wurde möglicherweise beeinträchtigt",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"              => "Ihre Sitzung wurde beeinträchtigt. Sie sollten sich auf allen Geräten abmelden, sich dann wieder anmelden und sicherstellen, dass Ihre Daten nicht manipuliert wurden.",
+            "TITLE"                     => "Ihr Konto wurde möglicherweise beeinträchtigt",
+            "TEXT"                      => "Möglicherweise ist es jemandem gelungen, Ihren Zugang zu dieser Seite zu übernehmen. Aus Sicherheitsgründen wurden Sie überall abgemeldet. Bitte <a href=\"{{url}}\">melden Sie sich neu an</a> und untersuchen Sie das Konto nach verdächtigen Aktivitäten. Außerdem sollten Sie Ihr Passwort ändern."
+        ],
         "SESSION_EXPIRED"               => "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
 
         "SETTINGS" => [
