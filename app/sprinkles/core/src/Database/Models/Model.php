@@ -11,11 +11,11 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 
 use UserFrosting\Sprinkle\Core\Database\Builder;
-use UserFrosting\Sprinkle\Core\Database\Model\Relations\BelongsToManyConstrained;
-use UserFrosting\Sprinkle\Core\Database\Model\Relations\BelongsToManyThrough;
-use UserFrosting\Sprinkle\Core\Database\Model\Relations\BelongsToManyUnique;
-use UserFrosting\Sprinkle\Core\Database\Model\Relations\HasManySyncable;
-use UserFrosting\Sprinkle\Core\Database\Model\Relations\MorphManySyncable;
+use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyConstrained;
+use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
+use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique;
+use UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable;
+use UserFrosting\Sprinkle\Core\Database\Relations\MorphManySyncable;
 
 /**
  * Model Class

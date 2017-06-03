@@ -227,6 +227,17 @@ abstract class Sprunje
     }
 
     /**
+     * Set the underlying QueryBuilder object.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+        return $this;
+    }
+
+    /**
      * Executes the sprunje query, applying all sorts, filters, and pagination.
      *
      * Returns an array containing `count` (the total number of rows, before filtering), `count_filtered` (the total number of rows after filtering),
@@ -383,7 +394,7 @@ abstract class Sprunje
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function applySorts()
+    public function applySorts()
     {
         foreach ($this->options['sorts'] as $name => $direction) {
             // Check that this sort is allowed
