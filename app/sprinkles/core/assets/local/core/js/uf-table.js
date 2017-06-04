@@ -246,6 +246,11 @@
             window.location = this.settings.dataUrl + '?' + $.param(tableState);
         }, this));
 
+        // Set up filter selects 
+        this.ts.on('filterInit', $.proxy(function () {
+            this._buildFilterSelect(this.ts); 
+        }, this)); 
+
         // Allow clicking on the labels in the table menu without closing the menu
         $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
             e.stopPropagation();
