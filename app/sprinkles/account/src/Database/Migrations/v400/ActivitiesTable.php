@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Model\Migrations\v400;
+namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use UserFrosting\System\Bakery\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Model\Migrations\v400;
+namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
@@ -29,8 +29,8 @@ class PermissionsTable extends Migration
      * {@inheritDoc}
      */
     public $dependencies = [
-        '\UserFrosting\Sprinkle\Account\Model\Migrations\v400\RolesTable',
-        '\UserFrosting\Sprinkle\Account\Model\Migrations\v400\PermissionRolesTable'
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
+        '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionRolesTable'
     ];
 
     /**
