@@ -336,7 +336,7 @@ class Migrator
             $version = str_replace("/$className.php", "", $migration);
 
             // Reconstruct the classname
-            $className = "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Model\Migrations\\".$version."\\".$className;
+            $className = "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Database\Migrations\\".$version."\\".$className;
 
             return $className;
         });
@@ -526,7 +526,7 @@ class Migrator
                 $sprinkleName .
                 \UserFrosting\DS .
                 \UserFrosting\SRC_DIR_NAME .
-                "/Model/Migrations/";
+                "/Database/Migrations/";
 
         return $path;
     }
