@@ -8,7 +8,7 @@
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use UserFrosting\Sprinkle\Core\Model\Relations\Concerns\Syncable;
+use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Syncable;
 
 /**
  * A HasMany relationship that supports a `sync` method.

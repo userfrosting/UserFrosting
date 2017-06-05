@@ -65,7 +65,7 @@ abstract class Model extends LaravelModel
      * @param  string  $foreignKey
      * @param  string  $relatedKey
      * @param  string  $relation
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyConstrained
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyConstrained
      */
     public function belongsToManyConstrained($related, $constraintKey, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
     {
@@ -111,7 +111,7 @@ abstract class Model extends LaravelModel
      * @param  string  $secondRelatedKey
      * @param  string  $throughRelation
      * @param  string  $relation
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough
      */
     public function belongsToManyThrough(
         $related,
@@ -173,7 +173,7 @@ abstract class Model extends LaravelModel
      * Define a unique many-to-many relationship.  Similar to a regular many-to-many relationship, but removes duplicate child objects.
      *
      * {@inheritDoc}
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyUnique
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique
      */
     public function belongsToManyUnique($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
     {
@@ -219,7 +219,7 @@ abstract class Model extends LaravelModel
      * Overrides the default Eloquent hasMany relationship to return a HasManySyncable.
      *
      * {@inheritDoc}
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\HasManySyncable
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
@@ -238,7 +238,7 @@ abstract class Model extends LaravelModel
      * Overrides the default Eloquent morphMany relationship to return a MorphManySyncable.
      *
      * {@inheritDoc}
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\MorphManySyncable
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\MorphManySyncable
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
     {

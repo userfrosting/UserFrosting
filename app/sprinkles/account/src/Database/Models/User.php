@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Account\Database\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use UserFrosting\Sprinkle\Account\Model\Collection\UserCollection;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
@@ -371,7 +370,7 @@ class User extends Model
     /**
      * Get all of the permissions this user has, via its roles.
      *
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough
      */
     public function permissions()
     {
@@ -406,7 +405,7 @@ class User extends Model
     /**
      * Get this user's roles, but only those that have a particular permission (specified elsewhere in the query).
      *
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyConstrained
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyConstrained
      */
     public function rolesWithPermission()
     {

@@ -100,7 +100,7 @@ class Permission extends Model
     /**
      * Get a list of users who have this permission, along with a list of roles through which each user has the permission.
      *
-     * @return \UserFrosting\Sprinkle\Core\Model\Relations\BelongsToManyThrough
+     * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough
      */
     public function users()
     {

@@ -8,7 +8,7 @@
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use UserFrosting\Sprinkle\Core\Model\Relations\Concerns\Syncable;
+use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Syncable;
 
 /**
  * A MorphMany relationship that constrains on the value of an additional foreign key in the pivot table.
