@@ -176,6 +176,13 @@
             }
         });
 
+        // Detect changes to element attributes
+        this.$element.attrchange({
+            callback: $.proxy(function (event) {
+                this.element = event.target;
+            }, this)
+        });
+
         return this;
     }
 
@@ -262,20 +269,3 @@
         }
     };
 })(jQuery, window, document);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
