@@ -204,53 +204,47 @@
         this._defaults = defaults;
         this._name = pluginName;
 
+        // Detect changes to element attributes
+        this.$element.attrchange({ callback: function (event) { this.element = event.target; }.bind(this) });
+
         // Plugin variables
         this.settings.pager.ajaxUrl = this.settings.dataUrl;
 
         // Generate the URL for the AJAX request, with the relevant parameters
-        this.settings.pager.customAjaxUrl = $.proxy(function (table, url) {
-            return this._generateUrl(this, table, url);
-        }, this);
+        this.settings.pager.customAjaxUrl = this._generateUrl.bind(this);
 
         // Callback to process the response from the AJAX request
-        this.settings.pager.ajaxProcessing = $.proxy(function (data) {
-            return this._processAjax(this, data);
-        }, this);
+        this.settings.pager.ajaxProcessing = this._processAjax.bind(this);
 
         // Callback to display errors
-        this.settings.pager.ajaxError = $.proxy(function (config, xhr, settings, exception) {
-            return this._ajaxError(this, config, xhr, settings, exception);
-        }, this);
+        this.settings.pager.ajaxError = this._ajaxError.bind(this);
 
-        this.settings.tablesorter.widgetOptions.sort2Hash_encodeHash = $.proxy(function (config, tableId, component, value, rawValue) {
-            return this._encodeHash(this, config, tableId, component, value, rawValue);
-        }, this);
+        // Callback to encode URL friendly hash
+        this.settings.tablesorter.widgetOptions.sort2Hash_encodeHash = this._encodeHash.bind(this);
 
-        this.settings.tablesorter.widgetOptions.sort2Hash_decodeHash = $.proxy(function (config, tableId, component) {
-            return this._decodeHash(this, config, tableId, component);
-        }, this);
+        // Callback to decode hash from URL
+        this.settings.tablesorter.widgetOptions.sort2Hash_decodeHash = this._decodeHash.bind(this);
 
-        this.settings.tablesorter.widgetOptions.sort2Hash_cleanHash = $.proxy(function (config, tableId, component, hash ) {
-            return this._cleanHash(this, config, tableId, component, hash);
-        }, this);
+        // Callback to clean URL hash
+        this.settings.tablesorter.widgetOptions.sort2Hash_cleanHash = this._cleanHash.bind(this);
 
         // Set up tablesorter and pager
         this.ts = this.$element.find('.tablesorter').tablesorter(this.settings.tablesorter);
         this.ts.tablesorterPager(this.settings.pager);
 
         // Link CSV download button
-        this.$element.find('.js-download-table').on('click', $.proxy(function () {
+        this.$element.find('.js-download-table').on('click', function () {
             var tableState = this.getTableStateVars(this.ts[0]);
-            tableState['format'] = 'csv';
-            delete tableState['page'];
-            delete tableState['size'];
+            tableState.format = 'csv';
+            delete tableState.page;
+            delete tableState.size;
 
             // Merge in any additional request parameters
             $.extend(tableState, this.settings.addParams);
 
             // Causes download to begin
             window.location = this.settings.dataUrl + '?' + $.param(tableState);
-        }, this));
+        }.bind(this));
 
         // Allow clicking on the labels in the table menu without closing the menu
         $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
@@ -260,6 +254,13 @@
         this.ts.on('pagerComplete', $.proxy(function () {
             this.$element.trigger('pagerComplete.ufTable');
         }, this));
+
+        // Detect changes to element attributes
+        this.$element.attrchange({
+            callback: function (event) {
+                this.element = event.target;
+            }.bind(this)
+        });
 
         return this;
     }
@@ -281,11 +282,12 @@
             // Set sorts in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
             var sortList = table.config.sortList;
             var sorts = {};
+            var columnName; // Due to intermidate scoping, we declare once, right now.
             for (var i = 0; i < sortList.length; i++) {
                 var columnIndex = sortList[i][0];
                 var columnDirection = sortOrders[sortList[i][1]];   // Converts to 'asc' or 'desc'
                 if (sortList[i]) {
-                    var columnName = $(table.config.headerList[columnIndex]).data('column-name');
+                    columnName = $(table.config.headerList[columnIndex]).data('column-name');
                     sorts[columnName] = columnDirection;
                 }
             }
@@ -296,9 +298,9 @@
             for (i = 0; i < filterList.length; i++) {
                 if (filterList[i]) {
                     if (table.config.headerList[i]) {
-                        var columnName = $(table.config.headerList[i]).data('column-name');
+                        columnName = $(table.config.headerList[i]).data('column-name');
                     } else {
-                        var columnName = base.settings.filterAllField;
+                        columnName = base.settings.filterAllField;
                     }
                     
                     filters[columnName] = filterList[i];
@@ -317,25 +319,25 @@
         /**
          * Callback for generating the AJAX url.
          */
-        _generateUrl: function(base, table, url) {
-            var tableState = base.getTableStateVars(table);
+        _generateUrl: function(table, url) {
+            var tableState = this.getTableStateVars(table);
 
-            if (base.settings.DEBUG) {
+            if (this.settings.DEBUG) {
                 console.log(tableState);
             }
 
             $.extend(table.config.pager.ajaxObject.data, tableState);
 
             // Merge in any additional parameters
-            $.extend(table.config.pager.ajaxObject.data, base.settings.addParams);
+            $.extend(table.config.pager.ajaxObject.data, this.settings.addParams);
 
             return url;
         },
         /**
          * Callback for processing data returned from the AJAX request and rendering the table cells.
          */
-        _processAjax: function(base, data) {
-            var ts = base.ts[0];
+        _processAjax: function(data) {
+            var ts = this.ts[0];
             var col, row, txt,
                 // make # column show correct value
                 index = ts.config.pager.page,
@@ -354,7 +356,7 @@
                 }
 
                 // Render table cells via Handlebars
-                for (var row = 0; row < size; row++) {
+                for (row = 0; row < size; row++) {
                     rows += '<tr>';
                     var cellData = {
                         'row'  : data.rows[ row ],       // It is safe to use the data from the API because Handlebars escapes HTML
@@ -382,25 +384,25 @@
         /**
          * Handle ajax error
          */
-        _ajaxError: function(base, c, jqXHR, settings, exception) {
+        _ajaxError: function(c, jqXHR, settings, exception) {
             if (typeof jqXHR === 'object') {
                 // Error messages
                 if ((typeof site !== 'undefined') && site.debug.ajax && jqXHR.responseText) {
                     document.write(jqXHR.responseText);
                     document.close();
                 } else {
-                    if (base.settings.DEBUG) {
+                    if (this.settings.DEBUG) {
                         console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
                     }
                     // Display errors on failure
-                    // TODO: ufAlerts widget should have a 'destroy' method
-                    if (!base.settings.msgTarget.data('ufAlerts')) {
-                        base.settings.msgTarget.ufAlerts();
+                    // TODO: ufAlerts has a 'destroy' method, should it be used here?
+                    if (!this.settings.msgTarget.data('ufAlerts')) {
+                        this.settings.msgTarget.ufAlerts();
                     } else {
-                        base.settings.msgTarget.ufAlerts('clear');
+                        this.settings.msgTarget.ufAlerts('clear');
                     }
 
-                    base.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
+                    this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
                 }
             }
 
@@ -410,18 +412,19 @@
         /**
          * Private method used to encode the current table state variables into a URL hash.
          */
-        _encodeHash: function(base, config, tableId, component, value, rawValue) {
+        _encodeHash: function(config, tableId, component, value, rawValue) {
+            var columnName, len, encodedFilters, index; // Due to intermidate scoping, we declare once, right now.
             var wo = config.widgetOptions;
             if ( component === 'filter' ) {
                 // rawValue is an array of filter values, numerically indexed
-                var encodedFilters = "";
-                var len = rawValue.length;
-                for ( index = 0; index < len; index++ ) {
+                encodedFilters = "";
+                len = rawValue.length;
+                for (index = 0; index < len; index++ ) {
                     if (rawValue[index]) {
                         if (config.$headerIndexed[index]) {
-                            var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
+                            columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
                         } else {
-                            var columnName = base.settings.filterAllField;
+                            columnName = this.settings.filterAllField;
                         }
                         encodedFilters += '&filter[' + tableId + '][' + columnName + ']=' + encodeURIComponent(rawValue[index]);
                     }
@@ -429,12 +432,12 @@
                 return encodedFilters;
             } else if ( component === 'sort' ) {
                 // rawValue is an array of sort pairs [columnNum, sortDirection]
-                var encodedFilters = "";
-                var len = rawValue.length;
-                for (var index = 0; index < len; index++) {
+                encodedFilters = "";
+                len = rawValue.length;
+                for (index = 0; index < len; index++) {
                     var columnNum = rawValue[index][0];
                     var sortDirection = rawValue[index][1];
-                    var columnName = $(config.$headerIndexed[columnNum][0]).attr(wo.sort2Hash_headerTextAttr);
+                    columnName = $(config.$headerIndexed[columnNum][0]).attr(wo.sort2Hash_headerTextAttr);
                     encodedFilters += '&sort[' + tableId + '][' + columnName + ']=' + wo.sort2Hash_directionText[sortDirection];
                 }
                 return encodedFilters;
@@ -444,8 +447,7 @@
         /**
          * Private method used to decode the current table state variables from the URL hash.
          */
-        _decodeHash: function(base, config, tableId, component) {
-            base = this;
+        _decodeHash: function(config, tableId, component) {
             var wo = config.widgetOptions;
             var result;
             // Convert hash into JSON object
@@ -456,12 +458,12 @@
                 // Extract filter names and values for the specified table
                 var filters = urlObject.filter ? urlObject.filter : [];
                 if (filters[tableId]) {
-                    var filters = filters[tableId];
+                    filters = filters[tableId];
                     // Build a numerically indexed array of filter values
                     var len = config.$headerIndexed.length;
-                    for ( index = 0; index < len; index++ ) {
+                    for (var index = 0; index < len; index++ ) {
                         var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
-                        if (filters[columnName] && filters[columnName] != base.settings.filterAllField) {
+                        if (filters[columnName] && filters[columnName] != this.settings.filterAllField) {
                             decodedFilters.push(filters[columnName]);
                         } else {
                             decodedFilters.push('');
@@ -480,7 +482,7 @@
         /**
          * Private method used to clean up URL hash.
          */
-        _cleanHash: function(base, config, tableId, component, hash) {
+        _cleanHash: function(config, tableId, component, hash) {
             var wo = config.widgetOptions;
             // Convert hash to JSON object
             var urlObject = $.String.deparam(hash);
@@ -553,12 +555,13 @@
             // Remove duplicates in `arry` since using an array of objects
             // won't do it automatically
             var arr = {};
-
-            for ( var i=0, len=arry.length; i < len; i++ ) {
+            
+            len = arry.length;
+            for (var i = 0; i < len; i++) {
                 arr[arry[i].text] = arry[i];
             }
 
-            arry = new Array();
+            arry = new [];
             for ( var key in arr ) {
                 arry.push(arr[key]);
             }

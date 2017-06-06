@@ -25,6 +25,9 @@
         this._defaults = defaults;
         this._name = pluginName;
 
+        // Detect changes to element attributes
+        this.$element.attrchange({ callback: function (event) { this.element = event.target; }.bind(this) });
+
         // Plugin initalisation
         this.modal = null;
 
