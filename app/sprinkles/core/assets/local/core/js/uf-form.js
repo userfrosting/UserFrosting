@@ -53,15 +53,11 @@
         this.element = element[0];
         this.$element = $(this.element);
         var lateDefaults = {
-            reqParams: {
-                type    : this.$element.attr('method'),
-                url     : this.$element.attr('action')
-            },
             encType  : (typeof this.$element.attr('enctype') !== 'undefined') ? this.$element.attr('enctype') : '',
             msgTarget: this.$element.find('.js-form-alerts:first')
         };
         this.settings = $.extend(true, {}, defaults, lateDefaults, options);
-        this._defaults = defaults;
+        this._defaults = $.extend(true, {}, defaults, lateDefaults);
         this._name = pluginName;
 
         // Detect changes to element attributes
@@ -90,19 +86,25 @@
                     submitButton.html(this.settings.submittingText);
                 }
 
+                // Get basic request parameters.
+                var reqParams = {
+                    type: this.$element.attr('method'),
+                    url: this.$element.attr('action')
+                };
+
                 // Get the form encoding type from the users HTML, and chose an encoding form.
                 if (this.settings.encType.toLowerCase() === "multipart/form-data" ) {
-                    this.settings.reqParams.data = this._multipartData(form);
+                    reqParams.data = this._multipartData(form);
                     // add additional params to fix jquery errors
-                    this.settings.reqParams.cache = false;
-                    this.settings.reqParams.contentType = false;
-                    this.settings.reqParams.processData = false;
+                    reqParams.cache = false;
+                    reqParams.contentType = false;
+                    reqParams.processData = false;
                 } else {
-                    this.settings.reqParams.data = this._urlencodeData(form);
+                    reqParams.data = this._urlencodeData(form);
                 }
 
                 // Submit the form via AJAX
-                $.ajax(this.settings.reqParams).then(
+                $.ajax(reqParams).then(
                     // Submission successful
                     $.proxy(function(data, textStatus, jqXHR) {
                         // Restore button text and re-enable submit button
