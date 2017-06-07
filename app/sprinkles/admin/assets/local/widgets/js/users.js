@@ -29,10 +29,11 @@ function attachUserForm() {
  * Enable/disable password fields when switch is toggled
  */
 function toggleChangePasswordMode(el, userName, changePasswordMode) {
+    var form = el.find("form");
     if (changePasswordMode == 'link') {
         $(".controls-password").find("input[type='password']").prop('disabled', true);
         // Form submits password reset request
-        el.find("form").attr({
+        form.attr({
             method: 'POST',
             action: site.uri.public + '/api/users/u/' + userName + '/password-reset'
         });
@@ -54,7 +55,7 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
     } else {
         $(".controls-password").find("input[type='password']").prop('disabled', false);
         // Form submits direct password update
-        el.find("form").attr({
+        form.attr({
             method: 'PUT',
             action: site.uri.public + '/api/users/u/' + userName + '/password'
         });
