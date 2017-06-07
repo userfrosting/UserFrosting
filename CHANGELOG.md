@@ -1,5 +1,8 @@
 # Change Log
 
+## v.4.0.22-Alpha
+- Fix issue where 'Change User Password' popup form couldn't handle specifying a new password.
+
 ## v.4.0.21-Alpha
 - Implement reflow and column selector for tables (#670)
 - Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
