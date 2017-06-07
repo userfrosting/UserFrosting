@@ -50,7 +50,8 @@ return [
 
     "PAGINATION" => [
         "GOTO" => "ข้ามไปยังหน้า",
-        "SHOW" => "แสดง"
+        "SHOW" => "แสดง",
+        "OUTPUT" => "{startRow} to {endRow} of {filteredRows} ({totalRows})"
     ],
     "PRIVACY" => "นโยบายความเป็นส่วนตัว",
 

@@ -50,7 +50,8 @@ return [
 
     "PAGINATION" => [
         "GOTO" => "انتقال إلى الصفحة",
-        "SHOW" => "تبين"
+        "SHOW" => "تبين",
+        "OUTPUT" => "{startRow} to {endRow} of {filteredRows} ({totalRows})"
     ],
     "PRIVACY" => "سياسة الخصوصية",
 

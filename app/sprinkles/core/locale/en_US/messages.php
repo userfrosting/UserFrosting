@@ -50,7 +50,12 @@ return [
 
     "PAGINATION" => [
         "GOTO" => "Jump to Page",
-        "SHOW" => "Show"
+        "SHOW" => "Show",
+
+        // Paginator
+        // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+        // also {page:input} & {startRow:input} will add a modifiable input in place of the value
+        "OUTPUT" => "{startRow} to {endRow} of {filteredRows} ({totalRows})"
     ],
     "PRIVACY" => "Privacy Policy",
 

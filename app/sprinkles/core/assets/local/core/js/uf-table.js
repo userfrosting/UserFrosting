@@ -246,10 +246,10 @@
             window.location = this.settings.dataUrl + '?' + $.param(tableState);
         }, this));
 
-        // Set up filter selects 
+        // Set up filter selects
         this.ts.on('filterInit', $.proxy(function () {
-            this._buildFilterSelect(this.ts); 
-        }, this)); 
+            this._buildFilterSelect(this.ts);
+        }, this));
 
         // Allow clicking on the labels in the table menu without closing the menu
         $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
@@ -299,7 +299,7 @@
                     } else {
                         var columnName = base.settings.filterAllField;
                     }
-                    
+
                     filters[columnName] = filterList[i];
                 }
             }
@@ -370,6 +370,7 @@
                 json.total = data.count;  // Get total rows without pagination
                 json.filteredRows = data.count_filtered; // no filtering
                 json.rows = $(rows);
+                json.output = data.output;
             } else {
                 json.total = 0;
                 json.filteredRows = 0;

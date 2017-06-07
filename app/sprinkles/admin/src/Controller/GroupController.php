@@ -226,7 +226,10 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $sprunje = $classMapper->createInstance('group_sprunje', $classMapper, $params);
+        /** @var UserFrosting\I18n\MessageTranslator $translator */
+        $translator = $this->ci->translator;
+
+        $sprunje = $classMapper->createInstance('group_sprunje', $classMapper, $translator, $params);
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
@@ -428,7 +431,10 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $params);
+        /** @var UserFrosting\I18n\MessageTranslator $translator */
+        $translator = $this->ci->translator;
+
+        $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $translator, $params);
         $sprunje->extendQuery(function ($query) use ($group) {
             return $query->where('group_id', $group->id);
         });

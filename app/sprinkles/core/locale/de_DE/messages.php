@@ -50,7 +50,8 @@ return [
 
     "PAGINATION" => [
         "GOTO"                          => "Gehe zu Seite",
-        "SHOW"                          => "Anzeigen"
+        "SHOW"                          => "Anzeigen",
+        "OUTPUT"                        => "{startRow} to {endRow} of {filteredRows} ({totalRows})"
     ],
     "PRIVACY"                           => "Datenschutz-Bestimmungen",
 
