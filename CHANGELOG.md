@@ -2,6 +2,7 @@
 
 ## v.4.0.22-Alpha
 - Fix issue where 'Change User Password' popup form couldn't handle specifying a new password.
+- Fixed issue where ufModal's could not be opened if a previous ufModal had just been closed. (#732)
 
 ## v.4.0.21-Alpha
 - Implement reflow and column selector for tables (#670)

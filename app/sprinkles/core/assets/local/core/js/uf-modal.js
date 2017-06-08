@@ -53,9 +53,7 @@
                 this.modal.modal('show');
 
                 // Bind modal to be deleted when closed
-                this.modal.on("hidden.bs.modal", $.proxy(function () {
-                    this.destroy();
-                }), this);
+                this.modal.on("hidden.bs.modal", function () { this.destroy(); }.bind(this));
 
                 this.$element.trigger('renderSuccess.ufModal');
                 return data;
@@ -107,13 +105,13 @@
          * Destroys instance
          */
         destroy: function() {
-            // Remove the modal from the selector
+            // Remove the modal from the DOM
             if (this.modal) {
                 this.modal.remove();
             }
 
             // Unbind any bound events
-            this.$element.off('.' + this.pluginName);
+            this.modal.off('.' + this.pluginName);
 
             // Grab jQuery wrapped element before plugin destruction
             var $element = this.$element;
