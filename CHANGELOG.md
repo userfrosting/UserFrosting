@@ -13,6 +13,7 @@
 - Support for allowing Sprinkles to register middleware (#617)
 - Automatically load Sprinkler service providers (see #636)
 - Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
+- Rebased ufTable and ufModal with new jQuery plugin template. (part of #646)
 
 ## v.4.0.22-Alpha
 - Fix issue where 'Change User Password' popup form couldn't handle specifying a new password.

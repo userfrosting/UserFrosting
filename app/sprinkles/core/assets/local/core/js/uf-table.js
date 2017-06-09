@@ -135,7 +135,7 @@
 
                         // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
                         // table row set to a height to compensate; default is false
-                        pager_fixedHeight: true,
+                        pager_fixedHeight: false,
 
                         // remove rows from the table to speed up the sort of large tables.
                         // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
@@ -143,7 +143,7 @@
 
                         // target the pager markup - see the HTML block below
                         pager_css: {
-                            errorRow    : 'tablesorter-errorRow', // error information row
+                            errorRow    : 'uf-table-error-row', // error information row
                             disabled    : 'disabled' // Note there is no period "." in front of this class name
                         },
 
@@ -253,6 +253,26 @@
         this.ts.on('pagerComplete', $.proxy(function () {
             this.$element.trigger('pagerComplete.ufTable');
         }, this));
+
+        // Show info messages when there are no rows/no results
+        this.ts.on('filterEnd filterReset pagerComplete', $.proxy(function () {
+            var table = this.ts[0];
+            var infoMessages = this.$element.find('.uf-table-info-messages');
+            if (table.config.pager) {
+                infoMessages.html('');
+                var fr = table.config.pager.filteredRows;
+                if (fr === 0) {
+                    infoMessages.html($(table).data('message-empty-rows'));
+                }
+            }
+        }, this));
+
+        // Detect changes to element attributes
+        this.$element.attrchange({
+            callback: function (event) {
+                this.element = event.target;
+            }.bind(this)
+        });
 
         return this;
     }
