@@ -2,6 +2,14 @@
  # Requires tablesorter-custom.css for proper styling of pager elements.
 #}
 
+{# Set some default values for the child template. #}
+{% set table = {
+        'id': "uf-table",
+        'message_empty_rows': translate('NO_RESULTS'),
+        'sortlist': "[[0, 0]]"
+    } | merge(table)
+%}
+
 <div class="table-search form-group has-feedback">
     <input type="search" class="form-control" data-column="all">
     <i class="fa fa-search form-control-icon" aria-hidden="true"></i>
@@ -15,18 +23,25 @@
         {# Define your Handlebars cell templates in this block in your child template #}
     {% endblock %}
 
-    <div class="pager pager-lg tablesorter-pager">
-        <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
-        <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
-        <span class="pagedisplay"></span> {# this can be any element, including an input #}
-        <span class="pager-control next" title="Next page"><i class="fa fa-angle-right"></i></span>
-        <span class="pager-control last" title= "Last page"><i class="fa fa-angle-double-right"></i></span>
-        <br><br>
-        {{translate("PAGINATION.GOTO")}}: <select class="gotoPage"></select> &bull; {{translate("PAGINATION.SHOW")}}:
-        <select class="pagesize">
-        {% for count in pager.take|default([5, 10, 50, 100]) %}
-            <option value="{{count}}">{{count}}</option>
-        {% endfor %}
-        </select>
-    </div>
+    {% block table_info %}
+        <div class="uf-table-info-messages">
+        </div>
+    {% endblock %}
+
+    {% block table_pager_controls %}
+        <div class="pager pager-lg tablesorter-pager">
+            <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
+            <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
+            <span class="pagedisplay"></span> {# this can be any element, including an input #}
+            <span class="pager-control next" title="Next page"><i class="fa fa-angle-right"></i></span>
+            <span class="pager-control last" title= "Last page"><i class="fa fa-angle-double-right"></i></span>
+            <br><br>
+            {{translate("PAGINATION.GOTO")}}: <select class="gotoPage"></select> &bull; {{translate("PAGINATION.SHOW")}}:
+            <select class="pagesize">
+            {% for count in pager.take|default([5, 10, 50, 100]) %}
+                <option value="{{count}}">{{count}}</option>
+            {% endfor %}
+            </select>
+        </div>
+    {% endblock %}
 </div>

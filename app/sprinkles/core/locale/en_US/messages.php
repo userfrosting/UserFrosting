@@ -49,6 +49,7 @@ return [
 
     "NAME"  => "Name",
     "NAVIGATION" => "Navigation",
+    "NO_RESULTS" => "Sorry, we've got nothing here.",
 
     "PAGINATION" => [
         "GOTO" => "Jump to Page",
