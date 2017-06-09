@@ -198,7 +198,7 @@
                     // class added to arrows when at the extremes; see the "updateArrows" option
                     // (i.e. prev/first arrows are "disabled" when on the first page)
                     cssDisabled    : 'disabled', // Note there is no period "." in front of this class name
-                    cssErrorRow    : 'tablesorter-errorRow' // error information row
+                    cssErrorRow    : 'uf-table-error-row' // error information row
                 }
             },
             options
@@ -317,7 +317,27 @@
         });
 
         base.ts.on('pagerComplete', function () {
-            $el.trigger('pagerComplete.ufTable');
+            $el.trigger('pagerComplete.ufTable'); 
+        });
+
+        // Show info messages when there are no rows/no results
+        base.ts.on('filterEnd filterReset pagerComplete', function () {
+            var table = base.ts[0];
+            var infoMessages = base.$T.find('.uf-table-info-messages');
+            if (table.config.pager) {
+                infoMessages.html('');
+                var fr = table.config.pager.filteredRows;
+                if (fr === 0) {
+                    infoMessages.html($(table).data('message-empty-rows'));
+                }
+            }
+        });
+
+        // Detect changes to element attributes
+        this.$T.attrchange({
+            callback: function (event) {
+                this.element = event.target;
+            }.bind(this)
         });
     };
 

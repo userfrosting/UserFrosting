@@ -2,6 +2,7 @@
 
 ## v.4.0.22-Alpha
 - Fix issue where 'Change User Password' popup form couldn't handle specifying a new password.
+- Display message when there are no results in `ufTable`
 
 ## v.4.0.21-Alpha
 - Implement reflow and column selector for tables (#670)
