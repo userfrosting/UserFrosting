@@ -225,10 +225,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
-
-        $sprunje = $classMapper->createInstance('role_sprunje', $classMapper, $translator, $params);
+        $sprunje = $classMapper->createInstance('role_sprunje', $classMapper, $params);
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
@@ -483,10 +480,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
-
-        $sprunje = $classMapper->createInstance('permission_sprunje', $classMapper, $translator, $params);
+        $sprunje = $classMapper->createInstance('permission_sprunje', $classMapper, $params);
         $sprunje->extendQuery(function ($query) use ($role) {
             return $query->forRole($role->id);
         });
@@ -514,9 +508,6 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
-
         // GET parameters
         $params = $request->getQueryParams();
 
@@ -534,7 +525,7 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $translator, $params);
+        $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $params);
         $sprunje->extendQuery(function ($query) use ($role) {
             return $query->forRole($role->id);
         });

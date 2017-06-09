@@ -97,10 +97,7 @@ class PermissionController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
-
-        $sprunje = $classMapper->createInstance('permission_sprunje', $classMapper, $translator, $params);
+        $sprunje = $classMapper->createInstance('permission_sprunje', $classMapper, $params);
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
@@ -135,9 +132,6 @@ class PermissionController extends SimpleController
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
-
         $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
 
         // If the permission doesn't exist, return 404
@@ -146,7 +140,7 @@ class PermissionController extends SimpleController
         }
 
         $params['permission_id'] = $permissionId;
-        $sprunje = $classMapper->createInstance('permission_user_sprunje', $classMapper, $translator, $params);
+        $sprunje = $classMapper->createInstance('permission_user_sprunje', $classMapper, $params);
 
         $response = $sprunje->toResponse($response);
 

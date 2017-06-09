@@ -5,7 +5,6 @@
 {# Set some default values for the child template. #}
 {% set table = {
         'id': "uf-table",
-        'message_empty_rows': translate('NO_RESULTS'),
         'sortlist': "[[0, 0]]"
     } | merge(table)
 %}
@@ -24,12 +23,12 @@
     {% endblock %}
 
     {% block table_info %}
-        <div class="uf-table-info-messages">
+        <div class="uf-table-info-messages" data-message-empty-rows="{{translate('NO_RESULTS')}}">
         </div>
     {% endblock %}
 
     {% block table_pager_controls %}
-        <div class="pager pager-lg tablesorter-pager">
+        <div class="pager pager-lg tablesorter-pager" data-output-template="{{translate('PAGINATION.OUTPUT')}}">
             <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
             <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
             <span class="pagedisplay"></span> {# this can be any element, including an input #}

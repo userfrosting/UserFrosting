@@ -30,11 +30,6 @@ abstract class Sprunje
     protected $classMapper;
 
     /**
-     * @var UserFrosting\I18n\MessageTranslator
-     */
-    protected $translator;
-
-    /**
      * Name of this Sprunje, used when generating output files.
      *
      * @var string
@@ -99,10 +94,9 @@ abstract class Sprunje
      * @param ClassMapper $classMapper
      * @param mixed[] $options
      */
-    public function __construct($classMapper, $translator, $options)
+    public function __construct($classMapper, $options)
     {
         $this->classMapper = $classMapper;
-        $this->translator = $translator;
 
         // Validation on input data
         $v = new Validator($options);
@@ -271,7 +265,6 @@ abstract class Sprunje
             'count' => $total,
             'count_filtered' => $totalFiltered,
             'rows' => $collection->values()->toArray(),
-            'output' => $this->translator->translate('PAGINATION.OUTPUT'),
             'listable' => $this->getListable()
         ];
 

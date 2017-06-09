@@ -8,7 +8,7 @@
 {% extends "components/tables/table-paginated.html.twig" %}
 
 {% block table %}
-    <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}" data-message-empty-rows="{{table.message_empty_rows}}">
+    <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
         <thead>
             <tr>
                 <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info" data-priority="1">{{translate('USER')}} <i class="fa fa-sort"></i></th>

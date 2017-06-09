@@ -116,10 +116,6 @@
                         filter_selectSource : {
                             '.filter-select' : function() { return null; }
                         },
-                        // output default: '{page}/{totalPages}'
-                        // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
-                        // also {page:input} & {startRow:input} will add a modifiable input in place of the value
-                        pager_output: '{startRow} to {endRow} of {filteredRows} ({totalRows})', // '{page}/{totalPages}'
 
                         // apply disabled classname to the pager arrows when the rows at either extreme is visible
                         pager_updateArrows: true,
@@ -185,6 +181,9 @@
         this.element = element[0];
         this.$element = $(this.element);
         var lateDefaults = {
+            info: {
+                container: this.$element.find('.uf-table-info-messages')
+            },
             tablesorter: {
                 widgetOptions: {
                     columnSelector_container : this.$element.find('.menu-table-column-selector-options'),
@@ -199,6 +198,28 @@
         this._defaults = defaults;
         this._name = pluginName;
 
+        // Fall back to attributes from data-*, default values if not specified in options
+        var pagerContainer = this.settings.tablesorter.widgetOptions.pager_css.container;
+        var infoContainer = this.settings.info.container;
+        var dataAttributeDefaults = {
+            info: {
+                messageEmptyRows: infoContainer.data('message-empty-rows') ?
+                                  infoContainer.data('message-empty-rows') :
+                                  "Sorry, we've got nothing here."
+            },
+            tablesorter: {
+                widgetOptions: {
+                    // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+                    // also {page:input} & {startRow:input} will add a modifiable input in place of the value
+                    pager_output: pagerContainer.data('output-template') ?
+                                  pagerContainer.data('output-template') :
+                                  '{startRow} to {endRow} of {filteredRows} ({totalRows})' // default if not set on data-* attribute
+                }
+            }
+        };
+
+        this.settings = $.extend(true, {}, dataAttributeDefaults, this.settings);
+        
         this.settings.tablesorter.widgetOptions.pager_ajaxUrl = this.settings.dataUrl;
 
         // Generate the URL for the AJAX request, with the relevant parameters
@@ -257,12 +278,12 @@
         // Show info messages when there are no rows/no results
         this.ts.on('filterEnd filterReset pagerComplete', $.proxy(function () {
             var table = this.ts[0];
-            var infoMessages = this.$element.find('.uf-table-info-messages');
+            var infoMessages = this.settings.info.container;
             if (table.config.pager) {
                 infoMessages.html('');
                 var fr = table.config.pager.filteredRows;
                 if (fr === 0) {
-                    infoMessages.html($(table).data('message-empty-rows'));
+                    infoMessages.html(this.settings.info.messageEmptyRows);
                 }
             }
         }, this));
