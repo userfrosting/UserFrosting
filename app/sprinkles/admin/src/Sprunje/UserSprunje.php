@@ -9,6 +9,7 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Facades\Translator;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -144,15 +145,15 @@ class UserSprunje extends Sprunje
         return [
             [
                 'value' => 'active',
-                'text' => 'Active'
+                'text' => Translator::translate('ACTIVE')
             ],
             [
                 'value' => 'unactivated',
-                'text' => 'Unactivated'
+                'text' => Translator::translate('UNACTIVATED')
             ],
             [
                 'value' => 'disabled',
-                'text' => 'Disabled'
+                'text' => Translator::translate('DISABLED')
             ]
         ];
     }
