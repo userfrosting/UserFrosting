@@ -97,7 +97,6 @@
         defaults = {
             DEBUG           : false,
                 dataUrl         : "",
-                selectOptionsUrl: null,
                 msgTarget       : $('#alerts-page'),
                 addParams       : {},
                 filterAllField: '_all',
@@ -246,11 +245,6 @@
             window.location = this.settings.dataUrl + '?' + $.param(tableState);
         }, this));
 
-        // Set up filter selects
-        this.ts.on('filterInit', $.proxy(function () {
-            this._buildFilterSelect(this.ts);
-        }, this));
-
         // Allow clicking on the labels in the table menu without closing the menu
         $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
             e.stopPropagation();
@@ -290,7 +284,20 @@
             }
 
             // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
-            var filterList = $.tablesorter.getFilters(table);
+            var filterList = $.tablesorter.getFilters(table) || [];
+
+            // Overwrite list with saved filter for filter-select not setup by ts
+            var isArray, saved,
+                wo = table.config.widgetOptions;
+            if ( wo.filter_saveFilters && $.tablesorter.storage ) {
+				saved = $.tablesorter.storage( table, 'tablesorter-filters' ) || [];
+				isArray = $.isArray( saved );
+				// make sure we're not just getting an empty array
+				if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
+					filterList = $.tablesorter.filter.processFilters( saved );
+				}
+			}
+
             var filters = {};
             for (i = 0; i < filterList.length; i++) {
                 if (filterList[i]) {
@@ -365,6 +372,21 @@
                     }
 
                     rows += '</tr>';
+                }
+
+                // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
+                var columns = ts.config.headerList;
+                var selectColumnNames = [];
+                var selectColumnNumbers = {};
+                for (var i = 0; i < columns.length; i++) {
+                    var column = $(columns[i]);
+                    // If the column is designated for filter-select, get the listables from the data and recreate it
+                    if (column.hasClass('filter-select')) {
+                        var columnName = column.data('column-name');
+                        if (data.listable[columnName]) {
+                            $.tablesorter.filter.buildSelect(ts, i, data.listable[columnName], true);
+                        }
+                    }
                 }
 
                 json.total = data.count;  // Get total rows without pagination
@@ -504,44 +526,6 @@
             // Convert modified JSON object back into serialized representation
             var result = jQuery.param(urlObject);
             return result.length ? result : '';
-        },
-        /**
-         * Private method used to build the filter select using data attributes for custom options
-         * Based on tablesorter.filter.getOptions
-         */
-        _buildFilterSelect: function(table) {
-            var base = this;
-
-            if (base.settings.selectOptionsUrl) {
-                // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
-                var columns = table[0].config.headerList;
-                var selectColumnNames = [];
-                var selectColumnNumbers = {};
-                for (var i = 0; i < columns.length; i++) {
-                    var column = $(columns[i]);
-                    // If the column is designated for filter-select, add it to the list of listables and map the column number
-                    if (column.hasClass('filter-select')) {
-                        var columnName = column.data('column-name');
-                        selectColumnNames.push(columnName);
-                        selectColumnNumbers[columnName] = i;
-                    }
-                }
-
-                // Make AJAX request for column select options
-                $.getJSON(base.settings.selectOptionsUrl, {
-                    lists: selectColumnNames
-                }).done(function(data, textStatus, jqXHR) {
-                    // For each filter-select column, try to build the select menu from the corresponding entry in the AJAX response
-                    $.each(selectColumnNumbers, function (columnName, columnNumber) {
-                        if (data[columnName]) {
-                            $.tablesorter.filter.buildSelect(table, columnNumber, data[columnName], true);
-                        }
-                    });
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    base._ajaxError(jqXHR);
-                });
-            }
-            return false;
         }
     });
 

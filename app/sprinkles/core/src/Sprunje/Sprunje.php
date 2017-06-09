@@ -198,16 +198,10 @@ abstract class Sprunje
      *
      * @return array
      */
-    public function getValues()
+    public function getListable()
     {
         $result = [];
-        foreach ($this->options['lists'] as $name) {
-            // Check that this list is allowed
-            if (!in_array($name, $this->listable)) {
-                $e = new BadRequestException();
-                $e->addUserMessage('VALIDATE.SPRUNJE.BAD_LIST', ['name' => $name]);
-                throw $e;
-            }
+        foreach ($this->listable as $name) {
 
             // Determine if a custom filter method has been defined
             $methodName = 'list'.studly_case($name);
@@ -277,7 +271,8 @@ abstract class Sprunje
             'count' => $total,
             'count_filtered' => $totalFiltered,
             'rows' => $collection->values()->toArray(),
-            'output' => $this->translator->translate('PAGINATION.OUTPUT')
+            'output' => $this->translator->translate('PAGINATION.OUTPUT'),
+            'listable' => $this->getListable()
         ];
 
         return $result;

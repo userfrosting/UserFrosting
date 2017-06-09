@@ -788,44 +788,6 @@ class UserController extends SimpleController
     }
 
     /**
-     * Returns a list of column values for users
-     *
-     * Generates a list of possible values for the requested column(s).
-     * This route requires authentication.
-     * Request type: GET
-     */
-    public function getValues($request, $response, $args)
-    {
-        // GET parameters
-        $params = $request->getQueryParams();
-
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
-        $authorizer = $this->ci->authorizer;
-
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
-        $currentUser = $this->ci->currentUser;
-
-        /** @var UserFrosting\I18n\MessageTranslator $translator */
-        $translator = $this->ci->translator;
-
-        // Access-controlled page
-        if (!$authorizer->checkAccess($currentUser, 'uri_users')) {
-            throw new ForbiddenException();
-        }
-
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
-        $classMapper = $this->ci->classMapper;
-
-        $sprunje = $classMapper->createInstance('user_sprunje', $classMapper, $translator, $params);
-
-        $result = $sprunje->getValues();
-
-        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
-        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
-        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
-    }
-
-    /**
      * Renders a page displaying a user's information, in read-only mode.
      *
      * This checks that the currently logged-in user has permission to view the requested user's info.

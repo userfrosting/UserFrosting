@@ -6,17 +6,16 @@
  *
  * Target page: /users
  */
- 
+
 $(document).ready(function() {
     // Set up table of users
     $("#widget-users").ufTable({
-        dataUrl: site.uri.public + "/api/users",
-        selectOptionsUrl: site.uri.public + "/api/users/values"
+        dataUrl: site.uri.public + "/api/users"
     });
 
     // Bind creation button
     bindUserCreationButton($("#widget-users"));
-    
+
     // Bind table buttons
     $("#widget-users").on("pagerComplete.ufTable", function () {
         bindUserButtons($(this));
