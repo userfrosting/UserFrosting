@@ -9,7 +9,7 @@
     } | merge(table)
 %}
 
-<div class="table-search form-group has-feedback">
+<div class="form-group has-feedback uf-table-search js-uf-table-search">
     <input type="search" class="form-control" data-column="all">
     <i class="fa fa-search form-control-icon" aria-hidden="true"></i>
 </div>
@@ -23,12 +23,12 @@
     {% endblock %}
 
     {% block table_info %}
-        <div class="uf-table-info-messages" data-message-empty-rows="{{translate('NO_RESULTS')}}">
+        <div class="uf-table-info js-uf-table-info" data-message-empty-rows="{{translate('NO_RESULTS')}}">
         </div>
     {% endblock %}
 
     {% block table_pager_controls %}
-        <div class="pager pager-lg tablesorter-pager" data-output-template="{{translate('PAGINATION.OUTPUT')}}">
+        <div class="pager pager-lg tablesorter-pager js-uf-table-pager" data-output-template="{{translate('PAGINATION.OUTPUT')}}">
             <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
             <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
             <span class="pagedisplay"></span> {# this can be any element, including an input #}

@@ -9,8 +9,8 @@
  *
  * Create a container element, and within it place your table, paging controls, and Handlebars templates for rendering the cells.
  *
- * - Your table should have a unique id, and your paging controls should be wrapped in an element with the `.tablesorter-pager` class.
- * - Create a button with the `.js-download-table` class, and it will be automatically bound to trigger an AJAX request for downloading the table (CSV, etc).
+ * - Your table should have a unique id, and your paging controls should be wrapped in an element with the `.js-uf-table-pager` class.
+ * - Create a button with the `.js-uf-table-download` class, and it will be automatically bound to trigger an AJAX request for downloading the table (CSV, etc).
  *
     <div id="widget-users">
        <table id="table-users" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="[[0, 0]]">
@@ -49,7 +49,7 @@
            {{/if }}
        </script>
 
-       <div class="pager pager-lg tablesorter-pager">
+       <div class="pager pager-lg tablesorter-pager js-uf-table-pager">
            <span class="pager-control first" title="First page"><i class="fa fa-angle-double-left"></i></span>
            <span class="pager-control prev" title="Previous page"><i class="fa fa-angle-left"></i></span>
            <span class="pagedisplay"></span>
@@ -63,7 +63,7 @@
            </select>
        </div>
 
-       <button class="btn btn-sm btn-default js-download-table">Download CSV</button>
+       <button class="btn btn-sm btn-default js-uf-table-download">Download CSV</button>
    </div>
  *
  * Initialize ufTable on your container object:
@@ -181,15 +181,16 @@
         this.element = element[0];
         this.$element = $(this.element);
         var lateDefaults = {
+            downloadButton: this.$element.find('.js-uf-table-download'),
             info: {
-                container: this.$element.find('.uf-table-info-messages')
+                container: this.$element.find('.js-uf-table-info')
             },
             tablesorter: {
                 widgetOptions: {
-                    columnSelector_container : this.$element.find('.menu-table-column-selector-options'),
-                    filter_external          : this.$element.find('.table-search input'),
+                    columnSelector_container : this.$element.find('.js-uf-table-cs-options'),
+                    filter_external          : this.$element.find('.js-uf-table-search input'),
                     pager_css: {
-                        container: this.$element.find('.tablesorter-pager')
+                        container: this.$element.find('.js-uf-table-pager')
                     }
                 }
             }
@@ -253,7 +254,7 @@
         this.ts = this.$element.find('.tablesorter').tablesorter(this.settings.tablesorter);
 
         // Link CSV download button
-        this.$element.find('.js-download-table').on('click', $.proxy(function () {
+        this.settings.downloadButton.on('click', $.proxy(function () {
             var tableState = this.getTableStateVars(this.ts[0]);
             tableState['format'] = 'csv';
             delete tableState['page'];

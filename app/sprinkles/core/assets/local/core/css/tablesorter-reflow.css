@@ -4,7 +4,7 @@
   /* uncomment out the line below if you don't want the sortable headers to show */
   table.ui-table-reflow thead { display: none; }
 
-  .table-search {
+  .uf-table-search {
     display: inherit;
   }
   

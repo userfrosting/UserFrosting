@@ -40,32 +40,33 @@ form textarea {
 
 /* Styles for table column selectors */
 
-.menu-table-column-selector-title {
+.uf-table-cs-title {
     padding: 0px 20px;
     font-weight: bold;
 }
 
-.menu-table-column-selector-options {
+.uf-table-cs-options {
     padding: 3px 20px;
 }
 
-.menu-table-column-selector-options label {
+.uf-table-cs-options label {
     width: 100%;
     font-weight: normal;
     word-wrap: break-word;
     word-break: break-all;
 }
 
-.menu-table-column-selector-options label span {
+.uf-table-cs-options label span {
     padding-left: 10px;
 }
 
-.table-search {
+/* Hide global search field on larger devices */
+.uf-table-search {
     display: none;
 }
 
 /* Special styling for uf-table messages */
-.uf-table-info-messages {
+.uf-table-info {
     background-color: #fff !important;
     color: #cdcdcd;
     font-weight: 700;
