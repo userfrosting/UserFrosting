@@ -10,11 +10,11 @@ namespace UserFrosting\Sprinkle\Core\Facades;
 use UserFrosting\System\Facade;
 
 /**
- * Implements facade for the "debugLogger" service
+ * Implements facade for the "translator" service
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Debug extends Facade
+class Translator extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -23,6 +23,6 @@ class Debug extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'debugLogger';
+        return 'translator';
     }
 }
