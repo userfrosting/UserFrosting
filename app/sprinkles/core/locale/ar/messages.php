@@ -38,8 +38,11 @@ return [
     ],
 
     "HOME"  => "الصفحة الرئيسية",
-
-    "LEGAL" => "السياسة القانونية",
+	
+    "LEGAL" => [
+        "@TRANSLATION" => "السياسة القانونية",
+        "DESCRIPTION" => "تسري سياستنا القانونية على استخدامك لهذا الموقع وخدماتنا"
+    ],
 
     "LOCALE" => [
         "@TRANSLATION" => "اللغه",
@@ -52,9 +55,16 @@ return [
 
     "PAGINATION" => [
         "GOTO" => "انتقال إلى الصفحة",
-        "SHOW" => "تبين"
+        "SHOW" => "عرض",
+        "NEXT" => "الصفحة التالية",
+        "PREVIOUS" => "الصفحة السابقة",
+        "FIRST" => "الصفحة الأولى",
+        "LAST" => "آخر صفحة"
     ],
-    "PRIVACY" => "سياسة الخصوصية",
+    "PRIVACY" => [
+        "@TRANSLATION" => "سياسة الخصوصية",
+        "DESCRIPTION" => "تحدد سياسة الخصوصية لدينا نوع المعلومات التي نجمعها منك وكيفية استخدامها."
+    ],
 
     "SLUG" => "Slug",
     "SLUG_CONDITION" => "Slug/الظروف",
@@ -99,5 +109,6 @@ return [
 
     // Misc
     "BUILT_WITH_UF" => "بنيت مع <a href=\"http://wwwuserfrostingcom\">UserFrosting</a>",
-    "ADMINLTE_THEME_BY" => "فكرة رئيسية <strong><a href=\"http://almsaeedstudiocom\">Almsaeed Studio</a></strong> كل الحقوق محفوظة"
+    "ADMINLTE_THEME_BY" => "فكرة رئيسية <strong><a href=\"http://almsaeedstudiocom\">Almsaeed Studio</a></strong> كل الحقوق محفوظة",
+    "WELCOME_TO" => "مرحبا بك في {{title}}!"
 ];
