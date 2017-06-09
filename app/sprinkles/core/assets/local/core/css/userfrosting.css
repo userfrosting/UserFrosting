@@ -64,6 +64,20 @@ form textarea {
     display: none;
 }
 
+/* Special styling for uf-table messages */
+.uf-table-info-messages {
+    background-color: #fff !important;
+    color: #cdcdcd;
+    font-weight: 700;
+    text-align: center;
+}
+
+.uf-table-error-row td {
+    background-color: #f39c12 !important;
+    color: #fff !important;
+    text-align: center;
+}
+
 /* Special wrapper for alerts on public form pages (sign-in, register, etc) */
 .form-alerts {
     margin-bottom: 10px !important;

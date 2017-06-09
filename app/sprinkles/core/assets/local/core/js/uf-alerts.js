@@ -56,6 +56,9 @@
         this._defaults = defaults;
         this._name = pluginName;
 
+        // Detect changes to element attributes
+        this.$element.attrchange({ callback: function (event) { this.element = event.target; }.bind(this) });
+
         // Plugin variables
         this.alerts = [];
         this._newAlertsPromise = $.Deferred().resolve();
@@ -165,7 +168,7 @@
             if (this.alerts.length > 0) {
                 // Prepare template
                 var alertTemplate = Handlebars.compile(this._alertTemplateHtml, {noEscape: true});
-
+                var i;
                 // If agglomeration is enabled, set the container to the highest priority alert type
                 if (this.settings.agglomerate) {
                     // Holds generated agglomerated alerts
@@ -173,7 +176,7 @@
 
                     // Determine overall alert priority
                     var alertContainerType = "info";
-                    for (var i = 0; i < this.alerts.length; i++) {
+                    for (i = 0; i < this.alerts.length; i++) {
                         if (this._alertTypePriorities[this.alerts[i].type] > this._alertTypePriorities[alertContainerType]) {
                             alertContainerType = this.alerts[i].type;
                         }
@@ -181,7 +184,7 @@
 
                     // Compile each alert
                     var aggTemplate = Handlebars.compile("<li class=" + this.settings.alertMessageClass + ">{{ message }}</li>");
-                    for (var i = 0; i < this.alerts.length; i++) {
+                    for (i = 0; i < this.alerts.length; i++) {
                         alertMessage += aggTemplate(this.alerts[i]);
                     }
 
@@ -196,7 +199,7 @@
                 }
                 else {
                     // Compile each alert.
-                    for (var i = 0; i < this.alerts.length; i++) {
+                    for (i = 0; i < this.alerts.length; i++) {
                         alert = this.alerts[i];
 
                         // Inject icon
@@ -211,7 +214,7 @@
             this.$element.html(alertHtml);
 
             // Scroll to top of alert location is new alerts output, and auto scrolling is enabled
-            if (this.settings.scrollToTop && alertHtml != "") {
+            if (this.settings.scrollToTop && alertHtml !== "") {
                 // Don't scroll if already visible, unless scrollWhenVisible is true
                 if (!this._alertsVisible() || this.settings.scrollWhenVisible) {
                     $("html, body").animate({ scrollTop: this.$element.offset().top }, "fast");

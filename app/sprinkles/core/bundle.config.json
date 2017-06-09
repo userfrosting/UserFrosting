@@ -11,6 +11,7 @@
                 "vendor/fastclick/lib/fastclick.js",
                 "vendor/select2/dist/js/select2.full.js",
                 "vendor/clipboard/dist/clipboard.js",
+                "local/core/js/attrchange.js",
                 "local/core/js/AdminLTE.js",
                 "local/core/js/AdminLTE-custom.js",
                 "local/core/js/fortress-jqueryvalidation-methods.js",
