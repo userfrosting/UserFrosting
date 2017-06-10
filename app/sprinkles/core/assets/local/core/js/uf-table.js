@@ -326,20 +326,7 @@
             }
 
             // Set filters in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
-            var filterList = $.tablesorter.getFilters(table) || [];
-
-            // Overwrite list with saved filter for filter-select not setup by ts
-            var isArray, saved,
-                wo = table.config.widgetOptions;
-            if ( wo.filter_saveFilters && $.tablesorter.storage ) {
-				saved = $.tablesorter.storage( table, 'tablesorter-filters' ) || [];
-				isArray = $.isArray( saved );
-				// make sure we're not just getting an empty array
-				if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
-					filterList = $.tablesorter.filter.processFilters( saved );
-				}
-			}
-
+            var filterList = base.getSavedFilters(table);
             var filters = {};
             for (i = 0; i < filterList.length; i++) {
                 if (filterList[i]) {
@@ -361,6 +348,28 @@
             };
 
             return state;
+        },
+        /**
+         * Get saved filters from the browser local storage. Those should always be up to date
+         */
+        getSavedFilters: function(table) {
+
+            // Fallback to `getFilters` or empty in case of failure
+            var filterList = $.tablesorter.getFilters(table) || [];
+
+            // Overwrite list with saved filter for filter-select not setup by ts
+            var isArray, saved,
+                wo = table.config.widgetOptions;
+            if ( wo.filter_saveFilters && $.tablesorter.storage ) {
+				saved = $.tablesorter.storage( table, 'tablesorter-filters' ) || [];
+				isArray = $.isArray( saved );
+				// make sure we're not just getting an empty array
+				if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
+					filterList = $.tablesorter.filter.processFilters( saved );
+				}
+			}
+
+			return filterList;
         },
         /**
          * Callback for generating the AJAX url.
@@ -430,6 +439,10 @@
                         }
                     }
                 }
+
+                // The select-filters have been changed. Reapply the filter so the select have the correct option active
+                var filterList = base.getSavedFilters(ts);
+    			$.tablesorter.setFilters( ts, filterList, true );
 
                 json.total = data.count;  // Get total rows without pagination
                 json.filteredRows = data.count_filtered; // no filtering
