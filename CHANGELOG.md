@@ -4,16 +4,24 @@
 - Switch from pagination "plugin" to "widget" for Tablesorter.  Allows us to update to the latest version of TS (fix #688, #715)
 - Implement `WhoopsRenderer` for pretty debug pages.  See (#674)
 - Refactor error handling.  Move responsibility for displayErrorDetails to handlers, and factor our ErrorRenderers.  Addresses (#702)
-- Move composer.json to root directory to allow installing UF via composer create-project
-- Move sprinkles.json to app directory to make it easier to find
+- Move `composer.json` to root directory to allow installing UF via composer create-project
+- Move `sprinkles.json` to app directory to make it easier to find
 - Factor out "system" classes from core Sprinkle
 - Refactor overall application lifecycle; move main lifecycle into UserFrosting\System\UserFrosting
 - SprinkleManager now better focused on a single responsibility
 - Sprinkle initializer classes now use events to hook into application lifecycle
 - Support for allowing Sprinkles to register middleware (#617)
-- Automatically load Sprinkler service providers (see #636)
+- Automatically load Sprinkle service providers (see #636)
 - Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
 - Rebased ufTable and ufModal with new jQuery plugin template. (part of #646)
+- Removed the search bar from the Dashboard layout
+- Added Tablesorter pagination translation
+- New Translator Facade
+- New CLI tool (Bakery). 
+- New migration system based on bakery CLI
+- Listable sprunjing
+
+See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
 
 ## v.4.0.22-Alpha
 - Fix issue where 'Change User Password' popup form couldn't handle specifying a new password.
