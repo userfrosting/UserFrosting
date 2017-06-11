@@ -2,13 +2,13 @@
  * Page-specific Javascript file.  Should generally be included as a separate asset bundle in your page template.
  * example: {{ assets.js('js/pages/sign-in-or-register') | raw }}
  *
- * Target page: /admin/dashboard
+ * Target page: /dashboard
  */
 
 $(document).ready(function() {
     $('.js-clear-cache').click(function() {
         $("body").ufModal({
-            sourceUrl: site.uri.public + "/modals/admin/clear-cache",
+            sourceUrl: site.uri.public + "/modals/dashboard/clear-cache",
             ajaxParams: {
                 slug: $(this).data('slug')
             },
@@ -39,7 +39,7 @@ $(document).ready(function() {
 
     // Bind user creation button
     bindUserCreationButton($("#widget-group-users"));
-    
+
     // Bind user table buttons
     $("#widget-group-users").on("pagerComplete.ufTable", function () {
         bindUserButtons($(this));

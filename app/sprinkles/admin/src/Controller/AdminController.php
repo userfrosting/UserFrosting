@@ -19,7 +19,7 @@ use UserFrosting\Support\Exception\ForbiddenException;
 /**
  * AdminController Class
  *
- * Controller class for /admin URL.  Handles admin-related activities
+ * Controller class for /dashboard URL.  Handles admin-related activities
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -140,7 +140,7 @@ class AdminController extends SimpleController
 
         return $this->ci->view->render($response, 'components/modals/confirm-clear-cache.html.twig', [
             'form' => [
-                'action' => 'api/admin/clear-cache',
+                'action' => 'api/dashboard/clear-cache',
             ]
         ]);
     }

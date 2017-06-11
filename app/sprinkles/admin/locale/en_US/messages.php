@@ -20,10 +20,6 @@ return [
        "TIME" => "Activity Time"
     ],
 
-    "ADMIN" => [
-        "PANEL" => "Admin panel"
-    ],
-
     "CACHE" => [
         "CLEAR"             => "Clear cache",
         "CLEAR_CONFIRM"     => "Are you sure you want to clear the site cache?",

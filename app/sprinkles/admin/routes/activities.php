@@ -10,7 +10,7 @@
 /**
  * Routes for administrative activity monitoring.
  */
-$app->group('/admin/activities', function () {
+$app->group('/activities', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\ActivityController:pageList')
         ->setName('uri_activities');
 })->add('authGuard');

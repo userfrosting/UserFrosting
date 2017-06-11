@@ -20,10 +20,6 @@ return [
        "TIME"                           => "Aktivitätszeit"
     ],
 
-    "ADMIN" => [
-        "PANEL"                         => "Administrationsmenü"
-    ],
-
     "CACHE" => [
         "CLEAR"                         => "Cache löschen",
         "CLEAR_CONFIRM"                 => "Sind Sie sicher, dass Sie den Seiten-Cache löschen möchten?",

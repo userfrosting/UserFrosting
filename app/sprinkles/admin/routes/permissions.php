@@ -10,7 +10,7 @@
 /**
  * Routes for administrative permission management.
  */
-$app->group('/admin/permissions', function () {
+$app->group('/permissions', function () {
     $this->get('', 'UserFrosting\Sprinkle\Admin\Controller\PermissionController:pageList')
         ->setName('uri_permissions');
 

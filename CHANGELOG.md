@@ -20,6 +20,7 @@
 - New CLI tool (Bakery). 
 - New migration system based on bakery CLI
 - Listable sprunjing
+- Refactor groups and user routes (Fix #721)
 
 See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
 

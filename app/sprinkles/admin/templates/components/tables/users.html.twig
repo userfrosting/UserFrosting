@@ -34,7 +34,7 @@
     <script id="user-table-column-info" type="text/x-handlebars-template">
         <td data-text="{{row.last_name}}">
             <strong>
-                <a href="{{site.uri.public}}/admin/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
+                <a href="{{site.uri.public}}/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
             </strong>
             <div class="js-copy-container">
                 <span class="js-copy-target">{{row.email}}</span>
@@ -58,7 +58,7 @@
     </script>
 
     <script id="user-table-column-actions" type="text/x-handlebars-template">
-        <td 
+        <td
             {{#ifCond row.flag_enabled 0 }}
                 data-text="disabled"
             {{ else }}

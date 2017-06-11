@@ -20,10 +20,6 @@ return [
        "TIME" => "Tempo da Atividade"
     ],
 
-    "ADMIN" => [
-        "PANEL" => "Painel de Administração"
-    ],
-
     "CACHE" => [
         "CLEAR"             => "Limpar cache",
         "CLEAR_CONFIRM"     => "Tem a certeza que pretende limpar a cache do site?",
