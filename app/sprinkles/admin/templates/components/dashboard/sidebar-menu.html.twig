@@ -12,7 +12,7 @@
         'group': current_user.group
     }) %}
     <li>
-        <a href="{{site.uri.public}}/groups/g/{{current_user.group.slug}}"><i class="{{current_user.group.icon}} fa-fw"></i> <span>Manage Group</span></a>
+        <a href="{{site.uri.public}}/groups/g/{{current_user.group.slug}}"><i class="{{current_user.group.icon}} fa-fw"></i> <span>{{ translate("GROUP.MANAGE") }}</span></a>
     </li>
     {% endif %}
     {% if checkAccess('uri_activities') %}
