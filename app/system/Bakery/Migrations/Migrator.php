@@ -119,9 +119,10 @@ class Migrator
      * Run all the migrations available
      *
      * @access public
+     * @param bool $pretend (default: false)
      * @return void
      */
-    public function runUp()
+    public function runUp($pretend = false)
     {
         // Get installed migrations and pluck by class name. We only need this for now
         $migrations = Migrations::get();
@@ -158,15 +159,26 @@ class Migrator
             exit(1);
         }
 
+        // Ready to run !
         $this->io->section("Running migrations");
+
+        if ($pretend) {
+            $this->io->note("Running migration in pretend mode");
+        }
 
         // We have a list of fulfillable migration, we run them up!
         foreach ($this->fulfillable as $migration) {
-            $this->io->write("> Migrating {$migration->className}...");
-            $migration->up();
-            $this->log($migration);
-            $this->io->write(" Done!");
-            $this->io->newLine();
+            $this->io->write("\n> <info>Migrating {$migration->className}...</info>");
+
+            if ($pretend) {
+                $this->io->newLine();
+                $this->pretendToRun($migration, 'up');
+            } else {
+                $migration->up();
+                $migration->seed();
+                $this->log($migration);
+                $this->io->writeln(" Done!");
+            }
         }
 
         // If all went well and there's no fatal errors, we are ready to bake
@@ -179,9 +191,10 @@ class Migrator
      * @access public
      * @param int $step (default: 1). Number of batch we will be going back. -1 revert all migrations
      * @param string $sprinkle (default: "") Limit rollback to a specific sprinkle
+     * @param bool $pretend (default: false)
      * @return void
      */
-    public function runDown($step = 1, $sprinkle = "")
+    public function runDown($step = 1, $sprinkle = "", $pretend = false)
     {
         // Can't go furhter down than 1 step
         if ($step <= 0 && $step != -1) {
@@ -223,8 +236,12 @@ class Migrator
         $this->io->listing($migrations->pluck('migration')->toArray());
 
         // Ask confirmation to continue.
-        if (!$this->io->confirm("Continue?", false)) {
+        if (!$pretend && !$this->io->confirm("Continue?", false)) {
             exit(1);
+        }
+
+        if ($pretend) {
+            $this->io->note("Rolling back in pretend mode");
         }
 
         // Only thing we have to check here before going further is if those migration class are available
@@ -238,17 +255,57 @@ class Migrator
 
         // Loop again to run down each migration
         foreach ($migrations as $migration) {
-            $this->io->write("> Rolling back {$migration->migration}...");
+            $this->io->write("> <info>Rolling back {$migration->migration}...</info>");
             $migrationClass = $migration->migration;
             $instance = new $migrationClass($this->schema, $this->io);
-            $instance->down();
-            $migration->delete();
-            $this->io->write(" Done!");
+
+            if ($pretend) {
+                $this->io->newLine();
+                $this->pretendToRun($instance, 'down');
+            } else {
+                $instance->down();
+                $migration->delete();
+                $this->io->writeln(" Done!");
+            }
+
             $this->io->newLine();
         }
 
         // If all went well and there's no fatal errors, we are ready to bake
         $this->io->success("Rollback successful !");
+    }
+
+    /**
+     * Pretend to run migration class.
+     *
+     * @access protected
+     * @param mixed $migration
+     * @param string $method up/down
+     */
+    protected function pretendToRun($migration, $method)
+    {
+        foreach ($this->getQueries($migration, $method) as $query) {
+            $this->io->writeln($query['query'], OutputInterface::VERBOSITY_VERBOSE);
+        }
+    }
+
+    /**
+     * Return all of the queries that would be run for a migration.
+     *
+     * @access protected
+     * @param mixed $migration
+     * @param string $method up/down
+     * @return void
+     */
+    protected function getQueries($migration, $method)
+    {
+        $db = $this->schema->getConnection();
+
+        return $db->pretend(function () use ($migration, $method) {
+            if (method_exists($migration, $method)) {
+                $migration->{$method}();
+            }
+        });
     }
 
     /**
@@ -315,7 +372,7 @@ class Migrator
      * Return a list of resolved className
      *
      * @access public
-     * @param mixed $sprinkleName
+     * @param string $sprinkleName
      * @return void
      */
     public function getMigrations($sprinkle)
@@ -379,7 +436,7 @@ class Migrator
      * Already been installed OR exist and have all it's dependencies met
      *
      * @access protected
-     * @param mixed $migration
+     * @param $migration
      * @return bool true/false if all conditions are met
      */
     protected function validateClassDependencies($migration)

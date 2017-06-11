@@ -31,7 +31,8 @@ class MigrationCommand extends Bakery
     {
         $this->setName("migrate")
              ->setDescription("Perform database migration")
-             ->setHelp("This command runs all the pending database migrations.");
+             ->setHelp("This command runs all the pending database migrations.")
+             ->addOption('pretend', 'p', InputOption::VALUE_NONE, 'Run migrations in "dry run" mode');
     }
 
     /**
@@ -41,7 +42,9 @@ class MigrationCommand extends Bakery
     {
         $this->io->title("UserFrosting's Migration");
 
+        $pretend = $input->getOption('pretend');
+
         $migrator = new Migrator($this->io, $this->ci);
-        $migrator->runUp();
+        $migrator->runUp($pretend);
     }
 }

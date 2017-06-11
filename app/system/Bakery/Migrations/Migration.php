@@ -47,6 +47,18 @@ abstract class Migration
         $this->io = $io;
     }
 
-    abstract public function up();
-    abstract public function down();
+    /**
+     * Method to apply changes to the database
+     */
+    public function up() {}
+
+    /**
+     * Method to revert changes applied by the `up` method
+     */
+    public function down() {}
+
+    /**
+     * Method to seed new information to the database
+     */
+    public function seed() {}
 }

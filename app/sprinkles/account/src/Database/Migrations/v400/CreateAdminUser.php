@@ -35,9 +35,9 @@ class CreateAdminUser extends Migration
     ];
 
     /**
-     * {@inheritDoc}
+     * Seed the master user into the User Table
      */
-    public function up()
+    public function seed()
     {
         $this->io->section("Root account setup");
 
@@ -294,18 +294,5 @@ class CreateAdminUser extends Migration
         }
 
         return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function down()
-    {
-        if (!$this->schema->hasTable('users')) {
-            $users = User::get();
-            foreach ($users as $user) {
-                $user->delete(true);
-            }
-        }
     }
 }

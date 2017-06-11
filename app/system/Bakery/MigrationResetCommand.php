@@ -31,7 +31,8 @@ class MigrationResetCommand extends Bakery
     {
         $this->setName("migrate:reset")
              ->setDescription("Reset the whole database to an empty state")
-             ->addOption('sprinkle', null, InputOption::VALUE_REQUIRED, 'The sprinkle to rollback', "");
+             ->addOption('sprinkle', null, InputOption::VALUE_REQUIRED, 'The sprinkle to rollback', "")
+             ->addOption('pretend', 'p', InputOption::VALUE_NONE, 'Run migrations in "dry run" mode');
     }
 
     /**
@@ -42,7 +43,9 @@ class MigrationResetCommand extends Bakery
         $this->io->title("Migration reset");
 
         $sprinkle = $input->getOption('sprinkle');
+        $pretend = $input->getOption('pretend');
+
         $migrator = new Migrator($this->io, $this->ci);
-        $migrator->runDown(-1, $sprinkle);
+        $migrator->runDown(-1, $sprinkle, $pretend);
     }
 }

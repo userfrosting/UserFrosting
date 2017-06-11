@@ -32,7 +32,8 @@ class MigrationRollbackCommand extends Bakery
         $this->setName("migrate:rollback")
              ->setDescription("Rollback last database migration")
              ->addOption('steps', 's', InputOption::VALUE_REQUIRED, 'Number of steps to rollback', 1)
-             ->addOption('sprinkle', null, InputOption::VALUE_REQUIRED, 'The sprinkle to rollback', "");
+             ->addOption('sprinkle', null, InputOption::VALUE_REQUIRED, 'The sprinkle to rollback', "")
+             ->addOption('pretend', 'p', InputOption::VALUE_NONE, 'Run migrations in "dry run" mode');
     }
 
     /**
@@ -44,8 +45,9 @@ class MigrationRollbackCommand extends Bakery
 
         $step = $input->getOption('steps');
         $sprinkle = $input->getOption('sprinkle');
+        $pretend = $input->getOption('pretend');
 
         $migrator = new Migrator($this->io, $this->ci);
-        $migrator->runDown($step, $sprinkle);
+        $migrator->runDown($step, $sprinkle, $pretend);
     }
 }
