@@ -42,4 +42,5 @@ $app->add(new Bakery\MigrationCommand());
 $app->add(new Bakery\MigrationRollbackCommand());
 $app->add(new Bakery\MigrationResetCommand());
 $app->add(new Bakery\MigrationRefreshCommand());
+$app->add(new Bakery\ClearCacheCommand());
 $app->run();
