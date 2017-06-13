@@ -10,6 +10,7 @@ namespace UserFrosting\System\Bakery;
 
 use Symfony\Component\Console\Application;
 use UserFrosting\System\UserFrosting;
+use Illuminate\Support\Str;
 
 /**
  * Base class for UserFrosting Bakery CLI tools.
@@ -46,11 +47,7 @@ class Bakery
         $this->ci = $uf->getContainer();
 
         // Add each commands to the Console App
-        foreach ($this->getCommands() as $command) {
-            $instance = new $command();
-            $instance->setContainer($this->ci);
-            $this->app->add($instance);
-        }
+        $this->loadCommands();
     }
 
     /**
@@ -62,21 +59,84 @@ class Bakery
     }
 
     /**
-     * Return the list of available commands.
+     * Return the list of available commands for a specific sprinkle
      */
-    protected function getCommands()
+    protected function loadCommands()
     {
-        return [
-            'UserFrosting\System\Bakery\Command\Debug',
-            'UserFrosting\System\Bakery\Command\Assets',
-            'UserFrosting\System\Bakery\Command\Bake',
-            'UserFrosting\System\Bakery\Command\Setup',
-            'UserFrosting\System\Bakery\Command\Test',
-            'UserFrosting\System\Bakery\Command\Migration',
-            'UserFrosting\System\Bakery\Command\MigrationRollback',
-            'UserFrosting\System\Bakery\Command\MigrationReset',
-            'UserFrosting\System\Bakery\Command\MigrationRefresh',
-            'UserFrosting\System\Bakery\Command\ClearCache'
-        ];
+        // Get base Bakery command
+        $commands = $this->getBakeryCommands();
+
+        // Get the sprinkles commands
+        $sprinkles = $this->ci->sprinkleManager->getSprinkleNames();
+        foreach ($sprinkles as $sprinkle) {
+            $commands = $commands->merge($this->getSprinkleCommands($sprinkle));
+        }
+
+        // Add commands to the App
+        $commands->each(function($command) {
+            $instance = new $command();
+            $instance->setContainer($this->ci);
+            $this->app->add($instance);
+        });
+    }
+
+    /**
+     * Return the list of available commands for a specific sprinkle
+     * Sprinkles commands should be located in `src/Bakery/`
+     */
+    protected function getSprinkleCommands($sprinkle)
+    {
+        // Find all the migration files
+        $path = $this->commandDirectoryPath($sprinkle);
+        $files = glob($path . "*.php");
+        $commands = collect($files);
+
+        // Transform the path into a class names
+        $commands->transform(function ($file) use ($sprinkle, $path) {
+            $className = basename($file, '.php');
+            $sprinkleName = Str::studly($sprinkle);
+            $className = "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Bakery\\".$className;
+            return $className;
+        });
+
+        return $commands;
+    }
+
+    /**
+     * Return the list of available commands in system/Bakery/Command/
+     */
+    protected function getBakeryCommands()
+    {
+        // Find all the migration files
+        $files = glob(\UserFrosting\APP_DIR . "/system/Bakery/Command/" . "*.php");
+        $commands = collect($files);
+
+        // Transform the path into a class names
+        $commands->transform(function ($file) {
+            $className = basename($file, '.php');
+            $className = "\\UserFrosting\\System\\Bakery\\Command\\".$className;
+            return $className;
+        });
+
+        return $commands;
+    }
+
+    /**
+     * Returns the path of the Migration directory.
+     *
+     * @access protected
+     * @param mixed $sprinkleName
+     * @return void
+     */
+    protected function commandDirectoryPath($sprinkleName)
+    {
+        return \UserFrosting\APP_DIR .
+               \UserFrosting\DS .
+               \UserFrosting\SPRINKLES_DIR_NAME .
+               \UserFrosting\DS .
+               $sprinkleName .
+               \UserFrosting\DS .
+               \UserFrosting\SRC_DIR_NAME .
+               "/Bakery/";
     }
 }
