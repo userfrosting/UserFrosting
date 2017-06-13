@@ -54,5 +54,8 @@ class Bake extends BaseCommand
 
         $command = $this->getApplication()->find('build-assets');
         $command->run($input, $output);
+
+        $command = $this->getApplication()->find('clear-cache');
+        $command->run($input, $output);
     }
 }
