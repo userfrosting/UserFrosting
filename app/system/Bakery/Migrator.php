@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\System\Bakery\Migrations;
+namespace UserFrosting\System\Bakery;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Support\Str;
@@ -16,8 +16,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
-use UserFrosting\System\Model\Migrations;
-use UserFrosting\System\Bakery\Traits\DatabaseTest;
+use UserFrosting\System\Database\Model\Migrations;
+use UserFrosting\System\Bakery\DatabaseTest;
 
 /**
  * Migration CLI Tools.
@@ -560,7 +560,7 @@ class Migrator
         if (!$this->schema->hasColumn($this->table, 'id')) {
             $this->io->section("Creating the `{$this->table}` table");
 
-            $migration = new \UserFrosting\System\Bakery\Migrations\v410\MigrationTable($this->schema, $this->io);
+            $migration = new \UserFrosting\System\Database\Migrations\v410\MigrationTable($this->schema, $this->io);
             $migration->up();
 
             $this->io->success("Table `{$this->table}` created");

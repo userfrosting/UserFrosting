@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\System\Bakery\Migrations;
+namespace UserFrosting\System\Bakery;
 
 use Illuminate\Database\Schema\Builder;
 use Symfony\Component\Console\Style\SymfonyStyle;

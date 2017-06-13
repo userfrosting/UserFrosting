@@ -8,13 +8,7 @@
  */
 namespace UserFrosting\System\Bakery;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Application;
 use UserFrosting\System\UserFrosting;
 
 /**
@@ -22,30 +16,25 @@ use UserFrosting\System\UserFrosting;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-abstract class Bakery extends Command
+class Bakery
 {
     /**
-     * @var @Symfony\Component\Console\Style\SymfonyStyle
-     * See http://symfony.com/doc/current/console/style.html
+     * @var $app Symfony\Component\Console\Application
      */
-    protected $io;
+    protected $app;
 
     /**
-     * @var string Path to the project root folder
-     */
-    protected $projectRoot;
-
-    /**
-     * @var ContainerInterface $ci The global container object, which holds all of UserFristing services.
+     * @var ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
 
     /**
-     * {@inheritDoc}
+     * Constructor
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    public function __construct()
     {
-        $this->io = new SymfonyStyle($input, $output);
+        // Create Symfony Console App
+        $this->app = new Application("UserFrosting Bakery", \UserFrosting\VERSION);
 
         // Setup the sprinkles
         $uf = new UserFrosting();
@@ -56,7 +45,38 @@ abstract class Bakery extends Command
         // Get the container
         $this->ci = $uf->getContainer();
 
-        // Setup project root
-        $this->projectRoot = \UserFrosting\ROOT_DIR;
+        // Add each commands to the Console App
+        foreach ($this->getCommands() as $command) {
+            $instance = new $command();
+            $instance->setContainer($this->ci);
+            $this->app->add($instance);
+        }
+    }
+
+    /**
+     * Run the Symfony Console App
+     */
+    public function run()
+    {
+        $this->app->run();
+    }
+
+    /**
+     * Return the list of available commands.
+     */
+    protected function getCommands()
+    {
+        return [
+            'UserFrosting\System\Bakery\Command\Debug',
+            'UserFrosting\System\Bakery\Command\Assets',
+            'UserFrosting\System\Bakery\Command\Bake',
+            'UserFrosting\System\Bakery\Command\Setup',
+            'UserFrosting\System\Bakery\Command\Test',
+            'UserFrosting\System\Bakery\Command\Migration',
+            'UserFrosting\System\Bakery\Command\MigrationRollback',
+            'UserFrosting\System\Bakery\Command\MigrationReset',
+            'UserFrosting\System\Bakery\Command\MigrationRefresh',
+            'UserFrosting\System\Bakery\Command\ClearCache'
+        ];
     }
 }

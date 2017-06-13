@@ -9,7 +9,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
-use UserFrosting\System\Bakery\Migrations\Migration;
+use UserFrosting\System\Bakery\Migration;
 
 /**
  * Sessions table migration

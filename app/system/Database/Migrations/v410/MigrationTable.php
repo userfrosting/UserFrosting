@@ -5,11 +5,11 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\System\Bakery\Migrations\v410;
+namespace UserFrosting\System\Database\Migrations\v410;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
-use UserFrosting\System\Bakery\Migrations\Migration;
+use UserFrosting\System\Bakery\Migration;
 
 /**
  * Migration table migration

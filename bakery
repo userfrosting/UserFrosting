@@ -26,21 +26,10 @@ if (!file_exists(__DIR__ . '/app/vendor/autoload.php')) {
     require_once __DIR__ . '/app/vendor/autoload.php';
 }
 
-use Symfony\Component\Console\Application;
-use UserFrosting\System\Bakery;
+use UserFrosting\System\Bakery\Bakery;
 
 /**
  * Get and run CLI App
  */
-$app = new Application("UserFrosting Bakery", \UserFrosting\VERSION);
-$app->add(new Bakery\DebugCommand());
-$app->add(new Bakery\AssetsCommand());
-$app->add(new Bakery\BakeCommand());
-$app->add(new Bakery\SetupCommand());
-$app->add(new Bakery\TestCommand());
-$app->add(new Bakery\MigrationCommand());
-$app->add(new Bakery\MigrationRollbackCommand());
-$app->add(new Bakery\MigrationResetCommand());
-$app->add(new Bakery\MigrationRefreshCommand());
-$app->add(new Bakery\ClearCacheCommand());
-$app->run();
+$bakery = new Bakery();
+$bakery->run();

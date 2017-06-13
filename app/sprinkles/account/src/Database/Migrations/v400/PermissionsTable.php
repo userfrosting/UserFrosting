@@ -11,7 +11,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
-use UserFrosting\System\Bakery\Migrations\Migration;
+use UserFrosting\System\Bakery\Migration;
 
 /**
  * Permissions table migration
