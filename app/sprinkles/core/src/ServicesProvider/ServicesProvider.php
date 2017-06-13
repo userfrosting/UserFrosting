@@ -151,22 +151,22 @@ class ServicesProvider
 
             $config = $c->config;
 
-            if ($config['cache.store'] == 'file')
+            if ($config['cache.driver'] == 'file')
             {
                 $path = $c->locator->findResource('cache://', true, true);
                 $cacheStore = new TaggableFileStore($path);
             }
-            else if ($config['cache.store'] == 'memcached')
+            else if ($config['cache.driver'] == 'memcached')
             {
                 $cacheStore = new MemcachedStore($config['cache.memcached']);
             }
-            else if ($config['cache.store'] == 'redis')
+            else if ($config['cache.driver'] == 'redis')
             {
                 $cacheStore = new RedisStore($config['cache.redis']);
             }
             else
             {
-                throw new \Exception("Bad cache store type '{$config['cache.store']}' specified in configuration file.");
+                throw new \Exception("Bad cache store type '{$config['cache.driver']}' specified in configuration file.");
             }
 
             $cache = $cacheStore->instance();

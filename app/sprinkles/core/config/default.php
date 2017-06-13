@@ -31,7 +31,7 @@
             'use_raw'  => true
         ],
         'cache' => [
-            'store' => 'file', // Set to one of `file`, `memcached`, `redis`
+            'driver' => 'file', // Set to one of `file`, `memcached`, `redis`
     	    'prefix' => 'userfrosting', // Edit prefix to something unique when multiple instance of memcached/redis are used on the same server
             'memcached' => [
                 'host' => '127.0.0.1',
