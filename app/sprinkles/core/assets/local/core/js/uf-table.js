@@ -96,84 +96,84 @@
     var pluginName = "ufTable",
         defaults = {
             DEBUG           : false,
-                dataUrl         : "",
-                msgTarget       : $('#alerts-page'),
-                addParams       : {},
-                filterAllField: '_all',
-                tablesorter     : {
-                    debug: false,
-                    theme     : 'bootstrap',
-                    widthFixed: true,
-                    // Set up pagination of data via an AJAX source
-                    // See http://jsfiddle.net/Mottie/uwZc2/
-                    // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
-                    widgets: ['saveSort', 'sort2Hash', 'filter', 'pager', 'columnSelector', 'reflow2'],
-                    widgetOptions : {
-                        columnSelector_layout : '<label><input type="checkbox"> <span>{name}</span></label>',
-                        filter_cssFilter: 'form-control',
-                        filter_saveFilters : true,
-                        filter_serversideFiltering : true,
-                        filter_selectSource : {
-                            '.filter-select' : function() { return null; }
-                        },
+            dataUrl         : "",
+            msgTarget       : $('#alerts-page'),
+            addParams       : {},
+            filterAllField: '_all',
+            tablesorter     : {
+                debug: false,
+                theme     : 'bootstrap',
+                widthFixed: true,
+                // Set up pagination of data via an AJAX source
+                // See http://jsfiddle.net/Mottie/uwZc2/
+                // Also see https://mottie.github.io/tablesorter/docs/example-pager-ajax.html
+                widgets: ['saveSort', 'sort2Hash', 'filter', 'pager', 'columnSelector', 'reflow2'],
+                widgetOptions : {
+                    columnSelector_layout : '<label><input type="checkbox"> <span>{name}</span></label>',
+                    filter_cssFilter: 'form-control',
+                    filter_saveFilters : true,
+                    filter_serversideFiltering : true,
+                    filter_selectSource : {
+                        '.filter-select' : function() { return null; }
+                    },
 
-                        // apply disabled classname to the pager arrows when the rows at either extreme is visible
-                        pager_updateArrows: true,
+                    // apply disabled classname to the pager arrows when the rows at either extreme is visible
+                    pager_updateArrows: true,
 
-                        // starting page of the pager (zero based index)
-                        pager_startPage: 0,
+                    // starting page of the pager (zero based index)
+                    pager_startPage: 0,
 
-                        // Number of visible rows
-                        pager_size: 10,
+                    // Number of visible rows
+                    pager_size: 10,
 
-                        // Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
-                        pager_savePages: true,
+                    // Save pager page & size if the storage script is loaded (requires $.tablesorter.storage in jquery.tablesorter.widgets.js)
+                    pager_savePages: true,
 
-                        // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
-                        // table row set to a height to compensate; default is false
-                        pager_fixedHeight: false,
+                    // if true, the table will remain the same height no matter how many records are displayed. The space is made up by an empty
+                    // table row set to a height to compensate; default is false
+                    pager_fixedHeight: false,
 
-                        // remove rows from the table to speed up the sort of large tables.
-                        // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
-                        pager_removeRows: false, // removing rows in larger tables speeds up the sort
+                    // remove rows from the table to speed up the sort of large tables.
+                    // setting this to false, only hides the non-visible rows; needed if you plan to add/remove rows with the pager enabled.
+                    pager_removeRows: false, // removing rows in larger tables speeds up the sort
 
-                        // target the pager markup - see the HTML block below
-                        pager_css: {
-                            errorRow    : 'uf-table-error-row', // error information row
-                            disabled    : 'disabled' // Note there is no period "." in front of this class name
-                        },
+                    // target the pager markup - see the HTML block below
+                    pager_css: {
+                        errorRow    : 'uf-table-error-row', // error information row
+                        disabled    : 'disabled' // Note there is no period "." in front of this class name
+                    },
 
-                        // Must be initialized with a 'data' key
-                        pager_ajaxObject: {
-                            data: {},
-                            dataType: 'json'
-                        },
-                        // jQuery selectors
-                        pager_selectors: {
-                          container   : '.pager',       // target the pager markup (wrapper)
-                          first       : '.first',       // go to first page arrow
-                          prev        : '.prev',        // previous page arrow
-                          next        : '.next',        // next page arrow
-                          last        : '.last',        // go to last page arrow
-                          gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
-                          pageDisplay : '.pagedisplay', // location of where the "output" is displayed
-                          pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
-                        },
+                    // Must be initialized with a 'data' key
+                    pager_ajaxObject: {
+                        data: {},
+                        dataType: 'json'
+                    },
+                    // jQuery selectors
+                    pager_selectors: {
+                      container   : '.pager',       // target the pager markup (wrapper)
+                      first       : '.first',       // go to first page arrow
+                      prev        : '.prev',        // previous page arrow
+                      next        : '.next',        // next page arrow
+                      last        : '.last',        // go to last page arrow
+                      gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
+                      pageDisplay : '.pagedisplay', // location of where the "output" is displayed
+                      pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
+                    },
 
-                        // hash prefix
-                        sort2Hash_hash              : '#',
-                        // don't '#' or '=' here
-                        sort2Hash_separator         : '|',
-                        // this option > table ID > table index on page
-                        sort2Hash_tableId           : null,
-                        // if true, show header cell text instead of a zero-based column index
-                        sort2Hash_headerTextAttr    : 'data-column-name',
-                        // direction text shown in the URL e.g. [ 'asc', 'desc' ]
-                        sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
-                        // if true, override saveSort widget sort, if used & stored sort is available
-                        sort2Hash_overrideSaveSort  : true, // default = false
-                    }
+                    // hash prefix
+                    sort2Hash_hash              : '#',
+                    // don't '#' or '=' here
+                    sort2Hash_separator         : '|',
+                    // this option > table ID > table index on page
+                    sort2Hash_tableId           : null,
+                    // if true, show header cell text instead of a zero-based column index
+                    sort2Hash_headerTextAttr    : 'data-column-name',
+                    // direction text shown in the URL e.g. [ 'asc', 'desc' ]
+                    sort2Hash_directionText     : [ 'asc', 'desc' ], // default values
+                    // if true, override saveSort widget sort, if used & stored sort is available
+                    sort2Hash_overrideSaveSort  : true, // default = false
                 }
+            }
         };
 
     // Constructor
