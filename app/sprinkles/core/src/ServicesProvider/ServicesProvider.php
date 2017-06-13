@@ -36,6 +36,8 @@ use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
 use UserFrosting\Cache\TaggableFileStore;
 use UserFrosting\Cache\MemcachedStore;
 use UserFrosting\Cache\RedisStore;
+use UserFrosting\Config\ConfigPathBuilder;
+use UserFrosting\I18n\LocalePathBuilder;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
@@ -51,6 +53,8 @@ use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
+use UserFrosting\Support\Repository\Repository;
 
 /**
  * UserFrosting core services provider.
@@ -123,10 +127,14 @@ class ServicesProvider
 
                 // Load Sprinkle assets
                 $sprinkles = $c->sprinkleManager->getSprinkleNames();
-                foreach ($sprinkles as $sprinkle) {
-                    $resource = $locator->findResource("sprinkles://$sprinkle/" . $config['assets.raw.schema'], true, true);
-                    if (file_exists($resource)) {
-                        $as->loadRawSchemaFile($resource);
+
+                // TODO: move this out into PathBuilder and Loader classes in userfrosting/assets
+                // This would also allow us to define and load bundles in themes
+                $bundleSchemas = array_reverse($locator->findResources('sprinkles://' . $config['assets.raw.schema'], true, true));
+
+                foreach ($bundleSchemas as $schema) {
+                    if (file_exists($schema)) {
+                        $as->loadRawSchemaFile($schema);
                     }
                 }
             } else {
@@ -208,17 +216,13 @@ class ServicesProvider
                 // Skip loading the environment config file if it doesn't exist.
             }
 
-            // Create and inject new config item
-            $config = new \UserFrosting\Config\Config();
-
-            // Add search paths for all config files.  Include them in reverse order to allow config files added later to override earlier files.
-            $configPaths = array_reverse($c->locator->findResources('config://', true, true));
-
-            $config->setPaths($configPaths);
-
             // Get configuration mode from environment
-            $mode = getenv("UF_MODE") ?: "";
-            $config->loadConfigurationFiles($mode);
+            $mode = getenv("UF_MODE") ?: '';
+
+            // Construct and load config repository
+            $builder = new ConfigPathBuilder($c->locator, 'config://');
+            $loader = new ArrayFileLoader($builder->buildPaths($mode));
+            $config = new Repository($loader->load());
 
             // Construct base url from components, if not explicitly specified
             if (!isset($config['site.uri.public'])) {
@@ -405,6 +409,23 @@ class ServicesProvider
         };
 
         /**
+         * Builds search paths for locales in all Sprinkles.
+         */
+        $container['localePathBuilder'] = function ($c) {
+            $config = $c->config;
+
+            // Make sure the locale config is a valid string
+            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == "") {
+                throw new \UnexpectedValueException("The locale config is not a valid string.");
+            }
+
+            // Load the base locale file(s) as specified in the configuration
+            $locales = explode(',', $config['site.locales.default']);
+
+            return new LocalePathBuilder($c->locator, 'locale://', $locales);
+        };
+
+        /**
          * Mail service.
          */
         $container['mailer'] = function ($c) {
@@ -557,31 +578,12 @@ class ServicesProvider
          * Translation service, for translating message tokens.
          */
         $container['translator'] = function ($c) {
-
-            // Create and inject new config item
-            $translator = new MessageTranslator();
-
-            // Add search paths for all locale files.  Include them in reverse order to allow locale files added later to override earlier files.
-            $localePaths = array_reverse($c->locator->findResources('locale://', true, true));
-
-            $translator->setPaths($localePaths);
-
-            $config = $c->config;
-
-            // Make sure the locale config is a valid string
-            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == "") {
-                throw new \UnexpectedValueException("The locale config is not a valid string.");
-            }
-
-            // Load the base locale file(s) as specified in the configuration
-            $locales = explode(',', $config['site.locales.default']);
-            foreach ($locales as $locale) {
-
-                // Make sure it's a valid string before loading
-                if (is_string($locale) && $locale != "") {
-                    $translator->loadLocaleFiles(trim($locale));
-                }
-            }
+            // Load the translations
+            $paths = $c->localePathBuilder->buildPaths();
+            $loader = new ArrayFileLoader($paths);
+        
+            // Create the $translator object
+            $translator = new MessageTranslator($loader->load());
 
             return $translator;
         };
@@ -602,7 +604,12 @@ class ServicesProvider
 
             // Add Sprinkles' templates namespaces
             foreach ($sprinkles as $sprinkle) {
-                if ($path = $c->locator->findResource('sprinkles://'.$sprinkle.'/templates/', true, false)) {
+                $path = \UserFrosting\APP_DIR . \UserFrosting\DS .
+                    \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS .
+                    $sprinkle . \UserFrosting\DS .
+                    \UserFrosting\TEMPLATE_DIR_NAME . \UserFrosting\DS;
+
+                if (is_dir($path)) {
                     $loader->addPath($path, $sprinkle);
                 }
             }

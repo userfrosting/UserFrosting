@@ -13,6 +13,9 @@
 - Support for allowing Sprinkles to register middleware (#617)
 - Automatically load Sprinkle service providers (see #636)
 - Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
+- The `sprinkles://` stream now represents a virtual filesystem for the root directory of each loaded sprinkle, rather than the `sprinkles/` directory itself.
+- Separate out `localePathBuilder` from the `translator` service.  Makes it easier to add/remove paths before actually loading the translations.
+- Only present locale options with non-null names.
 - Rebased ufTable and ufModal with new jQuery plugin template. (part of #646)
 - Removed the search bar from the Dashboard layout
 - Added Tablesorter pagination translation

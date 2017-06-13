@@ -519,7 +519,7 @@ class UserController extends SimpleController
         ];
 
         // Get a list of all locales
-        $locales = $config['site.locales.available'];
+        $locales = $config->getDefined('site.locales.available');
 
         // Determine if currentUser has permission to modify the group.  If so, show the 'group' dropdown.
         // Otherwise, set to the currentUser's group and disable the dropdown.
@@ -612,7 +612,7 @@ class UserController extends SimpleController
         $config = $this->ci->config;
 
         // Get a list of all locales
-        $locales = $config['site.locales.available'];
+        $locales = $config->getDefined('site.locales.available');
 
         // Generate form
         $fields = [
@@ -814,7 +814,7 @@ class UserController extends SimpleController
         $config = $this->ci->config;
 
         // Get a list of all locales
-        $locales = $config['site.locales.available'];
+        $locales = $config->getDefined('site.locales.available');
 
         // Determine fields that currentUser is authorized to view
         $fieldNames = ['user_name', 'name', 'email', 'locale', 'group', 'roles'];

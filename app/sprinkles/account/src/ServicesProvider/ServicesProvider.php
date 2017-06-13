@@ -93,11 +93,10 @@ class ServicesProvider
         });
 
         /**
-         * Extends the 'translator' service, adding any locale files from the user theme.
+         * Extends the 'localePathBuilder' service, adding any locale files from the user theme.
          *
-         * Also loads the actual translations for the user's locale.
          */
-        $container->extend('translator', function ($translator, $c) {
+        $container->extend('localePathBuilder', function ($pathBuilder, $c) {
             // Add paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
@@ -105,21 +104,18 @@ class ServicesProvider
                 $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
-                return $translator;
+                return $pathBuilder;
             }
 
             if ($authenticator->check()) {
+                // Add paths to locale files for user theme
                 $themePath = $c->sprinkleManager->addResource('locale', $currentUser->theme);
-                if ($themePath) {
-                    // Add paths to locale files for user theme
-                    $translator->addPath($themePath);
-                }
 
-                // Add user locale to translator service
-                $translator->loadLocaleFiles($currentUser->locale);
+                // Add user locale
+                $pathBuilder->addLocales($currentUser->locale);
             }
 
-            return $translator;
+            return $pathBuilder;
         });
 
         /**

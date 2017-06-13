@@ -61,6 +61,7 @@ class SprinkleManager
             'locale' => \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME,
             'routes' => \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME,
             'schema' => \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME,
+            'sprinkles' => '',
             'templates' => \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME
         ];
     }
@@ -101,6 +102,7 @@ class SprinkleManager
             $this->addResource('locale', $sprinkleName);
             $this->addResource('routes', $sprinkleName);
             $this->addResource('schema', $sprinkleName);
+            $this->addResource('sprinkles', $sprinkleName);
             $this->addResource('templates', $sprinkleName);
         }
     }

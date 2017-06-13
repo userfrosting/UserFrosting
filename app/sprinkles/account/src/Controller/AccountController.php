@@ -548,7 +548,7 @@ class AccountController extends SimpleController
         $config = $this->ci->config;
 
         // Get a list of all locales
-        $locales = $config['site.locales.available'];
+        $locales = $config->getDefined('site.locales.available');
 
         return $this->ci->view->render($response, 'pages/account-settings.html.twig', [
             "locales" => $locales,
@@ -649,7 +649,7 @@ class AccountController extends SimpleController
         }
 
         // Check that locale is valid
-        $locales = $config['site.locales.available'];
+        $locales = $config->getDefined('site.locales.available');
         if (!array_key_exists($data['locale'], $locales)) {
             $ms->addMessageTranslated("danger", "LOCALE.INVALID", $data);
             $error = true;

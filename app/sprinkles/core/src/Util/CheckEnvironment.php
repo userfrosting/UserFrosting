@@ -259,7 +259,7 @@ class CheckEnvironment
         if ($this->isProduction()) {
             // Should be write-protected in production!
             $shouldBeWriteable = array_merge($shouldBeWriteable, [
-                $this->locator->findResource('sprinkles://') => false,
+                \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME => false,
                 \UserFrosting\VENDOR_DIR => false
             ]);
         }
