@@ -21,7 +21,7 @@ use UserFrosting\System\Bakery\BaseCommand;
  * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Assets extends BaseCommand
+class BuildAssets extends BaseCommand
 {
     /**
      * @var string Path to the build/ directory
@@ -127,7 +127,7 @@ class Assets extends BaseCommand
         $coreVendorFiles = glob($vendorPath);
 
         if (!$coreVendorFiles){
-            $this->io->error("NPM bundle failed. Directory `$vendorPath` is empty.");
+            $this->io->error("Assets building seems to have failed. Directory `$vendorPath` is empty, but it shouldn't be. Check the above log for any errors.");
             exit(1);
         }
     }
