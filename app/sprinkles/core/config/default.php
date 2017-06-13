@@ -16,7 +16,7 @@
             ]
         ],
         'alert' => [
-            'storage'   => 'cache', // Set to one of `cache` or `session`
+            'storage'   => 'session', // Set to one of `cache` or `session`
             'key'       => 'site.alerts', // the key to use to store flash messages
         ],
         'assets' => [
