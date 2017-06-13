@@ -190,6 +190,16 @@ class User extends Model
     }
 
     /**
+     * Return a cache instance specific to that user
+     *
+     * @return Illuminate\\Cache\\*Store
+     */
+    public function getCache()
+    {
+        return static::$ci->cache->tags([static::$ci->config['cache.prefix'], "_u".$this->id]);
+    }
+
+    /**
      * Allows you to get the full name of the user using `$user->full_name`
      *
      * @return string

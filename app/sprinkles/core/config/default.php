@@ -15,6 +15,10 @@
                 'name'  => 'Site Administrator'
             ]
         ],
+        'alert' => [
+            'storage'   => 'cache', // Set to one of `cache` or `session`
+            'key'       => 'site.alerts', // the key to use to store flash messages
+        ],
         'assets' => [
             'compiled' => [
                 'path'   => 'assets',
@@ -27,26 +31,20 @@
             'use_raw'  => true
         ],
         'cache' => [
-            'twig' => false,
-            'illuminate' => [
-                'default' => 'file',
-        	    'prefix' => 'uf4',
-        	    'stores' => [
-                    'file' => [
-                        'driver' => 'file'
-                    ],
-                    'memcached' => [
-                        'driver' => 'memcached',
-                        'servers' => [
-                            [
-                                'host' => '127.0.0.1',
-                                'port' => 11211,
-                                'weight' => 100
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+            'store' => 'file', // Set to one of `file`, `memcached`, `redis`
+    	    'prefix' => 'userfrosting', // Edit prefix to something unique when multiple instance of memcached/redis are used on the same server
+            'memcached' => [
+                'host' => '127.0.0.1',
+                'port' => 11211,
+                'weight' => 100
+            ],
+            "redis" => [
+                'host' => '127.0.0.1',
+                'password' => null,
+                'port' => 6379,
+                'database' => 0
+            ],
+            'twig' => false
         ],
         // CSRF middleware settings (see https://github.com/slimphp/Slim-Csrf)
         'csrf' => [
@@ -104,7 +102,6 @@
             'cache_limiter' => false,
             // Decouples the session keys used to store certain session info
             'keys' => [
-                'alerts'  => 'site.alerts',    // the key to use to store flash messages
                 'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
             ]
         ],

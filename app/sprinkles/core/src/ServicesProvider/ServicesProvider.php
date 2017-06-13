@@ -9,8 +9,6 @@ namespace UserFrosting\Sprinkle\Core\ServicesProvider;
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
-use Illuminate\Cache\CacheManager;
-use Illuminate\Cache\MemcachedConnector;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Events\QueryExecuted;
@@ -35,12 +33,16 @@ use UserFrosting\Assets\AssetLoader;
 use UserFrosting\Assets\AssetManager;
 use UserFrosting\Assets\UrlBuilder\AssetUrlBuilder;
 use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
+use UserFrosting\Cache\TaggableFileStore;
+use UserFrosting\Cache\MemcachedStore;
+use UserFrosting\Cache\RedisStore;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
-use UserFrosting\Sprinkle\Core\MessageStream;
+use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
+use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
@@ -71,7 +73,20 @@ class ServicesProvider
          * Persists error/success messages between requests in the session.
          */
         $container['alerts'] = function ($c) {
-            return new MessageStream($c->session, $c->config['session.keys.alerts'], $c->translator);
+            $config = $c->config;
+
+            if ($config['alert.storage'] == 'cache')
+            {
+                return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->config);
+            }
+            else if ($config['alert.storage'] == 'session')
+            {
+                return new SessionAlertStream($config['alert.key'], $c->translator, $c->session);
+            }
+            else
+            {
+                throw new \Exception("Bad alert storage handler type '{$config['alert.storage']}' specified in configuration file.");
+            }
         };
 
         /**
@@ -134,26 +149,28 @@ class ServicesProvider
          */
         $container['cache'] = function ($c) {
 
-            // Create dummy Illuminate Container
-            $app = new Container();
+            $config = $c->config;
 
-            $app->singleton('files', function() {
-                return new Filesystem();
-            });
+            if ($config['cache.store'] == 'file')
+            {
+                $path = $c->locator->findResource('cache://', true, true);
+                $cacheStore = new TaggableFileStore($path);
+            }
+            else if ($config['cache.store'] == 'memcached')
+            {
+                $cacheStore = new MemcachedStore($config['cache.memcached']);
+            }
+            else if ($config['cache.store'] == 'redis')
+            {
+                $cacheStore = new RedisStore($config['cache.redis']);
+            }
+            else
+            {
+                throw new \Exception("Bad cache store type '{$config['cache.store']}' specified in configuration file.");
+            }
 
-            $app->singleton('memcached.connector', function() {
-                return new MemcachedConnector;
-            });
-
-            $app->singleton('config', function() use ($c) {
-                $config = new \UserFrosting\Config\Config();
-                $config['cache'] = $c->config['cache.illuminate'];
-                $config['cache.stores.file.path'] = $c->locator->findResource('cache://illuminate', true, true);
-                return $config;
-            });
-
-            $cacheManager = new CacheManager($app);
-            return $cacheManager->driver();
+            $cache = $cacheStore->instance();
+            return $cache->tags($config['cache.prefix']);
         };
 
         /**
@@ -500,6 +517,7 @@ class ServicesProvider
             // Create, start and return a new wrapper for $_SESSION
             $session = new Session($handler, $config['session']);
             $session->start();
+
             return $session;
         };
 
