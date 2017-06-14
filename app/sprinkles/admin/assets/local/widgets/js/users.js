@@ -74,22 +74,51 @@ function updateUser(userName, fieldName, fieldValue) {
     data[site.csrf.keys.value] = site.csrf.value;
 
     var url = site.uri.public + '/api/users/u/' + userName + '/' + fieldName;
+    var debugAjax = (typeof site !== "undefined") && site.debug.ajax;
 
     return $.ajax({
         type: "PUT",
         url: url,
-        data: data
-	}).fail(function (response) {
+        data: data,
+        dataType: debugAjax ? 'html' : 'json',
+        converters: {
+            // Override jQuery's strict JSON parsing
+            'text json': function(result) {
+                try {
+                    // First try to use native browser parsing
+                    if (typeof JSON === 'object' && typeof JSON.parse === 'function') {
+                        return JSON.parse(result);
+                    } else {
+                        return $.parseJSON(result);
+                    }
+                } catch (e) {
+                   // statements to handle any exceptions
+                   console.log("Warning: Could not parse expected JSON response.");
+                   return {};
+                }
+            }
+        }
+	}).fail(function (jqXHR) {
         // Error messages
-        if ((typeof site !== "undefined") && site.debug.ajax && response.responseText) {
-            document.write(response.responseText);
+        if (debugAjax && jqXHR.responseText) {
+            document.write(jqXHR.responseText);
             document.close();
         } else {
-            console.log("Error (" + response.status + "): " + response.responseText );
+            console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+
+            // Display errors on failure
+            // TODO: ufAlerts widget should have a 'destroy' method
+            if (!$("#alerts-page").data('ufAlerts')) {
+                $("#alerts-page").ufAlerts();
+            } else {
+                $("#alerts-page").ufAlerts('clear');
+            }
+    
+            $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
         }
 
-        return response;
-    }).always(function (response) {
+        return jqXHR;
+    }).done(function (response) {
         window.location.reload();
     });
 }

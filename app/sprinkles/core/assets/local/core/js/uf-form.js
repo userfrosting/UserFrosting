@@ -59,6 +59,7 @@
         this.settings = $.extend(true, {}, defaults, lateDefaults, options);
         this._defaults = $.extend(true, {}, defaults, lateDefaults);
         this._name = pluginName;
+        this._debugAjax = (typeof site !== "undefined") && site.debug.ajax;
 
         // Detect changes to element attributes
         this.$element.attrchange({ callback: function (event) { this.element = event.target; }.bind(this) });
@@ -88,6 +89,25 @@
 
                 // Get basic request parameters.
                 var reqParams = {
+                    converters: {
+                        // Override jQuery's strict JSON parsing
+                        'text json': function(result) {
+                            try {
+                                // First try to use native browser parsing
+                                if (typeof JSON === 'object' && typeof JSON.parse === 'function') {
+                                    return JSON.parse(result);
+                                } else {
+                                    return $.parseJSON(result);
+                                }
+                            } catch (e) {
+                               // statements to handle any exceptions
+                               console.log("Warning: Could not parse expected JSON response.");
+                               return {};
+                            }
+                        }
+                    },
+
+                    dataType: this._debugAjax ? 'html' : 'json',
                     type: this.$element.attr('method'),
                     url: this.$element.attr('action')
                 };
@@ -124,7 +144,7 @@
                             submitButton.html(submitButtonText);
                         }
                         // Error messages
-                        if ((typeof site !== "undefined") && site.debug.ajax && jqXHR.responseText) {
+                        if (this._debugAjax && jqXHR.responseText) {
                             this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
                             document.write(jqXHR.responseText);
                             document.close();
