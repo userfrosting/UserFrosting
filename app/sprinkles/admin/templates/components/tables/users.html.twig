@@ -59,24 +59,24 @@
 
     <script id="user-table-column-actions" type="text/x-handlebars-template">
         <td
-            {{#ifCond row.flag_enabled 0 }}
+            {{#ifx row.flag_enabled '==' 0 }}
                 data-text="disabled"
             {{ else }}
-                {{#ifCond row.flag_verified 0 }}
+                {{#ifx row.flag_verified '==' 0 }}
                     data-text="unactivated"
                 {{ else }}
                     data-text="active"
-                {{/ifCond }}
-            {{/ifCond }}
+                {{/ifx }}
+            {{/ifx }}
         >
             <div class="btn-group">
-                {{#ifCond row.flag_enabled 0 }}
+                {{#ifx row.flag_enabled '==' 0 }}
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
                         <span class="caret"></span>
                     </button>
                 {{ else }}
-                    {{#ifCond row.flag_verified 0 }}
+                    {{#ifx row.flag_verified '==' 0 }}
                         <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                             {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
                             <span class="caret"></span>
@@ -86,16 +86,16 @@
                             {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
                             <span class="caret"></span>
                         </button>
-                    {{/ifCond }}
-                {{/ifCond }}
+                    {{/ifx }}
+                {{/ifx }}
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    {{#ifCond row.flag_verified 0 }}
+                    {{#ifx row.flag_verified '==' 0 }}
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-activate">
                         <i class="fa fa-bolt"></i> {% endverbatim %}{{translate("USER.ACTIVATE")}}{% verbatim %}
                         </a>
                     </li>
-                    {{/ifCond }}
+                    {{/ifx }}
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-edit">
                         <i class="fa fa-edit"></i> {% endverbatim %}{{translate("USER.EDIT")}}{% verbatim %}
@@ -112,7 +112,7 @@
                         </a>
                     </li>
                     <li>
-                    {{#ifCond row.flag_enabled 1 }}
+                    {{#ifx row.flag_enabled '==' 1 }}
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-disable">
                         <i class="fa fa-minus-circle"></i> {% endverbatim %}{{translate("USER.DISABLE")}}{% verbatim %}
                         </a>
@@ -120,7 +120,7 @@
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-enable">
                         <i class="fa fa-plus-circle"></i> {% endverbatim %}{{translate("USER.ENABLE")}}{% verbatim %}
                         </a>
-                    {{/ifCond }}
+                    {{/ifx }}
                     </li>
                     <li>
                         <a href="#" data-user_name="{{row.user_name}}" class="js-user-delete">
