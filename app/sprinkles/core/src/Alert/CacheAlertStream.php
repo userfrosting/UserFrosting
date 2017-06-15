@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Alert;
@@ -15,8 +14,7 @@ namespace UserFrosting\Sprinkle\Core\Alert;
  * Using the cache system to store the alerts. Note that the tags are added each time instead of the constructor
  * since the session_id can change when the user logs in or out
  *
- * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/components/#messages
+ * @author Louis Charette
  */
 class CacheAlertStream extends AlertStream
 {
