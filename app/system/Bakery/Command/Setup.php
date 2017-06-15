@@ -124,8 +124,9 @@ class Setup extends BaseCommand
             $this->io->success("Database connexion successful");
             $success = true;
         } catch (\PDOException $e) {
-            $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}'.  Please check your database configuration and/or google the exception shown below and run command again:".PHP_EOL;
-            $message .= "Exception: " . $e->getMessage() . PHP_EOL;
+            $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
+            $message .= "Exception: " . $e->getMessage() . PHP_EOL.PHP_EOL;
+            $message .= "Please check your database configuration and/or google the exception shown above and run command again.";
             $this->io->error($message);
             exit(1);
         }
