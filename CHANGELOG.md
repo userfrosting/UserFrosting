@@ -26,7 +26,8 @@
 - Refactor groups and user routes (Fix #721)
 - Added the `config` alert stream to save ufAlerts to the cache instead of sessions. Fix #633. The old `session` is still the default alertStream in 4.1.
 - Added support for the Redis cache driver and refactored the cache config values.
-- Added user and session cache. 
+- Added user and session cache.
+- Common log file for db queries, auth checks, smtp, errors, and debug messages (#709).
 
 See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
 

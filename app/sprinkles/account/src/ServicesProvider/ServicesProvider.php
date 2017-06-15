@@ -182,14 +182,14 @@ class ServicesProvider
         };
 
         /**
-         * Auth logging with Monolog.
+         * Authorization check logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'auth' log stack.
          */
         $container['authLogger'] = function ($c) {
             $logger = new Logger('auth');
 
-            $logFile = $c->get('locator')->findResource('log://auth.log', true, true);
+            $logFile = $c->get('locator')->findResource('log://userfrosting.log', true, true);
 
             $handler = new StreamHandler($logFile);
 

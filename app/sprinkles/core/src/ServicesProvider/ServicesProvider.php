@@ -337,7 +337,7 @@ class ServicesProvider
         $container['debugLogger'] = function ($c) {
             $logger = new Logger('debug');
 
-            $logFile = $c->locator->findResource('log://debug.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
 
             $handler = new StreamHandler($logFile);
 
@@ -374,7 +374,7 @@ class ServicesProvider
         $container['errorLogger'] = function ($c) {
             $log = new Logger('errors');
 
-            $logFile = $c->locator->findResource('log://errors.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
 
             $handler = new StreamHandler($logFile, Logger::WARNING);
 
@@ -448,7 +448,7 @@ class ServicesProvider
         $container['mailLogger'] = function ($c) {
             $log = new Logger('mail');
 
-            $logFile = $c->locator->findResource('log://mail.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
 
             $handler = new StreamHandler($logFile);
             $formatter = new LineFormatter(null, null, true);
@@ -493,7 +493,7 @@ class ServicesProvider
         $container['queryLogger'] = function ($c) {
             $logger = new Logger('query');
 
-            $logFile = $c->locator->findResource('log://queries.log', true, true);
+            $logFile = $c->locator->findResource('log://userfrosting.log', true, true);
 
             $handler = new StreamHandler($logFile);
 

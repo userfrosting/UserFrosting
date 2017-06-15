@@ -68,7 +68,7 @@
         ],
         'debug' => [
             'queries' => false,
-            'smtp' => true,
+            'smtp' => false,
             'twig' => false
         ],
         'mail'    => [
@@ -112,7 +112,7 @@
         // "Site" settings that are automatically passed to Twig
         'site' => [
             'AdminLTE' =>  [
-                'skin' => "blue"
+                'skin' => 'blue'
             ],
             'analytics' => [
                 'google' => [
