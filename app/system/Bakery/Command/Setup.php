@@ -63,7 +63,7 @@ class Setup extends BaseCommand
         // There might not be any `.env` file because there may be some custom config or global env values defined on the server.
         // We'll check for that. If the configs are empty, we'll assume nothing is defined and go strait to setup.
         if (!$force && $config["db.default.host"] != "" && $config["db.default.database"] != "" && $config["db.default.username"] != "") {
-            $this->io->note("File `{$this->envPath}` was not found, but some database configuraiton are present. If this is not right, use -f option to force setup to run.");
+            $this->io->note("File `{$this->envPath}` was not found, but some database configuration are present. Global system environment variable might be defined. If this is not right, use -f option to force setup to run.");
             return;
         }
 
@@ -155,6 +155,11 @@ class Setup extends BaseCommand
 
         // Let's save this config
         file_put_contents($this->envPath, $fileContent);
+
+        // At this point, `$this->uf` is still using the old configs.
+        // We need to refresh the `db.default` config values
+        $newConfig = array_merge($config['db.default'], $dbParams);
+        $this->ci->config->set("db.default", $newConfig);
     }
 
     /**
