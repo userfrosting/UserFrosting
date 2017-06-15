@@ -29,6 +29,19 @@ class Bake extends BaseCommand
     protected $buildPath;
 
     /**
+     * @var String $ufArt The UserFrosting ASCII art.
+     */
+    public $title = "
+ _   _              ______             _   _
+| | | |             |  ___|           | | (_)
+| | | |___  ___ _ __| |_ _ __ ___  ___| |_ _ _ __   __ _
+| | | / __|/ _ \ '__|  _| '__/ _ \/ __| __| | '_ \ / _` |
+| |_| \__ \  __/ |  | | | | | (_) \__ \ |_| | | | | (_| |
+ \___/|___/\___|_|  \_| |_|  \___/|___/\__|_|_| |_|\__, |
+                                                    __/ |
+                                                   |___/";
+
+    /**
      * {@inheritDoc}
      */
     protected function configure()
@@ -43,6 +56,8 @@ class Bake extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io->writeln("<info>{$this->title}</info>");
+
         $command = $this->getApplication()->find('setup');
         $command->run($input, $output);
 
