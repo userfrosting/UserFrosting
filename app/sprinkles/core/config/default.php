@@ -26,7 +26,7 @@
             ],
             'raw' => [
                 'path'   => 'assets-raw',
-                'schema' => 'bundle.config.json'
+                'schema' => 'asset-bundles.json'
             ],
             'use_raw'  => true
         ],
