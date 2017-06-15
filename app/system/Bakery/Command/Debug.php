@@ -135,7 +135,7 @@ class Debug extends BaseCommand
         $path = \UserFrosting\APP_DIR . '/sprinkles.json';
         $sprinklesFile = @file_get_contents($path);
         if ($sprinklesFile === false) {
-            $sprinklesFile = $this->setupBaseSprinkleList();
+            $this->io->error("The file `$path` not found.");
         }
 
         // List installed sprinkles
@@ -148,27 +148,6 @@ class Debug extends BaseCommand
             $this->io->error("The `core` sprinkle is missing from the 'sprinkles.json' file.");
             exit(1);
         }
-    }
-
-    /**
-     * Write the base `sprinkle.json` file if none exist.
-     *
-     * @access protected
-     * @return void
-     */
-    protected function setupBaseSprinkleList()
-    {
-        $model = \UserFrosting\APP_DIR . '/sprinkles.example.json';
-        $destination = \UserFrosting\APP_DIR . '/sprinkles.json';
-        $sprinklesModelFile = @file_get_contents($model);
-        if ($sprinklesModelFile === false) {
-            $this->io->error("File `$sprinklesModelFile` not found. Please create '$destination' manually and try again.");
-            exit(1);
-        }
-
-        file_put_contents($destination, $sprinklesModelFile);
-
-        return $sprinklesModelFile;
     }
 
     /**

@@ -34,6 +34,13 @@ class Bakery
      */
     public function __construct()
     {
+        // Check for `sprinkles.json`
+        $path = \UserFrosting\APP_DIR . '/sprinkles.json';
+        $sprinklesFile = @file_get_contents($path);
+        if ($sprinklesFile === false) {
+            $sprinklesFile = $this->setupBaseSprinkleList();
+        }
+
         // Create Symfony Console App
         $this->app = new Application("UserFrosting Bakery", \UserFrosting\VERSION);
 
@@ -138,5 +145,26 @@ class Bakery
                \UserFrosting\DS .
                \UserFrosting\SRC_DIR_NAME .
                "/Bakery/";
+    }
+
+    /**
+     * Write the base `sprinkles.json` file if none exist.
+     *
+     * @access protected
+     * @return void
+     */
+    protected function setupBaseSprinkleList()
+    {
+        $model = \UserFrosting\APP_DIR . '/sprinkles.example.json';
+        $destination = \UserFrosting\APP_DIR . '/sprinkles.json';
+        $sprinklesModelFile = @file_get_contents($model);
+        if ($sprinklesModelFile === false) {
+            $this->io->error("File `$sprinklesModelFile` not found. Please create '$destination' manually and try again.");
+            exit(1);
+        }
+
+        file_put_contents($destination, $sprinklesModelFile);
+
+        return $sprinklesModelFile;
     }
 }
