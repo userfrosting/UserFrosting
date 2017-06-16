@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block body_attributes %}
-    class="hold-transition skin-{{site.AdminLTE.skin}} sidebar-mini"
+    {% if current_user.isMaster() %}
+        class="hold-transition skin-red sidebar-mini"
+    {% else %}
+        class="hold-transition skin-{{site.AdminLTE.skin}} sidebar-mini"
+    {% endif %}
 {% endblock %}
 
 {% block content %}

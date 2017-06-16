@@ -81,6 +81,7 @@ class User extends Model
 
     /**
      * Determine if the property for this object exists.
+     *
      * We add relations here so that Twig will be able to find them.
      * See http://stackoverflow.com/questions/29514081/cannot-access-eloquent-attributes-on-twig/35908957#35908957
      * Every property in __get must also be implemented here for Twig to recognize it.
@@ -192,7 +193,7 @@ class User extends Model
     /**
      * Return a cache instance specific to that user
      *
-     * @return Illuminate\\Cache\\*Store
+     * @return Illuminate\Contracts\Cache\Store
      */
     public function getCache()
     {
@@ -264,6 +265,19 @@ class User extends Model
     }
 
     /**
+     * Returns whether or not this user is the master user.
+     *
+     * @return bool
+     */
+    public function isMaster()
+    {
+        $masterId = static::$ci->config['reserved_user_ids.master'];
+
+        // Need to use loose comparison for now, because some DBs return `id` as a string
+        return ($this->id == $masterId);
+    }
+
+    /**
      * Get the most recent activity for this user, based on the user's last_activity_id.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -317,7 +331,7 @@ class User extends Model
      * @param mixed[] $params Optional array of parameters used for this event handler.
      * @todo Transition to Laravel Event dispatcher to handle this
      */
-    public function onLogin($params = array())
+    public function onLogin($params = [])
     {
         // Add a sign in activity (time is automatically set by database)
         static::$ci->userActivityLogger->info("User {$this->user_name} signed in.", [
@@ -329,15 +343,15 @@ class User extends Model
 
         if ($passwordType != "modern") {
             if (!isset($params['password'])) {
-                error_log("Notice: Unhashed password must be supplied to update to modern password hashing.");
+                Debug::debug("Notice: Unhashed password must be supplied to update to modern password hashing.");
             } else {
                 // Hash the user's password and update
                 $passwordHash = Password::hash($params['password']);
                 if ($passwordHash === null) {
-                    error_log("Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?");
+                    Debug::debug("Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?");
                 } else {
                     $this->password = $passwordHash;
-                    error_log("Notice: outdated password hash has been automatically updated to modern hashing.");
+                    Debug::debug("Notice: outdated password hash has been automatically updated to modern hashing.");
                 }
             }
         }
@@ -355,7 +369,7 @@ class User extends Model
      * @param mixed[] $params Optional array of parameters used for this event handler.
      * @todo Transition to Laravel Event dispatcher to handle this
      */
-    public function onLogout($params = array())
+    public function onLogout($params = [])
     {
         static::$ci->userActivityLogger->info("User {$this->user_name} signed out.", [
             'type' => 'sign_out'

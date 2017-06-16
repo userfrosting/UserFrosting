@@ -66,7 +66,6 @@ class CreateAdminUser extends Migration
                 "email" => $email,
                 "first_name" => $first_name,
                 "last_name" => $last_name,
-                "theme" => 'root',
                 "password" => Password::hash($password)
             ]);
 
