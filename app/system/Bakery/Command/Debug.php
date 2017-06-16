@@ -46,6 +46,10 @@ class Debug extends BaseCommand
         $this->io->writeln("OS Name : " . php_uname('s'));
         $this->io->writeln("Project Root : {$this->projectRoot}");
 
+        // Need to touch the config service first to load dotenv values
+        $config = $this->ci->config;
+        $this->io->writeln("Environment mode : " . getenv("UF_MODE"));
+
         // Perform tasks
         $this->checkPhpVersion();
         $this->checkNodeVersion();

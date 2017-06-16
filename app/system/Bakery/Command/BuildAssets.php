@@ -53,8 +53,13 @@ class BuildAssets extends BaseCommand
         $this->npmInstall();
         $this->assetsInstall();
 
+        // Get current env mode
+        // N.B.: Need to touch the config service first to load dotenv values
+        $config = $this->ci->config;
+        $mode = getenv("UF_MODE") ?: '';
+
         // Compile if requested
-        if ($input->getOption('compile')) {
+        if ($input->getOption('compile') || $mode == "production") {
             $this->buildAssets();
         }
 
@@ -99,7 +104,7 @@ class BuildAssets extends BaseCommand
      */
     protected function buildAssets()
     {
-        $this->io->section("Building assets");
+        $this->io->section("Building assets for production");
 
         $this->io->writeln("> <comment>npm run uf-bundle-build</comment>");
         passthru("npm run uf-bundle-build --prefix " . $this->buildPath);
