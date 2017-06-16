@@ -1047,7 +1047,7 @@ class AccountController extends SimpleController
         // Access control for entire resource - check that the current user has permission to modify themselves
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
         if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
-            $ms->addMessageTranslated("danger", "ACCOUNT.ACCESS_DENIED");
+            $ms->addMessageTranslated('danger', 'ACCOUNT.ACCESS_DENIED');
             return $response->withStatus(403);
         }
 
@@ -1061,7 +1061,7 @@ class AccountController extends SimpleController
         $params = $request->getParsedBody();
 
         // Load the request schema
-        $schema = new RequestSchema("schema://account-settings.json");
+        $schema = new RequestSchema('schema://account-settings.json');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1078,7 +1078,7 @@ class AccountController extends SimpleController
 
         // Confirm current password
         if (!isset($data['passwordcheck']) || !Password::verify($data['passwordcheck'], $currentUser->password)) {
-            $ms->addMessageTranslated("danger", "PASSWORD.INVALID");
+            $ms->addMessageTranslated('danger', 'PASSWORD.INVALID');
             $error = true;
         }
 
@@ -1088,7 +1088,7 @@ class AccountController extends SimpleController
 
         // If new email was submitted, check that the email address is not in use
         if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'exists', $data['email'], 'email')) {
-            $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
+            $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
 
@@ -1104,10 +1104,52 @@ class AccountController extends SimpleController
             unset($data['password']);
         }
 
+        // If new email was submitted, it must be verified again
+        if (isset($data['email']) && $data['email'] != $currentUser->email && $config['site.registration.require_email_verification']) {
+            // Throttle requests
+
+            /** @var UserFrosting\Sprinkle\Core\Throttle\Throttler $throttler */
+            $throttler = $this->ci->throttler;
+
+            $throttleData = [
+                'email' => $data['email']
+            ];
+            $delay = $throttler->getDelay('verification_request', $throttleData);
+
+            if ($delay > 0) {
+                $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', ['delay' => $delay]);
+                return $response->withStatus(429);
+            }
+
+            // All checks passed! Reset verified flag, log event and send new verification email
+            // Begin transaction - DB will be rolled back if an exception occurs
+            Capsule::transaction(function () use (&$data, $currentUser, $throttler, $throttleData, $config) {
+                // Reset the users verified flag
+                $data['flag_verified'] = false;
+
+                // Log throttleable event
+                $throttler->logEvent('verification_request', $throttleData);
+
+                // We're good to go - record user activity and send the email
+                $verification = $this->ci->repoVerification->create($currentUser, $config['verification.timeout']);
+
+                // Create and send verification email
+                $message = new TwigMailMessage($this->ci->view, 'mail/email-change.html.twig');
+
+                $message->from($config['address_book.admin'])
+                    ->addEmailRecipient(new EmailRecipient($data['email'], $currentUser->full_name))
+                    ->addParams([
+                        'user' => $currentUser,
+                        'token' => $verification->getToken()
+                    ]);
+
+                $this->ci->mailer->send($message);
+            });
+        }
+
         // Looks good, let's update with new values!
         // Note that only fields listed in `account-settings.json` will be permitted in $data, so this prevents the user from updating all columns in the DB
         $currentUser->fill($data);
-
         $currentUser->save();
 
         // Create activity record
@@ -1115,7 +1157,16 @@ class AccountController extends SimpleController
             'type' => 'update_account_settings'
         ]);
 
-        $ms->addMessageTranslated("success", "ACCOUNT.SETTINGS.UPDATED");
+        $ms->addMessageTranslated('success', 'ACCOUNT.SETTINGS.UPDATED');
+
+        // If te flag_verified field is set we need to logout the user
+        if (isset($data['flag_verified'])) {
+            // Destroy the session
+            $this->ci->authenticator->logout();
+            // Return to homepage (client side)
+            $response = $response->withHeader('UF-Redirect', $config['site.uri.public']);
+        }
+
         return $response->withStatus(200);
     }
 
