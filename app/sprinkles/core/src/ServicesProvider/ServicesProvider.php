@@ -239,6 +239,14 @@ class ServicesProvider
                 $config['site.uri.public'] = trim($public, '/');
             }
 
+            // Add asset URLs to the CSRF blacklist
+            $csrfBlacklist = $config['csrf.blacklist'];
+            $csrfBlacklist['^' . $config['assets.raw.path']] = [
+                'GET'
+            ];
+
+            $config->set('csrf.blacklist', $csrfBlacklist);
+
             if (isset($config['display_errors'])) {
                 ini_set("display_errors", $config['display_errors']);
             }

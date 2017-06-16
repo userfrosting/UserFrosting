@@ -40,12 +40,21 @@ class Core extends Sprinkle
         // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
         $request = $this->ci->request;
         $path = $request->getUri()->getPath();
+        $method = $request->getMethod();
 
-        $csrfBlacklist = [
-            $this->ci->config['assets.raw.path']
-        ];
+        $csrfBlacklist = $this->ci->config['csrf.blacklist'];
 
-        if (!$path || !starts_with($path, $csrfBlacklist)) {
+        $isBlacklisted = false;
+
+        foreach ($csrfBlacklist as $pattern => $methods) {
+            $methods = array_map('strtoupper', (array) $methods);
+            if (in_array($method, $methods) && $pattern != '' && preg_match('~' . $pattern . '~', $path)) {
+                $isBlacklisted = true;
+                break;
+            }
+        }
+
+        if (!$path || !$isBlacklisted) {
             $app = $event->getApp();
             $app->add($this->ci->csrf);
         }
