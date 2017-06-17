@@ -2,7 +2,7 @@
     "bundle": {
         "js/pages/account-settings": {
             "scripts": [
-                "local/pages/js/account-settings.js"
+                "userfrosting/js/pages/account-settings.js"
             ],
             "options": {
                 "result": {
@@ -14,7 +14,7 @@
         },
         "js/pages/forgot-password": {
             "scripts": [
-                "local/pages/js/forgot-password.js"
+                "userfrosting/js/pages/forgot-password.js"
             ],
             "options": {
                 "result": {
@@ -26,7 +26,7 @@
         },
         "js/pages/resend-verification": {
             "scripts": [
-                "local/pages/js/resend-verification.js"
+                "userfrosting/js/pages/resend-verification.js"
             ],
             "options": {
                 "result": {
@@ -38,7 +38,7 @@
         },
         "js/pages/set-or-reset-password": {
             "scripts": [
-                "local/pages/js/set-or-reset-password.js"
+                "userfrosting/js/pages/set-or-reset-password.js"
             ],
             "options": {
                 "result": {
@@ -51,8 +51,8 @@
         "js/pages/register": {
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
-                "local/core/js/uf-captcha.js",
-                "local/pages/js/register.js"
+                "userfrosting/js/uf-captcha.js",
+                "userfrosting/js/pages/register.js"
             ],
             "options": {
                 "result": {
@@ -65,7 +65,7 @@
         "js/pages/sign-in": {
             "scripts": [
                 "vendor/urijs/src/URI.js",
-                "local/pages/js/sign-in.js"
+                "userfrosting/js/pages/sign-in.js"
             ],
             "options": {
                 "result": {

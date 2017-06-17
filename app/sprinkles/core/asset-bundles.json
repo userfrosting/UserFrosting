@@ -11,16 +11,16 @@
                 "vendor/fastclick/lib/fastclick.js",
                 "vendor/select2/dist/js/select2.full.js",
                 "vendor/clipboard/dist/clipboard.js",
-                "local/core/js/attrchange.js",
-                "local/core/js/AdminLTE.js",
-                "local/core/js/AdminLTE-custom.js",
-                "local/core/js/fortress-jqueryvalidation-methods.js",
-                "local/core/js/uf-jqueryvalidation-config.js",
-                "local/core/js/uf-alerts.js",
-                "local/core/js/uf-form.js",
-                "local/core/js/uf-modal.js",
-                "local/core/js/uf-copy.js",
-                "local/core/js/uf-init.js"
+                "userfrosting/js/attrchange.js",
+                "userfrosting/js/AdminLTE.js",
+                "userfrosting/js/AdminLTE-custom.js",
+                "userfrosting/js/fortress-jqueryvalidation-methods.js",
+                "userfrosting/js/uf-jqueryvalidation-config.js",
+                "userfrosting/js/uf-alerts.js",
+                "userfrosting/js/uf-form.js",
+                "userfrosting/js/uf-modal.js",
+                "userfrosting/js/uf-copy.js",
+                "userfrosting/js/uf-init.js"
             ],
             "options": {
                 "result": {
@@ -33,7 +33,7 @@
         "js/form-widgets": {
             "scripts": [
                 "vendor/speakingurl/speakingurl.min.js",
-                "local/core/js/uf-collection.js"
+                "userfrosting/js/uf-collection.js"
             ],
             "options": {
                 "result": {
@@ -51,11 +51,11 @@
                 "vendor/select2-bootstrap-theme/dist/select2-bootstrap.css",
                 "vendor/icheck/skins/square/_all.css",
                 "vendor/ionicons/css/ionicons.css",
-                "local/core/css/uf-jqueryvalidation.css",
-                "local/core/css/uf-alerts.css",
-                "local/core/css/AdminLTE.css",
-                "local/core/css/AdminLTE-skins-all.css",
-                "local/core/css/userfrosting.css"
+                "userfrosting/css/uf-jqueryvalidation.css",
+                "userfrosting/css/uf-alerts.css",
+                "userfrosting/css/AdminLTE.css",
+                "userfrosting/css/AdminLTE-skins-all.css",
+                "userfrosting/css/userfrosting.css"
             ],
             "options": {
                 "result": {
@@ -67,7 +67,7 @@
         },
         "css/form-widgets": {
             "styles": [
-                "local/core/css/uf-collection.css"
+                "userfrosting/css/uf-collection.css"
             ],
             "options": {
                 "result": {

@@ -8,6 +8,7 @@
 - Move `sprinkles.json` to app directory to make it easier to find
 - Eliminate the `root` theme Sprinkle.  Custom styling for the root user is now handled with some Twig logic in the `admin` Sprinkle (#726)
 - Rename bundle.config.json -> asset-bundles.json (#726)
+- Reorganize assets (#726)
 - Factor out "system" classes from core Sprinkle
 - Refactor overall application lifecycle; move main lifecycle into UserFrosting\System\UserFrosting
 - SprinkleManager now better focused on a single responsibility

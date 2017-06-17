@@ -3,15 +3,15 @@
         "js/admin": {
             "scripts": [
                 "vendor/moment/moment.js",
-                "local/core/js/handlebars-helpers.js",
+                "userfrosting/js/handlebars-helpers.js",
                 "vendor/tablesorter/dist/js/jquery.tablesorter.js",
                 "vendor/tablesorter/dist/js/jquery.tablesorter.widgets.js",
                 "vendor/tablesorter/dist/js/widgets/widget-sort2Hash.min.js",
                 "vendor/tablesorter/dist/js/widgets/widget-columnSelector.min.js",
                 "vendor/tablesorter/dist/js/widgets/widget-reflow.min.js",
                 "vendor/tablesorter/dist/js/widgets/widget-pager.min.js",
-                "local/core/js/query-string.js",
-                "local/core/js/uf-table.js"
+                "userfrosting/js/query-string.js",
+                "userfrosting/js/uf-table.js"
             ],
             "options": {
                 "result": {
@@ -23,7 +23,7 @@
         },
         "js/pages/activities": {
             "scripts": [
-                "local/pages/js/activities.js"
+                "userfrosting/js/pages/activities.js"
             ],
             "options": {
                 "result": {
@@ -35,8 +35,8 @@
         },
         "js/pages/dashboard": {
             "scripts": [
-                "local/widgets/js/users.js",
-                "local/pages/js/dashboard.js"
+                "userfrosting/js/widgets/users.js",
+                "userfrosting/js/pages/dashboard.js"
             ],
             "options": {
                 "result": {
@@ -48,9 +48,9 @@
         },
         "js/pages/group": {
             "scripts": [
-                "local/widgets/js/users.js",
-                "local/widgets/js/groups.js",
-                "local/pages/js/group.js"
+                "userfrosting/js/widgets/users.js",
+                "userfrosting/js/widgets/groups.js",
+                "userfrosting/js/pages/group.js"
             ],
             "options": {
                 "result": {
@@ -62,7 +62,7 @@
         },
         "js/pages/permission": {
             "scripts": [
-                "local/pages/js/permission.js"
+                "userfrosting/js/pages/permission.js"
             ],
             "options": {
                 "result": {
@@ -74,8 +74,8 @@
         },
         "js/pages/role": {
             "scripts": [
-                "local/widgets/js/roles.js",
-                "local/pages/js/role.js"
+                "userfrosting/js/widgets/roles.js",
+                "userfrosting/js/pages/role.js"
             ],
             "options": {
                 "result": {
@@ -87,8 +87,8 @@
         },
         "js/pages/user": {
             "scripts": [
-                "local/widgets/js/users.js",
-                "local/pages/js/user.js"
+                "userfrosting/js/widgets/users.js",
+                "userfrosting/js/pages/user.js"
             ],
             "options": {
                 "result": {
@@ -100,8 +100,8 @@
         },
         "js/pages/users": {
             "scripts": [
-                "local/widgets/js/users.js",
-                "local/pages/js/users.js"
+                "userfrosting/js/widgets/users.js",
+                "userfrosting/js/pages/users.js"
             ],
             "options": {
                 "result": {
@@ -113,8 +113,8 @@
         },
         "js/pages/groups": {
             "scripts": [
-                "local/widgets/js/groups.js",
-                "local/pages/js/groups.js"
+                "userfrosting/js/widgets/groups.js",
+                "userfrosting/js/pages/groups.js"
             ],
             "options": {
                 "result": {
@@ -126,7 +126,7 @@
         },
         "js/pages/permissions": {
             "scripts": [
-                "local/pages/js/permissions.js"
+                "userfrosting/js/pages/permissions.js"
             ],
             "options": {
                 "result": {
@@ -138,8 +138,8 @@
         },
         "js/pages/roles": {
             "scripts": [
-                "local/widgets/js/roles.js",
-                "local/pages/js/roles.js"
+                "userfrosting/js/widgets/roles.js",
+                "userfrosting/js/pages/roles.js"
             ],
             "options": {
                 "result": {
@@ -151,11 +151,11 @@
         },
         "css/admin": {
             "styles": [
-                "local/font-starcraft/css/font-starcraft.css",
+                "font-starcraft/css/font-starcraft.css",
                 "vendor/tablesorter/dist/css/theme.bootstrap.min.css",
                 "vendor/tablesorter/dist/css/jquery.tablesorter.pager.min.css",
-                "local/core/css/tablesorter-reflow.css",
-                "local/pages/css/tablesorter-custom.css"
+                "userfrosting/css/tablesorter-reflow.css",
+                "userfrosting/css/tablesorter-custom.css"
             ],
             "options": {
                 "result": {
