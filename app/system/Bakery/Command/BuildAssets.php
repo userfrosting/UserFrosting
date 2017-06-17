@@ -35,7 +35,8 @@ class BuildAssets extends BaseCommand
         $this->setName("build-assets")
              ->setDescription("Build the assets using node and npm")
              ->setHelp("The build directory contains the scripts and configuration files required to download Javascript, CSS, and other assets used by UserFrosting. This command will install Gulp, Bower, and several other required npm packages locally. With <info>npm</info> set up with all of its required packages, it can be use it to automatically download and install the assets in the correct directories. For more info, see <comment>https://learn.userfrosting.com/basics/installation</comment>")
-             ->addOption("compile", "c", InputOption::VALUE_NONE, "Compile the assets and asset bundles for production environment");
+             ->addOption("compile", "c", InputOption::VALUE_NONE, "Compile the assets and asset bundles for production environment")
+             ->addOption("force", "f", InputOption::VALUE_NONE, "Force assets compilation by deleting cached data and installed assets before proceeding");
     }
 
     /**
@@ -49,17 +50,17 @@ class BuildAssets extends BaseCommand
         // Set $path
         $this->buildPath = $this->projectRoot . "/build";
 
+        // Delete cached data is requested
+        if ($input->getOption('force')) {
+            $this->clean();
+        }
+
         // Perform tasks
         $this->npmInstall();
         $this->assetsInstall();
 
-        // Get current env mode
-        // N.B.: Need to touch the config service first to load dotenv values
-        $config = $this->ci->config;
-        $mode = getenv("UF_MODE") ?: '';
-
         // Compile if requested
-        if ($input->getOption('compile') || $mode == "production") {
+        if ($input->getOption('compile') || $this->isProduction()) {
             $this->buildAssets();
         }
 
@@ -127,12 +128,49 @@ class BuildAssets extends BaseCommand
         $this->io->section("Testing assets installation");
 
         // Get path and vendor files
-        $vendorPath = \UserFrosting\APP_DIR . '/' . \UserFrosting\SPRINKLES_DIR_NAME . "/core/assets/vendor/*";
+        $vendorPath = \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . "/core/assets/vendor/*";
         $coreVendorFiles = glob($vendorPath);
 
         if (!$coreVendorFiles){
-            $this->io->error("Assets building seems to have failed. Directory `$vendorPath` is empty, but it shouldn't be. Check the above log for any errors.");
+            $this->io->error("Assets installation seems to have failed. Directory `$vendorPath` is empty, but it shouldn't be. Check the above log for any errors.");
             exit(1);
         }
+
+        // Check that `bundle.result.json` is present in production mode
+        $config = $this->ci->config;
+        $resultFile = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME . \UserFrosting\DS . $config['assets.compiled.schema'];
+        if ($this->isProduction() && !file_exists($resultFile)) {
+            $this->io->error("Assets building seems to have failed. File `$resultFile` not found. This file is required for production envrionement. Check the above log for any errors.");
+            exit(1);
+        }
+    }
+
+    /**
+     * Run the `uf-clean` command to delete installed assets, delete compiled
+     * bundle config file and delete compiled assets
+     *
+     * @access protected
+     * @return void
+     */
+    protected function clean()
+    {
+        $this->io->section("Cleaning cached data");
+        $this->io->writeln("> <comment>npm run uf-clean</comment>");
+        passthru("npm run uf-clean --prefix " . $this->buildPath);
+    }
+
+    /**
+     * Return if the app is in production mode
+     *
+     * @access protected
+     * @return bool
+     */
+    protected function isProduction()
+    {
+        // N.B.: Need to touch the config service first to load dotenv values
+        $config = $this->ci->config;
+        $mode = getenv("UF_MODE") ?: '';
+
+        return ($mode == "production");
     }
 }
