@@ -12,7 +12,7 @@
  * @param {Object} dropdown The options to pass to the select2 plugin for the add item dropdown.
  * @param {string} dropdown.ajax.url The url from which to fetch options (as JSON data) in the dropdown selector menu.
  * @param {bool}   selectOnClose Set to true if you want the currently highlighted dropdown item to be automatically added when the dropdown is closed for any reason.
- * @param {string} dropdown.theme The select2 theme to use for the dropdown menu.  Defaults to "bootstrap".
+ * @param {string} dropdown.theme The select2 theme to use for the dropdown menu.  Defaults to "default".
  * @param {string} dropdown.placeholder Placeholder text to use in the dropdown menu before a selection is made.  Defaults to "Item".
  * @param {string} dropdown.width Width of the dropdown selector, when used.  Defaults to "100%".
  * @param {Object} dropdownControl a jQuery selector specifying the dropdown select2 control.  Defaults to looking for a .js-select-new element inside the parent object.
