@@ -117,13 +117,13 @@
          */
         _fetchSuccess: function(alerts) {
             this.alerts = $.merge(this.alerts, alerts);
-            this.$element.trigger("fetch." + this.pluginName);
+            this.$element.trigger("fetch." + this._name);
         },
         /**
          * Failure callback for fetch
          */
         _fetchFailure: function(response) {
-            this.$element.trigger("error." + this.pluginName);
+            this.$element.trigger("error." + this._name);
             if ((typeof site !== "undefined") && site.debug.ajax && response.responseText) {
                 document.write(response.responseText);
                 document.close();
@@ -222,7 +222,7 @@
             }
 
             // Trigger render events
-            this.$element.trigger("render." + this.pluginName);
+            this.$element.trigger("render." + this._name);
         },
         /**
          * Returns true if alerts container is completely within the viewport.
@@ -241,13 +241,13 @@
          */
         destroy: function() {
             // Unbind any bound events
-            this.$element.off('.' + this.pluginName);
+            this.$element.off('.' + this._name);
 
             // Grab jQuery wrapped element before plugin destruction
             var $element = this.$element;
 
             // Remove plugin from element
-            this.$element.removeData(this.pluginName);
+            this.$element.removeData(this._name);
 
             return $element;
         }

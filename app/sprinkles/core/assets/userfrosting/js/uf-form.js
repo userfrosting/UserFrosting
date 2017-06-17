@@ -161,9 +161,9 @@
                             }
 
                             this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
-                            this.settings.msgTarget.on("render.ufAlerts", function () {
+                            this.settings.msgTarget.on("render.ufAlerts", $.proxy(function () {
                                 this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
-                            });
+                            }, this));
                         }
                         return jqXHR;
                     }, this)
