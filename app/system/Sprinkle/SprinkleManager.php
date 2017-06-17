@@ -55,7 +55,7 @@ class SprinkleManager
         $this->resourcePaths = [
             'assets' => \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME,
             'config' => \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME,
-            'extras' => \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME,
+            'extra' => \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME,
             'factories' => \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME,
             'locale' => \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME,
             'routes' => \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME,
@@ -96,7 +96,7 @@ class SprinkleManager
         foreach ($this->sprinkles as $sprinkleName => $sprinkle) {
             $this->addResource('config', $sprinkleName);
             $this->addResource('assets', $sprinkleName);
-            $this->addResource('extras', $sprinkleName);
+            $this->addResource('extra', $sprinkleName);
             $this->addResource('factories', $sprinkleName);
             $this->addResource('locale', $sprinkleName);
             $this->addResource('routes', $sprinkleName);
