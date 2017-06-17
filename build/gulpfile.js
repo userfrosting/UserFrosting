@@ -28,7 +28,7 @@ const sprinkles = ['core'].concat(require(`${sprinklesSchemaPath}`)['base']);
 const publicAssetsDir = '../public/assets/';
 
 // name of the bundle file
-const bundleFile = 'bundle.config.json';
+const bundleFile = 'asset-bundles.json';
 
 // Compiled bundle config file
 const bundleConfigFile = `./${bundleFile}`;
