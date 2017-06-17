@@ -1,0 +1,60 @@
+---
+first_name:
+  validators:
+    length:
+      label: "&FIRST_NAME"
+      min: 1
+      max: 20
+      message: VALIDATE.LENGTH_RANGE
+last_name:
+  validators:
+    length:
+      label: "&LAST_NAME"
+      min: 1
+      max: 30
+      message: VALIDATE.LENGTH_RANGE
+email:
+  validators:
+    length:
+      label: "&EMAIL"
+      min: 1
+      max: 150
+      message: VALIDATE.LENGTH_RANGE
+    email:
+      message: VALIDATE.INVALID_EMAIL
+locale:
+  validators:
+    length:
+      label: "&LOCALE"
+      min: 1
+      max: 10
+      message: VALIDATE.LENGTH_RANGE
+group_id:
+  validators:
+    integer:
+      message: VALIDATE.INTEGER
+flag_enabled:
+  validators:
+    member_of:
+      values:
+      - '0'
+      - '1'
+      message: VALIDATE.BOOLEAN
+flag_verified:
+  validators:
+    member_of:
+      values:
+      - '0'
+      - '1'
+      message: VALIDATE.BOOLEAN
+password:
+  validators:
+    length:
+      label: "&PASSWORD"
+      min: 12
+      max: 100
+      message: VALIDATE.LENGTH_RANGE
+roles:
+  validators:
+    array:
+      message: VALIDATE.ARRAY

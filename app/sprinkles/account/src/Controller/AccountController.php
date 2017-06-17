@@ -58,7 +58,7 @@ class AccountController extends SimpleController
         $params = $request->getQueryParams();
 
         // Load request schema
-        $schema = new RequestSchema("schema://check-username.json");
+        $schema = new RequestSchema("schema://check-username.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -125,7 +125,7 @@ class AccountController extends SimpleController
         $loginPage = $this->ci->router->pathFor('login');
 
         // Load validation rules
-        $schema = new RequestSchema("schema://deny-password.json");
+        $schema = new RequestSchema("schema://deny-password.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -179,7 +179,7 @@ class AccountController extends SimpleController
         $params = $request->getParsedBody();
 
         // Load the request schema
-        $schema = new RequestSchema("schema://forgot-password.json");
+        $schema = new RequestSchema("schema://forgot-password.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -307,7 +307,7 @@ class AccountController extends SimpleController
         $params = $request->getParsedBody();
 
         // Load the request schema
-        $schema = new RequestSchema("schema://login.json");
+        $schema = new RequestSchema("schema://login.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -392,7 +392,7 @@ class AccountController extends SimpleController
     public function pageForgotPassword($request, $response, $args)
     {
         // Load validation rules
-        $schema = new RequestSchema("schema://forgot-password.json");
+        $schema = new RequestSchema("schema://forgot-password.yaml");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/forgot-password.html.twig', [
@@ -431,7 +431,7 @@ class AccountController extends SimpleController
         }
 
         // Load validation rules
-        $schema = new RequestSchema("schema://register.json");
+        $schema = new RequestSchema("schema://register.yaml");
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/register.html.twig', [
@@ -453,7 +453,7 @@ class AccountController extends SimpleController
     public function pageResendVerification($request, $response, $args)
     {
         // Load validation rules
-        $schema = new RequestSchema("schema://resend-verification.json");
+        $schema = new RequestSchema("schema://resend-verification.yaml");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/resend-verification.html.twig', [
@@ -477,7 +477,7 @@ class AccountController extends SimpleController
         $params = $request->getQueryParams();
 
         // Load validation rules - note this uses the same schema as "set password"
-        $schema = new RequestSchema("schema://set-password.json");
+        $schema = new RequestSchema("schema://set-password.yaml");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/reset-password.html.twig', [
@@ -503,7 +503,7 @@ class AccountController extends SimpleController
         $params = $request->getQueryParams();
 
         // Load validation rules
-        $schema = new RequestSchema("schema://set-password.json");
+        $schema = new RequestSchema("schema://set-password.yaml");
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/set-password.html.twig', [
@@ -538,10 +538,10 @@ class AccountController extends SimpleController
         }
 
         // Load validation rules
-        $schema = new RequestSchema("schema://account-settings.json");
+        $schema = new RequestSchema("schema://account-settings.yaml");
         $validatorAccountSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        $schema = new RequestSchema("schema://profile-settings.json");
+        $schema = new RequestSchema("schema://profile-settings.yaml");
         $validatorProfileSettings = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         /** @var UserFrosting\Config\Config $config */
@@ -584,7 +584,7 @@ class AccountController extends SimpleController
         }
 
         // Load validation rules
-        $schema = new RequestSchema("schema://login.json");
+        $schema = new RequestSchema("schema://login.yaml");
         $validatorLogin = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'pages/sign-in.html.twig', [
@@ -633,7 +633,7 @@ class AccountController extends SimpleController
         $params = $request->getParsedBody();
 
         // Load the request schema
-        $schema = new RequestSchema("schema://profile-settings.json");
+        $schema = new RequestSchema("schema://profile-settings.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -660,7 +660,7 @@ class AccountController extends SimpleController
         }
 
         // Looks good, let's update with new values!
-        // Note that only fields listed in `profile-settings.json` will be permitted in $data, so this prevents the user from updating all columns in the DB
+        // Note that only fields listed in `profile-settings.yaml` will be permitted in $data, so this prevents the user from updating all columns in the DB
         $currentUser->fill($data);
 
         $currentUser->save();
@@ -732,7 +732,7 @@ class AccountController extends SimpleController
         }
 
         // Load the request schema
-        $schema = new RequestSchema("schema://register.json");
+        $schema = new RequestSchema("schema://register.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -888,7 +888,7 @@ class AccountController extends SimpleController
         $params = $request->getParsedBody();
 
         // Load the request schema
-        $schema = new RequestSchema("schema://resend-verification.json");
+        $schema = new RequestSchema("schema://resend-verification.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -976,7 +976,7 @@ class AccountController extends SimpleController
         $params = $request->getParsedBody();
 
         // Load the request schema
-        $schema = new RequestSchema("schema://set-password.json");
+        $schema = new RequestSchema("schema://set-password.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1061,7 +1061,7 @@ class AccountController extends SimpleController
         $params = $request->getParsedBody();
 
         // Load the request schema
-        $schema = new RequestSchema("schema://account-settings.json");
+        $schema = new RequestSchema("schema://account-settings.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1105,7 +1105,7 @@ class AccountController extends SimpleController
         }
 
         // Looks good, let's update with new values!
-        // Note that only fields listed in `account-settings.json` will be permitted in $data, so this prevents the user from updating all columns in the DB
+        // Note that only fields listed in `account-settings.yaml` will be permitted in $data, so this prevents the user from updating all columns in the DB
         $currentUser->fill($data);
 
         $currentUser->save();
@@ -1169,7 +1169,7 @@ class AccountController extends SimpleController
         $params = $request->getQueryParams();
 
         // Load request schema
-        $schema = new RequestSchema("schema://account-verify.json");
+        $schema = new RequestSchema("schema://account-verify.yaml");
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

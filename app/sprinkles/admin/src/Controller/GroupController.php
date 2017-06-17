@@ -63,7 +63,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://group/create.json');
+        $schema = new RequestSchema('schema://group/create.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -318,7 +318,7 @@ class GroupController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://group/create.json');
+        $schema = new RequestSchema('schema://group/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
@@ -382,7 +382,7 @@ class GroupController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://group/edit-info.json');
+        $schema = new RequestSchema('schema://group/edit-info.yaml');
         $validator = new JqueryValidationAdapter($schema, $translator);
 
         return $this->ci->view->render($response, 'components/modals/group.html.twig', [
@@ -566,7 +566,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://group/edit-info.json');
+        $schema = new RequestSchema('schema://group/edit-info.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -655,7 +655,7 @@ class GroupController extends SimpleController
     protected function getGroupFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://group/get-by-slug.json');
+        $schema = new RequestSchema('schema://group/get-by-slug.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

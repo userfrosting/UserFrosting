@@ -31,6 +31,7 @@
 - Added support for the Redis cache driver and refactored the cache config values.
 - Added user and session cache.
 - Common log file for db queries, auth checks, smtp, errors, and debug messages (#709).
+- Use YAML as default format for request schema (#690)
 
 See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
 

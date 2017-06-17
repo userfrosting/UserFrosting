@@ -63,7 +63,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role/create.json');
+        $schema = new RequestSchema('schema://role/create.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -325,7 +325,7 @@ class RoleController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://role/create.json');
+        $schema = new RequestSchema('schema://role/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'components/modals/role.html.twig', [
@@ -389,7 +389,7 @@ class RoleController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://role/edit-info.json');
+        $schema = new RequestSchema('schema://role/edit-info.yaml');
         $validator = new JqueryValidationAdapter($schema, $translator);
 
         return $this->ci->view->render($response, 'components/modals/role.html.twig', [
@@ -663,7 +663,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role/edit-info.json');
+        $schema = new RequestSchema('schema://role/edit-info.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -801,7 +801,7 @@ class RoleController extends SimpleController
         // Validate key -> value pair
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role/edit-field.json');
+        $schema = new RequestSchema('schema://role/edit-field.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -860,7 +860,7 @@ class RoleController extends SimpleController
     protected function getRoleFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://role/get-by-slug.json');
+        $schema = new RequestSchema('schema://role/get-by-slug.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
