@@ -66,7 +66,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://user/create.yaml');
+        $schema = new RequestSchema('schema://requests/user/create.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -544,7 +544,7 @@ class UserController extends SimpleController
         $user = $classMapper->createInstance('user', $data);
 
         // Load validation rules
-        $schema = new RequestSchema('schema://user/create.yaml');
+        $schema = new RequestSchema('schema://requests/user/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'modals/user.html.twig', [
@@ -629,7 +629,7 @@ class UserController extends SimpleController
         }
 
         // Load validation rules
-        $schema = new RequestSchema('schema://user/edit-info.yaml');
+        $schema = new RequestSchema('schema://requests/user/edit-info.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         $translator = $this->ci->translator;
@@ -684,7 +684,7 @@ class UserController extends SimpleController
         }
 
         // Load validation rules
-        $schema = new RequestSchema('schema://user/edit-password.yaml');
+        $schema = new RequestSchema('schema://requests/user/edit-password.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
         return $this->ci->view->render($response, 'modals/user-set-password.html.twig', [
@@ -942,7 +942,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://user/edit-info.yaml');
+        $schema = new RequestSchema('schema://requests/user/edit-info.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1093,7 +1093,7 @@ class UserController extends SimpleController
         ];
 
         // Load the request schema
-        $schema = new RequestSchema('schema://user/edit-field.yaml');
+        $schema = new RequestSchema('schema://requests/user/edit-field.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -1182,7 +1182,7 @@ class UserController extends SimpleController
     protected function getUserFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://user/get-by-username.yaml');
+        $schema = new RequestSchema('schema://requests/user/get-by-username.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

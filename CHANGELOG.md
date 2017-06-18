@@ -10,6 +10,7 @@
 - Rename bundle.config.json -> asset-bundles.json (#726)
 - Reorganize assets (#726)
 - Heavily reorganize templates (#726)
+- Move request schema from `schema/` to `schema/requests/` (#726)
 - Factor out "system" classes from core Sprinkle
 - Refactor overall application lifecycle; move main lifecycle into UserFrosting\System\UserFrosting
 - SprinkleManager now better focused on a single responsibility
