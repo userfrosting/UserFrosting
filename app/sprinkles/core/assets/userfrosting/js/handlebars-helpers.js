@@ -56,7 +56,7 @@ Handlebars.registerHelper('dateFormat', function(context, block) {
 /**
  * Format a phone number.
  */
-Handlebars.registerHelper("phoneFormat", function(phoneNumber) {
+Handlebars.registerHelper("phoneUSFormat", function(phoneNumber) {
   if (typeof phoneNumber === 'undefined') {
     return '';
   }

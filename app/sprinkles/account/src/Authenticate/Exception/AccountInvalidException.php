@@ -16,6 +16,6 @@ use UserFrosting\Support\Exception\HttpException;
  */
 class AccountInvalidException extends HttpException
 {
-    protected $default_message = 'ACCOUNT.INVALID';
-    protected $http_error_code = 403;
+    protected $defaultMessage = 'ACCOUNT.INVALID';
+    protected $httpErrorCode = 403;
 }

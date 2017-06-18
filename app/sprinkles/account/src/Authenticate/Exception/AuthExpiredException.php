@@ -16,6 +16,6 @@ use UserFrosting\Support\Exception\HttpException;
  */
 class AuthExpiredException extends HttpException
 {
-    protected $default_message = 'ACCOUNT.SESSION_EXPIRED';
-    protected $http_error_code = 401;
+    protected $defaultMessage = 'ACCOUNT.SESSION_EXPIRED';
+    protected $httpErrorCode = 401;
 }

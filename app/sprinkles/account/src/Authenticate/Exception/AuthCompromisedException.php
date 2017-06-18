@@ -16,5 +16,5 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AuthCompromisedException extends ForbiddenException
 {
-    protected $default_message = 'ACCOUNT.SESSION_COMPROMISED';
+    protected $defaultMessage = 'ACCOUNT.SESSION_COMPROMISED';
 }
