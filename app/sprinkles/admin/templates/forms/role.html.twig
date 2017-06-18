@@ -1,0 +1,56 @@
+<form class="js-form" method="{{form.method | default('POST')}}" action="{{site.uri.public}}/{{form.action}}">
+    {% include "forms/csrf.html.twig" %}
+    <div class="js-form-alerts">
+    </div>
+    <div class="row">
+        {% if 'name' not in form.fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>{{translate("ROLE.NAME")}}</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-edit fa-fw"></i></span>
+                    <input type="text" class="form-control" name="name" autocomplete="off" value="{{role.name}}" placeholder="{{translate("ROLE.NAME_EXPLAIN")}}" {% if 'name' in form.fields.disabled %}disabled{% endif %}>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'slug' not in form.fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label>{{translate("SLUG")}}</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-tag fa-fw"></i></span>
+                    <input type="text" class="form-control" name="slug" autocomplete="off" value="{{role.slug}}" placeholder="{{translate("SLUG")}}" {% if 'slug' in form.fields.disabled %}disabled{% endif %} readonly>
+                    {% if 'slug' not in form.fields.disabled %}
+                        <span class="input-group-btn" data-toggle="buttons">
+                            <label class="btn btn-primary">
+                                <input type="checkbox" id="form-role-slug-override" autocomplete="off"> {{translate("OVERRIDE")}}
+                            </label>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if 'description' not in fields.hidden %}
+        <div class="col-sm-12">
+            <div class="form-group">
+                <label for="input_description">{{translate("DESCRIPTION")}}</label>
+                <textarea id="input_description" class="form-control" type="text" name="description" {% if 'description' in form.fields.disabled %}disabled{% endif %} rows=6>{{role.description}}</textarea>
+            </div>
+        </div>
+        {% endif %}
+    </div><br>
+    <div class="row">
+        <div class="col-xs-8 col-sm-4">
+            <button type="submit" class="btn btn-block btn-lg btn-success">{{form.submit_text}}</button>
+        </div>
+        <div class="col-xs-4 col-sm-4 pull-right">
+            <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate("CANCEL")}}</button>
+        </div>
+    </div>
+</form>
+<!-- Include validation rules -->
+<script>
+{% include "pages/partials/page.js.twig" %}
+</script>

@@ -269,7 +269,7 @@ class GroupController extends SimpleController
             throw $e;
         }
 
-        return $this->ci->view->render($response, 'components/modals/confirm-delete-group.html.twig', [
+        return $this->ci->view->render($response, 'modals/confirm-delete-group.html.twig', [
             'group' => $group,
             'form' => [
                 'action' => "api/groups/g/{$group->slug}",
@@ -321,7 +321,7 @@ class GroupController extends SimpleController
         $schema = new RequestSchema('schema://group/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        return $this->ci->view->render($response, 'components/modals/group.html.twig', [
+        return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
             'form' => [
                 'action' => 'api/groups',
@@ -385,7 +385,7 @@ class GroupController extends SimpleController
         $schema = new RequestSchema('schema://group/edit-info.yaml');
         $validator = new JqueryValidationAdapter($schema, $translator);
 
-        return $this->ci->view->render($response, 'components/modals/group.html.twig', [
+        return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
             'form' => [
                 'action' => "api/groups/g/{$group->slug}",

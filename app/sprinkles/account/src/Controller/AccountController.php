@@ -252,7 +252,7 @@ class AccountController extends SimpleController
      */
     public function getModalAccountTos($request, $response, $args)
     {
-        return $this->ci->view->render($response, 'components/modals/tos.html.twig');
+        return $this->ci->view->render($response, 'modals/tos.html.twig');
     }
 
     /**

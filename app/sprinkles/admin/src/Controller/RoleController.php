@@ -278,7 +278,7 @@ class RoleController extends SimpleController
             throw $e;
         }
 
-        return $this->ci->view->render($response, 'components/modals/confirm-delete-role.html.twig', [
+        return $this->ci->view->render($response, 'modals/confirm-delete-role.html.twig', [
             'role' => $role,
             'form' => [
                 'action' => "api/roles/r/{$role->slug}",
@@ -328,7 +328,7 @@ class RoleController extends SimpleController
         $schema = new RequestSchema('schema://role/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        return $this->ci->view->render($response, 'components/modals/role.html.twig', [
+        return $this->ci->view->render($response, 'modals/role.html.twig', [
             'role' => $role,
             'form' => [
                 'action' => 'api/roles',
@@ -392,7 +392,7 @@ class RoleController extends SimpleController
         $schema = new RequestSchema('schema://role/edit-info.yaml');
         $validator = new JqueryValidationAdapter($schema, $translator);
 
-        return $this->ci->view->render($response, 'components/modals/role.html.twig', [
+        return $this->ci->view->render($response, 'modals/role.html.twig', [
             'role' => $role,
             'form' => [
                 'action' => "api/roles/r/{$role->slug}",
@@ -439,7 +439,7 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        return $this->ci->view->render($response, 'components/modals/role-manage-permissions.html.twig', [
+        return $this->ci->view->render($response, 'modals/role-manage-permissions.html.twig', [
             'role' => $role
         ]);
     }

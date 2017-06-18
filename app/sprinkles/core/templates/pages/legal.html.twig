@@ -1,4 +1,4 @@
-{% extends "layouts/default.html.twig" %}
+{% extends "pages/abstract/default.html.twig" %}
 
 {% set page_active = "home" %}
 
@@ -8,5 +8,5 @@
 {% block page_description %}Our legal policy applies to your usage of this website and our services.{% endblock %}
 
 {% block body_matter %}
-    {% include 'components/legal.html.twig' %}
+    {% include 'pages/partials/legal.html.twig' %}
 {% endblock %}

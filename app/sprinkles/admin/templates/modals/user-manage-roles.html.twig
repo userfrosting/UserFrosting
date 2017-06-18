@@ -1,0 +1,77 @@
+{% extends "modals/modal.html.twig" %}
+
+{% block modal_title %}{{translate("ROLE.MANAGE")}}{% endblock %}
+
+{% block modal_body %}
+<form class="js-form" method="PUT" action="{{site.uri.public}}/api/users/u/{{user.user_name}}/roles">
+    {% include "forms/csrf.html.twig" %}
+    <div class="js-form-alerts">
+    </div>
+    <div class="js-form-roles">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{{translate("NAME")}}</th>
+                    <th>{{translate("DESCRIPTION")}}</th>
+                    <th>{{translate("REMOVE")}}</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="padding-bottom">
+            <label>{{translate("ROLE.ASSIGN_NEW")}}:</label>
+            <select class="form-control js-select-new" type="text">
+            <option></option>
+            </select>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-8 col-sm-4">
+            <button type="submit" class="btn btn-block btn-lg btn-success">{{translate("UPDATE")}}</button>
+        </div>
+        <div class="col-xs-4 col-sm-3 pull-right">
+            <button type="button" class="btn btn-block btn-lg btn-link" data-dismiss="modal">{{translate('CANCEL')}}</button>
+        </div>
+    </div>
+</form>
+
+{# This contains a series of <script> blocks, each of which is a client-side Handlebars template.
+ # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+ # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+ #
+ # These templates require handlebars-helpers.js, moment.js
+#}
+{% verbatim %}
+<script id="user-roles-select-option" type="text/x-handlebars-template">
+    <div>
+        <strong>
+            {{name}}
+        </strong>
+        <br>
+        {{description}}
+    </div>
+</script>
+
+<script id="user-roles-row" type="text/x-handlebars-template">
+    <tr class="uf-collection-row">
+        <td>
+            {{name}}
+            <input type="hidden" name="value[{{ rownum }}][role_id]" value="{{id}}">
+        </td>
+        <td>
+            {{description}}
+        </td>
+        <td>
+            <button type="button" class="btn btn-link btn-trash js-delete-row pull-right" title="Delete"> <i class="fa fa-trash"></i> </button>
+        </td>
+    </tr>
+</script>
+{% endverbatim %}
+
+<!-- Include validation rules -->
+<script>
+    {% include "pages/partials/page.js.twig" %}
+</script>
+{% endblock %}

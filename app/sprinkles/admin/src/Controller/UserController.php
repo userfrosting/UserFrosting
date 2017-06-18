@@ -469,7 +469,7 @@ class UserController extends SimpleController
             throw $e;
         }
 
-        return $this->ci->view->render($response, 'components/modals/confirm-delete-user.html.twig', [
+        return $this->ci->view->render($response, 'modals/confirm-delete-user.html.twig', [
             'user' => $user,
             'form' => [
                 'action' => "api/users/u/{$user->user_name}",
@@ -547,7 +547,7 @@ class UserController extends SimpleController
         $schema = new RequestSchema('schema://user/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        return $this->ci->view->render($response, 'components/modals/user.html.twig', [
+        return $this->ci->view->render($response, 'modals/user.html.twig', [
             'user' => $user,
             'groups' => $groups,
             'locales' => $locales,
@@ -634,7 +634,7 @@ class UserController extends SimpleController
 
         $translator = $this->ci->translator;
 
-        return $this->ci->view->render($response, 'components/modals/user.html.twig', [
+        return $this->ci->view->render($response, 'modals/user.html.twig', [
             'user' => $user,
             'groups' => $groups,
             'locales' => $locales,
@@ -687,7 +687,7 @@ class UserController extends SimpleController
         $schema = new RequestSchema('schema://user/edit-password.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        return $this->ci->view->render($response, 'components/modals/user-set-password.html.twig', [
+        return $this->ci->view->render($response, 'modals/user-set-password.html.twig', [
             'user' => $user,
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -728,7 +728,7 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        return $this->ci->view->render($response, 'components/modals/user-manage-roles.html.twig', [
+        return $this->ci->view->render($response, 'modals/user-manage-roles.html.twig', [
             'user' => $user
         ]);
     }

@@ -6,7 +6,7 @@
  * Modern Standard Arabic message token translations for the error pages
  *
  * @package UserFrosting
- * @link http://wwwuserfrostingcom/components/#i18n
+ * @link http://www.userfrosting.com/components/#i18n
  * @author Alexander Weissman and Abdullah Seba
  */
 

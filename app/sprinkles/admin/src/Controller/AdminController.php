@@ -138,7 +138,7 @@ class AdminController extends SimpleController
             throw new ForbiddenException();
         }
 
-        return $this->ci->view->render($response, 'components/modals/confirm-clear-cache.html.twig', [
+        return $this->ci->view->render($response, 'modals/confirm-clear-cache.html.twig', [
             'form' => [
                 'action' => 'api/dashboard/clear-cache',
             ]

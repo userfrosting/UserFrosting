@@ -1,0 +1,16 @@
+{% extends 'modals/modal.html.twig' %}
+
+{% block modal_title %}
+    {{translate("TOS_FOR", {title: site.title})}}
+{% endblock %}
+
+{% block modal_body %}
+    <div class="text-left">
+        {% include 'pages/partials/legal.html.twig' %}
+        {% include 'pages/partials/privacy.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block modal_footer %}
+    <button type="button" data-dismiss="modal" class="btn btn-primary btn-block">Got it!</button>
+{% endblock %}

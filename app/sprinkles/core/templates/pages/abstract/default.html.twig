@@ -1,0 +1,45 @@
+{% extends "pages/abstract/base.html.twig" %}
+
+{% block stylesheets_page_group %}
+{% endblock %}
+
+{% block body_attributes %}
+    class="hold-transition skin-{{site.AdminLTE.skin}} layout-top-nav"
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+  <header class="main-header">
+    {% include "navigation/main-nav.html.twig" %}
+  </header>
+
+  <!-- Full Width Column -->
+  <div class="content-wrapper">
+    <div class="container">
+        <!-- Content Header (Page header) -->
+        {% block content_header %}
+        <section class="content-header">
+          <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
+          {% if block('page_description') is not empty %}<h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>{% endif %}
+          {% block breadcrumb %}
+            {% include 'navigation/breadcrumb.html.twig' with {page_title: block('page_title')} %}
+          {% endblock %}
+          <div id="alerts-page"></div>
+        </section>
+        {% endblock %}
+        <section class="content">
+            {% block body_matter %}{% endblock %}
+        </section>
+    </div>
+  </div>
+  <!-- /.content-wrapper -->
+
+  {% block footer %}
+    {% include "pages/partials/footer.html.twig" %}
+  {% endblock %}
+</div>
+<!-- ./wrapper -->
+
+{% endblock %}

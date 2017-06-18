@@ -1,4 +1,4 @@
-{% extends "layouts/dashboard.html.twig" %}
+{% extends "pages/abstract/dashboard.html.twig" %}
 
 {% block stylesheets_page %}
     <!-- Page-group-specific CSS asset bundle -->
@@ -68,10 +68,10 @@
             <div id="widget-role-permissions" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('PERMISSION', 2)}}</h3>
-                    {% include "components/tables/table-tool-menu.html.twig" %}
+                    {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
-                    {% include "components/tables/permissions.html.twig" with {
+                    {% include "tables/permissions.html.twig" with {
                             "table" : {
                                 "id" : "table-role-permissions"
                             }
@@ -85,7 +85,7 @@
 {% block scripts_page %}
     <!-- Include page variables -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
 
     // Add user name
     page = $.extend(

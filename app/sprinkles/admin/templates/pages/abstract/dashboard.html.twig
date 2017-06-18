@@ -1,0 +1,89 @@
+{% extends "pages/abstract/base.html.twig" %}
+
+{% block stylesheets_page_group %}
+    <!-- Page-group-specific CSS asset bundle -->
+    {{ assets.css('css/admin') | raw }}
+{% endblock %}
+
+{% block body_attributes %}
+    {% if current_user.isMaster() %}
+        class="hold-transition skin-red sidebar-mini"
+    {% else %}
+        class="hold-transition skin-{{site.AdminLTE.skin}} sidebar-mini"
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {# This needs to be here (early in the body) to make sure the animation doesn't fire #}
+    <script>
+        (function () {
+          if (Boolean(sessionStorage.getItem('sidebar-toggle-collapsed'))) {
+            var body = document.getElementsByTagName('body')[0];
+            body.className = body.className + ' sidebar-collapse';
+          }
+        })();
+    </script>
+
+    <div class="wrapper">
+
+      <header class="main-header">
+        <!-- Logo -->
+        {% block navbar_logo %}
+          <a href="{{site.uri.public}}" class="logo">
+          <!-- mini logo for sidebar mini 50x50 pixels -->
+          <span class="logo-mini"><img src="{{ assets.url('assets://userfrosting/images/logo.svg') | raw }}" width="35" alt=""></span>
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg"><img src="{{ assets.url('assets://userfrosting/images/logo.svg') | raw }}" width="35" alt="">{{site.title}}</span>
+        </a>
+        {% endblock %}
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Main nav buttons -->
+            {% include "navigation/navbar.html.twig" %}
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            {% include 'navigation/sidebar.html.twig' %}
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        {% block content_header %}
+        <section class="content-header">
+          <h1>{% block header_title %}{{ block('page_title') }}{% endblock %}</h1>
+          {% if block('page_description') is not empty %}<h1><small>{% block header_description %}{{ block('page_description') }}{% endblock %}</small></h1>{% endif %}
+          {% block breadcrumb %}
+            {% include 'navigation/breadcrumb.html.twig' with {page_title: block('page_title')} %}
+          {% endblock %}
+          <div id="alerts-page"></div>
+        </section>
+        {% endblock %}
+        <section class="content">
+            {% block body_matter %}{% endblock %}
+        </section>
+      </div>
+      <!-- /.content-wrapper -->
+
+    <!-- Footer -->
+    {% block footer %}
+        {% include "pages/partials/footer.html.twig" %}
+    {% endblock %}
+
+    </div>
+    <!-- ./wrapper -->
+
+{% endblock %}
+
+{% block scripts_page_group %}
+    {{ assets.js('js/admin') | raw }}
+{% endblock %}
