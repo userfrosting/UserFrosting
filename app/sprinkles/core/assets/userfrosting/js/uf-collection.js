@@ -245,7 +245,7 @@
             this.$element.trigger('rowTouch.ufCollection', row);
 
             // If we're not using dropdowns, assert that the table doesn't already have a virgin row.  If not, create a new virgin row.
-            if (this.settings.useDropdown) {
+            if (!this.settings.useDropdown) {
                 var virginRows = this.settings.rowContainer.find('.uf-collection-row-virgin').length;
                 if (!virginRows) {
                     this._createVirginRow();
