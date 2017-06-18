@@ -1,10 +1,15 @@
 # Change Log
 
-## v.4.0.22-Alpha
+## v4.0.23-Alpha
+
+- Set module dependency versions to ~4.0.0 instead of ^4.0.0 (since 4.1.x will introduce breaking changes)
+- Fix bug in ufCollection
+
+## v4.0.22-Alpha
 - Fix issue where 'Change User Password' popup form couldn't handle specifying a new password.
 - Display message when there are no results in `ufTable`
 
-## v.4.0.21-Alpha
+## v4.0.21-Alpha
 - Implement reflow and column selector for tables (#670)
 - Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
 - ufAlerts will only auto-scroll when outside the viewport (even if only partially). Can be overriden with `scrollWhenVisible: true`. (#714)
