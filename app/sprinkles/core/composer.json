@@ -15,10 +15,10 @@
     "require": {
         "doctrine/dbal": "^2.5",
         "filp/whoops": "^2.1",
-        "illuminate/cache": "^5.3",
-        "illuminate/database": "^5.3",
-        "illuminate/events": "^5.3",
-        "illuminate/filesystem": "^5.3",
+        "illuminate/cache": "^5.4",
+        "illuminate/database": "^5.4",
+        "illuminate/events": "^5.4",
+        "illuminate/filesystem": "^5.4",
         "league/csv": "^8.1",
         "monolog/monolog": "^1",
         "phpmailer/phpmailer": "5.2.10",
@@ -30,14 +30,13 @@
         "twig/twig": "^1.18",
         "userfrosting/assets": "~4.1.0",
         "userfrosting/config": "~4.1.0",
-        "userfrosting/cache": "dev-dev",
+        "userfrosting/cache": "~4.1.0",
         "userfrosting/fortress": "~4.1.0",
         "userfrosting/i18n": "~4.1.0",
         "userfrosting/session": "~4.1.0",
         "userfrosting/support": "~4.1.0",
         "vlucas/phpdotenv": "^2"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "UserFrosting\\Sprinkle\\Core\\": "src/"
