@@ -11,7 +11,7 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.1.0-dev",
+    "version": "4.1.0-alpha",
     "config": {
         "vendor-dir": "app/vendor"
     },
