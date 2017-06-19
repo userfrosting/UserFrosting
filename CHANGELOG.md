@@ -1,6 +1,6 @@
 # Change Log
 
-## v4.1.x-dev
+## v4.1.0
 - Switch from pagination "plugin" to "widget" for Tablesorter.  Allows us to update to the latest version of TS (fix #688, #715)
 - Implement `WhoopsRenderer` for pretty debug pages.  See (#674)
 - Refactor error handling.  Move responsibility for displayErrorDetails to handlers, and factor our ErrorRenderers.  Addresses (#702)
