@@ -162,7 +162,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
         try {
             $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/$httpCode.html.twig");
         } catch (\Twig_Error_Loader $e) {
-            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
+            $template = $this->ci->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
         }
 
         return $this->response

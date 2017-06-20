@@ -1,6 +1,10 @@
 # Change Log
 
-## v4.1.0
+## v4.1.1-Alpha
+- Fixed missing template in ExceptionHandler and `notFoundHandler`
+- Migration rollback will throw a warning if a class is not found instead of aborting
+
+## v4.1.0-Alpha
 - Switch from pagination "plugin" to "widget" for Tablesorter.  Allows us to update to the latest version of TS (fix #688, #715)
 - Implement `WhoopsRenderer` for pretty debug pages.  See (#674)
 - Refactor error handling.  Move responsibility for displayErrorDetails to handlers, and factor our ErrorRenderers.  Addresses (#702)

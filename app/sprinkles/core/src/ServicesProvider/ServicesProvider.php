@@ -483,7 +483,7 @@ class ServicesProvider
                 try {
                     $template = $c->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");
                 } catch (\Twig_Error_Loader $e) {
-                    $template = $c->view->getEnvironment()->loadTemplate("pages/error/default.html.twig");
+                    $template = $c->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
                 }
 
                 return $response->withStatus(404)
@@ -589,7 +589,7 @@ class ServicesProvider
             // Load the translations
             $paths = $c->localePathBuilder->buildPaths();
             $loader = new ArrayFileLoader($paths);
-        
+
             // Create the $translator object
             $translator = new MessageTranslator($loader->load());
 
