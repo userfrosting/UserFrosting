@@ -244,17 +244,15 @@ class Migrator
             $this->io->note("Rolling back in pretend mode");
         }
 
-        // Only thing we have to check here before going further is if those migration class are available
-        // We do it before running anything down to be sure not to break anything
-        foreach ($migrations as $migration) {
-            if (!class_exists($migration->migration)) {
-                $this->io->error("Migration class {$migration->migration} doesn't exist.");
-                exit(1);
-            }
-        }
-
         // Loop again to run down each migration
         foreach ($migrations as $migration) {
+
+            // Check if those migration class are available
+            if (!class_exists($migration->migration)) {
+                $this->io->warning("Migration class {$migration->migration} doesn't exist.");
+                continue;
+            }
+
             $this->io->write("> <info>Rolling back {$migration->migration}...</info>");
             $migrationClass = $migration->migration;
             $instance = new $migrationClass($this->schema, $this->io);
