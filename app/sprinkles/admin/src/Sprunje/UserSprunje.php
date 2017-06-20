@@ -9,6 +9,7 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Sprinkle\Core\Facades\Translator;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -22,22 +23,24 @@ class UserSprunje extends Sprunje
 {
     protected $name = 'users';
 
+    protected $listable = [
+        'status'
+    ];
+
     protected $sortable = [
         'name',
         'last_activity',
-        'flag_enabled',
         'status'
     ];
 
     protected $filterable = [
         'name',
         'last_activity',
-        'flag_enabled'
+        'status'
     ];
 
     protected $excludeForAll = [
-        'last_activity',
-        'flag_enabled'
+        'last_activity'
     ];
 
     /**
@@ -103,6 +106,56 @@ class UserSprunje extends Sprunje
             }
             return $query;
         });
+    }
+
+    /**
+     * Filter by status (active, disabled, unactivated)
+     *
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
+     */
+    protected function filterStatus($query, $value)
+    {
+        // Split value on separator for OR queries
+        $values = explode($this->orSeparator, $value);
+        return $query->where(function ($query) use ($values) {
+            foreach ($values as $value) {
+                if ($value == 'disabled') {
+                    $query = $query->orWhere('flag_enabled', 0);
+                } elseif ($value == 'unactivated') {
+                    $query = $query->orWhere('flag_verified', 0);
+                } elseif ($value == 'active') {
+                    $query = $query->orWhere(function ($query) {
+                        return $query->where('flag_enabled', 1)->where('flag_verified', 1);
+                    });
+                }
+            }
+            return $query;
+        });
+    }
+
+    /**
+     * Return a list of possible user statuses.
+     *
+     * @return array
+     */
+    protected function listStatus()
+    {
+        return [
+            [
+                'value' => 'active',
+                'text' => Translator::translate('ACTIVE')
+            ],
+            [
+                'value' => 'unactivated',
+                'text' => Translator::translate('UNACTIVATED')
+            ],
+            [
+                'value' => 'disabled',
+                'text' => Translator::translate('DISABLED')
+            ]
+        ];
     }
 
     /**

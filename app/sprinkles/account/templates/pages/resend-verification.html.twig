@@ -1,4 +1,4 @@
-{% extends "layouts/basic.html.twig" %}
+{% extends "pages/abstract/base.html.twig" %}
 
 {# Overrides blocks in head of base template #}
 {% block page_title %}{{translate("ACCOUNT.VERIFICATION.RESEND")}}{% endblock %}
@@ -23,7 +23,7 @@
         <div class="form-alerts" id="alerts-page"></div>
 
         <form id="request-verification-email" role="form" action="{{site.uri.public}}/account/resend-verification" method="post" class="r-form">
-            {% include "components/csrf.html.twig" %}
+            {% include "forms/csrf.html.twig" %}
             <div class="form-group">
                 <label class="sr-only" for="verification-form-email">{{translate("EMAIL")}}</label>
                 <input type="text" name="email" placeholder="{{translate("EMAIL")}}" class="form-control" id="verification-form-email">
@@ -37,7 +37,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
     </script>
 
     <!-- Include page-specific JS -->

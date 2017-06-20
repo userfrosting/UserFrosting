@@ -20,10 +20,6 @@ return [
        "TIME" => "Activity Time"
     ],
 
-    "ADMIN" => [
-        "PANEL" => "Admin panel"
-    ],
-
     "CACHE" => [
         "CLEAR"             => "Clear cache",
         "CLEAR_CONFIRM"     => "Are you sure you want to clear the site cache?",
@@ -56,6 +52,7 @@ return [
         "ICON"          => "Group icon",
         "ICON_EXPLAIN"  => "Icon for group members",
         "INFO_PAGE"     => "Group information page for {{name}}",
+        "MANAGE"        => "Manage group",
         "NAME"          => "Group name",
         "NAME_EXPLAIN"  => "Please enter a name for the group",
         "NOT_EMPTY"     => "You can't do that because there are still users associated with the group <strong>{{name}}</strong>.",

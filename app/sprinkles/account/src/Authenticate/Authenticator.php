@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Authenticate;
@@ -20,7 +19,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedExcep
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
-use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Util\Password;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
@@ -28,7 +27,6 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  * Handles authentication tasks.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/components/#authentication
  * Partially inspired by Laravel's Authentication component: https://github.com/laravel/framework/blob/5.3/src/Illuminate/Auth/SessionGuard.php
  */
 class Authenticator
@@ -47,6 +45,11 @@ class Authenticator
      * @var Config
      */
     protected $config;
+
+    /**
+     * @var Cache
+     */
+    protected $cache;
 
     /**
      * @var bool
@@ -82,11 +85,12 @@ class Authenticator
      * @param Session $session The session wrapper object that will store the user's id.
      * @param Config $config Config object that contains authentication settings.
      */
-    public function __construct(ClassMapper $classMapper, Session $session, $config)
+    public function __construct(ClassMapper $classMapper, Session $session, $config, $cache)
     {
         $this->classMapper = $classMapper;
         $this->session = $session;
         $this->config = $config;
+        $this->cache = $cache;
 
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
@@ -185,7 +189,11 @@ class Authenticator
      */
     public function login($user, $rememberMe = false)
     {
+        $oldId = session_id();
         $this->session->regenerateId(true);
+
+        // Since regenerateId delete the old session, we'll do the same in cache
+        $this->cache->tags("_s".$oldId)->flush();
 
         // If the user wants to be remembered, create Rememberme cookie
         if ($rememberMe) {
@@ -237,8 +245,13 @@ class Authenticator
         $this->user = null;
         $this->loggedOut = true;
 
+        $oldId = session_id();
+
         // Completely destroy the session
         $this->session->destroy();
+
+        // Since regenerateId delete the old session, we'll do the same in cache
+        $this->cache->tags("_s".$oldId)->flush();
 
         // Restart the session service
         $this->session->start();

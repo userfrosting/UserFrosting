@@ -20,10 +20,6 @@ return [
        "TIME"                           => "Aktivitätszeit"
     ],
 
-    "ADMIN" => [
-        "PANEL"                         => "Administrationsmenü"
-    ],
-
     "CACHE" => [
         "CLEAR"                         => "Cache löschen",
         "CLEAR_CONFIRM"                 => "Sind Sie sicher, dass Sie den Seiten-Cache löschen möchten?",
@@ -56,6 +52,7 @@ return [
         "ICON"                          => "Gruppensymbol",
         "ICON_EXPLAIN"                  => "Symbol für Gruppenmitglieder",
         "INFO_PAGE"                     => "Gruppeninformationsseite für {{name}}",
+        //"MANAGE"                      => "Manage group",
         "NAME"                          => "Gruppenname",
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Gruppe ein",
         "NOT_EMPTY"                     => "Sie können das nicht tun, denn es sind noch Benutzer mit der Gruppe <strong>{{name}}</strong> verbunden.",

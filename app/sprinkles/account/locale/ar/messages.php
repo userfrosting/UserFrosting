@@ -6,7 +6,7 @@
  * Modern Standard Arabic message token translations for the 'account' sprinkle
  *
  * @package UserFrosting
- * @link http://wwwuserfrostingcom/components/#i18n
+ * @link http://www.userfrosting.com/components/#i18n
  * @author Alex Weissman and Abdullah Seba
  *
  */

@@ -22,6 +22,7 @@ return [
         "REQUIRED" => "Please specify a value for <strong>{{label}}</strong>.",
         "SPRUNJE" => [
             "BAD_FILTER" => "<strong>{{name}}</strong> is not a valid filter for this Sprunje.",
+            "BAD_LIST" => "<strong>{{name}}</strong> is not a valid list for this Sprunje.",
             "BAD_SORT" => "<strong>{{name}}</strong> is not a valid sort field for this Sprunje."
         ]
     ]

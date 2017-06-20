@@ -3,7 +3,7 @@
 namespace UserFrosting;
 
 // Some standard defines
-define('UserFrosting\VERSION', '4.0.23-alpha');
+define('UserFrosting\VERSION', '4.1.0-alpha');
 define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '5.6');
 define('UserFrosting\DEBUG_CONFIG', false);
@@ -35,3 +35,4 @@ define('UserFrosting\SCHEMA_DIR_NAME', 'schema');
 define('UserFrosting\SRC_DIR_NAME', 'src');
 define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
 define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');
+define('UserFrosting\FACTORY_DIR_NAME', 'factories');

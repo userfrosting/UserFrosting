@@ -1,4 +1,4 @@
-{% extends forcedLayout ? forcedLayout  : "layouts/default.html.twig" %}
+{% extends forcedLayout ? forcedLayout  : "pages/abstract/default.html.twig" %}
 
 {% set page_active = "account-settings" %}
 
@@ -18,14 +18,14 @@
         <div class="col-lg-6">
             {% block settings_profile_box %}
                 <div class="box box-primary">
-                    {% include "components/forms/settings-profile.html.twig" %}
+                    {% include "forms/settings-profile.html.twig" %}
                 </div>
             {% endblock %}
         </div>
         <div class="col-lg-6">
             {% block settings_account_box %}
                 <div class="box box-primary">
-                    {% include "components/forms/settings-account.html.twig" %}
+                    {% include "forms/settings-account.html.twig" %}
                 </div>
             {% endblock %}
         </div>
@@ -34,7 +34,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->

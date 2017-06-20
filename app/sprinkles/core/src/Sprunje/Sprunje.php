@@ -49,6 +49,7 @@ abstract class Sprunje
     protected $options = [
         'sorts' => [],
         'filters' => [],
+        'lists' => [],
         'size' => 'all',
         'page' => null,
         'format' => 'json'
@@ -60,6 +61,13 @@ abstract class Sprunje
      * @var array[string]
      */
     protected $filterable = [];
+
+    /**
+     * Fields to allow listing (enumeration) upon.
+     *
+     * @var array[string]
+     */
+    protected $listable = [];
 
     /**
      * Fields to allow sorting upon.
@@ -92,7 +100,7 @@ abstract class Sprunje
 
         // Validation on input data
         $v = new Validator($options);
-        $v->rule('array', ['sorts', 'filters']);
+        $v->rule('array', ['sorts', 'filters', 'lists']);
         $v->rule('regex', 'sorts.*', '/asc|desc/i');
         $v->rule('regex', 'size', '/all|[0-9]+/i');
         $v->rule('integer', 'page');
@@ -178,6 +186,30 @@ abstract class Sprunje
         return $csv;
     }
 
+
+    /**
+     * Get lists of values for specified fields in 'lists' option, calling a custom lister callback when appropriate.
+     *
+     * @return array
+     */
+    public function getListable()
+    {
+        $result = [];
+        foreach ($this->listable as $name) {
+
+            // Determine if a custom filter method has been defined
+            $methodName = 'list'.studly_case($name);
+
+            if (method_exists($this, $methodName)) {
+                $result[$name] = $this->$methodName();
+            } else {
+                $result[$name] = $this->getColumnValues($name);
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Get the underlying QueryBuilder object.
      *
@@ -186,6 +218,17 @@ abstract class Sprunje
     public function getQuery()
     {
         return $this->query;
+    }
+
+    /**
+     * Set the underlying QueryBuilder object.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+        return $this;
     }
 
     /**
@@ -221,7 +264,8 @@ abstract class Sprunje
         $result = [
             'count' => $total,
             'count_filtered' => $totalFiltered,
-            'rows' => $collection->values()->toArray()
+            'rows' => $collection->values()->toArray(),
+            'listable' => $this->getListable()
         ];
 
         return $result;
@@ -345,7 +389,7 @@ abstract class Sprunje
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function applySorts()
+    public function applySorts()
     {
         foreach ($this->options['sorts'] as $name => $direction) {
             // Check that this sort is allowed
@@ -402,6 +446,8 @@ abstract class Sprunje
 
     /**
      * Set the initial query used by your Sprunje.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     abstract protected function baseQuery();
 
@@ -423,5 +469,25 @@ abstract class Sprunje
     protected function countFiltered()
     {
         return $this->query->count();
+    }
+
+    /**
+     * Returns a list of distinct values for a specified column.
+     * Formats results to have a "value" and "text" attribute.
+     *
+     * @param string $column
+     * @return array
+     */
+    protected function getColumnValues($column)
+    {
+        $rawValues = $this->query->select($column)->distinct()->orderBy($column, 'asc')->get();
+        $values = [];
+        foreach ($rawValues as $raw) {
+            $values[] = [
+                'value' => $raw[$column],
+                'text' => $raw[$column]
+            ];
+        }
+        return $values;
     }
 }

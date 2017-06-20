@@ -6,7 +6,7 @@
  * Modern Spoken Arabic generic message translations for the core sprinkle
  *
  * @package UserFrosting
- * @link http://wwwuserfrostingcom/components/#i18n
+ * @link http://www.userfrosting.com/components/#i18n
  * @author Alexander Weissman and Abdullah Seba
  */
 

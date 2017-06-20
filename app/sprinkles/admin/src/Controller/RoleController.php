@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
@@ -18,8 +17,8 @@ use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-use UserFrosting\Sprinkle\Account\Model\Role;
-use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Role;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -52,7 +51,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -64,7 +63,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role/create.json');
+        $schema = new RequestSchema('schema://requests/role/create.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -145,7 +144,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -215,7 +214,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -248,7 +247,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -279,7 +278,7 @@ class RoleController extends SimpleController
             throw $e;
         }
 
-        return $this->ci->view->render($response, 'components/modals/confirm-delete-role.html.twig', [
+        return $this->ci->view->render($response, 'modals/confirm-delete-role.html.twig', [
             'role' => $role,
             'form' => [
                 'action' => "api/roles/r/{$role->slug}",
@@ -302,7 +301,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var UserFrosting\I18n\MessageTranslator $translator */
@@ -326,10 +325,10 @@ class RoleController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://role/create.json');
+        $schema = new RequestSchema('schema://requests/role/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        return $this->ci->view->render($response, 'components/modals/role.html.twig', [
+        return $this->ci->view->render($response, 'modals/role.html.twig', [
             'role' => $role,
             'form' => [
                 'action' => 'api/roles',
@@ -368,7 +367,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var UserFrosting\I18n\MessageTranslator $translator */
@@ -390,10 +389,10 @@ class RoleController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://role/edit-info.json');
+        $schema = new RequestSchema('schema://requests/role/edit-info.yaml');
         $validator = new JqueryValidationAdapter($schema, $translator);
 
-        return $this->ci->view->render($response, 'components/modals/role.html.twig', [
+        return $this->ci->view->render($response, 'modals/role.html.twig', [
             'role' => $role,
             'form' => [
                 'action' => "api/roles/r/{$role->slug}",
@@ -429,7 +428,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit "permissions" field for this role
@@ -440,7 +439,7 @@ class RoleController extends SimpleController
             throw new ForbiddenException();
         }
 
-        return $this->ci->view->render($response, 'components/modals/role-manage-permissions.html.twig', [
+        return $this->ci->view->render($response, 'modals/role-manage-permissions.html.twig', [
             'role' => $role
         ]);
     }
@@ -467,7 +466,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -515,7 +514,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -558,7 +557,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -623,7 +622,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -664,7 +663,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role/edit-info.json');
+        $schema = new RequestSchema('schema://requests/role/edit-info.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -688,7 +687,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this role
@@ -774,7 +773,7 @@ class RoleController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user
@@ -802,7 +801,7 @@ class RoleController extends SimpleController
         // Validate key -> value pair
 
         // Load the request schema
-        $schema = new RequestSchema('schema://role/edit-field.json');
+        $schema = new RequestSchema('schema://requests/role/edit-field.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -861,7 +860,7 @@ class RoleController extends SimpleController
     protected function getRoleFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://role/get-by-slug.json');
+        $schema = new RequestSchema('schema://requests/role/get-by-slug.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

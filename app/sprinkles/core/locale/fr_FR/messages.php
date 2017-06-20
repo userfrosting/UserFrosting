@@ -45,14 +45,13 @@ return [
         "@TRANSLATION" => "Langue"
     ],
 
-    "MAIL_ERROR" => "Erreur fatale lors de l'envoie du courriel. Contactez votre administrateur. Si vous être administrateur, consultez les logs.",
-
     "NAME"  => "Nom",
     "NAVIGATION" => "Menu principal",
 
     "PAGINATION" => [
         "GOTO" => "Aller à la page",
-        "SHOW" => "Afficher"
+        "SHOW" => "Afficher",
+        "OUTPUT" => "{startRow} à {endRow} de {filteredRows} ({totalRows})"
     ],
     "PRIVACY" => "Politique de confidentialité",
 

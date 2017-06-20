@@ -3,13 +3,12 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 
 /**
  * AuthorizationManager class.
@@ -68,7 +67,7 @@ class AuthorizationManager
      *
      * Determine if this user has access to the given $slug under the given $params.
      *
-     * @param UserFrosting\Sprinkle\Account\Model\User $user
+     * @param UserFrosting\Sprinkle\Account\Database\Models\User $user
      * @param string $slug The permission slug to check for access.
      * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.

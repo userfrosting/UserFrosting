@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
@@ -18,8 +17,8 @@ use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-use UserFrosting\Sprinkle\Account\Model\Group;
-use UserFrosting\Sprinkle\Account\Model\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Group;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Support\Exception\BadRequestException;
@@ -52,7 +51,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -64,7 +63,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://group/create.json');
+        $schema = new RequestSchema('schema://requests/group/create.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -145,7 +144,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -216,7 +215,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -249,7 +248,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -270,7 +269,7 @@ class GroupController extends SimpleController
             throw $e;
         }
 
-        return $this->ci->view->render($response, 'components/modals/confirm-delete-group.html.twig', [
+        return $this->ci->view->render($response, 'modals/confirm-delete-group.html.twig', [
             'group' => $group,
             'form' => [
                 'action' => "api/groups/g/{$group->slug}",
@@ -293,7 +292,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var UserFrosting\I18n\MessageTranslator $translator */
@@ -319,10 +318,10 @@ class GroupController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://group/create.json');
+        $schema = new RequestSchema('schema://requests/group/create.yaml');
         $validator = new JqueryValidationAdapter($schema, $this->ci->translator);
 
-        return $this->ci->view->render($response, 'components/modals/group.html.twig', [
+        return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
             'form' => [
                 'action' => 'api/groups',
@@ -361,7 +360,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var UserFrosting\I18n\MessageTranslator $translator */
@@ -383,10 +382,10 @@ class GroupController extends SimpleController
         ];
 
         // Load validation rules
-        $schema = new RequestSchema('schema://group/edit-info.json');
+        $schema = new RequestSchema('schema://requests/group/edit-info.yaml');
         $validator = new JqueryValidationAdapter($schema, $translator);
 
-        return $this->ci->view->render($response, 'components/modals/group.html.twig', [
+        return $this->ci->view->render($response, 'modals/group.html.twig', [
             'group' => $group,
             'form' => [
                 'action' => "api/groups/g/{$group->slug}",
@@ -415,7 +414,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -461,7 +460,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -526,7 +525,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -567,7 +566,7 @@ class GroupController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Load the request schema
-        $schema = new RequestSchema('schema://group/edit-info.json');
+        $schema = new RequestSchema('schema://requests/group/edit-info.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);
@@ -591,7 +590,7 @@ class GroupController extends SimpleController
         /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Model\User $currentUser */
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this group
@@ -656,7 +655,7 @@ class GroupController extends SimpleController
     protected function getGroupFromParams($params)
     {
         // Load the request schema
-        $schema = new RequestSchema('schema://group/get-by-slug.json');
+        $schema = new RequestSchema('schema://requests/group/get-by-slug.yaml');
 
         // Whitelist and set parameter defaults
         $transformer = new RequestDataTransformer($schema);

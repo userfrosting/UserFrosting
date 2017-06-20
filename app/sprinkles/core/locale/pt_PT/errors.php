@@ -14,14 +14,6 @@ return [
     "ERROR" => [
         "@TRANSLATION" => "Erro",
 
-        "TITLE" => "Perturbância na Força",
-        "DESCRIPTION" => "Sentimos uma grande perturbância na Força.",
-        "ENCOUNTERED" => "Uhhh...algo aconteceu.  Não sabemos bem o quê.",
-        "DETAIL" => "Eis o que sabemos:",
-        "RETURN" => 'Clique <a href="{{url}}">aqui</a> para regressar à página inicial.',
-
-        "SERVER" => "Oops, parece que o nosso servidor deu o berro. Se é um administrador, por favor consulte o log de erros PHP ou UF.",
-
         "400" => [
             "TITLE" => "Erro 400: Pedido Inválido",
             "DESCRIPTION" => "Provavelmente a culpa não é sua.",
@@ -40,6 +32,19 @@ return [
             "DESCRIPTION" => "Alguns requisitos de configuração do UserFrosting não foram satisfeitos.",
             "DETAIL" => "Algo não está bem.",
             "RETURN" => 'Por favor corrija os seguintes erros, depois <a href="{{url}}">refresque</a> a página.'
-        ]
+        ],
+
+        "DESCRIPTION" => "Sentimos uma grande perturbância na Força.",
+        "DETAIL" => "Eis o que sabemos:",
+
+        "ENCOUNTERED" => "Uhhh...algo aconteceu.  Não sabemos bem o quê.",
+
+        "MAIL" => "Erro fatal ao tentar enviar email, contate o administrator do servidor.  Se é administrador, por favor consulte o log de mail do UF.",
+
+        "RETURN" => 'Clique <a href="{{url}}">aqui</a> para regressar à página inicial.',
+
+        "SERVER" => "Oops, parece que o nosso servidor deu o berro. Se é um administrador, por favor consulte o log de erros PHP ou UF.",
+
+        "TITLE" => "Perturbância na Força"
     ]
 ];

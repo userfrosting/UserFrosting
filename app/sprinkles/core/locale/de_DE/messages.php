@@ -45,14 +45,13 @@ return [
         "@TRANSLATION"                  => "Sprache"
     ],
 
-    "MAIL_ERROR"                        => "Schwerwiegender Fehler beim Mailversand, wenden Sie sich an Ihren Serveradministrator. Wenn Sie der Administrator sind, überprüfen Sie bitte das UF-Mail-Protokoll.",
-
     "NAME"                              => "Name",
     "NAVIGATION"                        => "Navigation",
 
     "PAGINATION" => [
         "GOTO"                          => "Gehe zu Seite",
-        "SHOW"                          => "Anzeigen"
+        "SHOW"                          => "Anzeigen",
+        "OUTPUT"                        => "{startRow} to {endRow} of {filteredRows} ({totalRows})"
     ],
     "PRIVACY"                           => "Datenschutz-Bestimmungen",
 

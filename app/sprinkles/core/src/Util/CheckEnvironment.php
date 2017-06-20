@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Util;
@@ -259,7 +258,7 @@ class CheckEnvironment
         if ($this->isProduction()) {
             // Should be write-protected in production!
             $shouldBeWriteable = array_merge($shouldBeWriteable, [
-                $this->locator->findResource('sprinkles://') => false,
+                \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME => false,
                 \UserFrosting\VENDOR_DIR => false
             ]);
         }

@@ -1,4 +1,4 @@
-# UserFrosting 4.0
+# UserFrosting 4.1
 
 [http://www.userfrosting.com](http://www.userfrosting.com)
 
@@ -12,7 +12,7 @@ If you simply want to show that you like this project, or want to remember it fo
 
 Copyright (c) 2017, free to use in personal and commercial software as per the [license](licenses/UserFrosting.md).
 
-UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.2/eloquent#introduction) ORM.
+UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.4/eloquent#introduction) ORM.
 
 ## Features
 
@@ -53,6 +53,10 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 ### [Learning UserFrosting](https://learn.userfrosting.com)
 
 ### [API documentation](http://api.userfrosting.com)
+
+## Running tests
+
+Run `php bakery test` from the root project directory. Any tests included in `sprinkles/*/tests` will be run.
 
 ## About the Developers
 

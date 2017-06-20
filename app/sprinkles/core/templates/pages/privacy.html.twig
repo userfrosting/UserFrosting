@@ -1,4 +1,4 @@
-{% extends "layouts/default.html.twig" %}
+{% extends "pages/abstract/default.html.twig" %}
 
 {% set page_active = "home" %}
 
@@ -8,5 +8,5 @@
 {% block page_description %}Our privacy policy outlines what kind of information we collect from you and how we will use it.{% endblock %}
 
 {% block body_matter %}
-    {% include 'components/privacy.html.twig' %}
+    {% include 'pages/partials/privacy.html.twig' %}
 {% endblock %}
