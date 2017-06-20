@@ -55,7 +55,7 @@ class Setup extends BaseCommand
 
         // Check if the .env file exist.
         if (!$force && file_exists($this->envPath)) {
-            $this->io->note("File `{$this->envPath}` already exist. Use -f option to force setup to run again.");
+            $this->io->note("File `{$this->envPath}` already exist. Use the `php bakery setup -f` command to force setup to run again.");
             return;
         }
 
