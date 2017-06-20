@@ -136,9 +136,7 @@ class Bakery
      */
     protected function commandDirectoryPath($sprinkleName)
     {
-        return \UserFrosting\APP_DIR .
-               \UserFrosting\DS .
-               \UserFrosting\SPRINKLES_DIR_NAME .
+        return \UserFrosting\SPRINKLES_DIR .
                \UserFrosting\DS .
                $sprinkleName .
                \UserFrosting\DS .

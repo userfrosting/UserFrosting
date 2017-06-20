@@ -574,9 +574,7 @@ class Migrator
      */
     protected function migrationDirectoryPath($sprinkleName)
     {
-        $path = \UserFrosting\APP_DIR .
-                \UserFrosting\DS .
-                \UserFrosting\SPRINKLES_DIR_NAME .
+        $path = \UserFrosting\SPRINKLES_DIR .
                 \UserFrosting\DS .
                 $sprinkleName .
                 \UserFrosting\DS .

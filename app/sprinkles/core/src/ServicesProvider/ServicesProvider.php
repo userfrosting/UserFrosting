@@ -100,7 +100,7 @@ class ServicesProvider
          * Assets are Javascript, CSS, image, and other files used by your site.
          */
         $container['assetLoader'] = function ($c) {
-            $basePath = \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME;
+            $basePath = \UserFrosting\SPRINKLES_DIR;
             $pattern = "/^[A-Za-z0-9_\-]+\/assets\//";
 
             $al = new AssetLoader($basePath, $pattern);
@@ -612,8 +612,7 @@ class ServicesProvider
 
             // Add Sprinkles' templates namespaces
             foreach ($sprinkles as $sprinkle) {
-                $path = \UserFrosting\APP_DIR . \UserFrosting\DS .
-                    \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS .
+                $path = \UserFrosting\SPRINKLES_DIR . \UserFrosting\DS .
                     $sprinkle . \UserFrosting\DS .
                     \UserFrosting\TEMPLATE_DIR_NAME . \UserFrosting\DS;
 

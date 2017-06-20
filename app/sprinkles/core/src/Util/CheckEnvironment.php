@@ -258,7 +258,7 @@ class CheckEnvironment
         if ($this->isProduction()) {
             // Should be write-protected in production!
             $shouldBeWriteable = array_merge($shouldBeWriteable, [
-                \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME => false,
+                \UserFrosting\SPRINKLES_DIR => false,
                 \UserFrosting\VENDOR_DIR => false
             ]);
         }
@@ -320,7 +320,7 @@ class CheckEnvironment
         } else {
             $this->resultsSuccess['phpVersion'] = [
                 "title" => "<i class='fa fa-code fa-fw'></i> PHP version checks out!",
-                "message" => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . ".  Great!",
+                "message" => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION .  "or higher.  Great!",
                 "success" => true
             ];
         }
