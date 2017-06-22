@@ -3,6 +3,7 @@
 ## v4.1.1-Alpha
 - Fixed missing template in ExceptionHandler and `notFoundHandler`
 - Migration rollback will throw a warning if a class is not found instead of aborting
+- Temporary fix for trouble with `npm install` in Windows (#742)
 
 ## v4.1.0-Alpha
 - Switch from pagination "plugin" to "widget" for Tablesorter.  Allows us to update to the latest version of TS (fix #688, #715)

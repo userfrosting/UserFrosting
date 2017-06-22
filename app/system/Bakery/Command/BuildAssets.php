@@ -81,7 +81,12 @@ class BuildAssets extends BaseCommand
     {
         $this->io->section("<info>Installing npm dependencies</info>");
         $this->io->writeln("> <comment>npm install</comment>");
-        passthru("npm install --prefix " . $this->buildPath);
+
+        // Temporarily change the working directory so we can install npm dependencies
+        $wd = getcwd();
+        chdir($this->buildPath);
+        passthru("npm install");
+        chdir($wd);
     }
 
     /**
