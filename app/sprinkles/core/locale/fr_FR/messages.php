@@ -47,6 +47,7 @@ return [
 
     "NAME"  => "Nom",
     "NAVIGATION" => "Menu principal",
+    "NO_RESULTS" => "Aucun résultat trouvé.",
 
     "PAGINATION" => [
         "GOTO" => "Aller à la page",
