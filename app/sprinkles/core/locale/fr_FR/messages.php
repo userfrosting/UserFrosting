@@ -93,7 +93,7 @@ return [
     "SUBMIT" => "Envoyer",
     "PRINT" => "Imprimer",
     "REMOVE" => "Supprimer",
-    "UNACTIVATED" => "Désactivé",
+    "UNACTIVATED" => "Non activé",
     "UPDATE" => "Mettre à jour",
     "YES" => "Oui",
     "NO" => "Non",
