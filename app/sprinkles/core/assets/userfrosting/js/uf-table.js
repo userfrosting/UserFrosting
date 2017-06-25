@@ -440,10 +440,6 @@
                     }
                 }
 
-                // The select-filters have been changed. Reapply the filter so the select have the correct option active
-                var filterList = base.getSavedFilters(ts);
-    			$.tablesorter.setFilters( ts, filterList, true );
-
                 json.total = data.count;  // Get total rows without pagination
                 json.filteredRows = data.count_filtered; // no filtering
                 json.rows = $(rows);
