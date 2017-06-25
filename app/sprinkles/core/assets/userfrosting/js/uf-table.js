@@ -90,7 +90,7 @@
  * @author Alexander Weissman <https://alexanderweissman.com>
  */
 ;(function($, window, document, undefined) {
-	"use strict";
+    "use strict";
 
     // Define plugin name and defaults.
     var pluginName = "ufTable",
@@ -220,7 +220,7 @@
         };
 
         this.settings = $.extend(true, {}, dataAttributeDefaults, this.settings);
-        
+
         this.settings.tablesorter.widgetOptions.pager_ajaxUrl = this.settings.dataUrl;
 
         // Generate the URL for the AJAX request, with the relevant parameters
@@ -361,15 +361,15 @@
             var isArray, saved,
                 wo = table.config.widgetOptions;
             if ( wo.filter_saveFilters && $.tablesorter.storage ) {
-				saved = $.tablesorter.storage( table, 'tablesorter-filters' ) || [];
-				isArray = $.isArray( saved );
-				// make sure we're not just getting an empty array
-				if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
-					filterList = $.tablesorter.filter.processFilters( saved );
-				}
-			}
+                saved = $.tablesorter.storage( table, 'tablesorter-filters' ) || [];
+                isArray = $.isArray( saved );
+                // make sure we're not just getting an empty array
+                if ( !( isArray && saved.join( '' ) === '' || !isArray ) ) {
+                    filterList = $.tablesorter.filter.processFilters( saved );
+                }
+            }
 
-			return filterList;
+            return filterList;
         },
         /**
          * Callback for generating the AJAX url.
