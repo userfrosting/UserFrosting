@@ -26,8 +26,10 @@ return [
         "MASTER_NOT_EXISTS" => "Vous ne pouvez pas enregistrer un compte tant que le compte principal n'a pas été créé!",
         "MY"                => "Mon compte",
 
-        "SESSION_COMPROMISED"       => "Votre session a été compromise. Vous devez vous déconnecter de tous les périphériques, puis vous reconnecter et vous assurer que vos données n'ont pas été altérées.",
-        "SESSION_COMPROMISED_TITLE" => "Votre compte peut avoir été compromis",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"  => "Votre session a été compromise. Vous devez vous déconnecter de tous les périphériques, puis vous reconnecter et vous assurer que vos données n'ont pas été altérées.",
+            "TITLE"         => "Votre compte peut avoir été compromis"
+        ],
         "SESSION_EXPIRED"           => "Votre session a expiré. Veuillez vous connecter à nouveau.",
 
         "SETTINGS" => [

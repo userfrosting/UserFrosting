@@ -26,8 +26,10 @@ return [
         "MASTER_NOT_EXISTS" => "Não pode registrar uma conta enquanto a conta principal não for criada!",
         "MY"                => "A minha conta",
 
-        "SESSION_COMPROMISED"       => "A sua sessão foi comprometida.  Deverá fechar todas as sessões, voltar a iniciar sessão e verificar que os seus dados não foram alterados por alheios.",
-        "SESSION_COMPROMISED_TITLE" => "A sua sessão pode ter sido comprometida",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"  => "A sua sessão foi comprometida.  Deverá fechar todas as sessões, voltar a iniciar sessão e verificar que os seus dados não foram alterados por alheios.",
+            "TITLE"         => "A sua sessão pode ter sido comprometida"
+        ],
         "SESSION_EXPIRED"       => "A sua sessão expirou. Por favor inicie nova sessão.",
 
         "SETTINGS" => [

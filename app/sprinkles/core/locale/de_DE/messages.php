@@ -39,7 +39,10 @@ return [
 
     "HOME"                              => "Startseite",
 
-    "LEGAL"                             => "Rechtsgrundsatz",
+    "LEGAL" => [
+        "@TRANSLATION"                  => "Rechtsgrundsatz",
+        "DESCRIPTION"                   => "Unser Rechtsgrundsatz gilt für die Benutzung dieser Internetseite und unserer Dienste."
+    ],
 
     "LOCALE" => [
         "@TRANSLATION"                  => "Sprache"
@@ -51,12 +54,19 @@ return [
     "PAGINATION" => [
         "GOTO"                          => "Gehe zu Seite",
         "SHOW"                          => "Anzeigen",
-        "OUTPUT"                        => "{startRow} to {endRow} of {filteredRows} ({totalRows})"
+        "NEXT"                          => "Nächste Seite",
+        "PREVIOUS"                      => "Vorherige Seite",
+        "FIRST"                         => "Erste Seite",
+        "LAST"                          => "Letzte Seite"
     ],
-    "PRIVACY"                           => "Datenschutz-Bestimmungen",
+    "PRIVACY" => [
+        "@TRANSLATION"                  => "Datenschutzbestimmungen",
+        "DESCRIPTION"                   => "In unsere Datenschutzbestimmungen erklären wir Ihnen, welche Daten wir sammeln und wozu wir diese benutzen."
+    ],
 
     "SLUG"                              => "Schnecke",
     "SLUG_CONDITION"                    => "Schnecke/Bedingungen",
+    "SLUG_IN_USE"                       => "Die Schnecke <strong>{{slug}}</strong> existiert bereits",
     "STATUS"                            => "Status",
     "SUGGEST"                           => "Vorschlagen",
 
@@ -99,5 +109,6 @@ return [
 
     // Misc.
     "BUILT_WITH_UF"                     => "Errichtet mit <a href=\"http://www.userfrosting.com\">UserFrosting</a>",
-    "ADMINLTE_THEME_BY"                 => "Theme von <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten"
+    "ADMINLTE_THEME_BY"                 => "Theme von <strong><a href=\"http://almsaeedstudio.com\">Almsaeed Studio</a>.</strong> Alle Rechte vorbehalten",
+    "WELCOME_TO"                        => "Willkommen auf {{title}}!"
 ];

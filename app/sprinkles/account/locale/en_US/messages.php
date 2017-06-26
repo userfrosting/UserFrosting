@@ -26,8 +26,11 @@ return [
         "MASTER_NOT_EXISTS" => "You cannot register an account until the master account has been created!",
         "MY"                => "My Account",
 
-        "SESSION_COMPROMISED"       => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
-        "SESSION_COMPROMISED_TITLE" => "Your account may have been compromised",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"  => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
+            "TITLE"         => "Your account may have been compromised",
+            "TEXT"          => "Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href=\"{{url}}\">log in</a> and check your account for suspicious activity.  You may also wish to change your password."
+        ],
         "SESSION_EXPIRED"       => "Your session has expired.  Please sign in again.",
 
         "SETTINGS" => [
@@ -128,7 +131,13 @@ return [
         "INVALID"           => "Current password doesn't match the one we have on record",
         "NEW"               => "New Password",
         "NOTHING_TO_UPDATE" => "You cannot update with the same password",
-        "UPDATED"           => "Account password updated"
+        "UPDATED"           => "Account password updated",
+
+        "CREATE" => [
+            "@TRANSLATION"  => "Create Password",
+            "PAGE"          => "Choose a password for your new account.",
+            "SET"           => "Set Password and Sign In"
+        ]
     ],
 
     "PROFILE"       => [
@@ -138,6 +147,7 @@ return [
 
     "REGISTER"      => "Register",
     "REGISTER_ME"   => "Sign me up",
+    "SIGN_IN_HERE"  => "Already have an account? <a href=\"{{url}}\">Sign in here.</a>",
 
     "REGISTRATION" => [
         "BROKEN"            => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
