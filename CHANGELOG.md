@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.1.2-alpha
+- Remove call to setFilters that was causing problems with pagination (#688)
+- Update German translations and factor out some hardcoded text (#725)
+- Update French translations
+- Update Arabic translations (#733, #734, #735)
+
 ## v4.1.1-Alpha
 - Fixed missing template in ExceptionHandler and `notFoundHandler`
 - Migration rollback will throw a warning if a class is not found instead of aborting
