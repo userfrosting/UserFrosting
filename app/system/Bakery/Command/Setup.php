@@ -112,7 +112,8 @@ class Setup extends BaseCommand
             'port' => $port,
             'database' => $name,
             'username' => $user,
-            'password' => $password
+            'password' => $password,
+            'charset' => 'utf8'
         ];
         $capsule->addConnection($dbParams);
 
