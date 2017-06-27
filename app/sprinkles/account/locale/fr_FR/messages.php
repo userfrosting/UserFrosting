@@ -116,7 +116,7 @@ return [
             "INVALID"           => "Cette requête de réinitialisation de mot de passe n'a pas pu être trouvée ou a expiré. Veuillez réessayer <a href=\"{{url}}\"> de soumettre votre demande <a>.",
             "PAGE"              => "Obtenir un lien pour réinitialiser votre mot de passe.",
             "REQUEST_CANNED"    => "Demande de mot de passe perdu annulée.",
-            "REQUEST_SENT"      => "Un lien de réinitialisation du mot de passe a été envoyé à {{email}}."
+            "REQUEST_SENT"      => "Si le courrier électronique <strong>{{email}}</strong> correspond à un compte dans notre système, un lien de réinitialisation de mot de passe sera envoyé à <strong>{{email}}</strong>."
         ],
 
         "RESET" => [
