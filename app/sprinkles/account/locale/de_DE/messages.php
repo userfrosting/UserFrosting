@@ -117,7 +117,7 @@ return [
             "INVALID"                   => "Diese Anforderung zum Zurücksetzen des Passworts wurde nicht gefunden oder ist abgelaufen.Bitte versuchen Sie <a href=\'{{url}}\'>Ihre Anfrage erneut einzureichen<a>.",
             "PAGE"                      => "Holen Sie sich einen Link, um Ihr Passwort zurückzusetzen.",
             "REQUEST_CANNED"            => "Verlorene Passwortanforderung abgebrochen.",
-            "REQUEST_SENT"              => "Ein Passwort-Reset-Link wurde an {{email}} gesendet."
+            "REQUEST_SENT"              => "Wenn die E-Mail <strong>{{email}}</strong> mit einem Account in unserem System übereinstimmt, wird ein Passwort-Reset-Link an <strong>{{email}}</strong> gesendet."
         ],
 
         "RESET" => [
