@@ -47,6 +47,8 @@ class ShutdownHandler
             $errstr  = $error["message"];
             $clientErrorMessage = "Oops, looks like our server might have goofed.  If you're an admin, please check your PHP error log.";
 
+            error_log("Fatal error ($errno) in $errfile on line $errline: $errstr");
+
             // For AJAX requests, add an alert to the message stream instead
             if ($this->ci->request->isXhr()) {
                 // Inform the client of a fatal error
@@ -55,6 +57,8 @@ class ShutdownHandler
                     $this->ci->alerts->addMessageTranslated("danger", $clientErrorMessage);
                     $output = $clientErrorMessage;
                 }
+            } else if (php_sapi_name() === 'cli') {
+				exit($clientErrorMessage . PHP_EOL);
             } else {
                 $title = "UserFrosting Application Error";
                 $html = "<h2>$clientErrorMessage</h2>";
@@ -70,7 +74,6 @@ class ShutdownHandler
                 );
             }
 
-            error_log("Fatal error ($errno) in $errfile on line $errline: $errstr");
             echo $output;
             header("HTTP/1.1 500 Internal Server Error");
             exit();
