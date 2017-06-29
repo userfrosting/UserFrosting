@@ -11,8 +11,8 @@
     <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
         <thead>
             <tr>
-                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info">{{translate('USER')}} <i class="fa fa-sort"></i></th>
-                <th data-column-template="#user-table-column-via-roles" data-sorter="false" data-filter="false">{{translate('PERMISSION.VIA_ROLES')}}</th>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info" data-priority="1">{{translate('USER')}} <i class="fa fa-sort"></i></th>
+                <th data-column-template="#user-table-column-via-roles" data-sorter="false" data-filter="false" data-priority="1">{{translate('PERMISSION.VIA_ROLES')}}</th>
             </tr>
         </thead>
         <tbody>

@@ -1,5 +1,9 @@
 # Change Log
 
+## v4.1.3-alpha
+- Add Italian translations
+- Add `data-priority` attributes to built-in tables (#752)
+
 ## v4.1.2-alpha
 - Remove call to setFilters that was causing problems with pagination (#688)
 - Update German translations and factor out some hardcoded text (#725)
