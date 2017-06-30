@@ -43,8 +43,11 @@ class AdminController extends SimpleController
             throw new ForbiddenException();
         }
 
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
         // Probably a better way to do this
-        $users = User::orderBy('created_at', 'desc')
+        $users = $classMapper->createInstance('user')->orderBy('created_at', 'desc')
                ->take(8)
                ->get();
 
