@@ -9,10 +9,16 @@
     } | merge(table)
 %}
 
-<div class="form-group has-feedback uf-table-search js-uf-table-search">
-    <input type="search" class="form-control" data-column="all">
-    <i class="fa fa-search form-control-icon" aria-hidden="true"></i>
-</div>
+{#
+   Global search field for the table.  By default, only shown in mobile sizes.
+   To customize this behavior, see core/assets/userfrosting/css/userfrosting.css
+#}
+{% block table_search %}
+    <div class="form-group has-feedback uf-table-search js-uf-table-search">
+        <input type="search" class="form-control" data-column="all">
+        <i class="fa fa-search form-control-icon" aria-hidden="true"></i>
+    </div>
+{% endblock %}
 <div class="table">
     {% block table %}
         {# Define your table skeleton in this block in your child template #}

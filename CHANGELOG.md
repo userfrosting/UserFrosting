@@ -3,6 +3,7 @@
 ## v4.1.3-alpha
 - Add Italian translations
 - Add `data-priority` attributes to built-in tables (#752)
+- Add block `table_search` to `table-paginated.html.twig`
 
 ## v4.1.2-alpha
 - Remove call to setFilters that was causing problems with pagination (#688)
