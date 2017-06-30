@@ -43,7 +43,14 @@ class Test extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io->title("UserFrosting's Tester");
+
+        // Get command
         $command = \UserFrosting\VENDOR_DIR . "/bin/phpunit --colors=always";
+        if ($output->isVerbose() || $output->isVeryVerbose()) {
+            $command .= " -v";
+        }
+
+        // Execute
         $this->io->writeln("> <comment>$command</comment>");
         passthru($command);
     }
