@@ -43,10 +43,13 @@ class AdminController extends SimpleController
             throw new ForbiddenException();
         }
 
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
         // Probably a better way to do this
-        $users = User::orderBy('created_at', 'desc')
-               ->take(8)
-               ->get();
+        $users = $classMapper->staticMethod('user', 'orderBy', 'created_at', 'desc')
+                 ->take(8)
+                 ->get();
 
         // Transform the `create_at` date in "x days ago" type of string
         $users->transform(function ($item, $key) {
@@ -65,9 +68,9 @@ class AdminController extends SimpleController
 
         return $this->ci->view->render($response, 'pages/dashboard.html.twig', [
             'counter' => [
-                'users' => User::count(),
-                'roles' => Role::count(),
-                'groups' => Group::count(),
+                'users' => $classMapper->staticMethod('user', 'count'),
+                'roles' => $classMapper->staticMethod('role', 'count'),
+                'groups' => $classMapper->staticMethod('group', 'count'),
             ],
             'info' => [
                 'version' => [
