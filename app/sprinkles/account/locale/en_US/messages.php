@@ -114,7 +114,7 @@ return [
             "INVALID"           => "This password reset request could not be found, or has expired.  Please try <a href=\"{{url}}\">resubmitting your request<a>.",
             "PAGE"              => "Get a link to reset your password.",
             "REQUEST_CANNED"    => "Lost password request cancelled.",
-            "REQUEST_SENT"      => "A password reset link has been sent to <strong>{{email}}</strong>."
+            "REQUEST_SENT"      => "If the email <strong>{{email}}</strong> matches an account in our system, a password reset link will be sent to <strong>{{email}}</strong>."
         ],
 
         "RESET" => [

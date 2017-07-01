@@ -107,7 +107,8 @@ return [
             "INVALID"           => "This password reset request could not be found, or has expired.  Please try <a href=\"{{url}}\">resubmitting your request<a>.",
             "PAGE"              => "Obtenha um link para fazer reset à sua password.",
             "REQUEST_CANNED"    => "Pedido de password esquecida foi cancelado.",
-            "REQUEST_SENT"      => "Um link de reset da sua password foi enviado para {{email}}."
+            "REQUEST_SENT"      => "Se o email <strong>{{email}}</strong> corresponder a uma conta em nosso sistema, um link de redefinição de senha será enviado para <strong>{{email}}</strong>."
+         ],
         ],
 
         "RESET" => [
