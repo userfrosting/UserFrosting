@@ -3,6 +3,7 @@
 ## v4.0.24-Alpha
 - Fixes to nginx config file, and add location block for LE acme challenge
 - Fix JS errors when `#alerts-page` is not present on a page
+- Fix hardcoded User class in AdminController (#753)
 
 ## v4.0.23-Alpha
 - Set module dependency versions to ~4.0.0 instead of ^4.0.0 (since 4.1.x will introduce breaking changes)
