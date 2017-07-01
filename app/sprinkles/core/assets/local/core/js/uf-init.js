@@ -12,6 +12,8 @@ $(document).ready(function() {
     $.uf.copy('.js-copy-trigger');
 
     // Display page alerts
-    $("#alerts-page").ufAlerts();
-    $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
+    if ($("#alerts-page").length) {
+        $("#alerts-page").ufAlerts();
+        $("#alerts-page").ufAlerts('fetch').ufAlerts('render');
+    }
 });
