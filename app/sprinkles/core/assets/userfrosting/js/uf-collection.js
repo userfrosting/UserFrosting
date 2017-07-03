@@ -181,13 +181,12 @@
             // Generate the row and append to table
             var newRowTemplate = this._rowTemplateCompiled(params),
                 newRow;
-            
+
             // Add the new row before any virgin rows in the table.
             var virginRows = this.settings.rowContainer.find('.uf-collection-row-virgin').length;
             if (virginRows) {
                 newRow = $(newRowTemplate).insertBefore(this.settings.rowContainer.find('.uf-collection-row-virgin:first'));
-            }
-            else {
+            } else {
                 newRow = $(newRowTemplate).appendTo(this.settings.rowContainer);
             }
 

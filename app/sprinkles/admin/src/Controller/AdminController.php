@@ -70,7 +70,7 @@ class AdminController extends SimpleController
             'counter' => [
                 'users' => $classMapper->staticMethod('user', 'count'),
                 'roles' => $classMapper->staticMethod('role', 'count'),
-                'groups' => $classMapper->staticMethod('group', 'count'),
+                'groups' => $classMapper->staticMethod('group', 'count')
             ],
             'info' => [
                 'version' => [
