@@ -1,6 +1,6 @@
 {
     "name": "userfrosting/sprinkle-core",
-    "type": "sprinkle",
+    "type": "userfrosting-sprinkle",
     "description": "Core module for UserFrosting.",
     "keywords": ["php user management", "usercake", "bootstrap"],
     "homepage": "https://github.com/userfrosting/UserFrosting",
