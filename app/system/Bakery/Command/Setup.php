@@ -113,7 +113,7 @@ class Setup extends BaseCommand
             'database' => $name,
             'username' => $user,
             'password' => $password,
-            'charset' => 'utf8'
+            'charset' => $config['db.default.charset']
         ];
         $capsule->addConnection($dbParams);
 
