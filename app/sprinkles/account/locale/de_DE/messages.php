@@ -104,6 +104,11 @@ return [
         "CONFIRM_NEW"                   => "Neues Passwort bestätigen",
         "CONFIRM_NEW_EXPLAIN"           => "Geben Sie Ihr neues Passwort erneut ein",
         "CONFIRM_NEW_HELP"              => "Erforderlich, wenn Sie ein neues Passwort wählen",
+        "CREATE" => [
+            "@TRANSLATION"              => "Passwort setzen",
+            "PAGE"                      => "Setzen Sie ein Passwort für den Account.",
+            "SET"                       => "Passwort setzen und anmelden"
+        ],
         "CURRENT"                       => "Aktuelles Passwort",
         "CURRENT_EXPLAIN"               => "Sie müssen Ihr aktuelles Passwort bestätigen, um Änderungen vorzunehmen",
 
@@ -120,6 +125,11 @@ return [
             "REQUEST_SENT"              => "Wenn die E-Mail <strong>{{email}}</strong> mit einem Account in unserem System übereinstimmt, wird ein Passwort-Reset-Link an <strong>{{email}}</strong> gesendet."
         ],
 
+        "HASH_FAILED"                   => "Passwort Hashing fehlgeschlagen. Bitte kontaktieren Sie einen Administrator.",
+        "INVALID"                       => "Das aktuelle Passwort stimmt nicht mit dem Datensatz überein",
+        "NEW"                           => "Neues Passwort",
+        "NOTHING_TO_UPDATE"             => "Sie können nicht das gleiche Passwort zum Aktualisieren verwenden",
+
         "RESET" => [
             "@TRANSLATION"              => "Passwort zurücksetzen",
             "CHOOSE"                    => "Bitte wählen Sie ein neues Passwort, um fortzufahren.",
@@ -127,17 +137,7 @@ return [
             "SEND"                      => "Neues Passwort festlegen und anmelden"
         ],
 
-        "HASH_FAILED"                   => "Passwort Hashing fehlgeschlagen. Bitte kontaktieren Sie einen Administrator.",
-        "INVALID"                       => "Das aktuelle Passwort stimmt nicht mit dem Datensatz überein",
-        "NEW"                           => "Neues Passwort",
-        "NOTHING_TO_UPDATE"             => "Sie können nicht das gleiche Passwort zum Aktualisieren verwenden",
-        "UPDATED"                       => "Konto Passwort aktualisiert",
-
-        "CREATE" => [
-            "@TRANSLATION"              => "Passwort setzen",
-            "PAGE"                      => "Setzen Sie ein Passwort für den Account.",
-            "SET"                       => "Passwort setzen und anmelden"
-        ]
+        "UPDATED"                       => "Konto Passwort aktualisiert"
     ],
 
     "PROFILE" => [
@@ -145,10 +145,10 @@ return [
         "UPDATED"                       => "Profileinstellungen aktualisiert"
     ],
 
+    "RATE_LIMIT_EXCEEDED"               => "Die grenze für diese Maßnahme wurde überschritten. Sie müssen weitere {{delay}} Sekunden warten, bevor Sie einen weiteren Versuch machen dürfen.",
+
     "REGISTER"                          => "Registrieren",
     "REGISTER_ME"                       => "Melden Sie mich an",
-    "SIGN_IN_HERE"                      => "Sie haben bereits einen Account? <a href=\"{{url}}\">Melden Sie sich hier an.</a>",
-
     "REGISTRATION" => [
         "BROKEN"                        => "Es tut uns leid, es gibt ein Problem mit unserer Registrierung. Bitte kontaktieren Sie uns direkt für Hilfe.",
         "COMPLETE_TYPE1"                => "Sie haben sich erfolgreich registriert. Sie können sich jetzt anmelden.",
@@ -157,11 +157,10 @@ return [
         "LOGOUT"                        => "Es tut uns leid, Sie können kein neues Konto registrieren, während Sie angemeldet sind. Bitte melden Sie sich zuerst ab.",
         "WELCOME"                       => "Die Registrierung ist schnell und einfach."
     ],
-
-    "RATE_LIMIT_EXCEEDED"               => "Die grenze für diese Maßnahme wurde überschritten. Sie müssen weitere {{delay}} Sekunden warten, bevor Sie einen weiteren Versuch machen dürfen.",
     "REMEMBER_ME"                       => "Erinnere dich an mich!",
     "REMEMBER_ME_ON_COMPUTER"           => "Erinnere dich an mich auf diesem Computer (nicht für öffentliche Computer empfohlen)",
 
+    "SIGN_IN_HERE"                      => "Sie haben bereits einen Account? <a href=\"{{url}}\">Melden Sie sich hier an.</a>",
     "SIGNIN"                            => "Anmelden",
     "SIGNIN_OR_REGISTER"                => "Anmelden oder registrieren",
     "SIGNUP"                            => "Anmelden",

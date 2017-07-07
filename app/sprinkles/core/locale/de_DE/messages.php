@@ -50,10 +50,17 @@ return [
 
     "NAME"                              => "Name",
     "NAVIGATION"                        => "Navigation",
+    "NO_RESULTS"                        => "Sorry, hier gibt es bisher nichts zu sehen.",
 
     "PAGINATION" => [
         "GOTO"                          => "Gehe zu Seite",
         "SHOW"                          => "Anzeigen",
+
+                                        // Paginator
+                                        // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
+                                        // also {page:input} & {startRow:input} will add a modifiable input in place of the value
+        "OUTPUT"                        => "{startRow} bis {endRow} von {filteredRows} ({totalRows})",
+
         "NEXT"                          => "Nächste Seite",
         "PREVIOUS"                      => "Vorherige Seite",
         "FIRST"                         => "Erste Seite",
