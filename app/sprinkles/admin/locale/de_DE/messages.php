@@ -53,7 +53,7 @@ return [
         "ICON"                          => "Gruppensymbol",
         "ICON_EXPLAIN"                  => "Symbol für Gruppenmitglieder",
         "INFO_PAGE"                     => "Gruppeninformationsseite für {{name}}",
-        //"MANAGE"                      => "Manage group",
+        "MANAGE"                        => "Gruppe verwalten",
         "NAME"                          => "Gruppenname",
         "NAME_EXPLAIN"                  => "Geben Sie einen Namen für die Gruppe ein",
         "NOT_EMPTY"                     => "Sie können das nicht tun, denn es sind noch Benutzer mit der Gruppe <strong>{{name}}</strong> verbunden.",
@@ -121,6 +121,8 @@ return [
         "UF_VERSION"                    => "UserFrosting Version",
         "URL"                           => "Website-Stamm-Url"
     ],
+
+    "TOGGLE_COLUMNS" => "Spalten anpassen",
 
     "USER" => [
         1                               => "Benutzer",
