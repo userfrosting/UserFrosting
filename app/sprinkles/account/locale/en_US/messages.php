@@ -143,6 +143,7 @@ return [
     ],
 
     "RATE_LIMIT_EXCEEDED"       => "The rate limit for this action has been exceeded.  You must wait another {{delay}} seconds before you will be allowed to make another attempt.",
+
     "REGISTER"      => "Register",
     "REGISTER_ME"   => "Sign me up",
     "REGISTRATION" => [
