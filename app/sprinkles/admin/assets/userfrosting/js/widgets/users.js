@@ -20,7 +20,7 @@ function attachUserForm() {
             validators: page.validators
         }).on("submitSuccess.ufForm", function() {
             // Reload page on success
-            //window.location.reload();
+            window.location.reload();
         });
 		
 		toggleSetPasswordMode(modal, 'link');
