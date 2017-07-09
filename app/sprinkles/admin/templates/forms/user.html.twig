@@ -108,6 +108,9 @@
                 </div>
             </div>
             {% endif %}
+            {% if 'password' not in form.fields.hidden %}
+				{% include "forms/partials/user-set-password.html.twig" %}
+            {% endif %}
         {% endblock %}
     </div><br>
     <div class="row">

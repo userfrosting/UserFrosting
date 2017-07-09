@@ -20,13 +20,51 @@ function attachUserForm() {
             validators: page.validators
         }).on("submitSuccess.ufForm", function() {
             // Reload page on success
-            window.location.reload();
+            //window.location.reload();
+        });
+		
+		toggleSetPasswordMode(modal, 'link');
+
+        // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
+        modal.find("input[name='change_password_mode']").click(function() {
+            var changePasswordMode = $(this).val();
+            toggleSetPasswordMode(modal, changePasswordMode);
         });
     });
 }
 
 /**
  * Enable/disable password fields when switch is toggled
+ * Applies to 'creating' a user
+ */
+function toggleSetPasswordMode(el, changePasswordMode) {
+    var form = el.find("form");
+    if (changePasswordMode == 'link') {
+        $(".controls-password").find("input[type='password']").prop('disabled', true);
+        // Form submits password reset request
+
+        var validator = form.validate();
+        if (validator) {
+            //Iterate through named elements inside of the form, and mark them as error free
+            el.find("input[type='password']").each(function() {
+              validator.successList.push(this); //mark as error free
+            });
+            validator.resetForm();//remove error class on name elements and clear history
+            validator.reset();//remove all error and success data
+        }
+        el.find("input[type='password']").closest('.form-group')
+        .removeClass('has-error has-success');
+        el.find('.form-control-feedback').each(function () {
+            $(this).remove();
+        });
+    } else {
+        $(".controls-password").find("input[type='password']").prop('disabled', false);
+    }
+}
+
+/**
+ * Enable/disable password fields when switch is toggled
+ * Applies to 'reseting' a users password
  */
 function toggleChangePasswordMode(el, userName, changePasswordMode) {
     var form = el.find("form");
