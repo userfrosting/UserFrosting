@@ -22,8 +22,8 @@ function attachUserForm() {
             // Reload page on success
             window.location.reload();
         });
-		
-		toggleSetPasswordMode(modal, 'link');
+        
+        toggleSetPasswordMode(modal, 'link');
 
         // On submission, submit either the PUT request, or POST for a password reset, depending on the toggle state
         modal.find("input[name='change_password_mode']").click(function() {
@@ -104,7 +104,7 @@ function toggleChangePasswordMode(el, userName, changePasswordMode) {
  * Update user field(s)
  */
 function updateUser(userName, fieldName, fieldValue) {
-	var data = {
+    var data = {
         'value': fieldValue
     };
 
@@ -136,7 +136,7 @@ function updateUser(userName, fieldName, fieldValue) {
                 }
             }
         }
-	}).fail(function (jqXHR) {
+    }).fail(function (jqXHR) {
         // Error messages
         if (debugAjax && jqXHR.responseText) {
             document.write(jqXHR.responseText);

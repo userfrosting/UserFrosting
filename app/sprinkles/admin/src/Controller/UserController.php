@@ -118,13 +118,13 @@ class UserController extends SimpleController
         }
 
         $data['flag_verified'] = 1;
-		if(!isset($data['value'])){
-			// Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
-			$data['password'] = '';
-		}else{
-			$data['password'] = Password::hash($data['value']);
-		}
-		
+        if(!isset($data['value'])){
+            // Set password as empty on initial creation.  We will then send email so new user can set it themselves via a verification token
+            $data['password'] = '';
+        }else{
+            $data['password'] = Password::hash($data['value']);
+        }
+        
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
@@ -139,7 +139,7 @@ class UserController extends SimpleController
                 'type' => 'account_create',
                 'user_id' => $currentUser->id
             ]);
-			
+            
             // Load default roles
             $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
             $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
@@ -151,22 +151,22 @@ class UserController extends SimpleController
             // Try to generate a new password request
             $passwordRequest = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.create']);
 
-			// If the password_mode is manual, do not send an email to set it. Else, send the email.
-			if(!isset($data['value'])){
-				// Create and send welcome email with password set link
-				$message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
+            // If the password_mode is manual, do not send an email to set it. Else, send the email.
+            if(!isset($data['value'])){
+                // Create and send welcome email with password set link
+                $message = new TwigMailMessage($this->ci->view, 'mail/password-create.html.twig');
 
-				$message->from($config['address_book.admin'])
-						->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-						->addParams([
-							'user' => $user,
-							'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
-							'token' => $passwordRequest->getToken()
-						]);
+                $message->from($config['address_book.admin'])
+                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
+                        ->addParams([
+                            'user' => $user,
+                            'create_password_expiration' => $config['password_reset.timeouts.create'] / 3600 . ' hours',
+                            'token' => $passwordRequest->getToken()
+                        ]);
 
-				$this->ci->mailer->send($message);
-			}
-			
+                $this->ci->mailer->send($message);
+            }
+            
             $ms->addMessageTranslated('success', 'USER.CREATED', $data);
         });
 
