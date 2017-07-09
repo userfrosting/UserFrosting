@@ -623,7 +623,7 @@ class UserController extends SimpleController
 
         // Generate form
         $fields = [
-            'hidden' => ['theme'],
+            'hidden' => ['theme', 'password'],
             'disabled' => ['user_name']
         ];
 
