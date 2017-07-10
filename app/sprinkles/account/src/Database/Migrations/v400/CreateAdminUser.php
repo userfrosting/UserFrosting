@@ -255,7 +255,7 @@ class CreateAdminUser extends Migration
     protected function validatePassword($password)
     {
         if (strlen($password) < 12 || strlen($password) > 255) {
-            $this->io->error("Password must be between 1-20 characters");
+            $this->io->error("Password must be between 12-255 characters");
             return false;
         }
 
