@@ -93,27 +93,39 @@ class Setup extends BaseCommand
         $driver = $drivers->where('name', $driver)->first();
 
         $driverName = $driver['driver'];
-        $defaultPort = $driver['defaultPort'];
+        $defaultDBName = $driver['defaultDBName'];
 
-        $host = $this->io->ask("Hostname", "localhost");
-        $port = $this->io->ask("Port", $defaultPort);
-        $name = $this->io->ask("Database name", "userfrosting");
-        $user = $this->io->ask("Username", "userfrosting");
-        $password = $this->io->askHidden("Password", function ($password) {
-            // Use custom validator to accept empty password
-            return $password;
-        });
+        if ($driverName == 'sqlite') {
+            $name = $this->io->ask("Database name", $defaultDBName);
+
+            $dbParams = [
+                'driver' => $driverName,
+                'database' => $name
+            ];
+        } else {
+            $defaultPort = $driver['defaultPort'];
+
+            $host = $this->io->ask("Hostname", "localhost");
+            $port = $this->io->ask("Port", $defaultPort);
+            $name = $this->io->ask("Database name", $defaultDBName);
+            $user = $this->io->ask("Username", "userfrosting");
+            $password = $this->io->askHidden("Password", function ($password) {
+                // Use custom validator to accept empty password
+                return $password;
+            });
+    
+            $dbParams = [
+                'driver' => $driverName,
+                'host' => $host,
+                'port' => $port,
+                'database' => $name,
+                'username' => $user,
+                'password' => $password
+            ];
+        }
 
         // Setup a new db connection
         $capsule = new Capsule;
-        $dbParams = [
-            'driver' => $driverName,
-            'host' => $host,
-            'port' => $port,
-            'database' => $name,
-            'username' => $user,
-            'password' => $password
-        ];
         $capsule->addConnection($dbParams);
 
         // Test the db connexion.
@@ -140,18 +152,29 @@ class Setup extends BaseCommand
             return $password;
         });
 
-        $fileContent = [
-            "UF_MODE=\"\"\n",
-            "DB_DRIVER=\"{$dbParams['driver']}\"\n",
-            "DB_HOST=\"{$dbParams['host']}\"\n",
-            "DB_PORT=\"{$dbParams['port']}\"\n",
-            "DB_NAME=\"{$dbParams['database']}\"\n",
-            "DB_USER=\"{$dbParams['username']}\"\n",
-            "DB_PASSWORD=\"{$dbParams['password']}\"\n",
-            "SMTP_HOST=\"$smtpHost\"\n",
-            "SMTP_USER=\"$smtpUser\"\n",
-            "SMTP_PASSWORD=\"$smtpPassword\"\n"
-        ];
+        if ($driverName == 'sqlite') {
+            $fileContent = [
+                "UF_MODE=\"\"\n",
+                "DB_DRIVER=\"{$dbParams['driver']}\"\n",
+                "DB_NAME=\"{$dbParams['database']}\"\n",
+                "SMTP_HOST=\"$smtpHost\"\n",
+                "SMTP_USER=\"$smtpUser\"\n",
+                "SMTP_PASSWORD=\"$smtpPassword\"\n"
+            ];
+        } else {
+            $fileContent = [
+                "UF_MODE=\"\"\n",
+                "DB_DRIVER=\"{$dbParams['driver']}\"\n",
+                "DB_HOST=\"{$dbParams['host']}\"\n",
+                "DB_PORT=\"{$dbParams['port']}\"\n",
+                "DB_NAME=\"{$dbParams['database']}\"\n",
+                "DB_USER=\"{$dbParams['username']}\"\n",
+                "DB_PASSWORD=\"{$dbParams['password']}\"\n",
+                "SMTP_HOST=\"$smtpHost\"\n",
+                "SMTP_USER=\"$smtpUser\"\n",
+                "SMTP_PASSWORD=\"$smtpPassword\"\n"
+            ];
+        }
 
         // Let's save this config
         file_put_contents($this->envPath, $fileContent);
@@ -174,17 +197,26 @@ class Setup extends BaseCommand
             [
                 "driver" => "mysql",
                 "name" => "MySQL / MariaDB",
+                "defaultDBName" => "userfrosting",
                 "defaultPort" => 3306
             ],
             [
                 "driver" => "pgsql",
                 "name" => "ProgreSQL",
+                "defaultDBName" => "userfrosting",
                 "defaultPort" => 5432
             ],
             [
                 "driver" => "sqlsrv",
                 "name" => "SQL Server",
+                "defaultDBName" => "userfrosting",
                 "defaultPort" => 1433
+            ],
+            [
+                "driver" => "sqlite",
+                "name" => "SQLite",
+                "defaultDBName" => \UserFrosting\DB_DIR . \UserFrosting\DS . 'userfrosting.db',
+                "defaultPort" => null
             ]
         ]);
     }
