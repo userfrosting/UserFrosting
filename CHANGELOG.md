@@ -7,6 +7,7 @@
 - Added missing french translations & more default validation messages
 - Bump Fortress version (fix #766)
 - Support SQLite in Bakery setup
+- Fix for PostgreSQL charset in Bakery (#745)
 
 ## v4.1.3-alpha
 - Add Italian translations
