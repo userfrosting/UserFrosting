@@ -214,7 +214,7 @@ class Migrator
         }
 
         // Get installed migrations
-        $migrations = Migrations::orderBy("created_at", "desc")->where('batch', '>=', $stepsBack);
+        $migrations = Migrations::orderBy("id", "desc")->where('batch', '>=', $stepsBack);
 
         // Add the sprinkle requirement too
         if ($sprinkle != "") {

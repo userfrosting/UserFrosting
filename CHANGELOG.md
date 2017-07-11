@@ -1,5 +1,11 @@
 # Change Log
 
+## v4.1.4-alpha
+- Permissions rows get duplicated when upgrading from 4.0 to 4.1 (fix #759)
+- Fix migrate:rollback not running down the migration in the correct order
+- Updated type in `composer.json` for default sprinkles
+- Added missing french translations & more default validation messages
+
 ## v4.1.3-alpha
 - Add Italian translations
 - Add `data-priority` attributes to built-in tables (#752)
@@ -42,7 +48,7 @@
 - Removed the search bar from the Dashboard layout
 - Added Tablesorter pagination translation
 - New Translator Facade
-- New CLI tool (Bakery). 
+- New CLI tool (Bakery).
 - New migration system based on bakery CLI
 - Listable sprunjing
 - Refactor groups and user routes (Fix #721)
