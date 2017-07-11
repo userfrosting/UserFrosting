@@ -5,6 +5,7 @@
 - Fix migrate:rollback not running down the migration in the correct order
 - Updated type in `composer.json` for default sprinkles
 - Added missing french translations & more default validation messages
+- Bump Fortress version (fix #766)
 
 ## v4.1.3-alpha
 - Add Italian translations
