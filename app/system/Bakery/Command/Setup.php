@@ -62,7 +62,7 @@ class Setup extends BaseCommand
         // There might not be any `.env` file because there may be some custom config or global env values defined on the server.
         // We'll check for that. If the configs are empty, we'll assume nothing is defined and go strait to setup.
         if (!$force && $config["db.default.host"] != "" && $config["db.default.database"] != "" && $config["db.default.username"] != "") {
-            $this->io->note("File `{$this->envPath}` was not found, but some database configuration are present. Global system environment variable might be defined. If this is not right, use -f option to force setup to run.");
+            $this->io->note("File `{$this->envPath}` was not found, but some database configuration variables are present. Global system environment variables might be defined. If this is not right, use -f option to force setup to run.");
             return;
         }
 
@@ -132,19 +132,19 @@ class Setup extends BaseCommand
         try {
             $conn = $capsule->getConnection();
             $conn->getPdo();
-            $this->io->success("Database connexion successful");
+            $this->io->success("Database connection successful");
             $success = true;
         } catch (\PDOException $e) {
             $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
             $message .= "Exception: " . $e->getMessage() . PHP_EOL.PHP_EOL;
-            $message .= "Please check your database configuration and/or google the exception shown above and run command again.";
+            $message .= "Please check your database configuration and/or google the exception shown above and run the command again.";
             $this->io->error($message);
             exit(1);
         }
 
         // Ask for the smtp values now
         $this->io->section("Enter your SMTP credentials");
-        $this->io->write("This is use to send emails from the system. Edit `app/.env` if you have problem with this later.");
+        $this->io->write("This is used to send emails from the system. Edit `app/.env` if you have problems with this later.");
         $smtpHost = $this->io->ask("SMTP Host", "host.example.com");
         $smtpUser = $this->io->ask("SMTP User", "relay@example.com");
         $smtpPassword = $this->io->askHidden("SMTP Password", function ($password) {

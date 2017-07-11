@@ -6,6 +6,7 @@
 - Updated type in `composer.json` for default sprinkles
 - Added missing french translations & more default validation messages
 - Bump Fortress version (fix #766)
+- Support SQLite in Bakery setup
 
 ## v4.1.3-alpha
 - Add Italian translations

@@ -94,7 +94,7 @@ class CreateAdminUser extends Migration
     protected function askUsername()
     {
         while (!isset($user_name) || !$this->validateUsername($user_name)) {
-            $user_name = $this->io->ask("Enter the username (1-50 characters, no leading or trailing whitespace): ");
+            $user_name = $this->io->ask("Choose a username (1-50 characters, no leading or trailing whitespace)");
         }
         return $user_name;
     }
@@ -138,7 +138,7 @@ class CreateAdminUser extends Migration
     protected function askEmail()
     {
         while (!isset($email) || !$this->validateEmail($email)) {
-            $email = $this->io->ask("Enter a valid email address (1-254 characters, must be compatible with FILTER_VALIDATE_EMAIL): ");
+            $email = $this->io->ask("Enter a valid email address (1-254 characters, must be compatible with FILTER_VALIDATE_EMAIL)");
         }
         return $email;
     }
@@ -176,7 +176,7 @@ class CreateAdminUser extends Migration
     protected function askFirstName()
     {
         while (!isset($first_name) || !$this->validateFirstName($first_name)) {
-            $first_name = $this->io->ask("Enter the admin user first name (1-20 characters): ");
+            $first_name = $this->io->ask("Enter the admin user first name (1-20 characters)");
         }
         return $first_name;
     }
@@ -208,7 +208,7 @@ class CreateAdminUser extends Migration
     protected function askLastName()
     {
         while (!isset($last_name) || !$this->validateLastName($last_name)) {
-            $last_name = $this->io->ask("Enter the admin user last name (1-30 characters): ");
+            $last_name = $this->io->ask("Enter the admin user last name (1-30 characters)");
         }
         return $last_name;
     }
@@ -222,7 +222,7 @@ class CreateAdminUser extends Migration
      */
     protected function validateLastName($last_name)
     {
-        // Validate lenght
+        // Validate length
         if (strlen($last_name) < 1 || strlen($last_name) > 30) {
             $this->io->error("Last name must be between 1-30 characters");
             return false;
@@ -240,7 +240,7 @@ class CreateAdminUser extends Migration
     protected function askPassword()
     {
         while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password)) {
-            $password = $this->io->askHidden("Enter password (12-255 characters): ");
+            $password = $this->io->askHidden("Enter password (12-255 characters)");
         }
         return $password;
     }
@@ -255,7 +255,7 @@ class CreateAdminUser extends Migration
     protected function validatePassword($password)
     {
         if (strlen($password) < 12 || strlen($password) > 255) {
-            $this->io->error("Password must be between 1-20 characters");
+            $this->io->error("Password must be between 12-255 characters");
             return false;
         }
 
@@ -272,7 +272,7 @@ class CreateAdminUser extends Migration
     protected function confirmPassword($passwordToConfirm)
     {
         while (!isset($password)) {
-            $password = $this->io->askHidden("Please re-enter the chosen password: ");
+            $password = $this->io->askHidden("Please re-enter the chosen password");
         }
         return $this->validatePasswordConfirmation($password, $passwordToConfirm);
     }
