@@ -1,6 +1,6 @@
 # UserFrosting 4.1
 
-[http://www.userfrosting.com](http://www.userfrosting.com)
+[https://www.userfrosting.com](https://www.userfrosting.com)
 
 If you simply want to show that you like this project, or want to remember it for later, you should **star**, not **fork**, this repository.  Forking is only for when you are ready to create your own copy of the code to work on.
 
@@ -10,7 +10,7 @@ If you simply want to show that you like this project, or want to remember it fo
 
 ## By [Alex Weissman](https://alexanderweissman.com)
 
-Copyright (c) 2017, free to use in personal and commercial software as per the [license](licenses/UserFrosting.md).
+Copyright (c) 2017, free to use in personal and commercial software as per the [license](LICENSE.md).
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.4/eloquent#introduction) ORM.
 
@@ -29,13 +29,13 @@ UserFrosting is a secure, modern user management system written in PHP and built
 
 ## Installation
 
-Please see our [installation guide](https://learn.userfrosting.com/basics/installation).
+Please see our [installation guide](https://learn.userfrosting.com/installation).
 
 ## Troubleshooting
 
 If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com).
 
-If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/basics/overview).  
+If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/background).  
 
 ## Mission Objectives
 
@@ -53,6 +53,8 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 ### [Learning UserFrosting](https://learn.userfrosting.com)
 
 ### [API documentation](http://api.userfrosting.com)
+
+### [Change log](CHANGELOG.md)
 
 ## Running tests
 

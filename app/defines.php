@@ -3,7 +3,7 @@
 namespace UserFrosting;
 
 // Some standard defines
-define('UserFrosting\VERSION', '4.1.3-alpha');
+define('UserFrosting\VERSION', '4.1.4-alpha');
 define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '5.6');
 define('UserFrosting\DEBUG_CONFIG', false);
@@ -21,6 +21,7 @@ define('UserFrosting\ROOT_DIR', realpath(__DIR__ . '/..'));
 define('UserFrosting\APP_DIR_NAME', basename(__DIR__));
 define('UserFrosting\BUILD_DIR_NAME', 'build');
 define('UserFrosting\CACHE_DIR_NAME', 'cache');
+define('UserFrosting\DB_DIR_NAME', 'database');
 define('UserFrosting\SESSION_DIR_NAME', 'sessions');
 define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
 define('UserFrosting\LOG_DIR_NAME', 'logs');
@@ -31,6 +32,9 @@ define('UserFrosting\VENDOR_DIR', APP_DIR . DS . VENDOR_DIR_NAME);
 
 // Full path to Sprinkles directory
 define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
+
+// Full path to database directory (SQLite only)
+define('UserFrosting\DB_DIR', APP_DIR . DS . DB_DIR_NAME);
 
 // Names of directories within Sprinkles
 define('UserFrosting\ASSET_DIR_NAME', 'assets');
