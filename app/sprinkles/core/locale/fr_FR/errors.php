@@ -25,7 +25,7 @@ return [
             "DESCRIPTION" => "Nous ne pouvons trouver ce que vous cherchez.",
             "DETAIL" => "Nous avons tout tenté...",
             "EXPLAIN" => "Nous ne pouvons trouver la page que vous cherchez.",
-            "RETURN" => 'Cliquez <a href="{{url}}">ici</a> pour retourner à la page d\'acceuil.'
+            "RETURN" => 'Cliquez <a href="{{url}}">ici</a> pour retourner à la page d\'accueil.'
         ],
 
         "CONFIG" => [
