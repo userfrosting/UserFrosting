@@ -1,13 +1,16 @@
 <?php
-
 /**
- * de_DE
+ * UserFrosting (http://www.userfrosting.com)
  *
- * German validation message translations for the account sprinkle.
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
- * @author @X-Anonymous-Y
+ * German message token translations for the 'account' sprinkle.
+ *
+ * @package userfrosting\i18n\de
+ * @author X-Anonymous-Y
+ * @author kevinrombach
+ * @author splitt3r
  */
 
 return [
