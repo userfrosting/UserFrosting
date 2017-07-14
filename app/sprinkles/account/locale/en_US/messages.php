@@ -1,16 +1,16 @@
 <?php
-
 /**
- * en_US
+ * UserFrosting (http://www.userfrosting.com)
+ *
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
  * US English message token translations for the 'account' sprinkle.
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
+ * @package userfrosting\i18n\en_US
  * @author Alexander Weissman
- *
  */
-
+ 
 return [
     "ACCOUNT" => [
         "@TRANSLATION" => "Account",
