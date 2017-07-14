@@ -6,7 +6,7 @@
  * Modern Standard Arabic message token translations for the 'account' sprinkle
  *
  * @package UserFrosting
- * @link http://wwwuserfrostingcom/components/#i18n
+ * @link http://www.userfrosting.com/components/#i18n
  * @author Alex Weissman and Abdullah Seba
  *
  */
@@ -26,8 +26,12 @@ return [
         "MASTER_NOT_EXISTS" => "لا يمكنك تسجيل حساب جديد حتى تم إنشاء الحساب الرئيسي",
         "MY"                => "حسابي",
 
-        "SESSION_COMPROMISED"       => "تم اختراق جلسنك يجب عليك الخروج على كافة الأجهزة، ثم تسجيل الدخول مرة أخرى والتأكد من أن المعلومات الخاصة بك لم يعبث بها",
-        "SESSION_COMPROMISED_TITLE" => "من الممكن أن حسابك قد اخترق",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"  => "تم اختراق جلسنك يجب عليك الخروج على كافة الأجهزة، ثم تسجيل الدخول مرة أخرى والتأكد من أن المعلومات الخاصة بك لم يعبث بها",
+            "TITLE"         => "من الممكن أن حسابك قد اخترق",
+            "TEXT"          => "ربما استخدم شخص معلومات التسجيل الدخول للدخول إلى هذه الصفحة. لسلامتك، تم انتهاء جميع الجلسات يرجا <a href=\"{{url}}\">التسجيل مرة اخرى</a> وتحقق من حسابك بسبب النشاط الغريب  قد ترغب في تغيير كلمة المرور"
+         ],
+
         "SESSION_EXPIRED"       => "انتهت جلستك تستطيع تسجيل الدخول مرة أخرى",
 
         "SETTINGS" => [
@@ -122,11 +126,18 @@ return [
         "INVALID"           => "كلمة مرور الحالية لا تتطابق مع ما لدينا",
         "NEW"               => "كلمة مرور الجديدة",
         "NOTHING_TO_UPDATE" => "لا يمكنك تحديث مع نفس كلمة مرور",
-        "UPDATED"           => "جدد كلمة مرور"
+        "UPDATED"           => "جدد كلمة مرور",
+        
+        "CREATE" => [
+            "@TRANSLATION"  => "إنشاء كلمة مرور",
+            "PAGE"          => "اختر كلمة مرور لحسابك الجديد",
+            "SET"           => "تعيين كلمة المرور وتسجيل الدخول"
+        ]
     ],
 
     "REGISTER"      => "تسجيل",
     "REGISTER_ME"   => "سجلني",
+    "SIGN_IN_HERE"  => "هل لديك حساب؟ <a href=\"{{url}}\">تسجيل الدخول هنا</a>",
 
     "REGISTRATION" => [
         "BROKEN"            => "نحن آسفون، هناك مشكلة مع عملية تسجيل الحساب يرجى الاتصال بنا مباشرة للحصول على المساعدة",

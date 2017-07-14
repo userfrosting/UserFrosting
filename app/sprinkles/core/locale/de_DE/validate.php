@@ -19,6 +19,11 @@ return [
         "LENGTH_RANGE"                  => "{{label}} muss zwischen {{min}} und {{max}} Zeichen lang sein.",
         "NO_LEAD_WS"                    => "Der Wert für <strong>{{label}}</strong> kann nicht mit Leerzeichen, Tabulatoren oder anderen Leerzeichen beginnen.",
         "NO_TRAIL_WS"                   => "Der Wert für <strong>{{label}}</strong> kann nicht mit Leerzeichen, Tabulatoren oder anderen Leerzeichen enden.",
-        "REQUIRED"                      => "Bitte geben Sie einen Wert für <strong>{{label}}</strong> an."
+        "REQUIRED"                      => "Bitte geben Sie einen Wert für <strong>{{label}}</strong> an.",
+        "SPRUNJE" => [
+            "BAD_FILTER"                => "<strong>{{name}}</strong> ist kein gültiger Filter für dieses Sprunje.",
+            "BAD_LIST"                  => "<strong>{{name}}</strong> ist kein gültige Liste für dieses Sprunje.",
+            "BAD_SORT"                  => "<strong>{{name}}</strong> ist kein gültiges Sortierungsfeld für dieses Sprunje."
+        ]
     ]
 ];

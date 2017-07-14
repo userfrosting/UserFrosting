@@ -1,0 +1,80 @@
+{
+    "bundle": {
+        "js/main": {
+            "scripts": [
+                "vendor/bootstrap/dist/js/bootstrap.js",
+                "vendor/handlebars/handlebars.js",
+                "vendor/jquery-validation/dist/jquery.validate.js",
+                "vendor/jquery-validation/dist/additional-methods.js",
+                "vendor/jquery-slimscroll/jquery.slimscroll.js",
+                "vendor/icheck/icheck.min.js",
+                "vendor/fastclick/lib/fastclick.js",
+                "vendor/select2/dist/js/select2.full.js",
+                "vendor/clipboard/dist/clipboard.js",
+                "userfrosting/js/attrchange.js",
+                "userfrosting/js/AdminLTE.js",
+                "userfrosting/js/AdminLTE-custom.js",
+                "userfrosting/js/fortress-jqueryvalidation-methods.js",
+                "userfrosting/js/uf-jqueryvalidation-config.js",
+                "userfrosting/js/uf-alerts.js",
+                "userfrosting/js/uf-form.js",
+                "userfrosting/js/uf-modal.js",
+                "userfrosting/js/uf-copy.js",
+                "userfrosting/js/uf-init.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/form-widgets": {
+            "scripts": [
+                "vendor/speakingurl/speakingurl.min.js",
+                "userfrosting/js/uf-collection.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "css/main": {
+            "styles": [
+                "vendor/font-awesome/css/font-awesome.css",
+                "vendor/bootstrap/dist/css/bootstrap.css",
+                "vendor/select2/dist/css/select2.css",
+                "vendor/icheck/skins/square/_all.css",
+                "vendor/ionicons/css/ionicons.css",
+                "userfrosting/css/uf-jqueryvalidation.css",
+                "userfrosting/css/uf-alerts.css",
+                "userfrosting/css/AdminLTE.css",
+                "userfrosting/css/AdminLTE-skins-all.css",
+                "userfrosting/css/userfrosting.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        },
+        "css/form-widgets": {
+            "styles": [
+                "userfrosting/css/uf-collection.css"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "styles": "plain"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -20,10 +20,6 @@ return [
        "TIME" => "Tempo da Atividade"
     ],
 
-    "ADMIN" => [
-        "PANEL" => "Painel de Administração"
-    ],
-
     "CACHE" => [
         "CLEAR"             => "Limpar cache",
         "CLEAR_CONFIRM"     => "Tem a certeza que pretende limpar a cache do site?",
@@ -54,6 +50,7 @@ return [
         "ICON"          => "Icon do grupo",
         "ICON_EXPLAIN"  => "Icon para membros do grupo",
         "INFO_PAGE"     => "Página informativa do grupo {{name}}",
+        //"MANAGE"        => "Manage group",
         "NAME"          => "Nome do grupo",
         "NAME_EXPLAIN"  => "Por favor introduza um nome para o grupo",
         "PAGE_DESCRIPTION" => "Lista de grupos do site. Contém opções para editar e remover grupos."

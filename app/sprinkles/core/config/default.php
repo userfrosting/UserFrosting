@@ -15,6 +15,10 @@
                 'name'  => 'Site Administrator'
             ]
         ],
+        'alert' => [
+            'storage'   => 'session', // Set to one of `cache` or `session`
+            'key'       => 'site.alerts', // the key to use to store flash messages
+        ],
         'assets' => [
             'compiled' => [
                 'path'   => 'assets',
@@ -22,38 +26,40 @@
             ],
             'raw' => [
                 'path'   => 'assets-raw',
-                'schema' => 'bundle.config.json'
+                'schema' => 'asset-bundles.json'
             ],
             'use_raw'  => true
         ],
         'cache' => [
-            'twig' => false,
-            'illuminate' => [
-                'default' => 'file',
-        	    'prefix' => 'uf4',
-        	    'stores' => [
-                    'file' => [
-                        'driver' => 'file'
-                    ],
-                    'memcached' => [
-                        'driver' => 'memcached',
-                        'servers' => [
-                            [
-                                'host' => '127.0.0.1',
-                                'port' => 11211,
-                                'weight' => 100
-                            ]
-                        ]
-                    ]
-                ]
-            ]
+            'driver' => 'file', // Set to one of `file`, `memcached`, `redis`
+    	    'prefix' => 'userfrosting', // Edit prefix to something unique when multiple instance of memcached/redis are used on the same server
+            'memcached' => [
+                'host' => '127.0.0.1',
+                'port' => 11211,
+                'weight' => 100
+            ],
+            "redis" => [
+                'host' => '127.0.0.1',
+                'password' => null,
+                'port' => 6379,
+                'database' => 0
+            ],
+            'twig' => false
         ],
         // CSRF middleware settings (see https://github.com/slimphp/Slim-Csrf)
         'csrf' => [
             'name'             => 'csrf',
             'storage_limit'    => 200,
             'strength'         => 16,
-            'persistent_token' => true
+            'persistent_token' => true,
+            // A list of url paths to ignore CSRF checks on
+            'blacklist' => [
+                // URL paths will be matched against each regular expression in this list.
+                // Each regular expression should map to an array of methods.
+                // Regular expressions will be delimited with ~ in preg_match, so if you
+                // have routes with ~ in them, you must escape this character in your regex.
+                // Also, remember to use ^ when you only want to match the beginning of a URL path!
+            ]
         ],
         'db'      =>  [
             'default' => [
@@ -70,7 +76,7 @@
         ],
         'debug' => [
             'queries' => false,
-            'smtp' => true,
+            'smtp' => false,
             'twig' => false
         ],
         'mail'    => [
@@ -104,7 +110,6 @@
             'cache_limiter' => false,
             // Decouples the session keys used to store certain session info
             'keys' => [
-                'alerts'  => 'site.alerts',    // the key to use to store flash messages
                 'csrf'    => 'site.csrf',      // the key (prefix) used to store an ArrayObject of CSRF tokens.
             ]
         ],
@@ -115,7 +120,7 @@
         // "Site" settings that are automatically passed to Twig
         'site' => [
             'AdminLTE' =>  [
-                'skin' => "blue"
+                'skin' => 'blue'
             ],
             'analytics' => [
                 'google' => [
@@ -138,7 +143,8 @@
                     'fr_FR' => 'Français',
                     'pt_PT' => 'Português',
                     'de_DE' => 'Deutsch',
-                    'th_TH' => 'ภาษาไทย'
+                    'th_TH' => 'ภาษาไทย',
+                    'it_IT' => 'Italiano'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'

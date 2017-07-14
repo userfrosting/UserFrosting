@@ -1,0 +1,146 @@
+/* Use to collapse empty button columns */
+
+.hideable {
+    min-height: 0px;
+}
+
+/* Custom styles for bootstrap-switch labels */
+label.label-switch {
+    margin-top: 5px;
+}
+
+form textarea {
+  resize: vertical; /* user can resize vertically, but width is fixed */
+}
+
+/* Add some extra padding to tool groups in boxes */
+.box-tool-group {
+    padding: 10px 0 10px;
+}
+
+.box-tool-group .btn-app {
+    margin: 0 10px 10px 0;
+}
+
+.box-tool-menu {
+    background-color: #f4f4f4;
+}
+
+.box-tool-menu > li > a {
+    color: #444;
+}
+
+.box-profile {
+    padding: 10px 20px;
+}
+
+.box-profile-property {
+    float: right !important;
+}
+
+/* Styles for table column selectors */
+
+.uf-table-cs-title {
+    padding: 0px 20px;
+    font-weight: bold;
+}
+
+.uf-table-cs-options {
+    padding: 3px 20px;
+}
+
+.uf-table-cs-options label {
+    width: 100%;
+    font-weight: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.uf-table-cs-options label span {
+    padding-left: 10px;
+}
+
+/* Hide global search field on larger devices */
+.uf-table-search {
+    display: none;
+}
+
+/* Special styling for uf-table messages */
+.uf-table-info {
+    background-color: #fff !important;
+    color: #cdcdcd;
+    font-weight: 700;
+    text-align: center;
+}
+
+.uf-table-error-row td {
+    background-color: #f39c12 !important;
+    color: #fff !important;
+    text-align: center;
+}
+
+/* Special wrapper for alerts on public form pages (sign-in, register, etc) */
+.form-alerts {
+    margin-bottom: 10px !important;
+}
+
+/* Styling for AdminLTE form control icons, that doesn't interfere with validation plugin */
+.form-control-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.input-lg ~ .form-control-icon,
+.input-group-lg ~ .form-control-icon,
+.form-group-lg .form-control ~ .form-control-icon {
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+}
+.input-sm ~ .form-control-icon,
+.input-group-sm ~ .form-control-icon,
+.form-group-sm .form-control ~ .form-control-icon {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+@media (min-width: 768px) {
+  .form-inline .has-feedback .form-control-icon,
+  .navbar-form .has-feedback .form-control-icon {
+    top: 0;
+  }
+}
+
+.form-horizontal .has-feedback .form-control-icon {
+  right: 15px;
+}
+
+/* Fix for select2 not resizing properly when the page is resized */
+.select2-container--default {
+    display: block;
+    width: 100% !important;
+}
+
+/* Fix for links on info-box */
+a .info-box {
+    color: black;
+}
+
+/* Custom styling for trash buttons */
+.btn-trash {
+    padding: 0 10px;
+    color: #777;
+}
+
+.btn-trash:hover {
+    color: #d73925;
+}

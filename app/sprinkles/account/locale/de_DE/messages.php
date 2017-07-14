@@ -26,8 +26,11 @@ return [
         "MASTER_NOT_EXISTS"             => "Sie können kein neues Konto anlegen solange kein Root-Konto angelegt wurde!",
         "MY"                            => "Mein Konto",
 
-        "SESSION_COMPROMISED"           => "Ihre Sitzung wurde beeinträchtigt. Sie sollten sich auf allen Geräten abmelden, sich dann wieder anmelden und sicherstellen, dass Ihre Daten nicht manipuliert wurden.",
-        "SESSION_COMPROMISED_TITLE"     => "Ihr Konto wurde möglicherweise beeinträchtigt",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"              => "Ihre Sitzung wurde beeinträchtigt. Sie sollten sich auf allen Geräten abmelden, sich dann wieder anmelden und sicherstellen, dass Ihre Daten nicht manipuliert wurden.",
+            "TITLE"                     => "Ihr Konto wurde möglicherweise beeinträchtigt",
+            "TEXT"                      => "Möglicherweise ist es jemandem gelungen, Ihren Zugang zu dieser Seite zu übernehmen. Aus Sicherheitsgründen wurden Sie überall abgemeldet. Bitte <a href=\"{{url}}\">melden Sie sich neu an</a> und untersuchen Sie das Konto nach verdächtigen Aktivitäten. Außerdem sollten Sie Ihr Passwort ändern."
+        ],
         "SESSION_EXPIRED"               => "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
 
         "SETTINGS" => [
@@ -46,14 +49,15 @@ return [
             "COMPLETE"                  => "Sie haben Ihr Konto erfolgreich Verifiziert. Sie können sich jetzt anmelden.",
             "EMAIL"                     => "Bitte geben Sie die E-Mail-Adresse ein, mit der Sie sich registriert haben, Überprüfen Sie Ihr E-Mails/Spam-Ordner für die Bestätigungs-E-Mail.",
             "PAGE"                      => "Senden Sie die Bestätigungs-E-Mail erneut für Ihr neues Konto.",
-            "SEND"                      => "Senden Sie eine neue E-Mail mit dem Bestätigungslink für mein Konto",
-            "TOKEN_NOT_FOUND"           => "Verifizierungstoken existiert nicht / Konto wurde bereits verifiziert",
+            "SEND"                      => "Bestätigungslink erneut per E-Mail zusenden",
+            "TOKEN_NOT_FOUND"           => "Verifizierungstoken existiert nicht / Konto wurde bereits verifiziert"
         ]
     ],
 
     "EMAIL" => [
         "INVALID"                       => "Es gibt kein Konto für <strong>{{email}}</strong>.",
-        "IN_USE"                        => "E-Mail <strong>{{email}}</strong> wird bereits verwendet."
+        "IN_USE"                        => "Die E-Mail Adresse <strong>{{email}}</strong> wird bereits verwendet.",
+        "VERIFICATION_REQUIRED"         => "E-Mail (Bestätigung benötigt - Benutzen Sie eine echte E-Mail Adresse!)"
     ],
 
     "EMAIL_OR_USERNAME"                 => "Benutzername oder E-mail Adresse",
@@ -80,11 +84,13 @@ return [
 
     "NAME"                              => "Name",
 
+    "NAME_AND_EMAIL"                    => "Name und E-Mail",
+
     "PAGE" => [
         "LOGIN" => [
             "DESCRIPTION"               => "Melden Sie sich in Ihr {{site_name}} Konto an oder registrieren Sie sich für ein neues Konto.",
             "SUBTITLE"                  => "Registrieren Sie sich kostenlos oder melden Sie sich mit einem bestehenden Konto an.",
-            "TITLE"                     => "Lass uns anfangen!",
+            "TITLE"                     => "Lass uns anfangen!"
         ]
     ],
 
@@ -98,6 +104,11 @@ return [
         "CONFIRM_NEW"                   => "Neues Passwort bestätigen",
         "CONFIRM_NEW_EXPLAIN"           => "Geben Sie Ihr neues Passwort erneut ein",
         "CONFIRM_NEW_HELP"              => "Erforderlich, wenn Sie ein neues Passwort wählen",
+        "CREATE" => [
+            "@TRANSLATION"              => "Passwort setzen",
+            "PAGE"                      => "Setzen Sie ein Passwort für den Account.",
+            "SET"                       => "Passwort setzen und anmelden"
+        ],
         "CURRENT"                       => "Aktuelles Passwort",
         "CURRENT_EXPLAIN"               => "Sie müssen Ihr aktuelles Passwort bestätigen, um Änderungen vorzunehmen",
 
@@ -114,17 +125,18 @@ return [
             "REQUEST_SENT"              => "Wenn die E-Mail <strong>{{email}}</strong> mit einem Account in unserem System übereinstimmt, wird ein Passwort-Reset-Link an <strong>{{email}}</strong> gesendet."
         ],
 
-        "RESET" => [
-            "@TRANSLATION"              => "Passwort zurücksetzen",
-            "CHOOSE"                    => "Bitte wählen Sie ein neues Passwort, um fortzufahren.",
-            "PAGE"                      => "Wählen Sie ein neues Passwort für Ihr Konto.",
-            "SEND"                      => "Neues Passwort festlegen und Anmelden"
-        ],
-
         "HASH_FAILED"                   => "Passwort Hashing fehlgeschlagen. Bitte kontaktieren Sie einen Administrator.",
         "INVALID"                       => "Das aktuelle Passwort stimmt nicht mit dem Datensatz überein",
         "NEW"                           => "Neues Passwort",
         "NOTHING_TO_UPDATE"             => "Sie können nicht das gleiche Passwort zum Aktualisieren verwenden",
+
+        "RESET" => [
+            "@TRANSLATION"              => "Passwort zurücksetzen",
+            "CHOOSE"                    => "Bitte wählen Sie ein neues Passwort, um fortzufahren.",
+            "PAGE"                      => "Wählen Sie ein neues Passwort für Ihr Konto.",
+            "SEND"                      => "Neues Passwort festlegen und anmelden"
+        ],
+
         "UPDATED"                       => "Konto Passwort aktualisiert"
     ],
 
@@ -133,9 +145,10 @@ return [
         "UPDATED"                       => "Profileinstellungen aktualisiert"
     ],
 
+    "RATE_LIMIT_EXCEEDED"               => "Die grenze für diese Maßnahme wurde überschritten. Sie müssen weitere {{delay}} Sekunden warten, bevor Sie einen weiteren Versuch machen dürfen.",
+
     "REGISTER"                          => "Registrieren",
     "REGISTER_ME"                       => "Melden Sie mich an",
-
     "REGISTRATION" => [
         "BROKEN"                        => "Es tut uns leid, es gibt ein Problem mit unserer Registrierung. Bitte kontaktieren Sie uns direkt für Hilfe.",
         "COMPLETE_TYPE1"                => "Sie haben sich erfolgreich registriert. Sie können sich jetzt anmelden.",
@@ -144,11 +157,10 @@ return [
         "LOGOUT"                        => "Es tut uns leid, Sie können kein neues Konto registrieren, während Sie angemeldet sind. Bitte melden Sie sich zuerst ab.",
         "WELCOME"                       => "Die Registrierung ist schnell und einfach."
     ],
-
-    "RATE_LIMIT_EXCEEDED"               => "Die grenze für diese Maßnahme wurde überschritten. Sie müssen weitere {{delay}} Sekunden warten, bevor Sie einen weiteren Versuch machen dürfen.",
     "REMEMBER_ME"                       => "Erinnere dich an mich!",
     "REMEMBER_ME_ON_COMPUTER"           => "Erinnere dich an mich auf diesem Computer (nicht für öffentliche Computer empfohlen)",
 
+    "SIGN_IN_HERE"                      => "Sie haben bereits einen Account? <a href=\"{{url}}\">Melden Sie sich hier an.</a>",
     "SIGNIN"                            => "Anmelden",
     "SIGNIN_OR_REGISTER"                => "Anmelden oder registrieren",
     "SIGNUP"                            => "Anmelden",

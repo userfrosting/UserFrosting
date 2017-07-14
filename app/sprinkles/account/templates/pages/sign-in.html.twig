@@ -1,7 +1,7 @@
-{% extends "layouts/basic.html.twig" %}
+{% extends "pages/abstract/base.html.twig" %}
 
 {# Overrides blocks in head of base template #}
-{% block page_title %}Sign in{% endblock %}
+{% block page_title %}{{translate('SIGNIN')}}{% endblock %}
 
 {% block page_description %}{{translate('PAGE.LOGIN.DESCRIPTION', {'site_name': site.title })}}{% endblock %}
 
@@ -17,12 +17,12 @@
     <!-- /.login-logo -->
 
     <div class="login-box-body login-form">
-        <p class="login-box-msg">{{translate('SIGNIN')}}</p>
+        <p class="login-box-msg"><strong>{{translate('SIGNIN')}}</strong></p>
 
         <div class="form-alerts" id="alerts-page"></div>
 
         <form action="{{site.uri.public}}/account/login" id="sign-in" method="post">
-          {% include "components/csrf.html.twig" %}
+          {% include "forms/csrf.html.twig" %}
           <div class="form-group has-feedback">
             <input type="text" class="form-control" placeholder="{% if site.login.enable_email %}{{translate('EMAIL_OR_USERNAME')}}{% else %}{{translate('USERNAME')}}{% endif %}" name="user_name">
             <i class="glyphicon glyphicon-user form-control-icon" aria-hidden="true"></i>
@@ -62,7 +62,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-        {% include "components/page.js.twig" %}
+        {% include "pages/partials/page.js.twig" %}
     </script>
 
     <script>

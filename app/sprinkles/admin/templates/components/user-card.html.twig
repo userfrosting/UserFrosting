@@ -1,8 +1,0 @@
-{% extends "@account/components/user-card.html.twig" %}
-
-{% block userCard_menu %}
-    {% if checkAccess('uri_dashboard') %}
-        <a href="{{site.uri.public}}/admin" class="btn btn-default btn-flat btn-block">{{translate("ADMIN.PANEL")}}</a>
-    {% endif %}
-    {{ parent() }}
-{% endblock %}

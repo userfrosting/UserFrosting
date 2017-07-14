@@ -1,0 +1,79 @@
+{
+    "bundle": {
+        "js/pages/account-settings": {
+            "scripts": [
+                "userfrosting/js/pages/account-settings.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/forgot-password": {
+            "scripts": [
+                "userfrosting/js/pages/forgot-password.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/resend-verification": {
+            "scripts": [
+                "userfrosting/js/pages/resend-verification.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/set-or-reset-password": {
+            "scripts": [
+                "userfrosting/js/pages/set-or-reset-password.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/register": {
+            "scripts": [
+                "vendor/speakingurl/speakingurl.min.js",
+                "userfrosting/js/uf-captcha.js",
+                "userfrosting/js/pages/register.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        },
+        "js/pages/sign-in": {
+            "scripts": [
+                "vendor/urijs/src/URI.js",
+                "userfrosting/js/pages/sign-in.js"
+            ],
+            "options": {
+                "result": {
+                    "type": {
+                        "scripts": "plain"
+                    }
+                }
+            }
+        }
+    }
+}

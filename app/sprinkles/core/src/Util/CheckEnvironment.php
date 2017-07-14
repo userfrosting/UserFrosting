@@ -3,7 +3,6 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Core\Util;
@@ -259,7 +258,7 @@ class CheckEnvironment
         if ($this->isProduction()) {
             // Should be write-protected in production!
             $shouldBeWriteable = array_merge($shouldBeWriteable, [
-                $this->locator->findResource('sprinkles://') => false,
+                \UserFrosting\SPRINKLES_DIR => false,
                 \UserFrosting\VENDOR_DIR => false
             ]);
         }
@@ -321,7 +320,7 @@ class CheckEnvironment
         } else {
             $this->resultsSuccess['phpVersion'] = [
                 "title" => "<i class='fa fa-code fa-fw'></i> PHP version checks out!",
-                "message" => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION . ".  Great!",
+                "message" => "You're using PHP " . \UserFrosting\PHP_MIN_VERSION .  "or higher.  Great!",
                 "success" => true
             ];
         }

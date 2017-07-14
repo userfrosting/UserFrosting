@@ -1,5 +1,68 @@
 # Change Log
 
+## v4.1.4-alpha
+- Permissions rows get duplicated when upgrading from 4.0 to 4.1 (fix #759)
+- Fix migrate:rollback not running down the migration in the correct order
+- Updated type in `composer.json` for default sprinkles
+- Added missing french translations & more default validation messages
+- Bump Fortress version (fix #766)
+- Support SQLite in Bakery setup
+- Fix for PostgreSQL charset in Bakery (#745)
+
+## v4.1.3-alpha
+- Add Italian translations
+- Add `data-priority` attributes to built-in tables (#752)
+- Use `this.slug` to avoid conflict with helper names (#748)
+- Add block `table_search` to `table-paginated.html.twig`
+
+## v4.1.2-alpha
+- Remove call to setFilters that was causing problems with pagination (#688)
+- Update German translations and factor out some hardcoded text (#725)
+- Update French translations
+- Update Arabic translations (#733, #734, #735)
+
+## v4.1.1-Alpha
+- Fixed missing template in ExceptionHandler and `notFoundHandler`
+- Migration rollback will throw a warning if a class is not found instead of aborting
+- Temporary fix for trouble with `npm install` in Windows (#742)
+
+## v4.1.0-Alpha
+- Switch from pagination "plugin" to "widget" for Tablesorter.  Allows us to update to the latest version of TS (fix #688, #715)
+- Implement `WhoopsRenderer` for pretty debug pages.  See (#674)
+- Refactor error handling.  Move responsibility for displayErrorDetails to handlers, and factor our ErrorRenderers.  Addresses (#702)
+- Move `composer.json` to root directory to allow installing UF via composer create-project
+- Move `sprinkles.json` to app directory to make it easier to find
+- Eliminate the `root` theme Sprinkle.  Custom styling for the root user is now handled with some Twig logic in the `admin` Sprinkle (#726)
+- Rename bundle.config.json -> asset-bundles.json (#726)
+- Reorganize assets (#726)
+- Heavily reorganize templates (#726)
+- Move request schema from `schema/` to `schema/requests/` (#726)
+- Factor out "system" classes from core Sprinkle
+- Refactor overall application lifecycle; move main lifecycle into UserFrosting\System\UserFrosting
+- SprinkleManager now better focused on a single responsibility
+- Sprinkle initializer classes now use events to hook into application lifecycle
+- Support for allowing Sprinkles to register middleware (#617)
+- Automatically load Sprinkle service providers (see #636)
+- Get rid of "implicit loading" for core Sprinkle - core is now just an ordinary Sprinkle like any other.
+- The `sprinkles://` stream now represents a virtual filesystem for the root directory of each loaded sprinkle, rather than the `sprinkles/` directory itself.
+- Separate out `localePathBuilder` from the `translator` service.  Makes it easier to add/remove paths before actually loading the translations.
+- Only present locale options with non-null names.
+- Rebased ufTable and ufModal with new jQuery plugin template. (part of #646)
+- Removed the search bar from the Dashboard layout
+- Added Tablesorter pagination translation
+- New Translator Facade
+- New CLI tool (Bakery).
+- New migration system based on bakery CLI
+- Listable sprunjing
+- Refactor groups and user routes (Fix #721)
+- Added the `config` alert stream to save ufAlerts to the cache instead of sessions. Fix #633. The old `session` is still the default alertStream in 4.1.
+- Added support for the Redis cache driver and refactored the cache config values.
+- Added user and session cache.
+- Common log file for db queries, auth checks, smtp, errors, and debug messages (#709).
+- Use YAML as default format for request schema (#690)
+
+See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
+
 ## v4.0.24-Alpha
 - Fixes to nginx config file, and add location block for LE acme challenge
 - Fix JS errors when `#alerts-page` is not present on a page
@@ -34,7 +97,7 @@
 - New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
 - Change implementation of User::permissions() to use BelongsToManyThrough
 - New ufForm options: setting reqParams, encType, submittingText
-- ufCollection now triggers a check for virgin rows when _any_ control is touched 
+- ufCollection now triggers a check for virgin rows when _any_ control is touched
 - Fix issue with Sprunje when generating CSV with empty child collections (#697)
 - Authorizer now correctly interprets string literals (#482)
 - Authorizer now correctly interprets numeric types in access conditions.  **Caution**: this causes the `equals()` callback to return true in situations where it would have (incorrectly) returned false before.  For example, `equals(self.group_id,2)` would have returned false for users in group 2, because it was interpreting `2` as a string and then performing its strict comparison.  It now (correctly) returns true.  Notice that `equals(self.group_id,'2')`, on the other hand, will now return `false`.

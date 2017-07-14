@@ -1,6 +1,6 @@
 {
     "name": "userfrosting/sprinkle-admin",
-    "type": "sprinkle",
+    "type": "userfrosting-sprinkle",
     "description": "Administrative management module for UserFrosting.",
     "keywords": ["php user management", "usercake", "bootstrap"],
     "homepage": "https://github.com/userfrosting/UserFrosting",

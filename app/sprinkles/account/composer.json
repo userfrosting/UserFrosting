@@ -1,6 +1,6 @@
 {
     "name": "userfrosting/sprinkle-account",
-    "type": "sprinkle",
+    "type": "userfrosting-sprinkle",
     "description": "Authentication and account management module for UserFrosting.",
     "keywords": ["php user management", "usercake", "bootstrap"],
     "homepage": "https://github.com/userfrosting/UserFrosting",

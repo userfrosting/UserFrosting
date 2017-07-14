@@ -20,10 +20,6 @@ return [
        "TIME" => "Activity Time"
     ],
 
-    "ADMIN" => [
-        "PANEL" => "Admin panel"
-    ],
-
     "CACHE" => [
         "CLEAR"             => "Clear cache",
         "CLEAR_CONFIRM"     => "Are you sure you want to clear the site cache?",
@@ -32,6 +28,7 @@ return [
     ],
 
     "DASHBOARD"             => "Dashboard",
+    "NO_FEATURES_YET"       => "It doesn't look like any features have been set up for this account...yet.  Maybe they haven't been implemented yet, or maybe someone forgot to give you access.  Either way, we're glad to have you aboard!",
     "DELETE_MASTER"         => "You cannot delete the master account!",
     "DELETION_SUCCESSFUL"   => "User <strong>{{user_name}}</strong> has been successfully deleted.",
     "DETAILS_UPDATED"       => "Account details updated for user <strong>{{user_name}}</strong>",
@@ -56,6 +53,7 @@ return [
         "ICON"          => "Group icon",
         "ICON_EXPLAIN"  => "Icon for group members",
         "INFO_PAGE"     => "Group information page for {{name}}",
+        "MANAGE"        => "Manage group",
         "NAME"          => "Group name",
         "NAME_EXPLAIN"  => "Please enter a name for the group",
         "NOT_EMPTY"     => "You can't do that because there are still users associated with the group <strong>{{name}}</strong>.",

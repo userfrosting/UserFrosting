@@ -1,0 +1,6 @@
+---
+token:
+  validators:
+    required:
+      label: validation token
+      message: VALIDATION.REQUIRED

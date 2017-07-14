@@ -3,14 +3,13 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2016 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Account\Repository;
 
 use Carbon\Carbon;
-use UserFrosting\Sprinkle\Account\Model\User;
-use UserFrosting\Sprinkle\Core\Model\UFModel;
+use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
@@ -54,7 +53,7 @@ abstract class TokenRepository
      * Cancels a specified token by removing it from the database.
      *
      * @param int $token The token to remove.
-     * @return UFModel|false
+     * @return Model|false
      */
     public function cancel($token)
     {
@@ -81,7 +80,7 @@ abstract class TokenRepository
      *
      * @param int $token The token to complete.
      * @param mixed[] $userParams An optional list of parameters to pass to updateUser().
-     * @return UFModel|false
+     * @return Model|false
      */
     public function complete($token, $userParams = [])
     {
@@ -123,7 +122,7 @@ abstract class TokenRepository
      *
      * @param User $user The user object to associate with this token.
      * @param int $timeout The time, in seconds, after which this token should expire.
-     * @return UFModel The model (PasswordReset, Verification, etc) object that stores the token.
+     * @return Model The model (PasswordReset, Verification, etc) object that stores the token.
      */
     public function create(User $user, $timeout)
     {
@@ -159,7 +158,7 @@ abstract class TokenRepository
      *
      * @param User $user The user object to look up.
      * @param int $token Optionally, try to match a specific token.
-     * @return UFModel|false
+     * @return Model|false
      */
     public function exists(User $user, $token = null)
     {

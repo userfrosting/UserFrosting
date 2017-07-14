@@ -1,0 +1,135 @@
+{# This partial template renders a table of users, to be populated with rows via an AJAX request.
+ # This extends a generic template for paginated tables.
+ #
+ # Note that this template contains a "skeleton" table with an empty table body, and then a block of Handlebars templates which are used
+ # to render the table cells with the data from the AJAX request.
+#}
+
+{% extends "tables/table-paginated.html.twig" %}
+
+{% block table %}
+    <table id="{{table.id}}" class="tablesorter table table-bordered table-hover table-striped" data-sortlist="{{table.sortlist}}">
+        <thead>
+            <tr>
+                <th class="sorter-metatext" data-column-name="name" data-column-template="#user-table-column-info" data-priority="1">{{translate('USER')}} <i class="fa fa-sort"></i></th>
+                {% if 'last_activity' in table.columns %}
+                    <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="2">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
+                {% endif %}
+                <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-actions" data-priority="1">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block table_cell_templates %}
+    {# This contains a series of <script> blocks, each of which is a client-side Handlebars template.
+     # Note that these are NOT Twig templates, although the syntax is similar.  We wrap them in the `verbatim` tag,
+     # so that Twig will output them directly into the DOM instead of trying to treat them like Twig templates.
+     #
+     # These templates require handlebars-helpers.js, moment.js
+    #}
+    {% verbatim %}
+    <script id="user-table-column-info" type="text/x-handlebars-template">
+        <td data-text="{{row.last_name}}">
+            <strong>
+                <a href="{{site.uri.public}}/users/u/{{row.user_name}}">{{row.first_name}} {{row.last_name}} ({{row.user_name}})</a>
+            </strong>
+            <div class="js-copy-container">
+                <span class="js-copy-target">{{row.email}}</span>
+                <button class="btn btn-xs js-copy-trigger"><i class="fa fa-copy"></i></button>
+            </div>
+        </td>
+    </script>
+
+    <script id="user-table-column-last-activity" type="text/x-handlebars-template">
+        {{#if row.last_activity }}
+        <td data-num="{{dateFormat row.last_activity.occurred_at format='x'}}">
+            {{dateFormat row.last_activity.occurred_at format="dddd"}}<br>{{dateFormat row.last_activity.occurred_at format="MMM Do, YYYY h:mm a"}}
+            <br>
+            <i>{{row.last_activity.description}}</i>
+        </td>
+        {{ else }}
+        <td data-num="0">
+                <i>{% endverbatim %}{{translate("UNKNOWN")}}{% verbatim %}</i>
+        </td>
+        {{/if }}
+    </script>
+
+    <script id="user-table-column-actions" type="text/x-handlebars-template">
+        <td
+            {{#ifx row.flag_enabled '==' 0 }}
+                data-text="disabled"
+            {{ else }}
+                {{#ifx row.flag_verified '==' 0 }}
+                    data-text="unactivated"
+                {{ else }}
+                    data-text="active"
+                {{/ifx }}
+            {{/ifx }}
+        >
+            <div class="btn-group">
+                {{#ifx row.flag_enabled '==' 0 }}
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
+                        <span class="caret"></span>
+                    </button>
+                {{ else }}
+                    {{#ifx row.flag_verified '==' 0 }}
+                        <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                            {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
+                            <span class="caret"></span>
+                        </button>
+                    {{ else }}
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
+                            <span class="caret"></span>
+                        </button>
+                    {{/ifx }}
+                {{/ifx }}
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    {{#ifx row.flag_verified '==' 0 }}
+                    <li>
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-activate">
+                        <i class="fa fa-bolt"></i> {% endverbatim %}{{translate("USER.ACTIVATE")}}{% verbatim %}
+                        </a>
+                    </li>
+                    {{/ifx }}
+                    <li>
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-edit">
+                        <i class="fa fa-edit"></i> {% endverbatim %}{{translate("USER.EDIT")}}{% verbatim %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-roles">
+                        <i class="fa fa-drivers-license"></i> {% endverbatim %}{{translate("ROLE.MANAGE")}}{% verbatim %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-password">
+                        <i class="fa fa-key"></i> {% endverbatim %}{{translate("USER.ADMIN.CHANGE_PASSWORD")}}{% verbatim %}
+                        </a>
+                    </li>
+                    <li>
+                    {{#ifx row.flag_enabled '==' 1 }}
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-disable">
+                        <i class="fa fa-minus-circle"></i> {% endverbatim %}{{translate("USER.DISABLE")}}{% verbatim %}
+                        </a>
+                    {{ else }}
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-enable">
+                        <i class="fa fa-plus-circle"></i> {% endverbatim %}{{translate("USER.ENABLE")}}{% verbatim %}
+                        </a>
+                    {{/ifx }}
+                    </li>
+                    <li>
+                        <a href="#" data-user_name="{{row.user_name}}" class="js-user-delete">
+                        <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("USER.DELETE")}}{% verbatim %}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </script>
+    {% endverbatim %}
+{% endblock %}

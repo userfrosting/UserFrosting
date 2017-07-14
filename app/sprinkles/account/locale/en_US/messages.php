@@ -26,8 +26,11 @@ return [
         "MASTER_NOT_EXISTS" => "You cannot register an account until the master account has been created!",
         "MY"                => "My Account",
 
-        "SESSION_COMPROMISED"       => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
-        "SESSION_COMPROMISED_TITLE" => "Your account may have been compromised",
+        "SESSION_COMPROMISED" => [
+            "@TRANSLATION"  => "Your session has been compromised.  You should log out on all devices, then log back in and make sure that your data has not been tampered with.",
+            "TITLE"         => "Your account may have been compromised",
+            "TEXT"          => "Someone may have used your login information to acccess this page.  For your safety, all sessions were logged out. Please <a href=\"{{url}}\">log in</a> and check your account for suspicious activity.  You may also wish to change your password."
+        ],
         "SESSION_EXPIRED"       => "Your session has expired.  Please sign in again.",
 
         "SETTINGS" => [
@@ -64,19 +67,16 @@ return [
     "HEADER_MESSAGE_ROOT" => "YOU ARE SIGNED IN AS THE ROOT USER",
 
     "LAST_NAME" => "Last name",
-
     "LOCALE" => [
         "ACCOUNT" => "The language and locale to use for your account",
         "INVALID" => "<strong>{{locale}}</strong> is not a valid locale."
     ],
-
     "LOGIN" => [
         "@TRANSLATION"      => "Login",
         "ALREADY_COMPLETE"  => "You are already logged in!",
         "SOCIAL"            => "Or login with",
         "REQUIRED"          => "Sorry, you must be logged in to access this resource."
     ],
-
     "LOGOUT" => "Logout",
 
     "NAME" => "Name",
@@ -101,6 +101,11 @@ return [
         "CONFIRM_NEW"           => "Confirm New Password",
         "CONFIRM_NEW_EXPLAIN"   => "Re-enter your new password",
         "CONFIRM_NEW_HELP"      => "Required only if selecting a new password",
+        "CREATE" => [
+            "@TRANSLATION"  => "Create Password",
+            "PAGE"          => "Choose a password for your new account.",
+            "SET"           => "Set Password and Sign In"
+        ],
         "CURRENT"               => "Current Password",
         "CURRENT_EXPLAIN"       => "You must confirm your current password to make changes",
 
@@ -117,6 +122,11 @@ return [
             "REQUEST_SENT"      => "If the email <strong>{{email}}</strong> matches an account in our system, a password reset link will be sent to <strong>{{email}}</strong>."
         ],
 
+        "HASH_FAILED"       => "Password hashing failed. Please contact a site administrator.",
+        "INVALID"           => "Current password doesn't match the one we have on record",
+        "NEW"               => "New Password",
+        "NOTHING_TO_UPDATE" => "You cannot update with the same password",
+
         "RESET" => [
             "@TRANSLATION"      => "Reset Password",
             "CHOOSE"            => "Please choose a new password to continue.",
@@ -124,10 +134,6 @@ return [
             "SEND"              => "Set New Password and Sign In"
         ],
 
-        "HASH_FAILED"       => "Password hashing failed. Please contact a site administrator.",
-        "INVALID"           => "Current password doesn't match the one we have on record",
-        "NEW"               => "New Password",
-        "NOTHING_TO_UPDATE" => "You cannot update with the same password",
         "UPDATED"           => "Account password updated"
     ],
 
@@ -136,9 +142,10 @@ return [
         "UPDATED"   => "Profile settings updated"
     ],
 
+    "RATE_LIMIT_EXCEEDED"       => "The rate limit for this action has been exceeded.  You must wait another {{delay}} seconds before you will be allowed to make another attempt.",
+
     "REGISTER"      => "Register",
     "REGISTER_ME"   => "Sign me up",
-
     "REGISTRATION" => [
         "BROKEN"            => "We're sorry, there is a problem with our account registration process.  Please contact us directly for assistance.",
         "COMPLETE_TYPE1"    => "You have successfully registered. You can now sign in.",
@@ -147,11 +154,10 @@ return [
         "LOGOUT"            => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
         "WELCOME"           => "Registration is fast and simple."
     ],
-
-    "RATE_LIMIT_EXCEEDED"       => "The rate limit for this action has been exceeded.  You must wait another {{delay}} seconds before you will be allowed to make another attempt.",
     "REMEMBER_ME"               => "Remember me!",
     "REMEMBER_ME_ON_COMPUTER"   => "Remember me on this computer (not recommended for public computers)",
 
+    "SIGN_IN_HERE"          => "Already have an account? <a href=\"{{url}}\">Sign in here.</a>",
     "SIGNIN"                => "Sign in",
     "SIGNIN_OR_REGISTER"    => "Sign in or register",
     "SIGNUP"                => "Sign Up",

@@ -20,10 +20,6 @@ return [
         "TIME" => "Date de l'activité"
     ],
 
-    "ADMIN" => [
-        "PANEL" => "Panneau d'administration"
-    ],
-
     "CACHE" => [
         "CLEAR"             => "Vider le cache",
         "CLEAR_CONFIRM"     => "Voulez-vous vraiment supprimer le cache du site?",
@@ -56,6 +52,7 @@ return [
         "ICON"          => "Icône",
         "ICON_EXPLAIN"  => "Icône des membres du groupe",
         "INFO_PAGE"     => "Informations sur le groupe {{name}}",
+        "MANAGE"        => "Gérer le groupe",
         "NAME"          => "Nom du groupe",
         "NAME_EXPLAIN"  => "Spécifiez le nom du groupe",
         "NOT_EMPTY"     => "Vous ne pouvez pas le faire car il y a encore des utilisateurs associés au groupe <strong>{{name}}</strong>.",

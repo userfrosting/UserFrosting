@@ -1,4 +1,4 @@
-{% extends "layouts/dashboard.html.twig" %}
+{% extends "pages/abstract/dashboard.html.twig" %}
 
 {% block stylesheets_page %}
     <!-- Page-specific CSS asset bundle -->
@@ -16,10 +16,10 @@
             <div id="widget-roles" class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-drivers-license"></i> {{translate('ROLE', 2)}}</h3>
-                    {% include "components/tables/table-tool-menu.html.twig" %}
+                    {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="panel-body">
-                    {% include "components/tables/roles.html.twig" with {
+                    {% include "tables/roles.html.twig" with {
                             "table" : {
                                 "id" : "table-roles"
                             }
@@ -38,7 +38,7 @@
 {% block scripts_page %}
     <!-- Include validation rules -->
     <script>
-    {% include "components/page.js.twig" %}
+    {% include "pages/partials/page.js.twig" %}
     </script>
 
     <!-- Include form widgets JS -->
