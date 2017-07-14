@@ -1,13 +1,14 @@
 <?php
-
 /**
- * ar
+ * UserFrosting (http://www.userfrosting.com)
  *
- * Modern Standard Arabic validation message translations for the account sprinkle.
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
- * @author Alexander Weissman Abdullah Seba
+ * Modern Standard Arabic message token translations for the 'account' sprinkle.
+ *
+ * @package userfrosting\i18n\ar
+ * @author Alexander Weissman and Abdullah Seba
  */
 
 return [
