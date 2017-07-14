@@ -139,12 +139,13 @@
                 // with the exception of English, which as the default language comes first.
                 'available' => [
                     'en_US' => 'English',
+                    'es_ES' => 'Español',
                     'ar'    => 'العربية',
-                    'fr_FR' => 'Français',
                     'pt_PT' => 'Português',
+                    'fr_FR' => 'Français',
                     'de_DE' => 'Deutsch',
-                    'th_TH' => 'ภาษาไทย',
-                    'it_IT' => 'Italiano'
+                    'it_IT' => 'Italiano',
+                    'th_TH' => 'ภาษาไทย'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
