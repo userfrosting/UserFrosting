@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.5-alpha
+- Spanish language support (#770)
+
 ## v4.1.4-alpha
 - Permissions rows get duplicated when upgrading from 4.0 to 4.1 (fix #759)
 - Fix migrate:rollback not running down the migration in the correct order
