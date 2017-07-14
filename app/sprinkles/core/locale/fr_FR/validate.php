@@ -1,14 +1,14 @@
 <?php
-
 /**
- * fr_FR
+ * UserFrosting (http://www.userfrosting.com)
  *
- * French validation message translations for the core sprinkle.
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
- * @author Alexander Weissman
- * @translator Louis Charette
+ * French message token translations for the 'core' sprinkle.
+ *
+ * @package userfrosting\i18n\fr
+ * @author Louis Charette
  */
 
 return [

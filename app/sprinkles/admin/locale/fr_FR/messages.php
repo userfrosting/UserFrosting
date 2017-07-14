@@ -1,15 +1,16 @@
 <?php
-
 /**
- * en_US
+ * UserFrosting (http://www.userfrosting.com)
  *
- * US English message token translations for the 'admin' sprinkle.
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
- * @author Alexander Weissman
+ * French message token translations for the 'admin' sprinkle.
+ *
+ * @package userfrosting\i18n\fr
+ * @author Louis Charette
  */
-
+ 
 return [
     "ACTIVITY" => [
         1 => "Activité",
