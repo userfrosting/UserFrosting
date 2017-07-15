@@ -79,6 +79,11 @@ form textarea {
     text-align: center;
 }
 
+/* Cursor styling for ufCopy */
+.uf-copy-trigger {
+    cursor: pointer;
+}
+
 /* Special wrapper for alerts on public form pages (sign-in, register, etc) */
 .form-alerts {
     margin-bottom: 10px !important;
