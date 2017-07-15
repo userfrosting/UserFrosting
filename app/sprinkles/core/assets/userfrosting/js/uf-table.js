@@ -253,7 +253,6 @@
         var tableElement = this.$element.find('.tablesorter');
 
         // Set up 'loading' overlays
-        var spinner = $('<div class="uf-table-loading">Loading...</div>');
 
         /* Attempt to show spinner per-table...
         var rowPos = table.position();
@@ -266,11 +265,12 @@
         });
         */
 
-        if (!$('body').find('.uf-table-loading').length) {
-            $('body').append(spinner);
+        var spinner = $('body').find('.uf-table-loading');
+        if (!spinner.length) {
+            spinner = $('<div class="uf-table-loading">Loading...</div>');
+            $('body').append(spinner.hide());
         }
 
-        spinner.hide();
         tableElement.bind('sortStart filterStart pageMoved', function() {
             spinner.show();
         }).bind("pagerComplete updateComplete", function() {
