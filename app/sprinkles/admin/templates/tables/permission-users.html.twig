@@ -43,7 +43,7 @@
     <script id="user-table-column-via-roles" type="text/x-handlebars-template">
         <td>
             {{#each row.roles_via }}
-                <a href="{{site.uri.public}}/roles/r/{{this.slug}}" class="label label-primary" title="{{this.description}}">{{this.name}}</a>
+                <a href="{% endverbatim %}{# Handlebars can't access variables in the global scope, so we have to use Twig to insert the base url #}{{site.uri.public}}{% verbatim %}/roles/r/{{this.slug}}" class="label label-primary" title="{{this.description}}">{{this.name}}</a>
             {{/each}}
         </td>
     </script>
