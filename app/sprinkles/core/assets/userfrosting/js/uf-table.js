@@ -436,6 +436,12 @@
                         var columnName = column.data('column-name');
                         if (data.listable[columnName]) {
                             $.tablesorter.filter.buildSelect(ts, i, data.listable[columnName], true);
+                            var filters = base.getSavedFilters(ts);
+                            // If there is a filter actually set for this column, update the selected option.
+                            if (filters[i]) {
+                                var selectControl = $(ts).find(".tablesorter-filter[data-column='" + i + "']");
+                                selectControl.val(filters[i]);
+                            }
                         }
                     }
                 }
