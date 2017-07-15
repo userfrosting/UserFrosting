@@ -150,7 +150,7 @@ return [
         "WELCOME"        => "L'inscription est rapide et simple."
     ],
 
-    "RATE_LIMIT_EXCEEDED"       => "La limite tarifaire pour cette action a été dépassée. Vous devez attendre un autre {{délai}} secondes avant de pouvoir effectuer une autre tentative.",
+    "RATE_LIMIT_EXCEEDED"       => "La limite de tentatives pour cette action a été dépassée. Vous devez attendre {{delay}} secondes avant de pouvoir effectuer une autre tentative.",
     "REMEMBER_ME"               => "Se souvenir de moi!",
     "REMEMBER_ME_ON_COMPUTER"   => "Se souvenir de moi sur cet ordinateur (non recommandé pour les ordinateurs publics)",
 
