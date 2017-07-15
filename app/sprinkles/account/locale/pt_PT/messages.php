@@ -1,14 +1,14 @@
 <?php
-
 /**
- * pt_PT
+ * UserFrosting (http://www.userfrosting.com)
  *
- * PT Portuguese message token translations for the core sprinkle.
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
+ * Portuguese message token translations for the 'account' sprinkle.
+ *
+ * @package userfrosting\i18n\pt
  * @author Bruno Silva (brunomnsilva@gmail.com)
- *
  */
 
 return [
@@ -110,7 +110,6 @@ return [
             "PAGE"              => "Obtenha um link para fazer reset à sua password.",
             "REQUEST_CANNED"    => "Pedido de password esquecida foi cancelado.",
             "REQUEST_SENT"      => "Se o email <strong>{{email}}</strong> corresponder a uma conta em nosso sistema, um link de redefinição de senha será enviado para <strong>{{email}}</strong>."
-         ],
         ],
 
         "RESET" => [

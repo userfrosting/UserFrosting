@@ -1,12 +1,13 @@
 <?php
-
 /**
- * pt_PT
+ * UserFrosting (http://www.userfrosting.com)
  *
- * PT Portuguese message token translations for the core sprinkle.
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
+ * Portuguese message token translations for the 'admin' sprinkle.
+ *
+ * @package userfrosting\i18n\pt
  * @author Bruno Silva (brunomnsilva@gmail.com)
  */
 
