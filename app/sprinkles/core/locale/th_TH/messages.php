@@ -1,14 +1,14 @@
 <?php
-
 /**
- * th_TH
+ * UserFrosting (http://www.userfrosting.com)
  *
- * Thai message token translations for the core sprinkle.
+ * @link      https://github.com/userfrosting/UserFrosting
+ * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  *
- * @package UserFrosting
- * @link http://www.userfrosting.com/components/#i18n
+ * Thai message token translations for the 'core' sprinkle.
+ *
+ * @package userfrosting\i18n\th
  * @author Karuhut Komol
- *
  */
 
 return [
