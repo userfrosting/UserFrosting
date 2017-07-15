@@ -250,8 +250,35 @@
             return this._cleanHash(this, config, tableId, component, hash);
         }, this);
 
+        var tableElement = this.$element.find('.tablesorter');
+
+        // Set up 'loading' overlays
+        var spinner = $('<div class="uf-table-loading">Loading...</div>');
+
+        /* Attempt to show spinner per-table...
+        var rowPos = table.position();
+        spinner.css({
+            position: 'absolute',
+            top: rowPos.top,
+            left: rowPos.left,
+            width: table.css('width'),
+            height: table.css('height')
+        });
+        */
+
+        if (!$('body').find('.uf-table-loading').length) {
+            $('body').append(spinner);
+        }
+
+        spinner.hide();
+        tableElement.bind('sortStart filterStart pageMoved', function() {
+            spinner.show();
+        }).bind("pagerComplete updateComplete", function() {
+            spinner.hide();
+        });
+
         // Set up tablesorter and pager
-        this.ts = this.$element.find('.tablesorter').tablesorter(this.settings.tablesorter);
+        this.ts = tableElement.tablesorter(this.settings.tablesorter);
 
         // Link CSV download button
         this.settings.downloadButton.on('click', $.proxy(function () {
