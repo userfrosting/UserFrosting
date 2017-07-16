@@ -17,6 +17,10 @@
 
             {% include "pages/partials/favicons.html.twig" %}
 
+            {# Pace #}
+            <script src="{{ assets.url('assets://vendor/pace/pace.js') }}"></script>
+            <link href="{{ assets.url('assets://vendor/pace/themes/white/pace-theme-minimal.css') }}" rel="stylesheet">
+
             {# Use this block to add extra content in page head without having to override the entire base layout #}
             {% block head_extra %}{% endblock %}
 
