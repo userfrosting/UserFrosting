@@ -179,13 +179,10 @@
                 widgetOptions: {
                     columnSelector_container : this.$element.find('.js-uf-table-cs-options'),
                     filter_external          : this.$element.find('.js-uf-table-search input'),
-                    pager_css: {
-                        container: this.$element.find('.js-uf-table-pager')
-                    },
 
                     // Pager selectors
                     pager_selectors: {
-                        container   : '.pager',       // target the pager markup (wrapper)
+                        container   : this.$element.find('.js-uf-table-pager'),
                         first       : '.first',       // go to first page arrow
                         prev        : '.prev',        // previous page arrow
                         next        : '.next',        // next page arrow
@@ -202,7 +199,7 @@
         this._name = pluginName;
 
         // Fall back to attributes from data-*, default values if not specified in options
-        var pagerContainer = this.settings.tablesorter.widgetOptions.pager_css.container;
+        var pagerContainer = this.settings.tablesorter.widgetOptions.pager_selectors.container;
         var infoContainer = this.settings.info.container;
         var dataAttributeDefaults = {
             info: {
