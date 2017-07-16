@@ -175,6 +175,9 @@
             info: {
                 container: this.$element.find('.js-uf-table-info')
             },
+            overlay: {
+                container: this.$element.find('.js-uf-table-overlay')
+            },
             tablesorter: {
                 widgetOptions: {
                     columnSelector_container : this.$element.find('.js-uf-table-cs-options'),
@@ -253,16 +256,11 @@
 
         // Set up 'loading' overlays
         if (this.settings.useLoadingTransition) {
-            var spinner = $('body').find('.uf-table-loading');
-            if (!spinner.length) {
-                spinner = $('<div class="uf-table-loading">Loading...</div>');
-                $('body').append(spinner.hide());
-            }
-    
+            var overlay = this.settings.overlay.container;
             tableElement.bind('sortStart filterStart pageMoved', function() {
-                spinner.show();
+                overlay.removeClass('hidden');
             }).bind("pagerComplete updateComplete", function() {
-                spinner.hide();
+                overlay.addClass('hidden');
             });
         }
 

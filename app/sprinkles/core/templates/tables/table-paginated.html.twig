@@ -19,7 +19,7 @@
         <i class="fa fa-search form-control-icon" aria-hidden="true"></i>
     </div>
 {% endblock %}
-<div class="table">
+<div class="table overlay-wrapper">
     {% block table %}
         {# Define your table skeleton in this block in your child template #}
     {% endblock %}
@@ -47,6 +47,11 @@
                 <option value="{{count}}">{{count}}</option>
             {% endfor %}
             </select>
+        </div>
+    {% endblock %}
+    {% block table_overlay %}
+        <div class="overlay js-uf-table-overlay hidden">
+            <i class="fa fa-refresh fa-spin"></i>
         </div>
     {% endblock %}
 </div>
