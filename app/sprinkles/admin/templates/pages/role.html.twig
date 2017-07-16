@@ -80,6 +80,23 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-12">
+            <div id="widget-role-users" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title"><i class="fa fa-fw fa-key"></i> {{translate('USER', 2)}}</h3>
+                    {% include "tables/table-tool-menu.html.twig" %}
+                </div>
+                <div class="box-body">
+                    {% include "tables/users.html.twig" with {
+                            "table" : {
+                                "id" : "table-role-users",
+                                "columns" : ["last_activity"]
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block scripts_page %}

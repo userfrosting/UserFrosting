@@ -95,11 +95,12 @@
     // Define plugin name and defaults.
     var pluginName = "ufTable",
         defaults = {
-            DEBUG           : false,
-            dataUrl         : "",
-            msgTarget       : $('#alerts-page'),
-            addParams       : {},
-            filterAllField: '_all',
+            DEBUG                : false,
+            dataUrl              : "",
+            msgTarget            : $('#alerts-page'),
+            addParams            : {},
+            filterAllField       : '_all',
+            useLoadingTransition : true,
             tablesorter     : {
                 debug: false,
                 theme     : 'bootstrap',
@@ -148,17 +149,6 @@
                         data: {},
                         dataType: 'json'
                     },
-                    // jQuery selectors
-                    pager_selectors: {
-                      container   : '.pager',       // target the pager markup (wrapper)
-                      first       : '.first',       // go to first page arrow
-                      prev        : '.prev',        // previous page arrow
-                      next        : '.next',        // next page arrow
-                      last        : '.last',        // go to last page arrow
-                      gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
-                      pageDisplay : '.pagedisplay', // location of where the "output" is displayed
-                      pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
-                    },
 
                     // hash prefix
                     sort2Hash_hash              : '#',
@@ -191,6 +181,18 @@
                     filter_external          : this.$element.find('.js-uf-table-search input'),
                     pager_css: {
                         container: this.$element.find('.js-uf-table-pager')
+                    },
+
+                    // Pager selectors
+                    pager_selectors: {
+                        container   : '.pager',       // target the pager markup (wrapper)
+                        first       : '.first',       // go to first page arrow
+                        prev        : '.prev',        // previous page arrow
+                        next        : '.next',        // next page arrow
+                        last        : '.last',        // go to last page arrow
+                        gotoPage    : '.gotoPage',    // go to page selector - select dropdown that sets the current page
+                        pageDisplay : '.pagedisplay', // location of where the "output" is displayed
+                        pageSize    : '.pagesize'     // page size selector - select dropdown that sets the "size" option
                     }
                 }
             }
@@ -253,29 +255,19 @@
         var tableElement = this.$element.find('.tablesorter');
 
         // Set up 'loading' overlays
-
-        /* Attempt to show spinner per-table...
-        var rowPos = table.position();
-        spinner.css({
-            position: 'absolute',
-            top: rowPos.top,
-            left: rowPos.left,
-            width: table.css('width'),
-            height: table.css('height')
-        });
-        */
-
-        var spinner = $('body').find('.uf-table-loading');
-        if (!spinner.length) {
-            spinner = $('<div class="uf-table-loading">Loading...</div>');
-            $('body').append(spinner.hide());
+        if (this.settings.useLoadingTransition) {
+            var spinner = $('body').find('.uf-table-loading');
+            if (!spinner.length) {
+                spinner = $('<div class="uf-table-loading">Loading...</div>');
+                $('body').append(spinner.hide());
+            }
+    
+            tableElement.bind('sortStart filterStart pageMoved', function() {
+                spinner.show();
+            }).bind("pagerComplete updateComplete", function() {
+                spinner.hide();
+            });
         }
-
-        tableElement.bind('sortStart filterStart pageMoved', function() {
-            spinner.show();
-        }).bind("pagerComplete updateComplete", function() {
-            spinner.hide();
-        });
 
         // Set up tablesorter and pager
         this.ts = tableElement.tablesorter(this.settings.tablesorter);

@@ -14,4 +14,8 @@ $(document).ready(function() {
     $("#widget-role-permissions").ufTable({
         dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/permissions'
     });
+
+    $("#widget-role-users").ufTable({
+        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/users'
+    });
 });
