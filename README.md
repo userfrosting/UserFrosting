@@ -82,6 +82,18 @@ Mike's a programmer and IT specialist for a small business in New Hampshire, and
 
 Srinivas's a web applications architect, with a passion for open source technologies. He is experienced in building SaaS (software as a service) web applications and enjoys working on open source projects and contributing to the community. He has a Masters in Computer Science from Pune University, India.    
 
+## Thanks to our translators!
+
+- Louis Charette (@lcharette) - French
+- Karuhut Komol (@popiazaza) - Thai
+- Pietro Marangon (@Pe46dro) - Italian
+- Abdullah Seba (@abdullahseba) - Arabic
+- Bruno Silva (@brunomnsilva) - Portuguese
+- @kevinrombach - German
+- @rafa31gz - Spanish
+- @splitt3r - German
+- @X-Anonymous-Y - German
+
 ## Contributing
 
 Please see our [contributing guidelines](CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).
