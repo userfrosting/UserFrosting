@@ -50,8 +50,10 @@
         </div>
     {% endblock %}
     {% block table_overlay %}
-        <div class="overlay js-uf-table-overlay hidden">
-            <i class="fa fa-refresh fa-spin"></i>
-        </div>
+        {% if site.uf_table.use_loading_transition %}
+            <div class="overlay js-uf-table-overlay hidden">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+        {% endif %}
     {% endblock %}
 </div>
