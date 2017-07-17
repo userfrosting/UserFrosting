@@ -595,7 +595,7 @@
                 }
             }
             // Convert modified JSON object back into serialized representation
-            var result = jQuery.param(urlObject);
+            var result = decodeURIComponent(jQuery.param(urlObject));
             return result.length ? result : '';
         }
     });

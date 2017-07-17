@@ -4,7 +4,11 @@
 - Spanish language support (#770)
 - Show current filter in select-menu filters (#744)
 - Cursor styling for ufCopy
-- Pacing overlay for ufTables
+- Transition overlay for ufTables
+- Minor fix to ufTable.cleanHash
+- Correctly target pager container in Tablesorter options
+- Add table of users to role pages
+- Fix issue with links in permission users table
 
 ## v4.1.4-alpha
 - Permissions rows get duplicated when upgrading from 4.0 to 4.1 (fix #759)
