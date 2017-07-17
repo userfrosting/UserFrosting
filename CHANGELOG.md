@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.6-alpha
+- Fix missing permission check when `uri_account_settings` is not in role (#768)
+
 ## v4.1.5-alpha
 - Spanish language support (#770)
 - Show current filter in select-menu filters (#744)
