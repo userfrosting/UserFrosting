@@ -10,6 +10,7 @@
 $(document).ready(function() {
     // Set up table of activities
     $("#widget-activities").ufTable({
-        dataUrl: site.uri.public + "/api/activities"
+        dataUrl: site.uri.public + "/api/activities",
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 });

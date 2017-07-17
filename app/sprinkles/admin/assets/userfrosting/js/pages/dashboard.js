@@ -29,12 +29,14 @@ $(document).ready(function() {
 
     // Table of site activities
     $("#widget-activities").ufTable({
-        dataUrl: site.uri.public + "/api/activities"
+        dataUrl: site.uri.public + "/api/activities",
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 
     // Table of users in current user's group
     $("#widget-group-users").ufTable({
-        dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users'
+        dataUrl: site.uri.public + "/api/groups/g/" + page.group_slug + "/users",
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 
     // Bind user creation button

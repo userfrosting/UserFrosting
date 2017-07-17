@@ -13,6 +13,7 @@ $(document).ready(function() {
 
     // Table of activities
     $("#widget-user-activities").ufTable({
-        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities'
+        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities',
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 });

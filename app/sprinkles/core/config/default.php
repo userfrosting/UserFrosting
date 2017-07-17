@@ -151,6 +151,10 @@
                 'default' => 'en_US'
             ],
             'title'     =>      'UserFrosting',
+            // Global ufTable settings
+            'uf_table' => [
+                'use_loading_transition' => true
+            ],
             // URLs
             'uri' => [
                 'base' => [

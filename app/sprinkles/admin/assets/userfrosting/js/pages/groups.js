@@ -10,7 +10,8 @@
 $(document).ready(function() {
 
     $("#widget-groups").ufTable({
-        dataUrl: site.uri.public + "/api/groups"
+        dataUrl: site.uri.public + "/api/groups",
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 
     // Bind creation button

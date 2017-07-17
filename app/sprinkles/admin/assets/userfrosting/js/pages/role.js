@@ -12,10 +12,12 @@ $(document).ready(function() {
     bindRoleButtons($("#view-role"));
 
     $("#widget-role-permissions").ufTable({
-        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/permissions'
+        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/permissions',
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 
     $("#widget-role-users").ufTable({
-        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/users'
+        dataUrl: site.uri.public + '/api/roles/r/' + page.role_slug + '/users',
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 });

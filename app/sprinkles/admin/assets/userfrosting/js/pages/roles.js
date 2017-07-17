@@ -10,7 +10,8 @@
 $(document).ready(function() {
     // Set up table of roles
     $("#widget-roles").ufTable({
-        dataUrl: site.uri.public + "/api/roles"
+        dataUrl: site.uri.public + "/api/roles",
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 
     // Bind creation button

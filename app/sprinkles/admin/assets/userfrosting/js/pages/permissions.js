@@ -10,6 +10,7 @@
 $(document).ready(function() {
     // Set up table of permissions
     $("#widget-permissions").ufTable({
-        dataUrl: site.uri.public + "/api/permissions"
+        dataUrl: site.uri.public + "/api/permissions",
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 });

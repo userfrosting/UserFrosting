@@ -13,7 +13,8 @@ $(document).ready(function() {
 
     // Table of users in this group
     $("#widget-group-users").ufTable({
-        dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users'
+        dataUrl: site.uri.public + '/api/groups/g/' + page.group_slug + '/users',
+        useLoadingTransition: site.uf_table.use_loading_transition
     });
 
     // Bind user table buttons
