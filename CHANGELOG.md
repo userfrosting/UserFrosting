@@ -2,6 +2,10 @@
 
 ## v4.1.6-alpha
 - Fix missing permission check when `uri_account_settings` is not in role (#768)
+- Add `getLastRow` method and `transformDropdownSelection` option to `ufCollection`
+- Add `withoutGlobalScopes` to `Syncable::sync`
+- Add option to use `forceCreate` in `Syncable::sync`
+- Add option to use custom key in `Syncable::sync`
 
 ## v4.1.5-alpha
 - Spanish language support (#770)

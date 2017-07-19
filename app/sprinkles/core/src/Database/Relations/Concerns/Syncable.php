@@ -18,13 +18,23 @@ use Illuminate\Database\Eloquent\Collection;
  */
 trait Syncable
 {
-    public function sync($data, $deleting = true)
+    /**
+     * Synchronizes an array of data for related models with a parent model.
+     *
+     * @param mixed[] $data
+     * @param bool $deleting          Delete models from the database that are not represented in the input data.
+     * @param bool $forceCreate       Ignore mass assignment restrictions on child models.
+     * @param string $relatedKeyName  The primary key used to determine which child models are new, updated, or deleted.
+     */
+    public function sync($data, $deleting = true, $forceCreate = false, $relatedKeyName = null)
     {
         $changes = [
             'created' => [], 'deleted' => [], 'updated' => [],
         ];
 
-        $relatedKeyName = $this->related->getKeyName();
+        if (is_null($relatedKeyName)) {
+            $relatedKeyName = $this->related->getKeyName();
+        }
 
         // First we need to attach any of the associated models that are not currently
         // in the child entity table. We'll spin through the given IDs, checking to see
@@ -32,7 +42,7 @@ trait Syncable
         $current = $this->newQuery()->pluck(
             $relatedKeyName
         )->all();
-    
+
         // Separate the submitted data into "update" and "new"
         $updateRows = [];
         $newRows = [];
@@ -59,14 +69,21 @@ trait Syncable
 
         // Delete any non-matching rows
         if ($deleting && count($deleteIds) > 0) {
-            $this->getRelated()->destroy($deleteIds);
+            // Remove global scopes to avoid ambiguous keys
+            $this->getRelated()
+                 ->withoutGlobalScopes()
+                 ->whereIn($relatedKeyName, $deleteIds)
+                 ->delete();
 
             $changes['deleted'] = $this->castKeys($deleteIds);
         }
 
         // Update the updatable rows
         foreach ($updateRows as $id => $row) {
-            $this->getRelated()->where($relatedKeyName, $id)
+            // Remove global scopes to avoid ambiguous keys
+            $this->getRelated()
+                 ->withoutGlobalScopes()
+                 ->where($relatedKeyName, $id)
                  ->update($row);
         }
         
@@ -75,7 +92,11 @@ trait Syncable
         // Insert the new rows
         $newIds = [];
         foreach ($newRows as $row) {
-            $newModel = $this->create($row);
+            if ($forceCreate) {
+                $newModel = $this->forceCreate($row);
+            } else {
+                $newModel = $this->create($row);
+            }
             $newIds[] = $newModel->$relatedKeyName;
         }
 

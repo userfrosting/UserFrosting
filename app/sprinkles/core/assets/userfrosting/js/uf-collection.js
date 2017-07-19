@@ -15,6 +15,7 @@
  * @param {string} dropdown.theme The select2 theme to use for the dropdown menu.  Defaults to "default".
  * @param {string} dropdown.placeholder Placeholder text to use in the dropdown menu before a selection is made.  Defaults to "Item".
  * @param {string} dropdown.width Width of the dropdown selector, when used.  Defaults to "100%".
+ * @param {callback} transformDropdownSelection Custom transformation on objects from the dropdown before passing them to render in the collection table.
  * @param {Object} dropdownControl a jQuery selector specifying the dropdown select2 control.  Defaults to looking for a .js-select-new element inside the parent object.
  * @param {string} dropdownTemplate A Handlebars template to use for rendering the dropdown items.
  * @param {Object} rowContainer a jQuery selector specifying the place where rows should be added.  Defaults to looking for the first tbody element inside the parent object.
@@ -67,6 +68,9 @@
                 theme           : "default",
                 width           : "100%",
             },
+            transformDropdownSelection: function (item) {
+                return item;
+            },
             dropdownControl : null,
             dropdownTemplate: "",
             rowContainer    : null,
@@ -89,8 +93,11 @@
         // Detect changes to element attributes
         this.$element.attrchange({ callback: function (event) { this.element = event.target; }.bind(this) });
 
-        // Internal counter for adding rows to the collection.  Gets updated every time `addRow` is called.
+        // Internal counter for adding rows to the collection.  Gets updated every time `_createRow` is called.
         this._rownum = 0;
+
+        // Keep track of last added row
+        this._lastRow = null;
 
         // Handlebars template method
         this._dropdownTemplateCompiled = Handlebars.compile(this.settings.dropdownTemplate);
@@ -103,6 +110,7 @@
         // Add bindings for any rows already present in the DOM
         $.each(this.settings.rowContainer.find('.uf-collection-row'), $.proxy(function(idx, row) {
             this._onNewRow($(row));
+            this._lastRow = row;
         }, this));
 
         // If we're using dropdown options, create the select2 and add bindings to add a new row when an option is selected
@@ -110,13 +118,15 @@
             this._initDropdownField(this.settings.dropdownControl);
 
             this.settings.dropdownControl.on("select2:select", $.proxy(function(e) {
-                var item = $(e.target).select2("data");
-                this.addRow(item);
+                var item = $(e.target).select2("data")[0];
+                // Apply any transformations before rendering as a row
+                var transformed = this.settings.transformDropdownSelection(item);
+                this._createRow(transformed);
             }, this));
         }
         else {
             // Otherwise, add a new virgin row
-            this.addVirginRow();
+            this._createVirginRow();
         }
 
         return this;
@@ -128,7 +138,13 @@
          * Add a new row to the collection, optionally passing in prepopulated template data.
          */
         addRow: function(options) {
-            this._createRow(options);
+            // Grab params, if any
+            var params = {};
+            if (typeof options !== 'undefined') {
+                params = options[0];
+            }
+
+            this._createRow(params);
 
             return this.$element;
         },
@@ -138,7 +154,13 @@
          * When a virgin row is brought into focus, it loses its virgin status and a new virgin row is created.
          */
         addVirginRow: function(options) {
-            this._createVirginRow(options);
+            // Grab params, if any
+            var params = {};
+            if (typeof options !== 'undefined') {
+                params = options[0];
+            }
+
+            this._createVirginRow(params);
 
             return this.$element;
         },
@@ -157,6 +179,12 @@
             return this.settings.dropdownControl;
         },
         /**
+         * Get the last row added in the collection.
+         */
+        getLastRow: function () {
+            return this._lastRow;
+        },
+        /**
          * Touch a target row.
          */
         touchRow: function(row) {
@@ -167,16 +195,12 @@
         /**
          * Create a new row and attach the handler for deletion to the js-delete-row button
          */
-        _createRow: function(options) {
-            var params = {
+        _createRow: function(params) {
+            params = $.extend(true,
+            {
                 id: "",
                 rownum: this._rownum
-            };
-
-            // Merge in any prepopulated values for the row
-            if (typeof options !== 'undefined') {
-                $.extend(true, params, options[0]);
-            }
+            }, params);
 
             // Generate the row and append to table
             var newRowTemplate = this._rowTemplateCompiled(params),
@@ -190,6 +214,8 @@
                 newRow = $(newRowTemplate).appendTo(this.settings.rowContainer);
             }
 
+            this._lastRow = newRow;
+
             // Add bindings and fire event
             this._onNewRow(newRow);
 
@@ -198,9 +224,9 @@
         /**
          * Create a new, blank row with the 'virgin' status.
          */
-        _createVirginRow: function(options) {
+        _createVirginRow: function(params) {
             // Generate the row and append to table
-            var newRow = this._createRow(options);
+            var newRow = this._createRow(params);
 
             // Set the row's 'virgin' status
             newRow.addClass('uf-collection-row-virgin');
