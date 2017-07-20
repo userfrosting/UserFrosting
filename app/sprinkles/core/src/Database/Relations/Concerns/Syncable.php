@@ -100,7 +100,7 @@ trait Syncable
             $newIds[] = $newModel->$relatedKeyName;
         }
 
-        $changes['created'][] = $this->castKeys($newIds);
+        $changes['created'] = $this->castKeys($newIds);
 
         return $changes;
     }

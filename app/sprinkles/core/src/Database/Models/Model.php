@@ -280,7 +280,7 @@ abstract class Model extends LaravelModel
     /**
      * Overrides Laravel's base Model to return our custom query builder object.
      *
-     * @return \UserFrosting\Sprinkles\Core\Model\UFBuilder
+     * @return \UserFrosting\Sprinkles\Core\Database\Builder
      */
     protected function newBaseQueryBuilder()
     {
