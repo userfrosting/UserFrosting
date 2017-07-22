@@ -92,17 +92,18 @@ class DatabaseSyncableTest extends TestCase
         $relation->shouldReceive('newQuery')->once()->andReturn($query);
         $query->shouldReceive('pluck')->once()->with('id')->andReturn(new BaseCollection([1, 2, 3]));
 
-        // Test deletions of items removed from relationship (1)
-        $relation->getRelated()->shouldReceive('withoutGlobalScopes')->andReturn($query);
-        $query->shouldReceive('whereIn')->with('id', [1])->andReturn($query);
-        $query->shouldReceive('delete')->andReturn($query);
+        // withoutGlobalScopes will get called exactly 3 times
+        $relation->getRelated()->shouldReceive('withoutGlobalScopes')->times(3)->andReturn($query);
 
-        // Test updates to existing items in relationship (2,3)
-        $relation->getRelated()->shouldReceive('withoutGlobalScopes')->andReturn($query);        
-        $query->shouldReceive('where')->with('id', 2)->andReturn($query);
-        $query->shouldReceive('update')->with(['id' => 2, 'species' => 'Tyto'])->andReturn($query);
-        $query->shouldReceive('where')->with('id', 3)->andReturn($query);
-        $query->shouldReceive('update')->with(['id' => 3, 'species' => 'Megascops'])->andReturn($query);
+        // Test deletions of items removed from relationship (1)
+        $query->shouldReceive('whereIn')->once()->with('id', [1])->andReturn($query);
+        $query->shouldReceive('delete')->once()->andReturn($query);
+
+        // Test updates to existing items in relationship (2,3)      
+        $query->shouldReceive('where')->once()->with('id', 2)->andReturn($query);
+        $query->shouldReceive('update')->once()->with(['id' => 2, 'species' => 'Tyto'])->andReturn($query);
+        $query->shouldReceive('where')->once()->with('id', 3)->andReturn($query);
+        $query->shouldReceive('update')->once()->with(['id' => 3, 'species' => 'Megascops'])->andReturn($query);
 
         // Test creation of new items ('x')
         $model = $this->expectCreatedModel($relation, [
