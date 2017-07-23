@@ -24,22 +24,6 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  */
 class SprunjeTest extends TestCase
 {
-    protected $schemaName = 'integration';
-
-    /**
-     * Setup the database schema.
-     *
-     * @return void
-     */
-    public function setUp()
-    {
-        // Boot parent TestCase, which will set up the database and connections for us.
-        parent::setUp();
-
-        // Boot database
-        $this->ci->db;
-    }
-
     public function tearDown()
     {
         m::close();
@@ -111,10 +95,9 @@ class SprunjeStub extends Sprunje
     {
         // We use a partial mock for Builder, because we need to be able to run some of its actual methods.
         // For example, we need to be able to run the `where` method with a closure.
-        $connection = DB::connection('integration');
-        $builder = m::mock(Builder::class, [$connection]);
-
+        $builder = m::mock(Builder::class);
         $builder->makePartial();
+
         return $builder->from('table');
     }
 }
