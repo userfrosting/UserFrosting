@@ -26,58 +26,6 @@ class DatabaseSyncableTest extends TestCase
     }
 
     /**
-     * @dataProvider syncMethodListProvider
-     */
-     /*
-    public function testSyncMethodSyncsIntermediateTableWithGivenArray($list)
-    {
-        $relation = $this->getMockBuilder('Illuminate\Database\Eloquent\Relations\BelongsToMany')->setMethods(['attach', 'detach'])->setConstructorArgs($this->getRelationArguments())->getMock();
-
-        $query = m::mock('stdClass');
-        $query->shouldReceive('from')->once()->with('user_role')->andReturn($query);
-        $query->shouldReceive('where')->once()->with('user_id', 5)->andReturn($query);
-        $relation->getQuery()->shouldReceive('getQuery')->andReturn($mockQueryBuilder = m::mock('StdClass'));
-        $mockQueryBuilder->shouldReceive('newQuery')->once()->andReturn($query);
-        $query->shouldReceive('pluck')->once()->with('role_id')->andReturn(new BaseCollection([5, 2, 3]));
-        $relation->expects($this->once())->method('attach')->with($this->equalTo('x'), $this->equalTo([]), $this->equalTo(false));
-        $relation->expects($this->once())->method('detach')->with($this->equalTo([5]));
-        $relation->getRelated()->shouldReceive('touches')->andReturn(false);
-        $relation->getParent()->shouldReceive('touches')->andReturn(false);
-
-        //print_r($list);
-        $this->assertEquals(['attached' => ['x'], 'detached' => [5], 'updated' => []], $relation->sync($list));
-    }
-
-    public function getRelationArguments()
-    {
-        $parent = m::mock('Illuminate\Database\Eloquent\Model');
-        $parent->shouldReceive('getKey')->andReturn(5);
-        $parent->shouldReceive('getCreatedAtColumn')->andReturn('created_at');
-        $parent->shouldReceive('getUpdatedAtColumn')->andReturn('updated_at');
-        $builder = m::mock('Illuminate\Database\Eloquent\Builder');
-        $related = m::mock('Illuminate\Database\Eloquent\Model');
-        $builder->shouldReceive('getModel')->andReturn($related);
-        $related->shouldReceive('getTable')->andReturn('roles');
-        $related->shouldReceive('getKeyName')->andReturn('id');
-        $related->shouldReceive('newPivot')->andReturnUsing(function () {
-            $reflector = new ReflectionClass('Illuminate\Database\Eloquent\Relations\Pivot');
-            return $reflector->newInstanceArgs(func_get_args());
-        });
-        $builder->shouldReceive('join')->once()->with('user_role', 'roles.id', '=', 'user_role.role_id');
-        $builder->shouldReceive('where')->once()->with('user_role.user_id', '=', 5);
-        return [$builder, $parent, 'user_role', 'user_id', 'role_id', 'relation_name'];
-    }
-
-    public function syncMethodListProvider()
-    {
-        return [
-            [[2, 3, 'x']],
-            [['2', '3', 'x']],
-        ];
-    }
-    */
-
-    /**
      * @dataProvider syncMethodHasManyListProvider
      */
     public function testSyncMethod($list)
@@ -85,7 +33,7 @@ class DatabaseSyncableTest extends TestCase
         $relation = $this->getRelation();
 
         // Simulate determination of related key from builder
-        $relation->getRelated()->shouldReceive('getKeyName')->andReturn('id');
+        $relation->getRelated()->shouldReceive('getKeyName')->once()->andReturn('id');
 
         // Simulate fetching of current relationships (1,2,3)
         $query = m::mock('stdClass');

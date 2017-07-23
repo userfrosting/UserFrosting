@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 class DatabaseTests extends TestCase
 {
-    protected $schemaName = 'integration';
+    protected $schemaName = 'test_integration';
 
     /**
      * Setup the database schema.
@@ -137,7 +137,7 @@ class DatabaseTests extends TestCase
      *
      * @return \Illuminate\Database\Connection
      */
-    protected function connection($connection = 'integration')
+    protected function connection($connection = 'test_integration')
     {
         return Model::getConnectionResolver()->connection($connection);
     }
@@ -147,7 +147,7 @@ class DatabaseTests extends TestCase
      *
      * @return \Illuminate\Database\Schema\Builder
      */
-    protected function schema($connection = 'integration')
+    protected function schema($connection = 'test_integration')
     {
         return $this->connection($connection)->getSchemaBuilder();
     }
@@ -158,7 +158,7 @@ class DatabaseTests extends TestCase
  */
 class EloquentTestModel extends Model
 {
-    protected $connection = 'integration';
+    protected $connection = 'test_integration';
 }
 
 class EloquentTestUser extends EloquentTestModel

@@ -12,7 +12,7 @@
             ]
         ],
         'db' => [
-            'integration' => [
+            'test_integration' => [
                 'driver'    => 'sqlite',
                 'database'  => ':memory:',
             ]
