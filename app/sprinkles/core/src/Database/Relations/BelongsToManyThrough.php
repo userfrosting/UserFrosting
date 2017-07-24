@@ -61,6 +61,11 @@ class BelongsToManyThrough extends BelongsToMany
         parent::__construct($query, $parent, $table, $foreignKey, $relatedKey, $relationName);
     }
 
+    public function withVia()
+    {
+        error_log("Oh hi");
+    }
+
     /**
      * Set the constraints for an eager load of the relation.
      *
@@ -127,27 +132,22 @@ class BelongsToManyThrough extends BelongsToMany
      */
     public function match(array $models, Collection $results, $relation)
     {
-        // Get ids of child models (e.g., users) matching any of the parent models (e.g., permissions)
-        $childPivots = $this->getPivotKeys($results, $this->relatedKey);
-
-        // Fetch the child models
-        $childModels = $this->related->whereIn($this->related->getQualifiedKeyName(), $childPivots)->get();
-
-        // Now for each child model (e.g. user), we want to get their own children (e.g. roles),
+        // For each child model (e.g. user), we want to get their own children (e.g. roles),
         // but only those which match the grandparent permission.
 
         // Start by getting all grandchild models from the result set matching any of the parent models.
-        $grandchildPivots = $this->getPivotKeys($results, $this->foreignKey);
+        $grandchildPivots = $this->getPivotKeys($results->all(), $this->foreignKey);
         $grandChildModelClass = $this->intermediateRelation->getRelated();
         $grandchildModels = $this->getPivotModels($grandChildModelClass, $grandchildPivots);
-
-        // Build dictionary of parent (e.g. permission) to child (e.g. user) relationships
-        $dictionary = $this->buildDictionary($results);
 
         // Build dictionary of child (e.g. user) to grandchild (e.g. role) relationships
         $grandchildDictionary = $this->buildGrandchildDictionary($results, $grandchildModels);
 
         $grandchildRelation = $this->intermediateRelation->getRelationName();
+
+
+        // Build dictionary of parent (e.g. permission) to child (e.g. user) relationships
+        $dictionary = $this->buildDictionary($results);
 
         // Once we have an array dictionary of child objects we can easily match the
         // children back to their parent using the dictionary and the keys on the
@@ -158,6 +158,9 @@ class BelongsToManyThrough extends BelongsToMany
 
                 // Match up the children in the child collection with their related grandchild models
                 $childCollection = $this->matchChildModels($grandchildDictionary[$key], $items, $grandchildRelation);
+                
+                // If we don't care to load the via relationships
+                //$childCollection = $this->related->newCollection($this->getUnique($items));
 
                 $model->setRelation(
                     $relation, $childCollection
@@ -229,19 +232,21 @@ class BelongsToManyThrough extends BelongsToMany
 
         $models = $builder->getModels();
 
+        // Hydrate the pivot models so we can load the via models
+        $this->hydratePivotRelation($models);
+
+
         // Find the related child entities (roles) for all models (users)
-        $childPivots = $this->getUniquePivots($models, $this->foreignKey);
+        $childPivots = $this->getPivotKeys($models, $this->foreignKey);
 
         // Load children for each model
         $childModelClass = $this->intermediateRelation->getRelated();
         $childModels = $this->getPivotModels($childModelClass, $childPivots);
 
-        $childPivotKeyName = "pivot_{$this->foreignKey}";
-
         // Now for each model (user), we will build out a dictionary of their children (roles)
         $dictionary = [];
         foreach ($models as $model) {
-            $childPivotKey = $model->$childPivotKeyName;
+            $childPivotKey = $model->pivot->{$this->foreignKey};
             $dictionary[$model->id][] = $childModels[$childPivotKey];
         }
 
@@ -249,9 +254,8 @@ class BelongsToManyThrough extends BelongsToMany
         $childRelation = $this->intermediateRelation->getRelationName();
         $models = $this->matchChildModels($dictionary, $models, $childRelation);
 
-        $models = $this->getUnique($models);
 
-        $this->hydratePivotRelation($models);
+        $models = $this->getUnique($models);
 
         // If we actually found models we will also eager load any relationships that
         // have been specified as needing to be eager loaded. This will solve the
@@ -373,6 +377,7 @@ class BelongsToManyThrough extends BelongsToMany
      */
     protected function getPivotModels($pivotClass, $pivotKeys)
     {
+        // Need to provide a way to add `with` eager loads on the pivot models
         return $pivotClass
             ->whereIn($pivotClass->getQualifiedKeyName(), $pivotKeys)
             ->get()
@@ -396,21 +401,6 @@ class BelongsToManyThrough extends BelongsToMany
             }
         }
         return $result;
-    }
-
-    /**
-     * Generates an array of unique pivot ids on a collection of models.
-     */
-    protected function getUniquePivots($models, $keyName)
-    {
-        $pivotKeyName = "pivot_$keyName";
-
-        $pivots = [];
-        foreach ($models as $model) {
-            $pivots[] = $model->$pivotKeyName;
-        }
-
-        return array_unique($pivots);
     }
 
     /**
