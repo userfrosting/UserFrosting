@@ -72,7 +72,7 @@ trait Unique
         // Remove duplicate models from collection
         $models = $this->related->newCollection($models)->unique();
 
-        $models = $models->toArray();
+        $models = $models->all();
 
         // If we actually found models we will also eager load any relationships that
         // have been specified as needing to be eager loaded. This will solve the

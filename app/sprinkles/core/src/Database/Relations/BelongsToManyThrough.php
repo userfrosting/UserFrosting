@@ -294,7 +294,7 @@ class BelongsToManyThrough extends BelongsToMany
         // any via models.
         $this->unsetPivots($models);
 
-        $models = $models->toArray();
+        $models = $models->all();
 
         // If we actually found models we will also eager load any relationships that
         // have been specified as needing to be eager loaded. This will solve the

@@ -386,7 +386,7 @@ class DatabaseTests extends TestCase
 
         $tasks = $user->assignmentTasks;
 
-        $this->assertEquals([
+        $uniqueTasksAssertion = [
             [
                 'id' => 2,
                 'name' => 'Chopping',
@@ -403,7 +403,13 @@ class DatabaseTests extends TestCase
                     'task_id' => 3
                 ]
             ]
-        ], $tasks->toArray());
+        ];
+
+        $this->assertEquals($uniqueTasksAssertion, $tasks->toArray());
+
+        // Test 'with' method
+        $users = EloquentTestUser::with('assignmentTasks')->get();
+        $this->assertEquals($uniqueTasksAssertion, $users[0]->assignmentTasks->toArray());
     }
 
     /**
