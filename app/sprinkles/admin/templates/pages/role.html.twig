@@ -29,6 +29,13 @@
                                                 <i class="fa fa-edit fa-fw"></i> {{translate('EDIT')}}
                                             </a>
                                         </li>
+                                        {% if 'permissions' not in tools.hidden %}
+                                        <li>
+                                            <a href="#" class="js-role-permissions" data-slug="{{role.slug}}">
+                                            <i class="fa fa-key"></i> {{translate("PERMISSION.MANAGE")}}
+                                            </a>
+                                        </li>
+                                        {% endif %}
                                         {% if 'delete' not in tools.hidden %}
                                             <li>
                                                 <a href="#" class="js-role-delete" data-slug="{{role.slug}}">
