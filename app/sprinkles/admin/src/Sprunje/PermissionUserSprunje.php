@@ -57,7 +57,7 @@ class PermissionUserSprunje extends Sprunje
         }
 
         // Get permission users
-        $query = $permission->users();
+        $query = $permission->users()->withVia('roles_via');
 
         return $query;
     }
