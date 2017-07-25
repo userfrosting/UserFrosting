@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * A BelongsToMany relationship that constrains on the value of an additional foreign key in the pivot table.
+ * This has been superseded by the BelongsToTernary relationship since 4.1.6.
  *
+ * @deprecated since 4.1.6
  * @author Alex Weissman (https://alexanderweissman.com)
  * @link https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
  */

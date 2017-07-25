@@ -3,9 +3,12 @@
 ## v4.1.6-alpha
 - Fix missing permission check when `uri_account_settings` is not in role (#768)
 - Add `getLastRow` method and `transformDropdownSelection` option to `ufCollection`
+- Factor out custom relation methods into HasRelationships trait on Model
 - Add `withoutGlobalScopes` to `Syncable::sync`
 - Add option to use `forceCreate` in `Syncable::sync`
 - Add option to use custom key in `Syncable::sync`
+- Complete redesign of BelongsToManyThrough
+- Deprecate BelongsToManyConstrained
 
 ## v4.1.5-alpha
 - Spanish language support (#770)
