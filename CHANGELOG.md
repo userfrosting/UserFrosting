@@ -3,6 +3,7 @@
 ## v4.1.6-alpha
 - Fix missing permission check when `uri_account_settings` is not in role (#768)
 - Add `getLastRow` method and `transformDropdownSelection` option to `ufCollection`
+- Fix missing slug for permissions in "manage permissions" dropdown
 - Factor out custom relation methods into HasRelationships trait on Model
 - Add `withoutGlobalScopes` to `Syncable::sync`
 - Add option to use `forceCreate` in `Syncable::sync`
