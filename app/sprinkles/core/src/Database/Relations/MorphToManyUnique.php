@@ -7,16 +7,16 @@
  */
 namespace UserFrosting\Sprinkle\Core\Database\Relations;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique;
 
 /**
- * A BelongsToMany relationship that reduces the related members to a unique (by primary key) set.
+ * A MorphToMany relationship that reduces the related members to a unique (by primary key) set.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @link https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
+ * @link https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/MorphToMany.php
  */
-class BelongsToManyUnique extends BelongsToMany
+class MorphToManyUnique extends MorphToMany
 {
     use Unique;
 }

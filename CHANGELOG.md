@@ -5,12 +5,14 @@
 - Add `getLastRow` method and `transformDropdownSelection` option to `ufCollection`
 - Fix missing slug for permissions in "manage permissions" dropdown
 - Add "manage permissions" to role page menu
-- Factor out custom relation methods into HasRelationships trait on Model
+- Factor out custom relation methods into `HasRelationships` trait on `Model`
 - Add `withoutGlobalScopes` to `Syncable::sync`
 - Add option to use `forceCreate` in `Syncable::sync`
 - Add option to use custom key in `Syncable::sync`
-- Complete redesign of BelongsToManyThrough
-- Deprecate BelongsToManyConstrained
+- Complete redesign of `BelongsToManyThrough` - possible BC for a few people, as you now need to load the "via" models explicitly using `withVia`
+- Deprecate `BelongsToManyConstrained`
+- Add `MorphToManyUnique`
+- Integration tests now use an in-memory sqlite database (`test_integration`) by default
 
 ## v4.1.5-alpha
 - Spanish language support (#770)

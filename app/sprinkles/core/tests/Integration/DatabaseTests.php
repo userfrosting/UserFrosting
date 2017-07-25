@@ -89,9 +89,15 @@ class DatabaseTests extends TestCase
         });
 
         $this->schema($this->schemaName)->create('assignments', function($table) {
-            $table->integer('user_id')->unsigned();
             $table->integer('task_id')->unsigned();
             $table->integer('location_id')->unsigned();
+            $table->morphs('assignable');
+        });
+
+        $this->schema($this->schemaName)->create('jobs', function($table) {
+            $table->integer('user_id')->unsigned();
+            $table->integer('location_id')->unsigned();
+            $table->integer('role_id')->unsigned();
         });
     }
 
@@ -313,6 +319,93 @@ class DatabaseTests extends TestCase
         $this->assertBelongsToManyThroughForAlex($usersWithPermissions[1]['permissions']);
     }
 
+    public function testBelongsToManyUnique()
+    {
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $this->generateLocations();
+        $this->generateRoles();
+        $this->generateJobs();
+
+        $roles = $user->jobRoles;
+
+        $this->assertEquals([
+            [
+                'id' => 2,
+                'slug' => 'soldier',
+                'pivot' => [
+                    'user_id' => 1,
+                    'role_id' => 2
+                ]
+            ],
+            [
+                'id' => 3,
+                'slug' => 'egg-layer',
+                'pivot' => [
+                    'user_id' => 1,
+                    'role_id' => 3
+                ]
+            ]
+        ], $roles->toArray());
+    }
+
+    public function testMorphsToManyUnique()
+    {
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $this->generateTasks();
+        $this->generateLocations();
+
+        $assignment1 = EloquentTestAssignment::create([
+            'task_id' => 2,
+            'location_id' => 1,
+            'assignable_id' => 1,
+            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+        ]);
+
+        $assignment2 = EloquentTestAssignment::create([
+            'task_id' => 2,
+            'location_id' => 2,
+            'assignable_id' => 1,
+            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+        ]);
+
+        $assignment3 = EloquentTestAssignment::create([
+            'task_id' => 3,
+            'location_id' => 2,
+            'assignable_id' => 1,
+            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+        ]);
+
+        $assignment4 = EloquentTestAssignment::create([
+            'task_id' => 3,
+            'location_id' => 1,
+            'assignable_id' => 2,
+            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+        ]);
+
+        $tasks = $user->assignmentTasks;
+
+        $this->assertEquals([
+            [
+                'id' => 2,
+                'name' => 'Chopping',
+                'pivot' => [
+                    'assignable_id' => 1,
+                    'task_id' => 2
+                ]
+            ],
+            [
+                'id' => 3,
+                'name' => 'Baleing',
+                'pivot' => [
+                    'assignable_id' => 1,
+                    'task_id' => 3
+                ]
+            ]
+        ], $tasks->toArray());
+    }
+
     /**
      * Helpers...
      */
@@ -337,49 +430,124 @@ class DatabaseTests extends TestCase
         return $this->connection($connection)->getSchemaBuilder();
     }
 
+    protected function generateRoles()
+    {
+        return [
+            EloquentTestRole::create([
+                'id' => 1,
+                'slug' => 'forager'
+            ]),
+
+            EloquentTestRole::create([
+                'id' => 2,
+                'slug' => 'soldier'
+            ]),
+
+            EloquentTestRole::create([
+                'id' => 3,
+                'slug' => 'egg-layer'
+            ])
+        ];
+    }
+
+    protected function generatePermissions()
+    {
+        return [
+            EloquentTestPermission::create([
+                'id' => 1,
+                'slug' => 'uri_harvest'
+            ]),
+
+            EloquentTestPermission::create([
+                'id' => 2,
+                'slug' => 'uri_spit_acid'
+            ]),
+
+            EloquentTestPermission::create([
+                'id' => 3,
+                'slug' => 'uri_slash'
+            ]),
+
+            EloquentTestPermission::create([
+                'id' => 4,
+                'slug' => 'uri_royal_jelly'
+            ])
+        ];
+    }
+
     protected function generateRolesWithPermissions()
     {
-        $role1 = EloquentTestRole::create([
-            'id' => 1,
-            'slug' => 'forager'
-        ]);
+        $roles = $this->generateRoles();
 
-        $role2 = EloquentTestRole::create([
-            'id' => 2,
-            'slug' => 'soldier'
-        ]);
+        $this->generatePermissions();
 
-        $role3 = EloquentTestRole::create([
-            'id' => 3,
-            'slug' => 'egg-layer'
-        ]);
-
-        $permission1 = EloquentTestPermission::create([
-            'id' => 1,
-            'slug' => 'uri_harvest'
-        ]);
-
-        $permission2 = EloquentTestPermission::create([
-            'id' => 2,
-            'slug' => 'uri_spit_acid'
-        ]);
-
-        $permission3 = EloquentTestPermission::create([
-            'id' => 3,
-            'slug' => 'uri_slash'
-        ]);
-
-        $permission4 = EloquentTestPermission::create([
-            'id' => 4,
-            'slug' => 'uri_royal_jelly'
-        ]);
-
-        $role1->permissions()->attach([1,2]);
+        $roles[0]->permissions()->attach([1,2]);
         // We purposefully want a permission that belongs to more than one role
-        $role2->permissions()->attach([2,3]);
-        $role3->permissions()->attach([2,4]);
+        $roles[1]->permissions()->attach([2,3]);
+        $roles[2]->permissions()->attach([2,4]);
 
-        return [$role1, $role2, $role3];
+        return $roles;
+    }
+
+    protected function generateJobs()
+    {
+        return [
+            EloquentTestJob::create([
+                'role_id' => 2,
+                'location_id' => 1,
+                'user_id' => 1
+            ]),
+            EloquentTestJob::create([
+                'role_id' => 2,
+                'location_id' => 2,
+                'user_id' => 1
+            ]),
+            EloquentTestJob::create([
+                'role_id' => 3,
+                'location_id' => 2,
+                'user_id' => 1
+            ]),
+            EloquentTestJob::create([
+                'role_id' => 3,
+                'location_id' => 1,
+                'user_id' => 2
+            ])
+        ];
+    }
+
+    protected function generateLocations()
+    {
+        return [
+            EloquentTestLocation::create([
+                'id' => 1,
+                'name' => 'Hatchery'
+            ]),
+
+            EloquentTestLocation::create([
+                'id' => 2,
+                'name' => 'Nexus'
+            ])
+        ];
+    }
+
+    protected function generateTasks()
+    {
+        return [
+            EloquentTestTask::create([
+                'id' => 1,
+                'name' => 'Digging'
+            ]),
+
+            EloquentTestTask::create([
+                'id' => 2,
+                'name' => 'Chopping'
+            ]),
+
+            EloquentTestTask::create([
+                'id' => 3,
+                'name' => 'Baleing'
+            ])
+        ];
     }
 
     protected function assertBelongsToManyThroughForDavid($permissions)
@@ -497,32 +665,33 @@ class EloquentTestUser extends EloquentTestModel
         );
     }
 
-    public function tasks()
+    /**
+     * Get all of the user's unique tasks.
+     */
+    public function assignmentTasks()
     {
-        return $this->belongsToManyUnique(
+        $relation = $this->morphToManyUnique(
             'UserFrosting\Tests\Integration\EloquentTestTask',
+            'assignable',
             'assignments',
-            'user_id',
-            'task_id'
+            null,
+            'task_id'   // Need to explicitly set this, since it doesn't match our related model name
         );
+
+        return $relation;
     }
 
     /**
-     * Get all of the user's tasks, grouped by location.
+     * Get all of the user's unique roles based on their jobs.
      */
-    public function assignments()
+    public function jobRoles()
     {
-        $relation = $this->belongsToManyConstrained(
-            'UserFrosting\Tests\Integration\EloquentTestTask',
-            'location_id',
-            'assignments',
-            'location_id',
-            'task_id'
+        $relation = $this->belongsToManyUnique(
+            'UserFrosting\Tests\Integration\EloquentTestRole',
+            'jobs',
+            'user_id',
+            'role_id'
         );
-
-        //Need to make sure we add the `enrollable_id` pivot for BelongsToManyConstrained to match
-        //$relation = $relation->select('tasks.*')
-        //                    ->withPivot('task_id');
 
         return $relation;
     }
@@ -603,5 +772,19 @@ class EloquentTestLocation extends EloquentTestModel
 class EloquentTestAssignment extends EloquentTestModel
 {
     protected $table = 'assignments';
+    protected $guarded = [];
+
+    /**
+     * Get all of the users that are assigned to this assignment.
+     */
+    public function users()
+    {
+        return $this->morphedByMany('UserFrosting\Tests\Integration\EloquentTestUser', 'assignable');
+    }
+}
+
+class EloquentTestJob extends EloquentTestModel
+{
+    protected $table = 'jobs';
     protected $guarded = [];
 }
