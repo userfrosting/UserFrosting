@@ -206,19 +206,6 @@ class BelongsToManyThrough extends BelongsToMany
     }
 
     /**
-     * Unset pivots on a collection or array of models.
-     *
-     * @param  \Illuminate\Database\Eloquent\Collection $models
-     * @return void
-     */
-    protected function unsetPivots(Collection $models)
-    {
-        foreach ($models as $model) {
-            unset($model->pivot);
-        }
-    }
-
-    /**
      * Build dictionary of related models keyed by the top-level "parent" id.
      * If there is a "via" query set as well, then also build a two-level dictionary
      * that maps parent ids to arrays of related ids, which in turn map to arrays

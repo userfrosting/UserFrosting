@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.7-alpha
+- Add the `withTernary` method to the `Unique` trait to allow loading nested child models on ternary relationships.
+
 ## v4.1.6-alpha
 - Fix missing permission check when `uri_account_settings` is not in role (#768)
 - Add `getLastRow` method and `transformDropdownSelection` option to `ufCollection`

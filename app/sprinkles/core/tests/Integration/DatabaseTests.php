@@ -421,6 +421,125 @@ class DatabaseTests extends TestCase
         $this->assertEquals($uniqueTasksAssertion, $users[0]->assignmentTasks->toArray());
     }
 
+    public function testBelongsToManyUniqueWithTernary()
+    {
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $this->generateLocations();
+        $this->generateRoles();
+        $this->generateJobs();
+
+        $jobs = $user->jobs()->get();
+
+        $this->assertEquals([
+            [
+                'id' => 2,
+                'slug' => 'soldier',
+                'pivot' => [
+                    'user_id' => 1,
+                    'role_id' => 2
+                ],
+                'locations' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Hatchery'
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Nexus'
+                    ]
+                ]
+            ],
+            [
+                'id' => 3,
+                'slug' => 'egg-layer',
+                'pivot' => [
+                    'user_id' => 1,
+                    'role_id' => 3
+                ],
+                'locations' => [
+                    [
+                        'id' => 2,
+                        'name' => 'Nexus'
+                    ]
+                ]
+            ]
+        ], $jobs->toArray());
+    }
+
+    public function testBelongsToManyUniqueWithTernaryEagerLoad()
+    {
+        $user1 = EloquentTestUser::create(['name' => 'David']);
+        $user2 = EloquentTestUser::create(['name' => 'Alex']);
+
+        $this->generateLocations();
+        $this->generateRoles();
+        $this->generateJobs();
+
+        $users = EloquentTestUser::with('jobs')->get();
+
+        $this->assertEquals([
+            [
+                'id' => 1,
+                'name' => 'David',
+                'jobs' => [
+                    [
+                        'id' => 2,
+                        'slug' => 'soldier',
+                        'pivot' => [
+                            'user_id' => 1,
+                            'role_id' => 2
+                        ],
+                        'locations' => [
+                            [
+                                'id' => 1,
+                                'name' => 'Hatchery'
+                            ],
+                            [
+                                'id' => 2,
+                                'name' => 'Nexus'
+                            ]
+                        ]
+                    ],
+                    [
+                        'id' => 3,
+                        'slug' => 'egg-layer',
+                        'pivot' => [
+                            'user_id' => 1,
+                            'role_id' => 3
+                        ],
+                        'locations' => [
+                            [
+                                'id' => 2,
+                                'name' => 'Nexus'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'id' => 2,
+                'name' => 'Alex',
+                'jobs' => [
+                    [
+                        'id' => 3,
+                        'slug' => 'egg-layer',
+                        'pivot' => [
+                            'user_id' => 2,
+                            'role_id' => 3
+                        ],
+                        'locations' => [
+                            [
+                                'id' => 1,
+                                'name' => 'Hatchery'
+                            ],
+                        ]
+                    ]
+                ]
+            ]
+        ], $users->toArray());
+    }
+
     /**
      * Helpers...
      */
@@ -707,6 +826,21 @@ class EloquentTestUser extends EloquentTestModel
             'user_id',
             'role_id'
         );
+
+        return $relation;
+    }
+
+    /**
+     * Get all of the user's unique roles based on their jobs as a ternary relationship.
+     */
+    public function jobs()
+    {
+        $relation = $this->belongsToManyUnique(
+            EloquentTestRole::class,
+            'jobs',
+            'user_id',
+            'role_id'
+        )->withTernary(EloquentTestLocation::class, null, 'location_id');
 
         return $relation;
     }

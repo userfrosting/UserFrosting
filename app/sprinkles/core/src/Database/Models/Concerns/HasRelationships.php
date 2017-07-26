@@ -148,6 +148,7 @@ trait HasRelationships
 
     /**
      * Define a unique many-to-many relationship.  Similar to a regular many-to-many relationship, but removes duplicate child objects.
+     * Can also be used to implement ternary relationships.
      *
      * {@inheritDoc}
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique
@@ -217,7 +218,7 @@ trait HasRelationships
     /**
      * Define a constrained many-to-many relationship.
      * This is similar to a regular many-to-many, but constrains the child results to match an additional constraint key in the parent object.
-     * This has been superseded by the belongsToTernary relationship since 4.1.6.
+     * This has been superseded by the belongsToManyUnique relationship's `withTernary` method since 4.1.7.
      *
      * @deprecated since 4.1.6
      * @param  string  $related
