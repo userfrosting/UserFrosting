@@ -147,7 +147,8 @@ class AuthorizationManager
         $permissionsInfo = [];
         foreach ($permissions as $permission) {
             $permissionData = array_only($permission->toArray(), ['id', 'slug', 'name', 'conditions', 'description']);
-            $permissionData['roles_via'] = $permission->roles_via->pluck('id')->all();
+            // Remove this until we can find an efficient way to only load these once during debugging
+            //$permissionData['roles_via'] = $permission->roles_via->pluck('id')->all();
             $permissionsInfo[] = $permissionData;
         }
 
