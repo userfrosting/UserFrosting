@@ -270,6 +270,9 @@ class DatabaseTests extends TestCase
             ]
         ], $user->permissions->toArray());
 
+        // Test counting
+        $this->assertEquals(3, $user->permissions()->count());
+
         $user2 = EloquentTestUser::create(['name' => 'Alex']);
         $user2->roles()->attach([2,3]);
 
@@ -290,6 +293,11 @@ class DatabaseTests extends TestCase
                 'slug' => 'uri_royal_jelly'
             ]
         ],$usersWithPermissions[1]['permissions']);
+
+        // Test counting related models (withCount)
+        $users = EloquentTestUser::withCount('permissions')->get();
+        $this->assertEquals(3, $users[0]->permissions_count);
+        $this->assertEquals(3, $users[1]->permissions_count);
     }
 
     /**
@@ -352,6 +360,7 @@ class DatabaseTests extends TestCase
     public function testMorphsToManyUnique()
     {
         $user = EloquentTestUser::create(['name' => 'David']);
+        $user2 = EloquentTestUser::create(['name' => 'Alex']);
 
         $this->generateTasks();
         $this->generateLocations();

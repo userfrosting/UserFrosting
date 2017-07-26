@@ -9,7 +9,7 @@
 - Add `withoutGlobalScopes` to `Syncable::sync`
 - Add option to use `forceCreate` in `Syncable::sync`
 - Add option to use custom key in `Syncable::sync`
-- Complete redesign of `BelongsToManyThrough` - possible BC for a few people, as you now need to load the "via" models explicitly using `withVia`
+- Complete redesign of `BelongsToManyThrough` - possible BC for a few people, as you now need to load the "via" models explicitly using `withVia`.  This fixes a lot of issues with `BelongsToManyThrough`.
 - Deprecate `BelongsToManyConstrained`
 - Add `MorphToManyUnique`
 - Integration tests now use an in-memory sqlite database (`test_integration`) by default

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique;
 
 /**
  * A BelongsToMany relationship that queries through an additional intermediate model.
@@ -21,26 +22,14 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class BelongsToManyThrough extends BelongsToMany
 {
+    use Unique;
+
     /**
      * The relation through which we are joining.
      *
      * @var Relation
      */
     protected $intermediateRelation;
-
-    /**
-     * The limit to apply on the number of related models retrieved.
-     *
-     * @var int|null
-     */
-    protected $limit = null;
-
-    /**
-     * The offset to apply on the related models retrieved.
-     *
-     * @var int|null
-     */
-    protected $offset = null;
 
     /**
      * The name to use for the via relationship, if retrieved.
@@ -76,35 +65,35 @@ class BelongsToManyThrough extends BelongsToMany
     }
 
     /**
-     * Get the full join results for this query, overriding the default getEager() method.
-     * The default getEager() method would normally just call get() on this relationship.
+     * Use the intermediate relationship to determine the "parent" pivot key name
      *
-     * @param  array  $columns
-     * @return \Illuminate\Database\Eloquent\Collection
+     * This is a crazy roundabout way to get the name of the intermediate relation's foreign key.
+     * It would be better if BelongsToMany had a simple accessor for its foreign key.
+     * @return string
      */
-    public function getEager()
+    public function getParentKeyName()
     {
-        return parent::get();
+        return $this->intermediateRelation->newExistingPivot()->getForeignKey();
     }
 
     /**
-     * Set the limit on the number of intermediate models to load.
+     * Get the key for comparing against the parent key in "has" query.
+     *
+     * @see \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return string
      */
-    public function withLimit($limit)
+    public function getExistenceCompareKey()
     {
-        $this->limit = $limit;
-        return $this;
+        return $this->intermediateRelation->getQualifiedForeignKeyName();
     }
 
     /**
-     * Set the offset when loading the intermediate models.
+     * Add a "via" query to load the intermediate models through which the child models are related.
+     *
+     * @param string   $viaName
+     * @param callable $viaCallback
+     * @return $this
      */
-    public function withOffset($offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
     public function withVia($viaName = null, $viaCallback = null)
     {
         $this->viaName = is_null($viaName) ? $this->intermediateRelation->getRelationName() . '_via' : $viaName;
@@ -148,33 +137,6 @@ class BelongsToManyThrough extends BelongsToMany
     }
 
     /**
-     * Return the count of child models for this relationship.
-     *
-     * @see http://stackoverflow.com/a/29728129/2970321
-     * @return int
-     */
-    public function count()
-    {
-        $constrainedBuilder = clone $this->query;
-
-        $constrainedBuilder = $constrainedBuilder->distinct();
-
-        return $constrainedBuilder->count($this->relatedKey);
-    }
-
-    /**
-     * Use the intermediate relationship to determine the "parent" pivot key name
-     *
-     * @return string
-     */
-    public function getParentKeyName()
-    {
-        // Crazy roundabout way to get the name of the intermediate relation's foreign key
-        // Would be better if BelongsToMany had a simple accessor for its foreign key.
-        return $this->intermediateRelation->newExistingPivot()->getForeignKey();
-    }
-
-    /**
      * Match the eagerly loaded results to their parents
      *
      * @param  array   $models
@@ -213,69 +175,15 @@ class BelongsToManyThrough extends BelongsToMany
     }
 
     /**
-     * If we are applying either a limit or offset, we'll first determine a limited/offset list of model ids
-     * to select from in the final query.
+     * Condense the raw join query results into a set of unique models.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  int $limit
-     * @param  int $offset
-     * @return \Illuminate\Database\Eloquent\Builder
+     * Before doing this, we will find any "via" models that should be
+     * set as sub-relations on these models.
+     * @param  array $models
+     * @return array
      */
-    public function getPaginatedQuery(Builder $query, $limit = null, $offset = null)
+    protected function condenseModels(array $models)
     {
-        $constrainedBuilder = clone $query;
-
-        $constrainedBuilder = $constrainedBuilder->select($this->related->getQualifiedKeyName())->groupBy($this->relatedKey);
-
-        if ($limit) {
-            $constrainedBuilder = $constrainedBuilder->limit($limit);
-        }
-
-        if ($offset) {
-            $constrainedBuilder = $constrainedBuilder->offset($offset);
-        }
-
-        $constrainedModels = $constrainedBuilder->getModels();
-
-        $primaryKeyName = $this->getParent()->getKeyName();
-
-        $modelIds = $this->related->newCollection($constrainedModels)->pluck($primaryKeyName)->toArray();
-
-        // Modify the unconstrained query to limit to these models
-        $query = $query->whereIn($this->relatedKey, $modelIds);
-
-        return $query;
-    }
-
-    /**
-     * Execute the query as a "select" statement.
-     *
-     * @param  array  $columns
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function get($columns = ['*'])
-    {
-        // First we'll add the proper select columns onto the query so it is run with
-        // the proper columns. Then, we will get the results and hydrate out pivot
-        // models with the result of those columns as a separate model relation.
-        $columns = $this->query->getQuery()->columns ? [] : $columns;
-
-        $builder = $this->query->applyScopes();
-
-        $builder = $builder->addSelect(
-            $this->shouldSelect($columns)
-        );
-
-        // Add any necessary pagination on the child models
-        if ($this->limit || $this->offset) {
-            $builder = $this->getPaginatedQuery($builder, $this->limit, $this->offset);
-        }
-
-        $models = $builder->getModels();
-
-        // Hydrate the pivot models so we can load the via models
-        $this->hydratePivotRelation($models);
-
         // Build dictionary of via models, if `withVia` was called
         $viaDictionary = null;
         if ($this->viaName) {
@@ -294,25 +202,16 @@ class BelongsToManyThrough extends BelongsToMany
         // any via models.
         $this->unsetPivots($models);
 
-        $models = $models->all();
-
-        // If we actually found models we will also eager load any relationships that
-        // have been specified as needing to be eager loaded. This will solve the
-        // n + 1 query problem for the developer and also increase performance.
-        if (count($models) > 0) {
-            $models = $builder->eagerLoadRelations($models);
-        }
-
-        return $this->related->newCollection($models);
+        return $models->all();
     }
 
     /**
      * Unset pivots on a collection or array of models.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection|array  $models
+     * @param  \Illuminate\Database\Eloquent\Collection $models
      * @return void
      */
-    protected function unsetPivots($models)
+    protected function unsetPivots(Collection $models)
     {
         foreach ($models as $model) {
             unset($model->pivot);
@@ -458,7 +357,9 @@ class BelongsToManyThrough extends BelongsToMany
      */
     protected function performJoin($query = null)
     {
-        $query = parent::performJoin($query);
+        $query = $query ?: $this->query;
+
+        parent::performJoin($query);
 
         // We need to join to the intermediate table on the related model's primary
         // key column with the intermediate table's foreign key for the related
@@ -492,14 +393,5 @@ class BelongsToManyThrough extends BelongsToMany
         $aliasedPivotColumns[] = "{$this->intermediateRelation->getQualifiedForeignKeyName()} as pivot_$parentKeyName";
 
         return $aliasedPivotColumns->unique()->all();
-    }
-
-    protected function getTypeOf($var)
-    {
-        if (gettype($var) == "object") {
-            return get_class($var);
-        } else {
-            return gettype($var);
-        }
     }
 }
