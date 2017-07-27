@@ -32,20 +32,6 @@ class BelongsToManyThrough extends BelongsToMany
     protected $intermediateRelation;
 
     /**
-     * The name to use for the via relationship, if retrieved.
-     *
-     * @var string|null
-     */
-    protected $viaName = null;
-
-    /**
-     * A callback to apply to the via query.
-     *
-     * @var callable|null
-     */
-    protected $viaCallback = null;
-
-    /**
      * Create a new belongs to many relationship instance.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -90,14 +76,20 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Add a "via" query to load the intermediate models through which the child models are related.
      *
-     * @param string   $viaName
+     * @param string   $viaRelationName
      * @param callable $viaCallback
      * @return $this
      */
-    public function withVia($viaName = null, $viaCallback = null)
+    public function withVia($viaRelationName = null, $viaCallback = null)
     {
-        $this->viaName = is_null($viaName) ? $this->intermediateRelation->getRelationName() . '_via' : $viaName;
-        $this->viaCallback = is_null($viaCallback)
+        $this->tertiaryRelated = $this->intermediateRelation->getRelated();
+
+        // Set tertiary key and related model
+        $this->tertiaryKey = $this->foreignKey;
+
+        $this->tertiaryRelationName = is_null($viaRelationName) ? $this->intermediateRelation->getRelationName() . '_via' : $viaRelationName;
+
+        $this->tertiaryCallback = is_null($viaCallback)
                             ? function () {
                                 //
                             }
@@ -147,7 +139,7 @@ class BelongsToManyThrough extends BelongsToMany
     public function match(array $models, Collection $results, $relation)
     {
         // Build dictionary of parent (e.g. user) to related (e.g. permission) models
-        list($dictionary, $nestedViaDictionary) = $this->buildDictionary($results);
+        list($dictionary, $nestedViaDictionary) = $this->buildDictionary($results, $this->getParentKeyName());
 
         // Once we have an array dictionary of child objects we can easily match the
         // children back to their parent using the dictionary and the keys on the
@@ -162,7 +154,12 @@ class BelongsToManyThrough extends BelongsToMany
 
                 // If set, match up the via models to the models in the related collection
                 if (!is_null($nestedViaDictionary)) {
-                    $this->matchViaModels($nestedViaDictionary[$key], $items);
+                    $this->matchTertiaryModels($nestedViaDictionary[$key], $items);
+                }
+
+                // Remove the tertiary pivot key from the condensed models
+                foreach ($items as $relatedModel) {
+                    unset($relatedModel->pivot->{$this->foreignKey});
                 }
 
                 $model->setRelation(
@@ -175,164 +172,15 @@ class BelongsToManyThrough extends BelongsToMany
     }
 
     /**
-     * Condense the raw join query results into a set of unique models.
+     * Unset tertiary pivots on a collection or array of models.
      *
-     * Before doing this, we will find any "via" models that should be
-     * set as sub-relations on these models.
-     * @param  array $models
-     * @return array
-     */
-    protected function condenseModels(array $models)
-    {
-        // Build dictionary of via models, if `withVia` was called
-        $viaDictionary = null;
-        if ($this->viaName) {
-            $viaDictionary = $this->buildViaDictionary($models);
-        }
-
-        // Remove duplicate models from collection
-        $models = $this->related->newCollection($models)->unique();
-
-        // If using withVia, use the via dictionary to set the via relation on each model.
-        if (!is_null($viaDictionary)) {
-            $this->matchViaModels($viaDictionary, $models);
-        }
-
-        // We can also remove the pivot relation at this point, since we have already coalesced
-        // any via models.
-        $this->unsetPivots($models);
-
-        return $models->all();
-    }
-
-    /**
-     * Build dictionary of related models keyed by the top-level "parent" id.
-     * If there is a "via" query set as well, then also build a two-level dictionary
-     * that maps parent ids to arrays of related ids, which in turn map to arrays
-     * of via models corresponding to each relationship.
-     *
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @return array
-     */
-    protected function buildDictionary(Collection $results)
-    {
-        // First we will build a dictionary of child models keyed by the "parent key" (foreign key
-        // of the intermediate relation) so that we will easily and quickly match them to their
-        // parents without having a possibly slow inner loops for every models.
-        $dictionary = [];
-
-        $parentKeyName = $this->getParentKeyName();
-
-        //Example nested dictionary:
-        //[
-        //    // User 1
-        //    '1' => [
-        //        // Permission 3
-        //        '3' => [
-        //            Role1,
-        //            Role2
-        //        ],
-        //        ...
-        //    ],
-        //    ...
-        //]
-        $nestedViaDictionary = null;
-        $viaModels = null;
-
-        if ($this->viaName) {
-            // Get all via models from the result set matching any of the parent models.
-            $viaModels = $this->getViaModels($results->all());
-        }
-
-        foreach ($results as $result) {
-            $parentKey = $result->pivot->$parentKeyName;
-
-            // Set the related model in the main dictionary.
-            // Note that this can end up adding duplicate models.  It's cheaper to simply
-            // go back and remove the duplicates when we actually use the dictionary,
-            // rather than check for duplicates on each insert.
-            $dictionary[$parentKey][] = $result;
-
-            // If we're loading via models, then set the keys in the nested dictionary as well.
-            if (!is_null($viaModels)) {
-                $viaKey = $result->pivot->{$this->foreignKey};
-                $nestedViaDictionary[$parentKey][$result->getKey()][] = $viaModels[$viaKey];
-            }
-
-            // We can also remove the pivot relation at this point, since we have already coalesced
-            // any via models into the nested dictionary.
-            unset($result->pivot);
-        }
-
-        return [$dictionary, $nestedViaDictionary];
-    }
-
-    /**
-     * Build dictionary of "via" models keyed by the corresponding related model keys.
-     *
-     * @param  array  $models
-     * @return array
-     */
-    protected function buildViaDictionary(array $models)
-    {
-        $dictionary = [];
-
-        // Find the related via entities (e.g. roles) for all related models (e.g. permissions)
-        $viaModels = $this->getViaModels($models);
-
-        // Now for each related model (e.g. permission), we will build out a dictionary of their via models (e.g. roles)
-        foreach ($models as $model) {
-            $viaKey = $model->pivot->{$this->foreignKey};
-            $dictionary[$model->getKey()][] = $viaModels[$viaKey];
-        }
-
-        return $dictionary;
-    }
-
-    /**
-     * Get the "via" models for the relationship.
-     *
-     * @param  array  $models
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    protected function getViaModels(array $models)
-    {
-        $viaKeyName = $this->foreignKey;
-        $viaClass = $this->intermediateRelation->getRelated();
-
-        $keys = [];
-        foreach ($models as $model) {
-            $keys[] = $model->getRelation('pivot')->{$viaKeyName};
-        }
-        $keys = array_unique($keys);
-
-        $query = $viaClass->whereIn($viaClass->getQualifiedKeyName(), $keys);
-
-        // Add any additional constraints/eager loads to the via query
-        $callback = $this->viaCallback;
-        $callback($query);
-
-        return $query
-            ->get()
-            ->keyBy($viaClass->getKeyName());
-    }
-
-    /**
-     * Match a collection of child models into a collection of parent models using a dictionary.
-     *
-     * @param  array $dictionary
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @param  \Illuminate\Database\Eloquent\Collection $models
      * @return void
      */
-    protected function matchViaModels(array $dictionary, Collection $results)
+    protected function unsetTertiaryPivots(Collection $models)
     {
-        // Now go through and set the via relation on each child model
-        foreach ($results as $model) {
-            if (isset($dictionary[$key = $model->getKey()])) {
-                $model->setRelation(
-                    $this->viaName, $this->related->newCollection($dictionary[$key])
-                );
-            }
+        foreach ($models as $model) {
+            unset($model->pivot->{$this->foreignKey});
         }
     }
 

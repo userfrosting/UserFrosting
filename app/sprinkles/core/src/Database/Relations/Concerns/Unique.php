@@ -19,27 +19,27 @@ use Illuminate\Database\Query\Expression;
 trait Unique
 {
     /**
-     * The related ternary model instance.
+     * The related tertiary model instance.
      *
      * @var \Illuminate\Database\Eloquent\Model
      */
-    protected $ternaryRelated = null;
+    protected $tertiaryRelated = null;
 
-    protected $ternaryRelationName = null;
+    protected $tertiaryRelationName = null;
 
     /**
-     * The foreign key to the related ternary model instance.
+     * The foreign key to the related tertiary model instance.
      *
      * @var string
      */
-    protected $ternaryKey;
+    protected $tertiaryKey;
 
     /**
-     * A callback to apply to the ternary query.
+     * A callback to apply to the tertiary query.
      *
      * @var callable|null
      */
-    protected $ternaryCallback = null;
+    protected $tertiaryCallback = null;
 
     /**
      * The limit to apply on the number of related models retrieved.
@@ -57,6 +57,9 @@ trait Unique
 
     /**
      * Set the limit on the number of intermediate models to load.
+     *
+     * @param int $limit
+     * @return    $this
      */
     public function withLimit($limit)
     {
@@ -66,6 +69,9 @@ trait Unique
 
     /**
      * Set the offset when loading the intermediate models.
+     *
+     * @param int $offset
+     * @return    $this
      */
     public function withOffset($offset)
     {
@@ -74,30 +80,31 @@ trait Unique
     }
 
     /**
-     * Add a query to load the nested ternary models for this relationship.
+     * Add a query to load the nested tertiary models for this relationship.
      *
-     * @param \Illuminate\Database\Eloquent\Model   $ternaryRelated
-     * @param string                                $ternaryKey
-     * @param callable                              $ternaryCallback
+     * @param \Illuminate\Database\Eloquent\Model   $tertiaryRelated
+     * @param string                                $tertiaryRelationName
+     * @param string                                $tertiaryKey
+     * @param callable                              $tertiaryCallback
      * @return $this
      */
-    public function withTernary($ternaryRelated, $ternaryRelationName = null, $ternaryKey = null, $ternaryCallback = null)
+    public function withTertiary($tertiaryRelated, $tertiaryRelationName = null, $tertiaryKey = null, $tertiaryCallback = null)
     {
-        $this->ternaryRelated = new $ternaryRelated;
+        $this->tertiaryRelated = new $tertiaryRelated;
 
-        // Try to guess the ternary related key from the ternaryRelated model.
-        $this->ternaryKey = $ternaryKey ?: $this->ternaryRelated->getForeignKey();
+        // Try to guess the tertiary related key from the tertiaryRelated model.
+        $this->tertiaryKey = $tertiaryKey ?: $this->tertiaryRelated->getForeignKey();
 
-        // Also add the ternary key as a pivot
-        $this->withPivot($this->ternaryKey);
+        // Also add the tertiary key as a pivot
+        $this->withPivot($this->tertiaryKey);
 
-        $this->ternaryRelationName = is_null($ternaryRelationName) ? $this->ternaryRelated->getTable() : $ternaryRelationName;
+        $this->tertiaryRelationName = is_null($tertiaryRelationName) ? $this->tertiaryRelated->getTable() : $tertiaryRelationName;
 
-        $this->ternaryCallback = is_null($ternaryCallback)
+        $this->tertiaryCallback = is_null($tertiaryCallback)
                             ? function () {
                                 //
                             }
-                            : $ternaryCallback;
+                            : $tertiaryCallback;
 
         return $this;
     }
@@ -143,7 +150,7 @@ trait Unique
     public function match(array $models, Collection $results, $relation)
     {
         // Build dictionary of parent (e.g. user) to related (e.g. permission) models
-        list($dictionary, $nestedTernaryDictionary) = $this->buildDictionary($results);
+        list($dictionary, $nestedTertiaryDictionary) = $this->buildDictionary($results, $this->foreignKey);
 
         // Once we have an array dictionary of child objects we can easily match the
         // children back to their parent using the dictionary and the keys on the
@@ -156,9 +163,9 @@ trait Unique
                 // Eliminate any duplicates
                 $items = $this->related->newCollection($items)->unique();
 
-                // If set, match up the ternary models to the models in the related collection
-                if (!is_null($nestedTernaryDictionary)) {
-                    $this->matchTernaryModels($nestedTernaryDictionary[$key], $items);
+                // If set, match up the tertiary models to the models in the related collection
+                if (!is_null($nestedTertiaryDictionary)) {
+                    $this->matchTertiaryModels($nestedTertiaryDictionary[$key], $items);
                 }
 
                 $model->setRelation(
@@ -172,7 +179,7 @@ trait Unique
 
     /**
      * Execute the query as a "select" statement, getting all requested models
-     * and matching up any "via" models.
+     * and matching up any tertiary models.
      *
      * @param  array  $columns
      * @return \Illuminate\Database\Eloquent\Collection
@@ -180,7 +187,12 @@ trait Unique
     public function get($columns = ['*'])
     {
         // Get models and condense the result set
-        return $this->getModels($columns, true);
+        $models = $this->getModels($columns, true);
+
+        // Remove the tertiary pivot key from the condensed models
+        $this->unsetTertiaryPivots($models);
+
+        return $models;
     }
 
     /**
@@ -245,7 +257,7 @@ trait Unique
      *
      * @param  array  $columns
      * @param  bool   $condenseModels
-     * @return \Illuminate\Database\Eloquent\Model[]
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getModels($columns = ['*'], $condenseModels = true)
     {
@@ -287,29 +299,25 @@ trait Unique
     /**
      * Condense the raw join query results into a set of unique models.
      *
-     * Before doing this, we may optionally find any ternary models that should be
+     * Before doing this, we may optionally find any tertiary models that should be
      * set as sub-relations on these models.
      * @param  array $models
      * @return array
      */
     protected function condenseModels(array $models)
     {
-        // Build dictionary of ternary models, if `withTernary` was called
+        // Build dictionary of tertiary models, if `withTertiary` was called
         $dictionary = null;
-        if ($this->ternaryRelated) {
-            $dictionary = $this->buildTernaryDictionary($models);
+        if ($this->tertiaryRelated) {
+            $dictionary = $this->buildTertiaryDictionary($models);
         }
 
         // Remove duplicate models from collection
         $models = $this->related->newCollection($models)->unique();
 
-        // If using withTernary, use the dictionary to set the ternary relation on each model.
+        // If using withTertiary, use the dictionary to set the tertiary relation on each model.
         if (!is_null($dictionary)) {
-            $this->matchTernaryModels($dictionary, $models);
-
-            foreach ($models as $model) {
-                unset($model->pivot->{$this->ternaryKey});
-            }
+            $this->matchTertiaryModels($dictionary, $models);
         }
 
         return $models->all();
@@ -317,21 +325,20 @@ trait Unique
 
     /**
      * Build dictionary of related models keyed by the top-level "parent" id.
-     * If there is a ternary query set as well, then also build a two-level dictionary
+     * If there is a tertiary query set as well, then also build a two-level dictionary
      * that maps parent ids to arrays of related ids, which in turn map to arrays
-     * of ternary models corresponding to each relationship.
+     * of tertiary models corresponding to each relationship.
      *
      * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @param  string $parentKey
      * @return array
      */
-    protected function buildDictionary(Collection $results)
+    protected function buildDictionary(Collection $results, $parentKey = null)
     {
         // First we will build a dictionary of child models keyed by the "parent key" (foreign key
         // of the intermediate relation) so that we will easily and quickly match them to their
         // parents without having a possibly slow inner loops for every models.
         $dictionary = [];
-
-        $parentKeyName = $this->foreignKey;
 
         //Example nested dictionary:
         //[
@@ -346,82 +353,84 @@ trait Unique
         //    ],
         //    ...
         //]
-        $nestedTernaryDictionary = null;
-        $ternaryModels = null;
+        $nestedTertiaryDictionary = null;
+        $tertiaryModels = null;
 
-        if ($this->ternaryRelationName) {
-            // Get all ternary models from the result set matching any of the parent models.
-            $ternaryModels = $this->getTernaryModels($results->all());
+        if ($this->tertiaryRelationName) {
+            // Get all tertiary models from the result set matching any of the parent models.
+            $tertiaryModels = $this->getTertiaryModels($results->all());
         }
 
         foreach ($results as $result) {
-            $parentKey = $result->pivot->$parentKeyName;
+            $parentKeyValue = $result->pivot->$parentKey;
 
             // Set the related model in the main dictionary.
             // Note that this can end up adding duplicate models.  It's cheaper to simply
             // go back and remove the duplicates when we actually use the dictionary,
             // rather than check for duplicates on each insert.
-            $dictionary[$parentKey][] = $result;
+            $dictionary[$parentKeyValue][] = $result;
 
-            // If we're loading ternary models, then set the keys in the nested dictionary as well.
-            if (!is_null($ternaryModels)) {
-                $ternaryKeyValue = $result->pivot->{$this->ternaryKey};
-                $nestedTernaryDictionary[$parentKey][$result->getKey()][] = $ternaryModels[$ternaryKeyValue];
+            // If we're loading tertiary models, then set the keys in the nested dictionary as well.
+            if (!is_null($tertiaryModels)) {
+                $tertiaryKeyValue = $result->pivot->{$this->tertiaryKey};
+                $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModels[$tertiaryKeyValue];
 
                 // We can also remove the pivot relation at this point, since we have already coalesced
-                // any ternary models into the nested dictionary.
-                unset($result->pivot->{$this->ternaryKey});
+                // any tertiary models into the nested dictionary.
+                unset($result->pivot->{$this->tertiaryKey});
             }
         }
 
-        return [$dictionary, $nestedTernaryDictionary];
+        return [$dictionary, $nestedTertiaryDictionary];
     }
 
     /**
-     * Build dictionary of ternary models keyed by the corresponding related model keys.
+     * Build dictionary of tertiary models keyed by the corresponding related model keys.
      *
      * @param  array  $models
      * @return array
      */
-    protected function buildTernaryDictionary(array $models)
+    protected function buildTertiaryDictionary(array $models)
     {
         $dictionary = [];
 
-        // Find the related ternary entities (e.g. tasks) for all related models (e.g. locations)
-        $ternaryModels = $this->getTernaryModels($models);
+        // Find the related tertiary entities (e.g. tasks) for all related models (e.g. locations)
+        $tertiaryModels = $this->getTertiaryModels($models);
 
-        // Now for each related model (e.g. location), we will build out a dictionary of their ternary models (e.g. tasks)
+        // Now for each related model (e.g. location), we will build out a dictionary of their tertiary models (e.g. tasks)
         foreach ($models as $model) {
-            $ternaryKeyValue = $model->pivot->{$this->ternaryKey};
-            $dictionary[$model->getKey()][] = $ternaryModels[$ternaryKeyValue];
+            $tertiaryKeyValue = $model->pivot->{$this->tertiaryKey};
+            $dictionary[$model->getKey()][] = $tertiaryModels[$tertiaryKeyValue];
         }
 
         return $dictionary;
     }
 
     /**
-     * Get the ternary models for the relationship.
+     * Get the tertiary models for the relationship.
      *
      * @param  array  $models
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    protected function getTernaryModels(array $models)
+    protected function getTertiaryModels(array $models)
     {
+        $tertiaryClass = $this->tertiaryRelated;
+
         $keys = [];
         foreach ($models as $model) {
-            $keys[] = $model->getRelation('pivot')->{$this->ternaryKey};
+            $keys[] = $model->getRelation('pivot')->{$this->tertiaryKey};
         }
         $keys = array_unique($keys);
 
-        $query = $this->ternaryRelated->whereIn($this->ternaryRelated->getQualifiedKeyName(), $keys);
+        $query = $tertiaryClass->whereIn($tertiaryClass->getQualifiedKeyName(), $keys);
 
-        // Add any additional constraints/eager loads to the ternary query
-        $callback = $this->ternaryCallback;
+        // Add any additional constraints/eager loads to the tertiary query
+        $callback = $this->tertiaryCallback;
         $callback($query);
 
         return $query
             ->get()
-            ->keyBy($this->ternaryRelated->getKeyName());
+            ->keyBy($tertiaryClass->getKeyName());
     }
 
     /**
@@ -431,52 +440,28 @@ trait Unique
      * @param  \Illuminate\Database\Eloquent\Collection  $results
      * @return void
      */
-    protected function matchTernaryModels(array $dictionary, Collection $results)
+    protected function matchTertiaryModels(array $dictionary, Collection $results)
     {
-        // Now go through and set the ternary relation on each child model
+        // Now go through and set the tertiary relation on each child model
         foreach ($results as $model) {
             if (isset($dictionary[$key = $model->getKey()])) {
                 $model->setRelation(
-                    $this->ternaryRelationName, $this->ternaryRelated->newCollection($dictionary[$key])
+                    $this->tertiaryRelationName, $this->tertiaryRelated->newCollection($dictionary[$key])
                 );
             }
         }
     }
 
     /**
-     * Set the join clause for the relation query.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder|null  $query
-     * @return $this
-     */
-    protected function performJoin($query = null)
-    {
-        $query = $query ?: $this->query;
-
-        parent::performJoin($query);
-
-        return $this;
-    }
-
-    /**
-     * Unset pivots on a collection or array of models.
+     * Unset tertiary pivots on a collection or array of models.
      *
      * @param  \Illuminate\Database\Eloquent\Collection $models
      * @return void
      */
-    protected function unsetPivots(Collection $models)
+    protected function unsetTertiaryPivots(Collection $models)
     {
         foreach ($models as $model) {
-            unset($model->pivot);
-        }
-    }
-
-    protected function getTypeOf($var)
-    {
-        if (gettype($var) == "object") {
-            return get_class($var);
-        } else {
-            return gettype($var);
+            unset($model->pivot->{$this->tertiaryKey});
         }
     }
 }

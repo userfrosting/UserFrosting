@@ -243,90 +243,6 @@ class DatabaseTests extends TestCase
         ], $phones);
     }
 
-    /**
-     * Test the ability of a BelongsToManyThrough relationship to retrieve structured data on a single model or set of models.
-     */
-    public function testBelongsToManyThrough()
-    {
-        $this->generateRolesWithPermissions();
-
-        $user = EloquentTestUser::create(['name' => 'David']);
-
-        $user->roles()->attach([1,2]);
-
-        // Test retrieval of via models as well
-        $this->assertEquals([
-            [
-                'id' => 1,
-                'slug' => 'uri_harvest'
-            ],
-            [
-                'id' => 2,
-                'slug' => 'uri_spit_acid'
-            ],
-            [
-                'id' => 3,
-                'slug' => 'uri_slash'
-            ]
-        ], $user->permissions->toArray());
-
-        // Test counting
-        $this->assertEquals(3, $user->permissions()->count());
-
-        $user2 = EloquentTestUser::create(['name' => 'Alex']);
-        $user2->roles()->attach([2,3]);
-
-        $users = EloquentTestUser::with('permissions')->get();
-        $usersWithPermissions = $users->toArray();
-
-        $this->assertEquals([
-            [
-                'id' => 2,
-                'slug' => 'uri_spit_acid'
-            ],
-            [
-                'id' => 3,
-                'slug' => 'uri_slash'
-            ],
-            [
-                'id' => 4,
-                'slug' => 'uri_royal_jelly'
-            ]
-        ],$usersWithPermissions[1]['permissions']);
-
-        // Test counting related models (withCount)
-        $users = EloquentTestUser::withCount('permissions')->get();
-        $this->assertEquals(3, $users[0]->permissions_count);
-        $this->assertEquals(3, $users[1]->permissions_count);
-    }
-
-    /**
-     * Test the ability of a BelongsToManyThrough relationship to retrieve structured data on a single model or set of models,
-     * eager loading the "via" models at the same time.
-     */
-    public function testBelongsToManyThroughWithVia()
-    {
-        $this->generateRolesWithPermissions();
-
-        $user = EloquentTestUser::create(['name' => 'David']);
-
-        $user->roles()->attach([1,2]);
-
-        // Test retrieval of via models as well
-        $this->assertBelongsToManyThroughForDavid($user->permissions()->withVia('roles_via')->get()->toArray());
-
-        $user2 = EloquentTestUser::create(['name' => 'Alex']);
-        $user2->roles()->attach([2,3]);
-
-        $users = EloquentTestUser::with(['permissions' => function ($query) {
-            return $query->withVia('roles_via');
-        }])->get();
-        $usersWithPermissions = $users->toArray();
-
-        $this->assertBelongsToManyThroughForDavid($usersWithPermissions[0]['permissions']);
-        $this->assertBelongsToManyThroughForAlex($usersWithPermissions[1]['permissions']);
-    }
-
     public function testBelongsToManyUnique()
     {
         $user = EloquentTestUser::create(['name' => 'David']);
@@ -335,9 +251,7 @@ class DatabaseTests extends TestCase
         $this->generateRoles();
         $this->generateJobs();
 
-        $roles = $user->jobRoles;
-
-        $this->assertEquals([
+        $expectedRoles = [
             [
                 'id' => 2,
                 'slug' => 'soldier',
@@ -354,7 +268,14 @@ class DatabaseTests extends TestCase
                     'role_id' => 3
                 ]
             ]
-        ], $roles->toArray());
+        ];
+
+        $roles = $user->jobRoles;
+        $this->assertEquals($expectedRoles, $roles->toArray());
+
+        // Test eager loading
+        $users = EloquentTestUser::with('jobRoles')->get();
+        $this->assertEquals($expectedRoles, $users->toArray()[0]['job_roles']);
     }
 
     public function testMorphsToManyUnique()
@@ -364,38 +285,9 @@ class DatabaseTests extends TestCase
 
         $this->generateTasks();
         $this->generateLocations();
+        $this->generateAssignments();
 
-        $assignment1 = EloquentTestAssignment::create([
-            'task_id' => 2,
-            'location_id' => 1,
-            'assignable_id' => 1,
-            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
-        ]);
-
-        $assignment2 = EloquentTestAssignment::create([
-            'task_id' => 2,
-            'location_id' => 2,
-            'assignable_id' => 1,
-            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
-        ]);
-
-        $assignment3 = EloquentTestAssignment::create([
-            'task_id' => 3,
-            'location_id' => 2,
-            'assignable_id' => 1,
-            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
-        ]);
-
-        $assignment4 = EloquentTestAssignment::create([
-            'task_id' => 3,
-            'location_id' => 1,
-            'assignable_id' => 2,
-            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
-        ]);
-
-        $tasks = $user->assignmentTasks;
-
-        $uniqueTasksAssertion = [
+        $expectedTasks = [
             [
                 'id' => 2,
                 'name' => 'Chopping',
@@ -414,14 +306,67 @@ class DatabaseTests extends TestCase
             ]
         ];
 
-        $this->assertEquals($uniqueTasksAssertion, $tasks->toArray());
+        $tasks = $user->assignmentTasks;
+        $this->assertEquals($expectedTasks, $tasks->toArray());
 
-        // Test 'with' method
+        // Test eager loading
         $users = EloquentTestUser::with('assignmentTasks')->get();
-        $this->assertEquals($uniqueTasksAssertion, $users[0]->assignmentTasks->toArray());
+        $this->assertEquals($expectedTasks, $users->toArray()[0]['assignment_tasks']);
     }
 
-    public function testBelongsToManyUniqueWithTernary()
+    public function testMorphsToManyUniqueWithTertiary()
+    {
+        $user = EloquentTestUser::create(['name' => 'David']);
+        $user2 = EloquentTestUser::create(['name' => 'Alex']);
+
+        $this->generateTasks();
+        $this->generateLocations();
+        $this->generateAssignments();
+
+        $expectedTasks = [
+            [
+                'id' => 2,
+                'name' => 'Chopping',
+                'pivot' => [
+                    'assignable_id' => 1,
+                    'task_id' => 2
+                ],
+                'locations' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Hatchery'
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Nexus'
+                    ]
+                ]
+            ],
+            [
+                'id' => 3,
+                'name' => 'Baleing',
+                'pivot' => [
+                    'assignable_id' => 1,
+                    'task_id' => 3
+                ],
+                'locations' => [
+                    [
+                        'id' => 2,
+                        'name' => 'Nexus'
+                    ]
+                ]
+            ]
+        ];
+
+        $tasks = $user->tasks;
+        $this->assertEquals($expectedTasks, $tasks->toArray());
+
+        // Test eager loading
+        $users = EloquentTestUser::with('tasks')->get();
+        $this->assertEquals($expectedTasks, $users->toArray()[0]['tasks']);
+    }
+
+    public function testBelongsToManyUniqueWithTertiary()
     {
         $user = EloquentTestUser::create(['name' => 'David']);
 
@@ -429,9 +374,7 @@ class DatabaseTests extends TestCase
         $this->generateRoles();
         $this->generateJobs();
 
-        $jobs = $user->jobs()->get();
-
-        $this->assertEquals([
+        $expectedJobs = [
             [
                 'id' => 2,
                 'slug' => 'soldier',
@@ -464,10 +407,17 @@ class DatabaseTests extends TestCase
                     ]
                 ]
             ]
-        ], $jobs->toArray());
+        ];
+
+        $jobs = $user->jobs()->get();
+        $this->assertEquals($expectedJobs, $jobs->toArray());
+
+        // Test eager loading
+        $users = EloquentTestUser::with('jobs')->get();
+        $this->assertEquals($expectedJobs, $users->toArray()[0]['jobs']);
     }
 
-    public function testBelongsToManyUniqueWithTernaryEagerLoad()
+    public function testBelongsToManyUniqueWithTertiaryEagerLoad()
     {
         $user1 = EloquentTestUser::create(['name' => 'David']);
         $user2 = EloquentTestUser::create(['name' => 'Alex']);
@@ -538,6 +488,124 @@ class DatabaseTests extends TestCase
                 ]
             ]
         ], $users->toArray());
+    }
+
+    /**
+     * Test the ability of a BelongsToManyThrough relationship to retrieve structured data on a single model or set of models.
+     */
+    public function testBelongsToManyThrough()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $user->roles()->attach([1,2]);
+
+        // Test retrieval of via models as well
+        $this->assertEquals([
+            [
+                'id' => 1,
+                'slug' => 'uri_harvest',
+                'pivot' => [
+                    'user_id' => 1,
+                    'permission_id' => 1
+                ]
+            ],
+            [
+                'id' => 2,
+                'slug' => 'uri_spit_acid',
+                'pivot' => [
+                    'user_id' => 1,
+                    'permission_id' => 2
+                ]
+            ],
+            [
+                'id' => 3,
+                'slug' => 'uri_slash',
+                'pivot' => [
+                    'user_id' => 1,
+                    'permission_id' => 3
+                ]
+            ]
+        ], $user->permissions->toArray());
+
+        // Test counting
+        $this->assertEquals(3, $user->permissions()->count());
+
+        $user2 = EloquentTestUser::create(['name' => 'Alex']);
+        $user2->roles()->attach([2,3]);
+
+        // Test eager load
+        $users = EloquentTestUser::with('permissions')->get();
+        $usersWithPermissions = $users->toArray();
+
+        $this->assertEquals([
+            [
+                'id' => 2,
+                'slug' => 'uri_spit_acid',
+                'pivot' => [
+                    'user_id' => 2,
+                    'permission_id' => 2
+                ]
+            ],
+            [
+                'id' => 3,
+                'slug' => 'uri_slash',
+                'pivot' => [
+                    'user_id' => 2,
+                    'permission_id' => 3
+                ]
+            ],
+            [
+                'id' => 4,
+                'slug' => 'uri_royal_jelly',
+                'pivot' => [
+                    'user_id' => 2,
+                    'permission_id' => 4
+                ]
+            ]
+        ],$usersWithPermissions[1]['permissions']);
+
+        // Test counting related models (withCount)
+        $users = EloquentTestUser::withCount('permissions')->get();
+        $this->assertEquals(3, $users[0]->permissions_count);
+        $this->assertEquals(3, $users[1]->permissions_count);
+
+        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[0]);
+        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[1]);
+        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[2]);
+    }
+
+    /**
+     * Test the ability of a BelongsToManyThrough relationship to retrieve structured data on a single model or set of models,
+     * eager loading the "via" models at the same time.
+     */
+    public function testBelongsToManyThroughWithVia()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $user->roles()->attach([1,2]);
+
+        // Test retrieval of via models as well
+        $this->assertBelongsToManyThroughForDavid($user->permissions()->withVia('roles_via')->get()->toArray());
+
+        $user2 = EloquentTestUser::create(['name' => 'Alex']);
+        $user2->roles()->attach([2,3]);
+
+        // Test eager loading
+        $users = EloquentTestUser::with(['permissions' => function ($query) {
+            return $query->withVia('roles_via');
+        }])->get();
+
+        $this->assertInstanceOf(EloquentTestPermission::class, $users[0]->permissions[0]);
+        $this->assertInstanceOf(EloquentTestRole::class, $users[0]->permissions[0]->roles_via[0]);
+
+        $usersWithPermissions = $users->toArray();
+
+        $this->assertBelongsToManyThroughForDavid($usersWithPermissions[0]['permissions']);
+        $this->assertBelongsToManyThroughForAlex($usersWithPermissions[1]['permissions']);
     }
 
     /**
@@ -625,6 +693,18 @@ class DatabaseTests extends TestCase
 
     protected function generateJobs()
     {
+
+        /**
+         * Sample data
+
+        | user_id | role_id | location_id |
+        |---------|---------|-------------|
+        | 1       | 2       | 1           |
+        | 1       | 2       | 2           |
+        | 1       | 3       | 2           |
+        | 2       | 3       | 1           |
+        */
+
         return [
             EloquentTestJob::create([
                 'role_id' => 2,
@@ -680,6 +760,42 @@ class DatabaseTests extends TestCase
             EloquentTestTask::create([
                 'id' => 3,
                 'name' => 'Baleing'
+            ])
+        ];
+    }
+
+    protected function generateAssignments()
+    {
+        return [
+            EloquentTestAssignment::create([
+            'task_id' => 2,
+            'location_id' => 1,
+            'assignable_id' => 1,
+            'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+            ]),
+            EloquentTestAssignment::create([
+                'task_id' => 2,
+                'location_id' => 2,
+                'assignable_id' => 1,
+                'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+            ]),
+            EloquentTestAssignment::create([
+                'task_id' => 3,
+                'location_id' => 2,
+                'assignable_id' => 1,
+                'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
+            ]),
+            EloquentTestAssignment::create([
+                'task_id' => 3,
+                'location_id' => 3,
+                'assignable_id' => 1,
+                'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestNonExistant'
+            ]),
+            EloquentTestAssignment::create([
+                'task_id' => 3,
+                'location_id' => 1,
+                'assignable_id' => 2,
+                'assignable_type' => 'UserFrosting\Tests\Integration\EloquentTestUser'
             ])
         ];
     }
@@ -816,6 +932,22 @@ class EloquentTestUser extends EloquentTestModel
     }
 
     /**
+     * Get all of the user's unique tasks along with the task locations.
+     */
+    public function tasks()
+    {
+        $relation = $this->morphToManyUnique(
+            'UserFrosting\Tests\Integration\EloquentTestTask',
+            'assignable',
+            'assignments',
+            null,
+            'task_id'   // Need to explicitly set this, since it doesn't match our related model name
+        )->withTertiary(EloquentTestLocation::class, null, 'location_id');
+
+        return $relation;
+    }
+
+    /**
      * Get all of the user's unique roles based on their jobs.
      */
     public function jobRoles()
@@ -831,7 +963,7 @@ class EloquentTestUser extends EloquentTestModel
     }
 
     /**
-     * Get all of the user's unique roles based on their jobs as a ternary relationship.
+     * Get all of the user's unique roles based on their jobs as a tertiary relationship.
      */
     public function jobs()
     {
@@ -840,7 +972,7 @@ class EloquentTestUser extends EloquentTestModel
             'jobs',
             'user_id',
             'role_id'
-        )->withTernary(EloquentTestLocation::class, null, 'location_id');
+        )->withTertiary(EloquentTestLocation::class, null, 'location_id');
 
         return $relation;
     }
