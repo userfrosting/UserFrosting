@@ -25,6 +25,11 @@ trait Unique
      */
     protected $tertiaryRelated = null;
 
+    /**
+     * The name to use for the tertiary relation (e.g. 'roles_via', etc)
+     *
+     * @var string
+     */
     protected $tertiaryRelationName = null;
 
     /**
@@ -56,27 +61,81 @@ trait Unique
     protected $offset = null;
 
     /**
+     * Alias to set the "offset" value of the query.
+     *
+     * @param  int  $value
+     * @return $this
+     */
+    public function skip($value)
+    {
+        return $this->offset($value);
+    }
+
+    /**
+     * Set the "offset" value of the query.
+     *
+     * @todo Implement for 'unionOffset' as well?  (By checking the value of $this->query->getQuery()->unions)
+     * @see \Illuminate\Database\Query\Builder
+     * @param  int  $value
+     * @return $this
+     */
+    public function offset($value)
+    {
+        $this->offset = max(0, $value);
+
+        return $this;
+    }
+
+    /**
+     * Alias to set the "limit" value of the query.
+     *
+     * @param  int  $value
+     * @return $this
+     */
+    public function take($value)
+    {
+        return $this->limit($value);
+    }
+
+    /**
+     * Set the "limit" value of the query.
+     *
+     * @todo Implement for 'unionLimit' as well?  (By checking the value of $this->query->getQuery()->unions)
+     * @see \Illuminate\Database\Query\Builder
+     * @param  int  $value
+     * @return $this
+     */
+    public function limit($value)
+    {
+        if ($value >= 0) {
+            $this->limit = $value;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the limit on the number of intermediate models to load.
      *
-     * @param int $limit
+     * @deprecated since 4.1.7
+     * @param int $value
      * @return    $this
      */
-    public function withLimit($limit)
+    public function withLimit($value)
     {
-        $this->limit = $limit;
-        return $this;
+        return $this->limit($value);
     }
 
     /**
      * Set the offset when loading the intermediate models.
      *
-     * @param int $offset
+     * @deprecated since 4.1.7
+     * @param int $value
      * @return    $this
      */
-    public function withOffset($offset)
+    public function withOffset($value)
     {
-        $this->offset = $offset;
-        return $this;
+        return $this->offset($value);
     }
 
     /**
@@ -403,7 +462,7 @@ trait Unique
         // Now for each related model (e.g. location), we will build out a dictionary of their tertiary models (e.g. tasks)
         foreach ($models as $model) {
             $tertiaryKeyValue = $model->pivot->{$this->tertiaryKey};
-            
+
             $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
 
             $this->transferPivotsToTertiary($model, $tertiaryModel);
