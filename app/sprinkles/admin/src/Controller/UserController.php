@@ -734,6 +734,52 @@ class UserController extends SimpleController
     }
 
     /**
+     * Returns a list of effective Permissions for a specified User.
+     *
+     * Generates a list of permissions, optionally paginated, sorted and/or filtered.
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getPermissions($request, $response, $args)
+    {
+        $user = $this->getUserFromParams($args);
+
+        // If the user doesn't exist, return 404
+        if (!$user) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // GET parameters
+        $params = $request->getQueryParams();
+
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            'user' => $user,
+            'property' => 'permissions'
+        ])) {
+            throw new ForbiddenException();
+        }
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $params['user_id'] = $user->id;
+        $sprunje = $classMapper->createInstance('user_permission_sprunje', $classMapper, $params);
+
+        $response = $sprunje->toResponse($response);
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response;
+    }
+
+    /**
      * Returns roles associated with a single user.
      *
      * This page requires authentication.
@@ -881,11 +927,24 @@ class UserController extends SimpleController
             $editButtons['hidden'][] = 'delete';
         }
 
+        // Determine widgets to display
+        $widgets = [
+            'hidden' => []
+        ];
+
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            'user' => $user,
+            'property' => 'permissions'
+        ])) {
+            $widgets['hidden'][] = 'permissions';
+        }
+
         return $this->ci->view->render($response, 'pages/user.html.twig', [
             'user' => $user,
             'locales' => $locales,
             'fields' => $fields,
-            'tools' => $editButtons
+            'tools' => $editButtons,
+            'widgets' => $widgets
         ]);
     }
 

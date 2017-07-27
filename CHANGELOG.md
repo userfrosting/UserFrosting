@@ -2,6 +2,10 @@
 
 ## v4.1.7-alpha
 - Add the `withTernary` method to the `Unique` trait to allow loading nested child models on ternary relationships.
+- Add skip, take, limit, offset and deprecate withLimit and withOffset in `Unique` trait
+- Support for `withPivot` on `Unique` relationships (in tertiary models)
+- Factor out common code from `PermissionUserSprunje` into `UserSprunje`
+- Table of user permissions on user info page
 
 ## v4.1.6-alpha
 - Fix missing permission check when `uri_account_settings` is not in role (#768)

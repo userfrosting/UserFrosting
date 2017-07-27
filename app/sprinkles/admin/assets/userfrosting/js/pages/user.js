@@ -16,4 +16,10 @@ $(document).ready(function() {
         dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/activities',
         useLoadingTransition: site.uf_table.use_loading_transition
     });
+
+    // Table of permissions
+    $("#widget-permissions").ufTable({
+        dataUrl: site.uri.public + '/api/users/u/' + page.user_name + '/permissions',
+        useLoadingTransition: site.uf_table.use_loading_transition
+    });
 });

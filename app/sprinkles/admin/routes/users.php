@@ -27,6 +27,8 @@ $app->group('/api/users', function () {
 
     $this->get('/u/{user_name}/roles', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getRoles');
 
+    $this->get('/u/{user_name}/permissions', 'UserFrosting\Sprinkle\Admin\Controller\UserController:getPermissions');
+
     $this->post('', 'UserFrosting\Sprinkle\Admin\Controller\UserController:create');
 
     $this->post('/u/{user_name}/password-reset', 'UserFrosting\Sprinkle\Admin\Controller\UserController:createPasswordReset');

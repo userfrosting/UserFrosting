@@ -148,6 +148,27 @@
             {% endblock %}
         </div>
     </div>
+    {% if 'permissions' not in widgets.hidden %}
+    <div class="row">
+        <div class="col-md-12">
+            <div id="widget-permissions" class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title pull-left"><i class="fa fa-key fa-fw"></i> {{translate('PERMISSION', 2)}}</h3>
+                    {% include "tables/table-tool-menu.html.twig" %}
+                </div>
+                <div class="box-body">
+                    {% include "tables/permissions.html.twig" with {
+                            "table" : {
+                                "id" : "table-permissions",
+                                "columns" : ["via_roles"]
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 {% block scripts_page %}
     <!-- Include page variables -->
