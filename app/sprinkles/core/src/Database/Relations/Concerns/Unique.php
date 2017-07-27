@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Expression;
 
 /**
- * Enforce uniqueness for BelongsToManyUnique and MorphToManyUnique.
+ * Enforce uniqueness for BelongsToManyUnique, MorphToManyUnique, and BelongsToManyThrough.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
@@ -373,11 +373,14 @@ trait Unique
             // If we're loading tertiary models, then set the keys in the nested dictionary as well.
             if (!is_null($tertiaryModels)) {
                 $tertiaryKeyValue = $result->pivot->{$this->tertiaryKey};
-                $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModels[$tertiaryKeyValue];
 
-                // We can also remove the pivot relation at this point, since we have already coalesced
+                $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
+
+                // We also transfer the pivot relation at this point, since we have already coalesced
                 // any tertiary models into the nested dictionary.
-                unset($result->pivot->{$this->tertiaryKey});
+                $this->transferPivotsToTertiary($result, $tertiaryModel);
+
+                $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModel;
             }
         }
 
@@ -400,10 +403,32 @@ trait Unique
         // Now for each related model (e.g. location), we will build out a dictionary of their tertiary models (e.g. tasks)
         foreach ($models as $model) {
             $tertiaryKeyValue = $model->pivot->{$this->tertiaryKey};
-            $dictionary[$model->getKey()][] = $tertiaryModels[$tertiaryKeyValue];
+            
+            $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
+
+            $this->transferPivotsToTertiary($model, $tertiaryModel);
+
+            $dictionary[$model->getKey()][] = $tertiaryModel;
         }
 
         return $dictionary;
+    }
+
+    protected function transferPivotsToTertiary($model, $tertiaryModel)
+    {
+        $pivotAttributes = [];
+        foreach ($this->pivotColumns as $column) {
+            $pivotAttributes[$column] = $model->pivot->$column;
+            unset($model->pivot->$column);
+        }
+        // Copy the related key pivot as well, but don't unset on the related model
+        $pivotAttributes[$this->relatedKey] = $model->pivot->{$this->relatedKey};
+
+        // Set the tertiary key pivot as well
+        $pivotAttributes[$this->tertiaryKey] = $tertiaryModel->getKey();
+
+        $pivot = $this->newExistingPivot($pivotAttributes);
+        $tertiaryModel->setRelation('pivot', $pivot);
     }
 
     /**
@@ -428,9 +453,11 @@ trait Unique
         $callback = $this->tertiaryCallback;
         $callback($query);
 
-        return $query
+        $tertiaryModels = $query
             ->get()
             ->keyBy($tertiaryClass->getKeyName());
+
+        return $tertiaryModels;
     }
 
     /**
@@ -445,8 +472,10 @@ trait Unique
         // Now go through and set the tertiary relation on each child model
         foreach ($results as $model) {
             if (isset($dictionary[$key = $model->getKey()])) {
+                $tertiaryModels = $dictionary[$key];
+
                 $model->setRelation(
-                    $this->tertiaryRelationName, $this->tertiaryRelated->newCollection($dictionary[$key])
+                    $this->tertiaryRelationName, $this->tertiaryRelated->newCollection($tertiaryModels)
                 );
             }
         }
@@ -461,7 +490,9 @@ trait Unique
     protected function unsetTertiaryPivots(Collection $models)
     {
         foreach ($models as $model) {
-            unset($model->pivot->{$this->tertiaryKey});
+            foreach ($this->pivotColumns as $column) {
+                unset($model->pivot->$column);
+            }
         }
     }
 }
