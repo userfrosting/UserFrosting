@@ -383,9 +383,6 @@ class UserController extends SimpleController
             throw new ForbiddenException();
         }
 
-        // Exclude password from result set
-        unset($user->password);
-
         $result = $user->toArray();
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.

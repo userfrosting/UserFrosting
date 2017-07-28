@@ -55,20 +55,6 @@ class UserSprunje extends Sprunje
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function applyTransformations($collection)
-    {
-        // Exclude password field from results
-        $collection->transform(function ($item, $key) {
-            unset($item['password']);
-            return $item;
-        });
-
-        return $collection;
-    }
-
-    /**
      * Filter LIKE the last activity description.
      *
      * @param Builder $query
