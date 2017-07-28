@@ -7,6 +7,8 @@
 - Factor out common code from `PermissionUserSprunje` into `UserSprunje`
 - Table of user permissions on user info page
 - Add Chinese translations
+- Deprecate User::exists() (#771)
+- Add 'password' to hidden fields for User model
 
 ## v4.1.6-alpha
 - Fix missing permission check when `uri_account_settings` is not in role (#768)

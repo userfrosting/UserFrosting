@@ -9,7 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
-
 use UserFrosting\Sprinkle\Core\Database\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
 
@@ -60,6 +59,25 @@ abstract class Model extends LaravelModel
     public function export()
     {
         return $this->toArray();
+    }
+
+    /**
+     * Determines whether a model exists by checking a unique column, including checking soft-deleted records
+     *
+     * @param mixed  $value
+     * @param string $identifier
+     * @param bool   $checkDeleted set to true to include soft-deleted records
+     * @return       \UserFrosting\Sprinkle\Core\Database\Models\Model|null
+     */
+    public static function findUnique($value, $identifier, $checkDeleted = true)
+    {
+        $query = static::where($identifier, $value);
+
+        if ($checkDeleted) {
+            $query = $query->withTrashed();
+        }
+
+        return $query->first();
     }
 
     /**

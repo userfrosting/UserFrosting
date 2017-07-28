@@ -192,7 +192,7 @@ class User extends Model
     /**
      * Determines whether a user exists, including checking soft-deleted records
      *
-     * @deprecated since 4.1.7 This method conflicts with and overrides the Builder::exists() method, so we need to get rid of it at some point.
+     * @deprecated since 4.1.7 This method conflicts with and overrides the Builder::exists() method.  Use Model::findUnique instead.
      * @param mixed $value
      * @param string $identifier
      * @param bool $checkDeleted set to true to include soft-deleted records

@@ -85,12 +85,12 @@ class UserController extends SimpleController
         $classMapper = $this->ci->classMapper;
 
         // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'exists', $data['user_name'], 'user_name')) {
+        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('user', 'exists', $data['email'], 'email')) {
+        if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;
         }
@@ -1054,7 +1054,7 @@ class UserController extends SimpleController
         if (
             isset($data['email']) &&
             $data['email'] != $user->email &&
-            $classMapper->staticMethod('user', 'exists', $data['email'], 'email')
+            $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')
         ) {
             $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
             $error = true;

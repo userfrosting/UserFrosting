@@ -95,7 +95,7 @@ class AccountController extends SimpleController
         // Log throttleable event
         $throttler->logEvent('check_username_request');
 
-        if ($classMapper->staticMethod('user', 'exists', $data['user_name'], 'user_name')) {
+        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $message = $translator->translate('USERNAME.NOT_AVAILABLE', $data);
             return $response->write($message)->withStatus(200);
         } else {
@@ -757,12 +757,12 @@ class AccountController extends SimpleController
         }
 
         // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'exists', $data['user_name'], 'user_name')) {
+        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
             $ms->addMessageTranslated("danger", "USERNAME.IN_USE", $data);
             $error = true;
         }
 
-        if ($classMapper->staticMethod('user', 'exists', $data['email'], 'email')) {
+        if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
             $error = true;
         }
@@ -1087,7 +1087,7 @@ class AccountController extends SimpleController
         unset($data['passwordc']);
 
         // If new email was submitted, check that the email address is not in use
-        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'exists', $data['email'], 'email')) {
+        if (isset($data['email']) && $data['email'] != $currentUser->email && $classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
             $ms->addMessageTranslated("danger", "EMAIL.IN_USE", $data);
             $error = true;
         }
