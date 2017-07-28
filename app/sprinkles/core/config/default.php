@@ -139,6 +139,7 @@
                 // with the exception of English, which as the default language comes first.
                 'available' => [
                     'en_US' => 'English',
+                    'zh_CN' => '中文',
                     'es_ES' => 'Español',
                     'ar'    => 'العربية',
                     'pt_PT' => 'Português',

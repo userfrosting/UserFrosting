@@ -72,7 +72,7 @@ return [
 
     "SLUG" => "Slug",
     "SLUG_CONDITION" => "Slug/Conditions",
-    "SLUG_IN_USE" => "A <strong>{{slug}}</strong> slug already exist",
+    "SLUG_IN_USE" => "A <strong>{{slug}}</strong> slug already exists",
     "STATUS" => "Status",
     "SUGGEST" => "Suggest",
 

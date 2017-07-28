@@ -89,6 +89,7 @@ Srinivas's a web applications architect, with a passion for open source technolo
 - Pietro Marangon (@Pe46dro) - Italian
 - Abdullah Seba (@abdullahseba) - Arabic
 - Bruno Silva (@brunomnsilva) - Portuguese
+- @BruceGui - Chinese
 - @kevinrombach - German
 - @rafa31gz - Spanish
 - @splitt3r - German
