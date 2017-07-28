@@ -9,7 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
-use UserFrosting\Sprinkle\Core\Database\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
 
 /**
@@ -110,9 +109,16 @@ abstract class Model extends LaravelModel
      */
     protected function newBaseQueryBuilder()
     {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
         $connection = $this->getConnection();
-        return new Builder(
-            $connection, $connection->getQueryGrammar(), $connection->getPostProcessor()
+
+        return $classMapper->createInstance(
+            'query_builder',
+            $connection,
+            $connection->getQueryGrammar(),
+            $connection->getPostProcessor()
         );
     }
 

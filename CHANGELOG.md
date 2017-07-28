@@ -9,6 +9,7 @@
 - Add Chinese translations
 - Deprecate User::exists() (#771)
 - Add 'password' to hidden fields for User model
+- Replace hardcoded `Builder` with classMapper reference
 
 ## v4.1.6-alpha
 - Fix missing permission check when `uri_account_settings` is not in role (#768)
