@@ -327,7 +327,7 @@ class GroupController extends SimpleController
                 'action' => 'api/groups',
                 'method' => 'POST',
                 'fields' => $fields,
-                'submit_text' => $translator->translate("CREATE")
+                'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)

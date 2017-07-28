@@ -334,7 +334,7 @@ class RoleController extends SimpleController
                 'action' => 'api/roles',
                 'method' => 'POST',
                 'fields' => $fields,
-                'submit_text' => $translator->translate("CREATE")
+                'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -828,7 +828,7 @@ class RoleController extends SimpleController
 
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction( function() use ($fieldName, $fieldValue, $role, $currentUser) {
-            if ($fieldName == "permissions") {
+            if ($fieldName == 'permissions') {
                 $newPermissions = collect($fieldValue)->pluck('permission_id')->all();
                 $role->permissions()->sync($newPermissions);
             } else {

@@ -226,7 +226,7 @@ class UserController extends SimpleController
             $this->ci->mailer->send($message);
         });
 
-        $ms->addMessageTranslated("success", "PASSWORD.FORGET.REQUEST_SENT", [
+        $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', [
             'email' => $user->email
         ]);
         return $response->withStatus(200);
@@ -552,7 +552,7 @@ class UserController extends SimpleController
                 'action' => 'api/users',
                 'method' => 'POST',
                 'fields' => $fields,
-                'submit_text' => $translator->translate("CREATE")
+                'submit_text' => $translator->translate('CREATE')
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -639,7 +639,7 @@ class UserController extends SimpleController
                 'action' => "api/users/u/{$user->user_name}",
                 'method' => 'PUT',
                 'fields' => $fields,
-                'submit_text' => $translator->translate("UPDATE")
+                'submit_text' => $translator->translate('UPDATE')
             ],
             'page' => [
                 'validators' => $validator->rules('json', false)
@@ -1196,7 +1196,7 @@ class UserController extends SimpleController
 
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction( function() use ($fieldName, $fieldValue, $user, $currentUser) {
-            if ($fieldName == "roles") {
+            if ($fieldName == 'roles') {
                 $newRoles = collect($fieldValue)->pluck('role_id')->all();
                 $user->roles()->sync($newRoles);
             } else {
