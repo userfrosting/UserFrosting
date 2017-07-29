@@ -116,7 +116,7 @@
          * Success callback for fetch
          */
         _fetchSuccess: function(alerts) {
-            this.alerts = $.merge(this.alerts, alerts);
+            if (alerts != null) this.alerts = $.merge(this.alerts, alerts);
             this.$element.trigger("fetch." + this._name);
         },
         /**

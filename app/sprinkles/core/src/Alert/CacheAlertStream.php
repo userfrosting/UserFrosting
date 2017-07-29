@@ -45,9 +45,8 @@ class CacheAlertStream extends AlertStream
      */
     public function messages()
     {
-        if ($this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->has($this->messagesKey))
-        {
-            return $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->get($this->messagesKey);
+        if ($this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->has($this->messagesKey)) {
+            return $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->get($this->messagesKey) ?: [];
         } else {
             return [];
         }
