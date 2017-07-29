@@ -280,11 +280,11 @@
                 return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
             }
             else {
-                $.error( 'Method ' +  methodOrOptions + ' is private!' );
+                console.warn( 'Method ' +  methodOrOptions + ' is private!' );
             }
         }
         else {
-            $.error( 'Method ' +  methodOrOptions + ' does not exist.' );
+            console.warn( 'Method ' +  methodOrOptions + ' does not exist.' );
         }
     };
 })(jQuery, window, document);

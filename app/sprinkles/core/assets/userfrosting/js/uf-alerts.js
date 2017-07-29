@@ -129,7 +129,7 @@
                 document.close();
             } else {
                 if (this.settings.DEBUG) {
-                    $.error("Error (" + response.status + "): " + response.responseText );
+                    console.warn("Error (" + response.status + "): " + response.responseText );
                 }
             }
         },
@@ -272,11 +272,11 @@
                 return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
             }
             else {
-                $.error( 'Method ' +  methodOrOptions + ' is private!' );
+                console.warn( 'Method ' +  methodOrOptions + ' is private!' );
             }
         }
         else {
-            $.error( 'Method ' +  methodOrOptions + ' does not exist.' );
+            console.warn( 'Method ' +  methodOrOptions + ' does not exist.' );
         }
     };
 })(jQuery, window, document);
