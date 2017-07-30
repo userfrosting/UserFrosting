@@ -14,8 +14,7 @@ use UserFrosting\System\UserFrosting;
 /**
  * Class to handle Test
  *
- * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/navigating/#structure
+ * @author Louis Charette
  */
 class TestCase extends BaseTestCase
 {

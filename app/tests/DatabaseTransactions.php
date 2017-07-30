@@ -11,8 +11,7 @@ namespace UserFrosting\Tests;
  * Trait enabling wrapping of each test case in a database transaction
  * Based on Laravel `DatabaseTransactions` Traits
  *
- * @author Alex Weissman (https://alexanderweissman.com)
- * @see http://www.userfrosting.com/navigating/#structure
+ * @author Louis Charette
  */
 trait DatabaseTransactions
 {

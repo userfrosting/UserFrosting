@@ -8,7 +8,6 @@
 namespace UserFrosting\Tests\Unit;
 
 use UserFrosting\Tests\TestCase;
-//use UserFrosting\Tests\DatabaseMigrations;
 use UserFrosting\Tests\DatabaseTransactions;
 
 /**
