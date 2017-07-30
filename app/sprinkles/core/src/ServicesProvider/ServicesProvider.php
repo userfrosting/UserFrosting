@@ -403,13 +403,13 @@ class ServicesProvider
         $container['factory'] = function ($c) {
 
             // Get the path of all of the sprinkle's factories
-            $factories_path = $c->locator->findResources('factories://', true, true);
+            $factoriesPath = $c->locator->findResources('factories://', true, true);
 
             // Create a new Factory Muffin instance
             $fm = new FactoryMuffin();
 
             // Load all of the model definitions
-            $fm->loadFactories($factories_path);
+            $fm->loadFactories($factoriesPath);
 
             // Set the locale. Could be the config one, but for testing English should do
             Faker::setLocale('en_EN');
