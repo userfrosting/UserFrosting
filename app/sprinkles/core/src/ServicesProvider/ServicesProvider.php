@@ -480,16 +480,16 @@ class ServicesProvider
 
                     return $response->withStatus(404);
                 } else {
-                // Render a custom error page, if it exists
-                try {
-                    $template = $c->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");
-                } catch (\Twig_Error_Loader $e) {
-                    $template = $c->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
-                }
-
-                return $response->withStatus(404)
-                                ->withHeader('Content-Type', 'text/html')
-                                ->write($template->render([]));
+                    // Render a custom error page, if it exists
+                    try {
+                        $template = $c->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");
+                    } catch (\Twig_Error_Loader $e) {
+                        $template = $c->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
+                    }
+    
+                    return $response->withStatus(404)
+                                    ->withHeader('Content-Type', 'text/html')
+                                    ->write($template->render([]));
                 }
             };
         };
