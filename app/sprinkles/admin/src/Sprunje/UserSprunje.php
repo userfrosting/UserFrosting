@@ -59,18 +59,18 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return Builder
+     * @return $this
      */
     protected function filterLastActivity($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('activities.description', $value);
+                $query->orLike('activities.description', $value);
             }
-            return $query;
         });
+        return $this;
     }
 
     /**
@@ -78,20 +78,20 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return Builder
+     * @return $this
      */
     protected function filterName($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('first_name', $value)
-                                ->orLike('last_name', $value)
-                                ->orLike('email', $value);
+                $query->orLike('first_name', $value)
+                        ->orLike('last_name', $value)
+                        ->orLike('email', $value);
             }
-            return $query;
         });
+        return $this;
     }
 
     /**
@@ -99,26 +99,26 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return Builder
+     * @return $this
      */
     protected function filterStatus($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
                 if ($value == 'disabled') {
-                    $query = $query->orWhere('flag_enabled', 0);
+                    $query->orWhere('flag_enabled', 0);
                 } elseif ($value == 'unactivated') {
-                    $query = $query->orWhere('flag_verified', 0);
+                    $query->orWhere('flag_verified', 0);
                 } elseif ($value == 'active') {
-                    $query = $query->orWhere(function ($query) {
-                        return $query->where('flag_enabled', 1)->where('flag_verified', 1);
+                    $query->orWhere(function ($query) {
+                        $query->where('flag_enabled', 1)->where('flag_verified', 1);
                     });
                 }
             }
-            return $query;
         });
+        return $this;
     }
 
     /**
@@ -149,11 +149,12 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return Builder
+     * @return $this
      */
     protected function sortLastActivity($query, $direction)
     {
-        return $query->orderBy('activities.occurred_at', $direction);
+        $query->orderBy('activities.occurred_at', $direction);
+        return $this;
     }
 
     /**
@@ -161,11 +162,12 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return Builder
+     * @return $this
      */
     protected function sortName($query, $direction)
     {
-        return $query->orderBy('last_name', $direction);
+        $query->orderBy('last_name', $direction);
+        return $this;
     }
 
     /**
@@ -173,10 +175,11 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return Builder
+     * @return $this
      */
     protected function sortStatus($query, $direction)
     {
-        return $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
+        $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
+        return $this;
     }
 }

@@ -42,9 +42,7 @@ class RoleSprunje extends Sprunje
      */
     protected function baseQuery()
     {
-        $query = $this->classMapper->createInstance('role');
-
-        return $query;
+        return $this->classMapper->createInstance('role')->newQuery();
     }
 
     /**
@@ -52,18 +50,18 @@ class RoleSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return Builder
+     * @return $this
      */
     protected function filterInfo($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('name', $value)
-                                ->orLike('description', $value);
+                $query->orLike('name', $value)
+                        ->orLike('description', $value);
             }
-            return $query;
         });
+        return $this;
     }
 }

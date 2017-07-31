@@ -49,20 +49,20 @@ class ActivitySprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return Builder
+     * @return $this
      */
     protected function filterUser($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
+        $query->where(function ($query) use ($values) {
             foreach ($values as $value) {
-                $query = $query->orLike('users.first_name', $value)
-                                ->orLike('users.last_name', $value)
-                                ->orLike('users.email', $value);
+                $query->orLike('users.first_name', $value)
+                    ->orLike('users.last_name', $value)
+                    ->orLike('users.email', $value);
             }
-            return $query;
         });
+        return $this;
     }
 
     /**
@@ -70,10 +70,11 @@ class ActivitySprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return Builder
+     * @return $this
      */
     protected function sortUser($query, $direction)
     {
-        return $query->orderBy('users.last_name', $direction);
+        $query->orderBy('users.last_name', $direction);
+        return $this;
     }
 }

@@ -37,8 +37,6 @@ class GroupSprunje extends Sprunje
      */
     protected function baseQuery()
     {
-        $query = $this->classMapper->createInstance('group');
-
-        return $query;
+        return $this->classMapper->createInstance('group')->newQuery();
     }
 }

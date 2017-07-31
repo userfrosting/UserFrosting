@@ -149,6 +149,39 @@ class TestCase extends BaseTestCase
     }
 
     /**
+     * Asserts that collections are equivalent.
+     *
+     * @param  array   $expected
+     * @param  array   $actual
+     * @param  string  $message
+     * @throws PHPUnit_Framework_AssertionFailedError
+     */
+    public static function assertCollectionsSame($expected, $actual, $key = 'id', $message = '')
+    {
+        // Check that they have the same number of items
+        static::assertEquals(count($expected), count($actual));
+
+        // Sort by primary key
+        $expected = collect($expected)->sortBy($key);
+        $actual = collect($actual)->sortBy($key);
+
+        // Check that the keys match
+        $expectedKeys = $expected->keys()->all();
+        $actualKeys = $actual->keys()->all();
+        static::assertEquals(sort($expectedKeys), sort($actualKeys));
+
+        // Check that the array representations of each collection item match
+        $expected = $expected->values();
+        $actual = $actual->values();
+        for ($i = 0; $i < count($expected); $i++) {
+            static::assertEquals(
+                static::castToComparable($expected[$i]),
+                static::castToComparable($actual[$i])
+            );
+        }
+    }
+
+    /**
      * Register a callback to be run before the application is destroyed.
      *
      * @param  callable  $callback
@@ -157,5 +190,41 @@ class TestCase extends BaseTestCase
     protected function beforeApplicationDestroyed(callable $callback)
     {
         $this->beforeApplicationDestroyedCallbacks[] = $callback;
+    }
+
+    /**
+     * Helpers
+     */
+
+    /**
+     * Cast an item to an array if it has a toArray() method.
+     *
+     * @param $item Collection|mixed[]|mixed
+     * @return mixed|mixed[]
+     */
+    protected static function castToComparable($item)
+    {
+        return (is_object($item) && method_exists($item, 'toArray')) ? $item->toArray() : $item;
+    }
+
+    /**
+     * Remove all relations on a collection of models.
+     */
+    protected static function ignoreRelations($models)
+    {
+        foreach ($models as $model) {
+            $model->setRelations([]);
+        }
+    }
+
+    protected function cloneObjectArray($original)
+    {
+        $cloned = [];
+        
+        foreach ($original as $k => $v) {
+            $cloned[$k] = clone $v;
+        }
+
+        return $cloned;
     }
 }

@@ -28,7 +28,7 @@ class SprunjeTests extends TestCase
     {
         parent::setUp();
 
-        $this->classMapper = new ClassMapper(); 
+        $this->classMapper = new ClassMapper();
     }
 
     /**
@@ -39,18 +39,9 @@ class SprunjeTests extends TestCase
         $fm = $this->ci->factory;
 
         // Generate some test models
-        $users = $fm->seed(5, 'UserFrosting\Sprinkle\Account\Database\Models\User');
+        $users = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\User');
         $roles = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\Role');
         $permissions = $fm->seed(3, 'UserFrosting\Sprinkle\Account\Database\Models\Permission');
-        $permissions[0]->update([
-            'name' => 'a'
-        ]);
-        $permissions[1]->update([
-            'name' => 'b'
-        ]);
-        $permissions[2]->update([
-            'name' => 'c'
-        ]);
 
         // Create some relationships
         $roles[0]->permissions()->attach($permissions[1]);
@@ -69,46 +60,52 @@ class SprunjeTests extends TestCase
 
         // Test user 0
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[0]->id,
-            'sorts' => [
-                'name' => 'asc'
-            ]
+            'user_id' => $users[0]->id
         ]);
 
-        $result = $sprunje->getResults();
+        list($count, $countFiltered, $models) = $sprunje->getModels();
 
-        // TODO: assert that deeply nested keys actually exist
-        $this->assertArraySubset([
-            $permissions[0]->toArray(),
-            $permissions[1]->toArray(),
-            $permissions[2]->toArray()
-        ], $result['rows']);
+        // Check that counts are correct
+        $this->assertEquals(count($models), $count);
+        $this->assertEquals(count($models), $countFiltered);
+
+        // Ignore pivot and roles_via.  These are covered by the tests for the relationships themselves.
+        static::ignoreRelations($models);
+        $this->assertCollectionsSame(collect($permissions), $models);
 
         // Test user 1
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[1]->id,
-            'sorts' => [
-                'name' => 'asc'
-            ]
+            'user_id' => $users[1]->id
         ]);
 
-        $result = $sprunje->getResults();
-        $this->assertArraySubset([
-            $permissions[1]->toArray(),
-            $permissions[2]->toArray()
-        ], $result['rows']);
+        list($count, $countFiltered, $models) = $sprunje->getModels();
+
+        // Check that counts are correct
+        $this->assertEquals(count($models), $count);
+        $this->assertEquals(count($models), $countFiltered);
+
+        // Ignore pivot and roles_via.  These are covered by the tests for the relationships themselves.
+        static::ignoreRelations($models);
+        $this->assertCollectionsSame(collect([
+            $permissions[1],
+            $permissions[2]
+        ]), $models);
 
         // Test user 2
         $sprunje = new UserPermissionSprunje($this->classMapper, [
-            'user_id' => $users[2]->id,
-            'sorts' => [
-                'name' => 'asc'
-            ]
+            'user_id' => $users[2]->id
         ]);
 
-        $result = $sprunje->getResults();
-        $this->assertArraySubset([
-            $permissions[2]->toArray()
-        ], $result['rows']);
+        list($count, $countFiltered, $models) = $sprunje->getModels();
+
+        // Check that counts are correct
+        $this->assertEquals(count($models), $count);
+        $this->assertEquals(count($models), $countFiltered);
+
+        // Ignore pivot and roles_via.  These are covered by the tests for the relationships themselves.
+        static::ignoreRelations($models);
+        $this->assertCollectionsSame(collect([
+            $permissions[2]
+        ]), $models);
     }
 }

@@ -44,12 +44,11 @@ class SprunjeTest extends TestCase
         $builder->shouldReceive('newQuery')->andReturn(
                 $subBuilder = m::mock(Builder::class, function ($subQuery) {
                     $subQuery->makePartial();
-                    $subQuery->shouldReceive('from')->with('table')->once()->andReturn($subQuery);
                     $subQuery->shouldReceive('orLike')->with('species', 'Tyto')->once()->andReturn($subQuery);
                 })
             );
 
-        $sprunje->applyFilters();
+        $sprunje->applyFilters($builder);
     }
 
     function testSprunjeApplySortsDefault()
@@ -62,7 +61,7 @@ class SprunjeTest extends TestCase
 
         $builder = $sprunje->getQuery();
         $builder->shouldReceive('orderBy')->once()->with('species', 'asc');
-        $sprunje->applySorts();
+        $sprunje->applySorts($builder);
     }
 
 }
@@ -83,14 +82,6 @@ class SprunjeStub extends Sprunje
         parent::__construct($classMapper, $options);
     }
 
-    /**
-     * Allows us to test calls on a protected method.
-     */
-    public function applyFilters()
-    {
-        return parent::applyFilters();
-    }
-
     protected function baseQuery()
     {
         // We use a partial mock for Builder, because we need to be able to run some of its actual methods.
@@ -98,7 +89,7 @@ class SprunjeStub extends Sprunje
         $builder = m::mock(Builder::class);
         $builder->makePartial();
 
-        return $builder->from('table');
+        return $builder;
     }
 }
 
