@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * UserPermissionSprunje
@@ -36,7 +37,7 @@ class UserPermissionSprunje extends PermissionSprunje
 
         // If the user doesn't exist, return 404
         if (!$user) {
-            throw new NotFoundException($request, $response);
+            throw new NotFoundException;
         }
 
         // Get user permissions

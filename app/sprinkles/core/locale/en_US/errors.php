@@ -21,7 +21,7 @@ return [
         ],
 
         "404" => [
-            "TITLE" => "Error 404: Page not found",
+            "TITLE" => "Error 404: Not Found",
             "DESCRIPTION" => "We can't seem to find what you're looking for.",
             "DETAIL" => "We tried to find your page...",
             "EXPLAIN" => "We could not find the page you were looking for.",
