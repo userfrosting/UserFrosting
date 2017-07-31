@@ -67,6 +67,7 @@ class SprunjeTests extends TestCase
 
         $this->classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Database\Models\User');
 
+        // Test user 0
         $sprunje = new UserPermissionSprunje($this->classMapper, [
             'user_id' => $users[0]->id,
             'sorts' => [
@@ -82,7 +83,32 @@ class SprunjeTests extends TestCase
             $permissions[1]->toArray(),
             $permissions[2]->toArray()
         ], $result['rows']);
-        
 
+        // Test user 1
+        $sprunje = new UserPermissionSprunje($this->classMapper, [
+            'user_id' => $users[1]->id,
+            'sorts' => [
+                'name' => 'asc'
+            ]
+        ]);
+
+        $result = $sprunje->getResults();
+        $this->assertArraySubset([
+            $permissions[1]->toArray(),
+            $permissions[2]->toArray()
+        ], $result['rows']);
+
+        // Test user 2
+        $sprunje = new UserPermissionSprunje($this->classMapper, [
+            'user_id' => $users[2]->id,
+            'sorts' => [
+                'name' => 'asc'
+            ]
+        ]);
+
+        $result = $sprunje->getResults();
+        $this->assertArraySubset([
+            $permissions[2]->toArray()
+        ], $result['rows']);
     }
 }
