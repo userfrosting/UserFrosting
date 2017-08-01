@@ -7,6 +7,7 @@
 - Factor out common code from `PermissionUserSprunje` into `UserSprunje`
 - Rework internals of `Sprunje` to make it more testable.  Filters, sorts, and paginations are now applied to a clone of the original queriable object.  Deprecated `getResults` and added `getArray` and `getModels`.  Result keys can now be customized.
 - Table of user permissions on user info page
+- Simplify by combining `permission-users.html.twig` into options on `users.html.twig`
 - Add Chinese translations
 - Deprecate User::exists() (#771)
 - Add 'password' to hidden fields for User model

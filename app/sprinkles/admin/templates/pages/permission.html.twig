@@ -56,9 +56,10 @@
                     {% include "tables/table-tool-menu.html.twig" %}
                 </div>
                 <div class="box-body">
-                    {% include "tables/permission-users.html.twig" with {
+                    {% include "tables/users.html.twig" with {
                             "table" : {
-                                "id" : "table-permission-users"
+                                "id" : "table-permission-users",
+                                "columns" : ["via_roles"]
                             }
                         }
                     %}

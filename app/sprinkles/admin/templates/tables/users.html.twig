@@ -15,6 +15,9 @@
                 {% if 'last_activity' in table.columns %}
                     <th class="sorter-metanum" data-column-name="last_activity" data-column-template="#user-table-column-last-activity" data-priority="2">{{translate("ACTIVITY.LAST")}} <i class="fa fa-sort"></i></th>
                 {% endif %}
+                {% if 'via_roles' in table.columns %}
+                    <th data-column-template="#user-table-column-via-roles" data-sorter="false" data-filter="false" data-priority="1">{{translate('PERMISSION.VIA_ROLES')}}</th>
+                {% endif %}
                 <th class="filter-select filter-metatext" data-column-name="status" data-column-template="#user-table-column-actions" data-priority="1">{{translate("STATUS")}}/{{translate("ACTIONS")}} <i class="fa fa-sort"></i></th>
             </tr>
         </thead>
@@ -129,6 +132,14 @@
                     </li>
                 </ul>
             </div>
+        </td>
+    </script>
+
+    <script id="user-table-column-via-roles" type="text/x-handlebars-template">
+        <td>
+            {{#each row.roles_via }}
+                <a href="{% endverbatim %}{# Handlebars can't access variables in the global scope, so we have to use Twig to insert the base url #}{{site.uri.public}}{% verbatim %}/roles/r/{{this.slug}}" class="label label-primary" title="{{this.description}}">{{this.name}}</a>
+            {{/each}}
         </td>
     </script>
     {% endverbatim %}
