@@ -34,7 +34,7 @@
         "userfrosting/fortress": "~4.1.1",
         "userfrosting/i18n": "~4.1.0",
         "userfrosting/session": "~4.1.0",
-        "userfrosting/support": "~4.1.0",
+        "userfrosting/support": "~4.1.1",
         "vlucas/phpdotenv": "^2"
     },
     "autoload": {
