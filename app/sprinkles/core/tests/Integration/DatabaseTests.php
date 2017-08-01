@@ -655,6 +655,61 @@ class DatabaseTests extends TestCase
         $this->assertBelongsToManyThroughForAlex($usersWithPermissions[1]['permissions']);
     }
 
+    public function testQueryExclude()
+    {
+        $this->generateRoles();
+        $this->generateJobs();
+        $job = EloquentTestJob::exclude('location_id', 'title')->first();
+        
+        $this->assertEquals([
+            'role_id' => 2,
+            'user_id' => 1
+        ], $job->toArray());
+    }
+
+    public function testQueryExcludeOnJoinedTable()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $user->roles()->attach([1,2]);
+
+        $users = EloquentTestUser::with(['permissions' => function ($query) {
+            $query->exclude('slug');
+        }])->get();
+        
+        $this->assertEquals([
+            [
+                'id' => 1,
+                'name' => 'David',
+                'permissions' => [
+                    [
+                        'id' => 1,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'permission_id' => 1
+                        ]
+                    ],
+                    [
+                        'id' => 2,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'permission_id' => 2
+                        ]
+                    ],
+                    [
+                        'id' => 3,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'permission_id' => 3
+                        ]
+                    ]
+                ]
+            ]
+        ], $users->toArray());
+    }
+
     /**
      * Helpers...
      */
@@ -1151,4 +1206,12 @@ class EloquentTestJob extends EloquentTestModel
 {
     protected $table = 'jobs';
     protected $guarded = [];
+
+    /**
+     * Get the role for this job.
+     */
+    public function role()
+    {
+        return $this->belongsTo('UserFrosting\Tests\Integration\EloquentTestRole', 'role_id');
+    }
 }
