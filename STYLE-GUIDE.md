@@ -16,7 +16,6 @@ In addition:
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
- * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
  ```
@@ -25,8 +24,7 @@ In addition:
 
 - All classes MUST be prefaced with a documentation block containing a description and the author(s) of that class.  You SHOULD add other descriptive properties as well.
 - All class members and methods MUST be prefaced with a documentation block.  Any parameters and return values MUST be documented.
-- The contents of a class should be organized in the following order: constants, member variables, constructor, other magic methods, public methods, protected methods, private methods.
-- Within each of the categories above, variables/methods should be alphabetized.  See http://stackoverflow.com/a/3366429/2970321.
+- The contents of a class should be organized in the following order: constants, member variables, constructor, other magic methods, public methods, protected methods, private methods, and finally, deprecated methods (of any type or visibility).
 - Setter methods SHOULD return the parent object.
 
 ### Routes
