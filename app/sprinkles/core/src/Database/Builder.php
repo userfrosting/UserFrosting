@@ -99,7 +99,8 @@ class Builder extends LaravelBuilder
         if (!is_null($this->excludedColumns)) {
             $this->columns = $this->replaceWildcardColumns($this->columns);
 
-            $this->columns = array_diff($this->columns, $this->excludedColumns);
+            $excludedColumns = $this->getQualifiedExcludedColumns();
+            $this->columns = array_diff($this->columns, $excludedColumns);
         }
 
         $results = $this->processor->processSelect($this, $this->runSelect());
@@ -122,7 +123,7 @@ class Builder extends LaravelBuilder
         foreach ($wildcardTables as $wildColumn => $table) {
             $schemaColumns = $this->getQualifiedColumnNames($table);
 
-            // Remove the `*` or `.*` column and replace with the individual schema columns 
+            // Remove the `*` or `.*` column and replace with the individual schema columns
             $columns = array_diff($columns, [$wildColumn]);
             $columns = array_merge($columns, $schemaColumns);
         }
@@ -172,15 +173,28 @@ class Builder extends LaravelBuilder
         $schema = $this->getConnection()->getSchemaBuilder();
         $columns = $schema->getColumnListing($table);
 
-        // Don't modify column names if the table is the query's base table
-        if ($table == $this->from) {
-            return $columns;
-        }
-
-        array_walk ($columns, function (&$item, $key) use ($table) {
+        array_walk($columns, function (&$item, $key) use ($table) {
             $item = "$table.$item";
         });
 
         return $columns;
+    }
+
+    /**
+     * Return the list of excluded columns, fully qualifying any unqualified columns with this builder's table name.
+     *
+     * @return array
+     */
+    protected function getQualifiedExcludedColumns()
+    {
+        $excludedColumns = $this->excludedColumns;
+
+        array_walk($excludedColumns, function (&$item, $key) {
+            if (strpos($item, '.') === false) {
+                $item = "{$this->from}.$item";
+            }
+        });
+
+        return $excludedColumns;
     }
 }
