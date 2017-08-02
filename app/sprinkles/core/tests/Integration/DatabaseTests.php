@@ -710,6 +710,45 @@ class DatabaseTests extends TestCase
         ], $users->toArray());
     }
 
+    public function testQueryExcludeUseQualifiedNamesOnJoinedTable()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $user->roles()->attach([1,2]);
+
+        $users = EloquentTestUser::with(['roles' => function ($query) {
+            $query->addSelect('roles.*', 'jobs.*')->leftJoin('jobs', 'jobs.role_id', '=', 'roles.id')
+                    ->exclude('slug', 'jobs.user_id', 'jobs.location_id', 'jobs.role_id');
+        }])->get();
+
+        $this->assertEquals([
+            [
+                'id' => 1,
+                'name' => 'David',
+                'roles' => [
+                    [
+                        'id' => 1,
+                        'title' => null,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'role_id' => 1
+                        ]
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => null,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'role_id' => 2
+                        ]
+                    ]
+                ]
+            ]
+        ], $users->toArray());
+    }
+
     /**
      * Helpers...
      */

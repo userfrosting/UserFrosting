@@ -117,12 +117,10 @@ class Builder extends LaravelBuilder
      */
     protected function replaceWildcardColumns(array $columns)
     {
-        $schema = $this->getConnection()->getSchemaBuilder();
-
         $wildcardTables = $this->findWildcardTables($columns);
 
         foreach ($wildcardTables as $wildColumn => $table) {
-            $schemaColumns = $schema->getColumnListing($table);
+            $schemaColumns = $this->getQualifiedColumnNames($table);
 
             // Remove the `*` or `.*` column and replace with the individual schema columns 
             $columns = array_diff($columns, [$wildColumn]);
@@ -157,5 +155,32 @@ class Builder extends LaravelBuilder
         }
 
         return $tables;
+    }
+
+    /**
+     * Gets the fully qualified column names for a specified table.
+     *
+     * @param string $table
+     * @return array
+     */
+    protected function getQualifiedColumnNames($table = null)
+    {
+        if (is_null($table)) {
+            $table = $this->from;
+        }
+
+        $schema = $this->getConnection()->getSchemaBuilder();
+        $columns = $schema->getColumnListing($table);
+
+        // Don't modify column names if the table is the query's base table
+        if ($table == $this->from) {
+            return $columns;
+        }
+
+        array_walk ($columns, function (&$item, $key) use ($table) {
+            $item = "$table.$item";
+        });
+
+        return $columns;
     }
 }
