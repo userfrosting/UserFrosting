@@ -7,7 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
 
@@ -51,16 +51,6 @@ abstract class Model extends LaravelModel
     }
 
     /**
-     * Get the properties of this object as an associative array.  Alias for toArray().
-     *
-     * @return array
-     */
-    public function export()
-    {
-        return $this->toArray();
-    }
-
-    /**
      * Determines whether a model exists by checking a unique column, including checking soft-deleted records
      *
      * @param mixed  $value
@@ -80,18 +70,6 @@ abstract class Model extends LaravelModel
     }
 
     /**
-     * For raw array fetching.  Must be static, otherwise PHP gets confused about where to find $table.
-     *
-     * @todo Is this the right way to implement this?  can we just make it a query scope?
-     */
-    public static function queryBuilder()
-    {
-        // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
-        Capsule::connection()->setFetchMode(\PDO::FETCH_ASSOC);
-        return Capsule::table(static::$table);
-    }
-
-    /**
      * Determine if an relation exists on the model - even if it is null.
      *
      * @param  string  $key
@@ -100,6 +78,20 @@ abstract class Model extends LaravelModel
     public function relationExists($key)
     {
         return array_key_exists($key, $this->relations);
+    }
+
+    /**
+     * Store the object in the DB, creating a new row if one doesn't already exist.
+     *
+     * Calls save(), then returns the id of the new record in the database.
+     * @return int the id of this object.
+     */
+    public function store()
+    {
+        $this->save();
+
+        // Store function should always return the id of the object
+        return $this->id;
     }
 
     /**
@@ -123,16 +115,26 @@ abstract class Model extends LaravelModel
     }
 
     /**
-     * Store the object in the DB, creating a new row if one doesn't already exist.
+     * Get the properties of this object as an associative array.  Alias for toArray().
      *
-     * Calls save(), then returns the id of the new record in the database.
-     * @return int the id of this object.
+     * @deprecated since 4.1.8 There is no point in having this alias.
+     * @return array
      */
-    public function store()
+    public function export()
     {
-        $this->save();
+        return $this->toArray();
+    }
 
-        // Store function should always return the id of the object
-        return $this->id;
+    /**
+     * For raw array fetching.  Must be static, otherwise PHP gets confused about where to find $table.
+     *
+     * @deprecated since 4.1.8 setFetchMode is no longer available as of Laravel 5.4.
+     * @link https://github.com/laravel/framework/issues/17728
+     */
+    public static function queryBuilder()
+    {
+        // Set query builder to fetch result sets as associative arrays (instead of creating stdClass objects)
+        DB::connection()->setFetchMode(\PDO::FETCH_ASSOC);
+        return DB::table(static::$table);
     }
 }
