@@ -667,6 +667,7 @@ class DatabaseTests extends TestCase
         ], $job->toArray());
     }
 
+
     public function testQueryExcludeOnJoinedTable()
     {
         $this->generateRolesWithPermissions();
@@ -747,6 +748,29 @@ class DatabaseTests extends TestCase
                 ]
             ]
         ], $users->toArray());
+    }
+
+    public function testQueryExcludeWildcard()
+    {
+        $this->generateRoles();
+        $this->generateJobs();
+        $job = EloquentTestJob::select('*')->addSelect('user_id')->exclude('*')->first();
+
+        $this->assertEquals([
+            'user_id' => 1
+        ], $job->toArray());
+
+        $job = EloquentTestJob::select('jobs.*')->addSelect('user_id')->exclude('*')->first();
+
+        $this->assertEquals([
+            'user_id' => 1
+        ], $job->toArray());
+
+        $job = EloquentTestJob::select('*')->addSelect('user_id')->exclude('jobs.*')->first();
+
+        $this->assertEquals([
+            'user_id' => 1
+        ], $job->toArray());
     }
 
     /**

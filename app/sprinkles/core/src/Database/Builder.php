@@ -97,10 +97,7 @@ class Builder extends LaravelBuilder
 
         // Exclude any explicitly excluded columns
         if (!is_null($this->excludedColumns)) {
-            $this->columns = $this->replaceWildcardColumns($this->columns);
-
-            $excludedColumns = $this->getQualifiedExcludedColumns();
-            $this->columns = array_diff($this->columns, $excludedColumns);
+            $this->removeExcludedSelectColumns();
         }
 
         $results = $this->processor->processSelect($this, $this->runSelect());
@@ -108,6 +105,25 @@ class Builder extends LaravelBuilder
         $this->columns = $original;
 
         return collect($results);
+    }
+
+    /**
+     * Remove excluded columns from the select column list.
+     */
+    protected function removeExcludedSelectColumns()
+    {
+        // Convert current column list and excluded column list to fully-qualified list
+        $this->columns = $this->convertColumnsToFullyQualified($this->columns);
+        $excludedColumns = $this->convertColumnsToFullyQualified($this->excludedColumns);
+
+        // Remove any explicitly referenced excludable columns
+        $this->columns = array_diff($this->columns, $excludedColumns);
+
+        // Replace any remaining wildcard columns (*, table.*, etc) with a list
+        // of fully-qualified column names
+        $this->columns = $this->replaceWildcardColumns($this->columns);
+
+        $this->columns = array_diff($this->columns, $excludedColumns);
     }
 
     /**
@@ -166,35 +182,29 @@ class Builder extends LaravelBuilder
      */
     protected function getQualifiedColumnNames($table = null)
     {
+        $schema = $this->getConnection()->getSchemaBuilder();
+
+        return $this->convertColumnsToFullyQualified($schema->getColumnListing($table), $table);
+    }
+
+    /**
+     * Fully qualify any unqualified columns in a list with this builder's table name.
+     *
+     * @param array $columns
+     * @return array
+     */
+    protected function convertColumnsToFullyQualified($columns, $table = null)
+    {
         if (is_null($table)) {
             $table = $this->from;
         }
 
-        $schema = $this->getConnection()->getSchemaBuilder();
-        $columns = $schema->getColumnListing($table);
-
         array_walk($columns, function (&$item, $key) use ($table) {
-            $item = "$table.$item";
-        });
-
-        return $columns;
-    }
-
-    /**
-     * Return the list of excluded columns, fully qualifying any unqualified columns with this builder's table name.
-     *
-     * @return array
-     */
-    protected function getQualifiedExcludedColumns()
-    {
-        $excludedColumns = $this->excludedColumns;
-
-        array_walk($excludedColumns, function (&$item, $key) {
             if (strpos($item, '.') === false) {
-                $item = "{$this->from}.$item";
+                $item = "$table.$item";
             }
         });
 
-        return $excludedColumns;
+        return $columns;
     }
 }
