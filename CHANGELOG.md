@@ -2,6 +2,8 @@
 
 ## v4.1.8-alpha
 - Reimplement `Builder::exclude` to maintain a list of excluded columns, and then automatically update list of columns to fetch in `get()`
+- Deprecate `Model::queryBuilder` and `Model::export`
+- Update nginx config file from spdy to http2
 
 ## v4.1.7-alpha
 - Add the `withTernary` method to the `Unique` trait to allow loading nested child models on ternary relationships.
