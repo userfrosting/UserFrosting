@@ -25,7 +25,7 @@ class PlainTextRenderer extends ErrorRenderer
     {
         $e = $this->exception;
 
-        $text = 'Slim Application Error:' . PHP_EOL;
+        $text = 'UserFrosting Application Error:' . PHP_EOL;
         $text .= $this->formatExceptionFragment($e);
 
         while ($e = $e->getPrevious()) {

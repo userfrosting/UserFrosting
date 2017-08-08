@@ -393,7 +393,7 @@ abstract class Sprunje
                 throw $e;
             }
 
-            // Determine if a custom filter method has been defined
+            // Determine if a custom sort method has been defined
             $methodName = 'sort'.studly_case($name);
 
             if (method_exists($this, $methodName)) {
