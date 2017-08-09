@@ -42,6 +42,8 @@ class Core extends Sprinkle
 
         // Normalize path to always have a leading slash
         $path = '/' . ltrim($path, '/');
+        // Normalize method to uppercase
+        $method = strtoupper($method);
 
         $csrfBlacklist = $this->ci->config['csrf.blacklist'];
         $isBlacklisted = false;

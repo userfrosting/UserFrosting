@@ -1,7 +1,7 @@
 # Change Log
 
 ## v4.1.8-alpha
-- Normalize paths to always have a leading slash when comparing against the CSRF blacklist (#775)
+- Normalize paths to always have a leading slash when comparing against the CSRF blacklist (#775) (possible breaking change for some environments - please see updated docs at https://learn.userfrosting.com/routes-and-controllers/client-input/csrf-guard#blacklisting-routes)
 - Reimplement `Builder::exclude` to maintain a list of excluded columns, and then automatically update list of columns to fetch in `get()`
 - Deprecate `Model::queryBuilder` and `Model::export`
 - Update nginx config file from spdy to http2
