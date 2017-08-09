@@ -32,5 +32,9 @@
                 'ajax' => false,
                 'info' => false
             ]
+        ],
+        'php' => [
+            'display_errors'  => 'false',
+            'log_errors'      => 'true'
         ]
     ];

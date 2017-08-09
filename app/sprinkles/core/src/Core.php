@@ -25,10 +25,61 @@ class Core extends Sprinkle
     public static function getSubscribedEvents()
     {
         return [
-            'onAddGlobalMiddleware' => ['onAddGlobalMiddleware', 0],
             'onSprinklesInitialized' => ['onSprinklesInitialized', 0],
-            'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0]
+            'onSprinklesRegisterServices' => ['onSprinklesRegisterServices', 0],
+            'onAddGlobalMiddleware' => ['onAddGlobalMiddleware', 0]
         ];
+    }
+
+    /**
+     * Set static references to DI container in necessary classes.
+     */
+    public function onSprinklesInitialized()
+    {
+        // Set container for data model
+        Model::$ci = $this->ci;
+
+        // Set container for environment info class
+        EnvironmentInfo::$ci = $this->ci;
+    }
+
+    /**
+     * Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
+     */
+    public function onSprinklesRegisterServices()
+    {
+        // Set up any global PHP settings from the config service.
+        $config = $this->ci->config;
+
+        // Display PHP fatal errors
+        if (isset($config['php.display_errors'])) {
+            ini_set('display_errors', $config['php.display_errors']);
+        }
+
+        // Log PHP fatal errors
+        if (isset($config['php.log_errors'])) {
+            ini_set('log_errors', $config['php.log_errors']);
+        }
+
+        // Configure error-reporting level
+        if (isset($config['php.error_reporting'])) {
+            error_reporting($config['php.error_reporting']);
+        }
+
+        // Configure time zone
+        if (isset($config['php.timezone'])) {
+            date_default_timezone_set($config['php.timezone']);
+        }
+
+        // Run the generic shutdown handler, if error display is disabled.
+        if (!in_array(strtolower($config['php.display_errors']), [
+            '1',
+            'on',
+            'true',
+            'yes'
+        ])) {
+            $this->ci->shutdownHandler;
+        }
     }
 
     /**
@@ -61,25 +112,5 @@ class Core extends Sprinkle
             $app = $event->getApp();
             $app->add($this->ci->csrf);
         }
-    }
-
-    /**
-     * Set static references to DI container in necessary classes.
-     */
-    public function onSprinklesInitialized()
-    {
-        // Set container for data model
-        Model::$ci = $this->ci;
-
-        // Set container for environment info class
-        EnvironmentInfo::$ci = $this->ci;
-    }
-
-    /**
-     * Get shutdownHandler set up.  This needs to be constructed explicitly because it's invoked natively by PHP.
-     */
-    public function onSprinklesRegisterServices()
-    {
-        $this->ci->shutdownHandler;
     }
 }

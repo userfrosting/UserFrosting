@@ -218,7 +218,7 @@ class ServicesProvider
             }
 
             // Get configuration mode from environment
-            $mode = getenv("UF_MODE") ?: '';
+            $mode = getenv('UF_MODE') ?: '';
 
             // Construct and load config repository
             $builder = new ConfigPathBuilder($c->locator, 'config://');
@@ -248,20 +248,6 @@ class ServicesProvider
             ];
 
             $config->set('csrf.blacklist', $csrfBlacklist);
-
-            if (isset($config['display_errors'])) {
-                ini_set("display_errors", $config['display_errors']);
-            }
-
-            // Configure error-reporting
-            if (isset($config['error_reporting'])) {
-                error_reporting($config['error_reporting']);
-            }
-
-            // Configure time zone
-            if (isset($config['timezone'])) {
-                date_default_timezone_set($config['timezone']);
-            }
 
             return $config;
         };

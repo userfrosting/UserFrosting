@@ -19,9 +19,9 @@ use UserFrosting\System\UserFrosting;
 class TestCase extends BaseTestCase
 {
     /**
-     * The Illuminate application instance.
+     * The Slim application instance.
      *
-     * @var \Illuminate\Foundation\Application
+     * @var \Slim\App
      */
     protected $app;
 
@@ -98,6 +98,12 @@ class TestCase extends BaseTestCase
      */
     protected function refreshApplication()
     {
+        // Force setting UF_MODE.  This is needed at the moment because Bakery
+        // uses passthru to invoke PHPUnit.  This means that the value of UF_MODE
+        // has already been set when Bakery was set up, and PHPUnit < 6.3 has
+        // no way to override environment vars that have already been set.
+        putenv('UF_MODE=testing');
+
         // Setup the sprinkles
         $uf = new UserFrosting();
 

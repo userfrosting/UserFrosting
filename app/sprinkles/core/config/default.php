@@ -168,7 +168,10 @@
                 'publisher'         => ''
             ]
         ],
-        'timezone' => 'America/New_York',
-        'error_reporting' => E_ALL,  // Development - report all errors and suggestions
-        'display_errors'  => 'off'
+        'php' => [
+            'timezone' => 'America/New_York',
+            'error_reporting' => E_ALL,  // Development - report all errors and suggestions
+            'display_errors'  => 'true',
+            'log_errors'      => 'false'
+        ]
     ];

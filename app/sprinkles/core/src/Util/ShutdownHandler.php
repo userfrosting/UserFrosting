@@ -29,7 +29,7 @@ class ShutdownHandler
     public function __construct(ContainerInterface $ci)
     {
         $this->ci = $ci;
-        register_shutdown_function( [$this, "fatalHandler"]);
+        register_shutdown_function([$this, 'fatalHandler']);
     }
 
     /**
@@ -39,28 +39,26 @@ class ShutdownHandler
     {
         $error = error_get_last();
 
-        // Handle fatal errors
-        if( $error !== NULL && $error['type'] == E_ERROR || $error['type'] == E_PARSE) {
-            $errno   = (string)$error["type"];
-            $errfile = $error["file"];
-            $errline = (string)$error["line"];
-            $errstr  = $error["message"];
-            $clientErrorMessage = "Oops, looks like our server might have goofed.  If you're an admin, please check your PHP error log.";
-
-            error_log("Fatal error ($errno) in $errfile on line $errline: $errstr");
+        // Handle fatal errors and parse errors
+        if ($error !== NULL && $error['type'] == E_ERROR || $error['type'] == E_PARSE) {
+            $errno   = (string) $error['type'];
+            $errfile = $error['file'];
+            $errline = (string) $error['line'];
+            $errstr  = $error['message'];
+            $clientErrorMessage = "Oops, looks like our server might have goofed.  If you're an admin, please check the PHP error log.";
 
             // For AJAX requests, add an alert to the message stream instead
             if ($this->ci->request->isXhr()) {
                 // Inform the client of a fatal error
-                $output = "";
+                $output = '';
                 if ($this->ci->alerts && is_object($this->ci->alerts)) {
-                    $this->ci->alerts->addMessageTranslated("danger", $clientErrorMessage);
+                    $this->ci->alerts->addMessageTranslated('danger', $clientErrorMessage);
                     $output = $clientErrorMessage;
                 }
-            } else if (php_sapi_name() === 'cli') {
+            } elseif (php_sapi_name() === 'cli') {
 				exit($clientErrorMessage . PHP_EOL);
             } else {
-                $title = "UserFrosting Application Error";
+                $title = 'UserFrosting Application Error';
                 $html = "<h2>$clientErrorMessage</h2>";
 
                 $output = sprintf(
@@ -75,7 +73,7 @@ class ShutdownHandler
             }
 
             echo $output;
-            header("HTTP/1.1 500 Internal Server Error");
+            header('HTTP/1.1 500 Internal Server Error');
             exit();
         }
     }
