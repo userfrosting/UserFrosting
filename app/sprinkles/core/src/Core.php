@@ -36,16 +36,17 @@ class Core extends Sprinkle
      */
     public function onAddGlobalMiddleware(Event $event)
     {
-        // Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
-        // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
         $request = $this->ci->request;
         $path = $request->getUri()->getPath();
         $method = $request->getMethod();
 
-        $csrfBlacklist = $this->ci->config['csrf.blacklist'];
+        // Normalize path to always have a leading slash
+        $path = '/' . ltrim($path, '/');
 
+        $csrfBlacklist = $this->ci->config['csrf.blacklist'];
         $isBlacklisted = false;
 
+        // Go through the blacklist and determine if the path and method match any of the blacklist entries.
         foreach ($csrfBlacklist as $pattern => $methods) {
             $methods = array_map('strtoupper', (array) $methods);
             if (in_array($method, $methods) && $pattern != '' && preg_match('~' . $pattern . '~', $path)) {
