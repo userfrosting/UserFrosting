@@ -5,6 +5,8 @@
 - Reimplement `Builder::exclude` to maintain a list of excluded columns, and then automatically update list of columns to fetch in `get()`
 - Deprecate `Model::queryBuilder` and `Model::export`
 - Update nginx config file from spdy to http2
+- Add Pagespeed block (commented out) to nginx config file
+- Make fpm-php7.0 the default CGI nginx config file
 
 ## v4.1.7-alpha
 - Add the `withTernary` method to the `Unique` trait to allow loading nested child models on ternary relationships.
