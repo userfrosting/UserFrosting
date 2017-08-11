@@ -624,6 +624,41 @@ class DatabaseTests extends TestCase
     }
 
     /**
+     * Test the ability of a BelongsToManyThrough relationship to retrieve and count paginated queries.
+     */
+    public function testBelongsToManyThroughPaginated()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $user->roles()->attach([1,2]);
+
+        $paginatedPermissions = $user->permissions()->take(2)->offset(1);
+
+        $this->assertEquals([
+            [
+                'id' => 2,
+                'slug' => 'uri_spit_acid',
+                'pivot' => [
+                    'user_id' => 1,
+                    'permission_id' => 2
+                ]
+            ],
+            [
+                'id' => 3,
+                'slug' => 'uri_slash',
+                'pivot' => [
+                    'user_id' => 1,
+                    'permission_id' => 3
+                ]
+            ]
+        ], $paginatedPermissions->get()->toArray());
+
+        $this->assertEquals(2, $paginatedPermissions->count());
+    }
+
+    /**
      * Test the ability of a BelongsToManyThrough relationship to retrieve structured data on a single model or set of models,
      * eager loading the "via" models at the same time.
      */

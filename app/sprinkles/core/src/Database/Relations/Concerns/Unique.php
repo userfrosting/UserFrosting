@@ -273,8 +273,11 @@ trait Unique
         // Instead, we perform an additional query with grouping and limit/offset to determine
         // the desired set of unique model _ids_, and then constrain our final query
         // to these models with a whereIn clause.
+
+        // Get the ids via the FK so we can directly retrieve them without needing
+        // to create models.
         $constrainedBuilder = $constrainedBuilder
-                                ->select($this->related->getQualifiedKeyName())
+                                ->select($this->relatedKey)
                                 ->groupBy($this->relatedKey);
 
         if ($limit) {
@@ -285,11 +288,7 @@ trait Unique
             $constrainedBuilder = $constrainedBuilder->offset($offset);
         }
 
-        $constrainedModels = $constrainedBuilder->getModels();
-
-        $primaryKeyName = $this->getParent()->getKeyName();
-
-        $modelIds = $this->related->newCollection($constrainedModels)->pluck($primaryKeyName)->toArray();
+        $modelIds = $constrainedBuilder->get()->pluck($this->relatedKey)->toArray();
 
         // Modify the unconstrained query to limit to these models
         $query = $query->whereIn($this->relatedKey, $modelIds);
@@ -325,6 +324,7 @@ trait Unique
         // models with the result of those columns as a separate model relation.
         $columns = $this->query->getQuery()->columns ? [] : $columns;
 
+        // Apply scopes to the Eloquent\Builder instance.
         $builder = $this->query->applyScopes();
 
         $builder = $builder->addSelect(
