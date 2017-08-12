@@ -273,12 +273,10 @@ trait Unique
         // Instead, we perform an additional query with grouping and limit/offset to determine
         // the desired set of unique model _ids_, and then constrain our final query
         // to these models with a whereIn clause.
-
-        // Get the ids via the FK so we can directly retrieve them without needing
-        // to create models.
+        $relatedKeyName = $this->related->getQualifiedKeyName();
         $constrainedBuilder = $constrainedBuilder
-                                ->select($this->relatedKey)
-                                ->groupBy($this->relatedKey);
+                                ->select($relatedKeyName)
+                                ->groupBy($relatedKeyName);
 
         if ($limit) {
             $constrainedBuilder = $constrainedBuilder->limit($limit);
@@ -288,10 +286,11 @@ trait Unique
             $constrainedBuilder = $constrainedBuilder->offset($offset);
         }
 
-        $modelIds = $constrainedBuilder->get()->pluck($this->relatedKey)->toArray();
+        $primaryKeyName = $this->getParent()->getKeyName();
+        $modelIds = $constrainedBuilder->get()->pluck($primaryKeyName)->toArray();
 
         // Modify the unconstrained query to limit to these models
-        $query = $query->whereIn($this->relatedKey, $modelIds);
+        $query = $query->whereIn($relatedKeyName, $modelIds);
 
         return $query;
     }
