@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Core;
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
+use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
 
 /**
@@ -51,9 +52,9 @@ class Core extends Sprinkle
         // Set up any global PHP settings from the config service.
         $config = $this->ci->config;
 
-        // Display PHP fatal errors
-        if (isset($config['php.display_errors'])) {
-            ini_set('display_errors', $config['php.display_errors']);
+        // Display PHP fatal errors natively.
+        if (isset($config['php.display_errors_native'])) {
+            ini_set('display_errors', $config['php.display_errors_native']);
         }
 
         // Log PHP fatal errors
@@ -71,15 +72,19 @@ class Core extends Sprinkle
             date_default_timezone_set($config['php.timezone']);
         }
 
-        // Run the generic shutdown handler, if error display is disabled.
-        if (!in_array(strtolower($config['php.display_errors']), [
+        // Determine if error display is enabled in the shutdown handler.
+        $displayErrors = false;
+        if (in_array(strtolower($config['php.display_errors']), [
             '1',
             'on',
             'true',
             'yes'
         ])) {
-            $this->ci->shutdownHandler;
+            $displayErrors = true;
         }
+
+        $sh = new ShutdownHandler($this->ci, $displayErrors);
+        $sh->register();
     }
 
     /**

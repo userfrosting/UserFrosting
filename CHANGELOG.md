@@ -2,6 +2,7 @@
 
 ## v4.1.9-alpha
 - Fixes #780, and more efficient way to collect ids in Unique::getPaginatedQuery
+- Improve handling of fatal/parse errors
 
 ## v4.1.8-alpha
 - Normalize paths to always have a leading slash when comparing against the CSRF blacklist (#775) (possible breaking change for some environments - please see updated docs at https://learn.userfrosting.com/routes-and-controllers/client-input/csrf-guard#blacklisting-routes)

@@ -51,7 +51,6 @@ use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
-use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 use UserFrosting\Support\Repository\Repository;
@@ -473,7 +472,7 @@ class ServicesProvider
                     } catch (\Twig_Error_Loader $e) {
                         $template = $c->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
                     }
-    
+
                     return $response->withStatus(404)
                                     ->withHeader('Content-Type', 'text/html')
                                     ->write($template->render([]));
@@ -536,14 +535,6 @@ class ServicesProvider
             $session->start();
 
             return $session;
-        };
-
-        /**
-         * Custom shutdown handler, for dealing with fatal errors.
-         */
-        $container['shutdownHandler'] = function ($c) {
-            // This takes the entire container, so we don't have to initialize any other services unless absolutely necessary.
-            return new ShutdownHandler($c);
         };
 
         /**

@@ -15,6 +15,7 @@ use UserFrosting\Sprinkle\Core\Error\Renderer\JsonRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\PlainTextRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\WhoopsRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\XmlRenderer;
+use UserFrosting\Sprinkle\Core\Http\Concerns\DeterminesContentType;
 use UserFrosting\Support\Message\UserMessage;
 
 /**
@@ -24,18 +25,7 @@ use UserFrosting\Support\Message\UserMessage;
  */
 class ExceptionHandler implements ExceptionHandlerInterface
 {
-    /**
-     * Known handled content types
-     *
-     * @var array
-     */
-    protected $knownContentTypes = [
-        'application/json',
-        'application/xml',
-        'text/xml',
-        'text/html',
-        'text/plain'
-    ];
+    use DeterminesContentType;
 
     /**
      * @var ContainerInterface The global container object, which holds all your services.
@@ -102,7 +92,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
         $this->exception = $exception;
         $this->displayErrorDetails = $displayErrorDetails;
         $this->statusCode = $this->determineStatusCode();
-        $this->contentType = $this->determineContentType($request);
+        $this->contentType = $this->determineContentType($request, $this->ci->config['site.debug.ajax']);
         $this->renderer = $this->determineRenderer();
     }
 
@@ -198,51 +188,6 @@ class ExceptionHandler implements ExceptionHandlerInterface
         foreach ($messages as $message) {
             $this->ci->alerts->addMessageTranslated('danger', $message->message, $message->parameters);
         }
-    }
-
-    /**
-     * Determine which content type we know about is wanted using Accept header
-     *
-     * Note: This method is a bare-bones implementation designed specifically for
-     * Slim's error handling requirements. Consider a fully-feature solution such
-     * as willdurand/negotiation for any other situation.
-     *
-     * @param ServerRequestInterface $request
-     * @return string
-     */
-    protected function determineContentType(ServerRequestInterface $request)
-    {
-        // For AJAX requests, if AJAX debugging is turned on, always return html
-        if ($this->ci->config['site.debug.ajax'] && $this->request->isXhr()) {
-            return 'text/html';
-        }
-
-        $acceptHeader = $request->getHeaderLine('Accept');
-        $selectedContentTypes = array_intersect(explode(',', $acceptHeader), $this->knownContentTypes);
-        $count = count($selectedContentTypes);
-
-        if ($count) {
-            $current = current($selectedContentTypes);
-
-            /**
-             * Ensure other supported content types take precedence over text/plain
-             * when multiple content types are provided via Accept header.
-             */
-            if ($current === 'text/plain' && $count > 1) {
-                return next($selectedContentTypes);
-            }
-
-            return $current;
-        }
-
-        if (preg_match('/\+(json|xml)/', $acceptHeader, $matches)) {
-            $mediaType = 'application/' . $matches[1];
-            if (in_array($mediaType, $this->knownContentTypes)) {
-                return $mediaType;
-            }
-        }
-
-        return 'text/html';
     }
 
     /**
