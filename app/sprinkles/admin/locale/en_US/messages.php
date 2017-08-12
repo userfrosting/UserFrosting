@@ -141,6 +141,7 @@ return [
         "DELETE"            => "Delete user",
         "DELETE_CONFIRM"    => "Are you sure you want to delete the user <strong>{{name}}</strong>?",
         "DELETE_YES"        => "Yes, delete user",
+        "DELETED"           => "User deleted",
         "DISABLE"           => "Disable user",
         "EDIT"              => "Edit user",
         "ENABLE"            => "Enable user",

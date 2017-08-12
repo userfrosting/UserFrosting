@@ -45,13 +45,17 @@
 
     <script id="activity-table-column-user" type="text/x-handlebars-template">
         <td data-text="{{row.user.last_name}}">
-            <strong>
-                <a href="{{site.uri.public}}/users/u/{{row.user.user_name}}">{{row.user.first_name}} {{row.user.last_name}} ({{row.user.user_name}})</a>
-            </strong>
-            <div class="js-copy-container">
-                <span class="js-copy-target">{{row.user.email}}</span>
-                <button class="btn btn-xs uf-copy-trigger js-copy-trigger"><i class="fa fa-copy"></i></button>
-            </div>
+            {{#if row.user }}
+                <strong>
+                    <a href="{{site.uri.public}}/users/u/{{row.user.user_name}}">{{row.user.first_name}} {{row.user.last_name}} ({{row.user.user_name}})</a>
+                </strong>
+                <div class="js-copy-container">
+                    <span class="js-copy-target">{{row.user.email}}</span>
+                    <button class="btn btn-xs uf-copy-trigger js-copy-trigger"><i class="fa fa-copy"></i></button>
+                </div>
+            {{ else }}
+                <i>{% endverbatim %}{{translate("USER.DELETED")}}{% verbatim %}</i>
+            {{/if }}
         </td>
     </script>
 
