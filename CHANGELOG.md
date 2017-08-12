@@ -3,6 +3,7 @@
 ## v4.1.9-alpha
 - Fixes #780, and more efficient way to collect ids in Unique::getPaginatedQuery
 - Show "user deleted" in activities table (#782)
+- Patched version of `widget-sort2Hash.js` to prevent writing extraneous browser history entries (#712)
 - Improve handling of fatal/parse errors
 
 ## v4.1.8-alpha
