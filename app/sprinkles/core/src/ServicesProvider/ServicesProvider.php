@@ -481,6 +481,14 @@ class ServicesProvider
         };
 
         /**
+         * Error-handler for PHP runtime errors.  Notice that we just pass this through to our general-purpose
+         * error-handling service.
+         */
+        $container['phpErrorHandler'] = function ($c) {
+            return $c->errorHandler;
+        };
+
+        /**
          * Laravel query logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'query' log stack.

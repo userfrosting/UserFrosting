@@ -18,7 +18,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface ExceptionHandlerInterface
 {
-    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, \Exception $exception, $displayErrorDetails = false);
+    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false);
 
     public function handle();
 

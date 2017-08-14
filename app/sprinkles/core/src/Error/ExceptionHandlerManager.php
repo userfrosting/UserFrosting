@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface;
  * It outputs the error message and diagnostic information in either JSON, XML, or HTML based on the Accept header.
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class ExceptionHandlerManager extends \Slim\Handlers\Error
+class ExceptionHandlerManager
 {
     /**
      * @var ContainerInterface The global container object, which holds all your services.
@@ -29,6 +29,11 @@ class ExceptionHandlerManager extends \Slim\Handlers\Error
      * @var array[string] An array that maps Exception types to callbacks, for special processing of certain types of errors.
      */
     protected $exceptionHandlers = [];
+
+    /**
+     * @var bool
+     */
+    protected $displayErrorDetails;
 
     /**
      * Constructor
@@ -47,11 +52,11 @@ class ExceptionHandlerManager extends \Slim\Handlers\Error
      *
      * @param ServerRequestInterface $request   The most recent Request object
      * @param ResponseInterface      $response  The most recent Response object
-     * @param Exception              $exception The caught Exception object
+     * @param Throwable              $exception The caught Exception object
      *
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $exception)
     {
         // Default exception handler class
         $handlerClass = '\UserFrosting\Sprinkle\Core\Error\Handler\ExceptionHandler';

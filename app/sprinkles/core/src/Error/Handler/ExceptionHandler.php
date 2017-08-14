@@ -43,7 +43,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected $response;
 
     /**
-     * @var Exception
+     * @var Throwable
      */
     protected $exception;
 
@@ -76,14 +76,14 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * @param ContainerInterface     $ci
      * @param ServerRequestInterface $request   The most recent Request object
      * @param ResponseInterface      $response  The most recent Response object
-     * @param Exception              $exception The caught Exception object
+     * @param Throwable              $exception The caught Exception object
      * @param bool                   $displayErrorDetails
      */
     public function __construct(
         ContainerInterface $ci,
         ServerRequestInterface $request,
         ResponseInterface $response,
-        \Exception $exception,
+        $exception,
         $displayErrorDetails = false
     ) {
         $this->ci = $ci;

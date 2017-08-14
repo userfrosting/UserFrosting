@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.10-alpha
+- Add support for PHP7 runtime errors to be handled in the same way as Exceptions
+
 ## v4.1.9-alpha
 - Fixes #780, and more efficient way to collect ids in Unique::getPaginatedQuery
 - Show "user deleted" in activities table (#782)
