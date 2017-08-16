@@ -58,9 +58,15 @@ class ShutdownHandler
     public function fatalHandler()
     {
         $error = error_get_last();
+        $fatalErrorTypes = [
+            E_ERROR,
+            E_PARSE,
+            E_CORE_ERROR,
+            E_COMPILE_ERROR
+        ];
 
         // Handle fatal errors and parse errors
-        if ($error !== NULL && $error['type'] == E_ERROR || $error['type'] == E_PARSE) {
+        if ($error !== NULL && in_array($error['type'], $fatalErrorTypes)) {
 
             // Build the appropriate error message (debug or client)
             if ($this->displayErrorInfo) {
