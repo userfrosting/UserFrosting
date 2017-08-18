@@ -41,6 +41,7 @@ use UserFrosting\I18n\LocalePathBuilder;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager;
+use UserFrosting\Sprinkle\Core\Error\Handler\NotFoundExceptionHandler;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
@@ -52,6 +53,7 @@ use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Exception\BadRequestException;
+use UserFrosting\Support\Exception\NotFoundException;
 use UserFrosting\Support\Repository\Loader\ArrayFileLoader;
 use UserFrosting\Support\Repository\Repository;
 
@@ -352,8 +354,11 @@ class ServicesProvider
 
             $handler = new ExceptionHandlerManager($c, $settings['displayErrorDetails']);
 
-            // Register the HttpExceptionHandler.
+            // Register the base HttpExceptionHandler.
             $handler->registerHandler('\UserFrosting\Support\Exception\HttpException', '\UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler');
+
+            // Register the NotFoundExceptionHandler.
+            $handler->registerHandler('\UserFrosting\Support\Exception\NotFoundException', '\UserFrosting\Sprinkle\Core\Error\Handler\NotFoundExceptionHandler');
 
             // Register the PhpMailerExceptionHandler.
             $handler->registerHandler('\phpmailerException', '\UserFrosting\Sprinkle\Core\Error\Handler\PhpMailerExceptionHandler');
@@ -455,28 +460,14 @@ class ServicesProvider
         };
 
         /**
-         * Custom 404 handler.
-         *
-         * @todo Is it possible to integrate this into the common error-handling system?
+         * Error-handler for 404 errors.  Notice that we manually create a UserFrosting NotFoundException,
+         * and a NotFoundExceptionHandler.  This lets us pass through to the UF error handling system.
          */
         $container['notFoundHandler'] = function ($c) {
             return function ($request, $response) use ($c) {
-                if ($request->isXhr()) {
-                    $c->alerts->addMessageTranslated("danger", "ERROR.404.TITLE");
-
-                    return $response->withStatus(404);
-                } else {
-                    // Render a custom error page, if it exists
-                    try {
-                        $template = $c->view->getEnvironment()->loadTemplate("pages/error/404.html.twig");
-                    } catch (\Twig_Error_Loader $e) {
-                        $template = $c->view->getEnvironment()->loadTemplate("pages/abstract/error.html.twig");
-                    }
-
-                    return $response->withStatus(404)
-                                    ->withHeader('Content-Type', 'text/html')
-                                    ->write($template->render([]));
-                }
+                $exception = new NotFoundException;
+                $handler = new NotFoundExceptionHandler($c, $request, $response, $exception, $c->settings['displayErrorDetails']);
+                return $handler->handle();
             };
         };
 
