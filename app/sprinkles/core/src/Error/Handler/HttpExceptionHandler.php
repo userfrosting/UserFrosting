@@ -52,7 +52,13 @@ class HttpExceptionHandler extends ExceptionHandler
      */
     protected function determineUserMessages()
     {
-        // Grab messages from the exception
-        return $this->exception->getUserMessages();
+        if ($this->exception instanceof HttpException) {
+            return $this->exception->getUserMessages();
+        }
+
+        // Fallback
+        return [
+            new UserMessage("ERROR.SERVER")
+        ];
     }
 }
