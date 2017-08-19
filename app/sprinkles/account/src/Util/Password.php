@@ -25,12 +25,12 @@ class Password
     {
         // If the password in the db is 65 characters long, we have an sha1-hashed password.
         if (strlen($password) == 65) {
-            return "sha1";
-        } else if (substr($password, 0, 7) == "$2y$12$") {
-            return "legacy";
-        } else {
-            return "modern";
+            return 'sha1';
+        } elseif (substr($password, 0, 7) == '$2y$12$') {
+            return 'legacy';
         }
+
+        return 'modern';
     }
 
     /**
@@ -60,27 +60,28 @@ class Password
      */
     public static function verify($password, $hash)
     {
-        if (static::getHashType($hash) == "sha1") {
+        if (static::getHashType($hash) == 'sha1') {
             // Legacy UserCake passwords
             $salt = substr($hash, 0, 25);		// Extract the salt from the hash
             $hashInput = $salt . sha1($salt . $password);
             if ($hashInput == $hash) {
                 return true;
-            } else {
-                return false;
             }
-        } else if (static::getHashType($hash) == "legacy") {
+
+            return false;
+
+        } elseif (static::getHashType($hash) == 'legacy') {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.
             $cost = '12';
             if (substr($hash, 0, 60) == crypt($password, '$2y$' . $cost . '$' . substr($hash, 60))) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            // Modern implementation
-            return password_verify($password, $hash);
+
+            return false;
         }
+
+        // Modern implementation
+        return password_verify($password, $hash);
     }
 }

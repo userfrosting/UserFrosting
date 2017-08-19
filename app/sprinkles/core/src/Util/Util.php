@@ -18,6 +18,11 @@ class Util
 {
     /**
      * Extracts specific fields from one associative array, and places them into another.
+     *
+     * @param mixed[] $inputArray
+     * @param string[] $fieldArray
+     * @param bool $remove
+     * @return mixed[]
      */
     static public function extractFields(&$inputArray, $fieldArray, $remove = true)
     {
@@ -39,6 +44,9 @@ class Util
 
     /**
      * Extracts numeric portion of a string (for example, for normalizing phone numbers).
+     *
+     * @param string $str
+     * @return string
      */
     static public function extractDigits($str)
     {
@@ -47,6 +55,9 @@ class Util
 
     /**
      * Formats a phone number as a standard 7- or 10-digit string (xxx) xxx-xxxx
+     *
+     * @param string $phone
+     * @return string
      */
     static public function formatPhoneNumber($phone)
     {
@@ -54,7 +65,7 @@ class Util
 
         $len = strlen($num);
 
-        if($len == 7) {
+        if ($len == 7) {
             $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
         } elseif ($len == 10) {
             $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
@@ -64,7 +75,81 @@ class Util
     }
 
     /**
+     * Nicely format an array for printing.
+     * See https://stackoverflow.com/a/9776726/2970321
+     *
+     * @param array $arr
+     * @return string
+     */
+    static public function prettyPrintArray(array $arr)
+    {
+        $json = json_encode($arr);
+        $result = '';
+        $level = 0;
+        $inQuotes = false;
+        $inEscape = false;
+        $endsLineLevel = NULL;
+        $jsonLength = strlen($json);
+
+        for ($i = 0; $i < $jsonLength; $i++) {
+            $char = $json[$i];
+            $newLineLevel = NULL;
+            $post = '';
+            if ($endsLineLevel !== NULL) {
+                $newLineLevel = $endsLineLevel;
+                $endsLineLevel = NULL;
+            }
+            if ($inEscape) {
+                $inEscape = false;
+            } elseif ($char === '"') {
+                $inQuotes = !$inQuotes;
+            } elseif (!$inQuotes) {
+                switch ($char) {
+                    case '}': case ']':
+                        $level--;
+                        $endsLineLevel = NULL;
+                        $newLineLevel = $level;
+                        break;
+
+                    case '{': case '[':
+                        $level++;
+
+                    case ',':
+                        $endsLineLevel = $level;
+                        break;
+
+                    case ':':
+                        $post = ' ';
+                        break;
+
+                    case ' ': case '\t': case '\n': case '\r':
+                        $char = '';
+                        $endsLineLevel = $newLineLevel;
+                        $newLineLevel = NULL;
+                        break;
+                }
+            } elseif ($char === '\\') {
+                $inEscape = true;
+            }
+
+            if ($newLineLevel !== NULL) {
+                $result .= '<br>'.str_repeat( '&nbsp;&nbsp;', $newLineLevel);
+            }
+
+            $result .= $char.$post;
+        }
+
+        return $result;
+    }
+
+    /**
      * Generate a random phrase, consisting of a specified number of adjectives, followed by a noun.
+     *
+     * @param int $numAdjectives
+     * @param int $maxLength
+     * @param int $maxTries
+     * @param string $separator
+     * @return string
      */
     static public function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-')
     {

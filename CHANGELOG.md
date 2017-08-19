@@ -3,6 +3,7 @@
 ## v4.1.10-alpha
 - Add support for PHP7 runtime errors to be handled in the same way as Exceptions
 - Implement NotFoundExceptionHandler and pass through all NotFoundExceptions to this handler.
+- Fix some PSR-2 compliance issues
 
 ## v4.1.9-alpha
 - Fixes #780, and more efficient way to collect ids in Unique::getPaginatedQuery

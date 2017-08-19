@@ -1177,20 +1177,22 @@ class UserController extends SimpleController
         // Special checks and transformations for certain fields
         if ($fieldName == 'flag_enabled') {
             // Check that we are not disabling the master account
-            if (($user->id == $config['reserved_user_ids.master']) &&
+            if (
+                ($user->id == $config['reserved_user_ids.master']) &&
                 ($fieldValue == '0')
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_MASTER');
                 throw $e;
-            } else if (($user->id == $currentUser->id) &&
+            } elseif (
+                ($user->id == $currentUser->id) &&
                 ($fieldValue == '0')
             ) {
                 $e = new BadRequestException();
                 $e->addUserMessage('DISABLE_SELF');
                 throw $e;
             }
-        } else if ($fieldName == 'password') {
+        } elseif ($fieldName == 'password') {
             $fieldValue = Password::hash($fieldValue);
         }
 
@@ -1222,7 +1224,7 @@ class UserController extends SimpleController
                     'user_name' => $user->user_name
                 ]);
             }
-        } else if ($fieldName == 'flag_verified') {
+        } elseif ($fieldName == 'flag_verified') {
             $ms->addMessageTranslated('success', 'MANUALLY_ACTIVATED', [
                 'user_name' => $user->user_name
             ]);

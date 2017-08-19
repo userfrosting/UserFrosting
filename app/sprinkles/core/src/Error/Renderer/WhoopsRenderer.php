@@ -12,6 +12,7 @@ use RuntimeException;
 use Symfony\Component\VarDumper\Cloner\AbstractCloner;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use UnexpectedValueException;
+use UserFrosting\Sprinkle\Core\Util\Util;
 use Whoops\Exception\Formatter;
 use Whoops\Exception\Inspector;
 use Whoops\Handler\PlainTextHandler;
@@ -55,7 +56,7 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * @var string
      */
-    private $pageTitle = "Whoops! There was an error.";
+    private $pageTitle = 'Whoops! There was an error.';
 
     /**
      * @var array[]
@@ -128,7 +129,7 @@ class WhoopsRenderer extends ErrorRenderer
         }
 
         // Add the default, local resource search path:
-        $this->searchPaths[] = \UserFrosting\VENDOR_DIR . "/filp/whoops/src/Whoops/Resources";
+        $this->searchPaths[] = \UserFrosting\VENDOR_DIR . '/filp/whoops/src/Whoops/Resources';
 
         // blacklist php provided auth based values
         $this->blacklist('_SERVER', 'PHP_AUTH_PW');
@@ -215,7 +216,7 @@ class WhoopsRenderer extends ErrorRenderer
 
         // Nicely format the session object
         $session = isset($_SESSION) ? $this->masked($_SESSION, '_SESSION') :  [];
-        $session = ['session' => $this->prettyPrint($session)];
+        $session = ['session' => Util::prettyPrintArray($session)];
 
         // List of variables that will be passed to the layout template.
         $vars = [
@@ -692,8 +693,8 @@ class WhoopsRenderer extends ErrorRenderer
      *
      * We intentionally dont rely on $GLOBALS as it depends on 'auto_globals_jit' php.ini setting.
      *
-     * @param $superGlobal array One of the superglobal arrays
-     * @param $superGlobalName string the name of the superglobal array, e.g. '_GET'
+     * @param array $superGlobal One of the superglobal arrays
+     * @param string $superGlobalName the name of the superglobal array, e.g. '_GET'
      * @return array $values without sensitive data
      */
     private function masked(array $superGlobal, $superGlobalName)
@@ -707,70 +708,5 @@ class WhoopsRenderer extends ErrorRenderer
             }
         }
         return $values;
-    }
-
-    /**
-     * Nicely format an array for printing.
-     * See https://stackoverflow.com/a/9776726/2970321
-     *
-     * @param array
-     * @return string
-     */
-    private function prettyPrint($arr)
-    {
-        $json = json_encode($arr);
-        $result = '';
-        $level = 0;
-        $in_quotes = false;
-        $in_escape = false;
-        $ends_line_level = NULL;
-        $json_length = strlen( $json );
-
-        for( $i = 0; $i < $json_length; $i++ ) {
-            $char = $json[$i];
-            $new_line_level = NULL;
-            $post = "";
-            if( $ends_line_level !== NULL ) {
-                $new_line_level = $ends_line_level;
-                $ends_line_level = NULL;
-            }
-            if ( $in_escape ) {
-                $in_escape = false;
-            } else if( $char === '"' ) {
-                $in_quotes = !$in_quotes;
-            } else if( ! $in_quotes ) {
-                switch( $char ) {
-                    case '}': case ']':
-                        $level--;
-                        $ends_line_level = NULL;
-                        $new_line_level = $level;
-                        break;
-
-                    case '{': case '[':
-                        $level++;
-                    case ',':
-                        $ends_line_level = $level;
-                        break;
-
-                    case ':':
-                        $post = " ";
-                        break;
-
-                    case " ": case "\t": case "\n": case "\r":
-                        $char = "";
-                        $ends_line_level = $new_line_level;
-                        $new_line_level = NULL;
-                        break;
-                }
-            } else if ( $char === '\\' ) {
-                $in_escape = true;
-            }
-            if( $new_line_level !== NULL ) {
-                $result .= "<br>".str_repeat( "&nbsp;", $new_line_level );
-            }
-            $result .= $char.$post;
-        }
-
-        return $result;
     }
 }

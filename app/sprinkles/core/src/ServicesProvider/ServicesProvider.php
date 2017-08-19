@@ -80,16 +80,11 @@ class ServicesProvider
         $container['alerts'] = function ($c) {
             $config = $c->config;
 
-            if ($config['alert.storage'] == 'cache')
-            {
+            if ($config['alert.storage'] == 'cache') {
                 return new CacheAlertStream($config['alert.key'], $c->translator, $c->cache, $c->config);
-            }
-            else if ($config['alert.storage'] == 'session')
-            {
+            } elseif ($config['alert.storage'] == 'session') {
                 return new SessionAlertStream($config['alert.key'], $c->translator, $c->session);
-            }
-            else
-            {
+            } else {
                 throw new \Exception("Bad alert storage handler type '{$config['alert.storage']}' specified in configuration file.");
             }
         };
@@ -160,21 +155,14 @@ class ServicesProvider
 
             $config = $c->config;
 
-            if ($config['cache.driver'] == 'file')
-            {
+            if ($config['cache.driver'] == 'file') {
                 $path = $c->locator->findResource('cache://', true, true);
                 $cacheStore = new TaggableFileStore($path);
-            }
-            else if ($config['cache.driver'] == 'memcached')
-            {
+            } elseif ($config['cache.driver'] == 'memcached') {
                 $cacheStore = new MemcachedStore($config['cache.memcached']);
-            }
-            else if ($config['cache.driver'] == 'redis')
-            {
+            } elseif ($config['cache.driver'] == 'redis') {
                 $cacheStore = new RedisStore($config['cache.redis']);
-            }
-            else
-            {
+            } else {
                 throw new \Exception("Bad cache store type '{$config['cache.driver']}' specified in configuration file.");
             }
 
@@ -415,8 +403,8 @@ class ServicesProvider
             $config = $c->config;
 
             // Make sure the locale config is a valid string
-            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == "") {
-                throw new \UnexpectedValueException("The locale config is not a valid string.");
+            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
+                throw new \UnexpectedValueException('The locale config is not a valid string.');
             }
 
             // Load the base locale file(s) as specified in the configuration
@@ -521,7 +509,7 @@ class ServicesProvider
             if ($config['session.handler'] == 'file') {
                 $fs = new FileSystem;
                 $handler = new FileSessionHandler($fs, $c->locator->findResource('session://'), $config['session.minutes']);
-            } else if ($config['session.handler'] == 'database') {
+            } elseif ($config['session.handler'] == 'database') {
                 $connection = $c->db->connection();
                 // Table must exist, otherwise an exception will be thrown
                 $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
@@ -612,8 +600,8 @@ class ServicesProvider
 
             // Register the Slim extension with Twig
             $slimExtension = new TwigExtension(
-                $c['router'],
-                $c['request']->getUri()
+                $c->router,
+                $c->request->getUri()
             );
             $view->addExtension($slimExtension);
 
