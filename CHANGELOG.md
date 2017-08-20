@@ -3,6 +3,8 @@
 ## v4.1.10-alpha
 - Add support for PHP7 runtime errors to be handled in the same way as Exceptions
 - Implement NotFoundExceptionHandler and pass through all NotFoundExceptions to this handler.
+- Implement `redirect.onAlreadyLoggedIn` service (fixes #680)
+- Deprecate `determineRedirectOnLogin` and replace with `redirect.onLogin` service
 - Fix some PSR-2 compliance issues
 
 ## v4.1.9-alpha

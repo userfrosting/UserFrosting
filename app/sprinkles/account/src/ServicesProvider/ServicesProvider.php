@@ -13,6 +13,8 @@ use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
@@ -332,11 +334,46 @@ class ServicesProvider
         };
 
         /**
+         * Returns a callback that forwards to dashboard if user is already logged in.
+         */
+        $container['redirect.onAlreadyLoggedIn'] = function ($c) {
+            /**
+             * This method is invoked when a user attempts to perform certain public actions when they are already logged in.
+             *
+             * @todo Forward to user's landing page or last visited page
+             * @param \Psr\Http\Message\ServerRequestInterface $request  
+             * @param \Psr\Http\Message\ResponseInterface      $response 
+             * @param array $args
+             * @return \Psr\Http\Message\ResponseInterface
+             */
+            return function (Request $request, Response $response, array $args) use ($c) {
+                $redirect = $c->router->pathFor('dashboard');
+        
+                return $response->withRedirect($redirect, 302);
+            };
+        };
+
+        /**
          * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
          */
-        $container['determineRedirectOnLogin'] = function ($c) {
-            return function ($response) use ($c)
-            {
+        $container['redirect.onLogin'] = function ($c) {
+            /**
+             * This method is invoked when a user completes the login process.
+             *
+             * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
+             * @param \Psr\Http\Message\ServerRequestInterface $request  
+             * @param \Psr\Http\Message\ResponseInterface      $response 
+             * @param array $args
+             * @return \Psr\Http\Message\ResponseInterface
+             */
+            return function (Request $request, Response $response, array $args) use ($c) {
+                // Backwards compatibility for the deprecated determineRedirectOnLogin service
+                if ($c->has('determineRedirectOnLogin')) {
+                    $determineRedirectOnLogin = $c->determineRedirectOnLogin;
+            
+                    return $determineRedirectOnLogin($response)->withStatus(200);
+                }
+
                 /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
                 $authorizer = $c->authorizer;
 
