@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.11-alpha
+- Updated `composer/installers` dependency.
+
 ## v4.1.10-alpha
 - Add support for PHP7 runtime errors to be handled in the same way as Exceptions
 - Implement NotFoundExceptionHandler and pass through all NotFoundExceptions to this handler.
