@@ -2,6 +2,7 @@
 
 ## v4.1.11-alpha
 - Updated `composer/installers` dependency.
+- Patch `composer.json` to fix `illuminate/*` dependencies at 5.4 for now
 
 ## v4.1.10-alpha
 - Add support for PHP7 runtime errors to be handled in the same way as Exceptions

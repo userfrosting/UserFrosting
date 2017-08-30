@@ -11,14 +11,13 @@
             "homepage": "https://alexanderweissman.com"
         }
     ],
-    "version": "4.1.0-dev",
     "require": {
         "doctrine/dbal": "^2.5",
         "filp/whoops": "^2.1",
-        "illuminate/cache": "^5.4",
-        "illuminate/database": "^5.4",
-        "illuminate/events": "^5.4",
-        "illuminate/filesystem": "^5.4",
+        "illuminate/cache": "5.4.*",
+        "illuminate/database": "5.4.*",
+        "illuminate/events": "5.4.*",
+        "illuminate/filesystem": "5.4.*",
         "league/csv": "^8.1",
         "monolog/monolog": "^1",
         "phpmailer/phpmailer": "5.2.10",
