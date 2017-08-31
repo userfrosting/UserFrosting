@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.12-alpha
+- Twig extensions now implement `Twig_Extension_GlobalsInterface` as required by https://twig.symfony.com/doc/2.x/advanced.html#id1
+
 ## v4.1.11-alpha
 - Updated `composer/installers` dependency.
 - Patch `composer.json` to fix `illuminate/*` dependencies at 5.4 for now
