@@ -16,7 +16,7 @@ use Slim\Http\Uri;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class AccountExtension extends \Twig_Extension
+class AccountExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
 
     protected $services;

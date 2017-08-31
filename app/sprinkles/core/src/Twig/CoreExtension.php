@@ -15,7 +15,7 @@ use UserFrosting\Sprinkle\Core\Util\Util;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class CoreExtension extends \Twig_Extension
+class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
 
     /**
