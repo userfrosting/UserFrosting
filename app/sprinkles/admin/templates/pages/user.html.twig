@@ -129,6 +129,7 @@
                 {% endblock %}
             </div>
         </div>
+        {% if 'activities' not in widgets.hidden %}
         <div class="col-lg-8">
             {% block activity_box %}
                 <div id="widget-user-activities" class="box box-primary">
@@ -147,6 +148,7 @@
                 </div>
             {% endblock %}
         </div>
+        {% endif %}
     </div>
     {% if 'permissions' not in widgets.hidden %}
     <div class="row">
