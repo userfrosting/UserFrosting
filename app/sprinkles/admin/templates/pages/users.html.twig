@@ -27,11 +27,13 @@
                         }
                     %}
                 </div>
+                {% if checkAccess('create_user') %}
                 <div class="box-footer">
                     <button type="button" class="btn btn-success js-user-create">
                         <i class="fa fa-plus-square"></i>  {{ translate("USER.CREATE")}}
                     </button>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
