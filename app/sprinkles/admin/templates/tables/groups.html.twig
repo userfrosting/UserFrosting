@@ -13,7 +13,9 @@
             <tr>
                 <th class="sorter-metatext" data-column-name="name" data-column-template="#group-table-column-info" data-priority="1">{{translate('GROUP')}} <i class="fa fa-sort"></i></th>
                 <th class="sorter-metatext" data-column-name="description" data-column-template="#group-table-column-description" data-priority="2">{{translate("DESCRIPTION")}} <i class="fa fa-sort"></i></th>
-                <th data-column-template="#group-table-column-actions" data-sorter="false" data-filter="false" data-priority="1">{{translate("ACTIONS")}}</th>
+                {% if checkAccess('delete_group') or checkAccess('update_group_field') %}
+                    <th data-column-template="#group-table-column-actions" data-sorter="false" data-filter="false" data-priority="1">{{translate("ACTIONS")}}</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -51,16 +53,20 @@
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    {% endverbatim %}{% if checkAccess('update_group_field') %}{% verbatim %}
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-group-edit">
                         <i class="fa fa-edit"></i> {% endverbatim %}{{translate("GROUP.EDIT")}}{% verbatim %}
                         </a>
                     </li>
+                    {% endverbatim %}{% endif %}{% verbatim %}
+                    {% endverbatim %}{% if checkAccess('delete_group') %}{% verbatim %}
                     <li>
                         <a href="#" data-slug="{{row.slug}}" class="js-group-delete">
                         <i class="fa fa-trash-o"></i> {% endverbatim %}{{translate("GROUP.DELETE")}}{% verbatim %}
                         </a>
                     </li>
+                    {% endverbatim %}{% endif %}{% verbatim %}
                 </ul>
             </div>
         </td>
