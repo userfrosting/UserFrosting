@@ -936,6 +936,13 @@ class UserController extends SimpleController
             $widgets['hidden'][] = 'permissions';
         }
 
+        if (!$authorizer->checkAccess($currentUser, 'view_user_field', [
+            'user' => $user,
+            'property' => 'activities'
+        ])) {
+            $widgets['hidden'][] = 'activities';
+        }
+
         return $this->ci->view->render($response, 'pages/user.html.twig', [
             'user' => $user,
             'locales' => $locales,
