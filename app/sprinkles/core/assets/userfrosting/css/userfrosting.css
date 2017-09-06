@@ -161,8 +161,14 @@ a .info-box {
     vertical-align: sub;
 }
 
-.btn .btn-sm .dropdown-toggle .caret {
+/* Custom styling for table tool menus */
+.dropdown-toggle .caret {
     position: relative;
     top: -1px;
     right: -3px;
+}
+
+.box-tools .dropdown-toggle {
+    background-color: #ebeef5;
+    box-shadow: 1px 1px 15px 0px rgba(155, 155, 155, 0.1);
 }
