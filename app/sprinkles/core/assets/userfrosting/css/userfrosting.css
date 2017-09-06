@@ -172,3 +172,28 @@ a .info-box {
     background-color: #ebeef5;
     box-shadow: 1px 1px 15px 0px rgba(155, 155, 155, 0.1);
 }
+
+/* Custom styling for user */
+.btn-primary-reverse {
+    background-color: inherit;
+    color: #367fa9;
+}
+
+.btn-warning-reverse {
+    background-color: inherit;
+    color: #f39c12;
+    border-color: #f39c12;
+}
+    
+.btn-default-reverse {
+    background-color: inherit;
+    color: #888;
+    border-color: #888;
+}
+
+/* Mobile styling for dropdown menus */
+@media(max-width: 560px) {
+    .dropdown-menu-right {
+        right: initial;
+        left: 0;
+}
