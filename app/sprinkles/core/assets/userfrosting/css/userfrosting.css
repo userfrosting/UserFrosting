@@ -149,3 +149,8 @@ a .info-box {
 .btn-trash:hover {
     color: #d73925;
 }
+
+.logo-lg {
+    font-weight: 500;
+    letter-spacing: -.25px;
+}
