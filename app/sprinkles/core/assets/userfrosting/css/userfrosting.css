@@ -150,7 +150,9 @@ a .info-box {
     color: #d73925;
 }
 
+/* Custom styling for nav logo */
 .logo-lg {
     font-weight: 500;
     letter-spacing: -.25px;
+    text-align: left;
 }
