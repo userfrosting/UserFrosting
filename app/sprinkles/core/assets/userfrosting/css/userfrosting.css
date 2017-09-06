@@ -152,7 +152,17 @@ a .info-box {
 
 /* Custom styling for nav logo */
 .logo-lg {
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -.25px;
     text-align: left;
+}
+
+.logo-lg img {
+    vertical-align: sub;
+}
+
+.btn .btn-sm .dropdown-toggle .caret {
+    position: relative;
+    top: -1px;
+    right: -3px;
 }
