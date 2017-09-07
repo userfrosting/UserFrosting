@@ -73,23 +73,21 @@
                 {{/ifx }}
             {{/ifx }}
         >
-            <span class="user-status">
-                {{#ifx row.flag_enabled '==' 0 }}
-                    <button type="button" class="btn btn-default btn-default-reverse" data-toggle="dropdown">
-                        {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
-                    </button>
+            {{#ifx row.flag_enabled '==' 0 }}
+                <span class="text-muted">
+                    {% endverbatim %}{{translate("DISABLED")}}{% verbatim %}
+                </span>
+            {{ else }}
+                {{#ifx row.flag_verified '==' 0 }}
+                    <span class="text-yellow">
+                        {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
+                    </span>
                 {{ else }}
-                    {{#ifx row.flag_verified '==' 0 }}
-                        <button type="button" class="btn btn-warning btn-warning-reverse" data-toggle="dropdown">
-                            {% endverbatim %}{{translate("UNACTIVATED")}}{% verbatim %}
-                        </button>
-                    {{ else }}
-                        <button type="button" class="btn btn-primary btn-primary-reverse">
-                            {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
-                        </button>
-                    {{/ifx }}
+                    <span>
+                        {% endverbatim %}{{translate("ACTIVE")}}{% verbatim %}
+                    </span>
                 {{/ifx }}
-            </span>
+            {{/ifx }}
         </td>
     </script>
     <script id="user-table-column-actions" type="text/x-handlebars-template">
