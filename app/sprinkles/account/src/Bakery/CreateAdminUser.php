@@ -5,41 +5,78 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
+namespace UserFrosting\Sprinkle\Account\Bakery;
 
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Builder;
+use Illuminate\Database\Capsule\Manager as Capsule;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use UserFrosting\System\Bakery\BaseCommand;
+use UserFrosting\System\Bakery\DatabaseTest;
+use UserFrosting\System\Database\Model\Migrations;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Util\Password;
-use UserFrosting\System\Bakery\Migration;
 
 /**
- * CreateAdminUser migration
- * This migration handle the creation of the admin user. This is skipped if the user already exist
- * Version 4.0.0
+ * Create User CLI Command.
  *
- * See https://laravel.com/docs/5.4/migrations#tables
- * @extends Migration
+ * @extends BaseCommand
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class CreateAdminUser extends Migration
+class CreateAdminUser extends BaseCommand
 {
+    use DatabaseTest;
+
     /**
-     * {@inheritDoc}
+     * @var Array Migrations dependencies for thsi command to work
      */
-    public $dependencies = [
+    protected $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RoleUsersTable'
     ];
 
     /**
-     * Seed the master user into the User Table
+     * {@inheritDoc}
      */
-    public function seed()
+    protected function configure()
     {
-        $this->io->section("Root account setup");
+        $this->setName("create-admin")
+             ->setDescription("Create the initial admin (root) user account");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->io->title("Root account setup");
+
+        // Need the database
+        try {
+            $this->io->writeln("<info>Testing database connexion</info>", OutputInterface::VERBOSITY_VERBOSE);
+            $this->testDB();
+            $this->io->writeln("Ok", OutputInterface::VERBOSITY_VERBOSE);
+        } catch (\Exception $e) {
+            $this->io->error($e->getMessage());
+            exit(1);
+        }
+
+        // Need migration table
+        if (!Capsule::schema()->hasColumn('migrations', 'id')) {
+                $this->io->error("Migrations doesn't appear to have been run! Make sure the database is properly migrated by using the `php bakery migrate` command.");
+                exit(1);
+        }
+
+        // Make sure the required mirgations have been run
+        foreach ($this->dependencies as $migration) {
+            if (!Migrations::where('migration', $migration)->exists()) {
+                $this->io->error("Migration `$migration` doesn't appear to have been run! Make sure all migrations are up to date by using the `php bakery migrate` command.");
+                exit(1);
+            }
+        }
 
         // Make sure that there are no users currently in the user table
         // We setup the root account here so it can be done independent of the version check
@@ -49,8 +86,7 @@ class CreateAdminUser extends Migration
 
         } else {
 
-            $this->io->writeln("To complete the installation process, you must set up a master (root) account.");
-            $this->io->writeln("Please answer the following questions to complete this process:\n");
+            $this->io->writeln("Please answer the following questions to create the root account:\n");
 
             // Get the account details
             $user_name = $this->askUsername();
@@ -60,7 +96,7 @@ class CreateAdminUser extends Migration
             $password = $this->askPassword();
 
             // Ok, now we've got the info and we can create the new user.
-            $this->io->write("\n<info>Saving the root user details...</info>");
+            $this->io->write("\n<info>Saving the user details...</info>");
             $rootUser = new User([
                 "user_name" => $user_name,
                 "email" => $email,
@@ -82,6 +118,8 @@ class CreateAdminUser extends Migration
                     $rootUser->roles()->attach($role->id);
                 }
             }
+
+            $this->io->success("Admin user creation successful !");
         }
     }
 
@@ -176,7 +214,7 @@ class CreateAdminUser extends Migration
     protected function askFirstName()
     {
         while (!isset($first_name) || !$this->validateFirstName($first_name)) {
-            $first_name = $this->io->ask("Enter the admin user first name (1-20 characters)");
+            $first_name = $this->io->ask("Enter the user first name (1-20 characters)");
         }
         return $first_name;
     }
@@ -208,7 +246,7 @@ class CreateAdminUser extends Migration
     protected function askLastName()
     {
         while (!isset($last_name) || !$this->validateLastName($last_name)) {
-            $last_name = $this->io->ask("Enter the admin user last name (1-30 characters)");
+            $last_name = $this->io->ask("Enter the user last name (1-30 characters)");
         }
         return $last_name;
     }

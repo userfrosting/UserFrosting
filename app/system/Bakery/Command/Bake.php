@@ -66,6 +66,9 @@ class Bake extends BaseCommand
         $command = $this->getApplication()->find('migrate');
         $command->run($input, $output);
 
+        $command = $this->getApplication()->find('create-admin');
+        $command->run($input, $output);
+
         $command = $this->getApplication()->find('build-assets');
         $command->run($input, $output);
 

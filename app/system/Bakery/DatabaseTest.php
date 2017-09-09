@@ -12,7 +12,6 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 /**
  * Database Test Trait. Include method to test the db connexion
  *
- * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 trait DatabaseTest
