@@ -94,7 +94,7 @@ class Authenticator
 
         // Initialize RememberMe storage
         $this->rememberMeStorage = new RememberMePDO($this->config['remember_me.table']);
-    
+
         // Get the actual PDO instance from Eloquent
         $pdo = Capsule::connection()->getPdo();
 
@@ -193,7 +193,7 @@ class Authenticator
         $this->session->regenerateId(true);
 
         // Since regenerateId delete the old session, we'll do the same in cache
-        $this->cache->tags("_s".$oldId)->flush();
+        $this->cache->tags([$this->config['cache.prefix'], "_s".$oldId])->flush();
 
         // If the user wants to be remembered, create Rememberme cookie
         if ($rememberMe) {
@@ -251,7 +251,7 @@ class Authenticator
         $this->session->destroy();
 
         // Since regenerateId delete the old session, we'll do the same in cache
-        $this->cache->tags("_s".$oldId)->flush();
+        $this->cache->tags([$this->config['cache.prefix'], "_s".$oldId])->flush();
 
         // Restart the session service
         $this->session->start();
