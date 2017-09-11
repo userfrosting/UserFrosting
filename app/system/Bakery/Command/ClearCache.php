@@ -41,7 +41,7 @@ class ClearCache extends BaseCommand
 
         // Clear normal cache
         $this->io->writeln("<info> > Clearing Illumintate cache instance</info>", OutputInterface::VERBOSITY_VERBOSE);
-        $this->clearIlluminateCache(); //!TODO Add success check. Note that `->flush` won't return true/false because we're using a global tag
+        $this->clearIlluminateCache();
 
         // Clear Twig cache
         $this->io->writeln("<info> > Clearing Twig cached data</info>", OutputInterface::VERBOSITY_VERBOSE);
@@ -69,7 +69,7 @@ class ClearCache extends BaseCommand
      */
     protected function clearIlluminateCache()
     {
-        $this->ci->cache>flush();
+        $this->ci->cache->flush();
     }
 
     /**
