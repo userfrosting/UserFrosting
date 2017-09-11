@@ -2,6 +2,7 @@
 
 ## v4.1.12-alpha
 - Twig extensions now implement `Twig_Extension_GlobalsInterface` as required by https://twig.symfony.com/doc/2.x/advanced.html#id1
+- Display element based on permissions for group list/info pages 
 - Factor the admin user creation out of migrations and into it's own Bakery command (See #778)
 
 ## v4.1.11-alpha
