@@ -82,7 +82,7 @@ class CreateAdminUser extends BaseCommand
         // We setup the root account here so it can be done independent of the version check
         if (User::count() > 0) {
 
-            $this->io->warning("Table 'users' is not empty. Skipping root account setup. To set up the root account again, please truncate or drop the table and try again.");
+            $this->io->note("Table 'users' is not empty. Skipping root account setup. To set up the root account again, please truncate or drop the table and try again.");
 
         } else {
 
