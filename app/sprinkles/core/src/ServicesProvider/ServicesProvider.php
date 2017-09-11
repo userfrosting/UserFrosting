@@ -492,8 +492,8 @@ class ServicesProvider
          */
         $container['router'] = function ($c) {
             $routerCacheFile = false;
-            if (isset($c->settings['routerCacheFile'])) {
-                $routerCacheFile = $c->settings['routerCacheFile'];
+            if (isset($c->config['settings.routerCacheFile'])) {
+                $routerCacheFile = $c->config['settings.routerCacheFile'];
             }
 
             return (new Router)->setCacheFile($routerCacheFile);
