@@ -183,10 +183,25 @@ a .info-box {
     padding-right: 10px;
 }
 
-/* Mobile styling for dropdown menus */
-@media(max-width: 560px) {
-    .dropdown-menu-right {
-        right: initial;
+/* Custom classes to add responsiveness to bootstrap's dropdown-menu-right and dropdown-menu-left  */
+
+.dropdown-menu-right-responsive {
+    right: auto;
+    left: 0;
+}
+
+.dropdown-menu-left-responsive {
+    right: 0;
+    left: auto;
+}
+
+@media(min-width: 561px) {
+    .dropdown-menu-right-responsive {
+        right: 0;
+        left: auto;
+    }
+    .dropdown-menu-left-responsive {
+        right: auto;
         left: 0;
     }
 }
