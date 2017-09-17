@@ -163,14 +163,15 @@ a .info-box {
 }
 
 /* Custom styling for nav logo */
-.logo-lg {
-    font-weight: 400;
-    letter-spacing: -.25px;
-    text-align: left;
+.main-header .logo {
+    font-weight: 500;
+    text-align: center;
 }
 
-.logo-lg img {
-    vertical-align: sub;
+@media(min-width: 768px) {
+    .main-header .logo {
+        text-align: left;
+    }
 }
 
 /* Padding for user menu */
