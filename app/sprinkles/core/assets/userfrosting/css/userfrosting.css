@@ -13,6 +13,18 @@ form textarea {
   resize: vertical; /* user can resize vertically, but width is fixed */
 }
 
+/* Custom styling for table tool menus */
+.dropdown-toggle .caret {
+    position: relative;
+    top: -1px;
+    right: -3px;
+}
+
+.box-tools .dropdown-toggle {
+    background-color: #ebeef5;
+    box-shadow: 1px 1px 15px 0px rgba(155, 155, 155, 0.1);
+}
+
 /* Add some extra padding to tool groups in boxes */
 .box-tool-group {
     padding: 10px 0 10px;
@@ -58,6 +70,12 @@ form textarea {
 
 .uf-table-cs-options label span {
     padding-left: 10px;
+}
+
+/* Table column width, fit to content */
+.uf-table-fit-width {
+    width: 1%;
+    white-space: nowrap;
 }
 
 /* Hide global search field on larger devices */
@@ -148,4 +166,46 @@ a .info-box {
 
 .btn-trash:hover {
     color: #d73925;
+}
+
+/* Custom styling for nav logo */
+.main-header .logo {
+    font-weight: 400;
+    text-align: center;
+    font-size: 18px;
+}
+
+@media(min-width: 768px) {
+    .main-header .logo {
+        text-align: left;
+    }
+}
+
+/* Padding for user menu */
+.user-menu .fa {
+    padding-left: .5em;
+    font-size: 11px;
+}
+
+/* Custom classes to add responsiveness to bootstrap's dropdown-menu-right and dropdown-menu-left  */
+
+.dropdown-menu-right-responsive {
+    right: auto;
+    left: 0;
+}
+
+.dropdown-menu-left-responsive {
+    right: 0;
+    left: auto;
+}
+
+@media(min-width: 561px) {
+    .dropdown-menu-right-responsive {
+        right: 0;
+        left: auto;
+    }
+    .dropdown-menu-left-responsive {
+        right: auto;
+        left: 0;
+    }
 }

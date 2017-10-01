@@ -154,7 +154,7 @@ return [
         "LOGOUT"            => "I'm sorry, you cannot register for an account while logged in. Please log out first.",
         "WELCOME"           => "Registration is fast and simple."
     ],
-    "REMEMBER_ME"               => "Remember me!",
+    "REMEMBER_ME"               => "Keep me signed in",
     "REMEMBER_ME_ON_COMPUTER"   => "Remember me on this computer (not recommended for public computers)",
 
     "SIGN_IN_HERE"          => "Already have an account? <a href=\"{{url}}\">Sign in here.</a>",
