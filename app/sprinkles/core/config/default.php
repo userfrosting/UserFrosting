@@ -143,8 +143,9 @@
                     'es_ES' => 'Español',
                     'ar'    => 'العربية',
                     'pt_PT' => 'Português',
-                    'fr_FR' => 'Français',
+                    'ru_RU' => 'русский',
                     'de_DE' => 'Deutsch',
+                    'fr_FR' => 'Français',
                     'it_IT' => 'Italiano',
                     'th_TH' => 'ภาษาไทย'
                 ],

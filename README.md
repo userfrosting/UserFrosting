@@ -94,6 +94,7 @@ Srinivas's a web applications architect, with a passion for open source technolo
 - @rafa31gz - Spanish
 - @splitt3r - German
 - @X-Anonymous-Y - German
+- Dmitriy (@rendername) - Russian
 
 ## Contributing
 
