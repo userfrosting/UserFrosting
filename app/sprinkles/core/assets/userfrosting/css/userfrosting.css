@@ -164,8 +164,9 @@ a .info-box {
 
 /* Custom styling for nav logo */
 .main-header .logo {
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
+    font-size: 18px;
 }
 
 @media(min-width: 768px) {
