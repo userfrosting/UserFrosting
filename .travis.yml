@@ -10,5 +10,20 @@ php:
   - 7.1
   - hhvm
 
+services:
+  - mysql
+
+env:
+  - DB_DRIVER=mysql
+  - DB_HOST=127.0.0.1
+  - DB_PORT=3306
+  - DB_NAME=userfrosting
+  - DB_USER=travis
+  - DB_PASSWORD=
+
+before_install:
+  - mysql -e 'CREATE DATABASE userfrosting;'
+
 before_script: composer install
+
 script: app/vendor/bin/phpunit
