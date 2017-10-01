@@ -72,6 +72,11 @@ form textarea {
     padding-left: 10px;
 }
 
+/* Table column width, fit to content */
+.uf-table-fit-width {
+    width: 1%;
+}
+
 /* Hide global search field on larger devices */
 .uf-table-search {
     display: none;
