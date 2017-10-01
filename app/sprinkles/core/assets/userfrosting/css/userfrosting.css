@@ -176,7 +176,7 @@ a .info-box {
 }
 
 /* Padding for user menu */
-.user-menu a i {
+.user-menu .fa {
     padding-left: .5em;
     font-size: 11px;
 }
