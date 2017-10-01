@@ -175,13 +175,9 @@ a .info-box {
 }
 
 /* Padding for user menu */
-#user-menu-chevron {
+.user-menu a i {
     padding-left: .5em;
-}
-
-/* Padding for nav logo */
-#nav-logo {
-    padding-right: 10px;
+    font-size: 11px;
 }
 
 /* Custom classes to add responsiveness to bootstrap's dropdown-menu-right and dropdown-menu-left  */
