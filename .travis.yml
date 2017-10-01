@@ -10,4 +10,4 @@ php:
   - 7.1
   - hhvm
 
-script: app/vendor/bin/phpunit
+script: $TRAVIS_BUILD_DIR/app/vendor/bin/phpunit
