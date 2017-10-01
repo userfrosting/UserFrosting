@@ -15,14 +15,12 @@ use Illuminate\Database\Eloquent\Model;
  *
  * Represents the model for the `migrations` table
  *
- * @package UserFrosting
- * @author Alex Weissman
+ * @author Alex Weissman (https://alexanderweissman.com)
  * @property string sprinkle
  * @property string version
- *
  */
-class Migrations extends Model {
-
+class Migrations extends Model
+{
     /**
      * @var string The name of the table for the current model.
      */

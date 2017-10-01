@@ -15,10 +15,8 @@ use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\Sprinkle\Core\Twig\CacheHelper;
 
 /**
- * Debug CLI Tools.
- * Perform the preflight check for UserFrosting install
+ * ClearCache CLI Command.
  *
- * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ClearCache extends BaseCommand
@@ -40,7 +38,7 @@ class ClearCache extends BaseCommand
         $this->io->title("Clearing cache");
 
         // Clear normal cache
-        $this->io->writeln("<info> > Clearing Illumintate cache instance</info>", OutputInterface::VERBOSITY_VERBOSE);
+        $this->io->writeln("<info> > Clearing Illuminate cache instance</info>", OutputInterface::VERBOSITY_VERBOSE);
         $this->clearIlluminateCache();
 
         // Clear Twig cache

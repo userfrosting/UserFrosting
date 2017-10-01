@@ -14,10 +14,9 @@ use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
- * Assets builder CLI Tools.
- * Wrapper for npm/node commands
+ * Automated testing CLI tool.
+ * Sets up environment and runs PHPUnit tests in each Sprinkle.
  *
- * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Test extends BaseCommand

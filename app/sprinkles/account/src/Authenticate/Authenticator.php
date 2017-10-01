@@ -192,8 +192,8 @@ class Authenticator
         $oldId = session_id();
         $this->session->regenerateId(true);
 
-        // Since regenerateId delete the old session, we'll do the same in cache
-        $this->cache->tags([$this->config['cache.prefix'], "_s".$oldId])->flush();
+        // Since regenerateId deletes the old session, we'll do the same in cache
+        $this->cache->tags([$this->config['cache.prefix'], '_s' . $oldId])->flush();
 
         // If the user wants to be remembered, create Rememberme cookie
         if ($rememberMe) {
@@ -250,8 +250,8 @@ class Authenticator
         // Completely destroy the session
         $this->session->destroy();
 
-        // Since regenerateId delete the old session, we'll do the same in cache
-        $this->cache->tags([$this->config['cache.prefix'], "_s".$oldId])->flush();
+        // Since regenerateId deletes the old session, we'll do the same in cache
+        $this->cache->tags([$this->config['cache.prefix'], '_s' . $oldId])->flush();
 
         // Restart the session service
         $this->session->start();

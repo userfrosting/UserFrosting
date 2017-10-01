@@ -20,10 +20,8 @@ use UserFrosting\System\Database\Model\Migrations;
 use UserFrosting\System\Bakery\DatabaseTest;
 
 /**
- * Migration CLI Tools.
- * Perform database migrations commands
+ * Migrator class
  *
- * @extends Debug
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Migrator
@@ -100,7 +98,7 @@ class Migrator
 
         // Start by testing the DB connexion, just in case
         try {
-            $this->io->writeln("<info>Testing database connexion</info>", OutputInterface::VERBOSITY_VERBOSE);
+            $this->io->writeln("<info>Testing database connection</info>", OutputInterface::VERBOSITY_VERBOSE);
             $this->testDB();
             $this->io->writeln("Ok", OutputInterface::VERBOSITY_VERBOSE);
         } catch (\Exception $e) {

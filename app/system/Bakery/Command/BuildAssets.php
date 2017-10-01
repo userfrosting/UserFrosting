@@ -17,7 +17,6 @@ use UserFrosting\System\Bakery\BaseCommand;
  * Assets builder CLI Tools.
  * Wrapper for npm/node commands
  *
- * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class BuildAssets extends BaseCommand

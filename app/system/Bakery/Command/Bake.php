@@ -17,7 +17,6 @@ use UserFrosting\System\Bakery\BaseCommand;
  * Bake command.
  * Shortcut to run multiple commands at once
  *
- * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Bake extends BaseCommand

@@ -20,9 +20,8 @@ use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Util\Password;
 
 /**
- * Create User CLI Command.
+ * Create root user CLI command.
  *
- * @extends BaseCommand
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class CreateAdminUser extends BaseCommand
@@ -30,7 +29,7 @@ class CreateAdminUser extends BaseCommand
     use DatabaseTest;
 
     /**
-     * @var Array Migrations dependencies for thsi command to work
+     * @var string[] Migration dependencies for this command to work
      */
     protected $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\UsersTable',
@@ -56,7 +55,7 @@ class CreateAdminUser extends BaseCommand
 
         // Need the database
         try {
-            $this->io->writeln("<info>Testing database connexion</info>", OutputInterface::VERBOSITY_VERBOSE);
+            $this->io->writeln("<info>Testing database connection</info>", OutputInterface::VERBOSITY_VERBOSE);
             $this->testDB();
             $this->io->writeln("Ok", OutputInterface::VERBOSITY_VERBOSE);
         } catch (\Exception $e) {
@@ -89,19 +88,19 @@ class CreateAdminUser extends BaseCommand
             $this->io->writeln("Please answer the following questions to create the root account:\n");
 
             // Get the account details
-            $user_name = $this->askUsername();
+            $userName = $this->askUsername();
             $email = $this->askEmail();
-            $first_name = $this->askFirstName();
-            $last_name = $this->askLastName();
+            $firstName = $this->askFirstName();
+            $lastName = $this->askLastName();
             $password = $this->askPassword();
 
             // Ok, now we've got the info and we can create the new user.
-            $this->io->write("\n<info>Saving the user details...</info>");
+            $this->io->write("\n<info>Saving the root user details...</info>");
             $rootUser = new User([
-                "user_name" => $user_name,
+                "user_name" => $userName,
                 "email" => $email,
-                "first_name" => $first_name,
-                "last_name" => $last_name,
+                "first_name" => $firstName,
+                "last_name" => $lastName,
                 "password" => Password::hash($password)
             ]);
 
@@ -119,7 +118,7 @@ class CreateAdminUser extends BaseCommand
                 }
             }
 
-            $this->io->success("Admin user creation successful !");
+            $this->io->success("Root user creation successful!");
         }
     }
 
@@ -131,23 +130,23 @@ class CreateAdminUser extends BaseCommand
      */
     protected function askUsername()
     {
-        while (!isset($user_name) || !$this->validateUsername($user_name)) {
-            $user_name = $this->io->ask("Choose a username (1-50 characters, no leading or trailing whitespace)");
+        while (!isset($userName) || !$this->validateUsername($userName)) {
+            $userName = $this->io->ask("Choose a root username (1-50 characters, no leading or trailing whitespace)");
         }
-        return $user_name;
+        return $userName;
     }
 
     /**
      * Validate the username.
      *
      * @access protected
-     * @param mixed $user_name
+     * @param mixed $userName
      * @return void
      */
-    protected function validateUsername($user_name)
+    protected function validateUsername($userName)
     {
         // Validate length
-        if (strlen($user_name) < 1 || strlen($user_name) > 50) {
+        if (strlen($userName) < 1 || strlen($userName) > 50) {
             $this->io->error("Username must be between 1-50 characters");
             return false;
         }
@@ -158,7 +157,7 @@ class CreateAdminUser extends BaseCommand
                 'regexp' => "/^\S((.*\S)|)$/"
             ]
         ];
-        $validate = filter_var($user_name, FILTER_VALIDATE_REGEXP, $options);
+        $validate = filter_var($userName, FILTER_VALIDATE_REGEXP, $options);
         if (!$validate) {
             $this->io->error("Username can't have any leading or trailing whitespace");
             return false;
@@ -190,7 +189,7 @@ class CreateAdminUser extends BaseCommand
      */
     protected function validateEmail($email)
     {
-        // Validate lenght
+        // Validate length
         if (strlen($email) < 1 || strlen($email) > 254) {
             $this->io->error("Email must be between 1-254 characters");
             return false;
@@ -213,10 +212,10 @@ class CreateAdminUser extends BaseCommand
      */
     protected function askFirstName()
     {
-        while (!isset($first_name) || !$this->validateFirstName($first_name)) {
-            $first_name = $this->io->ask("Enter the user first name (1-20 characters)");
+        while (!isset($firstName) || !$this->validateFirstName($firstName)) {
+            $firstName = $this->io->ask("Enter the user first name (1-20 characters)");
         }
-        return $first_name;
+        return $firstName;
     }
 
     /**
@@ -226,10 +225,10 @@ class CreateAdminUser extends BaseCommand
      * @param mixed $name
      * @return void
      */
-    protected function validateFirstName($first_name)
+    protected function validateFirstName($firstName)
     {
-        // Validate lenght
-        if (strlen($first_name) < 1 || strlen($first_name) > 20) {
+        // Validate length
+        if (strlen($firstName) < 1 || strlen($firstName) > 20) {
             $this->io->error("First name must be between 1-20 characters");
             return false;
         }
@@ -245,23 +244,23 @@ class CreateAdminUser extends BaseCommand
      */
     protected function askLastName()
     {
-        while (!isset($last_name) || !$this->validateLastName($last_name)) {
-            $last_name = $this->io->ask("Enter the user last name (1-30 characters)");
+        while (!isset($lastName) || !$this->validateLastName($lastName)) {
+            $lastName = $this->io->ask("Enter the user last name (1-30 characters)");
         }
-        return $last_name;
+        return $lastName;
     }
 
     /**
      * validateLastName function.
      *
      * @access protected
-     * @param mixed $last_name
+     * @param mixed $lastName
      * @return void
      */
-    protected function validateLastName($last_name)
+    protected function validateLastName($lastName)
     {
         // Validate length
-        if (strlen($last_name) < 1 || strlen($last_name) > 30) {
+        if (strlen($lastName) < 1 || strlen($lastName) > 30) {
             $this->io->error("Last name must be between 1-30 characters");
             return false;
         }

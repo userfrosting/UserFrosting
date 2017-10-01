@@ -18,7 +18,6 @@ use UserFrosting\System\Bakery\Migrator;
  * Migrate CLI Tools.
  * Perform database migrations commands
  *
- * @extends Debug
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class MigrateReset extends BaseCommand

@@ -15,10 +15,8 @@ use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\DatabaseTest;
 
 /**
- * Debug CLI Tools.
- * Perform the preflight check for UserFrosting install
+ * Debug CLI tool.
  *
- * @extends Bakery
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Debug extends BaseCommand
@@ -149,11 +147,11 @@ class Debug extends BaseCommand
      */
     protected function checkDatabase()
     {
-        $this->io->section("Testing database connexion...");
+        $this->io->section("Testing database connection...");
 
         try {
             $this->testDB();
-            $this->io->writeln("Database connexion successful");
+            $this->io->writeln("Database connection successful");
             return;
         } catch (\Exception $e) {
             $error = $e->getMessage();
