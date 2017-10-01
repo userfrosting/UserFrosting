@@ -10,4 +10,5 @@ php:
   - 7.1
   - hhvm
 
-script: $TRAVIS_BUILD_DIR/app/vendor/bin/phpunit
+before_script: composer install
+script: app/vendor/bin/phpunit
