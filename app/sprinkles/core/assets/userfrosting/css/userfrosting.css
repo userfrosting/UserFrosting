@@ -75,6 +75,7 @@ form textarea {
 /* Table column width, fit to content */
 .uf-table-fit-width {
     width: 1%;
+    white-space: nowrap;
 }
 
 /* Hide global search field on larger devices */
