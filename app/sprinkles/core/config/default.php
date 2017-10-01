@@ -151,7 +151,7 @@
                 // This can be a comma-separated list, to load multiple fallback locales
                 'default' => 'en_US'
             ],
-            'title'     =>      'Userfrosting',
+            'title'     =>      'UserFrosting',
             // Global ufTable settings
             'uf_table' => [
                 'use_loading_transition' => true
