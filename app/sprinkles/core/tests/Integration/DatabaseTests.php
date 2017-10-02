@@ -695,7 +695,7 @@ class DatabaseTests extends TestCase
         $this->generateRoles();
         $this->generateJobs();
         $job = EloquentTestJob::exclude('location_id', 'title')->first();
-        
+
         $this->assertEquals([
             'role_id' => 2,
             'user_id' => 1
@@ -714,7 +714,7 @@ class DatabaseTests extends TestCase
         $users = EloquentTestUser::with(['permissions' => function ($query) {
             $query->exclude('slug');
         }])->get();
-        
+
         $this->assertEquals([
             [
                 'id' => 1,

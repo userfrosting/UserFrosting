@@ -224,7 +224,7 @@ class SprinkleManager
      */
     protected function loadSchema($schemaPath)
     {
-        $sprinklesFile = file_get_contents($schemaPath);
+        $sprinklesFile = @file_get_contents($schemaPath);
 
         if ($sprinklesFile === false) {
             $errorMessage = "Error: Unable to determine Sprinkle load order.  File '$schemaPath' not found or unable to read. Please create a 'sprinkles.json' file and try again.";
