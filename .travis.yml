@@ -18,6 +18,6 @@ env: UF_MODE=testing DB_DRIVER=mysql DB_HOST=127.0.0.1 DB_PORT=3306 DB_NAME=user
 before_install:
   - mysql -e 'CREATE DATABASE userfrosting;'
 
-before_script: composer install
+before_script: cp app/sprinkles.example.json app/sprinkles.json; composer install
 
 script: app/vendor/bin/phpunit
