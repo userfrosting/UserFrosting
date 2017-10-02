@@ -12,6 +12,7 @@
 - Factor the admin user creation out of migrations and into its own Bakery command (See #778)
 - Bakery `clear-cache` command now clears Twig and router cache (Fix #750)
 - Add Russian translations
+- Add Travis for automated test/build on push
 
 ## v4.1.11-alpha
 - Updated `composer/installers` dependency.

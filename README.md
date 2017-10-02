@@ -1,6 +1,6 @@
 # UserFrosting 4.1
 
-[![Build Status](https://travis-ci.org/userfrosting/UserFrosting)](https://travis-ci.org/userfrosting/UserFrosting)
+[![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting)
 
 [https://www.userfrosting.com](https://www.userfrosting.com)
 
