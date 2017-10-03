@@ -39,7 +39,7 @@ services:
     image: composer/composer
     volumes_from:
       - php
-    working_dir: /app/app
+    working_dir: /app
     command: -V
 
   node:
