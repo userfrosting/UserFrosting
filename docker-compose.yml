@@ -44,6 +44,8 @@ services:
 
   node:
     image: node:alpine
+    build:
+      context: ./docker/node
     volumes_from:
       - php
     working_dir: /app/build

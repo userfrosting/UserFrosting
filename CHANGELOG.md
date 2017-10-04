@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.13-alpha
+- Fix Docker
+
 ## v4.1.12-alpha
 - Separate out user action column from user status column
 - Improve table row menus in mobile views (#724)
