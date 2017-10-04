@@ -1,23 +1,36 @@
 sudo: false
-
-language: php
-
 dist: trusty
-
-php:
-  - 5.6
-  - 7.0
-  - 7.1
-  - hhvm
+language: php
 
 services:
   - mysql
+  - postgresql
 
-env: UF_MODE=testing DB_DRIVER=mysql DB_HOST=127.0.0.1 DB_PORT=3306 DB_NAME=userfrosting DB_USER=travis DB_PASSWORD=
+php:
+  - 5.6
+  - 7
+  - 7.1
+
+env:
+  matrix:
+    - DB=mysql
+    - DB=sqlite 
+    - DB=pgsql 
 
 before_install:
-  - mysql -e 'CREATE DATABASE userfrosting;'
+  # copy sprinkles.json
+  - cp app/sprinkles.example.json app/sprinkles.json
+  # set up db
+  - bash build/before_install.sh $DB
 
-before_script: cp app/sprinkles.example.json app/sprinkles.json; composer install; php bakery migrate
+before_script:
+  # install deps and UF
+  - composer install
+  - php bakery migrate
 
-script: app/vendor/bin/phpunit
+script:
+  # run unit tests
+  - composer test
+
+after_failure:
+  - cat app/log/userfrosting.log
