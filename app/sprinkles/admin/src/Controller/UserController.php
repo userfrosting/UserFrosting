@@ -527,7 +527,7 @@ class UserController extends SimpleController
             $groups = $classMapper->staticMethod('group', 'all');
         } else {
             // Get the current user's group
-            $groups = $classMapper->staticMethod('group', 'where', 'id', $currentUser->group_id);
+            $groups = $currentUser->group()->get();
             $fields['disabled'][] = 'group';
         }
 

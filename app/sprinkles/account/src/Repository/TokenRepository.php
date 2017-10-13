@@ -99,9 +99,9 @@ abstract class TokenRepository
         }
 
         // Fetch user for this token
-        $user = $this->classMapper->staticMethod('user', 'where', 'id', $model->user_id)->first();
+        $user = $this->classMapper->staticMethod('user', 'find', $model->user_id);
 
-        if ($user === null) {
+        if (is_null($user)) {
             return false;
         }
 

@@ -64,7 +64,7 @@ class PermissionController extends SimpleController
         }
 
         // Get permission
-        $result = $classMapper->staticMethod('permission', 'where', 'id', $permissionId)->with('users')->get()->toArray();
+        $result = $permission->load('users')->toArray();
 
         // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
         // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
