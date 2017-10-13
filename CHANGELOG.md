@@ -1,6 +1,7 @@
 # Change Log
 
 ## v4.1.13-alpha
+- Remove explicit references to `id` columns (#803)
 - Fix Docker
 
 ## v4.1.12-alpha
