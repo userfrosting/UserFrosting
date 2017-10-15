@@ -4,6 +4,7 @@
 - Implement `rowTemplateSelector` for customizing how ufTable rows are rendered (#787)
 - Remove explicit references to `id` columns (#803)
 - Fix Docker
+- Append full name to User API
 
 ## v4.1.12-alpha
 - Separate out user action column from user status column

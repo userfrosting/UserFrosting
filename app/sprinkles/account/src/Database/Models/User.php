@@ -86,6 +86,10 @@ class User extends Model
         'deleted_at'
     ];
 
+    protected $appends = [
+        'full_name'
+    ];
+
     /**
      * Cached dictionary of permissions for the user.
      *
