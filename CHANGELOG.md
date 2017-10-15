@@ -1,7 +1,8 @@
 # Change Log
 
 ## v4.1.13-alpha
-- Implement `rowTemplateSelector` for customizing how ufTable rows are rendered (#787)
+- `ufTable`: Implement `rowTemplateSelector` for customizing how rows are rendered (#787)
+- `ufTable`: Support for passing callbacks for column templates instead of Handlebars templates
 - Remove explicit references to `id` columns (#803)
 - Fix Docker
 - Append full name to User API

@@ -229,6 +229,7 @@
                                   infoContainer.data('message-empty-rows') :
                                   "Sorry, we've got nothing here."
             },
+            columnTemplates: {},
             tablesorter: {
                 widgetOptions: {
                     // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
@@ -242,6 +243,7 @@
 
         this.settings = $.extend(true, {}, dataAttributeDefaults, this.settings);
 
+        // Copy over dataUrl to pager_ajaxUrl
         this.settings.tablesorter.widgetOptions.pager_ajaxUrl = this.settings.dataUrl;
 
         var tableElement = this.$element.find('.tablesorter');
@@ -258,6 +260,36 @@
 
         // Set up tablesorter and pager
         this.ts = tableElement.tablesorter(this.settings.tablesorter);
+
+        // Map default column template selectors based on data-column-template attribute in each column header
+        var columns = this.ts[0].config.headerList;
+        var columnTemplates = {};
+        for (var col = 0; col < columns.length; col++) {
+            var columnName = $(columns[col]).data('column-name');
+            if (!columnName && this.settings.DEBUG) {
+                console.error('Column number ' + col + ' is missing a data-column-name attribute.');
+            }
+            columnTemplates[columnName] = $(columns[col]).data('column-template');
+        }
+
+        // Merge in any column template selectors that were set in the ctor options
+        columnTemplates = $.extend(true, columnTemplates, this.settings.columnTemplates);
+
+        // Locate and compile templates for any string-identified column renderers
+        // At the same time, build out a numerically indexed array of templates
+        this.columnTemplates = [];
+        for (var col = 0; col < columns.length; col++) {
+            var columnName = $(columns[col]).data('column-name');
+            if (!columnTemplates[columnName] && this.settings.DEBUG) {
+                console.error("No template found for column '" + columnName + "'.");
+            }
+            var columnTemplate = columnTemplates[columnName];
+            if (typeof columnTemplate === 'string') {
+                this.columnTemplates.push(Handlebars.compile($(columnTemplate).html()));
+            } else {
+                this.columnTemplates.push(columnTemplate);
+            }
+        }
 
         // Link CSV download button
         this.settings.downloadButton.on('click', this.settings.onDownload);
@@ -395,15 +427,8 @@
                 rowTemplate = Handlebars.compile($(this.settings.rowTemplateSelector).html());
             }
 
-            // Build Handlebars templates based on column-template attribute in each column header
-            var columns = ts.config.headerList;
-            var columnTemplates = [];
-            for (var col = 0; col < columns.length; col++) {
-                var columnName = $(columns[col]).data('column-template');
-                columnTemplates.push(Handlebars.compile($(columnName).html()));
-            }
-
             // Render table rows and cells via Handlebars
+            var columns = ts.config.headerList;
             for (var row = 0; row < size; row++) {
                 var cellData = {
                     rownum: row,
@@ -413,8 +438,8 @@
 
                 rows += rowTemplate(cellData);
 
-                for (col = 0; col < columns.length; col++) {
-                    rows += columnTemplates[col](cellData);
+                for (var col = 0; col < columns.length; col++) {
+                    rows += this.columnTemplates[col](cellData);
                 }
 
                 rows += '</tr>';
