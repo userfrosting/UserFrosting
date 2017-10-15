@@ -102,6 +102,7 @@
             filterAllField       : '_all',
             useLoadingTransition : true,
             rowTemplate          : null,
+            columnTemplates      : {},
             tablesorter     : {
                 debug: false,
                 theme     : 'bootstrap',
@@ -174,11 +175,13 @@
         var tableElement = this.$element.find('.tablesorter');
 
         var lateDefaults = {
-            downloadButton: this.$element.find('.js-uf-table-download'),
-            onDownload: $.proxy(this._onDownload, this),
-            renderInfoMessages: $.proxy(this._renderInfoMessages, this),
+            download: {
+                button: this.$element.find('.js-uf-table-download'),
+                callback: $.proxy(this._onDownload, this)
+            },
             info: {
-                container: this.$element.find('.js-uf-table-info')
+                container: this.$element.find('.js-uf-table-info'),
+                callback: $.proxy(this._renderInfoMessages, this)
             },
             overlay: {
                 container: this.$element.find('.js-uf-table-overlay')
@@ -231,7 +234,6 @@
                                   infoContainer.data('message-empty-rows') :
                                   "Sorry, we've got nothing here."
             },
-            columnTemplates: {},
             tablesorter: {
                 widgetOptions: {
                     // possible variables: {size}, {page}, {totalPages}, {filteredPages}, {startRow}, {endRow}, {filteredRows} and {totalRows}
@@ -304,7 +306,7 @@
         }
 
         // Link CSV download button
-        this.settings.downloadButton.on('click', this.settings.onDownload);
+        this.settings.download.button.on('click', this.settings.download.callback);
 
         // Allow clicking on the labels in the table menu without closing the menu
         $(this.settings.tablesorter.widgetOptions.columnSelector_container).find('label').on('click', function(e) {
@@ -317,7 +319,7 @@
         }, this));
 
         // Show info messages when there are no rows/no results
-        this.ts.on('filterEnd filterReset pagerComplete', this.settings.renderInfoMessages);
+        this.ts.on('filterEnd filterReset pagerComplete', this.settings.info.callback);
 
         // Detect changes to element attributes
         this.$element.attrchange({
@@ -494,6 +496,7 @@
 
     /**
      * Implements handler for the "download CSV" button.
+     * Default callback for download.callback
      * @private
      */
     Plugin.prototype._onDownload = function () {
@@ -549,7 +552,7 @@
 
     /**
      * Render info messages, such as when there are no results.
-     * Default callback for renderInfoMessages
+     * Default callback for info.callback
      * @private
      */
     Plugin.prototype._renderInfoMessages = function () {
