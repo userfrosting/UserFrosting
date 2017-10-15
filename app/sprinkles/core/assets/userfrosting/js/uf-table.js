@@ -101,7 +101,7 @@
             addParams            : {},
             filterAllField       : '_all',
             useLoadingTransition : true,
-            rowTemplateSelector  : null,
+            rowTemplate          : null,
             tablesorter     : {
                 debug: false,
                 theme     : 'bootstrap',
@@ -291,6 +291,18 @@
             }
         }
 
+        // Locate and compile row template
+        this.rowTemplate = Handlebars.compile('<tr>');
+        // If rowTemplateSelector is set, then find the DOM element that it references, which contains the template 
+        if (this.settings.rowTemplate) {
+            var rowTemplate = this.settings.rowTemplate;
+            if (typeof rowTemplate === 'string') {
+                this.rowTemplate = Handlebars.compile($(this.settings.rowTemplate).html());
+            } else {
+                this.rowTemplate = rowTemplate;
+            }
+        }
+
         // Link CSV download button
         this.settings.downloadButton.on('click', this.settings.onDownload);
 
@@ -421,12 +433,6 @@
         if (data) {
             var size = data.rows.length;
 
-            var rowTemplate = Handlebars.compile('<tr>');
-            // If rowTemplateSelector is set, then find the DOM element that it references, which contains the template 
-            if (this.settings.rowTemplateSelector) {
-                rowTemplate = Handlebars.compile($(this.settings.rowTemplateSelector).html());
-            }
-
             // Render table rows and cells via Handlebars
             for (var row = 0; row < size; row++) {
                 var cellData = {
@@ -435,7 +441,7 @@
                     site  : site
                 };
 
-                rows += rowTemplate(cellData);
+                rows += this.rowTemplate(cellData);
 
                 for (var col = 0; col < this.columnTemplates.length; col++) {
                     rows += this.columnTemplates[col](cellData);
