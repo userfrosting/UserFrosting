@@ -171,6 +171,8 @@
     function Plugin (element, options) {
         this.element = element[0];
         this.$element = $(this.element);
+        var tableElement = this.$element.find('.tablesorter');
+
         var lateDefaults = {
             downloadButton: this.$element.find('.js-uf-table-download'),
             onDownload: $.proxy(this._onDownload, this),
@@ -246,8 +248,6 @@
         // Copy over dataUrl to pager_ajaxUrl
         this.settings.tablesorter.widgetOptions.pager_ajaxUrl = this.settings.dataUrl;
 
-        var tableElement = this.$element.find('.tablesorter');
-
         // Set up 'loading' overlays
         if (this.settings.useLoadingTransition) {
             var overlay = this.settings.overlay.container;
@@ -262,14 +262,14 @@
         this.ts = tableElement.tablesorter(this.settings.tablesorter);
 
         // Map default column template selectors based on data-column-template attribute in each column header
-        var columns = this.ts[0].config.headerList;
+        var columns = this.ts[0].config.$headerIndexed;
         var columnTemplates = {};
         for (var col = 0; col < columns.length; col++) {
-            var columnName = $(columns[col]).data('column-name');
+            var columnName = columns[col].data('column-name');
             if (!columnName && this.settings.DEBUG) {
                 console.error('Column number ' + col + ' is missing a data-column-name attribute.');
             }
-            columnTemplates[columnName] = $(columns[col]).data('column-template');
+            columnTemplates[columnName] = columns[col].data('column-template');
         }
 
         // Merge in any column template selectors that were set in the ctor options
@@ -279,7 +279,7 @@
         // At the same time, build out a numerically indexed array of templates
         this.columnTemplates = [];
         for (var col = 0; col < columns.length; col++) {
-            var columnName = $(columns[col]).data('column-name');
+            var columnName = columns[col].data('column-name');
             if (!columnTemplates[columnName] && this.settings.DEBUG) {
                 console.error("No template found for column '" + columnName + "'.");
             }
@@ -336,7 +336,7 @@
             var columnIndex = sortList[i][0];
             var columnDirection = sortOrders[sortList[i][1]];   // Converts to 'asc' or 'desc'
             if (sortList[i]) {
-                var columnName = $(table.config.headerList[columnIndex]).data('column-name');
+                var columnName = table.config.$headerIndexed[columnIndex].data('column-name');
                 sorts[columnName] = columnDirection;
             }
         }
@@ -348,8 +348,8 @@
             if (filterList[i]) {
                 var columnName = base.settings.filterAllField;
 
-                if (table.config.headerList[i]) {
-                    columnName = $(table.config.headerList[i]).data('column-name');
+                if (table.config.$headerIndexed[i]) {
+                    columnName = table.config.$headerIndexed[i].data('column-name');
                 }
 
                 filters[columnName] = filterList[i];
@@ -428,7 +428,6 @@
             }
 
             // Render table rows and cells via Handlebars
-            var columns = ts.config.headerList;
             for (var row = 0; row < size; row++) {
                 var cellData = {
                     rownum: row,
@@ -438,14 +437,15 @@
 
                 rows += rowTemplate(cellData);
 
-                for (var col = 0; col < columns.length; col++) {
+                for (var col = 0; col < this.columnTemplates.length; col++) {
                     rows += this.columnTemplates[col](cellData);
                 }
 
                 rows += '</tr>';
             }
 
-            // Initialize any dropdown filters 
+            // Initialize any dropdown filters
+            var columns = ts.config.$headerIndexed;
             this._ajaxInitFilterSelects(columns, data.listable);
 
             json.total = data.count;  // Get total rows without pagination
@@ -470,7 +470,7 @@
         var filters = this.getSavedFilters(ts);
         // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
         for (var col = 0; col < columns.length; col++) {
-            var column = $(columns[col]);
+            var column = columns[col];
             // If the column is designated for filter-select, get the listables from the data and recreate it
             if (column.hasClass('filter-select')) {
                 var columnName = column.data('column-name');
