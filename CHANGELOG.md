@@ -1,6 +1,7 @@
 # Change Log
 
 ## v4.1.13-alpha
+- Implement `rowTemplateSelector` for customizing how ufTable rows are rendered (#787)
 - Remove explicit references to `id` columns (#803)
 - Fix Docker
 

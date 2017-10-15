@@ -90,17 +90,18 @@
  * @author Alexander Weissman <https://alexanderweissman.com>
  */
 ;(function($, window, document, undefined) {
-    "use strict";
+    'use strict';
 
     // Define plugin name and defaults.
-    var pluginName = "ufTable",
+    var pluginName = 'ufTable',
         defaults = {
             DEBUG                : false,
-            dataUrl              : "",
+            dataUrl              : '',
             msgTarget            : $('#alerts-page'),
             addParams            : {},
             filterAllField       : '_all',
             useLoadingTransition : true,
+            rowTemplateSelector  : null,
             tablesorter     : {
                 debug: false,
                 theme     : 'bootstrap',
@@ -173,6 +174,7 @@
         var lateDefaults = {
             downloadButton: this.$element.find('.js-uf-table-download'),
             onDownload: $.proxy(this._onDownload, this),
+            renderInfoMessages: $.proxy(this._renderInfoMessages, this),
             info: {
                 container: this.$element.find('.js-uf-table-info')
             },
@@ -249,7 +251,7 @@
             var overlay = this.settings.overlay.container;
             tableElement.bind('sortStart filterStart pageMoved', function() {
                 overlay.removeClass('hidden');
-            }).bind("pagerComplete updateComplete", function() {
+            }).bind('pagerComplete updateComplete', function() {
                 overlay.addClass('hidden');
             });
         }
@@ -265,22 +267,13 @@
             e.stopPropagation();
         });
 
+        // Propagate our own pagerComplete event
         this.ts.on('pagerComplete', $.proxy(function () {
             this.$element.trigger('pagerComplete.ufTable');
         }, this));
 
         // Show info messages when there are no rows/no results
-        this.ts.on('filterEnd filterReset pagerComplete', $.proxy(function () {
-            var table = this.ts[0];
-            var infoMessages = this.settings.info.container;
-            if (table.config.pager) {
-                infoMessages.html('');
-                var fr = table.config.pager.filteredRows;
-                if (fr === 0) {
-                    infoMessages.html(this.settings.info.messageEmptyRows);
-                }
-            }
-        }, this));
+        this.ts.on('filterEnd filterReset pagerComplete', this.settings.renderInfoMessages);
 
         // Detect changes to element attributes
         this.$element.attrchange({
@@ -396,24 +389,32 @@
         if (data) {
             var size = data.rows.length;
 
-            // Build Handlebars templates based on column-template attribute in each column header
-            var columns = ts.config.headerList;
-            var templates = [];
-            for (var i = 0; i < columns.length; i++) {
-                var columnName = $(columns[i]).data('column-template');
-                templates.push(Handlebars.compile($(columnName).html()));
+            var rowTemplate = Handlebars.compile('<tr>');
+            // If rowTemplateSelector is set, then find the DOM element that it references, which contains the template 
+            if (this.settings.rowTemplateSelector) {
+                rowTemplate = Handlebars.compile($(this.settings.rowTemplateSelector).html());
             }
 
-            // Render table cells via Handlebars
+            // Build Handlebars templates based on column-template attribute in each column header
+            var columns = ts.config.headerList;
+            var columnTemplates = [];
+            for (var col = 0; col < columns.length; col++) {
+                var columnName = $(columns[col]).data('column-template');
+                columnTemplates.push(Handlebars.compile($(columnName).html()));
+            }
+
+            // Render table rows and cells via Handlebars
             for (var row = 0; row < size; row++) {
-                rows += '<tr>';
                 var cellData = {
-                    'row'  : data.rows[row],       // It is safe to use the data from the API because Handlebars escapes HTML
-                    'site' : site
+                    rownum: row,
+                    row   : data.rows[row],       // It is safe to use the data from the API because Handlebars escapes HTML
+                    site  : site
                 };
 
-                for (i = 0; i < columns.length; i++) {
-                    rows += templates[i](cellData);
+                rows += rowTemplate(cellData);
+
+                for (col = 0; col < columns.length; col++) {
+                    rows += columnTemplates[col](cellData);
                 }
 
                 rows += '</tr>';
@@ -441,19 +442,19 @@
      */
     Plugin.prototype._ajaxInitFilterSelects = function(columns, listable) {
         var ts = this.ts[0];
+        var filters = this.getSavedFilters(ts);
         // Find columns with `.filter-select` and match them to column numbers based on their data-column-name
-        for (var i = 0; i < columns.length; i++) {
-            var column = $(columns[i]);
+        for (var col = 0; col < columns.length; col++) {
+            var column = $(columns[col]);
             // If the column is designated for filter-select, get the listables from the data and recreate it
             if (column.hasClass('filter-select')) {
                 var columnName = column.data('column-name');
                 if (listable[columnName]) {
-                    $.tablesorter.filter.buildSelect(ts, i, listable[columnName], true);
-                    var filters = this.getSavedFilters(ts);
+                    $.tablesorter.filter.buildSelect(ts, col, listable[columnName], true);
                     // If there is a filter actually set for this column, update the selected option.
-                    if (filters[i]) {
-                        var selectControl = $(ts).find(".tablesorter-filter[data-column='" + i + "']");
-                        selectControl.val(filters[i]);
+                    if (filters[col]) {
+                        var selectControl = $(ts).find(".tablesorter-filter[data-column='" + col + "']");
+                        selectControl.val(filters[col]);
                     }
                 }
             }
@@ -500,7 +501,7 @@
                 document.close();
             } else {
                 if (this.settings.DEBUG) {
-                    console.log("Error (" + jqXHR.status + "): " + jqXHR.responseText );
+                    console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText );
                 }
                 // Display errors on failure
                 // TODO: ufAlerts widget should have a 'destroy' method
@@ -511,6 +512,23 @@
                 }
 
                 this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
+            }
+        }
+    };
+
+    /**
+     * Render info messages, such as when there are no results.
+     * Default callback for renderInfoMessages
+     * @private
+     */
+    Plugin.prototype._renderInfoMessages = function () {
+        var table = this.ts[0];
+        var infoMessages = this.settings.info.container;
+        if (table.config.pager) {
+            infoMessages.html('');
+            var fr = table.config.pager.filteredRows;
+            if (fr === 0) {
+                infoMessages.html(this.settings.info.messageEmptyRows);
             }
         }
     };
