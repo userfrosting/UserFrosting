@@ -96,6 +96,7 @@
     var pluginName = 'ufTable',
         defaults = {
             DEBUG                : false,
+            site                 : site, // global site variables
             dataUrl              : '',
             msgTarget            : $('#alerts-page'),
             addParams            : {},
@@ -224,6 +225,7 @@
         this.settings = $.extend(true, {}, defaults, lateDefaults, options);
         this._defaults = defaults;
         this._name = pluginName;
+        this._debugAjax = (typeof this.settings.site !== 'undefined') && this.settings.site.debug.ajax;
 
         // Fall back to attributes from data-*, default values if not specified in options
         var pagerContainer = this.settings.tablesorter.widgetOptions.pager_selectors.container;
@@ -279,7 +281,7 @@
 
         // Locate and compile templates for any string-identified column renderers
         // At the same time, build out a numerically indexed array of templates
-        this.columnTemplates = [];
+        this.columnTemplatesIndexed = [];
         for (var col = 0; col < columns.length; col++) {
             var columnName = columns[col].data('column-name');
             if (!columnTemplates[columnName] && this.settings.DEBUG) {
@@ -287,15 +289,15 @@
             }
             var columnTemplate = columnTemplates[columnName];
             if (typeof columnTemplate === 'string') {
-                this.columnTemplates.push(Handlebars.compile($(columnTemplate).html()));
+                this.columnTemplatesIndexed.push(Handlebars.compile($(columnTemplate).html()));
             } else {
-                this.columnTemplates.push(columnTemplate);
+                this.columnTemplatesIndexed.push(columnTemplate);
             }
         }
 
         // Locate and compile row template
         this.rowTemplate = Handlebars.compile('<tr>');
-        // If rowTemplateSelector is set, then find the DOM element that it references, which contains the template 
+        // If rowTemplateSelector is set, then find the DOM element that it references, which contains the template
         if (this.settings.rowTemplate) {
             var rowTemplate = this.settings.rowTemplate;
             if (typeof rowTemplate === 'string') {
@@ -339,8 +341,8 @@
 
         // Get sort column and order
         var sortOrders = {
-            '0' : 'asc',
-            '1' : 'desc'
+            '0': 'asc',
+            '1': 'desc'
         };
 
         // Set sorts in URL.  Assumes each th has a data-column-name attribute that corresponds to the name in the API
@@ -440,13 +442,13 @@
                 var cellData = {
                     rownum: row,
                     row   : data.rows[row],       // It is safe to use the data from the API because Handlebars escapes HTML
-                    site  : site
+                    site  : this.settings.site
                 };
 
                 rows += this.rowTemplate(cellData);
 
-                for (var col = 0; col < this.columnTemplates.length; col++) {
-                    rows += this.columnTemplates[col](cellData);
+                for (var col = 0; col < this.columnTemplatesIndexed.length; col++) {
+                    rows += this.columnTemplatesIndexed[col](cellData);
                 }
 
                 rows += '</tr>';
@@ -530,7 +532,7 @@
     Plugin.prototype._ajaxError = function(jqXHR) {
         if (typeof jqXHR === 'object') {
             // Error messages
-            if ((typeof site !== 'undefined') && site.debug.ajax && jqXHR.responseText) {
+            if (this._debugAjax && jqXHR.responseText) {
                 document.write(jqXHR.responseText);
                 document.close();
             } else {
@@ -617,15 +619,15 @@
         if (component === 'filter') {
             var decodedFilters = [];
             // Extract filter names and values for the specified table
-            var filters = urlObject.filter ? urlObject.filter : [];
-            if (filters[tableId]) {
-                var filters = filters[tableId];
+            var pageFilters = urlObject.filter ? urlObject.filter : [];
+            if (pageFilters[tableId]) {
+                var tableFilters = pageFilters[tableId];
                 // Build a numerically indexed array of filter values
                 var len = config.$headerIndexed.length;
                 for (var index = 0; index < len; index++) {
                     var columnName = $(config.$headerIndexed[index][0]).attr(wo.sort2Hash_headerTextAttr);
-                    if (filters[columnName] && filters[columnName] != this.settings.filterAllField) {
-                        decodedFilters.push(filters[columnName]);
+                    if (tableFilters[columnName] && tableFilters[columnName] != this.settings.filterAllField) {
+                        decodedFilters.push(tableFilters[columnName]);
                     } else {
                         decodedFilters.push('');
                     }
@@ -633,7 +635,7 @@
                 // Convert array of filter values to a delimited string
                 result = decodedFilters.join(wo.sort2Hash_separator);
                 // make sure to use decodeURIComponent on the result
-                return decodeURIComponent( result );
+                return decodeURIComponent(result);
             } else {
                 return '';
             }
