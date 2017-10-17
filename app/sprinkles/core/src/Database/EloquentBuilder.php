@@ -100,8 +100,8 @@ class EloquentBuilder extends LaravelEloquentBuilder
             // set the default column as * or primary key
             $column = ($function == 'count') ? '*' : $this->model->getKeyName();
 
-            if (Str::contains($name, ':')) {
-                list($name, $column) = explode(':', $name);
+            if (Str::contains($name, '~')) {
+                list($name, $column) = explode('~', $name);
             }
 
             $relation = $this->getRelationWithoutConstraints($name);
