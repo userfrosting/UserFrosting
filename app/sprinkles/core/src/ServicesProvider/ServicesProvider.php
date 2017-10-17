@@ -188,6 +188,7 @@ class ServicesProvider
         $container['classMapper'] = function ($c) {
             $classMapper = new ClassMapper();
             $classMapper->setClassMapping('query_builder', 'UserFrosting\Sprinkle\Core\Database\Builder');
+            $classMapper->setClassMapping('eloquent_builder', 'UserFrosting\Sprinkle\Core\Database\EloquentBuilder');
             $classMapper->setClassMapping('throttle', 'UserFrosting\Sprinkle\Core\Database\Models\Throttle');
             return $classMapper;
         };
