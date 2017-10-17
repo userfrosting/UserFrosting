@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.14-alpha
+- Implement withRaw, withSum, withAvg, withMin, withMax (see https://github.com/laravel/framework/pull/16815)
+
 ## v4.1.13-alpha
 - `ufTable`: Implement `rowTemplate` for customizing how rows are rendered (#787)
 - `ufTable`: Support for passing callbacks for column templates instead of Handlebars templates
