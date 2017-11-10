@@ -279,7 +279,7 @@ class UserController extends SimpleController
 
         // Begin transaction - DB will be rolled back if an exception occurs
         Capsule::transaction( function() use ($user, $userName, $currentUser) {
-            $user->delete();
+            $user->deleteUser();
             unset($user);
 
             // Create activity record

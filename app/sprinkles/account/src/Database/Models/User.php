@@ -165,7 +165,7 @@ class User extends Model
      * @param bool $hardDelete Set to true to completely remove the user and all associated objects.
      * @return bool true if the deletion was successful, false otherwise.
      */
-    public function delete($hardDelete = false)
+    public function deleteUser($hardDelete = false)
     {
         /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
@@ -184,10 +184,10 @@ class User extends Model
             // TODO: remove any persistences
 
             // Delete the user
-            $result = parent::forceDelete();
+            $result = $this->forceDelete();
         } else {
             // Soft delete the user, leaving all associated records alone
-            $result = parent::delete();
+            $result = $this->delete();
         }
 
         return $result;
