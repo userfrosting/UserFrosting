@@ -14,6 +14,8 @@ namespace UserFrosting\Sprinkle\Account\Util;
  */
 class Password
 {
+    const DEFAULT_COST = 12;
+
     /**
      * Returns the hashing type for a specified password hash.
      *
@@ -26,7 +28,7 @@ class Password
         // If the password in the db is 65 characters long, we have an sha1-hashed password.
         if (strlen($password) == 65) {
             return 'sha1';
-        } elseif (substr($password, 0, 7) == '$2y$12$') {
+        } elseif (substr($password, 0, 7) == '$2y$'.self::$_DEFAULT_COST.'$') {
             return 'legacy';
         }
 
@@ -64,7 +66,7 @@ class Password
             // Legacy UserCake passwords
             $salt = substr($hash, 0, 25);		// Extract the salt from the hash
             $hashInput = $salt . sha1($salt . $password);
-            if ($hashInput == $hash) {
+            if (hash_equals($hashInput, $hash) === true) {
                 return true;
             }
 
@@ -73,8 +75,10 @@ class Password
         } elseif (static::getHashType($hash) == 'legacy') {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.
-            $cost = '12';
-            if (substr($hash, 0, 60) == crypt($password, '$2y$' . $cost . '$' . substr($hash, 60))) {
+            $extract = substr($hash, 0, 60);
+            $compare = crypt($password, '$2y$' . self::$DEFAULT_COST . '$' . substr($hash, 60));
+
+            if (hash_equals($extract, $compare) === true) {
                 return true;
             }
 
