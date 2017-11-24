@@ -1,6 +1,4 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
-@import '../fonts/font-face.css';
-
 /*!
  *   AdminLTE v2.3.5
  *   Author: Almsaeed Studio
@@ -28,7 +26,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     direction: rtl;
-    font-family: 'Vazir', tahoma, 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: tahoma, 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-weight: 400;
     overflow-x: hidden;
     overflow-y: auto;
@@ -200,7 +198,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-    font-family: 'Vazir', sans-serif;
+    font-family: tahoma, sans-serif;
 }
 
 
@@ -362,7 +360,7 @@ a:focus {
     line-height: 50px;
     text-align: center;
     width: 230px;
-    font-family: 'Vazir', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     padding: 0 15px;
     font-weight: 300;
     overflow: hidden;
