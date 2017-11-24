@@ -1,0 +1,19 @@
+/* Styling for AdminLTE form control icons, that doesn't interfere with validation plugin */
+.form-control-icon {
+  position: absolute;
+  top: 0;
+  right: auto;
+  left: 0;
+  z-index: 2;
+  display: block;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  pointer-events: none;
+}
+/* Custom styling for table tool menus */
+.dropdown-toggle .caret {
+    left: -3px;
+	right: 0px;
+}

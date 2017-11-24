@@ -25,6 +25,18 @@
                 {% block stylesheets_site %}
                     <!-- Include main CSS asset bundle -->
                     {{ assets.css() | raw }}
+					
+					{# check if languge is RTL if it is RTL add rtl css files to the page #}
+					
+					{% if current_user.locale %}
+						{% if (current_user.locale == 'ar') or (current_user.locale == 'arc') or (current_user.locale == 'dv') or (current_user.locale == 'fa') or (current_user.locale == 'ha') or (current_user.locale == 'he') or (current_user.locale == 'khw') or (current_user.locale == 'ks') or (current_user.locale == 'ku') or (current_user.locale == 'ps') or (current_user.locale == 'ur') or (current_user.locale == 'yi') %}
+							{{ assets.css('css/main-rtl') | raw }}
+						{% endif %}
+					{% else %}
+						{% if (site.locales.default == 'ar') or (site.locales.default == 'arc') or (site.locales.default == 'dv') or (site.locales.default == 'fa') or (site.locales.default == 'ha') or (site.locales.default == 'he') or (site.locales.default == 'khw') or (site.locales.default == 'ks') or (site.locales.default == 'ku') or (site.locales.default == 'ps') or (site.locales.default == 'ur') or (site.locales.default == 'yi') %}
+							{{ assets.css('css/main-rtl') | raw }}
+						{% endif %}
+					{% endif %}
                 {% endblock %}
 
                 {# Override this block in a child layout template or page template to specify or override stylesheets for groups of similar pages. #}

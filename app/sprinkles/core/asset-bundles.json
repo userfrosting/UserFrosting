@@ -64,6 +64,22 @@
                 }
             }
         },
+		"css/main-rtl": {
+			"styles": [
+				"userfrosting/css/bootstrap-rtl.css",
+				"userfrosting/css/AdminLTE-rtl.css",
+				"userfrosting/css/AdminLTE-skins-all-rtl.css",
+				"userfrosting/css/userfrosting-rtl.css",
+				"userfrosting/css/theme.bootstrap.min.css"
+			],
+			"options": {
+				"result": {
+					"type": {
+						"styles": "plain"
+					}
+				}
+			}
+		},
         "css/form-widgets": {
             "styles": [
                 "userfrosting/css/uf-collection.css"
