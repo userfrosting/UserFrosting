@@ -8,6 +8,7 @@
 namespace UserFrosting\Tests\Unit;
 
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Mockery as m;
 use ReflectionClass;
@@ -31,17 +32,19 @@ class BelongsToManyThroughTest extends TestCase
 
     function testPaginatedQuery()
     {
+        // Creates a real BelongsToManyThrough object
         $relation = $this->getRelation();
 
         // We need to define a mock base query, because Eloquent\Builder will pass through many calls
         // to this underlying Query\Builder object.
         $baseQuery = m::mock(QueryBuilder::class);
-        $builder = m::mock('Illuminate\Database\Eloquent\Builder', [$baseQuery])->makePartial();
+        $builder = m::mock(EloquentBuilder::class, [$baseQuery])->makePartial();
 
         $related = $relation->getRelated();
         $related->shouldReceive('getQualifiedKeyName')->once()->andReturn('users.id');
-        $builder->shouldReceive('select')->once()->with('users.id')->andReturnSelf();
-        $builder->shouldReceive('groupBy')->once()->with('users.id')->andReturnSelf();
+
+        $builder->shouldReceive('withGlobalScope')->once()->andReturnSelf();
+
         $builder->shouldReceive('limit')->once()->with(2)->andReturnSelf();
         $builder->shouldReceive('offset')->once()->with(1)->andReturnSelf();
 
@@ -63,14 +66,14 @@ class BelongsToManyThroughTest extends TestCase
     protected function getRelation()
     {
         // We simulate a BelongsToManyThrough relationship that gets all related users for a specified permission(s).
-        $builder = m::mock('Illuminate\Database\Eloquent\Builder');
+        $builder = m::mock(EloquentBuilder::class);
         $related = m::mock('Illuminate\Database\Eloquent\Model');
         $related->shouldReceive('getKey')->andReturn(1);
         $related->shouldReceive('getTable')->andReturn('users');
         $related->shouldReceive('getKeyName')->andReturn('id');
         // Tie the mocked builder to the mocked related model
         $builder->shouldReceive('getModel')->andReturn($related);
-        
+
         // Mock the intermediate role->permission BelongsToMany relation
         $intermediateRelationship = m::mock(BelongsToMany::class);
         $intermediateRelationship->shouldReceive('getTable')->once()->andReturn('permission_roles');
