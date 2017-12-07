@@ -437,13 +437,15 @@ trait Unique
             if (!is_null($tertiaryModels)) {
                 $tertiaryKeyValue = $result->pivot->{$this->tertiaryKey};
 
-                $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
-
-                // We also transfer the pivot relation at this point, since we have already coalesced
-                // any tertiary models into the nested dictionary.
-                $this->transferPivotsToTertiary($result, $tertiaryModel);
-
-                $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModel;
+                if (!is_null($tertiaryKeyValue)) {
+                    $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
+    
+                    // We also transfer the pivot relation at this point, since we have already coalesced
+                    // any tertiary models into the nested dictionary.
+                    $this->transferPivotsToTertiary($result, $tertiaryModel);
+    
+                    $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModel;
+                }
             }
         }
 
