@@ -2,6 +2,7 @@
 
 ## v4.1.14-alpha
 - Fix issue with scopes being applied twice in Unique::getPaginatedQuery (https://github.com/userfrosting/extend-user/issues/2)
+- Update Bower dependencies in core Sprinkle
 
 ## v4.1.13-alpha
 - `ufTable`: Implement `rowTemplate` for customizing how rows are rendered (#787)
