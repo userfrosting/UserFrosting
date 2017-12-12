@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Core\Twig;
 
 use Interop\Container\ContainerInterface;
 use UserFrosting\Sprinkle\Core\Util\Util;
+use UserFrosting\Assets\AssetsTemplatePlugin;
 
 /**
  * Extends Twig functionality for the Core sprinkle.
@@ -119,7 +120,7 @@ class CoreExtension extends \Twig_Extension
 
         return [
             'site'   => $site,
-            'assets' => $this->services->assets
+            'assets' => new AssetsTemplatePlugin($this->services->assets)
         ];
     }
 }

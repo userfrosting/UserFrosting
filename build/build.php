@@ -7,18 +7,24 @@
 
     echo "/*******************************/\n/* UserFrosting's Build Assets */\n/*******************************/\n";
 
+    $failCheck = 0;
+
     // Install npm
-    passthru("npm install --prefix ../build");
+    passthru("npm install", $failCheck);
 
-    // Install bower
-    passthru("npm run uf-assets-install --prefix ../build");
+    // Check npm install succeeded.
+    if ($failCheck !== 0) {
+        echo PHP_EOL.PHP_EOL . "ERROR :: npm install failed.";
+        exit(1);
+    }
+    
+    // Install vendor assets
+    passthru("npm run uf-assets-install");
 
-    // Test it did worked
-    $coreVendorFiles = glob(UserFrosting\APP_DIR . '/' . UserFrosting\SPRINKLES_DIR_NAME . "/core/assets/vendor/*");
-    if (!$coreVendorFiles){
-        echo PHP_EOL.PHP_EOL."ERROR :: NPM bundle failed. Directory '" . UserFrosting\APP_DIR . '/' . UserFrosting\SPRINKLES_DIR_NAME . "/core/assets/vendor/' is empty." .PHP_EOL;
+    // Check vendor asset installation succeeded.
+    if ($failCheck !== 0) {
+        echo PHP_EOL.PHP_EOL."ERROR :: Frontend asset installation failed.";
         exit(1);
     } else {
-        echo PHP_EOL."Assets install looks successful !";
-        echo PHP_EOL.PHP_EOL;
+        echo PHP_EOL."Assets install looks successful !".PHP_EOL.PHP_EOL;
     }

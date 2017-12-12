@@ -66,7 +66,7 @@ Louis's a civil engineer in Montréal, Québec who also has a passion for coding
 
 ### Jordan Mele
 
-Jordan's a developer at Mayvin Training and a student studying Computer Science at the University of Wollongong. His passion is creating software-based solutions to overcomplicated problems, without taking control away from the user. He's also Australian.
+Jordan's a former developer of Mayvin Training and a student studying Computer Science at the University of Wollongong, Australia. His passion is creating software-based solutions to overcomplicated problems, while keeping the user in control.
 
 ### Mike Jacobs
 

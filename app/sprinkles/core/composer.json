@@ -9,6 +9,19 @@
         {
             "name": "Alexander Weissman",
             "homepage": "https://alexanderweissman.com"
+        },
+        {
+            "name": "Louis Charette"
+        },
+        {
+            "name": "Jordan Mele",
+            "email": "SiliconSoldier@outlook.com.au"
+        },
+        {
+            "name": "Mike Jacobs"
+        },
+        {
+            "name": "Srinivas Nukala"
         }
     ],
     "version": "4.0",
@@ -27,12 +40,12 @@
         "slim/twig-view": "^1.2",
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
-        "userfrosting/assets": "~4.0.0",
+        "userfrosting/assets": ">=5",
         "userfrosting/config": "~4.0.0",
         "userfrosting/fortress": "~4.0.0",
         "userfrosting/i18n": "~4.0.1",
         "userfrosting/session": "~4.0.0",
-        "userfrosting/support": "~4.0.0",
+        "userfrosting/support": "^4.0.0",
         "vlucas/phpdotenv": "^2"
     },
     "minimum-stability": "dev",

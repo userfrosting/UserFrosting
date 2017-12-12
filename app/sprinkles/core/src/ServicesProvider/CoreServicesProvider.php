@@ -33,10 +33,10 @@ use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use UserFrosting\Assets\AssetBundleSchema;
-use UserFrosting\Assets\AssetLoader;
-use UserFrosting\Assets\AssetManager;
-use UserFrosting\Assets\UrlBuilder\AssetUrlBuilder;
-use UserFrosting\Assets\UrlBuilder\CompiledAssetUrlBuilder;
+use UserFrosting\Assets\Assets;
+use UserFrosting\Assets\PathTransformer\PrefixTransformer;
+use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
+use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -50,6 +50,7 @@ use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Util\CheckEnvironment;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
+use UserFrosting\Sprinkle\Core\Util\AssetLoader;
 use UserFrosting\Support\Exception\BadRequestException;
 
 /**
@@ -77,17 +78,18 @@ class CoreServicesProvider
         };
 
         /**
-         * Asset loader service.
-         *
+         * Asset loader service
+         * 
          * Loads assets from a specified relative location.
          * Assets are Javascript, CSS, image, and other files used by your site.
+         * 
+         * @deprecated 4.0.25-alpha This service was formerly used to serve frontend assets during development.
          */
         $container['assetLoader'] = function ($c) {
             $basePath = \UserFrosting\APP_DIR . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME;
             $pattern = "/^[A-Za-z0-9_\-]+\/assets\//";
 
-            $al = new AssetLoader($basePath, $pattern);
-            return $al;
+            return new AssetLoader($basePath, $pattern);
         };
 
         /**
@@ -99,35 +101,56 @@ class CoreServicesProvider
         $container['assets'] = function ($c) {
             $config = $c->config;
             $locator = $c->locator;
+            
+            // Hacky way to clean up locator paths.
+            $locatorPaths = [];
+            foreach ($locator->getPaths('assets') as $pathSet) {
+                foreach ($pathSet as $path) {
+                    $locatorPaths[] = $path;
+                }
+            }
 
             // Load asset schema
             if ($config['assets.use_raw']) {
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
-                $removePrefix = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME;
-                $aub = new AssetUrlBuilder($locator, $baseUrl, $removePrefix, 'assets');
 
-                $as = new AssetBundleSchema($aub);
-                $as->loadRawSchemaFile($locator->findResource("sprinkles://core/" . $config['assets.raw.schema'], true, true));
-
-                // Extend for loaded sprinkles
                 $sprinkles = $c->sprinkleManager->getSprinkles();
+
+                $prefixTransformer = new PrefixTransformer();
+                $prefixTransformer->define(\UserFrosting\BOWER_ASSET_DIR, 'vendor-bower');
+                $prefixTransformer->define(\UserFrosting\NPM_ASSET_DIR, 'vendor-npm');
+
                 foreach ($sprinkles as $sprinkle) {
+                    $prefixTransformer->define(\UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME, \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle);
+                }
+                $assets = new Assets($locator, 'assets', $baseUrl, $prefixTransformer);
+
+                // Load raw asset bundles for each Sprinkle.
+
+                // Create asset bundle accessor with core as base.
+                $bundles = new RawAssetBundles($locator->findResource("sprinkles://core/" . $config['assets.raw.schema'], true, true));
+
+                // Extend asset bundle accessor for every subsequent sprinkle.
+                foreach ($c->sprinkleManager->getSprinkles() as $sprinkle) {
                     $resource = $locator->findResource("sprinkles://$sprinkle/" . $config['assets.raw.schema'], true, true);
                     if (file_exists($resource)) {
-                        $as->loadRawSchemaFile($resource);
+                        // Extend for bundles.
+                        $bundles->extend($resource);
                     }
                 }
+
+                // Add bundles to asset manager.
+                $assets->addAssetBundles($bundles);
             } else {
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
-                $aub = new CompiledAssetUrlBuilder($baseUrl);
+                $assets = new Assets($locator, 'assets', $baseUrl);
+                $assets->overrideBasePath($locator->getBase() . '/public/assets');
 
-                $as = new AssetBundleSchema($aub);
-                $as->loadCompiledSchemaFile($locator->findResource("build://" . $config['assets.compiled.schema'], true, true));
+                // Load compiled asset bundle.
+                $assets->addAssetBundles(new CompiledAssetBundles($locator("build://" . $config['assets.compiled.schema'], true, true)));
             }
 
-            $am = new AssetManager($aub, $as);
-
-            return $am;
+            return $assets;
         };
 
         /**
@@ -208,17 +231,10 @@ class CoreServicesProvider
 
             // Construct base url from components, if not explicitly specified
             if (!isset($config['site.uri.public'])) {
-                $base_uri = $config['site.uri.base'];
-
-                $public = new Uri(
-                    $base_uri['scheme'],
-                    $base_uri['host'],
-                    $base_uri['port'],
-                    $base_uri['path']
-                );
+                $uri = $c->request->getUri();
 
                 // Slim\Http\Uri likes to add trailing slashes when the path is empty, so this fixes that.
-                $config['site.uri.public'] = trim($public, '/');
+                $config['site.uri.public'] = trim($uri->getBaseUrl(), '/');
             }
 
             if (isset($config['display_errors'])) {
@@ -233,6 +249,12 @@ class CoreServicesProvider
             // Configure time zone
             if (isset($config['timezone'])) {
                 date_default_timezone_set($config['timezone']);
+            }
+
+            // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
+            if (!$config['assets.use_raw']) {
+                $c->locator->resetScheme('assets');
+                $c->locator->addPath('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME);
             }
 
             return $config;
@@ -385,6 +407,10 @@ class CoreServicesProvider
             $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
             $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
             $locator->addPath('sprinkles', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SPRINKLES_DIR_NAME);
+            $locator->addPath('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components');
+            $locator->addPath('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules');
+
+            // NOTE: 'assets://' scheme is reset to point to 'public/assets/' when application is in production mode. This occurs within the config service.
 
             // Use locator to initialize streams
             ReadOnlyStream::setLocator($locator);

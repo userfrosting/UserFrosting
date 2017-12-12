@@ -3,7 +3,7 @@
         "js/main": {
             "scripts": [
                 "vendor/bootstrap/dist/js/bootstrap.js",
-                "vendor/handlebars/handlebars.js",
+                "vendor/handlebars/dist/handlebars.js",
                 "vendor/jquery-validation/dist/jquery.validate.js",
                 "vendor/jquery-validation/dist/additional-methods.js",
                 "vendor/jquery-slimscroll/jquery.slimscroll.min.js",

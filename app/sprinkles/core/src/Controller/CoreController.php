@@ -72,25 +72,4 @@ class CoreController extends SimpleController
     {
         return $response->withJson($this->ci->alerts->getAndClearMessages());
     }
-
-    /**
-     * Handle all requests for raw assets.
-     * Request type: GET
-     */
-    public function getAsset($request, $response, $args)
-    {
-        // By starting this service, we ensure that the timezone gets set.
-        $config = $this->ci->config;
-
-        $assetLoader = $this->ci->assetLoader;
-
-        if (!$assetLoader->loadAsset($args['url'])) {
-            throw new NotFoundException($request, $response);
-        }
-
-        return $response
-            ->withHeader('Content-Type', $assetLoader->getType())
-            ->withHeader('Content-Length', $assetLoader->getLength())
-            ->write($assetLoader->getContent());
-    }
 }
