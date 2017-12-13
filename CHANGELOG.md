@@ -1,5 +1,8 @@
 # Change Log
 
+## v4.1.15-alpha
+- Change default hash cost back to 10 and fix legacy hash detection issue
+
 ## v4.1.14-alpha
 - Fix issue with scopes being applied twice in `Unique::getPaginatedQuery` (https://github.com/userfrosting/extend-user/issues/2)
 - Update Bower dependencies in core Sprinkle
