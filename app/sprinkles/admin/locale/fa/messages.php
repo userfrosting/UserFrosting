@@ -8,7 +8,7 @@
  *
  * Standard Farsi/Persian message token translations for the 'admin' sprinkle.
  *
- * @package userfrosting\i18n\ar
+ * @package userfrosting\i18n\fa
  * @author aminakbari
  */
 
