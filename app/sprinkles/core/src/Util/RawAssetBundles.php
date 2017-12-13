@@ -20,10 +20,9 @@ use UserFrosting\Assets\AssetBundles\GulpBundleAssetsRawBundles;
 class RawAssetBundles extends GulpBundleAssetsRawBundles {
 
     /**
-     * Undocumented function
+     * Extends the currently loaded bundles with another bundle schema.
      *
-     * @param [type] $filePath
-     * @return void
+     * @param string
      * 
      * @throws FileNotFoundException if file cannot be found.
      * @throws JsonException if file cannot be parsed as JSON.
