@@ -143,8 +143,8 @@ class Authenticator
             throw new AccountDisabledException();
         }
 
-        // Check that the user's account is activated
-        if ($user->flag_verified == 0) {
+        // Check that the user's account is verified (if verification is required)
+        if ($this->config['site.registration.require_email_verification'] && $user->flag_verified == 0) {
             throw new AccountNotVerifiedException();
         }
 
