@@ -1,13 +1,13 @@
 # Change Log
 
 ## v4.1.14-alpha
-- Fix issue with scopes being applied twice in Unique::getPaginatedQuery (https://github.com/userfrosting/extend-user/issues/2)
+- Fix issue with scopes being applied twice in `Unique::getPaginatedQuery` (https://github.com/userfrosting/extend-user/issues/2)
 - Update Bower dependencies in core Sprinkle
 - Refactor the `Password` class to use `hash_equals` for legacy passwords (prevent timing-based attacks) and factor out the default cost (#814)
-- Check if require_email_verification is set in Authenticator and sign-in page (#815)
+- Check if `require_email_verification` is set in `Authenticator` and sign-in page (#815)
 - Factor out hardcoded `sprinkles.json` filename (partially addresses #813)
 - Add Farsi translations (#816)
-- `ufTable`: Make tableElement configurable, and check for existence (#824)
+- `ufTable`: Make `tableElement` configurable, and check for existence (#824)
 - Put AdminLTE menu toggle button back (Revert e8a26fb and part of a46205f)
 
 ## v4.1.13-alpha
