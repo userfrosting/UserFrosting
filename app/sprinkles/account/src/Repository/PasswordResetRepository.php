@@ -7,7 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Repository;
 
-use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Account\Facades\Password;
 
 /**
  * Token repository class for password reset requests.

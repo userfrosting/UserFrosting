@@ -5,21 +5,21 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Util;
+namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 /**
- * Password utility class
+ * Password hashing and validation class
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Password
+class Hasher
 {
     /**
      * Default crypt cost factor.
      *
      * @var int
      */
-    protected static $rounds = 10;
+    protected $defaultRounds = 10;
 
     /**
      * Returns the hashing type for a specified password hash.
@@ -28,7 +28,7 @@ class Password
      * @param string $password the hashed password.
      * @return string "sha1"|"legacy"|"modern".
      */
-    public static function getHashType($password)
+    public function getHashType($password)
     {
         // If the password in the db is 65 characters long, we have an sha1-hashed password.
         if (strlen($password) == 65) {
@@ -48,10 +48,10 @@ class Password
      * @return string the hashed password.
      * @throws HashFailedException
      */
-    public static function hash($password, array $options = [])
+    public function hash($password, array $options = [])
     {
         $hash = password_hash($password, PASSWORD_BCRYPT, [
-            'cost' => static::cost($options),
+            'cost' => $this->cost($options),
         ]);
 
         if (!$hash) {
@@ -69,9 +69,9 @@ class Password
      * @param array  $options
      * @return boolean True if the password matches, false otherwise.
      */
-    public static function verify($password, $hash, array $options = [])
+    public function verify($password, $hash, array $options = [])
     {
-        $hashType = static::getHashType($hash);
+        $hashType = $this->getHashType($hash);
 
         if ($hashType == 'sha1') {
             // Legacy UserCake passwords
@@ -101,8 +101,8 @@ class Password
      * @param  array  $options
      * @return int
      */
-    protected static function cost(array $options = [])
+    protected function cost(array $options = [])
     {
-        return isset($options['rounds']) ? $options['rounds'] : static::$rounds;
+        return isset($options['rounds']) ? $options['rounds'] : $this->defaultRounds;
     }
 }
