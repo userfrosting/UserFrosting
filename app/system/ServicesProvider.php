@@ -49,6 +49,8 @@ class ServicesProvider
             $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);
             $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
             $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
+            $locator->addPath('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components');
+            $locator->addPath('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules');
 
             // Use locator to initialize streams
             ReadOnlyStream::setLocator($locator);

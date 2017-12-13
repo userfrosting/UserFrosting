@@ -63,11 +63,8 @@ class BuildAssets extends BaseCommand
             $this->buildAssets();
         }
 
-        // Test the result
-        $this->checkAssets();
-
         // If all went well and there's no fatal errors, we are successful
-        $this->io->success("Assets install looks successful");
+        $this->io->success("Assets install looks successful, check output for specifics");
     }
 
     /**
@@ -84,8 +81,14 @@ class BuildAssets extends BaseCommand
         // Temporarily change the working directory so we can install npm dependencies
         $wd = getcwd();
         chdir($this->buildPath);
-        passthru("npm install");
+        $exitCode = 0;
+        passthru("npm install", $exitCode);
         chdir($wd);
+
+        if ($exitCode !== 0) {
+            $this->io->error("npm dependency installation has failed");
+            exit(1);
+        }
     }
 
     /**
@@ -96,9 +99,22 @@ class BuildAssets extends BaseCommand
      */
     protected function assetsInstall()
     {
-        $this->io->section("Installing assets bundles");
+        $this->io->section("Installing frontend vendor assets");
         $this->io->writeln("> <comment>npm run uf-assets-install</comment>");
-        passthru("npm run uf-assets-install --prefix " . $this->buildPath);
+
+        // Temporarily change the working directory (more reliable than --prefix npm switch)
+        $wd = getcwd();
+        chdir($this->buildPath);
+        $exitCode = 0;
+        passthru("npm run uf-assets-install", $exitCode);
+        chdir($wd);
+
+        if ($exitCode !== 0) {
+            $this->io->error("assets installation has failed");
+            exit(1);
+        }
+
+        return $exitCode;
     }
 
     /**
@@ -111,42 +127,36 @@ class BuildAssets extends BaseCommand
     {
         $this->io->section("Building assets for production");
 
+        // Temporarily change the working directory (more reliable than --prefix npm switch)
+        $wd = getcwd();
+        chdir($this->buildPath);
+
+        $exitCode = 0;
+
         $this->io->writeln("> <comment>npm run uf-bundle-build</comment>");
-        passthru("npm run uf-bundle-build --prefix " . $this->buildPath);
+        passthru("npm run uf-bundle-build", $exitCode);
+
+        if ($exitCode !== 0) {
+            $this->io->error("bundling preparation has failed");
+            exit(1);
+        }
 
         $this->io->writeln("> <comment>npm run uf-bundle</comment>");
-        passthru("npm run uf-bundle --prefix " . $this->buildPath);
+        passthru("npm run uf-bundle");
+
+        if ($exitCode !== 0) {
+            $this->io->error("bundling has failed");
+            exit(1);
+        }
+
+        if ($exitCode !== 0) $this->io->warning("bundling may have failed, check output");
 
         $this->io->writeln("> <comment>npm run uf-bundle-clean</comment>");
-        passthru("npm run uf-bundle-clean --prefix " . $this->buildPath);
-    }
+        passthru("npm run uf-bundle-clean");
 
-    /**
-     * Check that the assets where installed in the core sprinkles
-     *
-     * @access protected
-     * @return void
-     */
-    protected function checkAssets()
-    {
-        $this->io->section("Testing assets installation");
+        if ($exitCode !== 0) $this->io->warning("bundling cleanup has failed, which while unusual shouldn't cause any problems");
 
-        // Get path and vendor files
-        $vendorPath = \UserFrosting\SPRINKLES_DIR . "/core/assets/vendor/*";
-        $coreVendorFiles = glob($vendorPath);
-
-        if (!$coreVendorFiles){
-            $this->io->error("Assets installation seems to have failed. Directory `$vendorPath` is empty, but it shouldn't be. Check the above log for any errors.");
-            exit(1);
-        }
-
-        // Check that `bundle.result.json` is present in production mode
-        $config = $this->ci->config;
-        $resultFile = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME . \UserFrosting\DS . $config['assets.compiled.schema'];
-        if ($this->isProduction() && !file_exists($resultFile)) {
-            $this->io->error("Assets building seems to have failed. File `$resultFile` not found. This file is required for production envrionement. Check the above log for any errors.");
-            exit(1);
-        }
+        chdir($wd);
     }
 
     /**
@@ -160,7 +170,18 @@ class BuildAssets extends BaseCommand
     {
         $this->io->section("Cleaning cached data");
         $this->io->writeln("> <comment>npm run uf-clean</comment>");
-        passthru("npm run uf-clean --prefix " . $this->buildPath);
+
+        // Temporarily change the working directory (more reliable than --prefix npm switch)
+        $wd = getcwd();
+        chdir($this->buildPath);
+        $exitCode = 0;
+        passthru("npm run uf-clean", $exitCode);
+        chdir($wd);
+
+        if ($exitCode !== 0) {
+            $this->io->error("Failed to clean cached data");
+            exit(1);
+        }
     }
 
     /**

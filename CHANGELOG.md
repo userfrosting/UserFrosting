@@ -148,6 +148,16 @@
 - Use YAML as default format for request schema (#690)
 
 See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
+## v4.0.25-Alpha
+- Support npm for frontend vendor assets, and deprecation of bower (#737)
+- Duplicate frontend vendor assets are no longer downloaded (#727)
+- Detect incompatibilites between frontend vendor assets (related to #727)
+- Improved reliability of generated base URL, especially when using docker
+- Fixed syntax error in Portugese translations
+- Minimise verbosity of assets build scripts when not in 'dev' mode
+- Fix to stop bower complaining about sudo when using docker
+- The `assetLoader` service has been deprecated, and may be removed in the future.
+- **Potential breaking change:** Some packages like `Handlebars` are organised differently at npm. If referencing vendor assets introduced by UF, make sure they are still correct.
 
 ## v4.0.24-Alpha
 - Fixes to nginx config file, and add location block for LE acme challenge

@@ -9,6 +9,19 @@
         {
             "name": "Alexander Weissman",
             "homepage": "https://alexanderweissman.com"
+        },
+        {
+            "name": "Louis Charette"
+        },
+        {
+            "name": "Jordan Mele",
+            "email": "SiliconSoldier@outlook.com.au"
+        },
+        {
+            "name": "Mike Jacobs"
+        },
+        {
+            "name": "Srinivas Nukala"
         }
     ],
     "require": {
@@ -27,7 +40,7 @@
         "slim/twig-view": "^1.2",
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
-        "userfrosting/assets": "~4.1.0",
+        "userfrosting/assets": ">=5",
         "userfrosting/config": "~4.1.0",
         "userfrosting/cache": "~4.1.0",
         "userfrosting/fortress": "~4.1.1",
