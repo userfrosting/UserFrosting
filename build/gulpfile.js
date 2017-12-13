@@ -30,10 +30,10 @@ const sprinkles = require(`${sprinklesSchemaPath}`)['base'];
 const publicAssetsDir = '../public/assets/';
 
 // name of the bundle file
-const bundleFile = 'asset-bundles.json';
+const sprinkleBundleFile = 'asset-bundles.json';
 
-// Compiled bundle config file
-const bundleConfigFile = `./${bundleFile}`;
+// Merged bundle config file with relative dir
+const bundleConfigFile = './bundle.config.json';
 
 /**
  * Vendor asset task
@@ -158,8 +158,9 @@ gulp.task('bundle-build', () => {
     sprinkles.forEach((sprinkle) => {
         'use strict';
         let location = `${sprinklesDir}/${sprinkle}/`;
-        if (fs.existsSync(`${location}${bundleFile}`)) {
-            let currentConfig = require(`${location}${bundleFile}`);
+        if (fs.existsSync(`${location}${sprinkleBundleFile}`)) {
+            // Require shouldn't be used here.
+            let currentConfig = require(`${location}${sprinkleBundleFile}`);
             // Add bundles to config, respecting collision rules.
             for (let bundleName in currentConfig.bundle) {
                 // If bundle already defined, handle as per collision rules.
