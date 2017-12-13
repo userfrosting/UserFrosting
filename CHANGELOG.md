@@ -3,6 +3,7 @@
 ## v4.1.14-alpha
 - Fix issue with scopes being applied twice in Unique::getPaginatedQuery (https://github.com/userfrosting/extend-user/issues/2)
 - Update Bower dependencies in core Sprinkle
+- Refactor the `Password` class to use `hash_equals` for legacy passwords (prevent timing-based attacks) and factor out the default cost (#814)
 
 ## v4.1.13-alpha
 - `ufTable`: Implement `rowTemplate` for customizing how rows are rendered (#787)

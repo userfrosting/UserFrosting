@@ -14,21 +14,27 @@ namespace UserFrosting\Sprinkle\Account\Util;
  */
 class Password
 {
-    const DEFAULT_COST = 12;
+    /**
+     * Default crypt cost factor.
+     *
+     * @var int
+     */
+    protected static $rounds = 12;
 
     /**
      * Returns the hashing type for a specified password hash.
      *
      * Automatically detects the hash type: "sha1" (for UserCake legacy accounts), "legacy" (for 0.1.x accounts), and "modern" (used for new accounts).
      * @param string $password the hashed password.
+     * @param array  $options
      * @return string "sha1"|"legacy"|"modern".
      */
-    public static function getHashType($password)
+    public static function getHashType($password, array $options = [])
     {
         // If the password in the db is 65 characters long, we have an sha1-hashed password.
         if (strlen($password) == 65) {
             return 'sha1';
-        } elseif (substr($password, 0, 7) == '$2y$'.self::$_DEFAULT_COST.'$') {
+        } elseif (substr($password, 0, 7) == '$2y$' . static::cost($options) . '$') {
             return 'legacy';
         }
 
@@ -39,12 +45,15 @@ class Password
      * Hashes a plaintext password using bcrypt.
      *
      * @param string $password the plaintext password.
+     * @param array  $options
      * @return string the hashed password.
      * @throws HashFailedException
      */
-    public static function hash($password)
+    public static function hash($password, array $options = [])
     {
-        $hash = password_hash($password, PASSWORD_BCRYPT);
+        $hash = password_hash($password, PASSWORD_BCRYPT, [
+            'cost' => static::cost($options),
+        ]);
 
         if (!$hash) {
             throw new HashFailedException();
@@ -60,9 +69,11 @@ class Password
      * @param string $hash The hash to compare against.
      * @return boolean True if the password matches, false otherwise.
      */
-    public static function verify($password, $hash)
+    public static function verify($password, $hash, array $options = [])
     {
-        if (static::getHashType($hash) == 'sha1') {
+        $hashType = static::getHashType($hash, $options);
+
+        if ($hashType == 'sha1') {
             // Legacy UserCake passwords
             $salt = substr($hash, 0, 25);		// Extract the salt from the hash
             $hashInput = $salt . sha1($salt . $password);
@@ -72,11 +83,11 @@ class Password
 
             return false;
 
-        } elseif (static::getHashType($hash) == 'legacy') {
+        } elseif ($hashType == 'legacy') {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.
             $extract = substr($hash, 0, 60);
-            $compare = crypt($password, '$2y$' . self::$DEFAULT_COST . '$' . substr($hash, 60));
+            $compare = crypt($password, '$2y$' . static::cost($options) . '$' . substr($hash, 60));
 
             if (hash_equals($extract, $compare) === true) {
                 return true;
@@ -87,5 +98,16 @@ class Password
 
         // Modern implementation
         return password_verify($password, $hash);
+    }
+
+    /**
+     * Extract the cost value from the options array.
+     *
+     * @param  array  $options
+     * @return int
+     */
+    protected static function cost(array $options = [])
+    {
+        return isset($options['rounds']) ? $options['rounds'] : static::$rounds;
     }
 }
