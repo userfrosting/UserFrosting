@@ -1,0 +1,3 @@
+# Forces Git to handle line endings, preventing any changes (like from editors or tools) being commited.
+# Also improves reliability of tools like Git Lens.
+* text=auto
