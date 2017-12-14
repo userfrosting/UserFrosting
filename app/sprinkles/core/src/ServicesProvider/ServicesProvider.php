@@ -420,14 +420,44 @@ class ServicesProvider
          */
         $container['localePathBuilder'] = function ($c) {
             $config = $c->config;
+            $request = $c->request;
 
             // Make sure the locale config is a valid string
             if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
                 throw new \UnexpectedValueException('The locale config is not a valid string.');
             }
 
-            // Load the base locale file(s) as specified in the configuration
+            // Get default locales as specified in configurations.
             $locales = explode(',', $config['site.locales.default']);
+
+            // Add supported browser preferred locales.
+            if ($request->hasHeader('Accept-Language')) {
+                $allowedLocales = [];
+                foreach (explode(',', $request->getHeaderLine('Accept-Language')) as $index => $browserLocale) {
+                    // Split to access q
+                    $parts = explode(';', $browserLocale) ?: [];
+
+                    // Ensure locale valid, and available
+                    if (array_key_exists(0, $parts) && array_key_exists($parts[0], $config['site.locales.available'])) {
+                        // Determine preference level, and add to $allowedLocales
+                        if (array_key_exists(1, $parts)) {
+                            $parts[1] = str_replace('q=', '', $parts[1]);
+                            $parts[1] = is_numeric($parts[1]) ?: 0;
+                        } else {
+                            $parts[1] = 1;
+                        }
+                        // Add to list, and format for UF's i18n.
+                        $allowedLocales[str_replace('-', '_', $parts[0])] = $parts[1];
+                    }
+                }
+                
+                // Sort, extract keys, and merge with $locales
+                asort($allowedLocales, SORT_NUMERIC);
+                $locales = array_merge($locales, array_keys($allowedLocales));
+
+                // Remove duplicates, while maintaining fallback order
+                $locales = array_reverse(array_unique(array_reverse($locales)));
+            }
 
             return new LocalePathBuilder($c->locator, 'locale://', $locales);
         };

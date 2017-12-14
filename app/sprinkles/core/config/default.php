@@ -149,7 +149,8 @@
                     'it_IT' => 'Italiano',
                     'th_TH' => 'ภาษาไทย'
                 ],
-                // This can be a comma-separated list, to load multiple fallback locales
+                // This can be a comma-separated list, to load multiple fallback locales.
+                // Supported browser requested languages always have first preference.
                 'default' => 'en_US'
             ],
             'title'     =>      'UserFrosting',
