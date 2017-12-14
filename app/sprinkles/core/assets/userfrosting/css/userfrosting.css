@@ -171,14 +171,7 @@ a .info-box {
 /* Custom styling for nav logo */
 .main-header .logo {
     font-weight: 400;
-    text-align: center;
     font-size: 18px;
-}
-
-@media(min-width: 768px) {
-    .main-header .logo {
-        text-align: left;
-    }
 }
 
 /* Padding for user menu */

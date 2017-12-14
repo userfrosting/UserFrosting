@@ -274,25 +274,30 @@ trait Unique
         // the desired set of unique model _ids_, and then constrain our final query
         // to these models with a whereIn clause.
         $relatedKeyName = $this->related->getQualifiedKeyName();
-        $constrainedBuilder = $constrainedBuilder
-                                ->select($relatedKeyName)
-                                ->groupBy($relatedKeyName);
+
+        // Apply an additional scope to override any selected columns in other global scopes
+        $uniqueIdScope = function ($subQuery) use ($relatedKeyName) {
+            $subQuery->select($relatedKeyName)
+                     ->groupBy($relatedKeyName);
+        };
+
+        $identifier = spl_object_hash($uniqueIdScope);
+
+        $constrainedBuilder->withGlobalScope($identifier, $uniqueIdScope);
 
         if ($limit) {
-            $constrainedBuilder = $constrainedBuilder->limit($limit);
+            $constrainedBuilder->limit($limit);
         }
 
         if ($offset) {
-            $constrainedBuilder = $constrainedBuilder->offset($offset);
+            $constrainedBuilder->offset($offset);
         }
 
         $primaryKeyName = $this->getParent()->getKeyName();
         $modelIds = $constrainedBuilder->get()->pluck($primaryKeyName)->toArray();
 
         // Modify the unconstrained query to limit to these models
-        $query = $query->whereIn($relatedKeyName, $modelIds);
-
-        return $query;
+        return $query->whereIn($relatedKeyName, $modelIds);
     }
 
     /**
@@ -323,17 +328,17 @@ trait Unique
         // models with the result of those columns as a separate model relation.
         $columns = $this->query->getQuery()->columns ? [] : $columns;
 
+        // Add any necessary pagination on the related models
+        if ($this->limit || $this->offset) {
+            $this->getPaginatedQuery($this->query, $this->limit, $this->offset);
+        }
+
         // Apply scopes to the Eloquent\Builder instance.
         $builder = $this->query->applyScopes();
 
         $builder = $builder->addSelect(
             $this->shouldSelect($columns)
         );
-
-        // Add any necessary pagination on the related models
-        if ($this->limit || $this->offset) {
-            $builder = $this->getPaginatedQuery($builder, $this->limit, $this->offset);
-        }
 
         $models = $builder->getModels();
 
@@ -432,13 +437,15 @@ trait Unique
             if (!is_null($tertiaryModels)) {
                 $tertiaryKeyValue = $result->pivot->{$this->tertiaryKey};
 
-                $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
-
-                // We also transfer the pivot relation at this point, since we have already coalesced
-                // any tertiary models into the nested dictionary.
-                $this->transferPivotsToTertiary($result, $tertiaryModel);
-
-                $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModel;
+                if (!is_null($tertiaryKeyValue)) {
+                    $tertiaryModel = clone $tertiaryModels[$tertiaryKeyValue];
+    
+                    // We also transfer the pivot relation at this point, since we have already coalesced
+                    // any tertiary models into the nested dictionary.
+                    $this->transferPivotsToTertiary($result, $tertiaryModel);
+    
+                    $nestedTertiaryDictionary[$parentKeyValue][$result->getKey()][] = $tertiaryModel;
+                }
             }
         }
 

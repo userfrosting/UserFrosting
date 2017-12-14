@@ -147,7 +147,8 @@
                     'de_DE' => 'Deutsch',
                     'fr_FR' => 'Français',
                     'it_IT' => 'Italiano',
-                    'th_TH' => 'ภาษาไทย'
+                    'th_TH' => 'ภาษาไทย',
+                    'fa'    => 'فارسی'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales.
                 // Supported browser requested languages always have first preference.

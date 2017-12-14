@@ -131,14 +131,11 @@ class UserFrosting
         $serviceProvider = new ServicesProvider();
         $serviceProvider->register($this->ci);
 
-        // Expected path to `sprinkles.json`
-        $schemaPath = \UserFrosting\APP_DIR . '/sprinkles.json';
-
         // Boot the Sprinkle manager, which creates Sprinkle classes and subscribes them to the event dispatcher
         $sprinkleManager = $this->ci->sprinkleManager;
 
         try {
-            $sprinkleManager->initFromSchema($schemaPath);
+            $sprinkleManager->initFromSchema(\UserFrosting\SPRINKLES_SCHEMA_FILE);
         } catch (FileNotFoundException $e) {
             if ($isWeb) {
                 $this->renderSprinkleErrorPage($e->getMessage());

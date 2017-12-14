@@ -13,7 +13,7 @@ use UserFrosting\System\Bakery\Migration;
 
 /**
  * Users table migration
- * Removed the 'display_name', 'title', 'secret_token', and 'flag_password_reset' fields, and added first and last name and 'last_activity_at'.
+ * Removed the 'display_name', 'title', 'secret_token', and 'flag_password_reset' fields, and added first and last name and 'last_activity_id'.
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables

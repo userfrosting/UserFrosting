@@ -35,7 +35,7 @@ abstract class BaseCommand extends Command
     protected $projectRoot;
 
     /**
-     * @var ContainerInterface $ci The global container object, which holds all of UserFristing services.
+     * @var ContainerInterface $ci The global container object, which holds all of the UserFrosting services.
      */
     protected $ci;
 

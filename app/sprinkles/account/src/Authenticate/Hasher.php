@@ -5,15 +5,22 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Sprinkle\Account\Util;
+namespace UserFrosting\Sprinkle\Account\Authenticate;
 
 /**
- * Password utility class
+ * Password hashing and validation class
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Password
+class Hasher
 {
+    /**
+     * Default crypt cost factor.
+     *
+     * @var int
+     */
+    protected $defaultRounds = 10;
+
     /**
      * Returns the hashing type for a specified password hash.
      *
@@ -21,12 +28,12 @@ class Password
      * @param string $password the hashed password.
      * @return string "sha1"|"legacy"|"modern".
      */
-    public static function getHashType($password)
+    public function getHashType($password)
     {
         // If the password in the db is 65 characters long, we have an sha1-hashed password.
         if (strlen($password) == 65) {
             return 'sha1';
-        } elseif (substr($password, 0, 7) == '$2y$12$') {
+        } elseif (strlen($password) == 82) {
             return 'legacy';
         }
 
@@ -37,12 +44,15 @@ class Password
      * Hashes a plaintext password using bcrypt.
      *
      * @param string $password the plaintext password.
+     * @param array  $options
      * @return string the hashed password.
      * @throws HashFailedException
      */
-    public static function hash($password)
+    public function hash($password, array $options = [])
     {
-        $hash = password_hash($password, PASSWORD_BCRYPT);
+        $hash = password_hash($password, PASSWORD_BCRYPT, [
+            'cost' => $this->cost($options),
+        ]);
 
         if (!$hash) {
             throw new HashFailedException();
@@ -56,32 +66,43 @@ class Password
      *
      * @param string $password The plaintext password to verify.
      * @param string $hash The hash to compare against.
+     * @param array  $options
      * @return boolean True if the password matches, false otherwise.
      */
-    public static function verify($password, $hash)
+    public function verify($password, $hash, array $options = [])
     {
-        if (static::getHashType($hash) == 'sha1') {
+        $hashType = $this->getHashType($hash);
+
+        if ($hashType == 'sha1') {
             // Legacy UserCake passwords
             $salt = substr($hash, 0, 25);		// Extract the salt from the hash
-            $hashInput = $salt . sha1($salt . $password);
-            if ($hashInput == $hash) {
-                return true;
-            }
+            $inputHash = $salt . sha1($salt . $password);
 
-            return false;
+            return (hash_equals($inputHash, $hash) === true);
 
-        } elseif (static::getHashType($hash) == 'legacy') {
+        } elseif ($hashType == 'legacy') {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.
-            $cost = '12';
-            if (substr($hash, 0, 60) == crypt($password, '$2y$' . $cost . '$' . substr($hash, 60))) {
-                return true;
-            }
+            // Note that this legacy hashing put the salt at the _end_ for some reason.
+            $salt = substr($hash, 60);
+            $inputHash = crypt($password, '$2y$12$' . $salt);
+            $correctHash = substr($hash, 0, 60);
 
-            return false;
+            return (hash_equals($inputHash, $correctHash) === true);
         }
 
         // Modern implementation
         return password_verify($password, $hash);
+    }
+
+    /**
+     * Extract the cost value from the options array.
+     *
+     * @param  array  $options
+     * @return int
+     */
+    protected function cost(array $options = [])
+    {
+        return isset($options['rounds']) ? $options['rounds'] : $this->defaultRounds;
     }
 }
