@@ -102,7 +102,7 @@ gulp.task('bundle-build', () => {
                         case 'merge':
                             // If using this collision rule, keep in mind any bundling options will also be merged.
                             // Inspect the produced 'bundle.config.json' file in the 'build' folder to ensure options are correct.
-                            config.bundle[bundleName] = merge(config.bundle[bundleName], currentConfig.bundle[bundleName]);
+                            config.bundle[bundleName] = merge(currentConfig.bundle[bundleName], config.bundle[bundleName]);
                             break;
                         case 'ignore':
                             // Do nothing. This simply exists to prevent falling through to error catchment.
