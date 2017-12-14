@@ -415,6 +415,8 @@ class AccountController extends SimpleController
     {
         /** @var UserFrosting\Config\Config $config */
         $config = $this->ci->config;
+        /** @var UserFrosting\I18n\LocalePathBuilder */
+        $localePathBuilder = $this->ci->localePathBuilder;
 
         if (!$config['site.registration.enabled']) {
             throw new NotFoundException($request, $response);
@@ -434,11 +436,18 @@ class AccountController extends SimpleController
         $schema = new RequestSchema('schema://requests/register.yaml');
         $validatorRegister = new JqueryValidationAdapter($schema, $this->ci->translator);
 
+        // Get locale information
+        $currentLocales = $localePathBuilder->getLocales();
+
         return $this->ci->view->render($response, 'pages/register.html.twig', [
             'page' => [
                 'validators' => [
                     'register' => $validatorRegister->rules('json', false)
                 ]
+            ],
+            'locales' => [
+                'available' => $config['site.locales.available'],
+                'current' => end($currentLocales)
             ]
         ]);
     }
@@ -804,8 +813,8 @@ class AccountController extends SimpleController
         // Set default group
         $data['group_id'] = $defaultGroup->id;
 
-        // Set default locale
-        $data['locale'] = $config['site.registration.user_defaults.locale'];
+        // Set locale
+        $data['locale'] = $data['locale'];
 
         // Hash password
         $data['password'] = Password::hash($data['password']);

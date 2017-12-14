@@ -437,26 +437,32 @@ class ServicesProvider
                     // Split to access q
                     $parts = explode(';', $browserLocale) ?: [];
 
-                    // Ensure locale valid, and available
-                    if (array_key_exists(0, $parts) && array_key_exists($parts[0], $config['site.locales.available'])) {
-                        // Determine preference level, and add to $allowedLocales
-                        if (array_key_exists(1, $parts)) {
-                            $parts[1] = str_replace('q=', '', $parts[1]);
-                            $parts[1] = is_numeric($parts[1]) ?: 0;
-                        } else {
-                            $parts[1] = 1;
+                    // Ensure locale valid
+                    if (array_key_exists(0, $parts)) {
+                        // Format for UF's i18n
+                        $parts[0] = str_replace('-', '_', $parts[0]);
+                        // Ensure locale available
+                        if (array_key_exists($parts[0], $config['site.locales.available'])) {
+                            // Determine preference level, and add to $allowedLocales
+                            if (array_key_exists(1, $parts)) {
+                                $parts[1] = str_replace('q=', '', $parts[1]);
+                                // Sanitize with int cast (bad values go to 0)
+                                $parts[1] = (int)$parts[1];
+                            } else {
+                                $parts[1] = 1;
+                            }
+                            // Add to list, and format for UF's i18n.
+                            $allowedLocales[$parts[0]] = $parts[1];
                         }
-                        // Add to list, and format for UF's i18n.
-                        $allowedLocales[str_replace('-', '_', $parts[0])] = $parts[1];
                     }
                 }
                 
                 // Sort, extract keys, and merge with $locales
                 asort($allowedLocales, SORT_NUMERIC);
                 $locales = array_merge($locales, array_keys($allowedLocales));
-
+                
                 // Remove duplicates, while maintaining fallback order
-                $locales = array_reverse(array_unique(array_reverse($locales)));
+                $locales = array_reverse(array_unique(array_reverse($locales), SORT_STRING));
             }
 
             return new LocalePathBuilder($c->locator, 'locale://', $locales);

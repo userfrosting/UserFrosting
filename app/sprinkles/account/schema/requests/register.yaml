@@ -71,5 +71,11 @@ passwordc:
       min: 12
       max: 100
       message: VALIDATE.LENGTH_RANGE
+locale:
+  validators:
+    required:
+      label: "&LOCALE"
+      domain: server
+      message: VALIDATE.REQUIRED
 captcha:
   validators:
