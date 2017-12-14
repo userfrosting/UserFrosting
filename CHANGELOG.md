@@ -3,6 +3,16 @@
 ## v4.1.16-alpha
 - Use locale requested by browser when possible for guests (#718)
 - Add locale drop down to registration page, with the currently applied locale selected (#718)
+- Integrated improvements from v4.0.25-Alpha
+    - Support npm for frontend vendor assets, and deprecation of bower (#737)
+    - Duplicate frontend vendor assets are no longer downloaded (#727)
+    - Detect incompatibilites between frontend vendor assets (related to #727)
+    - Improved reliability of generated base URL, especially when using docker
+    - Fixed syntax error in Portugese translations
+    - Minimise verbosity of assets build scripts when not in 'dev' mode
+    - Fix to stop bower complaining about sudo when using docker
+    - The `assetLoader` service has been deprecated, and may be removed in the future.
+    - **Potential breaking change:** Some packages like `Handlebars` are organised differently at npm. If referencing vendor assets introduced by UF, make sure they are still correct.
 
 ## v4.1.15-alpha
 - Refactor `Password` into a instantiable `Hasher` class, service, and `Password` facade (#827)
