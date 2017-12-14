@@ -1,5 +1,9 @@
 # Change Log
 
+## v4.1.16-alpha
+- Use locale requested by browser when possible for guests (#718)
+- Add locale drop down to registration page, with the currently applied locale selected (#718)
+
 ## v4.1.15-alpha
 - Refactor `Password` into a instantiable `Hasher` class, service, and `Password` facade (#827)
 - Change default hash cost back to 10 and fix legacy hash detection issue
