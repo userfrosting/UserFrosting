@@ -3,190 +3,141 @@
  *
  *
  * UserFrosting https://www.userfrosting.com
- * @author Alexander Weissman https://alexanderweissman.com
+ * @author Alexander Weissman <https://alexanderweissman.com>
  */
-(function( $ )
-{
-    /**
-     * The plugin namespace, ie for $('.selector').ufModal(options)
-     *
-     * Also the id for storing the object state via $('.selector').data()
-     */
-    var PLUGIN_NS = 'ufModal';
+;(function($, window, document, undefined) {
+    'use strict';
 
-    var Plugin = function ( target, options )
-    {
-
-        this.$T = $(target);
-
-        /** #### OPTIONS #### */
-        this.options= $.extend(
-            true,               // deep extend
-            {
-                sourceUrl : "",
-                ajaxParams: {},
-                msgTarget : null,
-                DEBUG: false
-            },
-            options
-        );
-
-        this.modal = null;
-
-        this._init( target );
-
-        return this;
+    // Define plugin name and defaults.
+    var pluginName = 'ufModal',
+    defaults = {
+        sourceUrl : '',
+        ajaxParams: {},
+        msgTarget : null,
+        DEBUG     : false
     };
 
-    /** #### INITIALISER #### */
-    Plugin.prototype._init = function ( target )
-    {
-        var base = this;
-        var $el = $(target);
+    // Constructor
+    function Plugin (element, options) {
+        this.element = element[0];
+        this.$element = $(this.element);
+        this.settings = $.extend(true, {}, defaults, options);
+        this._defaults = defaults;
+        this._name = pluginName;
+
+        // True plugin initalisation commences
+        this.modal = null;
 
         // Delete any existing modals attached to the element (should have been deleted already anyway)
-        if ($el.find(".modal").length) {
-            $el.find(".modal").remove();
-        }
+        if (this.$element.find('.modal').length) this.$element.find('.modal').remove();
 
-        // Fetch and render the form
+        // Fetch and render form
         $.ajax({
-          type: "GET",
-          url: base.options.sourceUrl,
-          data: base.options.ajaxParams,
-          cache: false
-        })
-        .then(
-            // Fetch successful
+            context: this,
+            type: 'GET',
+            url: this.settings.sourceUrl,
+            data: this.settings.ajaxParms,
+            cache: false
+        }).then(
+            // Success
             function (data) {
-                // Append the form as a modal dialog to the body
-                base.modal = $(data);
-                $el.append(base.modal);
+                // Append the data as a modal dialog to the target element
+                this.modal = $(data);
+                this.$element.append(this.modal);
 
-                base.modal.modal('show');
+                // Trigger modal dialog
+                this.modal.modal('show');
 
-                // Bind modal to be deleted when closed
-                base.modal.on("hidden.bs.modal", function () {
-                    base.destroy();
-                });
+                // Bind destroy function to close event
+                this.modal.on('hidden.bs.modal', function () { this.destroy(); }.bind(this));
 
-                base.$T.trigger('renderSuccess.ufModal');
-                return data;
+                // Trigger success event
+                this.$element.trigger('renderSuccess.ufModal');
             },
-            // Fetch failed
+            // Failure
             function (data) {
-                // Error messages
-                if ((typeof site !== "undefined") && site.debug.ajax && data.responseText) {
-                    base.$T.trigger('renderError.ufModal');
+                // Handle error messages
+                if (site !== undefined && site.debug.ajax && data.responseText) {
+                    // Trigger failure event
+                    this.$element.trigger('renderError.ufModal');
+
+                    // Replace document content with response, and handle browser quirks
                     document.write(data.responseText);
                     document.close();
                 } else {
-                    if (base.options.DEBUG) {
-                        console.log("Error (" + data.status + "): " + data.responseText );
-                    }
-                    // Display errors on failure
-                    // TODO: ufAlerts widget should have a 'destroy' method
-                    if (!base.options.msgTarget.data('ufAlerts')) {
-                        base.options.msgTarget.ufAlerts();
+                    // Debug logging
+                    if (this.settings.DEBUG) console.log('Error (' + data.status + '): ' + data.responseText);
+
+                    // Refresh ufAlerts for errors if target defined
+                    if (this.settings.msgTarget) {
+                        // Check if ufAlerts is instanced and empty
+                        if (!this.settings.msgTarget.data('ufAlerts')) this.settings.msgTarget.ufAlerts();
+                        else this.settings.msgTarget.ufAlerts('clear');
+
+                        // Trigger failure event on render.ufAlerts event
+                        this.settings.msgTarget.on('render.ufAlerts', function () {
+                            this.$element.trigger('renderError.ufModal');
+                        }.bind(this));
+
+                        // Pull alerts
+                        this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
                     } else {
-                        base.options.msgTarget.ufAlerts('clear');
+                        // renderError.ufModal event should always be able to trigger
+                        this.$element.trigger('renderError.ufModal');
                     }
-
-                    base.options.msgTarget.ufAlerts('fetch').ufAlerts('render');
-                    base.options.msgTarget.on("render.ufAlerts", function () {
-                        base.$T.trigger('renderError.ufModal');
-                    });
                 }
-
-                base.destroy();
-
-                return data;
             }
-        );
-    };
+        )
+    }
 
-    Plugin.prototype.destroy = function () {
-        var base = this;
-        var $el = base.$T;
+    $.extend(Plugin.prototype, {
+        /**
+         * Destroys instance
+         */
+        destroy: function () {
+            // Remove modal from selector
+            if (this.modal) this.modal.remove();
 
-        // Delete the plugin object
-        base.delete;
+            // Unbind plugin events
+            this.$element.off('.' + this._name);
 
-        // Remove the modal from the selector
-        if (base.modal) {
-            base.modal.remove();
+            // Remove plugin data from internal jQuery store (jQuery doesn't store with data-*, but can access it)
+            this.$element.removeData(this._name);
+
+            return this.$element;
+        },
+        /**
+         * Returns underlying modal
+         */
+        getModal: function () {
+            return this.modal;
         }
-
-        // Unbind any modal events bound to the selector
-        $el.off('.ufModal');
-
-        // Remove plugin name from selector's data-* attribute
-        $el.removeData(PLUGIN_NS);
-    };
-
-    Plugin.prototype.getModal = function () {
-        return this.modal;
-    };
+    });
     
-    /**
-     * EZ Logging/Warning (technically private but saving an '_' is worth it imo)
-     */
-    Plugin.prototype.DLOG = function ()
-    {
-        if (!this.DEBUG) return;
-        for (var i in arguments) {
-            console.log( PLUGIN_NS + ': ', arguments[i] );
+    // Handles instantiation and access to non-private methods.
+    $.fn[pluginName] = function(methodOrOptions) {
+        // Grab plugin instance
+        var instance = $(this).data(pluginName);
+        // If undefined or object, initalise plugin.
+        if (methodOrOptions === undefined || typeof methodOrOptions === 'object') {
+            // Only initalise if not previously done.
+            if (!instance) {
+                $(this).data(pluginName, new Plugin(this, methodOrOptions));
+            }
+            return this;
         }
-    }
-    Plugin.prototype.DWARN = function ()
-    {
-        this.DEBUG && console.warn( arguments );
-    }
-
-
-/*###################################################################################
- * JQUERY HOOK
- ###################################################################################*/
-
-    /**
-     * Generic jQuery plugin instantiation method call logic
-     *
-     * Method options are stored via jQuery's data() method in the relevant element(s)
-     * Notice, myActionMethod mustn't start with an underscore (_) as this is used to
-     * indicate private methods on the PLUGIN class.
-     */
-    $.fn[ PLUGIN_NS ] = function( methodOrOptions )
-    {
-        if (!$(this).length) {
-            return $(this);
+        // Otherwise ensure first parameter is a valid string, and is the name of an actual function.
+        else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
+            // Ensure not a private function
+            if (methodOrOptions.indexOf('_') !== 0) {
+                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+            }
+            else {
+                $.error('Method ' +  methodOrOptions + ' is private!');
+            }
         }
-        var instance = $(this).data(PLUGIN_NS);
-
-        // CASE: action method (public method on PLUGIN class)
-        if ( instance
-                && methodOrOptions.indexOf('_') != 0
-                && instance[ methodOrOptions ]
-                && typeof( instance[ methodOrOptions ] ) == 'function' ) {
-
-            return instance[ methodOrOptions ]( Array.prototype.slice.call( arguments, 1 ) );
-
-
-        // CASE: argument is options object or empty = initialise
-        } else if ( typeof methodOrOptions === 'object' || ! methodOrOptions ) {
-
-            instance = new Plugin( $(this), methodOrOptions );    // ok to overwrite if this is a re-init
-            $(this).data( PLUGIN_NS, instance );
-            return $(this);
-
-        // CASE: method called before init
-        } else if ( !instance ) {
-            console.warn( 'Plugin must be initialised before using method: ' + methodOrOptions );
-
-        // CASE: invalid method
-        } else if ( methodOrOptions.indexOf('_') == 0 ) {
-            console.warn( 'Method ' +  methodOrOptions + ' is private!' );
-        } else {
-            console.warn( 'Method ' +  methodOrOptions + ' does not exist.' );
+        else {
+            $.error('Method ' +  methodOrOptions + ' does not exist.');
         }
     };
-})(jQuery);
+})(jQuery, window, document);

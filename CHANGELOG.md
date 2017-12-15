@@ -3,6 +3,7 @@
 ## v4.1.16-alpha
 - Use locale requested by browser when possible for guests (#718)
 - Add locale drop down to registration page, with the currently applied locale selected (#718)
+- Migrated ufModal to new jQuery boilerplate (#740)
 - Integrated improvements from v4.0.25-Alpha
     - Support npm for frontend vendor assets, and deprecation of bower (#737)
     - Duplicate frontend vendor assets are no longer downloaded (#727)
