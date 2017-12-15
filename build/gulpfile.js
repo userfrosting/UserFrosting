@@ -79,8 +79,6 @@ gulp.task('assets-install', () => {
         let childProcess = require('child_process');
         childProcess.execSync('yarn install --flat --no-lockfile --non-interactive', {
             cwd: '../app/assets',
-            preferLocal: true,// Local over PATH.
-            localDir: './node_modules/.bin',
             stdio: doILog ? 'inherit' : ''
         });
     }
@@ -117,16 +115,12 @@ gulp.task('assets-install', () => {
         // Remove extraneous packages
         childProcess.execSync('bower prune', {
             cwd: '../app/assets',
-            preferLocal: true,// Local over PATH.
-            localDir: './node_modules/.bin',
             stdio: doILog ? 'inherit' : ''
         });
 
         // Perform installation
         childProcess.execSync('bower install -q --allow-root', { // --allow-root stops bower from complaining about being in 'sudo'.
             cwd: '../app/assets',
-            preferLocal: true,// Local over PATH.
-            localDir: './node_modules/.bin',
             stdio: doILog ? 'inherit' : ''
         });
         // Yarn is able to output its completion. Bower... not so much.
