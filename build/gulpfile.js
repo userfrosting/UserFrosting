@@ -36,6 +36,7 @@ const bundleConfigFile = `./${bundleFile}`;
 
 /**
  * Vendor asset task
+ * NOTE: This task cannot be run directly from the gulp cli. Use the npm run script instead.
  */
 gulp.task('assets-install', () => {
     'use strict';
@@ -84,7 +85,7 @@ gulp.task('assets-install', () => {
     }
     else del.sync([
         '../app/assets/package.json',
-        '../app/assets/node_modules/'
+        '../app/assets/node_modules/**'
     ], { force: true });
 
     // See if there are any bower packages.
@@ -128,7 +129,7 @@ gulp.task('assets-install', () => {
     }
     else del.sync([
         '../app/assets/bower.json',
-        '../app/assets/bower_components/'
+        '../app/assets/bower_components/**'
     ], { force: true });
 });
 
@@ -257,8 +258,8 @@ gulp.task('bundle-clean', () => {
 // Deletes assets fetched by assets-install
 gulp.task('assets-clean', () => {
     'use strict';
-    return del(['../app/assets/bower_components/', '../app/assets/node_modules/', '../app/assets/bower.json', '../app/assets/package.json'], { force: true });
+    return del('../app/assets/*', { force: true });
 });
 
 // Deletes all generated, or acquired files.
-gulp.task('clean', ['public-clean', 'bundle-clean', 'assets-clean'], () => { });
+gulp.task('clean', ['public-clean', 'bundle-clean', 'assets-clean']);
