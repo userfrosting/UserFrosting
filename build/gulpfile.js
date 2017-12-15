@@ -40,6 +40,14 @@ const bundleConfigFile = `./${bundleFile}`;
 gulp.task('assets-install', () => {
     'use strict';
 
+    // Legacy clean up
+    let legacyVendorAssets = '../app/sprinkles/*/assets/vendor/**';
+    if (del.sync(legacyVendorAssets, { dryRun: true, force: true }).length > 0) {
+        logger('Frontend vendor assets are now located at "app/assets".\nStarting clean up of legacy vendor assets...');
+        del.sync(legacyVendorAssets, { force: true });
+        logger('Complete.')
+    }
+
     let mergePkg = require('@userfrosting/merge-package-dependencies');
 
     // See if there are any yarn packages.
