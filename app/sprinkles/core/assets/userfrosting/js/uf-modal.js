@@ -133,11 +133,11 @@
                 return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
             }
             else {
-                $.error('Method ' +  methodOrOptions + ' is private!');
+                console.error('Method ' +  methodOrOptions + ' is private!');
             }
         }
         else {
-            $.error('Method ' +  methodOrOptions + ' does not exist.');
+            console.error('Method ' +  methodOrOptions + ' does not exist.');
         }
     };
 })(jQuery, window, document);
