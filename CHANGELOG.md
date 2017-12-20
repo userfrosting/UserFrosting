@@ -1,6 +1,6 @@
 # Change Log
 
-## v4.1.16-alpha
+## v4.2.0-alpha
 - Use locale requested by browser when possible for guests (#718)
 - Add locale drop down to registration page, with the currently applied locale selected (#718)
 - Integrated improvements from v4.0.25-Alpha
