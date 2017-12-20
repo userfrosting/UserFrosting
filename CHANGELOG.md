@@ -3,16 +3,11 @@
 ## v4.2.0-alpha
 - Use locale requested by browser when possible for guests (#718)
 - Add locale drop down to registration page, with the currently applied locale selected (#718)
-- Integrated improvements from v4.0.25-Alpha
-    - Support npm for frontend vendor assets, and deprecation of bower (#737)
-    - Duplicate frontend vendor assets are no longer downloaded (#727)
-    - Detect incompatibilites between frontend vendor assets (related to #727)
-    - Improved reliability of generated base URL, especially when using docker
-    - Fixed syntax error in Portugese translations
-    - Minimise verbosity of assets build scripts when not in 'dev' mode
-    - Fix to stop bower complaining about sudo when using docker
-    - The `assetLoader` service has been deprecated, and may be removed in the future.
-    - **Potential breaking change:** Some packages like `Handlebars` are organised differently at npm. If referencing vendor assets introduced by UF, make sure they are still correct.
+- Integrated improvements from [v4.0.25-Alpha](#v4025-alpha)
+
+## v4.1.16-alpha
+- Fix for `merge` bundling rule (#660)
+- Fix for undefined variable exception under strict mode in `ufAlerts` (#809)
 
 ## v4.1.15-alpha
 - Refactor `Password` into a instantiable `Hasher` class, service, and `Password` facade (#827)
@@ -135,12 +130,12 @@
 - Update French translations
 - Update Arabic translations (#733, #734, #735)
 
-## v4.1.1-Alpha
+## v4.1.1-alpha
 - Fixed missing template in ExceptionHandler and `notFoundHandler`
 - Migration rollback will throw a warning if a class is not found instead of aborting
 - Temporary fix for trouble with `npm install` in Windows (#742)
 
-## v4.1.0-Alpha
+## v4.1.0-alpha
 - Switch from pagination "plugin" to "widget" for Tablesorter.  Allows us to update to the latest version of TS (fix #688, #715)
 - Implement `WhoopsRenderer` for pretty debug pages.  See (#674)
 - Refactor error handling.  Move responsibility for displayErrorDetails to handlers, and factor our ErrorRenderers.  Addresses (#702)
@@ -187,21 +182,21 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - The `assetLoader` service has been deprecated, and may be removed in the future.
 - **Potential breaking change:** Some packages like `Handlebars` are organised differently at npm. If referencing vendor assets introduced by UF, make sure they are still correct.
 
-## v4.0.24-Alpha
+## v4.0.24-alpha
 - Fixes to nginx config file, and add location block for LE acme challenge
 - Fix JS errors when `#alerts-page` is not present on a page
 - Fix hardcoded User class in AdminController (#753)
 - Update message PASSWORD.FORGET.REQUEST_SENT (#749)
 
-## v4.0.23-Alpha
+## v4.0.23-alpha
 - Set module dependency versions to ~4.0.0 instead of ^4.0.0 (since 4.1.x will introduce breaking changes)
 - Fix bug in ufCollection
 
-## v4.0.22-Alpha
+## v4.0.22-alpha
 - Fix issue where 'Change User Password' popup form couldn't handle specifying a new password.
 - Display message when there are no results in `ufTable`
 
-## v4.0.21-Alpha
+## v4.0.21-alpha
 - Implement reflow and column selector for tables (#670)
 - Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
 - ufAlerts will only auto-scroll when outside the viewport (even if only partially). Can be overriden with `scrollWhenVisible: true`. (#714)
@@ -210,13 +205,13 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Added Twig blocks
 - Fix issue with duplicate query logs when using multiple databases
 
-## v4.0.20-Alpha
+## v4.0.20-alpha
 - Remove pivot columns from pagination subquery in BelongsToManyThrough, to deal with MySQL's `only_full_group_by` warning
 
-## v4.0.19-Alpha
+## v4.0.19-alpha
 - Explicit column names in new user permissions relations
 
-## v4.0.18-Alpha
+## v4.0.18-alpha
 - Permission info page (#638)
 - New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
 - Change implementation of User::permissions() to use BelongsToManyThrough
@@ -230,13 +225,13 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Fix issue with Twig debug (#356)
 - Show disabled/unactivated badges on user info page
 
-## v4.0.17-Alpha
+## v4.0.17-alpha
 - Add IIS config file (#371)
 - New ufCollection now supports free text input mode
 - New design and layout for user, group, and role summary boxes (also fixes #703)
 - Registration page returns 404 when registration disabled (#705)
 
-## v4.0.16-Alpha
+## v4.0.16-alpha
 - Add Docker configuration files
 - Begin work on Bakery, the command-line debug tool
 - Lock version of tablesorter due to breaking changes
@@ -244,7 +239,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Fix bug in URLs for redirect-on-login
 - Added UTF-8 as default mail charset
 
-## v4.0.15-Alpha
+## v4.0.15-alpha
 - Prevent mixed content on demo pages
 - Fixed some missing translations
 - Fixed error in ufAlerts push method
@@ -253,18 +248,18 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Prevents empty locale's from displaying as empty options in profile form
 - Unignore .gitkeeps of directories that need to exist
 
-## v4.0.14-Alpha
+## v4.0.14-alpha
 - Fix ajax.delay in ufCollection
 - Fix missing translations
 - Minor fix in French translation
 - Fix alert margin when displayed inside a modal
 
-## v4.0.13-Alpha
+## v4.0.13-alpha
 - Update to RememberMe 2.0 (https://github.com/userfrosting/UserFrosting/issues/635)
 - Remove database checks, as they are apparently no longer needed (https://github.com/userfrosting/UserFrosting/issues/655)
 - Bump dependencies
 
-## v4.0.12-Alpha
+## v4.0.12-alpha
 - Separate out the registration and sign-in pages (https://github.com/userfrosting/UserFrosting/issues/657) **BC**
 - Slightly change behavior of form validation icons
 - Sprunje input validation (https://github.com/userfrosting/UserFrosting/issues/640)
@@ -272,7 +267,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Errors from tablesorter now get displayed
 - Support for OR expressions using `||` in Sprunje filters (https://github.com/userfrosting/UserFrosting/issues/647)
 
-## v4.0.11-Alpha
+## v4.0.11-alpha
 - Fix [#663](https://github.com/userfrosting/UserFrosting/issues/663)
 - Adding more Twig `blocks`
 - ufAlerts now scroll to alert location, if and only if alerts are output.
@@ -280,16 +275,16 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Minor update in French locale
 - Added comments in `.env.example`
 
-## v4.0.10-Alpha
+## v4.0.10-alpha
 - Move suggestion button outta-da-way
 - Add email to registration success message
 - Separate out some page content into smaller blocks
 - Factor out select2 options in ufCollection, into the 'dropdown' key so that any select2 option can be set
 
-## v4.0.9-Alpha
+## v4.0.9-alpha
 - Oops, `exists` needs to be static
 
-## v4.0.8-Alpha
+## v4.0.8-alpha
 - Autogenerate and suggestion features for usernames during account registration (partially addresses https://github.com/userfrosting/UserFrosting/issues/569)
 - Restrict username characters to a-z0-9.-_
 - Require first name by default
@@ -300,19 +295,19 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Implement extra:// stream
 - Lots of missing translation keys
 
-## v4.0.7-Alpha
+## v4.0.7-alpha
 - Separate "profile settings" from "account settings"
 
-## v4.0.6-Alpha
+## v4.0.6-alpha
 - Fix throttling issue #656
 - Other miscellaneous fixes
 
-## v4.0.5-Alpha
+## v4.0.5-alpha
 - Allow nulling out of throttle rules (to disable)
 - Disable Google Analytics by default (but enabled in production)
 - Other miscellaneous fixes
 
-## v4.0.4-Alpha
+## v4.0.4-alpha
 - UfAlert style customization (See [#634](https://github.com/userfrosting/UserFrosting/issues/634))
 - Translation function can now display raw placeholder using the `|raw` filter in the placeholder name. Other Twig filters are also avaiable. Requires latest version of the [i18n](https://github.com/userfrosting/i18n) component (See [#621](https://github.com/userfrosting/UserFrosting/issues/621)).
 - Fix the "Root account" message breaking the UI on smaller screens (See [#641](https://github.com/userfrosting/UserFrosting/issues/641)) - Thanks @brunomnsilva !
@@ -325,7 +320,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Fixed missing translations
 - Added Thai translation - Thanks @popiazaza !
 
-## v4.0.3-Alpha
+## v4.0.3-alpha
 - Add config file for nginx (https://github.com/userfrosting/UserFrosting/issues/373)
 - Add Portuguese translations (thanks to @brunomnsilva!)
 - Add Arabic (MSA) translations (thanks to @abdullah.seba!)
@@ -333,7 +328,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Specify foreign keys explicitly in all relationships.
 - Use classMapper for admin Sprunjes.
 
-## v4.0.2-Alpha
+## v4.0.2-alpha
 - Specify foreign key explicitly in `User::activities()` relationship.
 - Database checks in installer and Authenticator now respect custom database ports. (See [#628](https://github.com/userfrosting/UserFrosting/issues/628))
 - Fixed edge case where `5%C` would appear in generated urls.
@@ -342,7 +337,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Fix minor errors in French locale
 - Fix translation error on the Legal page
 
-## v4.0.1-Alpha
+## v4.0.1-alpha
 - Bump min version of PHP to 5.6
 - Added German translation (See [#625](https://github.com/userfrosting/UserFrosting/issues/625)) - Thanks @X-Anonymous-Y
 - Improved Gulp Build task
@@ -358,5 +353,203 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Refactor installer and how version are displayed in system info panel. Added notice when a migration is available for a sprinkle
 - Etc.
 
-## v4.0.0-Alpha
-- Initial release of UserFrosting V4
+## v4.0.0-alpha
+
+**Initial release of UserFrosting V4**
+
+- The [Sprinkle](https://learn.userfrosting.com/sprinkles) system, which keeps your code completely separate from the core UF codebase;
+- We're upgraded from Slim 2 to Slim 3, which is significantly different;
+- Completely redesigned [database structure](https://learn.userfrosting.com/database/default-tables);
+- Initialization is now achieved through [services](https://learn.userfrosting.com/services), with the Pimple dependency injection container;
+- [Composer](https://learn.userfrosting.com/installation/requirements/essential-tools-for-php#composer) is now a mandatory part of the installation process;
+- [Bower](https://learn.userfrosting.com/sprinkles/contents#-bower-json) is now used to install third-party client-side assets (Javascript/CSS packages);
+- "Groups" and "Primary Group" have been replaced by "Roles" and "Group", respectively;
+- Tables no longer need to be "registered" in any kind of initialization routine.  Simply set the table names directly in your data models;
+- Twig templates have been [reorganized and redesigned](https://learn.userfrosting.com/templating-with-twig/sprinkle-templates);
+- SB Admin has been removed and we now use the [AdminLTE](https://adminlte.io/) front-end theme;
+- Client-side code has been heavily refactored into reusable [components](https://learn.userfrosting.com/client-side-code/components).
+
+## v0.3.1.23
+- Also fix the `occurred_at` timestamp in the `user_event` table to allow null, for newer versions of MySQL that don't allow a zero date (see #605).
+
+## v0.3.1.22
+- Use `nullableTimestamps` instead of `timestamps` in installer, to prevent conflict with MySQL modes 'NO_ZERO_IN_DATE' and 'NO_ZERO_DATE'.
+
+## v0.3.1.21
+- Use Laravel's Schema interface to create tables and default rows, instead of constructing them with SQL
+
+## v0.3.1.20
+- Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()` 
+- Revert changes to User::fresh() but leave comment regarding upgrading Eloquent
+
+## v0.3.1.19
+- Fix some minor error screen layout issues
+- Make User::fresh() compatible with Eloquent\Model v5.2.40+
+- Update composer require to allow for Fortress 1.x bugfixes
+- Allow database port definitions in config-userfrosting.php
+- Fix fatal error when evaluateCondition is called before the router populates current route information
+
+## v0.3.1.18
+- Add check for logging being enabled but log file not existing yet
+
+## v0.3.1.17
+- Fix occasional bug when end-of-file is reached on log file before requested number of lines is reached
+- Roll back database connection checking to fix installer routines (frostbitten)
+- UI fixes for smaller screens (frostbitten)
+- Update Gitter references to Rocket.chat
+- Clarify hotfix branch procedure for contributions
+
+## v0.3.1.16
+- Fix comment reference to \Fortress\JqueryValidationAdaptor
+- CONTRIBUTING.md - Add note about proper Pull Requests
+- French language file fixes (#565) (lcharette)
+- Add HTTP status codes to 404 errors and database errors (frostbitten)
+- Change database errors to use BaseController instead of DatabaseController (frostbitten)
+
+## v0.3.1.15
+- Fix unattached submitHandler bug in Group and Auth edit interfaces (#465)
+- Remove references to nonexistent `formUserView` and `formGroupView` (#478)
+- Gracefully handle session destruction due to missing or disabled accounts (#510)
+- Add `attributeExists` and `relationExists` for models (#520)
+
+## v0.3.1.14
+- Stop reading entire log files to avoid out-of-memory errors (#497)
+- Deploy [league/csv](https://github.com/thephpleague/csv) to properly generate CSV files (#557)
+- Fix typos in language files
+
+## v0.3.1.13
+- Bump dependencies
+- userfrosting/fortress now has a release version
+
+## v0.3.1.12
+- Add sendmail support in Notification class
+- Fix problem with strict comparison in Handlebars templates and inconsistent data types among different database technologies
+- Override paths to font files for Bootstrap Glyphicons to support the UserFrosting directory structure
+- Added missing lines of Thai language (popiazaza)
+- Fix a vulnerability where users still logged in wouldn't automatically be logged out if they were disabled
+- Add option for HTTPS in `.htaccess`, commented out by default
+- Minor syntax fixes in `public/js/userfrosting.js`, `widget-auth.js`, `widget-groups.js`, and `widget-users.js`
+
+## v0.3.1.11
+- Composer can now include composer.json files from plugin folders (added "wikimedia/composer-merge-plugin" to composer)
+
+## v0.3.1.10
+- Select correct versions (PHP 5.x compatible) of packages in `composer.json`
+- Turkish language translation
+- Return `User` object created in `AccountController::register`
+
+## v0.3.1.9
+- Revert to loose comparison for `user_id`s because of issues with Ubuntu's PDO driver (see http://stackoverflow.com/questions/5323146/mysql-integer-field-is-returned-as-string-in-php#comment41836471_5323169)
+
+## v0.3.1.8
+- Finish replacing all usages of `*Loader` classes with Eloquent syntax
+- Installer warning for missing `imagepng`
+- Fix bug in CSV generation for user table
+
+## v0.3.1.7
+- Change "default theme" to "guest theme" and fix loading issues (#463).  What used to be called "default theme" is now base theme, i.e. the theme to fall back to when a template file cannot be found in the current theme (user group or guest theme)
+- New public template for "nyx" theme
+- Remove trailing slash from configuration JS/CSS paths to make uniform with site.uri.public
+- Make routes for config.js and theme.css dynamically generated from configuration variables (#461)
+- Make cookie name for "remember me" use session name
+- Fix potential bug in configuration user_id's for guest, master accounts
+
+## v0.3.1.6
+- Fix exception-handling for mail server errors
+- Notify if account creation was successful, even if mail server failed.
+
+## v0.3.1.5
+- Add Romanian translation
+- Upgrade Tablesorter and pretty URLs for searched/sorted/paginated tables
+- Fix bug in default value for user `secret_token`
+
+## v0.3.1.4
+- .htaccess redirect trailing slash: change to only redirect GET requests
+- Natural sort order in API
+- Fix bug in table pagination
+- Fix bug in loading user primary group properties as user properties
+- Fix mailto link bug in tables
+- Warn if config file missing (#445)
+- Fix dutch error (#447)
+
+## v0.3.1.3
+- Implement CSV download feature
+
+## v0.3.1.2
+- Implement `no_leading_whitespace` and `no_trailing_whitespace` rules
+
+## v0.3.1
+- Improved initialization routine as middleware
+- Implemented "remember me" for persistent sessions - see https://github.com/gbirke/rememberme
+- Converted page templates to inheritance architecture, using Twig `extends`
+- Start using the `.twig` extension for template files
+- All content is now part of a theme, and site can be configured so that one theme is the default theme for unauthenticated users
+- User session stored via `user_id`, rather than the entire User object
+- Data model is now built on Eloquent, instead of in-house
+- Cleaned up some of the per-page Javascript, refactoring repetitive code
+- Implement server-side pagination
+- Upgrade to Tablesorter v2.23.4
+- Switch from DateJS to momentjs
+- Switch to jQueryValidation from FormValidation
+- Implement basic interface for modifying group authorization rules
+- User events - timestamps for things like sign-in, sign-up, password reset, etc are now stored in a `user_event` table
+- Wrapper class Notification for sending emails, other notifications to users
+- Remove username requirement for password reset.  It is more likely that an attacker would know the user's username, than the user themselves.  For the next version, we can try to implement some real multi-factor authentication.
+- When a user creates another user, they don't need to set a password.  Instead, an email is sent out to the new user, with a token allowing them to set their own password.
+- Admins can manually generate a password reset request for another user, or directly change the user's password.
+
+## v0.3.0
+- [Autoloading with Composer](https://v3.userfrosting.com/navigating/#composer)
+- [MVC Architecture](https://v3.userfrosting.com/navigating/#structure)
+- [Front Controllers and the Slim Microframework](https://v3.userfrosting.com/navigating/#slim)
+- [Twig - Templating](http://twig.sensiolabs.org/)
+- [Theming](https://v3.userfrosting.com/components/#theming)
+- [Plugins](https://v3.userfrosting.com/components/#plugins)
+
+## v0.2.1 
+- Implemented db-driven menu system.  Menu items are pulled from the database, and can be modified via plugins.
+- Implemented backend templating of forms and tables via [Bootsole](https://github.com/alexweissman/bootsole).
+
+## v0.2.0 (butterflyknife)
+- Converted all DB calls to PDO.
+- Renamed "permissions" to "groups".  Same concept, but using the word "group" suggests that it can be used for more than just access control.
+- Implemented "primary group" membership for users.  A user can belong to multiple groups, but only one of those will be their primary group.
+- Implemented DB-driven home pages for groups.  Upon login, a user will be redirected to the `home_page` for their primary group.
+- Implemented templated menus.  Every group has a corresponding menu template in `models/menu-templates`.  Upon login, the menu for a user's primary group is automatically loaded and rendered.
+- Implemented function-level user authorization.  Whenever a function in `secure_functions` is called, the `user_action_permits` table is checked to see whether or not that user has access to the function (the `action` column), conditional on the boolean functions specified in the `permits` column.
+- Organized pages into four categories: account pages, API pages, form pages, and public pages.  Public pages reside in the root directory and can be accessed by anyone.  Account pages are in the `account` directory and are only accessible after logging in.  API pages are in the `api` directory, and consist of all the pages that process or fetch data from the DB and interact with the frontend via AJAX/JSON.  They are accessible by any logged in user, but will only perform a function if the user is authorized.  Form pages are in the `forms` directory, and consist of pages that generate forms (for creating/updating users, groups, etc.)  
+- Converted registration page to AJAX.
+- Improved installer with site configuration.
+
+## v0.1.7
+- Page scrolls back to top after AJAX submit.
+- "Website url" is automatically suffixed with "/" if necessary.
+- Fixed bad link to forgot_password.php.
+- Began implementing action authorization scheme.
+
+## v0.1.6
+- Implemented CSRF token checking for creating and updating users
+- Moved much of the nuts and bolts for generating the user-create and user-update forms to the server side, so as to streamline rendering process and require fewer requests by the client (see load_form_user.php)
+- Improved responsive layout for rendering nicely on mobile devices
+
+## v0.1.5
+- More improvements to error-handling/rendering
+- HTTPS/SSL compatible
+- Fixed bug with different table name prefixes
+- Improvements to CSRF tokens
+
+## v0.1.4
+- Updated password hashing from md5 to modern bcrypt (more secure) - thanks to contributor @r3wt
+- Included better functions for sanitizing user input, validating user ip, generating csrf (cross-site request forgery) tokens - thanks to contributor @r3wt
+
+## v0.1.3
+- Root account (user id = 1) : created upon installation, cannot be deleted or disabled. 
+- Special color scheme for when logged in as root user.
+- Installer now guides user through creation of root account
+- Moved common JS and CSS includes to "includes.php"
+
+## v0.1.2
+- Improved error and exception handling
+- Added 404 error page
+- Standardized JSON interface for backend scripts
+- Front-end should now be able to catch virtually any backend error and take an appropriate action (instead of white screen of death)
