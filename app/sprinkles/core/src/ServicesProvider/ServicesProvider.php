@@ -149,7 +149,7 @@ class ServicesProvider
         /**
          * Cache service.
          *
-         * @todo Create an option somewhere to flush the cache
+         * @return \Illuminate\Cache\TaggedCache
          */
         $container['cache'] = function ($c) {
 
