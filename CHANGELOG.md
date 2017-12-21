@@ -3,6 +3,7 @@
 ## v4.1.16-alpha
 - Fix for `merge` bundling rule (#660)
 - Fix for undefined variable exception under strict mode in `ufAlerts` (#809)
+- Fix for site cache reset upon login (#828)
 
 ## v4.1.15-alpha
 - Refactor `Password` into a instantiable `Hasher` class, service, and `Password` facade (#827)
