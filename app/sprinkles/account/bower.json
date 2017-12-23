@@ -1,24 +1,28 @@
 {
-  "name": "core-assets",
-  "version": "0.0.1",
-  "homepage": "https://github.com/userfrosting",
-  "authors": [
-    "ssnukala"
-  ],
-  "moduleType": [
-    "node"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "assets/vendor",
-    "examples",
-    "demo-resources",
-    "demo",
-    "test",
-    "tests"
-  ],
-  "dependencies": {}
+    "name": "userfrosting-sprinkle-account",
+    "description": "Authentication and account management module for UserFrosting.",
+    "homepage": "https://github.com/userfrosting",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander Weissman",
+            "homepage": "https://alexanderweissman.com"
+        },
+        "ssnukala"
+    ],
+    "dependencies": {},
+    "moduleType": [
+        "node"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "assets/vendor",
+        "examples",
+        "demo-resources",
+        "demo",
+        "test",
+        "tests"
+    ]
 }

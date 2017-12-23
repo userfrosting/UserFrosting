@@ -20,7 +20,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedExceptio
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
@@ -143,8 +143,8 @@ class Authenticator
             throw new AccountDisabledException();
         }
 
-        // Check that the user's account is activated
-        if ($user->flag_verified == 0) {
+        // Check that the user's account is verified (if verification is required)
+        if ($this->config['site.registration.require_email_verification'] && $user->flag_verified == 0) {
             throw new AccountNotVerifiedException();
         }
 

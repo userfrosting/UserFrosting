@@ -100,6 +100,7 @@ Srinivas's a web applications architect, with a passion for open source technolo
 - @splitt3r - German
 - @X-Anonymous-Y - German
 - Dmitriy (@rendername) - Russian
+- Amin Akbari (@aminakbari) - Farsi
 
 ## Contributing
 

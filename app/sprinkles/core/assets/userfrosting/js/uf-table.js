@@ -173,7 +173,6 @@
     function Plugin (element, options) {
         this.element = element[0];
         this.$element = $(this.element);
-        var tableElement = this.$element.find('.tablesorter');
 
         var lateDefaults = {
             download: {
@@ -187,6 +186,7 @@
             overlay: {
                 container: this.$element.find('.js-uf-table-overlay')
             },
+            tableElement: this.$element.find('.tablesorter'),
             tablesorter: {
                 widgetOptions: {
                     columnSelector_container : this.$element.find('.js-uf-table-cs-options'),
@@ -248,6 +248,15 @@
         };
 
         this.settings = $.extend(true, {}, dataAttributeDefaults, this.settings);
+
+        // Check that tableElement exists
+        var tableElement = this.settings.tableElement;
+        if (!tableElement.length) {
+            if (window.console && console.error) {
+                console.error('ufTable could not be initialized: wrapper element does not exist, or does not contain a matched tableElement (see https://learn.userfrosting.com/client-side-code/components/tables )');
+            }
+            return;
+        }
 
         // Copy over dataUrl to pager_ajaxUrl
         this.settings.tablesorter.widgetOptions.pager_ajaxUrl = this.settings.dataUrl;

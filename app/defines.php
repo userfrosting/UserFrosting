@@ -24,14 +24,18 @@ define('UserFrosting\CACHE_DIR_NAME', 'cache');
 define('UserFrosting\DB_DIR_NAME', 'database');
 define('UserFrosting\SESSION_DIR_NAME', 'sessions');
 define('UserFrosting\SPRINKLES_DIR_NAME', 'sprinkles');
+
+// Full path to Sprinkles directory
+define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
+
+// Sprinkles schema file
+define('UserFrosting\SPRINKLES_SCHEMA_FILE', APP_DIR . DS . 'sprinkles.json');
+
 define('UserFrosting\LOG_DIR_NAME', 'logs');
 define('UserFrosting\VENDOR_DIR_NAME', 'vendor');
 
 // Full path to Composer's vendor directory
 define('UserFrosting\VENDOR_DIR', APP_DIR . DS . VENDOR_DIR_NAME);
-
-// Full path to Sprinkles directory
-define('UserFrosting\SPRINKLES_DIR', APP_DIR . DS . SPRINKLES_DIR_NAME);
 
 // Full path to database directory (SQLite only)
 define('UserFrosting\DB_DIR', APP_DIR . DS . DB_DIR_NAME);

@@ -17,7 +17,7 @@ use UserFrosting\System\Bakery\DatabaseTest;
 use UserFrosting\System\Database\Model\Migrations;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
-use UserFrosting\Sprinkle\Account\Util\Password;
+use UserFrosting\Sprinkle\Account\Facades\Password;
 
 /**
  * Create root user CLI command.

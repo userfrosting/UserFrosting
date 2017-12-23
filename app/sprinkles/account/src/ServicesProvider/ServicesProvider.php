@@ -17,6 +17,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
 use UserFrosting\Sprinkle\Account\Authenticate\AuthGuard;
+use UserFrosting\Sprinkle\Account\Authenticate\Hasher;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Log\UserActivityDatabaseHandler;
@@ -331,6 +332,11 @@ class ServicesProvider
             $authenticator = $c->authenticator;
 
             return $authenticator->user();
+        };
+
+        $container['passwordHasher'] = function ($c) {
+            $hasher = new Hasher();
+            return $hasher;
         };
 
         /**
