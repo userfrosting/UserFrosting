@@ -1,8 +1,10 @@
 # Change Log
 
+## v4.2.0
+- Implement `withRaw`, `withSum`, `withAvg`, `withMin`, `withMax` (see https://github.com/laravel/framework/pull/16815)
+
 ## v4.1.14-alpha
 - Fix issue with scopes being applied twice in Unique::getPaginatedQuery (https://github.com/userfrosting/extend-user/issues/2)
-- Implement withRaw, withSum, withAvg, withMin, withMax (see https://github.com/laravel/framework/pull/16815)
 
 ## v4.1.13-alpha
 - `ufTable`: Implement `rowTemplate` for customizing how rows are rendered (#787)
