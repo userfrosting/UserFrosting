@@ -28,7 +28,7 @@
  *
  * UserFrosting https://www.userfrosting.com
  * @author Alexander Weissman <https://alexanderweissman.com>
- * 
+ *
  * @todo Implement proper fallback for when `set` function isn't supported by FormData.
  */
 ;(function($, window, document, undefined) {
@@ -37,29 +37,61 @@
     // Define plugin name and defaults.
     var pluginName = 'ufForm',
         defaults = {
-            validators: {
-                'rules'   : {},
-                'messages': {}
-            },
+            DEBUG: false,
+            site                : site, // global site variables
             submittingText      : "<i class='fa fa-spinner fa-spin'></i>",
             beforeSubmitCallback: null,
             binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
             keyupDelay          : 0,
-            DEBUG: false
+            validator: {
+                rules        : {},
+                messages     : {}
+            },
+            // Deprecated
+            validators: {
+                rules        : {},
+                messages     : {}
+            }
         };
 
     // Constructor
     function Plugin (element, options) {
         this.element = element[0];
         this.$element = $(this.element);
+
         var lateDefaults = {
-            encType  : (typeof this.$element.attr('enctype') !== 'undefined') ? this.$element.attr('enctype') : '',
-            msgTarget: this.$element.find('.js-form-alerts:first')
+            submitButton : this.$element.find('button[type=submit]'),
+            msgTarget    : this.$element.find('.js-form-alerts:first'),
+            validator    : {
+                submitHandler: $.proxy(this.defaultSubmitHandler, this),
+                onkeyup      : $.proxy(this._onKeyUp, this)
+            },
+            ajax         : {
+                // Override jQuery's strict JSON parsing
+                converters : {
+                    'text json': $.proxy(this._defaultResponseParser, this)
+                },
+                // Response type
+                dataType   : this._debugAjax ? 'html' : 'json',
+                // Disable the submit button before sending the request
+                beforeSend : $.proxy(this.disableSubmit, this),
+                // enable the submit button once the request completes
+                complete   : $.proxy(this.enableSubmit, this)
+            }
         };
+
+        // Legacy options
+        if ('validators' in options) {
+            options.validator = options.validators;
+        }
+
         this.settings = $.extend(true, {}, defaults, lateDefaults, options);
+
         this._defaults = $.extend(true, {}, defaults, lateDefaults);
         this._name = pluginName;
         this._debugAjax = (typeof site !== 'undefined') && site.debug.ajax;
+
+        this.submitButtonText = this.settings.submitButton ? this.settings.submitButton.html() : '';
 
         // Detect changes to element attributes
         this.$element.attrchange({
@@ -69,12 +101,7 @@
         });
 
         // Setup validator
-        this.validator = this.$element.validate({
-            rules        : this.settings.validators.rules,
-            messages     : this.settings.validators.messages,
-            submitHandler: $.proxy(this._submitHandler, this),
-            onkeyup      : $.proxy(this._onKeyUp, this)
-        });
+        this.validator = this.$element.validate(this.settings.validator);
 
         return this;
     }
@@ -82,117 +109,194 @@
     // Functions
 
     /**
-     * Handles the form submission after successful client-side validation.
+     * Set "loading" text for submit button, if it exists, and disable button
      */
-    Plugin.prototype._submitHandler = function(form, event) {
+    Plugin.prototype.disableSubmit = function() {
+        var submitButton = this.settings.submitButton;
+        // Do nothing, if the button is already disabled
+        if (submitButton.prop('disabled')) {
+            return this;
+        }
+
+        if (!submitButton) {
+            console.error('Submit button not found.');
+            return this;
+        }
+
+        this.submitButtonText = submitButton.html();
+        submitButton.prop('disabled', true);
+        submitButton.html(this.settings.submittingText);
+        return this;
+    };
+
+    /**
+     * Restore button text and re-enable submit button
+     *
+     * @return this
+     */
+    Plugin.prototype.enableSubmit = function() {
+        var submitButton = this.settings.submitButton;
+
+        // Do nothing, if the button is already enabled
+        if (!submitButton.prop('disabled')) {
+            return this;
+        }
+
+        if (!submitButton) {
+            console.error('Submit button not found.');
+            return this;
+        }
+
+        submitButton.prop('disabled', false);
+        submitButton.html(this.submitButtonText);
+        return this;
+    };
+
+    /**
+     * Handles the form submission after successful client-side validation.
+     *
+     * @param {Element} form
+     * @param {Event}   event
+     */
+    Plugin.prototype.defaultSubmitHandler = function(form, event) {
         // Execute any "before submit" callback
         if (this.settings.beforeSubmitCallback) {
             this.settings.beforeSubmitCallback();
         }
 
-        var $form = $(form);
-
-        // Set "loading" text for submit button, if it exists, and disable button
-        var submitButton = $form.find('button[type=submit]');
-        if (submitButton) {
-            var submitButtonText = submitButton.html();
-            submitButton.prop('disabled', true);
-            submitButton.html(this.settings.submittingText);
-        }
-
         // Get basic request parameters.
-        var reqParams = {
-            converters: {
-                // Override jQuery's strict JSON parsing
-                'text json': function(result) {
-                    try {
-                        // First try to use native browser parsing
-                        if (typeof JSON === 'object' && typeof JSON.parse === 'function') {
-                            return JSON.parse(result);
-                        } else {
-                            return $.parseJSON(result);
-                        }
-                    } catch (e) {
-                       // statements to handle any exceptions
-                       console.warn('Could not parse expected JSON response.');
-                       return {};
-                    }
-                }
-            },
+        var ajaxParams = this.prepareRequestData(form, this.settings.ajax);
 
-            dataType: this._debugAjax ? 'html' : 'json',
-            type: this.$element.attr('method'),
-            url: this.$element.attr('action')
+        // Submit the form
+        this.submitForm(ajaxParams);
+    };
+
+    /**
+     * Submit the form via AJAX
+     * @param   {object} reqParams
+     * @returns {Deferred}
+     */
+    Plugin.prototype.submitForm = function(reqParams) {
+        return $.ajax(reqParams).then(
+            // Submission successful
+            $.proxy(this._defaultSuccess, this),
+            // Submission failed
+            $.proxy(this._defaultError, this)
+        );
+    }
+
+    /**
+     * Default handler for AJAX request success.
+     *
+     * @param {object} data
+     * @param {string} textStatus
+     * @param {jqXHR}  jqXHR
+     * @return {jqXHR}
+     */
+    Plugin.prototype._defaultSuccess = function(data, textStatus, jqXHR) {
+        this.$element.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
+        return jqXHR;
+    };
+
+    /**
+     * Default handler for AJAX request fail/error.
+     *
+     * @param {jqXHR}  jqXHR
+     * @param {string} textStatus
+     * @param {string} errorThrown
+     * @return {jqXHR}
+     */
+    Plugin.prototype._defaultError = function(jqXHR, textStatus, errorThrown) {
+        // Error messages
+        if (this._debugAjax && jqXHR.responseText) {
+            this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
+            document.write(jqXHR.responseText);
+            document.close();
+        } else {
+            if (this.settings.DEBUG) {
+                console.error(jqXHR.status + ': ' + jqXHR.responseText);
+            }
+            // Display errors on failure
+            // TODO: ufAlerts widget should have a 'destroy' method
+            if (!this.settings.msgTarget.data('ufAlerts')) {
+                this.settings.msgTarget.ufAlerts();
+            } else {
+                this.settings.msgTarget.ufAlerts('clear');
+            }
+
+            this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
+            this.settings.msgTarget.on('render.ufAlerts', $.proxy(function () {
+                this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
+            }, this));
+        }
+        return jqXHR;
+    };
+
+    Plugin.prototype._defaultResponseParser = function(result) {
+        try {
+            // First try to use native browser parsing
+            if (typeof JSON === 'object' && typeof JSON.parse === 'function') {
+                return JSON.parse(result);
+            } else {
+                return $.parseJSON(result);
+            }
+        } catch (e) {
+           // statements to handle any exceptions
+           console.warn('Could not parse expected JSON response.');
+           return {};
+        }
+    };
+
+    /**
+     * Prepares the ajax request parameters, serializing the form according to its enctype,
+     * and then using the serialized data as the ajax `data` parameter.
+     *
+     * @param {Element} form
+     * @param {object}  ajaxParams
+     * @return {object}
+     */
+    Plugin.prototype.prepareRequestData = function(form, ajaxParams) {
+        // Set ajax type and url from form method and action, if not otherwise set.
+        var ajaxDefaults = {
+            type        : this.$element.attr('method'),
+            url         : this.$element.attr('action'),
+            contentType : (typeof this.$element.attr('enctype') === 'undefined') ?
+                            'application/x-www-form-urlencoded; charset=UTF-8' :
+                            this.$element.attr('enctype')
         };
 
+        ajaxParams = $.extend(true, {}, ajaxDefaults, ajaxParams);
+
         // Get the form encoding type from the users HTML, and chose an encoding form.
-        if (this.settings.encType.toLowerCase() === 'multipart/form-data') {
-            reqParams.data = this._multipartData($form);
-            // add additional params to fix jquery errors
-            reqParams.cache = false;
-            reqParams.contentType = false;
-            reqParams.processData = false;
+        if (ajaxParams.contentType.toLowerCase() === 'multipart/form-data') {
+            ajaxParams.data = this._multipartData(form);
+            // Disable caching
+            ajaxParams.cache = false;
+            // Prevent serialization of FormData object
+            ajaxParams.processData = false;
+            // Allow the browser to set the Content-Type header instead,
+            // so it can include the boundary value
+            ajaxParams.contentType = false;
         } else {
-            reqParams.data = this._urlencodeData($form);
+            ajaxParams.data = this._urlencodeData(form);
         }
 
-        // Submit the form via AJAX
-        $.ajax(reqParams).then(
-            // Submission successful
-            $.proxy(function(data, textStatus, jqXHR) {
-                // Restore button text and re-enable submit button
-                if (submitButton) {
-                    submitButton.prop('disabled', false );
-                    submitButton.html(submitButtonText);
-                }
-
-                this.$element.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
-                return jqXHR;
-            }, this),
-            // Submission failed
-            $.proxy(function(jqXHR, textStatus, errorThrown) {
-                // Restore button text and re-enable submit button
-                if (submitButton) {
-                    submitButton.prop('disabled', false );
-                    submitButton.html(submitButtonText);
-                }
-                // Error messages
-                if (this._debugAjax && jqXHR.responseText) {
-                    this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
-                    document.write(jqXHR.responseText);
-                    document.close();
-                } else {
-                    if (this.settings.DEBUG) {
-                        console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText );
-                    }
-                    // Display errors on failure
-                    // TODO: ufAlerts widget should have a 'destroy' method
-                    if (!this.settings.msgTarget.data('ufAlerts')) {
-                        this.settings.msgTarget.ufAlerts();
-                    } else {
-                        this.settings.msgTarget.ufAlerts('clear');
-                    }
-
-                    this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
-                    this.settings.msgTarget.on('render.ufAlerts', $.proxy(function () {
-                        this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
-                    }, this));
-                }
-                return jqXHR;
-            }, this)
-        );
+        return ajaxParams;
     };
 
     /**
      * Helper function for encoding data as urlencoded
+     *
+     * @param {Element} form
+     * @return {string}
      */
     Plugin.prototype._urlencodeData = function(form) {
         // Serialize and post to the backend script in ajax mode
         var serializedData;
         if (this.settings.binaryCheckboxes) {
-            serializedData = form.find(':input').not(':checkbox').serialize();
+            serializedData = $(form).find(':input').not(':checkbox').serialize();
             // Get unchecked checkbox values, set them to 0
-            form.find('input[type=checkbox]:enabled').each(function() {
+            $(form).find('input[type=checkbox]:enabled').each(function() {
                 if ($(this).is(':checked')) {
                     serializedData += '&' + encodeURIComponent(this.name) + '=1';
                 } else {
@@ -201,7 +305,7 @@
             });
         }
         else {
-            serializedData = form.find(':input').serialize();
+            serializedData = $(form).find(':input').serialize();
         }
 
         return serializedData;
@@ -209,15 +313,18 @@
 
     /**
      * Helper function for encoding data as multipart/form-data
+     *
+     * @param {Element} form
+     * @return {FormData}
      */
     Plugin.prototype._multipartData = function(form) {
         // Use FormData to wrap form contents.
         // https://developer.mozilla.org/en/docs/Web/API/FormData
-        var formData = new FormData(form[0]);
+        var formData = new FormData(form);
         // Serialize and post to the backend script in ajax mode
         if (this.settings.binaryCheckboxes) {
             // Get unchecked checkbox values, set them to 0.
-            var checkboxes = form.find('input[type=checkbox]:enabled');
+            var checkboxes = $(form).find('input[type=checkbox]:enabled');
             // Feature detection. Several browsers don't support `set`
             if (typeof formData.set !== 'function') {
                 this.settings.msgTarget.ufAlerts('push', 'danger', "Your browser is missing a required feature. This form will still attempt to submit, but if it fails, you'll need to use Chrome for desktop or FireFox for desktop.");
@@ -237,6 +344,12 @@
         return formData;
     };
 
+    /**
+     * Implements a delay for revalidating the form.
+     *
+     * @param {Element} form
+     * @param {Event}   event
+     */
     Plugin.prototype._onKeyUp = function(element, event) {
         var validator = this.validator;
         // See http://stackoverflow.com/questions/41363409/jquery-validate-add-delay-to-keyup-validation
