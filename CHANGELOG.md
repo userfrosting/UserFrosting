@@ -4,6 +4,7 @@
 - Fix for `merge` bundling rule (#660)
 - Fix for undefined variable exception under strict mode in `ufAlerts` (#809)
 - Fix for site cache reset upon login (#828)
+- Changed global cache tag to proper prefix
 
 ## v4.1.15-alpha
 - Refactor `Password` into a instantiable `Hasher` class, service, and `Password` facade (#827)
@@ -34,7 +35,7 @@
 - Change "remember me" text
 - Improve table tool buttons
 - Twig extensions now implement `Twig_Extension_GlobalsInterface` as required by https://twig.symfony.com/doc/2.x/advanced.html#id1 (#788)
-- Display element based on permissions for group list/info pages 
+- Display element based on permissions for group list/info pages
 - Factor the admin user creation out of migrations and into its own Bakery command (See #778)
 - Bakery `clear-cache` command now clears Twig and router cache (Fix #750)
 - Add Russian translations
@@ -365,7 +366,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Use Laravel's Schema interface to create tables and default rows, instead of constructing them with SQL
 
 ## v0.3.1.20
-- Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()` 
+- Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()`
 - Revert changes to User::fresh() but leave comment regarding upgrading Eloquent
 
 ## v0.3.1.19
@@ -492,7 +493,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - [Theming](https://v3.userfrosting.com/components/#theming)
 - [Plugins](https://v3.userfrosting.com/components/#plugins)
 
-## v0.2.1 
+## v0.2.1
 - Implemented db-driven menu system.  Menu items are pulled from the database, and can be modified via plugins.
 - Implemented backend templating of forms and tables via [Bootsole](https://github.com/alexweissman/bootsole).
 
@@ -529,7 +530,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Included better functions for sanitizing user input, validating user ip, generating csrf (cross-site request forgery) tokens - thanks to contributor @r3wt
 
 ## v0.1.3
-- Root account (user id = 1) : created upon installation, cannot be deleted or disabled. 
+- Root account (user id = 1) : created upon installation, cannot be deleted or disabled.
 - Special color scheme for when logged in as root user.
 - Installer now guides user through creation of root account
 - Moved common JS and CSS includes to "includes.php"

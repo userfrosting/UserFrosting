@@ -50,12 +50,12 @@ class CacheAlertStream extends AlertStream
     /**
      *    Get the messages from this message stream.
      *
-     *    @return array An array of messages, each of which is itself an array containing "type" and "message" fields.
+     *    @return array An array of messages, each of which is itself an array containing 'type' and 'message' fields.
      */
     public function messages()
     {
-        if ($this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->has($this->messagesKey)) {
-            return $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->get($this->messagesKey) ?: [];
+        if ($this->cache->tags('_s'.session_id())->has($this->messagesKey)) {
+            return $this->cache->tags('_s'.session_id())->get($this->messagesKey) ?: [];
         } else {
             return [];
         }
@@ -68,7 +68,7 @@ class CacheAlertStream extends AlertStream
      */
     public function resetMessageStream()
     {
-        $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->forget($this->messagesKey);
+        $this->cache->tags('_s'.session_id())->forget($this->messagesKey);
     }
 
     /**
@@ -79,6 +79,6 @@ class CacheAlertStream extends AlertStream
      */
     protected function saveMessages($messages)
     {
-        $this->cache->tags([$this->config['cache.prefix'], "_s".session_id()])->forever($this->messagesKey, $messages);
+        $this->cache->tags('_s'.session_id())->forever($this->messagesKey, $messages);
     }
 }

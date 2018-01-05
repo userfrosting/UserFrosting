@@ -159,15 +159,18 @@ class ServicesProvider
                 $path = $c->locator->findResource('cache://', true, true);
                 $cacheStore = new TaggableFileStore($path);
             } elseif ($config['cache.driver'] == 'memcached') {
-                $cacheStore = new MemcachedStore($config['cache.memcached']);
+                // We need to inject the prefix in the memcached config
+                $config = array_merge($config['cache.memcached'], ['prefix' => $config['cache.prefix']]);
+                $cacheStore = new MemcachedStore($config);
             } elseif ($config['cache.driver'] == 'redis') {
-                $cacheStore = new RedisStore($config['cache.redis']);
+                // We need to inject the prefix in the redis config
+                $config = array_merge($config['cache.redis'], ['prefix' => $config['cache.prefix']]);
+                $cacheStore = new RedisStore($config);
             } else {
                 throw new \Exception("Bad cache store type '{$config['cache.driver']}' specified in configuration file.");
             }
 
-            $cache = $cacheStore->instance();
-            return $cache->tags($config['cache.prefix']);
+            return $cacheStore->instance();
         };
 
         /**
