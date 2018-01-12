@@ -43,6 +43,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## v4.1.16-alpha
 - Fix for `merge` bundling rule (#660)
 - Fix for undefined variable exception under strict mode in `ufAlerts` (#809)
+- Fix for site cache reset upon login (#828)
+- Changed global cache tag to proper prefix
 
 ## v4.1.15-alpha
 - Refactor `Password` into a instantiable `Hasher` class, service, and `Password` facade (#827)

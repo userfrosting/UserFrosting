@@ -38,7 +38,7 @@
                 'port' => 11211,
                 'weight' => 100
             ],
-            "redis" => [
+            'redis' => [
                 'host' => '127.0.0.1',
                 'password' => null,
                 'port' => 6379,
