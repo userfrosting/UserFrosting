@@ -5,7 +5,7 @@
     "clipboard": "^1.5.16",
     "font-awesome": "^4.7.0",
     "handlebars": "^3.0.3",
-    "jquery": "^2.2.4",
+    "jquery": "^3.2.1",
     "jquery-ui": "^1.12.0",
     "jquery-validation": "~1.14.0",
     "select2": "^4.0.5",
