@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\System\Bakery\Command;
+namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,7 +27,7 @@ class Bake extends BaseCommand
     protected $buildPath;
 
     /**
-     * @var String $ufArt The UserFrosting ASCII art.
+     * @var string $ufArt The UserFrosting ASCII art.
      */
     public $title = "
  _   _              ______             _   _

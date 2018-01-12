@@ -42,6 +42,7 @@ build/node_modules/*
 # Ignore generated bundle schema files
 build/bundle.config.json
 build/bundle.result.json
+build/package-lock.json
 
 # Ignore temporary build assets
 build/temp

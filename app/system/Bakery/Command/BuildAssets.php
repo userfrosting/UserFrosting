@@ -47,7 +47,7 @@ class BuildAssets extends BaseCommand
         $this->io->title("UserFrosting's Assets Builder");
 
         // Set $path
-        $this->buildPath = $this->projectRoot . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
+        $this->buildPath = \UserFrosting\ROOT_DIR . \UserFrosting\DS . \UserFrosting\BUILD_DIR_NAME;
 
         // Delete cached data is requested
         if ($input->getOption('force')) {
@@ -182,20 +182,5 @@ class BuildAssets extends BaseCommand
             $this->io->error("Failed to clean cached data");
             exit(1);
         }
-    }
-
-    /**
-     * Return if the app is in production mode
-     *
-     * @access protected
-     * @return bool
-     */
-    protected function isProduction()
-    {
-        // N.B.: Need to touch the config service first to load dotenv values
-        $config = $this->ci->config;
-        $mode = getenv("UF_MODE") ?: '';
-
-        return ($mode == "production");
     }
 }

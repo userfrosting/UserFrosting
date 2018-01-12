@@ -53,5 +53,10 @@
         "psr-4": {
             "UserFrosting\\Sprinkle\\Core\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UserFrosting\\Sprinkle\\Core\\Tests\\": "tests/"
+        }
     }
 }

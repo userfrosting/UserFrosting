@@ -2,15 +2,10 @@
 
 namespace UserFrosting\Tests\Integration;
 
-use Exception;
-
 use UserFrosting\Tests\TestCase;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Capsule\Manager as DB;
-
-use UserFrosting\Sprinkle\Core\Database\Models\Model;
-
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Schema\Blueprint;
+use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 class DatabaseTests extends TestCase
 {
@@ -34,13 +29,13 @@ class DatabaseTests extends TestCase
 
     protected function createSchema()
     {
-        $this->schema($this->schemaName)->create('users', function ($table) {
+        $this->schema($this->schemaName)->create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
         });
 
         // Users have multiple email addresses
-        $this->schema($this->schemaName)->create('emails', function ($table) {
+        $this->schema($this->schemaName)->create('emails', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('label');
@@ -48,7 +43,7 @@ class DatabaseTests extends TestCase
         });
 
         // Users have multiple phones (polymorphic - other entities can have phones as well)
-        $this->schema($this->schemaName)->create('phones', function ($table) {
+        $this->schema($this->schemaName)->create('phones', function (Blueprint $table) {
             $table->increments('id');
             $table->string('label');
             $table->string('number', 20);
@@ -56,18 +51,18 @@ class DatabaseTests extends TestCase
         });
 
         // Users have multiple roles... (m:m)
-        $this->schema($this->schemaName)->create('role_users', function ($table) {
+        $this->schema($this->schemaName)->create('role_users', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('role_id')->unsigned();
         });
 
-        $this->schema($this->schemaName)->create('roles', function ($table) {
+        $this->schema($this->schemaName)->create('roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('slug');
         });
 
         // And Roles have multiple permissions... (m:m)
-        $this->schema($this->schemaName)->create('permission_roles', function ($table) {
+        $this->schema($this->schemaName)->create('permission_roles', function (Blueprint $table) {
             $table->integer('permission_id')->unsigned();
             $table->integer('role_id')->unsigned();
         });
@@ -815,6 +810,7 @@ class DatabaseTests extends TestCase
     /**
      * Get a database connection instance.
      *
+     * @param  string $connection [description]
      * @return \Illuminate\Database\Connection
      */
     protected function connection($connection = 'test_integration')
@@ -825,6 +821,7 @@ class DatabaseTests extends TestCase
     /**
      * Get a schema builder instance.
      *
+     * @param  string $connection
      * @return \Illuminate\Database\Schema\Builder
      */
     protected function schema($connection = 'test_integration')

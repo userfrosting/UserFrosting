@@ -7,14 +7,10 @@
  */
 namespace UserFrosting\Sprinkle\Account\Bakery;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\DatabaseTest;
-use UserFrosting\System\Database\Model\Migrations;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Account\Facades\Password;
@@ -63,15 +59,26 @@ class CreateAdminUser extends BaseCommand
             exit(1);
         }
 
+        /**
+         * @var \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
+         */
+        $migrator = $this->ci->migrator;
+
+        /**
+         * @var \UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
+         */
+        $repository = $migrator->getRepository();
+
         // Need migration table
-        if (!Capsule::schema()->hasColumn('migrations', 'id')) {
-                $this->io->error("Migrations doesn't appear to have been run! Make sure the database is properly migrated by using the `php bakery migrate` command.");
-                exit(1);
+        if (!$repository->repositoryExists()) {
+            $this->io->error("Migrations doesn't appear to have been run! Make sure the database is properly migrated by using the `php bakery migrate` command.");
+            exit(1);
         }
 
-        // Make sure the required mirgations have been run
+        // Make sure the required migrations have been run
+        $ranMigrations = $repository->getRan();
         foreach ($this->dependencies as $migration) {
-            if (!Migrations::where('migration', $migration)->exists()) {
+            if (!in_array($migration, $ranMigrations)) {
                 $this->io->error("Migration `$migration` doesn't appear to have been run! Make sure all migrations are up to date by using the `php bakery migrate` command.");
                 exit(1);
             }
@@ -80,11 +87,8 @@ class CreateAdminUser extends BaseCommand
         // Make sure that there are no users currently in the user table
         // We setup the root account here so it can be done independent of the version check
         if (User::count() > 0) {
-
             $this->io->note("Table 'users' is not empty. Skipping root account setup. To set up the root account again, please truncate or drop the table and try again.");
-
         } else {
-
             $this->io->writeln("Please answer the following questions to create the root account:\n");
 
             // Get the account details
@@ -125,8 +129,7 @@ class CreateAdminUser extends BaseCommand
     /**
      * Ask for the username
      *
-     * @access protected
-     * @return void
+     * @return string
      */
     protected function askUsername()
     {
@@ -139,9 +142,8 @@ class CreateAdminUser extends BaseCommand
     /**
      * Validate the username.
      *
-     * @access protected
-     * @param mixed $userName
-     * @return void
+     * @param string $userName
+     * @return bool
      */
     protected function validateUsername($userName)
     {
@@ -169,8 +171,7 @@ class CreateAdminUser extends BaseCommand
     /**
      * Ask for the email
      *
-     * @access protected
-     * @return void
+     * @return string
      */
     protected function askEmail()
     {
@@ -183,9 +184,8 @@ class CreateAdminUser extends BaseCommand
     /**
      * Validate the email.
      *
-     * @access protected
-     * @param mixed $email
-     * @return void
+     * @param string $email
+     * @return bool
      */
     protected function validateEmail($email)
     {
@@ -207,8 +207,7 @@ class CreateAdminUser extends BaseCommand
     /**
      * Ask for the first name
      *
-     * @access protected
-     * @return void
+     * @return string
      */
     protected function askFirstName()
     {
@@ -221,9 +220,8 @@ class CreateAdminUser extends BaseCommand
     /**
      * validateFirstName function.
      *
-     * @access protected
-     * @param mixed $name
-     * @return void
+     * @param string $firstName
+     * @return bool
      */
     protected function validateFirstName($firstName)
     {
@@ -239,8 +237,7 @@ class CreateAdminUser extends BaseCommand
     /**
      * Ask for the last name
      *
-     * @access protected
-     * @return void
+     * @return string
      */
     protected function askLastName()
     {
@@ -253,9 +250,8 @@ class CreateAdminUser extends BaseCommand
     /**
      * validateLastName function.
      *
-     * @access protected
-     * @param mixed $lastName
-     * @return void
+     * @param string $lastName
+     * @return bool
      */
     protected function validateLastName($lastName)
     {
@@ -271,8 +267,7 @@ class CreateAdminUser extends BaseCommand
     /**
      * Ask for the password
      *
-     * @access protected
-     * @return void
+     * @return string
      */
     protected function askPassword()
     {
@@ -285,9 +280,8 @@ class CreateAdminUser extends BaseCommand
     /**
      * validatePassword function.
      *
-     * @access protected
-     * @param mixed $password
-     * @return void
+     * @param string $password
+     * @return bool
      */
     protected function validatePassword($password)
     {
@@ -302,9 +296,8 @@ class CreateAdminUser extends BaseCommand
     /**
      * confirmPassword function.
      *
-     * @access protected
-     * @param mixed $passwordToConfirm
-     * @return void
+     * @param string $passwordToConfirm
+     * @return bool
      */
     protected function confirmPassword($passwordToConfirm)
     {
@@ -317,10 +310,9 @@ class CreateAdminUser extends BaseCommand
     /**
      * validatePasswordConfirmation function.
      *
-     * @access protected
-     * @param mixed $password
-     * @param mixed $passwordToConfirm
-     * @return void
+     * @param string $password
+     * @param string $passwordToConfirm
+     * @return bool
      */
     protected function validatePasswordConfirmation($password, $passwordToConfirm)
     {

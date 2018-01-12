@@ -1,9 +1,44 @@
 # Change Log
 
-## v4.2.0-alpha
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
 - Use locale requested by browser when possible for guests (#718)
 - Add locale drop down to registration page, with the currently applied locale selected (#718)
 - Integrated improvements from [v4.0.25-Alpha](#v4025-alpha)
+- Added tests for migrator and it's components.
+- Added tests for `migrate` Bakery command and sub-commands.
+- Added `database` option for `migrate` and `migrate:*` Bakery commands
+- New `isProduction` method for Bakery command to test if app is in production mode
+- `migrate` and `migrate:*` Bakery command now require confirmation before execution when in production mode.
+- Added `migrate:status` Bakery command
+- Added `RefreshDatabase` test Trait to use a fresh database for a test
+- Added `TestDatabase` test Trait to use the in memory database for a test
+
+### Changed
+- Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle.
+- Re-written Migrator. The migrator is now detached from the console and Bakery. The migrator is now included in the ServicesProvider and included in the `Core` sprinkle. (#795)
+- Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace.
+
+### Deprecated
+- Migrations should now extends `UserFrosting\Sprinkle\Core\Database\Migration` instead of `UserFrosting\System\Bakery\Migration`.
+- Migrations dependencies property should now be a static property.
+- Trait `\UserFrosting\Tests\DatabaseTransactions` has been deprecated. Tests should now use the `\UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` trait instead. (#826)
+
+### Removed
+- The console IO instance is not available anymore in migrations.
+- Removed the `io` property from migration classes.
+- Removed Bakery `projectRoot` property. Use the `\UserFrosting\ROOT_DIR` constant instead.
+- Removed `preted` option from Bakery `migrate:refresh` and `migrate:reset` commands.
+
+### Fixed
+
+### Security
 
 ## v4.1.16-alpha
 - Fix for `merge` bundling rule (#660)
@@ -38,7 +73,7 @@
 - Change "remember me" text
 - Improve table tool buttons
 - Twig extensions now implement `Twig_Extension_GlobalsInterface` as required by https://twig.symfony.com/doc/2.x/advanced.html#id1 (#788)
-- Display element based on permissions for group list/info pages 
+- Display element based on permissions for group list/info pages
 - Factor the admin user creation out of migrations and into its own Bakery command (See #778)
 - Bakery `clear-cache` command now clears Twig and router cache (Fix #750)
 - Add Russian translations
@@ -379,7 +414,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Use Laravel's Schema interface to create tables and default rows, instead of constructing them with SQL
 
 ## v0.3.1.20
-- Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()` 
+- Added `pushAlert()`,`clearAlerts()` in `public/js/userfrosting.js` and updated `flashAlerts()`
 - Revert changes to User::fresh() but leave comment regarding upgrading Eloquent
 
 ## v0.3.1.19
@@ -506,7 +541,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - [Theming](https://v3.userfrosting.com/components/#theming)
 - [Plugins](https://v3.userfrosting.com/components/#plugins)
 
-## v0.2.1 
+## v0.2.1
 - Implemented db-driven menu system.  Menu items are pulled from the database, and can be modified via plugins.
 - Implemented backend templating of forms and tables via [Bootsole](https://github.com/alexweissman/bootsole).
 
@@ -543,7 +578,7 @@ See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x 
 - Included better functions for sanitizing user input, validating user ip, generating csrf (cross-site request forgery) tokens - thanks to contributor @r3wt
 
 ## v0.1.3
-- Root account (user id = 1) : created upon installation, cannot be deleted or disabled. 
+- Root account (user id = 1) : created upon installation, cannot be deleted or disabled.
 - Special color scheme for when logged in as root user.
 - Installer now guides user through creation of root account
 - Moved common JS and CSS includes to "includes.php"

@@ -94,6 +94,9 @@
                 'Timeout' => 15
             ]
         ],
+        'migrations' => [
+            'repository_table' => 'migrations'
+        ],
         // Filesystem paths
         'path'    => [
             'document_root'     => str_replace(DIRECTORY_SEPARATOR, \UserFrosting\DS, $_SERVER['DOCUMENT_ROOT']),

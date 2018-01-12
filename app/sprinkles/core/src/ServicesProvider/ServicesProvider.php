@@ -20,14 +20,12 @@ use Interop\Container\ContainerInterface;
 use League\FactoryMuffin\FactoryMuffin;
 use League\FactoryMuffin\Faker\Facade as Faker;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Slim\Csrf\Guard;
 use Slim\Http\Uri;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 use UserFrosting\Assets\AssetBundleSchema;
 use UserFrosting\Cache\TaggableFileStore;
 use UserFrosting\Cache\MemcachedStore;
@@ -46,6 +44,9 @@ use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 use UserFrosting\Sprinkle\Core\Mail\Mailer;
 use UserFrosting\Sprinkle\Core\Alert\CacheAlertStream;
 use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
+use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
+use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
+use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
@@ -92,17 +93,18 @@ class ServicesProvider
 
         /**
          * Asset loader service
-         * 
+         *
+
+         *
+         * @deprecated 4.0.25-alpha This service was formerly used to serve frontend assets during development.
          * Loads assets from a specified relative location.
          * Assets are Javascript, CSS, image, and other files used by your site.
-         * 
-         * @deprecated 4.0.25-alpha This service was formerly used to serve frontend assets during development.
          */
         $container['assetLoader'] = function ($c) {
             $basePath = \UserFrosting\SPRINKLES_DIR;
-            $pattern = "/^[A-Za-z0-9_\-]+\/assets\//";
-
             return new AssetLoader($basePath, $pattern);
+            $al = new AssetLoader($basePath, $pattern);
+            return $al;
         };
 
         /**
@@ -111,10 +113,7 @@ class ServicesProvider
          * Loads raw or compiled asset information from your bundle.config.json schema file.
          * Assets are Javascript, CSS, image, and other files used by your site.
          */
-        $container['assets'] = function ($c) {
-            $config = $c->config;
-            $locator = $c->locator;
-            
+
             // Hacky way to clean up locator paths.
             $locatorPaths = [];
             foreach ($locator->getPaths('assets') as $pathSet) {
@@ -122,24 +121,20 @@ class ServicesProvider
                     $locatorPaths[] = $path;
                 }
             }
+        $container['assets'] = function ($c) {
+            $config = $c->config;
+            $locator = $c->locator;
 
-            // Load asset schema
-            if ($config['assets.use_raw']) {
-                $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
-                
+
                 $sprinkles = $c->sprinkleManager->getSprinkleNames();
-
                 $prefixTransformer = new PrefixTransformer();
                 $prefixTransformer->define(\UserFrosting\BOWER_ASSET_DIR, 'vendor-bower');
                 $prefixTransformer->define(\UserFrosting\NPM_ASSET_DIR, 'vendor-npm');
-
                 foreach ($sprinkles as $sprinkle) {
                     $prefixTransformer->define(\UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME, \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle);
                 }
                 $assets = new Assets($locator, 'assets', $baseUrl, $prefixTransformer);
-
                 // Load raw asset bundles for each Sprinkle.
-
                 // Retrieve locations of raw asset bundle schemas that exist.
                 $bundleSchemas = $locator->findResources('sprinkles://' . $config['assets.raw.schema']);
 
@@ -149,21 +144,28 @@ class ServicesProvider
 
                     foreach ($bundleSchemas as $bundleSchema) {
                         $bundles->extend($bundleSchema);
-                    }
 
                     // Add bundles to asset manager.
                     $assets->addAssetBundles($bundles);
-                }
-            } else {
-                $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
+                // TODO: move this out into PathBuilder and Loader classes in userfrosting/assets
+                // This would also allow us to define and load bundles in themes
+                $bundleSchemas = array_reverse($locator->findResources('sprinkles://' . $config['assets.raw.schema'], true, true));
                 $assets = new Assets($locator, 'assets', $baseUrl);
                 $assets->overrideBasePath($locator->getBase() . '/public/assets');
-
                 // Load compiled asset bundle.
                 $assets->addAssetBundles(new CompiledAssetBundles($locator("build://" . $config['assets.compiled.schema'], true, true)));
+                        $as->loadRawSchemaFile($schema);
+            return $assets;
+                $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
+                $aub = new CompiledAssetUrlBuilder($baseUrl);
+
+                $as = new AssetBundleSchema($aub);
+                $as->loadCompiledSchemaFile($locator->findResource("build://" . $config['assets.compiled.schema'], true, true));
             }
 
-            return $assets;
+            $am = new AssetManager($aub, $as);
+
+            return $am;
         };
 
         /**
@@ -225,21 +227,27 @@ class ServicesProvider
             } catch (InvalidPathException $e) {
                 // Skip loading the environment config file if it doesn't exist.
             }
-
-            // Get configuration mode from environment
-            $mode = getenv('UF_MODE') ?: '';
-
-            // Construct and load config repository
-            $builder = new ConfigPathBuilder($c->locator, 'config://');
-            $loader = new ArrayFileLoader($builder->buildPaths($mode));
-            $config = new Repository($loader->load());
-
-            // Construct base url from components, if not explicitly specified
-            if (!isset($config['site.uri.public'])) {
                 $uri = $c->request->getUri();
 
-                // Slim\Http\Uri likes to add trailing slashes when the path is empty, so this fixes that.
                 $config['site.uri.public'] = trim($uri->getBaseUrl(), '/');
+            if (!isset($config['site.uri.public'])) {
+                $base_uri = $config['site.uri.base'];
+
+                $public = new Uri(
+                    $base_uri['scheme'],
+                    $base_uri['host'],
+                    $base_uri['port'],
+                    $base_uri['path']
+                );
+
+            // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
+            if (!$config['assets.use_raw']) {
+                $c->locator->resetScheme('assets');
+                $c->locator->addPath('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME);
+            }
+
+                // Slim\Http\Uri likes to add trailing slashes when the path is empty, so this fixes that.
+                $config['site.uri.public'] = trim($public, '/');
             }
 
             // Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
@@ -250,12 +258,6 @@ class ServicesProvider
             ];
 
             $config->set('csrf.blacklist', $csrfBlacklist);
-
-            // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
-            if (!$config['assets.use_raw']) {
-                $c->locator->resetScheme('assets');
-                $c->locator->addPath('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME);
-            }
 
             return $config;
         };
@@ -407,28 +409,14 @@ class ServicesProvider
             $fm = new FactoryMuffin();
 
             // Load all of the model definitions
+            $request = $c->request;
             $fm->loadFactories($factoriesPath);
 
             // Set the locale. Could be the config one, but for testing English should do
             Faker::setLocale('en_EN');
 
             return $fm;
-        };
-
-        /**
-         * Builds search paths for locales in all Sprinkles.
-         */
-        $container['localePathBuilder'] = function ($c) {
-            $config = $c->config;
-            $request = $c->request;
-
-            // Make sure the locale config is a valid string
-            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
-                throw new \UnexpectedValueException('The locale config is not a valid string.');
-            }
-
             // Get default locales as specified in configurations.
-            $locales = explode(',', $config['site.locales.default']);
 
             // Add supported browser preferred locales.
             if ($request->hasHeader('Accept-Language')) {
@@ -456,14 +444,28 @@ class ServicesProvider
                         }
                     }
                 }
-                
+
                 // Sort, extract keys, and merge with $locales
                 asort($allowedLocales, SORT_NUMERIC);
                 $locales = array_merge($locales, array_keys($allowedLocales));
-                
+
                 // Remove duplicates, while maintaining fallback order
                 $locales = array_reverse(array_unique(array_reverse($locales), SORT_STRING));
             }
+
+        /**
+         * Builds search paths for locales in all Sprinkles.
+         */
+        $container['localePathBuilder'] = function ($c) {
+            $config = $c->config;
+
+            // Make sure the locale config is a valid string
+            if (!is_string($config['site.locales.default']) || $config['site.locales.default'] == '') {
+                throw new \UnexpectedValueException('The locale config is not a valid string.');
+            }
+
+            // Load the base locale file(s) as specified in the configuration
+            $locales = explode(',', $config['site.locales.default']);
 
             return new LocalePathBuilder($c->locator, 'locale://', $locales);
         };
@@ -500,6 +502,26 @@ class ServicesProvider
             $log->pushHandler($handler);
 
             return $log;
+        };
+
+        /**
+         * Migrator service.
+         *
+         * This service handles database migration operations
+         */
+        $container['migrator'] = function ($c) {
+            $migrator = new Migrator(
+                $c->db,
+                new DatabaseMigrationRepository($c->db, $c->config['migrations.repository_table']),
+                new MigrationLocator($c->sprinkleManager, new Filesystem)
+            );
+
+            // Make sure repository exist
+            if (!$migrator->repositoryExists()) {
+                $migrator->getRepository()->createRepository();
+            }
+
+            return $migrator;
         };
 
         /**
@@ -548,7 +570,9 @@ class ServicesProvider
         $container['router'] = function ($c) {
             $routerCacheFile = false;
             if (isset($c->config['settings.routerCacheFile'])) {
-                $routerCacheFile = $c->config['settings.routerCacheFile'];
+                $fs = new Filesystem;
+
+
             }
 
             return (new Router)->setCacheFile($routerCacheFile);
@@ -562,7 +586,7 @@ class ServicesProvider
 
             // Create appropriate handler based on config
             if ($config['session.handler'] == 'file') {
-                $fs = new FileSystem;
+                $fs = new Filesystem;
                 $handler = new FileSessionHandler($fs, $c->locator->findResource('session://'), $config['session.minutes']);
             } elseif ($config['session.handler'] == 'database') {
                 $connection = $c->db->connection();

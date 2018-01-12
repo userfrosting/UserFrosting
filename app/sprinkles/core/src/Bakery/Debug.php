@@ -5,7 +5,7 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\System\Bakery\Command;
+namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -42,7 +42,7 @@ class Debug extends BaseCommand
         $this->io->title("UserFrosting");
         $this->io->writeln("UserFrosing version : " . \UserFrosting\VERSION);
         $this->io->writeln("OS Name : " . php_uname('s'));
-        $this->io->writeln("Project Root : {$this->projectRoot}");
+        $this->io->writeln("Project Root : " . \UserFrosting\ROOT_DIR);
 
         // Need to touch the config service first to load dotenv values
         $config = $this->ci->config;
@@ -64,7 +64,6 @@ class Debug extends BaseCommand
      * Check the minimum version of php.
      * This is done by composer itself, but we do it again for good mesure
      *
-     * @access public
      * @return void
      */
     protected function checkPhpVersion()
@@ -79,7 +78,6 @@ class Debug extends BaseCommand
     /**
      * Check the minimum version requirement of Node installed
      *
-     * @access public
      * @return void
      */
     protected function checkNodeVersion()
@@ -96,7 +94,6 @@ class Debug extends BaseCommand
     /**
      * Check the minimum version requirement for Npm
      *
-     * @access public
      * @return void
      */
     protected function checkNpmVersion()
@@ -114,7 +111,6 @@ class Debug extends BaseCommand
      * List all sprinkles defined in the Sprinkles schema file,
      * making sure this file exist at the same time
      *
-     * @access protected
      * @return void
      */
     protected function listSprinkles()
@@ -142,7 +138,6 @@ class Debug extends BaseCommand
      * Check the database connexion and setup the `.env` file if we can't
      * connect and there's no one found.
      *
-     * @access protected
      * @return void
      */
     protected function checkDatabase()
@@ -163,7 +158,6 @@ class Debug extends BaseCommand
     /**
      * Display database config as for debug purposes
      *
-     * @access protected
      * @return void
      */
     protected function showConfig()

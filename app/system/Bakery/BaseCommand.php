@@ -24,18 +24,13 @@ use Interop\Container\ContainerInterface;
 abstract class BaseCommand extends Command
 {
     /**
-     * @var @Symfony\Component\Console\Style\SymfonyStyle
-     * See http://symfony.com/doc/current/console/style.html
+     *    @var @Symfony\Component\Console\Style\SymfonyStyle
+     *    See http://symfony.com/doc/current/console/style.html
      */
     protected $io;
 
     /**
-     * @var string Path to the project root folder
-     */
-    protected $projectRoot;
-
-    /**
-     * @var ContainerInterface $ci The global container object, which holds all of the UserFrosting services.
+     *    @var ContainerInterface $ci The global container object, which holds all of UserFristing services.
      */
     protected $ci;
 
@@ -45,14 +40,29 @@ abstract class BaseCommand extends Command
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->projectRoot = \UserFrosting\ROOT_DIR;
     }
 
     /**
-     * Setup the global container object
+     *    Setup the global container object
+     *
+     *    @param ContainerInterface $ci
      */
     public function setContainer(ContainerInterface $ci)
     {
         $this->ci = $ci;
+    }
+
+    /**
+     *    Return if the app is in production mode
+     *
+     *    @return bool True/False if the app is in production mode
+     */
+    protected function isProduction()
+    {
+        // N.B.: Need to touch the config service first to load dotenv values
+        $config = $this->ci->config;
+        $mode = getenv("UF_MODE") ?: '';
+
+        return ($mode == "production");
     }
 }
