@@ -23,7 +23,7 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles {
      * Extends the currently loaded bundles with another bundle schema.
      *
      * @param string
-     * 
+     *
      * @throws FileNotFoundException if file cannot be found.
      * @throws JsonException if file cannot be parsed as JSON.
      * @throws InvalidBundlesFileException if unexpected value encountered.
@@ -41,7 +41,7 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles {
         if (isset($bundlesFile->bundle)) {
             foreach ($bundlesFile->bundle as $bundleName => $bundle) {
                 // Get collision setting.
-                $collisionRule = (isset($bundle->options->sprinkle->onCollision) ?: 'replace');
+                $collisionRule = ($bundle->options->sprinkle->onCollision ?: 'replace');
 
                 // Handle CSS bundle if specified.
                 if (isset($bundle->styles)) {

@@ -144,7 +144,7 @@ class ServicesProvider
                 // Load raw asset bundles for each Sprinkle.
 
                 // Retrieve locations of raw asset bundle schemas that exist.
-                $bundleSchemas = $locator->findResources('sprinkles://' . $config['assets.raw.schema']);
+                $bundleSchemas = array_reverse($locator->findResources('sprinkles://' . $config['assets.raw.schema']));
 
                 // Load asset bundle schemas that exist.
                 if (array_key_exists(0, $bundleSchemas)) {
