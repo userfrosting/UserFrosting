@@ -9,6 +9,7 @@
 namespace UserFrosting\Sprinkle\Core\Util;
 
 use UserFrosting\Assets\AssetBundles\GulpBundleAssetsRawBundles;
+use UserFrosting\Assets\Exception\InvalidBundlesFileException;
 
 /**
  * RawAssetBundles Class
@@ -17,15 +18,15 @@ use UserFrosting\Assets\AssetBundles\GulpBundleAssetsRawBundles;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class RawAssetBundles extends GulpBundleAssetsRawBundles {
+ class RawAssetBundles extends GulpBundleAssetsRawBundles {
 
     /**
      * Extends the currently loaded bundles with another bundle schema.
      *
-     * @param string
-     * 
-     * @throws FileNotFoundException if file cannot be found.
-     * @throws JsonException if file cannot be parsed as JSON.
+     * @param string $filePath
+     *
+     * @throws \UserFrosting\Support\Exception\FileNotFoundException if file cannot be found.
+     * @throws \UserFrosting\Support\Exception\JsonException if file cannot be parsed as JSON.
      * @throws InvalidBundlesFileException if unexpected value encountered.
      */
     public function extend($filePath)
@@ -41,7 +42,7 @@ class RawAssetBundles extends GulpBundleAssetsRawBundles {
         if (isset($bundlesFile->bundle)) {
             foreach ($bundlesFile->bundle as $bundleName => $bundle) {
                 // Get collision setting.
-                $collisionRule = (isset($bundle->options->sprinkle->onCollision) ?: 'replace');
+                $collisionRule = ($bundle->options->sprinkle->onCollision ?: 'replace');
 
                 // Handle CSS bundle if specified.
                 if (isset($bundle->styles)) {
