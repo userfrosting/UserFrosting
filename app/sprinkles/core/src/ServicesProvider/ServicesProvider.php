@@ -172,7 +172,7 @@ class ServicesProvider
         /**
          * Cache service.
          *
-         * @return \Illuminate\Cache\TaggedCache
+         * @return \Illuminate\Cache\Repository
          */
         $container['cache'] = function ($c) {
 

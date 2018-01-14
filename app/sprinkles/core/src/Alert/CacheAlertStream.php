@@ -7,7 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Core\Alert;
 
-use Illuminate\Cache\TaggedCache;
+use Illuminate\Cache\Repository as Cache;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Support\Repository\Repository;
 
@@ -23,7 +23,7 @@ use UserFrosting\Support\Repository\Repository;
 class CacheAlertStream extends AlertStream
 {
     /**
-     *    @var TaggedCache Object We use the cache object so that added messages will automatically appear in the cache.
+     *    @var Cache Object We use the cache object so that added messages will automatically appear in the cache.
      */
     protected $cache;
 
@@ -37,10 +37,10 @@ class CacheAlertStream extends AlertStream
      *
      *    @param string $messagesKey Store the messages under this key
      *    @param MessageTranslator|null $translator
-     *    @param TaggedCache $cache
+     *    @param Cache $cache
      *    @param Repository $config
      */
-    public function __construct($messagesKey, MessageTranslator $translator = null, TaggedCache $cache, Repository $config)
+    public function __construct($messagesKey, MessageTranslator $translator = null, Cache $cache, Repository $config)
     {
         $this->cache = $cache;
         $this->config = $config;
