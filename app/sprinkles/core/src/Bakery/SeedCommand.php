@@ -48,28 +48,21 @@ class SeedCommand extends BaseCommand
         // Get options
         $classes = $input->getArgument('class');
 
+        // Seeds list
+        $seeds = [];
+
+        // Start by gettings seeds
         foreach ($classes as $className) {
-            $this->runSeed($className, $input);
+
+            // Get seed class and
+            $seed = $this->getSeed($className);
+
+            // Display the class we are going to use as info
+            $this->io->writeln("<info>Seeding class `".get_class($seed)."`</>");
+
+            // Add seed class to list
+            $seeds[] = $seed;
         }
-
-        // Success
-        $this->io->success('Seed successful !');
-    }
-
-    /**
-     *    Run seed
-     *
-     *    @param  string $className Seed classname (argument from console)
-     *    @param  InputInterface $input
-     *    @return void
-     */
-    protected function runSeed($className, InputInterface $input)
-    {
-        // Get the class instance
-        $seed = $this->getSeed($className);
-
-        // Display the class we are going to use as info
-        $this->io->writeln("<info>Seeding class `".get_class($seed)."`</>");
 
         // Confirm action when in production mode
         if (!$this->confirmToProceed($input->getOption('force'))) {
@@ -81,13 +74,18 @@ class SeedCommand extends BaseCommand
         //   - Create seeder:list command/options
         //   - Create default seeds list/service
 
-        // Run seed
-        try {
-            $seed->run();
-        } catch (\Exception $e) {
-            $this->io->error($e->getMessage());
-            exit(1);
+        // Run seeds
+        foreach ($seeds as $seed) {
+            try {
+                $seed->run();
+            } catch (\Exception $e) {
+                $this->io->error($e->getMessage());
+                exit(1);
+            }
         }
+
+        // Success
+        $this->io->success('Seed successful !');
     }
 
     /**
