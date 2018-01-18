@@ -5,7 +5,7 @@
     "bower": "^1.8.0",
     "del": "^2.2.2",
     "dotenv": "^4.0.0",
-    "fs-extra": "^4.0.0",
+    "fs-extra": "^5.0.0",
     "gulp": "^3.9.1",
     "gulp-load-plugins": "^1.4.0",
     "gulp-uf-bundle-assets": "^2.27.2",
