@@ -34,8 +34,8 @@ class SeedCommand extends BaseCommand
         $this->setName('seed')
              ->setDescription('Seed the database with records')
              ->setHelp('This command runs a seed to populate the database with default, random and/or test data.')
-             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the operation to run when in production.')
-             ->addOption('class', null, InputOption::VALUE_REQUIRED, 'The class name of the seeder');
+             ->addArgument('class', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'The class name of the seeder. Separate multiple seeder with a space.')
+             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the operation to run when in production.');
     }
 
     /**
@@ -46,14 +46,25 @@ class SeedCommand extends BaseCommand
         $this->io->title("UserFrosting's Seeder");
 
         // Get options
-        $className = $input->getOption('class');
+        $classes = $input->getArgument('class');
 
-        // If there's no class in option, we abort
-        if (is_null($className) || $className == "") {
-            $this->io->error('No class selected. You must use the `--class` option.');
-            exit(1);
+        foreach ($classes as $className) {
+            $this->runSeed($className, $input);
         }
 
+        // Success
+        $this->io->success('Seed successful !');
+    }
+
+    /**
+     *    Run seed
+     *
+     *    @param  string $className Seed classname (argument from console)
+     *    @param  InputInterface $input
+     *    @return void
+     */
+    protected function runSeed($className, InputInterface $input)
+    {
         // Get the class instance
         $seed = $this->getSeed($className);
 
@@ -65,6 +76,11 @@ class SeedCommand extends BaseCommand
             exit(1);
         }
 
+        // TODO ::
+        //   - Disable Model guarded policy
+        //   - Create seeder:list command/options
+        //   - Create default seeds list/service
+
         // Run seed
         try {
             $seed->run();
@@ -72,9 +88,6 @@ class SeedCommand extends BaseCommand
             $this->io->error($e->getMessage());
             exit(1);
         }
-
-        // Success
-        $this->io->success('Seed successful !');
     }
 
     /**
