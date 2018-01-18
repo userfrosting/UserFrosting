@@ -61,8 +61,8 @@ gulp.task('assets-install', () => {
     if (yarnPaths.length > 0) {
         // Yes there are!
 
-        // Delete old package.json
-        del.sync('../app/assets/package.json', { force: true });
+        // Delete old package.json and yarn.lock
+        del.sync(['../app/assets/package.json', '../app/assets/yarn.lock'], { force: true });
 
         // Generate package.json
         let yarnTemplate = {// Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
@@ -87,7 +87,8 @@ gulp.task('assets-install', () => {
     }
     else del.sync([
         '../app/assets/package.json',
-        '../app/assets/node_modules/'
+        '../app/assets/node_modules/',
+        '../app/assets/yarn.lock'
     ], { force: true });
 
     // See if there are any bower packages.
@@ -224,10 +225,8 @@ gulp.task('bundle-build', () => {
     // Copy sprinkle assets
     paths = [];
     for (let sprinkle of sprinkles) {
-        paths.push(`../app/sprinkles/${sprinkle}/assets/`);
-    }
-    for (let path of paths) {
-        fs.copySync(path, '../public/assets/', { overwrite: true });
+        let path = `../app/sprinkles/${sprinkle}/assets/`;
+        if (fs.pathExistsSync(path)) fs.copySync(path, publicAssetsDir, { overwrite: true });
     }
     return;
 });
