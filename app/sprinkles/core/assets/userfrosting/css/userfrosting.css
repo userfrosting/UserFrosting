@@ -202,3 +202,10 @@ a .info-box {
         left: 0;
     }
 }
+
+/* Hide table filter row when printing */
+@media print {
+    .tablesorter-filter-row {
+        display: none !important;
+    }
+}
