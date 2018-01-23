@@ -1,5 +1,6 @@
 # UserFrosting 4.1
 
+[![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
 [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting)
 [![Join the chat at https://chat.userfrosting.com/channel/support](https://demo.rocket.chat/images/join-chat.svg)](https://chat.userfrosting.com/channel/support)
 
@@ -105,3 +106,31 @@ Srinivas's a web applications architect, with a passion for open source technolo
 ## Contributing
 
 Please see our [contributing guidelines](.github/CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="graphs/contributors"><img src="https://opencollective.com/userfrosting/contributors.svg?width=890" /></a>
+
+
+## Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/userfrosting#backer)]
+
+<a href="https://opencollective.com/userfrosting#backers" target="_blank"><img src="https://opencollective.com/userfrosting/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/userfrosting#sponsor)]
+
+<a href="https://opencollective.com/userfrosting/sponsor/0/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/1/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/2/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/3/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/4/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/5/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/6/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/7/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/8/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/userfrosting/sponsor/9/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/9/avatar.svg"></a>
+
+
