@@ -797,7 +797,7 @@ class AccountController extends SimpleController
 
         if (!$defaultGroup) {
             $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
-            $e->addUserMessage('ACCOUNT.REGISTRATION_BROKEN');
+            $e->addUserMessage('REGISTRATION.BROKEN');
             throw $e;
         }
 
