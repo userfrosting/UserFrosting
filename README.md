@@ -11,7 +11,7 @@ If you simply want to show that you like this project, or want to remember it fo
 
 ## By [Alex Weissman](https://alexanderweissman.com)
 
-Copyright (c) 2017, free to use in personal and commercial software as per the [license](LICENSE.md).
+Copyright (c) 2018, free to use in personal and commercial software as per the [license](LICENSE.md).
 
 UserFrosting is a secure, modern user management system written in PHP and built on top of the [Slim Microframework](http://www.slimframework.com/), [Twig](http://twig.sensiolabs.org/) templating engine, and [Eloquent](https://laravel.com/docs/5.4/eloquent#introduction) ORM.
 
@@ -101,6 +101,7 @@ Srinivas's a web applications architect, with a passion for open source technolo
 - @X-Anonymous-Y - German
 - Dmitriy (@rendername) - Russian
 - Amin Akbari (@aminakbari) - Farsi
+- Dumblledore - Turkish
 
 ## Contributing
 

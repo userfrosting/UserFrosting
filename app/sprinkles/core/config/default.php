@@ -146,6 +146,7 @@
                     'ru_RU' => 'русский',
                     'de_DE' => 'Deutsch',
                     'fr_FR' => 'Français',
+                    'tr'    => 'Türk',
                     'it_IT' => 'Italiano',
                     'th_TH' => 'ภาษาไทย',
                     'fa'    => 'فارسی'
