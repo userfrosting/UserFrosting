@@ -1,10 +1,10 @@
 # UserFrosting 4.1
 
-[![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
 [![Build Status](https://travis-ci.org/userfrosting/UserFrosting.svg?branch=master)](https://travis-ci.org/userfrosting/UserFrosting)
 [![Join the chat at https://chat.userfrosting.com/channel/support](https://demo.rocket.chat/images/join-chat.svg)](https://chat.userfrosting.com/channel/support)
+[![Backers on Open Collective](https://opencollective.com/userfrosting/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/userfrosting/sponsors/badge.svg)](#sponsors)
 
-[![Click here to lend your support to: UserFrosting: A secure, modern user management system for PHP and make a donation at pledgie.com !](https://pledgie.com/campaigns/29583.png?skin_name=chrome)](https://pledgie.com/campaigns/29583)
+<script src="https://opencollective.com/userfrosting/donate/button.js" color="blue"></script>
 
 [https://www.userfrosting.com](https://www.userfrosting.com)
 
@@ -62,33 +62,35 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 
 Run `php bakery test` from the root project directory. Any tests included in `sprinkles/*/tests` will be run.
 
-## About the Developers
+## Contributing
 
-### Alexander Weissman
+### Codebase
+
+Please see our [contributing guidelines](.github/CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).
+
+#### Developers
+
+##### Alexander Weissman
 
 Alex is the founder and co-owner of two companies, one that does [math tutoring at Indiana University](https://bloomingtontutors.com) in Bloomington, IN and another company that does [math tutoring at UMD](https://collegeparktutors.com) in College Park, MD. He is a PhD student in the School of Informatics and Computing at Indiana University.
 
-### Louis Charette
+##### Louis Charette
 
 Louis's a civil engineer in Montréal, Québec who also has a passion for coding. He is one of the main contributors for SimpsonsCity.com and likes to share his knowledge by helping others the same way he was helped when he first started coding.
 
-### Jordan Mele
+##### Jordan Mele
 
 Jordan's a developer at Mayvin Training and a student studying Computer Science at the University of Wollongong. His passion is creating software-based solutions to overcomplicated problems, without taking control away from the user. He's also Australian.
 
-### Sarah Baghdadi
+##### Sarah Baghdadi
 
 Sarah is UserFrosting's UX specialist and frontend designer.  In addition to her work on the UF application itself, she is responsible for the amazing design of https://www.userfrosting.com and https://learn.userfrosting.com.
 
-### Mike Jacobs
-
-Mike's a programmer and IT specialist for a small business in New Hampshire, and works on open source projects when he's not camping or traveling.
-
-### Srinivas Nukala
+##### Srinivas Nukala
 
 Srinivas's a web applications architect, with a passion for open source technologies. He is experienced in building SaaS (software as a service) web applications and enjoys working on open source projects and contributing to the community. He has a Masters in Computer Science from Pune University, India.
 
-## Thanks to our translators!
+#### Thanks to our translators!
 
 - Louis Charette (@lcharette) - French
 - Karuhut Komol (@popiazaza) - Thai
@@ -104,22 +106,18 @@ Srinivas's a web applications architect, with a passion for open source technolo
 - Amin Akbari (@aminakbari) - Farsi
 - Dumblledore - Turkish
 
-## Contributing
+### Financial
 
-Please see our [contributing guidelines](.github/CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to all the people who contribute. [[Contribute](.github/CONTRIBUTING.md)].
 <a href="graphs/contributors"><img src="https://opencollective.com/userfrosting/contributors.svg?width=890" /></a>
 
-
-## Backers
+#### Backers
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/userfrosting#backer)]
 
 <a href="https://opencollective.com/userfrosting#backers" target="_blank"><img src="https://opencollective.com/userfrosting/backers.svg?width=890"></a>
 
-
-## Sponsors
+#### Sponsors
 
 Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/userfrosting#sponsor)]
 
@@ -133,5 +131,4 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/userfrosting/sponsor/7/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/userfrosting/sponsor/8/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/userfrosting/sponsor/9/website" target="_blank"><img src="https://opencollective.com/userfrosting/sponsor/9/avatar.svg"></a>
-
 
