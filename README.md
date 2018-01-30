@@ -64,32 +64,33 @@ UserFrosting seeks to balance modern programming principles, like DRY and MVC, w
 
 Run `php bakery test` from the root project directory. Any tests included in `sprinkles/*/tests` will be run.
 
-## Contributing
+## Development Team
 
-This project exists thanks to all the people who contribute. If you're interested in contributing to the UserFrosting codebase, please see our [contributing guidelines](.github/CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).
-<a href="graphs/contributors"><img src="https://opencollective.com/userfrosting/contributors.svg?width=890" /></a>
-
-### Development Team
-
-#### Alexander Weissman
+### Alexander Weissman
 
 Alex is the founder and co-owner of two companies, one that does [math tutoring at Indiana University](https://bloomingtontutors.com) in Bloomington, IN and another company that does [math tutoring at UMD](https://collegeparktutors.com) in College Park, MD. He is a PhD student in the School of Informatics and Computing at Indiana University.
 
-#### Louis Charette
+### Louis Charette
 
 Louis's a civil engineer in Montréal, Québec who also has a passion for coding. He is one of the main contributors for SimpsonsCity.com and likes to share his knowledge by helping others the same way he was helped when he first started coding.
 
-#### Jordan Mele
+### Jordan Mele
 
 Jordan's a developer at Mayvin Training and a student studying Computer Science at the University of Wollongong. His passion is creating software-based solutions to overcomplicated problems, without taking control away from the user. He's also Australian.
 
-#### Sarah Baghdadi
+### Sarah Baghdadi
 
 Sarah is UserFrosting's UX specialist and frontend designer.  In addition to her work on the UF application itself, she is responsible for the amazing design of https://www.userfrosting.com and https://learn.userfrosting.com.
 
-#### Srinivas Nukala
+### Srinivas Nukala
 
 Srinivas's a web applications architect, with a passion for open source technologies. He is experienced in building SaaS (software as a service) web applications and enjoys working on open source projects and contributing to the community. He has a Masters in Computer Science from Pune University, India.
+
+## Contributing
+
+This project exists thanks to all the people who contribute. If you're interested in contributing to the UserFrosting codebase, please see our [contributing guidelines](.github/CONTRIBUTING.md) as well as our [style guidelines](STYLE-GUIDE.md).
+
+<a href="graphs/contributors"><img src="https://opencollective.com/userfrosting/contributors.svg?width=890" /></a>
 
 ### Thanks to our translators!
 
