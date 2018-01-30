@@ -210,11 +210,11 @@ class User extends Model
     /**
      * Return a cache instance specific to that user
      *
-     * @return Illuminate\Contracts\Cache\Store
+     * @return \Illuminate\Contracts\Cache\Store
      */
     public function getCache()
     {
-        return static::$ci->cache->tags([static::$ci->config['cache.prefix'], '_u'.$this->id]);
+        return static::$ci->cache->tags('_u'.$this->id);
     }
 
     /**
