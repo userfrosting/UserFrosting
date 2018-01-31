@@ -45,6 +45,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix for undefined variable exception under strict mode in `ufAlerts` (#809)
 - Fix for site cache reset upon login (#828)
 - Changed global cache tag to proper prefix
+- Fix broken alert message in registration process (#843)
+- Add partial Turkish translation
 
 ## v4.1.15-alpha
 - Refactor `Password` into a instantiable `Hasher` class, service, and `Password` facade (#827)

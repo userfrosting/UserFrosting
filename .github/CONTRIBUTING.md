@@ -38,7 +38,7 @@ You should also try testing your code in a local development environment, to sep
 
 We welcome your technical expertise!  But first, please join us in [chat](https://chat.userfrosting.com) to discuss your proposed changes/fixes/enhancements before you get started.  At least one member of our development team will usually be around.
 
-Please also be sure to read our [style guidelines](STYLE-GUIDE.md).
+Please also be sure to read our [style guidelines](../STYLE-GUIDE.md).
 
 When it's time to integrate changes, our git flow more or less follows http://nvie.com/posts/a-successful-git-branching-model/.
 
