@@ -37,6 +37,7 @@ const bundleConfigFile = './bundle.config.json';
 
 /**
  * Vendor asset task
+ * NOTE: This task cannot be run directly from the gulp cli. Use the npm run script instead.
  */
 gulp.task('assets-install', () => {
     'use strict';
@@ -80,8 +81,6 @@ gulp.task('assets-install', () => {
         logger('Installing npm/yarn assets...');
         require('child_process').execSync('yarn install --non-interactive', {
             cwd: '../app/assets',
-            preferLocal: true,// Local over PATH.
-            localDir: './node_modules/.bin',
             stdio: doILog ? 'inherit' : ''
         });
 
@@ -133,16 +132,12 @@ Alternatively, resolutions can be used as an override, as documented at https://
         // Remove extraneous packages
         childProcess.execSync('bower prune', {
             cwd: '../app/assets',
-            preferLocal: true,// Local over PATH.
-            localDir: './node_modules/.bin',
             stdio: doILog ? 'inherit' : ''
         });
 
         // Perform installation
         childProcess.execSync('bower install -q --allow-root', { // --allow-root stops bower from complaining about being in 'sudo'.
             cwd: '../app/assets',
-            preferLocal: true,// Local over PATH.
-            localDir: './node_modules/.bin',
             stdio: doILog ? 'inherit' : ''
         });
         // Yarn is able to output its completion. Bower... not so much.
@@ -150,7 +145,7 @@ Alternatively, resolutions can be used as an override, as documented at https://
     }
     else del.sync([
         '../app/assets/bower.json',
-        '../app/assets/bower_components/'
+        '../app/assets/bower_components/**'
     ], { force: true });
 });
 
@@ -278,8 +273,8 @@ gulp.task('bundle-clean', () => {
 // Deletes assets fetched by assets-install
 gulp.task('assets-clean', () => {
     'use strict';
-    return del(['../app/assets/bower_components/', '../app/assets/node_modules/', '../app/assets/bower.json', '../app/assets/package.json'], { force: true });
+    return del('../app/assets/*', { force: true });
 });
 
 // Deletes all generated, or acquired files.
-gulp.task('clean', ['public-clean', 'bundle-clean', 'assets-clean'], () => { });
+gulp.task('clean', ['public-clean', 'bundle-clean', 'assets-clean']);
