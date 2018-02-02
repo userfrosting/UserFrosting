@@ -61,13 +61,12 @@ gulp.task('assets-install', () => {
     if (yarnPaths.length > 0) {
         // Yes there are!
 
-        // Delete old package.json
-        del.sync('../app/assets/package.json', { force: true });
+        // Delete old package.json and yarn.lock
+        del.sync(['../app/assets/package.json', '../app/assets/yarn.lock'], { force: true });
 
         // Generate package.json
         let yarnTemplate = {// Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
-            private: true,
-            flat: true
+            private: true
         };
         logger('\nMerging packages...\n');
         mergePkg.yarn(yarnTemplate, yarnPaths, '../app/assets/', doILog);
@@ -76,16 +75,32 @@ gulp.task('assets-install', () => {
         // Yarn automatically removes extraneous packages.
 
         // Perform installation.
+        // --flat switch cannot be used due to spotty support of --non-interactive switch
+        // Thankfully, "resolutions" works outside flat mode.
         logger('Installing npm/yarn assets...');
-        let childProcess = require('child_process');
-        childProcess.execSync('yarn install --flat --no-lockfile --non-interactive', {
+        require('child_process').execSync('yarn install --non-interactive', {
             cwd: '../app/assets',
             stdio: doILog ? 'inherit' : ''
         });
+
+        // Ensure dependency tree is flat manually because Yarn errors out with a TTY error.
+        logger('\nInspecting dependency tree...\n');
+
+        if (!mergePkg.yarnIsFlat('../app/assets/', doILog)) {
+            logger(`
+Dependency tree is not flat! Dependencies must be flat to prevent abnormal behavior.
+Recommended solution is to adjust dependency versions until issue is resolved to ensure 100% compatibility.
+Alternatively, resolutions can be used as an override, as documented at https://yarnpkg.com/en/docs/selective-version-resolutions
+`);
+            throw 'Dependency tree is not flat!';
+        } else {
+            logger('\nDependency tree is flat and usable.\n');
+        }
     }
     else del.sync([
         '../app/assets/package.json',
-        '../app/assets/node_modules/**'
+        '../app/assets/node_modules/',
+        '../app/assets/yarn.lock'
     ], { force: true });
 
     // See if there are any bower packages.
@@ -217,10 +232,8 @@ gulp.task('bundle-build', () => {
     // Copy sprinkle assets
     paths = [];
     for (let sprinkle of sprinkles) {
-        paths.push(`../app/sprinkles/${sprinkle}/assets/`);
-    }
-    for (let path of paths) {
-        fs.copySync(path, '../public/assets/', { overwrite: true });
+        let path = `../app/sprinkles/${sprinkle}/assets/`;
+        if (fs.pathExistsSync(path)) fs.copySync(path, publicAssetsDir, { overwrite: true });
     }
     return;
 });
