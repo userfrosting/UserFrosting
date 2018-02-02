@@ -66,8 +66,7 @@ gulp.task('assets-install', () => {
 
         // Generate package.json
         let yarnTemplate = {// Private makes sure it isn't published, and cuts out a lot of unnecessary fields.
-            private: true,
-            flat: true
+            private: true
         };
         logger('\nMerging packages...\n');
         mergePkg.yarn(yarnTemplate, yarnPaths, '../app/assets/', doILog);
@@ -76,14 +75,29 @@ gulp.task('assets-install', () => {
         // Yarn automatically removes extraneous packages.
 
         // Perform installation.
+        // --flat switch cannot be used due to spotty support of --non-interactive switch
+        // Thankfully, "resolutions" works outside flat mode.
         logger('Installing npm/yarn assets...');
-        let childProcess = require('child_process');
-        childProcess.execSync('yarn install --flat --no-lockfile --non-interactive', {
+        require('child_process').execSync('yarn install --non-interactive', {
             cwd: '../app/assets',
             preferLocal: true,// Local over PATH.
             localDir: './node_modules/.bin',
             stdio: doILog ? 'inherit' : ''
         });
+
+        // Ensure dependency tree is flat manually because Yarn errors out with a TTY error.
+        logger('\nInspecting dependency tree...\n')
+
+        if (!mergePkg.yarnIsFlat('../app/assets/', doILog)) {
+            logger(`
+Dependency tree is not flat! Dependencies must be flat to prevent abnormal behavior.
+Recommended solution is to adjust dependency versions until issue is resolved to ensure 100% compatibility.
+Alternatively, resolutions can be used as an override, as documented at https://yarnpkg.com/en/docs/selective-version-resolutions
+`);
+            throw 'Dependency tree is not flat!';
+        } else {
+            logger('\nDependency tree is flat and usable.\n')
+        }
     }
     else del.sync([
         '../app/assets/package.json',
