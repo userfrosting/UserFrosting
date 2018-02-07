@@ -436,6 +436,9 @@ class ServicesProvider
             // Get default locales as specified in configurations.
             $locales = explode(',', $config['site.locales.default']);
 
+            // Get available locales (removing null values)
+            $availableLocales = array_filter($config['site.locales.available']);
+
             // Add supported browser preferred locales.
             if ($request->hasHeader('Accept-Language')) {
                 $allowedLocales = [];
@@ -448,7 +451,7 @@ class ServicesProvider
                         // Format for UF's i18n
                         $parts[0] = str_replace('-', '_', $parts[0]);
                         // Ensure locale available
-                        if (array_key_exists($parts[0], $locales)) {
+                        if (array_key_exists($parts[0], $availableLocales)) {
                             // Determine preference level, and add to $allowedLocales
                             if (array_key_exists(1, $parts)) {
                                 $parts[1] = str_replace('q=', '', $parts[1]);
