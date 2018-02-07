@@ -448,7 +448,7 @@ class ServicesProvider
                         // Format for UF's i18n
                         $parts[0] = str_replace('-', '_', $parts[0]);
                         // Ensure locale available
-                        if (array_key_exists($parts[0], $config['site.locales.available'])) {
+                        if (array_key_exists($parts[0], $locales)) {
                             // Determine preference level, and add to $allowedLocales
                             if (array_key_exists(1, $parts)) {
                                 $parts[1] = str_replace('q=', '', $parts[1]);
