@@ -30,7 +30,7 @@ abstract class BaseCommand extends Command
     protected $io;
 
     /**
-     *    @var ContainerInterface $ci The global container object, which holds all of UserFristing services.
+     *    @var ContainerInterface $ci The global container object, which holds all of UserFrosting services.
      */
     protected $ci;
 
