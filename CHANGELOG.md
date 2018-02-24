@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The console IO instance is not available anymore in migrations.
 - Removed the `io` property from migration classes.
 - Removed Bakery `projectRoot` property. Use the `\UserFrosting\ROOT_DIR` constant instead.
-- Removed `preted` option from Bakery `migrate:refresh` and `migrate:reset` commands.
+- Removed `pretend` option from Bakery `migrate:refresh` and `migrate:reset` commands.
 
 ### Fixed
 
