@@ -11,16 +11,20 @@
 
 {% block content %}
 <div class="login-box">
+    {% block loginLogo %}
     <div class="login-logo">
         <a href="{{site.uri.public}}">{{site.title}}</a>
     </div>
     <!-- /.login-logo -->
+    {% endblock %}
 
+    {% block loginBox %}
     <div class="login-box-body login-form">
         <p class="login-box-msg"><strong>{{translate('SIGNIN')}}</strong></p>
 
         <div class="form-alerts" id="alerts-page"></div>
 
+        {% block loginForm %}
         <form action="{{site.uri.public}}/account/login" id="sign-in" method="post">
           {% include "forms/csrf.html.twig" %}
           <div class="form-group has-feedback">
@@ -46,7 +50,9 @@
             <!-- /.col -->
           </div>
         </form>
+        {% endblock %}
 
+        {% block loginLinks %}
         <a href="{{site.uri.public}}/account/forgot-password">{{translate('PASSWORD.FORGET')}}</a><br>
         {% if site.registration.require_email_verification %}
             <a href="{{site.uri.public}}/account/resend-verification">{{translate('ACCOUNT.VERIFICATION.RESEND')}}</a><br>
@@ -54,8 +60,10 @@
         {% if site.registration.enabled %}
             <a href="{{site.uri.public}}/account/register">{{translate('REGISTER')}}</a>
         {% endif %}
+        {% endblock %}
 
     </div>
+    {% endblock %}
     <!-- /.login-box-body -->
 </div>
 <!-- /.login-box -->
