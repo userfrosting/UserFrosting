@@ -8,6 +8,7 @@
 namespace UserFrosting\Sprinkle\Account\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\DatabaseTest;
@@ -38,8 +39,14 @@ class CreateAdminUser extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName("create-admin")
-             ->setDescription("Create the initial admin (root) user account");
+        $this->setName('create-admin')
+             ->setDescription('Create the initial admin (root) user account')
+             ->addOption('force', 'f', InputOption::VALUE_NONE, 'If admin user already exist, delete user and recreate it again')
+             ->addOption('username', null, InputOption::VALUE_OPTIONAL, 'The admin user username')
+             ->addOption('email', null, InputOption::VALUE_OPTIONAL, 'The admin user email')
+             ->addOption('password', null, InputOption::VALUE_OPTIONAL, 'The admin user password')
+             ->addOption('firstName', null, InputOption::VALUE_OPTIONAL, 'The admin user first name')
+             ->addOption('lastName', null, InputOption::VALUE_OPTIONAL, 'The admin user last name');
     }
 
     /**
@@ -47,26 +54,25 @@ class CreateAdminUser extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->io->title("Root account setup");
+        $this->io->title('Root account setup');
+
+        // Get the options
+        $force = $input->getOption('force');
 
         // Need the database
         try {
-            $this->io->writeln("<info>Testing database connection</info>", OutputInterface::VERBOSITY_VERBOSE);
+            $this->io->writeln('<info>Testing database connection</info>', OutputInterface::VERBOSITY_VERBOSE);
             $this->testDB();
-            $this->io->writeln("Ok", OutputInterface::VERBOSITY_VERBOSE);
+            $this->io->writeln('Ok', OutputInterface::VERBOSITY_VERBOSE);
         } catch (\Exception $e) {
             $this->io->error($e->getMessage());
             exit(1);
         }
 
-        /**
-         * @var \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
-         */
+        /** @var \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator; */
         $migrator = $this->ci->migrator;
 
-        /**
-         * @var \UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
-         */
+        /** @var \UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository; */
         $repository = $migrator->getRepository();
 
         // Need migration table
@@ -86,28 +92,27 @@ class CreateAdminUser extends BaseCommand
 
         // Make sure that there are no users currently in the user table
         // We setup the root account here so it can be done independent of the version check
-        if (User::count() > 0) {
+        if (User::count() > 0 && !$force) {
             $this->io->note("Table 'users' is not empty. Skipping root account setup. To set up the root account again, please truncate or drop the table and try again.");
         } else {
             $this->io->writeln("Please answer the following questions to create the root account:\n");
 
             // Get the account details
-            $userName = $this->askUsername();
-            $email = $this->askEmail();
-            $firstName = $this->askFirstName();
-            $lastName = $this->askLastName();
-            $password = $this->askPassword();
+            $username = $this->askUsername($input->getOption('username'));
+            $email = $this->askEmail($input->getOption('email'));
+            $firstName = $this->askFirstName($input->getOption('firstName'));
+            $lastName = $this->askLastName($input->getOption('lastName'));
+            $password = $this->askPassword($input->getOption('password'));
 
             // Ok, now we've got the info and we can create the new user.
             $this->io->write("\n<info>Saving the root user details...</info>");
             $rootUser = new User([
-                "user_name" => $userName,
-                "email" => $email,
-                "first_name" => $firstName,
-                "last_name" => $lastName,
-                "password" => Password::hash($password)
+                'user_name'     => $username,
+                'email'         => $email,
+                'first_name'    => $firstName,
+                'last_name'     => $lastName,
+                'password'      => Password::hash($password)
             ]);
-
             $rootUser->save();
 
             $defaultRoles = [
@@ -122,34 +127,35 @@ class CreateAdminUser extends BaseCommand
                 }
             }
 
-            $this->io->success("Root user creation successful!");
+            $this->io->success('Root user creation successful!');
         }
     }
 
     /**
-     * Ask for the username
+     *    Ask for the username and return a valid one
      *
-     * @return string
+     *    @param  string $username The base/default username
+     *    @return string The validated username
      */
-    protected function askUsername()
+    protected function askUsername($username = '')
     {
-        while (!isset($userName) || !$this->validateUsername($userName)) {
-            $userName = $this->io->ask("Choose a root username (1-50 characters, no leading or trailing whitespace)");
+        while (!isset($username) || !$this->validateUsername($username)) {
+            $username = $this->io->ask('Choose a root username (1-50 characters, no leading or trailing whitespace)');
         }
-        return $userName;
+        return $username;
     }
 
     /**
-     * Validate the username.
+     *    Validate the username.
      *
-     * @param string $userName
-     * @return bool
+     *    @param string $username The input
+     *    @return bool Is the username validated ?
      */
-    protected function validateUsername($userName)
+    protected function validateUsername($username)
     {
         // Validate length
-        if (strlen($userName) < 1 || strlen($userName) > 50) {
-            $this->io->error("Username must be between 1-50 characters");
+        if (strlen($username) < 1 || strlen($username) > 50) {
+            $this->io->error('Username must be between 1-50 characters');
             return false;
         }
 
@@ -159,7 +165,7 @@ class CreateAdminUser extends BaseCommand
                 'regexp' => "/^\S((.*\S)|)$/"
             ]
         ];
-        $validate = filter_var($userName, FILTER_VALIDATE_REGEXP, $options);
+        $validate = filter_var($username, FILTER_VALIDATE_REGEXP, $options);
         if (!$validate) {
             $this->io->error("Username can't have any leading or trailing whitespace");
             return false;
@@ -169,35 +175,36 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the email
+     *    Ask for the email and return a valid one
      *
-     * @return string
+     *    @param  string $mail The base/default email
+     *    @return string The validated email
      */
-    protected function askEmail()
+    protected function askEmail($email = '')
     {
         while (!isset($email) || !$this->validateEmail($email)) {
-            $email = $this->io->ask("Enter a valid email address (1-254 characters, must be compatible with FILTER_VALIDATE_EMAIL)");
+            $email = $this->io->ask('Enter a valid email address (1-254 characters, must be compatible with FILTER_VALIDATE_EMAIL)');
         }
         return $email;
     }
 
     /**
-     * Validate the email.
+     *    Validate the email.
      *
-     * @param string $email
-     * @return bool
+     *    @param string $email The input
+     *    @return bool Is the email validated ?
      */
     protected function validateEmail($email)
     {
         // Validate length
         if (strlen($email) < 1 || strlen($email) > 254) {
-            $this->io->error("Email must be between 1-254 characters");
+            $this->io->error('Email must be between 1-254 characters');
             return false;
         }
 
         // Validate format
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->io->error("Email must be compatible with FILTER_VALIDATE_EMAIL");
+            $this->io->error('Email must be compatible with FILTER_VALIDATE_EMAIL');
             return false;
         }
 
@@ -205,29 +212,30 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the first name
+     *    Ask for the first name and return a valid one
      *
-     * @return string
+     *    @param  string $firstName The base/default first name
+     *    @return string The validated first name
      */
-    protected function askFirstName()
+    protected function askFirstName($firstName = '')
     {
         while (!isset($firstName) || !$this->validateFirstName($firstName)) {
-            $firstName = $this->io->ask("Enter the user first name (1-20 characters)");
+            $firstName = $this->io->ask('Enter the user first name (1-20 characters)');
         }
         return $firstName;
     }
 
     /**
-     * validateFirstName function.
+     *    Validate the first name
      *
-     * @param string $firstName
-     * @return bool
+     *    @param string $firstName The input
+     *    @return bool Is the input validated ?
      */
     protected function validateFirstName($firstName)
     {
         // Validate length
         if (strlen($firstName) < 1 || strlen($firstName) > 20) {
-            $this->io->error("First name must be between 1-20 characters");
+            $this->io->error('First name must be between 1-20 characters');
             return false;
         }
 
@@ -235,29 +243,30 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the last name
+     *    Ask for the last name and return a valid one
      *
-     * @return string
+     *    @param  string $lastName The base/default last name
+     *    @return string The validated last name
      */
-    protected function askLastName()
+    protected function askLastName($lastName = '')
     {
         while (!isset($lastName) || !$this->validateLastName($lastName)) {
-            $lastName = $this->io->ask("Enter the user last name (1-30 characters)");
+            $lastName = $this->io->ask('Enter the user last name (1-30 characters)');
         }
         return $lastName;
     }
 
     /**
-     * validateLastName function.
+     *    Validate the last name entered is valid
      *
-     * @param string $lastName
-     * @return bool
+     *    @param string $lastName The lastname
+     *    @return bool Input is valid or not
      */
     protected function validateLastName($lastName)
     {
         // Validate length
         if (strlen($lastName) < 1 || strlen($lastName) > 30) {
-            $this->io->error("Last name must be between 1-30 characters");
+            $this->io->error('Last name must be between 1-30 characters');
             return false;
         }
 
@@ -265,28 +274,30 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * Ask for the password
+     *    Ask for the password and return a valid one
      *
-     * @return string
+     *    @param  string $password The base/default password
+     *    @return string The validated password
      */
-    protected function askPassword()
+    protected function askPassword($password = '')
     {
         while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password)) {
-            $password = $this->io->askHidden("Enter password (12-255 characters)");
+            $password = $this->io->askHidden('Enter password (12-255 characters)');
         }
         return $password;
     }
 
     /**
-     * validatePassword function.
+     *    Validate password input
      *
-     * @param string $password
-     * @return bool
+     *    @param string $password The input
+     *    @return bool Is the password valid or not
      */
     protected function validatePassword($password)
     {
+        //TODO Config for this ??
         if (strlen($password) < 12 || strlen($password) > 255) {
-            $this->io->error("Password must be between 12-255 characters");
+            $this->io->error('Password must be between 12-255 characters');
             return false;
         }
 
@@ -294,30 +305,30 @@ class CreateAdminUser extends BaseCommand
     }
 
     /**
-     * confirmPassword function.
+     *    Ask for password confirmation
      *
-     * @param string $passwordToConfirm
-     * @return bool
+     *    @param string $passwordToConfirm
+     *    @return bool Is the password confirmed or not
      */
     protected function confirmPassword($passwordToConfirm)
     {
         while (!isset($password)) {
-            $password = $this->io->askHidden("Please re-enter the chosen password");
+            $password = $this->io->askHidden('Please re-enter the chosen password');
         }
         return $this->validatePasswordConfirmation($password, $passwordToConfirm);
     }
 
     /**
-     * validatePasswordConfirmation function.
+     *    Validate the confirmation password
      *
-     * @param string $password
-     * @param string $passwordToConfirm
-     * @return bool
+     *    @param string $password   The confirmation
+     *    @param string $passwordToConfirm The password to confirm
+     *    @return bool Is the confirmation password valid or not
      */
     protected function validatePasswordConfirmation($password, $passwordToConfirm)
     {
         if ($password != $passwordToConfirm) {
-            $this->io->error("Passwords do not match, please try again.");
+            $this->io->error('Passwords do not match, please try again.');
             return false;
         }
 
