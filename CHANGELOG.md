@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `migrate:status` Bakery command
 - Added `RefreshDatabase` test Trait to use a fresh database for a test
 - Added `TestDatabase` test Trait to use the in memory database for a test
+- Implement `withRaw`, `withSum`, `withAvg`, `withMin`, `withMax` (see https://github.com/laravel/framework/pull/16815)
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle.
@@ -210,6 +211,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Use YAML as default format for request schema (#690)
 
 See [http://learn.userfrosting.com/upgrading/40-to-41](Upgrading 4.0.x to 4.1.x documentation) for complete list of changes and breaking changes.
+
 ## v4.0.25-Alpha
 - Support npm for frontend vendor assets, and deprecation of bower (#737)
 - Duplicate frontend vendor assets are no longer downloaded (#727)
