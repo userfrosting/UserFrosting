@@ -10,7 +10,7 @@ $(document).ready(function() {
 
     // TODO: Process form
     $("#request-password-reset").ufForm({
-        validators: page.validators.forgot_password,
+        validator: page.validators.forgot_password,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function() {
         // Forward to login page on success

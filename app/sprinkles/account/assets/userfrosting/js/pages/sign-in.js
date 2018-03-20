@@ -31,7 +31,7 @@ $(document).ready(function() {
     }
 
     $("#sign-in").ufForm({
-        validators: page.validators.login,
+        validator: page.validators.login,
         msgTarget: $("#alerts-page")
     }).on("submitSuccess.ufForm", function(event, data, textStatus, jqXHR) {
         redirectOnLogin(jqXHR);

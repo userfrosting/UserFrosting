@@ -81,7 +81,7 @@ $(document).ready(function() {
 
     // Handles form submission
     $("#register").ufForm({
-        validators: registrationValidators,
+        validator: registrationValidators,
         msgTarget: $("#alerts-page"),
         keyupDelay: 500
     }).on("submitSuccess.ufForm", function() {
