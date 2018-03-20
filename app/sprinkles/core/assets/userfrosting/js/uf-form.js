@@ -43,6 +43,8 @@
             beforeSubmitCallback: null,
             binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
             keyupDelay          : 0,
+            // These are options that will be passed to jQuery Validate
+            // See https://jqueryvalidation.org/validate/#-validate()
             validator: {
                 rules        : {},
                 messages     : {}
@@ -62,6 +64,8 @@
         var lateDefaults = {
             submitButton : this.$element.find('button[type=submit]'),
             msgTarget    : this.$element.find('.js-form-alerts:first'),
+            // These are options that will be passed to jQuery Validate
+            // See https://jqueryvalidation.org/validate/#-validate()
             validator    : {
                 submitHandler: $.proxy(this.defaultSubmitHandler, this),
                 onkeyup      : $.proxy(this._onKeyUp, this)
