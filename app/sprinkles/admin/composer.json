@@ -18,5 +18,10 @@
         "psr-4": {
             "UserFrosting\\Sprinkle\\Admin\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UserFrosting\\Sprinkle\\Admin\\Tests\\": "tests/"
+        }
     }
 }

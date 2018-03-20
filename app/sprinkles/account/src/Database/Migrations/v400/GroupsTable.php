@@ -10,7 +10,7 @@ namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
-use UserFrosting\System\Bakery\Migration;
+use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Groups table migration

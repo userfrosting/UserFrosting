@@ -1,32 +1,24 @@
 {
-  "name": "@userfrosting/userfrosting",
-  "version": "4.1.0",
-  "description": "Build tool for UF 4.1",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/userfrosting/userfrosting"
-  },
-  "author": "Alex Weissman",
-  "license": "MIT",
+  "private": true,
   "devDependencies": {
+    "@userfrosting/merge-package-dependencies": "^1.2.0-rc.2",
+    "bower": "^1.8.0",
+    "del": "^2.2.2",
+    "dotenv": "^4.0.0",
+    "fs-extra": "^5.0.0",
     "gulp": "^3.9.1",
-    "gulp-uf-bundle-assets": "^2.27.2",
     "gulp-load-plugins": "^1.4.0",
+    "gulp-uf-bundle-assets": "^2.27.2",
     "merge-array-object": "^1.0.3",
     "recursive-copy": "^2.0.5",
-    "del": "^2.2.2",
-    "shelljs": "^0.7.6",
-    "bower": "^1.8.0",
-    "gulp-src-ordered-globs": "^1.0.3",
-    "gulp-copy": "^1.0.0"
+    "yarn": "^1.3.2"
   },
   "scripts": {
     "uf-bundle-build": "gulp bundle-build",
     "uf-bundle": "gulp bundle",
+    "uf-assets-install": "gulp assets-install",
     "uf-bundle-clean": "gulp bundle-clean",
-    "uf-assets-install": "gulp bower-install",
-    "uf-assets-clean": "gulp bower-clean",
+    "uf-assets-clean": "gulp assets-clean",
     "uf-public-clean": "gulp public-clean",
     "uf-clean": "gulp clean"
   }

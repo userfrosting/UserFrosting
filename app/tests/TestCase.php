@@ -10,6 +10,8 @@ namespace UserFrosting\Tests;
 use Slim\App;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use UserFrosting\System\UserFrosting;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
+use UserFrosting\Tests\DatabaseTransactions;
 
 /**
  * Class to handle Test
@@ -82,11 +84,8 @@ class TestCase extends BaseTestCase
     {
         $uses = array_flip(class_uses_recursive(static::class));
 
-        /*if (isset($uses[DatabaseMigrations::class])) {
-            $this->runDatabaseMigrations();
-        }*/
-
         if (isset($uses[DatabaseTransactions::class])) {
+            Debug::debug("`UserFrosting\Tests\DatabaseTransactions` has been deprecated and will be removed in future versions.  Please use `UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` class instead.");
             $this->beginDatabaseTransaction();
         }
     }
@@ -155,12 +154,14 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Asserts that collections are equivalent.
+     *    Asserts that collections are equivalent.
      *
-     * @param  array   $expected
-     * @param  array   $actual
-     * @param  string  $message
-     * @throws PHPUnit_Framework_AssertionFailedError
+     *    @param  array $expected
+     *    @param  array $actual
+     *    @param  string $key [description]
+     *    @param  string $message [description]
+     *    @throws \PHPUnit_Framework_AssertionFailedError
+     *    @return void
      */
     public static function assertCollectionsSame($expected, $actual, $key = 'id', $message = '')
     {
@@ -203,10 +204,10 @@ class TestCase extends BaseTestCase
      */
 
     /**
-     * Cast an item to an array if it has a toArray() method.
+     *    Cast an item to an array if it has a toArray() method.
      *
-     * @param $item Collection|mixed[]|mixed
-     * @return mixed|mixed[]
+     *    @param  object $item
+     *    @return mixed
      */
     protected static function castToComparable($item)
     {
@@ -214,7 +215,10 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Remove all relations on a collection of models.
+     *    Remove all relations on a collection of models.
+     *
+     *    @param  array $models
+     *    @return void
      */
     protected static function ignoreRelations($models)
     {
@@ -223,10 +227,16 @@ class TestCase extends BaseTestCase
         }
     }
 
+    /**
+     *    cloneObjectArray
+     *
+     *    @param  array $original
+     *    @return array
+     */
     protected function cloneObjectArray($original)
     {
         $cloned = [];
-        
+
         foreach ($original as $k => $v) {
             $cloned[$k] = clone $v;
         }

@@ -19,17 +19,17 @@ use Illuminate\Support\Str;
 class Bakery
 {
     /**
-     * @var $app Symfony\Component\Console\Application
+     *    @var $app Symfony\Component\Console\Application
      */
     protected $app;
 
     /**
-     * @var ContainerInterface The global container object, which holds all your services.
+     *    @var \Interop\Container\ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
 
     /**
-     * Constructor
+     *    Constructor
      */
     public function __construct()
     {
@@ -56,7 +56,9 @@ class Bakery
     }
 
     /**
-     * Run the Symfony Console App
+     *    Run the Symfony Console App
+     *
+     *    @return void
      */
     public function run()
     {
@@ -64,7 +66,9 @@ class Bakery
     }
 
     /**
-     * Return the list of available commands for a specific sprinkle
+     *    Return the list of available commands for a specific sprinkle
+     *
+     *    @return void
      */
     protected function loadCommands()
     {
@@ -86,8 +90,11 @@ class Bakery
     }
 
     /**
-     * Return the list of available commands for a specific sprinkle
-     * Sprinkles commands should be located in `src/Bakery/`
+     *    Return the list of available commands for a specific sprinkle
+     *    Sprinkles commands should be located in `src/Bakery/`
+     *
+     *    @param  string $sprinkle The sprinkle name
+     *    @return \Illuminate\Support\Collection A collection of commands
      */
     protected function getSprinkleCommands($sprinkle)
     {
@@ -108,7 +115,9 @@ class Bakery
     }
 
     /**
-     * Return the list of available commands in system/Bakery/Command/
+     *    Return the list of available commands in system/Bakery/Command/
+     *
+     *    @return \Illuminate\Support\Collection A collection of commands
      */
     protected function getBakeryCommands()
     {
@@ -127,11 +136,10 @@ class Bakery
     }
 
     /**
-     * Returns the path of the Migration directory.
+     *    Returns the path of the Bakery commands directory.
      *
-     * @access protected
-     * @param mixed $sprinkleName
-     * @return void
+     *    @param  string $sprinkleName The sprinkle name
+     *    @return string The sprinkle bakery command directory path
      */
     protected function commandDirectoryPath($sprinkleName)
     {
@@ -144,10 +152,9 @@ class Bakery
     }
 
     /**
-     * Write the base Sprinkles schema file if it doesn't exist.
+     *    Write the base `sprinkles.json` file if none exist.
      *
-     * @access protected
-     * @return void
+     *    @return string The sprinkle model file
      */
     protected function setupBaseSprinkleList()
     {

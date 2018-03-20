@@ -5,16 +5,13 @@
  * @link      https://github.com/userfrosting/UserFrosting
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
-namespace UserFrosting\Tests\Unit;
+namespace UserFrosting\Sprinkle\Core\Tests\Unit;
 
 use stdClass;
 use Mockery as m;
-use ReflectionClass;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as BaseCollection;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 use UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable;
 
@@ -36,9 +33,9 @@ class DatabaseSyncableTest extends TestCase
         $relation->getRelated()->shouldReceive('getKeyName')->once()->andReturn('id');
 
         // Simulate fetching of current relationships (1,2,3)
-        $query = m::mock('stdClass');
+        $query = m::mock(stdClass::class);
         $relation->shouldReceive('newQuery')->once()->andReturn($query);
-        $query->shouldReceive('pluck')->once()->with('id')->andReturn(new BaseCollection([1, 2, 3]));
+        $query->shouldReceive('pluck')->once()->with('id')->andReturn(new Collection([1, 2, 3]));
 
         // withoutGlobalScopes will get called exactly 3 times
         $relation->getRelated()->shouldReceive('withoutGlobalScopes')->times(3)->andReturn($query);
@@ -47,7 +44,7 @@ class DatabaseSyncableTest extends TestCase
         $query->shouldReceive('whereIn')->once()->with('id', [1])->andReturn($query);
         $query->shouldReceive('delete')->once()->andReturn($query);
 
-        // Test updates to existing items in relationship (2,3)      
+        // Test updates to existing items in relationship (2,3)
         $query->shouldReceive('where')->once()->with('id', 2)->andReturn($query);
         $query->shouldReceive('update')->once()->with(['id' => 2, 'species' => 'Tyto'])->andReturn($query);
         $query->shouldReceive('where')->once()->with('id', 3)->andReturn($query);
@@ -58,7 +55,7 @@ class DatabaseSyncableTest extends TestCase
             'id' => 'x'
         ]);
         $model->shouldReceive('getAttribute')->with('id')->andReturn('x');
-        
+
         $this->assertEquals(['created' => ['x'], 'deleted' => [1], 'updated' => [2,3]], $relation->sync($list));
     }
 

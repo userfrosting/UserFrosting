@@ -95,6 +95,23 @@ abstract class Model extends LaravelModel
     }
 
     /**
+     * Overrides Laravel's base Model to return our custom Eloquent builder object.
+     *
+     * @param  \UserFrosting\Sprinkles\Core\Database\Builder  $query
+     * @return \UserFrosting\Sprinkles\Core\Database\EloquentBuilder
+     */
+    public function newEloquentBuilder($query)
+    {
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = static::$ci->classMapper;
+
+        return $classMapper->createInstance(
+            'eloquent_builder',
+            $query
+        );
+    }
+
+    /**
      * Overrides Laravel's base Model to return our custom query builder object.
      *
      * @return \UserFrosting\Sprinkles\Core\Database\Builder
