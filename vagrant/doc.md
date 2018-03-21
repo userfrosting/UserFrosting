@@ -23,7 +23,7 @@ $ vagrant up
 
 * Access UserFrosting at `http://192.168.10.10/`
 * Username: **admin**
-* Password: **adminadmin**
+* Password: **adminadmin12**
 
 ## Additional commands:
 * Access your Linux server from the command line:

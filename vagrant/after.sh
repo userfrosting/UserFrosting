@@ -24,7 +24,7 @@ cp app/sprinkles.example.json app/sprinkles.json
 # Install UserFrosting
 php bakery debug
 php bakery migrate
-# php bakery create-admin !!! Requires fix for #808 https://github.com/userfrosting/UserFrosting/issues/808
+php bakery create-admin --username="admin" --email="admin@userfrosting.test" --password="adminadmin12" --firstName="Admin" --lastName="istrator"
 php bakery build-assets
 
 echo "\n\nUserFrosting is ready at http://192.168.10.10/"

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `RefreshDatabase` test Trait to use a fresh database for a test
 - Added `TestDatabase` test Trait to use the in memory database for a test
 - Implement `withRaw`, `withSum`, `withAvg`, `withMin`, `withMax` (see https://github.com/laravel/framework/pull/16815)
+- Include Vagrant integration directly inside UF (#829)
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle.
