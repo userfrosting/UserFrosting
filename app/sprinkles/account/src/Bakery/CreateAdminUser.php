@@ -12,9 +12,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\DatabaseTest;
+use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Account\Database\Models\Role;
-use UserFrosting\Sprinkle\Account\Facades\Password;
 
 /**
  * Create root user CLI command.
@@ -41,7 +40,6 @@ class CreateAdminUser extends BaseCommand
     {
         $this->setName('create-admin')
              ->setDescription('Create the initial admin (root) user account')
-             ->addOption('force', 'f', InputOption::VALUE_NONE, 'If admin user already exist, delete user and recreate it again')
              ->addOption('username', null, InputOption::VALUE_OPTIONAL, 'The admin user username')
              ->addOption('email', null, InputOption::VALUE_OPTIONAL, 'The admin user email')
              ->addOption('password', null, InputOption::VALUE_OPTIONAL, 'The admin user password')
@@ -55,9 +53,6 @@ class CreateAdminUser extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io->title('Root account setup');
-
-        // Get the options
-        $force = $input->getOption('force');
 
         // Need the database
         try {
@@ -92,39 +87,38 @@ class CreateAdminUser extends BaseCommand
 
         // Make sure that there are no users currently in the user table
         // We setup the root account here so it can be done independent of the version check
-        if (User::count() > 0 && !$force) {
+        if (User::count() > 0) {
             $this->io->note("Table 'users' is not empty. Skipping root account setup. To set up the root account again, please truncate or drop the table and try again.");
         } else {
             $this->io->writeln("Please answer the following questions to create the root account:\n");
+
+            // Don't need password confirmation if it's defined as an option
+            $requireConfirmation = ($input->getOption('password') == '') ? true : false;
 
             // Get the account details
             $username = $this->askUsername($input->getOption('username'));
             $email = $this->askEmail($input->getOption('email'));
             $firstName = $this->askFirstName($input->getOption('firstName'));
             $lastName = $this->askLastName($input->getOption('lastName'));
-            $password = $this->askPassword($input->getOption('password'));
+            $password = $this->askPassword($input->getOption('password'), $requireConfirmation);
 
             // Ok, now we've got the info and we can create the new user.
             $this->io->write("\n<info>Saving the root user details...</info>");
-            $rootUser = new User([
+            $registration = new Registration($this->ci, [
                 'user_name'     => $username,
                 'email'         => $email,
                 'first_name'    => $firstName,
                 'last_name'     => $lastName,
-                'password'      => Password::hash($password)
+                'password'      => $password
             ]);
-            $rootUser->save();
+            $registration->setRequireEmailVerification(false);
+            $registration->setDefaultRoles(['user', 'group-admin', 'site-admin']);
 
-            $defaultRoles = [
-                'user' => Role::where('slug', 'user')->first(),
-                'group-admin' => Role::where('slug', 'group-admin')->first(),
-                'site-admin' => Role::where('slug', 'site-admin')->first()
-            ];
-
-            foreach ($defaultRoles as $slug => $role) {
-                if ($role) {
-                    $rootUser->roles()->attach($role->id);
-                }
+            try {
+                $rootUser = $registration->register();
+            } catch (\Exception $e) {
+                $this->io->error($e->getMessage());
+                exit(1);
             }
 
             $this->io->success('Root user creation successful!');
@@ -177,7 +171,7 @@ class CreateAdminUser extends BaseCommand
     /**
      *    Ask for the email and return a valid one
      *
-     *    @param  string $mail The base/default email
+     *    @param  string $email The base/default email
      *    @return string The validated email
      */
     protected function askEmail($email = '')
@@ -277,11 +271,12 @@ class CreateAdminUser extends BaseCommand
      *    Ask for the password and return a valid one
      *
      *    @param  string $password The base/default password
+     *    @param bool $requireConfirmation (default true)
      *    @return string The validated password
      */
-    protected function askPassword($password = '')
+    protected function askPassword($password = '', $requireConfirmation = true)
     {
-        while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password)) {
+        while (!isset($password) || !$this->validatePassword($password) || !$this->confirmPassword($password, $requireConfirmation)) {
             $password = $this->io->askHidden('Enter password (12-255 characters)');
         }
         return $password;
@@ -308,10 +303,15 @@ class CreateAdminUser extends BaseCommand
      *    Ask for password confirmation
      *
      *    @param string $passwordToConfirm
+     *    @param bool $requireConfirmation (default true)
      *    @return bool Is the password confirmed or not
      */
-    protected function confirmPassword($passwordToConfirm)
+    protected function confirmPassword($passwordToConfirm, $requireConfirmation = true)
     {
+        if (!$requireConfirmation) {
+            return true;
+        }
+
         while (!isset($password)) {
             $password = $this->io->askHidden('Please re-enter the chosen password');
         }

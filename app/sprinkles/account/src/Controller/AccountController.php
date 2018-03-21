@@ -16,6 +16,7 @@ use UserFrosting\Fortress\RequestDataTransformer;
 use UserFrosting\Fortress\RequestSchema;
 use UserFrosting\Fortress\ServerSideValidator;
 use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
+use UserFrosting\Sprinkle\Account\Account\Registration;
 use UserFrosting\Sprinkle\Account\Controller\Exception\SpammyRequestException;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Util\Util as AccountUtil;
@@ -25,7 +26,6 @@ use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Sprinkle\Core\Util\Captcha;
 use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Support\Exception\HttpException;
 
 /**
  * Controller class for /account/* URLs.  Handles account-related activities, including login, registration, password recovery, and account settings.
@@ -36,19 +36,19 @@ use UserFrosting\Support\Exception\HttpException;
 class AccountController extends SimpleController
 {
     /**
-     *    Check a username for availability.
+     * Check a username for availability.
      *
-     *    This route is throttled by default, to discourage abusing it for account enumeration.
-     *    This route is "public access".
+     * This route is throttled by default, to discourage abusing it for account enumeration.
+     * This route is "public access".
      *
-     *    AuthGuard: false
-     *    Route: /account/check-username
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/check-username
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function checkUsername(Request $request, Response $response, $args)
     {
@@ -105,20 +105,20 @@ class AccountController extends SimpleController
     }
 
     /**
-     *    Processes a request to cancel a password reset request.
+     * Processes a request to cancel a password reset request.
      *
-     *    This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
-     *    Processes the request from the password reset link, checking that:
-     *    1. The provided token is associated with an existing user account, who has a pending password reset request.
+     * This is provided so that users can cancel a password reset request, if they made it in error or if it was not initiated by themselves.
+     * Processes the request from the password reset link, checking that:
+     * 1. The provided token is associated with an existing user account, who has a pending password reset request.
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/set-password/deny
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function denyResetPassword(Request $request, Response $response, $args)
     {
@@ -169,18 +169,17 @@ class AccountController extends SimpleController
      * Note that we have removed the requirement that a password reset request not already be in progress.
      * This is because we need to allow users to re-request a reset, even if they lose the first reset email.
      * This route is "public access".
-     * Request type: POST
      * @todo require additional user information
      * @todo prevent password reset requests for root account?
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/forgot-password
+     * Route Name: {none}
+     * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function forgotPassword(Request $request, Response $response, $args)
     {
@@ -266,16 +265,15 @@ class AccountController extends SimpleController
      * Returns a modal containing account terms of service.
      *
      * This does NOT render a complete page.  Instead, it renders the HTML for the form, which can be embedded in other pages.
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /modals/account/tos
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function getModalAccountTos(Request $request, Response $response, $args)
     {
@@ -285,16 +283,14 @@ class AccountController extends SimpleController
     /**
      * Generate a random captcha, store it to the session, and return the captcha image.
      *
+     * AuthGuard: false
+     * Route: /account/captcha
+     * Route Name: {none}
      * Request type: GET
-     *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function imageCaptcha(Request $request, Response $response, $args)
     {
@@ -317,16 +313,15 @@ class AccountController extends SimpleController
      * 5. The user account is enabled and verified.
      * 6. The user entered a valid username/email and password.
      * This route, by definition, is "public access".
-     * Request type: POST
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/login
+     * Route Name: {none}
+     * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function login(Request $request, Response $response, $args)
     {
@@ -414,16 +409,14 @@ class AccountController extends SimpleController
     /**
      * Log the user out completely, including destroying any "remember me" token.
      *
+     * AuthGuard: true
+     * Route: /account/logout
+     * Route Name: {none}
      * Request type: GET
-     *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function logout(Request $request, Response $response, $args)
     {
@@ -440,16 +433,15 @@ class AccountController extends SimpleController
      *
      * This creates a simple form to allow users who forgot their password to have a time-limited password reset link emailed to them.
      * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/forgot-password
+     * Route Name: forgot-password
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function pageForgotPassword(Request $request, Response $response, $args)
     {
@@ -472,16 +464,16 @@ class AccountController extends SimpleController
      *
      * This allows new (non-authenticated) users to create a new account for themselves on your website (if enabled).
      * By definition, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * checkEnvironment
+     * Route: /account/register
+     * Route Name: register
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function pageRegister(Request $request, Response $response, $args)
     {
@@ -529,16 +521,15 @@ class AccountController extends SimpleController
      *
      * This is a form that allows users who lost their account verification link to have the link resent to their email address.
      * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/resend-verification
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function pageResendVerification(Request $request, Response $response, $args)
     {
@@ -559,16 +550,15 @@ class AccountController extends SimpleController
      * Reset password page.
      *
      * Renders the new password page for password reset requests.
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/set-password/confirm
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function pageResetPassword(Request $request, Response $response, $args)
     {
@@ -594,16 +584,15 @@ class AccountController extends SimpleController
      *
      * Renders the page where new users who have had accounts created for them by another user, can set their password.
      * By default, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route:
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function pageSetPassword(Request $request, Response $response, $args)
     {
@@ -630,16 +619,15 @@ class AccountController extends SimpleController
      * Provides a form for users to modify various properties of their account, such as name, email, locale, etc.
      * Any fields that the user does not have permission to modify will be automatically disabled.
      * This page requires authentication.
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: true
+     * Route: /account/settings
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function pageSettings(Request $request, Response $response, $args)
     {
@@ -684,16 +672,16 @@ class AccountController extends SimpleController
      *
      * This allows existing users to sign in.
      * By definition, this is a "public page" (does not require authentication).
-     * Request type: GET
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * checkEnvironment
+     * Route: /account/sign-in
+     * Route Name: login
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function pageSignIn(Request $request, Response $response, $args)
     {
@@ -730,16 +718,15 @@ class AccountController extends SimpleController
      * 1. They have the necessary permissions to update the posted field(s);
      * 2. The submitted data is valid.
      * This route requires authentication.
-     * Request type: POST
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: true
+     * Route: /account/settings/profile
+     * Route Name: {none}
+     * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function profile(Request $request, Response $response, $args)
     {
@@ -824,17 +811,16 @@ class AccountController extends SimpleController
      * 7. The username and email are not already taken.
      * Automatically sends an activation link upon success, if account activation is enabled.
      * This route is "public access".
-     * Request type: POST
      * Returns the User Object for the user record that was created.
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/register
+     * Route Name: {none}
+     * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function register(Request $request, Response $response, $args)
     {
@@ -901,17 +887,6 @@ class AccountController extends SimpleController
             return $response->withStatus(429);
         }
 
-        // Check if username or email already exists
-        if ($classMapper->staticMethod('user', 'findUnique', $data['user_name'], 'user_name')) {
-            $ms->addMessageTranslated('danger', 'USERNAME.IN_USE', $data);
-            $error = true;
-        }
-
-        if ($classMapper->staticMethod('user', 'findUnique', $data['email'], 'email')) {
-            $ms->addMessageTranslated('danger', 'EMAIL.IN_USE', $data);
-            $error = true;
-        }
-
         // Check captcha, if required
         if ($config['site.registration.captcha']) {
             $captcha = new Captcha($this->ci->session, $this->ci->config['session.keys.captcha']);
@@ -929,80 +904,24 @@ class AccountController extends SimpleController
         unset($data['captcha']);
         unset($data['passwordc']);
 
+        // Now that we check the form, we can register the actual user
+        $registration = new Registration($this->ci, $data);
+
+        try {
+            $user = $registration->register();
+        } catch (\Exception $e) {
+            $ms->addMessageTranslated('danger', $e->getMessage(), $data);
+            $error = true;
+        }
+
+        // Success message
         if ($config['site.registration.require_email_verification']) {
-            $data['flag_verified'] = false;
+            // Verification required
+            $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE2', $user->toArray());
         } else {
-            $data['flag_verified'] = true;
+            // No verification required
+            $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE1');
         }
-
-        // Load default group
-        $groupSlug = $config['site.registration.user_defaults.group'];
-        $defaultGroup = $classMapper->staticMethod('group', 'where', 'slug', $groupSlug)->first();
-
-        if (!$defaultGroup) {
-            $e = new HttpException("Account registration is not working because the default group '$groupSlug' does not exist.");
-            $e->addUserMessage('ACCOUNT.REGISTRATION_BROKEN');
-            throw $e;
-        }
-
-        // Set default group
-        $data['group_id'] = $defaultGroup->id;
-
-        // Set locale
-        $data['locale'] = $data['locale'];
-
-        // Hash password
-        $data['password'] = Password::hash($data['password']);
-
-        // All checks passed!  log events/activities, create user, and send verification email (if required)
-        // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $throttler) {
-            // Log throttleable event
-            $throttler->logEvent('registration_attempt');
-
-            // Create the user
-            $user = $classMapper->createInstance('user', $data);
-
-            // Store new user to database
-            $user->save();
-
-            // Create activity record
-            $this->ci->userActivityLogger->info("User {$user->user_name} registered for a new account.", [
-                'type' => 'sign_up',
-                'user_id' => $user->id
-            ]);
-
-            // Load default roles
-            $defaultRoleSlugs = $classMapper->staticMethod('role', 'getDefaultSlugs');
-            $defaultRoles = $classMapper->staticMethod('role', 'whereIn', 'slug', $defaultRoleSlugs)->get();
-            $defaultRoleIds = $defaultRoles->pluck('id')->all();
-
-            // Attach default roles
-            $user->roles()->attach($defaultRoleIds);
-
-            // Verification email
-            if ($config['site.registration.require_email_verification']) {
-                // Try to generate a new verification request
-                $verification = $this->ci->repoVerification->create($user, $config['verification.timeout']);
-
-                // Create and send verification email
-                $message = new TwigMailMessage($this->ci->view, 'mail/verify-account.html.twig');
-
-                $message->from($config['address_book.admin'])
-                        ->addEmailRecipient(new EmailRecipient($user->email, $user->full_name))
-                        ->addParams([
-                            'user' => $user,
-                            'token' => $verification->getToken()
-                        ]);
-
-                $this->ci->mailer->send($message);
-
-                $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE2', $user->toArray());
-            } else {
-                // No verification required
-                $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE1');
-            }
-        });
 
         return $response->withStatus(200);
     }
@@ -1016,16 +935,15 @@ class AccountController extends SimpleController
      * 3. The user account is not already verified;
      * 4. The submitted data is valid.
      * This route is "public access".
-     * Request type: POST
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/resend-verification
+     * Route Name: {none}
+     * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function resendVerification(Request $request, Response $response, $args)
     {
@@ -1113,16 +1031,15 @@ class AccountController extends SimpleController
      * 3. The token has not expired;
      * 4. The submitted data (new password) is valid.
      * This route is "public access".
-     * Request type: POST
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/set-password
+     * Route Name: {none}
+     * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function setPassword(Request $request, Response $response, $args)
     {
@@ -1190,16 +1107,15 @@ class AccountController extends SimpleController
      * 2. They have the necessary permissions to update the posted field(s);
      * 3. The submitted data is valid.
      * This route requires authentication.
-     * Request type: POST
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: true
+     * Route: /account/settings
+     * Route Name: settings
+     * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function settings(Request $request, Response $response, $args)
     {
@@ -1291,17 +1207,16 @@ class AccountController extends SimpleController
      * Suggest an available username for a specified first/last name.
      *
      * This route is "public access".
-     * Request type: GET
      * @todo Can this route be abused for account enumeration?  If so we should throttle it as well.
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/suggest-username
+     * Route Name: {none}
+     * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function suggestUsername(Request $request, Response $response, $args)
     {
@@ -1328,15 +1243,14 @@ class AccountController extends SimpleController
      * 2. The user account is not already verified;
      * This route is "public access".
      *
-     *    AuthGuard: false
-     *    Route: /account/set-password/deny
-     *    Route Name: {none}
-     *    Request type: GET
-     *    @param  Request $request
-     *    @param  Response $response
-     *    @param  array $args
-     *    @return void
+     * AuthGuard: false
+     * Route: /account/verify
+     * Route Name: {none}
      * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
+     * @return void
      */
     public function verify(Request $request, Response $response, $args)
     {

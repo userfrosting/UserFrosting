@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle.
 - Re-written Migrator. The migrator is now detached from the console and Bakery. The migrator is now included in the ServicesProvider and included in the `Core` sprinkle. (#795)
 - Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace.
+- Move User registration out of the `AccountController` (#793)
 
 ### Deprecated
 - Migrations should now extends `UserFrosting\Sprinkle\Core\Database\Migration` instead of `UserFrosting\System\Bakery\Migration`.
