@@ -34,7 +34,7 @@ function attachRoleForm() {
 
         // Set up the form for submission
         form.ufForm({
-            validators: page.validators
+            validator: page.validators
         }).on("submitSuccess.ufForm", function() {
             // Reload page on success
             window.location.reload();
@@ -88,8 +88,8 @@ function bindRoleButtons(el) {
             });
 
             // Set up form for submission
-            form.ufForm({
-            }).on("submitSuccess.ufForm", function() {
+            form.ufForm()
+            .on("submitSuccess.ufForm", function() {
                 // Reload page on success
                 window.location.reload();
             });
