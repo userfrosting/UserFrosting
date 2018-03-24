@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v4.1.17-alpha
 - Lock `gulp-uf-bundle-assets` at v2.28.0 until Silic0nS0ldier/gulp-uf-bundle-assets#5 is resolved (see #859)
+- Add missing getInfo methods for GroupController and RoleController (#837)
 
 ## v4.1.16-alpha
 - Fix for `merge` bundling rule (#660)
