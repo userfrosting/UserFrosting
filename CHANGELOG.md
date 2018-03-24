@@ -1,5 +1,13 @@
 # Change Log
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## v4.1.17-alpha
+- Lock `gulp-uf-bundle-assets` at v2.28.0 until Silic0nS0ldier/gulp-uf-bundle-assets#5 is resolved (see #859)
+
 ## v4.1.16-alpha
 - Fix for `merge` bundling rule (#660)
 - Fix for undefined variable exception under strict mode in `ufAlerts` (#809)
