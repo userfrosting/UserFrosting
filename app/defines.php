@@ -3,7 +3,7 @@
 namespace UserFrosting;
 
 // Some standard defines
-define('UserFrosting\VERSION', '4.1.16-alpha');
+define('UserFrosting\VERSION', '4.2.0-alpha');
 define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '5.6');
 define('UserFrosting\DEBUG_CONFIG', false);
@@ -18,6 +18,7 @@ if (!defined('UserFrosting\APP_DIR')) {
 // The directory containing APP_DIR.  Usually, this will contain the entire website.
 define('UserFrosting\ROOT_DIR', realpath(__DIR__ . '/..'));
 
+// Directory names
 define('UserFrosting\APP_DIR_NAME', basename(__DIR__));
 define('UserFrosting\BUILD_DIR_NAME', 'build');
 define('UserFrosting\CACHE_DIR_NAME', 'cache');
@@ -50,3 +51,9 @@ define('UserFrosting\SCHEMA_DIR_NAME', 'schema');
 define('UserFrosting\SRC_DIR_NAME', 'src');
 define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');
 define('UserFrosting\FACTORY_DIR_NAME', 'factories');
+define('UserFrosting\PUBLIC_DIR_NAME', 'public');
+
+// Full path to frontend vendor asset directories
+define('UserFrosting\ASSET_DIR', APP_DIR_NAME . DS . ASSET_DIR_NAME);
+define('UserFrosting\NPM_ASSET_DIR', ASSET_DIR . DS . 'node_modules');
+define('UserFrosting\BOWER_ASSET_DIR', ASSET_DIR . DS . 'bower_components');

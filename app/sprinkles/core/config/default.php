@@ -94,6 +94,9 @@
                 'Timeout' => 15
             ]
         ],
+        'migrations' => [
+            'repository_table' => 'migrations'
+        ],
         // Filesystem paths
         'path'    => [
             'document_root'     => str_replace(DIRECTORY_SEPARATOR, \UserFrosting\DS, $_SERVER['DOCUMENT_ROOT']),
@@ -151,7 +154,11 @@
                     'th_TH' => 'ภาษาไทย',
                     'fa'    => 'فارسی'
                 ],
-                // This can be a comma-separated list, to load multiple fallback locales
+                // This can be a comma-separated list, to load multiple fallback locales.
+                // Supported browser requested languages always have first preference.
+                // First locale is the base one and the other one are loaded on top.
+                // For example, 'en_US,es_ES' will use the English (en_US)
+                // translation as a base and load the Spanish (es_ES) translation on top.
                 'default' => 'en_US'
             ],
             'title'     =>      'UserFrosting',
@@ -161,6 +168,7 @@
             ],
             // URLs
             'uri' => [
+                // 'base' settings are no longer used to generate the uri frequently used in Twig (site.uri.public). This is due to Slim doing a better job of figuring this out on its own. This key has been kept to ensure backwards compatibility.
                 'base' => [
                     'host'              => isset($_SERVER['SERVER_NAME']) ? trim($_SERVER['SERVER_NAME'], '/') : 'localhost',
                     'scheme'            => empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off' ? 'http' : 'https',

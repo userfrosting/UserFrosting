@@ -3,7 +3,6 @@
 namespace UserFrosting\Tests\Unit;
 
 use UserFrosting\Tests\TestCase;
-use UserFrosting\Tests\DatabaseTransactions;
 
 class ExampleTest extends TestCase
 {

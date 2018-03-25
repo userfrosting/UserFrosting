@@ -7,21 +7,16 @@
  */
 namespace UserFrosting\Tests\Unit;
 
-use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Mockery as m;
-use ReflectionClass;
 use UserFrosting\Tests\TestCase;
-use UserFrosting\Tests\DatabaseTransactions;
 use UserFrosting\Sprinkle\Core\Database\Builder as QueryBuilder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
 
 /**
  * Tests the BelongsToManyThrough relation.
- *
- * @extends TestCase
  */
 class BelongsToManyThroughTest extends TestCase
 {

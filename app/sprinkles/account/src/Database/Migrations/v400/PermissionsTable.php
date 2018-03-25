@@ -8,10 +8,9 @@
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
-use UserFrosting\System\Bakery\Migration;
+use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Permissions table migration
@@ -20,7 +19,6 @@ use UserFrosting\System\Bakery\Migration;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class PermissionsTable extends Migration
@@ -28,7 +26,7 @@ class PermissionsTable extends Migration
     /**
      * {@inheritDoc}
      */
-    public $dependencies = [
+    static public $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionRolesTable'
     ];
@@ -52,21 +50,7 @@ class PermissionsTable extends Migration
                 $table->charset = 'utf8';
             });
         }
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function down()
-    {
-        $this->schema->drop('permissions');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function seed()
-    {
         // Skip this if table is not empty
         if (Permission::count() == 0) {
 
@@ -258,5 +242,13 @@ class PermissionsTable extends Migration
                 ]);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function down()
+    {
+        $this->schema->drop('permissions');
     }
 }

@@ -59,4 +59,12 @@ public/css/min/*
 # Ignore personal config files (v0.3.x)
 app/config-userfrosting.php
 
+# Physical database storage for containers (?)
 app/database/userfrosting.db
+
+# Ignore vendor assets
+app/assets/*
+
+# Ignore Vagrant & Homestead VM
+vagrant/Homestead/
+.vagrant/*

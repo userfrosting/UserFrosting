@@ -11,9 +11,8 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 /**
- * UFBuilder Class
+ * UserFrosting's custom Query Builder Class
  *
- * The base Eloquent data model, from which all UserFrosting data classes extend.
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class Builder extends LaravelBuilder

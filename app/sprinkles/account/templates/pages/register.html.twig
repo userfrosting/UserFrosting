@@ -53,6 +53,17 @@
                 <label class="sr-only" for="r-form-passwordc">{{translate('PASSWORD.CONFIRM')}}</label>
                 <input type="password" name="passwordc" placeholder="{{translate('PASSWORD.CONFIRM')}}" class="form-control" id="r-form-passwordc">
             </div>
+            <div class="form-group">
+                <label for="r-form-locale" class="control-label">{{translate("LOCALE")}}</label>
+                <select id="r-form-locale" class="form-control js-select2" name="locale">
+                    {% for option, label in locales.available %}
+                        {% if label is not empty %}
+                            <option value="{{option}}" {% if (option == locales.current) %}selected{% endif %}>{{label}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <p class="help-block">{{translate("LOCALE.ACCOUNT")}}.</p>
+            </div>
             {% if site.registration.captcha %}
                 <div class="form-group">
                     <label class="sr-only" for="r-form-passwordc">{{translate('CAPTCHA.VERIFY')}}</label>

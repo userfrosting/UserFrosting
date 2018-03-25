@@ -8,7 +8,6 @@
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -130,7 +129,7 @@ class User extends Model
      * Get a property for this object.
      *
      * @param string $name the name of the property to retrieve.
-     * @throws Exception the property does not exist for this object.
+     * @throws \Exception the property does not exist for this object.
      * @return string the associated property.
      */
     public function __get($name)
@@ -153,7 +152,7 @@ class User extends Model
      */
     public function activities()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->hasMany($classMapper->getClassMapping('activity'), 'user_id');
@@ -167,7 +166,7 @@ class User extends Model
      */
     public function delete($hardDelete = false)
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         if ($hardDelete) {
@@ -275,7 +274,7 @@ class User extends Model
      */
     public function group()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsTo($classMapper->getClassMapping('group'), 'group_id');
@@ -301,7 +300,7 @@ class User extends Model
      */
     public function lastActivity()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsTo($classMapper->getClassMapping('activity'), 'last_activity_id');
@@ -315,7 +314,7 @@ class User extends Model
      */
     public function lastActivityOfType($type = null)
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         $query = $this->hasOne($classMapper->getClassMapping('activity'), 'user_id');
@@ -402,7 +401,7 @@ class User extends Model
      */
     public function passwordResets()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->hasMany($classMapper->getClassMapping('password_reset'), 'user_id');
@@ -415,7 +414,7 @@ class User extends Model
      */
     public function permissions()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsToManyThrough(
@@ -437,7 +436,7 @@ class User extends Model
      */
     public function roles()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsToMany($classMapper->getClassMapping('role'), 'role_users', 'user_id', 'role_id')->withTimestamps();

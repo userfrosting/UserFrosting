@@ -22,7 +22,7 @@ trait DatabaseTransactions
      */
     public function beginDatabaseTransaction()
     {
-        $database = $this->ci['db'];
+        $database = $this->ci->db;
 
         foreach ($this->connectionsToTransact() as $name) {
             $database->connection($name)->beginTransaction();

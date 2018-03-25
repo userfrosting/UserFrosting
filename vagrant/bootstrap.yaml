@@ -1,0 +1,23 @@
+---
+ip: "192.168.10.10"
+memory: 2048
+cpus: 1
+hostname: userfrosting
+name: userfrosting
+provider: virtualbox
+
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+    - ~/.ssh/id_rsa
+
+folders:
+    - map: "."
+      to: "/home/vagrant/userfrosting"
+
+sites:
+    - map: userfrosting.test
+      to: "/home/vagrant/userfrosting/public"
+
+databases:
+    - UserFrosting
