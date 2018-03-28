@@ -200,6 +200,45 @@ class RoleController extends SimpleController
     }
 
     /**
+     * Returns info for a single role, along with associated permissions.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getInfo($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_roles')) {
+            throw new ForbiddenException();
+        }
+
+        $slug = $args['slug'];
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $role = $classMapper->staticMethod('role', 'where', 'slug', $slug)->first();
+
+        // If the role doesn't exist, return 404
+        if (!$role) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // Get role
+        $result = $role->load('permissions')->toArray();
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
      * Returns a list of Roles
      *
      * Generates a list of roles, optionally paginated, sorted and/or filtered.
