@@ -201,6 +201,45 @@ class GroupController extends SimpleController
     }
 
     /**
+     * Returns info for a single group.
+     *
+     * This page requires authentication.
+     * Request type: GET
+     */
+    public function getInfo($request, $response, $args)
+    {
+        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        $authorizer = $this->ci->authorizer;
+
+        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        $currentUser = $this->ci->currentUser;
+
+        // Access-controlled page
+        if (!$authorizer->checkAccess($currentUser, 'uri_groups')) {
+            throw new ForbiddenException();
+        }
+
+        $slug = $args['slug'];
+
+        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        $classMapper = $this->ci->classMapper;
+
+        $group = $classMapper->staticMethod('group', 'where', 'slug', $slug)->first();
+
+        // If the group doesn't exist, return 404
+        if (!$group) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // Get group
+        $result = $group->toArray();
+
+        // Be careful how you consume this data - it has not been escaped and contains untrusted user-supplied content.
+        // For example, if you plan to insert it into an HTML DOM, you must escape it on the client side (or use client-side templating).
+        return $response->withJson($result, 200, JSON_PRETTY_PRINT);
+    }
+
+    /**
      * Returns a list of Groups
      *
      * Generates a list of groups, optionally paginated, sorted and/or filtered.
