@@ -175,9 +175,13 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $locator = new DeprecatedMigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
         $this->migrator->setLocator($locator);
 
-        // Run up
+        // Run up. Should also run the seeder
         $this->migrator->run();
         $this->assertTrue($this->schema->hasTable('deprecated_table'));
+
+        // Make sure the seeder ran.
+        // Easiest way to do so it asking the seeder to change the table structure
+        $this->assertTrue($this->schema->hasColumn('deprecated_table', 'foo'));
 
         // Rollback
         $this->migrator->rollback();

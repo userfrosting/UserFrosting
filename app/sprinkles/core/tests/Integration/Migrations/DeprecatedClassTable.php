@@ -30,4 +30,16 @@ class DeprecatedClassTable extends Migration
     {
         $this->schema->dropIfExists('deprecated_table');
     }
+
+    /**
+     * Seed the database.
+     *
+     * @return void
+     */
+    public function seed()
+    {
+        $this->schema->table('deprecated_table', function (Blueprint $table) {
+            $table->string('foo')->nullable();
+        });
+    }
 }
