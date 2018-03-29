@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `TestDatabase` test Trait to use the in memory database for a test
 - Implement `withRaw`, `withSum`, `withAvg`, `withMin`, `withMax` (see https://github.com/laravel/framework/pull/16815)
 - Include Vagrant integration directly inside UF (#829)
-- Added arguments to the `create-admin` Bakery command so it can be used in a non-interactive way (#808)
+- Added arguments to the `create-admin` and `setup` Bakery commands so it can be used in a non-interactive way (#808)
 - Added tests for migrator and it's components
 - Added tests for `migrate` Bakery command and sub-commands
 

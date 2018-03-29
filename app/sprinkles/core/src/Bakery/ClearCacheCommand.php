@@ -19,7 +19,7 @@ use UserFrosting\Sprinkle\Core\Twig\CacheHelper;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class ClearCache extends BaseCommand
+class ClearCacheCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}

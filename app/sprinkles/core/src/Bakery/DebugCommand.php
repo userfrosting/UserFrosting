@@ -19,7 +19,7 @@ use UserFrosting\System\Bakery\DatabaseTest;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Debug extends BaseCommand
+class DebugCommand extends BaseCommand
 {
     use DatabaseTest;
 
