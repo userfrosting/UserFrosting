@@ -15,19 +15,22 @@ namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 interface MigrationRepositoryInterface
 {
     /**
-     * Get the ran migrations.
+     * Get the list of ran migrations
      *
-     * @return array An array of migration class names
+     * @param  int $steps Number of batch to return
+     * @param  string $order asc|desc
+     * @return array An array of migration class names in the order they where ran
      */
-    public function getRan();
+    public function getMigrationsList($steps = -1, $order = 'asc');
 
     /**
      * Get list of migrations.
      *
-     * @param  int  $steps
+     * @param  int  $steps Number of batch to return
+     * @param  string $order asc|desc
      * @return array
      */
-    public function getMigrations($steps);
+    public function getMigrations($steps = -1, $order = 'asc');
 
     /**
      * Get the last migration batch.

@@ -76,7 +76,7 @@ class Migrator
         $availableMigrations = $this->getAvailableMigrations();
 
         // Get ran migrations
-        $ranMigrations = $this->repository->getRan();
+        $ranMigrations = $this->repository->getMigrationsList();
 
         // Get outstanding migrations classes that requires to be run up
         $pendingMigrations = $this->pendingMigrations($availableMigrations, $ranMigrations);
@@ -213,7 +213,7 @@ class Migrator
     {
         $steps = Arr::get($options, 'steps', 0);
         if ($steps > 0) {
-            return $this->repository->getMigrations($steps);
+            return $this->repository->getMigrationsList($steps, 'desc');
         } else {
             return $this->repository->getLast();
         }
@@ -273,7 +273,7 @@ class Migrator
         // "empty" state and ready to be migrated "up" again.
         //
         // !TODO :: Should compare to the install list to make sure no outstanding migration (ran, but with no migraiton class anymore) still exist in the db
-        $migrations = array_reverse($this->repository->getRan());
+        $migrations = array_reverse($this->repository->getMigrationsList());
 
         if (count($migrations) === 0) {
             return [];

@@ -91,7 +91,7 @@ class DatabaseMigratorTest extends TestCase
         $this->locator->shouldReceive('getMigrations')->once()->andReturn([]);
 
         // Repository will be asked to return the ran migrations
-        $this->repository->shouldReceive('getRan')->once()->andReturn([]);
+        $this->repository->shouldReceive('getMigrationsList')->once()->andReturn([]);
 
         $migrations = $this->migrator->run();
         $this->assertEmpty($migrations);
@@ -113,7 +113,7 @@ class DatabaseMigratorTest extends TestCase
         $this->locator->shouldReceive('getMigrations')->andReturn($testMigrations);
 
         // Repository will be asked to return the ran migrations, the next batch number and will log 3 new migrations
-        $this->repository->shouldReceive('getRan')->andReturn([]);
+        $this->repository->shouldReceive('getMigrationsList')->andReturn([]);
         $this->repository->shouldReceive('getNextBatchNumber')->andReturn(1);
         $this->repository->shouldReceive('log')->times(3)->andReturn(null);
 
@@ -145,7 +145,7 @@ class DatabaseMigratorTest extends TestCase
         ]);
 
         // Repository will be asked to return the ran migrations (one), the next batch number and will log 2 new migrations
-        $this->repository->shouldReceive('getRan')->andReturn([
+        $this->repository->shouldReceive('getMigrationsList')->andReturn([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable'
         ]);
         $this->repository->shouldReceive('getNextBatchNumber')->andReturn(2);
@@ -185,7 +185,7 @@ class DatabaseMigratorTest extends TestCase
         $this->locator->shouldReceive('getMigrations')->andReturn($testMigrations);
 
         // Repository will be asked to return the ran migrations (one), the next batch number and will log 2 new migrations
-        $this->repository->shouldReceive('getRan')->andReturn($testMigrations);
+        $this->repository->shouldReceive('getMigrationsList')->andReturn($testMigrations);
         $this->repository->shouldNotReceive('getNextBatchNumber');
         $this->repository->shouldNotReceive('log');
 
@@ -303,7 +303,7 @@ class DatabaseMigratorTest extends TestCase
         $this->locator->shouldReceive('getMigrations')->once()->andReturn($testMigrations);
 
         // Repository will be asked to return the ran migrations (one), the next batch number and will log 2 new migrations
-        $this->repository->shouldReceive('getRan')->once()->andReturn($testMigrations);
+        $this->repository->shouldReceive('getMigrationsList')->once()->andReturn($testMigrations);
         $this->repository->shouldReceive('delete')->times(3)->andReturn([]);
 
         // SchemaBuilder will only create 2 tables

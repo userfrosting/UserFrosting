@@ -7,6 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
+use Illuminate\Support\Collection;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -47,20 +48,21 @@ class MigrateStatusCommand extends BaseCommand
 
         // Get ran migrations. If repository doesn't exist, there's no ran
         if (!$migrator->repositoryExists()) {
-            $ran = [];
+            $ranArray = [];
         } else {
-            $ran = $migrator->getRepository()->getRan();
+            $ran = $migrator->getRepository()->getMigrations();
+            $ranArray = $ran->pluck('migration')->all();
         }
 
         // Get available migrations and calculate pending one
         $available = $migrator->getAvailableMigrations();
-        $pending = $migrator->pendingMigrations($available, $ran);
+        $pending = $migrator->pendingMigrations($available, $ranArray);
 
         // Display ran migrations
         $this->io->section("Installed migrations");
-        if (count($ran) > 0) {
+        if (count($ranArray) > 0) {
             $this->io->table(
-                ['Migration', 'Available?'],
+                ['Migration', 'Available?', 'Batch'],
                 $this->getStatusFor($ran, $available)
             );
         } else {
@@ -80,18 +82,19 @@ class MigrateStatusCommand extends BaseCommand
      * Return an array of [migration, available] association.
      * A migration is available if it's in the available stack (class is in the Filesystem)
      *
-     * @param  array  $ran       The ran migrations
+     * @param  Collection  $ran  The ran migrations
      * @param  array  $available The available migrations
      * @return array             An array of [migration, available] association
      */
-    protected function getStatusFor(array $ran, array $available)
+    protected function getStatusFor(Collection $ran, array $available)
     {
         return collect($ran)->map(function ($migration) use ($available) {
-            if (in_array($migration, $available)) {
-                return [$migration, '<info>Y</info>'];
+            if (in_array($migration->migration, $available)) {
+                $available = '<info>Yes</info>';
             } else {
-                return [$migration, '<fg=red>N</fg=red>'];
+                $available = '<fg=red>No</fg=red>';
             }
+            return [$migration->migration, $available, $migration->batch];
         })->toArray();
     }
 }

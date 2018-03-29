@@ -45,14 +45,16 @@ class MigrationRepositoryTest extends TestCase
     public function testGetRanMigrationsListMigrationsByPackage()
     {
         $query = m::mock('stdClass');
+        $sortedQuery = m::mock('stdClass');
 
         // Set expectations for the Connection mock
         $this->repository->getConnection()->shouldReceive('table')->once()->with('migrations')->andReturn($query);
 
         // When getRan is called, the $query should be orderedBy batch, then migration and pluck.
-        $query->shouldReceive('orderBy')->once()->with('id', 'asc')->andReturn(new Collection([['migration' => 'bar']]));
+        $query->shouldReceive('orderBy')->once()->with('id', 'asc')->andReturn($sortedQuery);
+        $sortedQuery->shouldReceive('get')->once()->andReturn(new Collection([['migration' => 'bar']]));
 
-        $this->assertEquals(['bar'], $this->repository->getRan());
+        $this->assertEquals(['bar'], $this->repository->getMigrationsList());
     }
 
     public function testGetLastBatchNumberReturnsMaxBatch()

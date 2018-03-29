@@ -93,7 +93,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
         // N.B.: getLast return the migrations in reverse order (last ran first)
         $this->assertEquals($this->locator->getMigrations(), $ran);
         $this->assertEquals(array_reverse($this->locator->getMigrations()), $this->repository->getLast());
-        $this->assertEquals($this->locator->getMigrations(), $this->repository->getRan());
+        $this->assertEquals($this->locator->getMigrations(), $this->repository->getMigrationsList());
     }
 
     public function testMigrationsCanBeRolledBack()

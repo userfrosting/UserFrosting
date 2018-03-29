@@ -28,7 +28,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
 
         // Define dummy data
         $available = ['foo', 'bar', 'oof', 'rab'];
-        $installed = ['foo', 'bar'];
+        $installed = $this->getInstalledMigrationStub()->pluck('migration')->all();
         $pending = ['oof', 'rab'];
 
         // Set expectations
@@ -38,7 +38,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
         $migrator->shouldReceive('getAvailableMigrations')->once()->andReturn($available);
         $migrator->shouldReceive('pendingMigrations')->once()->with($available, $installed)->andReturn($pending);
 
-        $repository->shouldReceive('getRan')->once()->andReturn($installed);
+        $repository->shouldReceive('getMigrations')->once()->andReturn($this->getInstalledMigrationStub());
 
         // Run command
         $commandTester = $this->runCommand($migrator, []);
@@ -52,7 +52,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
 
         // Define dummy data
         $available = ['foo', 'bar', 'oof', 'rab'];
-        $installed = ['foo', 'bar'];
+        $installed = $this->getInstalledMigrationStub()->pluck('migration')->all();
         $pending = ['oof', 'rab'];
 
         // Set expectations
@@ -62,7 +62,7 @@ class BakeryMigrateStatusCommandTest extends TestCase
         $migrator->shouldReceive('getAvailableMigrations')->once()->andReturn($available);
         $migrator->shouldReceive('pendingMigrations')->once()->with($available, $installed)->andReturn($pending);
 
-        $repository->shouldReceive('getRan')->once()->andReturn($installed);
+        $repository->shouldReceive('getMigrations')->once()->andReturn($this->getInstalledMigrationStub());
 
         // Run command
         $commandTester = $this->runCommand($migrator, ['--database' => 'test']);
@@ -90,5 +90,13 @@ class BakeryMigrateStatusCommandTest extends TestCase
         $commandTester->execute($execute);
 
         return $commandTester;
+    }
+
+    protected function getInstalledMigrationStub()
+    {
+        return collect([
+            (object)['migration' => 'foo', 'batch' => 1, 'sprinkle' => 'foo'],
+            (object)['migration' => 'bar', 'batch' => 2, 'sprinkle' => 'bar']
+        ]);
     }
 }
