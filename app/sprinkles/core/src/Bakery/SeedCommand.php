@@ -71,7 +71,6 @@ class SeedCommand extends BaseCommand
 
         // TODO ::
         //   - Disable Model guarded policy
-        //   - Create seeder:list command/options
         //   - Create default seeds list/service
 
         // Run seeds
@@ -99,7 +98,7 @@ class SeedCommand extends BaseCommand
         $finder = new ClassFinder($this->ci->sprinkleManager);
 
         try {
-            $class = $finder->getClass("Database\\Seeder\\$name");
+            $class = $finder->getClass("Database\\Seeds\\$name");
         } catch (\Exception $e) {
             $this->io->error($e->getMessage());
             exit(1);
