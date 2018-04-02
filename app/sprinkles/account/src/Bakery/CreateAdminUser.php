@@ -77,7 +77,7 @@ class CreateAdminUser extends BaseCommand
         }
 
         // Make sure the required migrations have been run
-        $ranMigrations = $repository->getRan();
+        $ranMigrations = $repository->getMigrationsList();
         foreach ($this->dependencies as $migration) {
             if (!in_array($migration, $ranMigrations)) {
                 $this->io->error("Migration `$migration` doesn't appear to have been run! Make sure all migrations are up to date by using the `php bakery migrate` command.");

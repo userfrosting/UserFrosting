@@ -93,7 +93,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
         // N.B.: getLast return the migrations in reverse order (last ran first)
         $this->assertEquals($this->locator->getMigrations(), $ran);
         $this->assertEquals(array_reverse($this->locator->getMigrations()), $this->repository->getLast());
-        $this->assertEquals($this->locator->getMigrations(), $this->repository->getRan());
+        $this->assertEquals($this->locator->getMigrations(), $this->repository->getMigrationsList());
     }
 
     public function testMigrationsCanBeRolledBack()
@@ -175,9 +175,13 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $locator = new DeprecatedMigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
         $this->migrator->setLocator($locator);
 
-        // Run up
+        // Run up. Should also run the seeder
         $this->migrator->run();
         $this->assertTrue($this->schema->hasTable('deprecated_table'));
+
+        // Make sure the seeder ran.
+        // Easiest way to do so it asking the seeder to change the table structure
+        $this->assertTrue($this->schema->hasColumn('deprecated_table', 'foo'));
 
         // Rollback
         $this->migrator->rollback();

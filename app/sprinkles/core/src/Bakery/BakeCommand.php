@@ -19,7 +19,7 @@ use UserFrosting\System\Bakery\BaseCommand;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Bake extends BaseCommand
+class BakeCommand extends BaseCommand
 {
     /**
      * @var string Path to the build/ directory

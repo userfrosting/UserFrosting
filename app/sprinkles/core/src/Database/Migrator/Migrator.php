@@ -12,6 +12,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocatorInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser as Analyser;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
 /**
@@ -76,7 +77,7 @@ class Migrator
         $availableMigrations = $this->getAvailableMigrations();
 
         // Get ran migrations
-        $ranMigrations = $this->repository->getRan();
+        $ranMigrations = $this->repository->getMigrationsList();
 
         // Get outstanding migrations classes that requires to be run up
         $pendingMigrations = $this->pendingMigrations($availableMigrations, $ranMigrations);
@@ -179,6 +180,16 @@ class Migrator
         $this->repository->log($migrationClass, $batch);
 
         $this->note("<info>Migrated:</info>  {$migrationClass}");
+
+        /**
+         * If the migration has a `seed` method, run it
+         * @deprecated Since 4.2.0. Use a seeder instead
+         */
+        if (method_exists($migration, 'seed')) {
+            Debug::debug("Migration `seed` method has been deprecated and will be removed in future versions. Please use a Seeder instead.");
+            $this->runMigration($migration, 'seed');
+            $this->note("<info>Seeded:</info>  {$migrationClass}");
+        }
     }
 
     /**
@@ -213,7 +224,7 @@ class Migrator
     {
         $steps = Arr::get($options, 'steps', 0);
         if ($steps > 0) {
-            return $this->repository->getMigrations($steps);
+            return $this->repository->getMigrationsList($steps, 'desc');
         } else {
             return $this->repository->getLast();
         }
@@ -273,7 +284,7 @@ class Migrator
         // "empty" state and ready to be migrated "up" again.
         //
         // !TODO :: Should compare to the install list to make sure no outstanding migration (ran, but with no migraiton class anymore) still exist in the db
-        $migrations = array_reverse($this->repository->getRan());
+        $migrations = array_reverse($this->repository->getMigrationsList());
 
         if (count($migrations) === 0) {
             return [];
