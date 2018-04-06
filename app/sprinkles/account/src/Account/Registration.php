@@ -131,7 +131,7 @@ class Registration
 
             // Verification email
             if ($this->requireEmailVerification) {
-                $this->sendVerificarionEmail($user);
+                $this->sendVerificationEmail($user);
             }
 
             return $user;
@@ -228,7 +228,7 @@ class Registration
      * @param  User $user The user to send the email for
      * @return void
      */
-    protected function sendVerificarionEmail(User $user)
+    protected function sendVerificationEmail(User $user)
     {
         // Try to generate a new verification request
         $verification = $this->ci->repoVerification->create($user, $this->ci->config['verification.timeout']);
