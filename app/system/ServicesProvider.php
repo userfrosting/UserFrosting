@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventDispatcher;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
+use RocketTheme\Toolbox\StreamWrapper\Stream;
 use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
 use UserFrosting\System\Sprinkle\SprinkleManager;
 
@@ -54,6 +55,7 @@ class ServicesProvider
 
             // Use locator to initialize streams
             ReadOnlyStream::setLocator($locator);
+            Stream::setLocator($locator);
 
             // Fire up StreamBuilder
             $c->streamBuilder;
