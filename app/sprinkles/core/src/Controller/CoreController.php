@@ -9,7 +9,7 @@ namespace UserFrosting\Sprinkle\Core\Controller;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Exception\NotFoundException as NotFoundException;
+use UserFrosting\Support\Exception\NotFoundException;
 
 /**
  * CoreController Class
@@ -70,5 +70,26 @@ class CoreController extends SimpleController
     public function jsonAlerts($request, $response, $args)
     {
         return $response->withJson($this->ci->alerts->getAndClearMessages());
+    }
+
+    /**
+     * Handle all requests for raw assets.
+     * Request type: GET
+     */
+    public function getAsset($request, $response, $args)
+    {
+        // By starting this service, we ensure that the timezone gets set.
+        $config = $this->ci->config;
+
+        $assetLoader = $this->ci->assetLoader;
+
+        if (!$assetLoader->loadAsset($args['url'])) {
+            throw new NotFoundException;
+        }
+
+        return $response
+            ->withHeader('Content-Type', $assetLoader->getType())
+            ->withHeader('Content-Length', $assetLoader->getLength())
+            ->write($assetLoader->getContent());
     }
 }

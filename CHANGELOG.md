@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Re-written Migrator. The migrator is now detached from the console and Bakery and is now included in the Core Sprinkle ServicesProvider (#795)
 - Makes the `semantic versioning` part of a migration class optional. Migrations classes can now have the `UserFrosting\Sprinkle\{sprinkleName}\Database\Migrations` namespace, or any other sub-namespace
 - Move User registration out of the `AccountController` (#793)
+- Temporarily undeprecate `AssetLoader` until the new asset system can be refactored (https://github.com/userfrosting/assets/issues/4)
+- Rewrite `AssetLoader` to act as a wrapper for `Assets`
 
 ### Deprecated
 - Migrations should now extends `UserFrosting\Sprinkle\Core\Database\Migration` instead of `UserFrosting\System\Bakery\Migration`

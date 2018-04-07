@@ -98,14 +98,35 @@ class ServicesProvider
          *
          * Loads assets from a specified relative location.
          * Assets are Javascript, CSS, image, and other files used by your site.
-         *
-         * @deprecated 4.0.25-alpha This service was formerly used to serve frontend assets during development.
+         * This implementation is a temporary hack until Assets can be refactored.
          */
         $container['assetLoader'] = function ($c) {
-            $basePath = \UserFrosting\SPRINKLES_DIR;
-            $pattern = "/^[A-Za-z0-9_\-]+\/assets\//";
+            $config = $c->config;
+            $locator = $c->locator;
 
-            return new AssetLoader($basePath, $pattern);
+            // Hacky way to clean up locator paths.
+            $locatorPaths = [];
+            foreach ($locator->getPaths('assets') as $pathSet) {
+                foreach ($pathSet as $path) {
+                    $locatorPaths[] = $path;
+                }
+            }
+
+            $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
+
+            $sprinkles = $c->sprinkleManager->getSprinkleNames();
+
+            $prefixTransformer = new PrefixTransformer();
+            $prefixTransformer->define(\UserFrosting\BOWER_ASSET_DIR, 'vendor-bower');
+            $prefixTransformer->define(\UserFrosting\NPM_ASSET_DIR, 'vendor-npm');
+
+            foreach ($sprinkles as $sprinkle) {
+                $prefixTransformer->define(\UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME, \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle);
+            }
+
+            $assets = new Assets($locator, 'assets', $baseUrl, $prefixTransformer);
+
+            return new AssetLoader($assets);
         };
 
         /**
