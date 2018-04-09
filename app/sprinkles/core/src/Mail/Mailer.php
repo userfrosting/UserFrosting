@@ -44,15 +44,6 @@ class Mailer
 
         // Configuration options
         if (isset($config['mailer'])) {
-            if (!in_array($config['mailer'], ['smtp', 'mail', 'qmail', 'sendmail'])) {
-                throw new \phpmailerException("'mailer' must be one of 'smtp', 'mail', 'qmail', or 'sendmail'.");
-            }
---- a/app/sprinkles/core/src/Mail/Mailer.php
-+++ b/app/sprinkles/core/src/Mail/Mailer.php
-@@ -44,11 +44,17 @@ class Mailer
- 
-         // Configuration options
-         if (isset($config['mailer'])) {
             switch ($config['mailer']) {
             case 'mail':
                 $this->phpMailer->isMail();
