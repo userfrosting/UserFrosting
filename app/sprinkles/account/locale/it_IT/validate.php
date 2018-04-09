@@ -16,6 +16,6 @@
 return [
 	"VALIDATE" => [
         "PASSWORD_MISMATCH" => "I due campi devono combaciare",
-        "USERNAME" => "L'username può essere composto da caratteri alfanumerici, '.', '-', e '_'."
+        "USERNAME" => "Il nome utente può essere composto solo da caratteri alfanumerici, '.', '-', e '_'."
     ]
 ];

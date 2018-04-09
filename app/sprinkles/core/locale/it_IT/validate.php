@@ -15,13 +15,13 @@
 
 return [
 	"VALIDATE" => [
-        "ARRAY" => "I valori per <strong>{{label}}</strong> devono essere in un vettore.",
+        "ARRAY" => "I valori per <strong>{{label}}</strong> devono essere in un array.",
         "BOOLEAN" => "Il valore per <strong>{{label}}</strong> deve essere '0' o '1'.",
-        "INTEGER" => "Il valore per <strong>{{label}}</strong> deve essere un intero.",
-        "INVALID_EMAIL" => "Indirizzo mail non valido",
-        "LENGTH_RANGE" => "{{label}} deve essere compreso tra i caratteri {{min}} e {{max}} in lunghezza.",
-        "NO_LEAD_WS" => "Il valore di <strong>{{label}}</strong> non può iniziare con spazi, tabulazioni o altri spazi vuoti.",
-        "NO_TRAIL_WS" => "Il valore di <strong>{{label}}</strong> non può terminare con spazi, tabulazioni o altri spazi vuoti.",
+        "INTEGER" => "Il valore per <strong>{{label}}</strong> deve essere un numero intero.",
+        "INVALID_EMAIL" => "Indirizzo email non valido",
+        "LENGTH_RANGE" => "{{label}} deve essere compreso tra {{min}} e {{max}} caratteri di lunghezza.",
+        "NO_LEAD_WS" => "Il valore di <strong>{{label}}</strong> non può iniziare con spazi, tab o altri spazi vuoti.",
+        "NO_TRAIL_WS" => "Il valore di <strong>{{label}}</strong> non può terminare con spazi, tab o altri spazi vuoti.",
         "REQUIRED" => "Il campo <strong>{{label}}</strong> deve essere specificato.",
         "SPRUNJE" => [
             "BAD_FILTER" => "<strong>{{name}}</strong> non è un filtro valido per questo Sprunje.",
