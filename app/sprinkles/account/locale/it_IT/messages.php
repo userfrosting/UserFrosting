@@ -17,7 +17,7 @@ return [
     "ACCOUNT" => [
         "@TRANSLATION" => "Account",
 
-        "ACCESS_DENIED" => "Sembra tu non abbiamo il permesso per effettuare questa azione.",
+        "ACCESS_DENIED" => "Sembra tu non abbia il permesso per effettuare questa azione.",
 
         "DISABLED" => "Questo account è stato disattivato, contattaci per maggiori informazioni",
 
