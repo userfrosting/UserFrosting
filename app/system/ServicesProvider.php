@@ -9,11 +9,8 @@ namespace UserFrosting\System;
 
 use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventDispatcher;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
-use RocketTheme\Toolbox\StreamWrapper\ReadOnlyStream;
-use RocketTheme\Toolbox\StreamWrapper\Stream;
-use RocketTheme\Toolbox\StreamWrapper\StreamBuilder;
 use UserFrosting\System\Sprinkle\SprinkleManager;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * UserFrosting system services provider.
@@ -41,60 +38,32 @@ class ServicesProvider
          * Path/file locator service.
          *
          * Register custom streams for the application, and add paths for app-level streams.
+         * @return \UserFrosting\UniformResourceLocator\ResourceLocator
          */
         $container['locator'] = function ($c) {
 
-            $locator = new UniformResourceLocator(\UserFrosting\ROOT_DIR);
+            $locator = new ResourceLocator(\UserFrosting\ROOT_DIR);
 
-            $locator->addPath('build', '', \UserFrosting\BUILD_DIR_NAME);
-            $locator->addPath('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME);
-            $locator->addPath('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME);
-            $locator->addPath('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME);
-            $locator->addPath('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components');
-            $locator->addPath('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules');
+            // Register shared streams
+            $locator->registerStream('build', \UserFrosting\BUILD_DIR_NAME, true);
+            $locator->registerStream('log', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME, true);
+            $locator->registerStream('cache', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME, true);
+            $locator->registerStream('session', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME, true);
+            //$locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components');
+            //$locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules');
 
-            // Use locator to initialize streams
-            ReadOnlyStream::setLocator($locator);
-            Stream::setLocator($locator);
-
-            // Fire up StreamBuilder
-            $c->streamBuilder;
+            // Register sprinkles streams
+            $locator->registerStream('assets', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
+            $locator->registerStream('config', \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME);
+            $locator->registerStream('extra', \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME);
+            $locator->registerStream('factories', \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME);
+            $locator->registerStream('locale', \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME);
+            $locator->registerStream('routes', \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME);
+            $locator->registerStream('schema', \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME);
+            $locator->registerStream('sprinkles', '');
+            $locator->registerStream('templates', \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME);
 
             return $locator;
-        };
-
-        /**
-         * StreamBuilder, to fire up our custom StreamWrapper defined in the locator service.
-         */
-        $container['streamBuilder'] = function ($c) {
-
-            $streams = [
-                'build' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'log' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'cache' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'session' => '\\RocketTheme\\Toolbox\\StreamWrapper\\Stream',
-                'sprinkles' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'assets' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'schema' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'templates' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'extra' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'locale' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'config' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'routes' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream',
-                'factories' => '\\RocketTheme\\Toolbox\\StreamWrapper\\ReadOnlyStream'
-            ];
-
-            // Before registering them, we need to unregister any that where previously registered.
-            // This will cause error when two scripts are run in succession from the CLI
-            foreach ($streams as $scheme => $handler) {
-                if (in_array($scheme, stream_get_wrappers())) {
-                    stream_wrapper_unregister($scheme);
-                }
-            }
-
-            $sb = new StreamBuilder($streams);
-
-            return $sb;
         };
 
         /**

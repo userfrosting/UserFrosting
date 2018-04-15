@@ -104,14 +104,6 @@ class ServicesProvider
             $config = $c->config;
             $locator = $c->locator;
 
-            // Hacky way to clean up locator paths.
-            $locatorPaths = [];
-            foreach ($locator->getPaths('assets') as $pathSet) {
-                foreach ($pathSet as $path) {
-                    $locatorPaths[] = $path;
-                }
-            }
-
             $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
 
             $sprinkles = $c->sprinkleManager->getSprinkleNames();
@@ -138,14 +130,6 @@ class ServicesProvider
         $container['assets'] = function ($c) {
             $config = $c->config;
             $locator = $c->locator;
-
-            // Hacky way to clean up locator paths.
-            $locatorPaths = [];
-            foreach ($locator->getPaths('assets') as $pathSet) {
-                foreach ($pathSet as $path) {
-                    $locatorPaths[] = $path;
-                }
-            }
 
             // Load asset schema
             if ($config['assets.use_raw']) {
@@ -281,8 +265,8 @@ class ServicesProvider
 
             // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
             if (!$config['assets.use_raw']) {
-                $c->locator->resetScheme('assets');
-                $c->locator->addPath('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME);
+                $c->locator->removeStream('assets');
+                $c->locator->registerStream('assets', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
             }
 
             return $config;
@@ -429,7 +413,7 @@ class ServicesProvider
         $container['factory'] = function ($c) {
 
             // Get the path of all of the sprinkle's factories
-            $factoriesPath = $c->locator->findResources('factories://', true, true);
+            $factoriesPath = $c->locator->findResources('factories://', true);
 
             // Create a new Factory Muffin instance
             $fm = new FactoryMuffin();

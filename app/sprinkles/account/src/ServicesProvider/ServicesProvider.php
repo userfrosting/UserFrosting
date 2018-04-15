@@ -50,7 +50,7 @@ class ServicesProvider
             // Register paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
-                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
                 $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
@@ -58,7 +58,7 @@ class ServicesProvider
             }
 
             if ($authenticator->check()) {
-                $c->sprinkleManager->addResource('assets', $currentUser->theme);
+                // TODO $c->sprinkleManager->addResource('assets', $currentUser->theme);
             }
 
             return $assets;
@@ -103,7 +103,7 @@ class ServicesProvider
             // Add paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
-                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
                 $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
@@ -112,7 +112,7 @@ class ServicesProvider
 
             if ($authenticator->check()) {
                 // Add paths to locale files for user theme
-                $themePath = $c->sprinkleManager->addResource('locale', $currentUser->theme);
+                // TODO $themePath = $c->sprinkleManager->addResource('locale', $currentUser->theme);
 
                 // Add user locale
                 $pathBuilder->addLocales($currentUser->locale);
@@ -134,7 +134,7 @@ class ServicesProvider
             // Add paths for user theme, if a user is logged in
             // We catch any authorization-related exceptions, so that error pages can be rendered.
             try {
-                /** @var UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
+                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
                 $authenticator = $c->authenticator;
                 $currentUser = $c->currentUser;
             } catch (\Exception $e) {
@@ -143,7 +143,7 @@ class ServicesProvider
 
             if ($authenticator->check()) {
                 $theme = $currentUser->theme;
-                $themePath = $c->sprinkleManager->addResource('templates', $theme);
+                // TODO $themePath = $c->sprinkleManager->addResource('templates', $theme);
                 if ($themePath) {
                     $loader = $twig->getLoader();
                     $loader->prependPath($themePath);
