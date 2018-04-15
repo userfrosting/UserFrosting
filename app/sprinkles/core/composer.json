@@ -28,10 +28,6 @@
         {
             "type": "git",
             "url":  "git@github.com:userfrosting/uniformresourcelocator.git"
-        },
-        {
-            "type": "git",
-            "url":  "git@github.com:userfrosting/assets.git"
         }
     ],
     "require": {
