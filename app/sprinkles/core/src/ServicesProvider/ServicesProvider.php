@@ -266,7 +266,7 @@ class ServicesProvider
             // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
             if (!$config['assets.use_raw']) {
                 $c->locator->removeStream('assets');
-                $c->locator->registerStream('assets', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
+                $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
             }
 
             return $config;

@@ -45,23 +45,23 @@ class ServicesProvider
             $locator = new ResourceLocator(\UserFrosting\ROOT_DIR);
 
             // Register shared streams
-            $locator->registerStream('build', \UserFrosting\BUILD_DIR_NAME, true);
-            $locator->registerStream('log', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME, true);
-            $locator->registerStream('cache', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME, true);
-            $locator->registerStream('session', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME, true);
-            //$locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components');
-            //$locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules');
+            $locator->registerStream('build', '', \UserFrosting\BUILD_DIR_NAME, true);
+            $locator->registerStream('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME, true);
+            $locator->registerStream('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME, true);
+            $locator->registerStream('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME, true);
+            $locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components');
+            $locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules');
 
             // Register sprinkles streams
-            $locator->registerStream('assets', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
-            $locator->registerStream('config', \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME);
-            $locator->registerStream('extra', \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME);
-            $locator->registerStream('factories', \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME);
-            $locator->registerStream('locale', \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME);
-            $locator->registerStream('routes', \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME);
-            $locator->registerStream('schema', \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME);
-            $locator->registerStream('sprinkles', '');
-            $locator->registerStream('templates', \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME);
+            $locator->registerStream('assets', '', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
+            $locator->registerStream('config', '', \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME);
+            $locator->registerStream('extra', '', \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME);
+            $locator->registerStream('factories', '', \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME);
+            $locator->registerStream('locale', '', \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME);
+            $locator->registerStream('routes', '', \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME);
+            $locator->registerStream('schema', '', \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME);
+            $locator->registerStream('sprinkles', '', '');
+            $locator->registerStream('templates', '', \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME);
 
             return $locator;
         };
