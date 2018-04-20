@@ -27,7 +27,8 @@
     "repositories": [
         {
             "type": "git",
-            "url":  "git@github.com:userfrosting/uniformresourcelocator.git"
+            "url":  "git@github.com:userfrosting/uniformresourcelocator.git",
+            "no-api": true
         }
     ],
     "require": {
