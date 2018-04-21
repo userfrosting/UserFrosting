@@ -26,9 +26,8 @@
     ],
     "repositories": [
         {
-            "type": "git",
-            "url":  "git@github.com:userfrosting/uniformresourcelocator.git",
-            "no-api": true
+            "type": "vcs",
+            "url":  "https://github.com/userfrosting/UniformResourceLocator"
         }
     ],
     "require": {
