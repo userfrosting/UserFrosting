@@ -49,8 +49,8 @@ class ServicesProvider
             $locator->registerStream('log', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\LOG_DIR_NAME, true);
             $locator->registerStream('cache', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\CACHE_DIR_NAME, true);
             $locator->registerStream('session', '', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\SESSION_DIR_NAME, true);
-            $locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components');
-            $locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules');
+            //NOT THERE YET... $locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'bower_components', true);
+            $locator->registerStream('assets', 'vendor', \UserFrosting\APP_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME . '/' . 'node_modules', true);
 
             // Register sprinkles streams
             $locator->registerStream('assets', '', \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME);
