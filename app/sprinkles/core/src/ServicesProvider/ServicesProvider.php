@@ -35,7 +35,6 @@ use UserFrosting\Cache\RedisStore;
 use UserFrosting\Config\ConfigPathBuilder;
 use UserFrosting\I18n\LocalePathBuilder;
 use UserFrosting\Assets\Assets;
-use UserFrosting\Assets\PathTransformer\PrefixTransformer;
 use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
 use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
 use UserFrosting\I18n\MessageTranslator;
@@ -106,17 +105,7 @@ class ServicesProvider
 
             $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
 
-            $sprinkles = $c->sprinkleManager->getSprinkleNames();
-
-            $prefixTransformer = new PrefixTransformer();
-            $prefixTransformer->define(\UserFrosting\BOWER_ASSET_DIR, 'vendor-bower');
-            $prefixTransformer->define(\UserFrosting\NPM_ASSET_DIR, 'vendor-npm');
-
-            foreach ($sprinkles as $sprinkle) {
-                $prefixTransformer->define(\UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME, \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle);
-            }
-
-            $assets = new Assets($locator, 'assets', $baseUrl, $prefixTransformer);
+            $assets = new Assets($locator, 'assets', $baseUrl);
 
             return new AssetLoader($assets);
         };
@@ -135,16 +124,7 @@ class ServicesProvider
             if ($config['assets.use_raw']) {
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
 
-                $sprinkles = $c->sprinkleManager->getSprinkleNames();
-
-                $prefixTransformer = new PrefixTransformer();
-                $prefixTransformer->define(\UserFrosting\BOWER_ASSET_DIR, 'vendor-bower');
-                $prefixTransformer->define(\UserFrosting\NPM_ASSET_DIR, 'vendor-npm');
-
-                foreach ($sprinkles as $sprinkle) {
-                    $prefixTransformer->define(\UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME, \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle);
-                }
-                $assets = new Assets($locator, 'assets', $baseUrl, $prefixTransformer);
+                $assets = new Assets($locator, 'assets', $baseUrl);
 
                 // Load raw asset bundles for each Sprinkle.
 
