@@ -40,5 +40,9 @@ class SeedListCommand extends BaseCommand
         $locator = new SeederLocator($this->ci->locator);
         $seeds = $locator->getSeeders();
         $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds);
+
+        // !TODO : Add `class_exist` column
+        //         + fix name with sub namespaces
+        //         + Create some tests
     }
 }

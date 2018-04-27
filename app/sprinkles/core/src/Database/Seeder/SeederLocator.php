@@ -57,7 +57,28 @@ class SeederLocator
     }
 
     /**
-     * Process
+     * Get a single seed info
+     *
+     * @param  string $name The seed name
+     * @return array The details about a seed file [name, class, sprinkle]
+     * @throws \Exception If seed not found
+     */
+    public function getSeed($name)
+    {
+        // Get seed resource
+        $seedResource = $this->locator->getResource("seeds://$name.php");
+
+        // Make sure we found something
+        if (!$seedResource) {
+            throw new \Exception("Seed $name not found");
+        }
+
+        // Return the seed info
+        return $this->getSeedDetails($seedResource);
+    }
+
+    /**
+     * Process seeder Resource into info
      *
      * @param  array $seedFiles List of seeds file
      * @return array

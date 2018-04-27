@@ -12,9 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\Sprinkle\Core\Database\Seeder\SeederInterface;
-use UserFrosting\Sprinkle\Core\Util\ClassFinder;
+use UserFrosting\Sprinkle\Core\Database\Seeder\SeederLocator;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\ConfirmableTrait;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * seed Bakery Command
@@ -25,6 +26,11 @@ use UserFrosting\System\Bakery\ConfirmableTrait;
 class SeedCommand extends BaseCommand
 {
     use ConfirmableTrait;
+
+    /**
+     * @var SeederLocator $locator
+     */
+    protected $locator;
 
     /**
      * {@inheritDoc}
@@ -44,6 +50,9 @@ class SeedCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io->title("UserFrosting's Seeder");
+
+        // Prepare seed locator
+        $this->locator = new SeederLocator($this->ci->locator);
 
         // Get options
         $classes = $input->getArgument('class');
@@ -69,10 +78,6 @@ class SeedCommand extends BaseCommand
             exit(1);
         }
 
-        // TODO ::
-        //   - Disable Model guarded policy
-        //   - Create default seeds list/service
-
         // Run seeds
         foreach ($seeds as $seed) {
             try {
@@ -95,16 +100,23 @@ class SeedCommand extends BaseCommand
      */
     protected function getSeed($name)
     {
-        $finder = new ClassFinder($this->ci->sprinkleManager);
-
+        // Try to get seed info
         try {
-            $class = $finder->getClass("Database\\Seeds\\$name");
+            $seed = $this->locator->getSeed($name);
         } catch (\Exception $e) {
             $this->io->error($e->getMessage());
             exit(1);
         }
 
-        $seedClass = new $class($this->ci);
+        // Make sure class exist
+        $classPath = $seed['class'];
+        if (!class_exists($classPath)) {
+            $this->io->error("Seed class `$classPath` not found. Make sure the class has the correct namespace.");
+            exit(1);
+        }
+
+        // Create a new class instance
+        $seedClass = new $classPath($this->ci);
 
         // Class must be an instance of `SeederInterface`
         if (!$seedClass instanceof SeederInterface) {
