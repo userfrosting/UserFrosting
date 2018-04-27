@@ -53,8 +53,8 @@ class ServicesProvider
              * This method is invoked when a user completes the login process.
              *
              * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
-             * @param \Psr\Http\Message\ServerRequestInterface $request  
-             * @param \Psr\Http\Message\ResponseInterface      $response 
+             * @param \Psr\Http\Message\ServerRequestInterface $request
+             * @param \Psr\Http\Message\ResponseInterface      $response
              * @param array $args
              * @return \Psr\Http\Message\ResponseInterface
              */

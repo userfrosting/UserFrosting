@@ -57,6 +57,9 @@
         "vlucas/phpdotenv": "^2"
     },
     "autoload": {
+        "files" : [
+            "defines.php"
+        ],
         "psr-4": {
             "UserFrosting\\Sprinkle\\Core\\": "src/"
         }

@@ -9,8 +9,6 @@ namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
-use RocketTheme\Toolbox\Event\EventDispatcher;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use UserFrosting\Support\Exception\FileNotFoundException;
 
 /**

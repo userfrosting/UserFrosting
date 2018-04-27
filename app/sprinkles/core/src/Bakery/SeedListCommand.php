@@ -37,8 +37,8 @@ class SeedListCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io->title("Database Seeds List");
-        $locator = new SeederLocator($this->ci->sprinkleManager, new Filesystem);
+        $locator = new SeederLocator($this->ci->locator);
         $seeds = $locator->getSeeders();
-        $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds->toArray());
+        $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds);
     }
 }

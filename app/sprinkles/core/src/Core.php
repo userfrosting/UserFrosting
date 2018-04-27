@@ -12,6 +12,7 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
+use Interop\Container\ContainerInterface;
 
 /**
  * Bootstrapper class for the core sprinkle.
@@ -20,6 +21,20 @@ use UserFrosting\System\Sprinkle\Sprinkle;
  */
 class Core extends Sprinkle
 {
+    /**
+     * Create a new Sprinkle object.
+     *
+     * @param ContainerInterface $ci The global container object, which holds all your services.
+     */
+    public function __construct(ContainerInterface $ci)
+    {
+        $this->ci = $ci;
+
+        // Register core locator streams
+        $this->ci->locator->registerStream('migrations', '', \UserFrosting\MIGRATIONS_DIR);
+        $this->ci->locator->registerStream('seeds', '', \UserFrosting\SEEDS_DIR);
+    }
+
     /**
      * Defines which events in the UF lifecycle our Sprinkle should hook into.
      */

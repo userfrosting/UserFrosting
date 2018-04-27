@@ -7,10 +7,9 @@
  */
 namespace UserFrosting\Sprinkle\Core\Database\Seeder;
 
-use Illuminate\Support\Collection;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use UserFrosting\System\Sprinkle\SprinkleManager;
+use UserFrosting\UniformResourceLocator\Resource;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * SeederLocator Class
@@ -22,25 +21,18 @@ use UserFrosting\System\Sprinkle\SprinkleManager;
 class SeederLocator
 {
     /**
-     * @var SprinkleManager The Sprinkle manager service
+     * @var ResourceLocator The Sprinkle manager service
      */
-    protected $sprinkleManager;
-
-    /**
-     * @var Filesystem The filesystem instance
-     */
-    protected $files;
+    protected $locator;
 
     /**
      *    Class Constructor
      *
-     *    @param  SprinkleManager $sprinkleManager The sprinkle manager services
-     *    @param  Filesystem $files The filesystem instance
+     *    @param  ResourceLocator $locator The locator services
      */
-    public function __construct(SprinkleManager $sprinkleManager, Filesystem $files)
+    public function __construct(ResourceLocator $locator)
     {
-        $this->sprinkleManager = $sprinkleManager;
-        $this->files = $files;
+        $this->locator = $locator;
     }
 
     /**
@@ -51,83 +43,55 @@ class SeederLocator
      */
     public function getSeedersForSprinkle($sprinkleName)
     {
-        $seeds = new Collection;
-
-        // Get the sprinkle seed path and get all files in that path recursively
-        $path = $this->seederDirectoryPath($sprinkleName);
-
-        // If directory diesn't exist, stop
-        if (!$this->files->exists($path)) {
-            return $seeds;
-        }
-
-        // Get files
-        $files = $this->files->allFiles($path);
-
-        // Transform the path into the mgiration full class name
-        $seeds = collect($files)->transform(function ($file) use ($sprinkleName, $path) {
-            return $this->getSeedDetails($file, $path, $sprinkleName);
-        });
-
-        // Return as array
-        return $seeds;
+        return $this->loadSeeders($this->locator->listResources("seeds://$sprinkleName/"));
     }
 
     /**
      *    Loop all the available sprinkles and return a list of their seeds
      *
-     *    @return Collection A collection of all the seed classes found for every sprinkle
+     *    @return array An array of all the seed classes found for every sprinkle
      */
     public function getSeeders()
     {
-        $seeds = new Collection;
-        foreach ($this->sprinkleManager->getSprinkleNames() as $sprinkle) {
-            $sprinkleSeeds = $this->getSeedersForSprinkle($sprinkle);
-            $seeds = $seeds->merge($sprinkleSeeds);
-        }
-
-        return $seeds;
+        return $this->loadSeeders($this->locator->listResources('seeds://'));
     }
 
     /**
-     * Returns the path of the seed directory for a sprinkle.
+     * Process
      *
-     * @param string $sprinkleName
-     * @return string The sprinkle seed dir path
+     * @param  array $seedFiles List of seeds file
+     * @return array
      */
-    protected function seederDirectoryPath($sprinkleName)
+    protected function loadSeeders($seedFiles)
     {
-        return \UserFrosting\SPRINKLES_DIR .
-               \UserFrosting\DS .
-               $sprinkleName .
-               \UserFrosting\DS .
-               \UserFrosting\SRC_DIR_NAME .
-               "/Database/Seeds";
+        $seeds = [];
+        foreach ($seedFiles as $seedFile) {
+            $seeds[] = $this->getSeedDetails($seedFile);
+        }
+        return $seeds;
     }
 
     /**
      *    Get the full classname of a seed based on the absolute file path,
      *    the initial search path and the SprinkleName
      *
-     *    @param  string $file The seed file absolute path
-     *    @param  string $path The initial search path
-     *    @param  string $sprinkleName The sprinkle name
+     *    @param  Resource $file The seed file absolute path
      *    @return array The details about a seed file [name, class, sprinkle]
      */
-    protected function getSeedDetails($file, $path, $sprinkleName)
+    protected function getSeedDetails(Resource $file)
     {
         // Format the sprinkle name for the namespace
+        $sprinkleName = $file->getLocation()->getName();
         $sprinkleName = Str::studly($sprinkleName);
 
-        // Extract the class name from the path and file
-        $relativePath = str_replace($path, '', $file);
-        $className = str_replace('.php', '', $relativePath);
-        $className = str_replace('/', '', $className);
+        // Getting base path for classname
+        $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
+        $basePath = str_replace('/', '\\', $basePath);
 
         // Build the class name and namespace
         return [
-            'name' => $className,
-            'class' => "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Database\\Seeds\\" . $className,
+            'name' => $file->getFilename(),
+            'class' => "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Database\\Seeds\\" . $basePath . $file->getFilename(),
             'sprinkle' => $sprinkleName
         ];
     }
