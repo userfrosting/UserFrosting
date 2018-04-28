@@ -82,7 +82,7 @@ class Seeder
      *
      * @param  string $name The seed name
      * @return SeedInterface The seed class instance
-     * @throws \Exception If class doesn't exist
+     * @throws \Exception If class doesn't exist or is not right interface
      */
     public function getSeedClass($name)
     {
@@ -145,14 +145,15 @@ class Seeder
         $sprinkleName = $file->getLocation()->getName();
         $sprinkleName = Str::studly($sprinkleName);
 
-        // Getting base path for classname
+        // Getting base path, name and classname
         $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
-        $basePath = str_replace('/', '\\', $basePath);
+        $name = $basePath . $file->getFilename();
+        $className = str_replace('/', '\\', $basePath) . $file->getFilename();
 
         // Build the class name and namespace
         return [
-            'name' => $file->getFilename(),
-            'class' => "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Database\\Seeds\\" . $basePath . $file->getFilename(),
+            'name' => $name,
+            'class' => "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Seeds\\$className",
             'sprinkle' => $sprinkleName
         ];
     }
