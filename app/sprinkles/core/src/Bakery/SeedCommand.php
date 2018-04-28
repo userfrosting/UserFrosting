@@ -11,11 +11,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use UserFrosting\Sprinkle\Core\Database\Seeder\SeederInterface;
-use UserFrosting\Sprinkle\Core\Database\Seeder\SeederLocator;
+use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
+use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\ConfirmableTrait;
-use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * seed Bakery Command
@@ -28,9 +27,9 @@ class SeedCommand extends BaseCommand
     use ConfirmableTrait;
 
     /**
-     * @var SeederLocator $locator
+     * @var Seeder $seeder
      */
-    protected $locator;
+    protected $seeder;
 
     /**
      * {@inheritDoc}
@@ -52,7 +51,7 @@ class SeedCommand extends BaseCommand
         $this->io->title("UserFrosting's Seeder");
 
         // Prepare seed locator
-        $this->locator = new SeederLocator($this->ci->locator);
+        $this->seeder = new Seeder($this->ci);
 
         // Get options
         $classes = $input->getArgument('class');
@@ -64,13 +63,18 @@ class SeedCommand extends BaseCommand
         foreach ($classes as $className) {
 
             // Get seed class and
-            $seed = $this->getSeed($className);
+            try {
+                $seedClass = $this->seeder->getSeedClass($className);
+            } catch (\Exception $e) {
+                $this->io->error($e->getMessage());
+                exit(1);
+            }
 
             // Display the class we are going to use as info
-            $this->io->writeln("<info>Seeding class `".get_class($seed)."`</>");
+            $this->io->writeln("<info>Seeding class `".get_class($seedClass)."`</>");
 
             // Add seed class to list
-            $seeds[] = $seed;
+            $seeds[] = $seedClass;
         }
 
         // Confirm action when in production mode
@@ -81,7 +85,7 @@ class SeedCommand extends BaseCommand
         // Run seeds
         foreach ($seeds as $seed) {
             try {
-                $seed->run();
+                $this->seeder->executeSeed($seed);
             } catch (\Exception $e) {
                 $this->io->error($e->getMessage());
                 exit(1);
@@ -90,40 +94,5 @@ class SeedCommand extends BaseCommand
 
         // Success
         $this->io->success('Seed successful !');
-    }
-
-    /**
-     *    Setup migrator and the shared options between other command
-     *
-     *    @param  string $name The seeder name
-     *    @return mixed The seeder class instance
-     */
-    protected function getSeed($name)
-    {
-        // Try to get seed info
-        try {
-            $seed = $this->locator->getSeed($name);
-        } catch (\Exception $e) {
-            $this->io->error($e->getMessage());
-            exit(1);
-        }
-
-        // Make sure class exist
-        $classPath = $seed['class'];
-        if (!class_exists($classPath)) {
-            $this->io->error("Seed class `$classPath` not found. Make sure the class has the correct namespace.");
-            exit(1);
-        }
-
-        // Create a new class instance
-        $seedClass = new $classPath($this->ci);
-
-        // Class must be an instance of `SeederInterface`
-        if (!$seedClass instanceof SeederInterface) {
-            $this->io->error('Seed class must be an instance of `SeederInterface`');
-            exit(1);
-        }
-
-        return $seedClass;
     }
 }
