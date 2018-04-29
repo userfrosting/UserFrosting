@@ -37,7 +37,7 @@ class SeedListCommand extends BaseCommand
     {
         $this->io->title("Database Seeds List");
         $seeder = new Seeder($this->ci);
-        $seeds = $seeder->getSeeders();
+        $seeds = $seeder->getSeeds();
         $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds);
 
         // !TODO : fix name with sub namespaces

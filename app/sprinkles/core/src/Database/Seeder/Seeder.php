@@ -41,7 +41,7 @@ class Seeder
      *    @param  string $sprinkleName The sprinkle name
      *    @return array The list of available seed classes
      */
-    public function getSeedersForSprinkle($sprinkleName)
+    public function getSeedsForSprinkle($sprinkleName)
     {
         return $this->loadSeeders($this->ci->locator->listResources("seeds://$sprinkleName/"));
     }
@@ -51,7 +51,7 @@ class Seeder
      *
      *    @return array An array of all the seed classes found for every sprinkle
      */
-    public function getSeeders()
+    public function getSeeds()
     {
         return $this->loadSeeders($this->ci->locator->listResources('seeds://'));
     }

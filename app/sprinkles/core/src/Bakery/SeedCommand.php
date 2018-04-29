@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\ConfirmableTrait;
