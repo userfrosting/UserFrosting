@@ -6,6 +6,7 @@ use Mockery as m;
 use Interop\Container\ContainerInterface;
 use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
+use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
 use UserFrosting\Tests\TestCase;
 use Slim\Container;
 
@@ -90,19 +91,58 @@ class DatabaseTests extends TestCase
      * @param  Seeder $seeder
      * @depends testSeeder
      */
-    /*public function testGetSeed(Seeder $seeder)
+    public function testGetSeed(Seeder $seeder)
     {
+        $seed = $seeder->getSeed('Seed1');
+        $this->assertInternalType('array', $seed);
+        $this->assertEquals([
+            'name' => 'Seed1',
+            'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
+            'sprinkle' => 'Core'
+        ], $seed);
+    }
 
-    }*/
+    /**
+     * @param  Seeder $seeder
+     * @depends testSeeder
+     * @expectedException \Exception
+     */
+    public function testUnfoundGetSeed(Seeder $seeder)
+    {
+        $seed = $seeder->getSeed('FakeSeed');
+    }
 
     /**
      * @param  Seeder $seeder
      * @depends testSeeder
      */
-    /*public function testGetSeedClass(Seeder $seeder)
+    public function testGetSeedClass(Seeder $seeder)
     {
+        $seed = $seeder->getSeedClass('Seed1');
+        $this->assertInstanceOf(SeedInterface::class, $seed);
+    }
 
-    }*/
+    /**
+     * @param  Seeder $seeder
+     * @depends testSeeder
+     * @expectedException \Exception
+     */
+    public function testGetSeedClassNotSeedInterface(Seeder $seeder)
+    {
+        // This class is not an instance of SeedInterface
+        $seeder->getSeedClass('Seed2');
+    }
+
+    /**
+     * @param  Seeder $seeder
+     * @depends testSeeder
+     * @expectedException \Exception
+     */
+    public function testGetSeedClassException(Seeder $seeder)
+    {
+        // The namespace in this class is wrong
+        $seeder->getSeedClass('Test/Seed');
+    }
 
     /**
      * @param  Seeder $seeder
