@@ -54,15 +54,6 @@ class DatabaseTests extends TestCase
      * @param  Seeder $seeder
      * @depends testSeeder
      */
-    /*public function testgetSeedsForSprinkle(Seeder $seeder)
-    {
-
-    }*/
-
-    /**
-     * @param  Seeder $seeder
-     * @depends testSeeder
-     */
     public function testgetSeeds(Seeder $seeder)
     {
         $seeds = $seeder->getSeeds();
@@ -70,8 +61,8 @@ class DatabaseTests extends TestCase
         $this->assertCount(3, $seeds);
         $this->assertEquals([
             [
-                'name' => 'Test/Seed',
-                'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Test\\Seed',
+                'name' => 'Seed1',
+                'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
                 'sprinkle' => 'Core'
             ],
             [
@@ -80,8 +71,8 @@ class DatabaseTests extends TestCase
                 'sprinkle' => 'Core'
             ],
             [
-                'name' => 'Seed1',
-                'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Seed1',
+                'name' => 'Test/Seed',
+                'class' => '\\UserFrosting\\Sprinkle\\Core\\Database\\Seeds\\Test\\Seed',
                 'sprinkle' => 'Core'
             ]
         ], $seeds);

@@ -36,17 +36,6 @@ class Seeder
     }
 
     /**
-     *    Returm a list of all available seeds for a specific sprinkle
-     *
-     *    @param  string $sprinkleName The sprinkle name
-     *    @return array The list of available seed classes
-     */
-    public function getSeedsForSprinkle($sprinkleName)
-    {
-        return $this->loadSeeders($this->ci->locator->listResources("seeds://$sprinkleName/"));
-    }
-
-    /**
      *    Loop all the available sprinkles and return a list of their seeds
      *
      *    @return array An array of all the seed classes found for every sprinkle
