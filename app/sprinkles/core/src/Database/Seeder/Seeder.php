@@ -26,6 +26,11 @@ class Seeder
     protected $ci;
 
     /**
+     * @var string $scheme The resource locator scheme
+     */
+    protected $scheme = 'seeds://';
+
+    /**
      *    Class Constructor
      *
      *    @param ContainerInterface $ci
@@ -42,7 +47,7 @@ class Seeder
      */
     public function getSeeds()
     {
-        return $this->loadSeeders($this->ci->locator->listResources('seeds://'));
+        return $this->loadSeeders($this->ci->locator->listResources($this->scheme));
     }
 
     /**
@@ -55,7 +60,7 @@ class Seeder
     public function getSeed($name)
     {
         // Get seed resource
-        $seedResource = $this->ci->locator->getResource("seeds://$name.php");
+        $seedResource = $this->ci->locator->getResource($this->scheme . $name . ".php");
 
         // Make sure we found something
         if (!$seedResource) {
@@ -122,10 +127,9 @@ class Seeder
     }
 
     /**
-     *    Get the full classname of a seed based on the absolute file path,
-     *    the initial search path and the SprinkleName
+     *    Return an array of seed details inclusing the classname and the sprinkle name
      *
-     *    @param  Resource $file The seed file absolute path
+     *    @param  Resource $file The seed file
      *    @return array The details about a seed file [name, class, sprinkle]
      */
     protected function getSeedDetails(Resource $file)
