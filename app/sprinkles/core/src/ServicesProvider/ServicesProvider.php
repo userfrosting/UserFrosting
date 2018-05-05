@@ -506,7 +506,7 @@ class ServicesProvider
             $migrator = new Migrator(
                 $c->db,
                 new DatabaseMigrationRepository($c->db, $c->config['migrations.repository_table']),
-                new MigrationLocator($c->sprinkleManager, new Filesystem)
+                new MigrationLocator($c->locator)
             );
 
             // Make sure repository exist

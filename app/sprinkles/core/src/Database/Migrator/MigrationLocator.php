@@ -7,9 +7,9 @@
  */
 namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use UserFrosting\System\Sprinkle\SprinkleManager;
+use UserFrosting\UniformResourceLocator\Resource;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocatorInterface;
 
 /**
@@ -22,53 +22,36 @@ use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocatorInterface;
 class MigrationLocator implements MigrationLocatorInterface
 {
     /**
-     * @var SprinkleManager The Sprinkle manager service
+     * @var ResourceLocator The locator service
      */
-    protected $sprinkleManager;
+    protected $locator;
 
     /**
-     * @var Filesystem The filesystem instance
+     * @var string The resource locator migration scheme
      */
-    protected $files;
+    protected $scheme = 'migrations://';
 
     /**
      *    Class Constructor
      *
-     *    @param  SprinkleManager $sprinkleManager The sprinkle manager services
-     *    @param  Filesystem $files The filesystem instance
+     *    @param  ResourceLocator $locator The locator services
      */
-    public function __construct(SprinkleManager $sprinkleManager, Filesystem $files)
+    public function __construct(ResourceLocator $locator)
     {
-        $this->sprinkleManager = $sprinkleManager;
-        $this->files = $files;
+        $this->locator = $locator;
     }
 
     /**
-     *    Returm a list of all available migration available for a specific sprinkle
+     *    Return a list of all available migration available for a specific sprinkle
      *
      *    @param  string $sprinkleName The sprinkle name
      *    @return array The list of available migration classes
      */
     public function getMigrationsForSprinkle($sprinkleName)
     {
-        // Get the sprinkle migration path and get all files in that path recursively
-        $path = $this->migrationDirectoryPath($sprinkleName);
-
-        // If directory diesn't exist, stop
-        if (!$this->files->exists($path)) {
-            return [];
-        }
-
-        // Get files
-        $files = $this->files->allFiles($path);
-
-        // Transform the path into the mgiration full class name
-        $migrations = collect($files)->transform(function ($file) use ($sprinkleName, $path) {
-            return $this->getMigrationClassName($file, $path, $sprinkleName);
-        });
-
-        // Return as array
-        return $migrations->all();
+        // Get migration and drop anything not related to the sprinkle we want
+        $migrations = $this->loadMigrations($this->locator->listResources($this->scheme));
+        return collect($migrations)->where('sprinkle', $sprinkleName)->pluck('class')->all();
     }
 
     /**
@@ -78,50 +61,47 @@ class MigrationLocator implements MigrationLocatorInterface
      */
     public function getMigrations()
     {
-        $migrationsFiles = [];
-        foreach ($this->sprinkleManager->getSprinkleNames() as $sprinkle) {
-            $migrationsFiles = array_merge($this->getMigrationsForSprinkle($sprinkle), $migrationsFiles);
-        }
-
-        return $migrationsFiles;
+        $migrations = $this->loadMigrations($this->locator->listResources($this->scheme));
+        return collect($migrations)->pluck('class')->all();
     }
 
     /**
-     * Returns the path of the Migration directory.
+     * Process migration Resource into info
      *
-     * @param string $sprinkleName
-     * @return string The sprinkle Migration dir path
+     * @param  array $migrationFiles List of migrations file
+     * @return array
      */
-    protected function migrationDirectoryPath($sprinkleName)
+    protected function loadMigrations($migrationFiles)
     {
-        return \UserFrosting\SPRINKLES_DIR .
-               \UserFrosting\DS .
-               $sprinkleName .
-               \UserFrosting\DS .
-               \UserFrosting\SRC_DIR_NAME .
-               "/Database/Migrations";
+        $migrations = [];
+        foreach ($migrationFiles as $migrationFile) {
+            $migrations[] = $this->getMigrationDetails($migrationFile);
+        }
+        return $migrations;
     }
 
     /**
-     *    Get the full classname of a migration based on the absolute file path,
-     *    the initial search path and the SprinkleName
+     *    Return an array of migration details inclusing the classname and the sprinkle name
      *
-     *    @param  string $file The migration file absolute path
-     *    @param  string $path The initial search path
-     *    @param  string $sprinkleName The sprinkle name
-     *    @return string The migration class name
+     *    @param  Resource $file The migration file
+     *    @return array The details about a seed file [name, class, sprinkle]
      */
-    protected function getMigrationClassName($file, $path, $sprinkleName)
+    protected function getMigrationDetails(Resource $file)
     {
         // Format the sprinkle name for the namespace
+        $sprinkleName = $file->getLocation()->getName();
         $sprinkleName = Str::studly($sprinkleName);
 
-        // Extract the class name from the path and file
-        $relativePath = str_replace($path, '', $file);
-        $className = str_replace('.php', '', $relativePath);
-        $className = str_replace('/', '\\', $className);
+        // Getting base path, name and classname
+        $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
+        $name = $basePath . $file->getFilename();
+        $className = str_replace('/', '\\', $basePath) . $file->getFilename();
 
         // Build the class name and namespace
-        return "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Database\\Migrations" . $className;
+        return [
+            'name' => $name,
+            'class' => "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Migrations\\$className",
+            'sprinkle' => $sprinkleName
+        ];
     }
 }
