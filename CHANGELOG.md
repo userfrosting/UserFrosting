@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## v4.1.18
+- Bakery setup wizard for SMTP config + separate SMTP setup in it's own command (#874)
 
 ## v4.1.17-alpha
 - Lock `gulp-uf-bundle-assets` at v2.28.0 until userfrosting/gulp-uf-bundle-assets#5 is resolved (see #859)
