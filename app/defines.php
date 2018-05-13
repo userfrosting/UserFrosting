@@ -53,6 +53,12 @@ define('UserFrosting\TEMPLATE_DIR_NAME', 'templates');
 define('UserFrosting\FACTORY_DIR_NAME', 'factories');
 define('UserFrosting\PUBLIC_DIR_NAME', 'public');
 
+// Paths for the different class sources
+define('UserFrosting\BAKERY_DIR', SRC_DIR_NAME . DS . 'Bakery');
+
+// Path to system Bakery commands
+define('UserFrosting\BAKERY_SYSTEM_DIR', APP_DIR_NAME . DS . 'system' . DS . 'Bakery' . DS . 'Command');
+
 // Full path to frontend vendor asset directories
 define('UserFrosting\ASSET_DIR', APP_DIR_NAME . DS . ASSET_DIR_NAME);
 define('UserFrosting\NPM_ASSET_DIR', ASSET_DIR . DS . 'node_modules');

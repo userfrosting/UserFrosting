@@ -45,6 +45,7 @@ class ServicesProvider
             $locator = new ResourceLocator(\UserFrosting\ROOT_DIR);
 
             // Register shared streams
+            $locator->registerStream('bakery', '', \UserFrosting\BAKERY_SYSTEM_DIR, true);
             $locator->registerStream('build', '', \UserFrosting\BUILD_DIR_NAME, true);
             $locator->registerStream('log', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\LOG_DIR_NAME, true);
             $locator->registerStream('cache', '', \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\CACHE_DIR_NAME, true);
@@ -62,6 +63,7 @@ class ServicesProvider
             $locator->registerStream('schema', '', \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME);
             $locator->registerStream('sprinkles', '', '');
             $locator->registerStream('templates', '', \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME);
+            $locator->registerStream('bakery', '', \UserFrosting\BAKERY_DIR);
 
             return $locator;
         };
