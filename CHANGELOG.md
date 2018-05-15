@@ -47,7 +47,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
-## v4.1.17
+## v4.1.18
+- Bakery setup wizard for SMTP config + separate SMTP setup in it's own command (https://github.com/userfrosting/UserFrosting/issues/874)
+- Update Italian translations (https://github.com/userfrosting/UserFrosting/pull/875)
+- Return deleted `row` in `ufCollection` event (https://github.com/userfrosting/UserFrosting/pull/873)
+
+## v4.1.17-alpha
 - Lock `gulp-uf-bundle-assets` at v2.28.0 until userfrosting/gulp-uf-bundle-assets#5 is resolved (see #859)
 - Add missing getInfo methods for GroupController and RoleController (#837)
 
