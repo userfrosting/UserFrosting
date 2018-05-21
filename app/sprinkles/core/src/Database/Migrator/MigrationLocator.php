@@ -32,9 +32,9 @@ class MigrationLocator implements MigrationLocatorInterface
     protected $scheme = 'migrations://';
 
     /**
-     *    Class Constructor
+     * Class Constructor
      *
-     *    @param  ResourceLocator $locator The locator services
+     * @param  ResourceLocator $locator The locator services
      */
     public function __construct(ResourceLocator $locator)
     {
@@ -42,37 +42,14 @@ class MigrationLocator implements MigrationLocatorInterface
     }
 
     /**
-     *    Return a list of all available migration available for a specific sprinkle
+     * Loop all the available sprinkles and return a list of their migrations
      *
-     *    @param  string $sprinkleName The sprinkle name
-     *    @return array The list of available migration classes
-     */
-    public function getMigrationsForSprinkle($sprinkleName)
-    {
-        // Get migration and drop anything not related to the sprinkle we want
-        $migrations = $this->loadMigrations($this->locator->listResources($this->scheme));
-        return collect($migrations)->where('sprinkle', $sprinkleName)->pluck('class')->all();
-    }
-
-    /**
-     *    Loop all the available sprinkles and return a list of their migrations
-     *
-     *    @return array A list of all the migration files found for every sprinkle
+     * @return array A list of all the migration files found for every sprinkle
      */
     public function getMigrations()
     {
-        $migrations = $this->loadMigrations($this->locator->listResources($this->scheme));
-        return collect($migrations)->pluck('class')->all();
-    }
+        $migrationFiles = $this->locator->listResources($this->scheme);
 
-    /**
-     * Process migration Resource into info
-     *
-     * @param  array $migrationFiles List of migrations file
-     * @return array
-     */
-    protected function loadMigrations($migrationFiles)
-    {
         $migrations = [];
         foreach ($migrationFiles as $migrationFile) {
             $migrations[] = $this->getMigrationDetails($migrationFile);
@@ -81,10 +58,10 @@ class MigrationLocator implements MigrationLocatorInterface
     }
 
     /**
-     *    Return an array of migration details inclusing the classname and the sprinkle name
+     * Return an array of migration details inclusing the classname and the sprinkle name
      *
-     *    @param  Resource $file The migration file
-     *    @return array The details about a seed file [name, class, sprinkle]
+     * @param  Resource $file The migration file
+     * @return string The migration full class path
      */
     protected function getMigrationDetails(Resource $file)
     {
@@ -98,10 +75,6 @@ class MigrationLocator implements MigrationLocatorInterface
         $className = str_replace('/', '\\', $basePath) . $file->getFilename();
 
         // Build the class name and namespace
-        return [
-            'name' => $name,
-            'class' => "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Migrations\\$className",
-            'sprinkle' => $sprinkleName
-        ];
+        return "\\UserFrosting\\Sprinkle\\$sprinkleName\\Database\\Migrations\\$className";
     }
 }

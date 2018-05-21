@@ -40,7 +40,7 @@ class Migrator
     protected $locator;
 
     /**
-     *    @var string The connection name
+     * @var string The connection name
      */
     protected $connection;
 
@@ -50,11 +50,11 @@ class Migrator
     protected $notes = [];
 
     /**
-     *    Constructor
+     * Constructor
      *
-     *    @param Capsule $db The database instance
-     *    @param MigrationRepositoryInterface $repository The migration repository
-     *    @param MigrationLocatorInterface $locator The Migration locator
+     * @param Capsule $db The database instance
+     * @param MigrationRepositoryInterface $repository The migration repository
+     * @param MigrationLocatorInterface $locator The Migration locator
      */
     public function __construct(Capsule $db, MigrationRepositoryInterface $repository, MigrationLocatorInterface $locator)
     {
@@ -64,10 +64,10 @@ class Migrator
     }
 
     /**
-     *    Run all the specified migrations up. Check that dependencies are met before running
+     * Run all the specified migrations up. Check that dependencies are met before running
      *
-     *    @param  array $options Options for the current operations [step, pretend]
-     *    @return array The list of ran migrations
+     * @param  array $options Options for the current operations [step, pretend]
+     * @return array The list of ran migrations
      */
     public function run(array $options = [])
     {
@@ -106,11 +106,11 @@ class Migrator
     }
 
     /**
-     *    Get the migration classes that have not yet run.
+     * Get the migration classes that have not yet run.
      *
-     *    @param  array $available The available migrations returned by the migration locator
-     *    @param  array $ran The list of already ran migrations returned by the migration repository
-     *    @return array The list of pending migrations, ie the available migrations not ran yet
+     * @param  array $available The available migrations returned by the migration locator
+     * @param  array $ran The list of already ran migrations returned by the migration repository
+     * @return array The list of pending migrations, ie the available migrations not ran yet
      */
     public function pendingMigrations($available, $ran)
     {
@@ -120,11 +120,11 @@ class Migrator
     }
 
     /**
-     *    Run an array of migrations.
+     * Run an array of migrations.
      *
-     *    @param  array $migrations An array of migrations classes names to be run (unsorted, unvalidated)
-     *    @param  array $options The options for the current operation [step, pretend]
-     *    @return void
+     * @param  array $migrations An array of migrations classes names to be run (unsorted, unvalidated)
+     * @param  array $options The options for the current operation [step, pretend]
+     * @return void
      */
     protected function runPending(array $migrations, array $options = [])
     {
@@ -152,12 +152,12 @@ class Migrator
     }
 
     /**
-     *    Run "up" a migration class
+     * Run "up" a migration class
      *
-     *    @param  string $migrationClass The migration class name
-     *    @param  int $batch The current bacth number
-     *    @param  bool $pretend If this operation should be pretended / faked
-     *    @return void
+     * @param  string $migrationClass The migration class name
+     * @param  int $batch The current bacth number
+     * @param  bool $pretend If this operation should be pretended / faked
+     * @return void
      */
     protected function runUp($migrationClass, $batch, $pretend)
     {
@@ -193,10 +193,10 @@ class Migrator
     }
 
     /**
-     *    Rollback the last migration operation.
+     * Rollback the last migration operation.
      *
-     *    @param  array $options The options for the current operation [steps, pretend]
-     *    @return array The list of rolledback migration classes
+     * @param  array $options The options for the current operation [steps, pretend]
+     * @return array The list of rolledback migration classes
      */
     public function rollback(array $options = [])
     {
@@ -231,11 +231,11 @@ class Migrator
     }
 
     /**
-     *    Rollback the given migrations.
+     * Rollback the given migrations.
      *
-     *    @param  array $migrations An array of migrations to rollback formated as an eloquent collection
-     *    @param  array $options The options for the current operation
-     *    @return array The list of rolledback migration classes
+     * @param  array $migrations An array of migrations to rollback formated as an eloquent collection
+     * @param  array $options The options for the current operation
+     * @return array The list of rolledback migration classes
      */
     protected function rollbackMigrations(array $migrations, array $options)
     {
@@ -269,10 +269,10 @@ class Migrator
     }
 
     /**
-     *    Rolls all of the currently applied migrations back.
+     * Rolls all of the currently applied migrations back.
      *
-     *    @param bool $pretend Should this operation be pretended
-     *    @return array An array of all the rolledback migration classes
+     * @param bool $pretend Should this operation be pretended
+     * @return array An array of all the rolledback migration classes
      */
     public function reset($pretend = false)
     {
@@ -294,11 +294,11 @@ class Migrator
     }
 
     /**
-     *    Run "down" a migration instance.
+     * Run "down" a migration instance.
      *
-     *    @param  string $migrationClass The migration class name
-     *    @param  bool $pretend Is the operation should be pretended
-     *    @return void
+     * @param  string $migrationClass The migration class name
+     * @param  bool $pretend Is the operation should be pretended
+     * @return void
      */
     protected function runDown($migrationClass, $pretend)
     {
@@ -321,12 +321,12 @@ class Migrator
     }
 
     /**
-     *    Run a migration inside a transaction if the database supports it.
-     *    Note : As of Laravel 5.4, only PostgresGrammar supports it
+     * Run a migration inside a transaction if the database supports it.
+     * Note : As of Laravel 5.4, only PostgresGrammar supports it
      *
-     *    @param  object $migration The migration instance
-     *    @param  string $method The method used [up, down]
-     *    @return void
+     * @param  object $migration The migration instance
+     * @param  string $method The method used [up, down]
+     * @return void
      */
     protected function runMigration($migration, $method)
     {
@@ -345,11 +345,11 @@ class Migrator
     }
 
     /**
-     *    Pretend to run the migrations.
+     * Pretend to run the migrations.
      *
-     *    @param  object $migration The migration instance
-     *    @param  string $method The method used [up, down]
-     *    @return void
+     * @param  object $migration The migration instance
+     * @param  string $method The method used [up, down]
+     * @return void
      */
     protected function pretendToRun($migration, $method)
     {
@@ -362,11 +362,11 @@ class Migrator
     }
 
     /**
-     *    Get all of the queries that would be run for a migration.
+     * Get all of the queries that would be run for a migration.
      *
-     *    @param  object $migration The migration instance
-     *    @param  string $method The method used [up, down]
-     *    @return array The queries executed by the processed schema
+     * @param  object $migration The migration instance
+     * @param  string $method The method used [up, down]
+     * @return array The queries executed by the processed schema
      */
     protected function getQueries($migration, $method)
     {
@@ -381,10 +381,10 @@ class Migrator
     }
 
     /**
-     *    Resolve a migration instance from it's class name.
+     * Resolve a migration instance from it's class name.
      *
-     *    @param  string $migrationClass The class name
-     *    @return object The migration class instance
+     * @param  string $migrationClass The class name
+     * @return object The migration class instance
      */
     public function resolve($migrationClass)
     {
@@ -396,9 +396,9 @@ class Migrator
     }
 
     /**
-     *    Get all of the migration files in a given path.
+     * Get all of the migration files in a given path.
      *
-     *    @return array The list of migration classes found in the filesystem
+     * @return array The list of migration classes found in the filesystem
      */
     public function getAvailableMigrations()
     {
@@ -406,9 +406,9 @@ class Migrator
     }
 
     /**
-     *    Get the migration repository instance.
+     * Get the migration repository instance.
      *
-     *    @return \Illuminate\Database\Migrations\MigrationRepositoryInterface
+     * @return \Illuminate\Database\Migrations\MigrationRepositoryInterface
      */
     public function getRepository()
     {
@@ -416,9 +416,9 @@ class Migrator
     }
 
     /**
-     *    Set the migration repository instance
+     * Set the migration repository instance
      *
-     *    @param MigrationRepositoryInterface $repository
+     * @param MigrationRepositoryInterface $repository
      */
     public function setRepository(MigrationRepositoryInterface $repository)
     {
@@ -426,9 +426,9 @@ class Migrator
     }
 
     /**
-     *    Determine if the migration repository exists.
+     * Determine if the migration repository exists.
      *
-     *    @return bool If the repository exist
+     * @return bool If the repository exist
      */
     public function repositoryExists()
     {
@@ -436,9 +436,9 @@ class Migrator
     }
 
     /**
-     *    Get the migration locator instance.
+     * Get the migration locator instance.
      *
-     *    @return MigrationLocatorInterface
+     * @return MigrationLocatorInterface
      */
     public function getLocator()
     {
@@ -446,9 +446,9 @@ class Migrator
     }
 
     /**
-     *    Set the migration locator instance
+     * Set the migration locator instance
      *
-     *    @param MigrationLocatorInterface $locator
+     * @param MigrationLocatorInterface $locator
      */
     public function setLocator(MigrationLocatorInterface $locator)
     {
@@ -456,9 +456,9 @@ class Migrator
     }
 
     /**
-     *    Get the schema builder.
+     * Get the schema builder.
      *
-     *    @return \Illuminate\Database\Schema\Builder
+     * @return \Illuminate\Database\Schema\Builder
      */
     public function getSchemaBuilder()
     {
@@ -466,9 +466,9 @@ class Migrator
     }
 
     /**
-     *    Return the connection instance
+     * Return the connection instance
      *
-     *    @return \Illuminate\Database\Connection
+     * @return \Illuminate\Database\Connection
      */
     public function getConnection()
     {
@@ -476,9 +476,9 @@ class Migrator
     }
 
     /**
-     *    Define which connection to use
+     * Define which connection to use
      *
-     *    @param string $name The connection name
+     * @param string $name The connection name
      */
     public function setConnection($name)
     {
@@ -487,8 +487,8 @@ class Migrator
     }
 
     /**
-     *    Get instance of Grammar
-     *    @return \Illuminate\Database\Schema\Grammars\Grammar
+     * Get instance of Grammar
+     * @return \Illuminate\Database\Schema\Grammars\Grammar
      */
     protected function getSchemaGrammar()
     {
@@ -496,10 +496,10 @@ class Migrator
     }
 
     /**
-     *    Raise a note event for the migrator.
+     * Raise a note event for the migrator.
      *
-     *    @param  string  $message The message
-     *    @return void
+     * @param  string  $message The message
+     * @return void
      */
     protected function note($message)
     {
@@ -507,9 +507,9 @@ class Migrator
     }
 
     /**
-     *    Get the notes for the last operation.
+     * Get the notes for the last operation.
      *
-     *    @return array An array of notes
+     * @return array An array of notes
      */
     public function getNotes()
     {

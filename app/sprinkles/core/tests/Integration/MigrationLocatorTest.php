@@ -79,39 +79,16 @@ class MigrationLocatorTest extends TestCase
     }
 
     /**
-     * Make sure migrations can be returned for a specific sprinkle
-     *
-     * @param  MigrationLocator $locator
-     * @depends testGetMigrations
-     */
-    public function testGetMigrationsForSprinkle(MigrationLocator $locator)
-    {
-        $results = $locator->getMigrationsForSprinkle('Core');
-
-        // The `getMigrationForSprinkle` method should return this
-        $expected = [
-            '\\UserFrosting\\Sprinkle\\Core\\Database\\Migrations\\one\\CreateUsersTable',
-            '\\UserFrosting\\Sprinkle\\Core\\Database\\Migrations\\one\\CreatePasswordResetsTable',
-            '\\UserFrosting\\Sprinkle\\Core\\Database\\Migrations\\two\\CreateFlightsTable',
-            '\\UserFrosting\\Sprinkle\\Core\\Database\\Migrations\\CreateMainTable'
-        ];
-
-        // Test results match expectations
-        $this->assertCount(4, $results);
-        $this->assertEquals($expected, $results);
-    }
-
-    /**
      * Make sure no error is thrown if the Migration dir doesn't exist
      *
      * @param  MigrationLocator $locator
      * @depends testGetMigrations
      */
-    public function testGetMigrationsForSprinkleWithNoMigrationDir(MigrationLocator $locator)
+    public function testGetMigrationsWithNoMigrationDir(MigrationLocator $locator)
     {
-        $results = $locator->getMigrationsForSprinkle('Foo');
+        /*$results = $locator->getMigrations();
         $this->assertCount(0, $results);
-        $this->assertEquals([], $results);
+        $this->assertEquals([], $results);*/
     }
 
     /**
