@@ -47,6 +47,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## v4.1.19
+- Fix `Unique::getPaginatedQuery` to call to `addSelect` instead of `select` during the pre-paginated query
+
 ## v4.1.18
 - Bakery setup wizard for SMTP config + separate SMTP setup in it's own command (https://github.com/userfrosting/UserFrosting/issues/874)
 - Update Italian translations (https://github.com/userfrosting/UserFrosting/pull/875)
