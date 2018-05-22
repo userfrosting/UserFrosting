@@ -277,7 +277,7 @@ trait Unique
 
         // Apply an additional scope to override any selected columns in other global scopes
         $uniqueIdScope = function ($subQuery) use ($relatedKeyName) {
-            $subQuery->select($relatedKeyName)
+            $subQuery->addSelect($relatedKeyName)
                      ->groupBy($relatedKeyName);
         };
 
