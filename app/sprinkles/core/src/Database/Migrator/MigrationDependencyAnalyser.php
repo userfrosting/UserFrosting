@@ -93,9 +93,6 @@ class MigrationDependencyAnalyser
      */
     protected function validateClassDependencies($migrationName)
     {
-        // Get migration dependencies
-        $dependencies = $this->getMigrationDependencies($migrationName);
-
         // If it's already marked as fulfillable, it's fulfillable
         // Return true directly (it's already marked)
         if ($this->fulfillable->contains($migrationName)) {
@@ -113,6 +110,9 @@ class MigrationDependencyAnalyser
         if ($this->installed->contains($migrationName)) {
             return $this->markAsFulfillable($migrationName);
         }
+
+        // Get migration dependencies
+        $dependencies = $this->getMigrationDependencies($migrationName);
 
         // Loop dependencies. If one is not fulfillable, then this migration is not either
         foreach ($dependencies as $dependency) {

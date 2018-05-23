@@ -236,6 +236,7 @@ class DatabaseMigratorTest extends TestCase
 
         // Repository will be asked to return the ran migrations (one), the next batch number and will log 2 new migrations
         $this->repository->shouldReceive('getLast')->once()->andReturn($testMigrations);
+        $this->repository->shouldReceive('getMigrationsList')->once()->andReturn($testMigrations);
         $this->repository->shouldReceive('delete')->times(3)->andReturn([]);
 
         // SchemaBuilder will only create 2 tables
@@ -258,19 +259,22 @@ class DatabaseMigratorTest extends TestCase
      */
     public function testMigratorRollbackAllInstalledMigrationsWithOneMissing()
     {
-        // When running up, Locator will return all 3 migration classes
+        // Locator will only return one of the two installed migrations
         $this->locator->shouldReceive('getMigrations')->once()->andReturn([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
         ]);
 
-        // Repository will be asked to return the ran migrations (one), the next batch number and will log 2 new migrations
-        $this->repository->shouldReceive('getLast')->once()->andReturn([
+        // Repository will be asked to return the ran migrations (two of them)
+        // and will only be asked to delete one
+        $installed = [
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
-        ]);
+        ];
+        $this->repository->shouldReceive('getLast')->once()->andReturn($installed);
+        $this->repository->shouldReceive('getMigrationsList')->once()->andReturn($installed);
         $this->repository->shouldReceive('delete')->times(1)->andReturn([]);
 
-        // SchemaBuilder will only create 2 tables
+        // SchemaBuilder will only drop one of the 2 tables
         $this->schema->shouldReceive('dropIfExists')->times(1)->andReturn([]);
 
         // Connection will be asked for the SchemaGrammar
@@ -278,13 +282,93 @@ class DatabaseMigratorTest extends TestCase
         $this->connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
         $grammar->shouldReceive('supportsSchemaTransactions')->andReturn(false);
 
-        // Run migrations up
+        // Rollback migrations
         $migrations = $this->migrator->rollback();
 
-        // The migration already ran shoudn't be in the pending ones
+        // The migration not available from the locator shouldn't have been run dowm
         $this->assertEquals([
             '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable'
         ], $migrations);
+    }
+
+    /**
+     * Test a specific migration with no dependencies can be rollbacked
+     */
+    public function testMigratorRollbackSpecific()
+    {
+        // The installed / available migrations
+        $testMigrations = [
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+        ];
+
+        // Migration object for the one being deleted
+        $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable';
+        $migrationObject = (object) [
+            'migration' => $migration
+        ];
+
+        // Locator will return all 3 migration classes as available
+        $this->locator->shouldReceive('getMigrations')->once()->andReturn($testMigrations);
+
+        // Repository will be asked to return the ran migrations and delete one
+        $this->repository->shouldReceive('getMigration')->once()->andReturn($migrationObject);
+        $this->repository->shouldReceive('getMigrationsList')->once()->andReturn($testMigrations);
+        $this->repository->shouldReceive('delete')->times(1)->andReturn([]);
+
+        // SchemaBuilder will delete 1 table
+        $this->schema->shouldReceive('dropIfExists')->times(1)->andReturn([]);
+
+        // Connection will be asked for the SchemaGrammar
+        $grammar = m::mock(Grammar::class);
+        $this->connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
+        $grammar->shouldReceive('supportsSchemaTransactions')->andReturn(false);
+
+        // Rollback only the Flights table. Should work as no other depends on it
+        $rolledback = $this->migrator->rollbackMigration($migration);
+
+        // The migration already ran shoudn't be in the pending ones
+        $this->assertEquals([$migration], $rolledback);
+    }
+
+    /**
+     * Test a specific migration with some dependencies can be rollbacked
+     */
+    public function testMigratorRollbackSpecificWithDependencies()
+    {
+        // The installed / available migrations
+        $testMigrations = [
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreatePasswordResetsTable',
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
+        ];
+
+        // Migration object for the one being deleted
+        $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable';
+        $migrationObject = (object) [
+            'migration' => $migration
+        ];
+
+        // Locator will return all 3 migration classes as available
+        $this->locator->shouldReceive('getMigrations')->once()->andReturn($testMigrations);
+
+        // Repository will be asked to return the ran migrations and delete one
+        $this->repository->shouldReceive('getMigration')->once()->andReturn($migrationObject);
+        $this->repository->shouldReceive('getMigrationsList')->once()->andReturn($testMigrations);
+        $this->repository->shouldNotReceive('delete');
+
+        // SchemaBuilder will delete 1 table
+        $this->schema->shouldNotReceive('dropIfExists');
+
+        // Connection will be asked for the SchemaGrammar
+        $grammar = m::mock(Grammar::class);
+        $this->connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
+        $grammar->shouldReceive('supportsSchemaTransactions')->andReturn(false);
+
+        // Rollback only the user table. Should fail as the flight table depends on it
+        $this->expectException(\Exception::class);
+        $rolledback = $this->migrator->rollbackMigration($migration);
     }
 
     /**
@@ -299,14 +383,15 @@ class DatabaseMigratorTest extends TestCase
             '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable'
         ];
 
-        // When running up, Locator will return all 3 migration classes
+        // Locator will return all 3 migration classes
         $this->locator->shouldReceive('getMigrations')->once()->andReturn($testMigrations);
 
-        // Repository will be asked to return the ran migrations (one), the next batch number and will log 2 new migrations
-        $this->repository->shouldReceive('getMigrationsList')->once()->andReturn($testMigrations);
+        // Repository will be asked to return the ran migrations (all of them),
+        // then asked to delete all 3 of them
+        $this->repository->shouldReceive('getMigrationsList')->twice()->andReturn($testMigrations);
         $this->repository->shouldReceive('delete')->times(3)->andReturn([]);
 
-        // SchemaBuilder will only create 2 tables
+        // SchemaBuilder will drop all 3 tables
         $this->schema->shouldReceive('dropIfExists')->times(3)->andReturn([]);
 
         // Connection will be asked for the SchemaGrammar
@@ -314,10 +399,10 @@ class DatabaseMigratorTest extends TestCase
         $this->connection->shouldReceive('getSchemaGrammar')->andReturn($grammar);
         $grammar->shouldReceive('supportsSchemaTransactions')->andReturn(false);
 
-        // Run migrations up
+        // Reset mgirations
         $migrations = $this->migrator->reset();
 
-        // The migration already ran shoudn't be in the pending ones
+        // All the migrations should have been rolledback
         $this->assertEquals(array_reverse($testMigrations), $migrations);
     }
 }

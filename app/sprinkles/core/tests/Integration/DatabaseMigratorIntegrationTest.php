@@ -251,6 +251,53 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->expectException(\Exception::class);
         $migrated = $this->migrator->run();
     }
+
+    public function testSpecificMigrationCanBeRollback()
+    {
+        // Change the repository so we can test with the DependableMigrationLocatorStub
+        $locator = new DependableMigrationLocatorStub($this->ci->locator);
+        $this->migrator->setLocator($locator);
+
+        // Run up
+        $migrated = $this->migrator->run();
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertTrue($this->schema->hasTable('flights'));
+
+        // Rollback only the Flights table. Should work as no other depends on it
+        $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable';
+        $rolledBack = $this->migrator->rollbackMigration($migration);
+        $this->assertCount(1, $rolledBack);
+        $this->assertEquals([$migration], $rolledBack);
+
+        // Look at actual db for tables. Flight should be gone, but other still there
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertFalse($this->schema->hasTable('flights'));
+    }
+
+    public function testSpecificMigrationRollbackWithDependencies()
+    {
+        // Change the repository so we can test with the DependableMigrationLocatorStub
+        $locator = new DependableMigrationLocatorStub($this->ci->locator);
+        $this->migrator->setLocator($locator);
+
+        // Run up
+        $migrated = $this->migrator->run();
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertTrue($this->schema->hasTable('flights'));
+
+        // Rollback only the user table. Should fail as the flight table depends on it
+        $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable';
+        $this->expectException(\Exception::class);
+        $rolledBack = $this->migrator->rollbackMigration($migration);
+
+        // Look at actual db for tables. Should be no changes
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertTrue($this->schema->hasTable('flights'));
+    }
 }
 
 class MigrationLocatorStub extends MigrationLocator {

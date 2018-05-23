@@ -12,6 +12,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocatorInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser as Analyser;
+use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRollbackDependencyAnalyser as RollbackAnalyser;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
@@ -215,6 +216,30 @@ class Migrator
     }
 
     /**
+     * Rollback a specific migration
+     *
+     * @param  string $migration The Migration to rollback
+     * @param  array  $options
+     * @return array  The list of rolledback migration classes
+     */
+    public function rollbackMigration($migration, array $options = [])
+    {
+        $this->notes = [];
+
+        // Get the migration detail from the repository
+        $migrationObject = $this->repository->getMigration($migration);
+
+        // Make sure the migration was found. If not, return same empty array
+        // as the main rollback method
+        if (!$migrationObject) {
+            return [];
+        }
+
+        // Rollback the migration
+        return $this->rollbackMigrations([$migrationObject->migration], $options);
+    }
+
+    /**
      * Get the migrations for a rollback operation.
      *
      * @param  array  $options The options for the current operation
@@ -244,6 +269,12 @@ class Migrator
         // Get the available migration classes in the filesystem
         $availableMigrations = collect($this->getAvailableMigrations());
 
+        // Extract some options
+        $pretend = Arr::get($options, 'pretend', false);
+
+        // Check for dependencies
+        $this->checkRollbackDependencies($migrations);
+
         // Next we will run through all of the migrations and call the "down" method
         // which will reverse each migration in order. This getLast method on the
         // repository already returns these migration's classenames in reverse order.
@@ -251,6 +282,7 @@ class Migrator
 
             // We have to make sure the class exist first
             if (!$availableMigrations->contains($migration)) {
+                //NOTE : WHY is the next line commented ??
                 //throw new \Exception("Can't rollback migrations `$migration`. The migration class doesn't exist");
                 continue;
             }
@@ -258,14 +290,32 @@ class Migrator
             // Add the migration to the list of rolledback migration
             $rolledBack[] = $migration;
 
-            // Extract some options
-            $pretend = Arr::get($options, 'pretend', false);
-
             // Run the migration down
             $this->runDown($migration, $pretend);
         }
 
         return $rolledBack;
+    }
+
+    /**
+     * Check if migrations can be rolledback.
+     *
+     * @param  array $migrations The migrations classes to rollback
+     * @throws \Exception If rollback can't be performed
+     */
+    protected function checkRollbackDependencies($migrations)
+    {
+        // Get ran migrations
+        $ranMigrations = $this->repository->getMigrationsList();
+
+        // Setup rollback analyser
+        $analyser = new RollbackAnalyser($ranMigrations, $migrations);
+
+        // Any rollback that creates an unfulfilled dependency will cause this script to throw an exception
+        if ($unfulfillable = $analyser->getUnfulfillable()) {
+            $unfulfillableList = implode(", ", $unfulfillable);
+            throw new \Exception("Some migrations can't be rolled back since the following migrations depends on it :: $unfulfillableList");
+        }
     }
 
     /**
