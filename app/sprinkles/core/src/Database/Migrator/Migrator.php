@@ -282,8 +282,12 @@ class Migrator
 
             // We have to make sure the class exist first
             if (!$availableMigrations->contains($migration)) {
-                //NOTE : WHY is the next line commented ??
+                // NOTE This next was commented because if a class doesn't exist,
+                // you'll get stuck and prevent futher classes to be rolledback
+                // until this class is put back in the system. Might wan't to
+                // display a warning instead of silently skipping it. See related "todo" in "reset" method
                 //throw new \Exception("Can't rollback migrations `$migration`. The migration class doesn't exist");
+                $this->note("<info>WARNING:</info> Can't rollback migrations `$migration`. The migration class doesn't exist");
                 continue;
             }
 
