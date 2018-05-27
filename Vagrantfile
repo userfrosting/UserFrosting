@@ -16,10 +16,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
 
     if File.exists? homesteadYamlPath then
-        Homestead.configure(config, YAML::load(File.read(homesteadYamlPath)))
+        settings = YAML::load(File.read(homesteadYamlPath))
+        Homestead.configure(config, settings)
     end
 
     if File.exists? afterScriptPath then
         config.vm.provision "shell", path: afterScriptPath
+    end
+
+    config.vm.provider :virtualbox do |vb|
+        vb_name = settings["name"] ||= "homestead-7"
+        vb_name = vb_name + "_" + File.basename(Dir.pwd)
+        vb.name = vb_name
     end
 end
