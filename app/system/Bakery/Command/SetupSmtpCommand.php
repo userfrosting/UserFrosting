@@ -50,6 +50,7 @@ class SetupSmtpCommand extends BaseCommand
         $this->setName('setup:smtp')
              ->setDescription('UserFrosting SMTP Configuration Wizard')
              ->setHelp('Helper command to setup outgoing email configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.')
+             ->addOption('force', null, InputOption::VALUE_NONE, "Force setup if SMTP appears to be already configured")
              ->addOption('smtp_host', null, InputOption::VALUE_OPTIONAL, 'The SMTP server hostname')
              ->addOption('smtp_user', null, InputOption::VALUE_OPTIONAL, 'The SMTP server user')
              ->addOption('smtp_password', null, InputOption::VALUE_OPTIONAL, 'The SMTP server password');
@@ -67,12 +68,17 @@ class SetupSmtpCommand extends BaseCommand
 
         // Display header,
         $this->io->title("UserFrosting's SMTP Setup Wizard");
-        $this->io->note("SMTP credentials will be saved in `{$this->envPath}`");
 
         // Get an instance of the DotenvEditor
         $dotenvEditor = new DotenvEditor(\UserFrosting\APP_DIR, false);
         $dotenvEditor->load($this->envPath);
         $dotenvEditor->save(); // Save make sure empty file is created if none exist before reading it
+
+        // Check if db is already setup
+        if (!$input->getOption('force') && $this->isSmtpConfigured($dotenvEditor)) {
+            $this->io->note("SMTP already setup. Use the `php bakery setup:smtp --force` command to run SMTP setup again.");
+            return;
+        }
 
         // Get keys
         $keys = [
@@ -93,6 +99,8 @@ class SetupSmtpCommand extends BaseCommand
                 return;
             }
         }
+
+        $this->io->note("SMTP credentials will be saved in `{$this->envPath}`");
 
         // Ask for SMTP info
         $smtpParams = $this->askForSmtpMethod($input);
@@ -204,6 +212,21 @@ class SetupSmtpCommand extends BaseCommand
             ];
         } else {
             $this->askForSmtpMethod($input);
+        }
+    }
+
+    /**
+     * Check if the app/.env SMTP portion is defined or not.
+     *
+     * @param  DotenvEditor $dotenvEditor
+     * @return bool true if SMTP is configured in .env file
+     */
+    protected function isSmtpConfigured(DotenvEditor $dotenvEditor)
+    {
+        if ($dotenvEditor->keyExists('SMTP_HOST') && $dotenvEditor->keyExists('SMTP_USER') && $dotenvEditor->keyExists('SMTP_PASSWORD')) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
