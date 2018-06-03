@@ -36,6 +36,7 @@ class SetupDbCommand extends BaseCommand
         $this->setName("setup:db")
              ->setDescription("UserFrosting Database Configuration Wizard")
              ->setHelp("Helper command to setup the database configuration. This can also be done manually by editing the <comment>app/.env</comment> file or using global server environment variables.")
+             ->addOption('force', null, InputOption::VALUE_NONE, "Force setup if db is already configured")
              ->addOption('db_driver', null, InputOption::VALUE_OPTIONAL, "The database driver {$this->getDatabaseDriversList()}")
              ->addOption('db_name', null, InputOption::VALUE_OPTIONAL, "The database name")
              ->addOption('db_host', null, InputOption::VALUE_OPTIONAL, "The database hostname")
@@ -56,6 +57,13 @@ class SetupDbCommand extends BaseCommand
 
         // Display header,
         $this->io->title("UserFrosting's Database Setup Wizard");
+
+        // Check if db is already setup
+        if (!$input->getOption('force') && $this->testDatabase($config["db.default"], false)) {
+            $this->io->note("Database already setup. Use the `php bakery setup:db --force` command to run db setup again.");
+            return;
+        }
+
         $this->io->note("Database credentials will be saved in `{$this->envPath}`");
 
         // Get an instance of the DotenvEditor
@@ -89,7 +97,11 @@ class SetupDbCommand extends BaseCommand
         $dbParams = $this->askForDatabase($input);
 
         // Test database
-        $this->testDatabase($dbParams);
+        if (!$this->testDatabase($dbParams)) {
+            exit(1);
+        } else {
+            $this->io->success("Database connection successful");
+        }
 
         // Time to save
         $this->io->section("Saving data");
@@ -189,9 +201,10 @@ class SetupDbCommand extends BaseCommand
      * Test new database connecion
      *
      * @param  array $dbParams Database params
-     * @return void (Exit if fails)
+     * @param  bool $displayMessage Display io message
+     * @return bool Return true if db is successful
      */
-    protected function testDatabase($dbParams)
+    protected function testDatabase($dbParams, $displayMessage = true)
     {
         // Setup a new db connection
         $capsule = new Capsule;
@@ -201,14 +214,17 @@ class SetupDbCommand extends BaseCommand
         try {
             $conn = $capsule->getConnection();
             $conn->getPdo();
-            $this->io->success("Database connection successful");
         } catch (\PDOException $e) {
-            $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
-            $message .= "Exception: " . $e->getMessage() . PHP_EOL.PHP_EOL;
-            $message .= "Please check your database configuration and/or google the exception shown above and run the command again.";
-            $this->io->error($message);
-            exit(1);
+            if ($displayMessage) {
+                $message  = "Could not connect to the database '{$dbParams['username']}@{$dbParams['host']}/{$dbParams['database']}':".PHP_EOL;
+                $message .= "Exception: " . $e->getMessage() . PHP_EOL.PHP_EOL;
+                $message .= "Please check your database configuration and/or google the exception shown above and run the command again.";
+                $this->io->error($message);
+            }
+            return false;
         }
+
+        return true;
     }
 
     /**

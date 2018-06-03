@@ -56,7 +56,10 @@ class BakeCommand extends BaseCommand
     {
         $this->io->writeln("<info>{$this->title}</info>");
 
-        $command = $this->getApplication()->find('setup');
+        $command = $this->getApplication()->find('setup:db');
+        $command->run($input, $output);
+
+        $command = $this->getApplication()->find('setup:smtp');
         $command->run($input, $output);
 
         $command = $this->getApplication()->find('debug');
