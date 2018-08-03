@@ -44,7 +44,7 @@ return [
 
         "RETURN" => 'Haga clic en <a href="{{url}}"> aquí </a> para volver a la página principal.',
 
-        "SERVER" => "¡Vaya, parece que nuestro servidor pudo haber metido la pata. Si eres un administrador, comprueba los registros de errores de PHP o el log de UserFrosting.",
+        "SERVER" => "¡Vaya! Parece que nuestro servidor pudo haber metido la pata. Si eres un administrador, comprueba los registros de errores de PHP o el log de UserFrosting.",
 
         "TITLE" => "Perturbación en la Fuerza",
     ]
