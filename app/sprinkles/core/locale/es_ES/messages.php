@@ -105,7 +105,7 @@ return [
     "REMOVE" => "Remover",
     "UNACTIVATED" => "Desactivado",
     "UPDATE" => "Actualizar",
-    "YES" => "Si",
+    "YES" => "Sí",
     "NO" => "No",
     "OPTIONAL" => "Opcional",
 
