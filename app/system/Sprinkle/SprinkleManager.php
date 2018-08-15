@@ -9,8 +9,6 @@ namespace UserFrosting\System\Sprinkle;
 
 use Illuminate\Support\Str;
 use Interop\Container\ContainerInterface;
-use RocketTheme\Toolbox\Event\EventDispatcher;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use UserFrosting\Support\Exception\FileNotFoundException;
 
 /**
@@ -51,40 +49,6 @@ class SprinkleManager
     {
         $this->ci = $ci;
         $this->sprinklesPath = \UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS;
-
-        $this->resourcePaths = [
-            'assets' => \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME,
-            'config' => \UserFrosting\DS . \UserFrosting\CONFIG_DIR_NAME,
-            'extra' => \UserFrosting\DS . \UserFrosting\EXTRA_DIR_NAME,
-            'factories' => \UserFrosting\DS . \UserFrosting\FACTORY_DIR_NAME,
-            'locale' => \UserFrosting\DS . \UserFrosting\LOCALE_DIR_NAME,
-            'routes' => \UserFrosting\DS . \UserFrosting\ROUTE_DIR_NAME,
-            'schema' => \UserFrosting\DS . \UserFrosting\SCHEMA_DIR_NAME,
-            'sprinkles' => '',
-            'templates' => \UserFrosting\DS . \UserFrosting\TEMPLATE_DIR_NAME
-        ];
-    }
-
-    /**
-     * Adds the relative path for a specified resource type in a Sprinkle to the resource's stream.
-     *
-     * @param string $resourceName
-     * @param string $sprinkleName
-     * @return string|bool The full path to specified resource for the specified Sprinkle (if found).
-     */
-    public function addResource($resourceName, $sprinkleName)
-    {
-        $resourcePath = $this->resourcePaths[$resourceName];
-        $fullPath = $this->sprinklesPath . $sprinkleName . $resourcePath;
-
-        $this->ci->locator->addPath($resourceName, '', $fullPath);
-
-        return $this->ci->locator->findResource("$resourceName://", true, false);
-
-        /* This would allow a stream to subnavigate to a specific sprinkle (e.g. "templates://core/")
-           Not sure if we need this.
-           $locator->addPath('templates', '$name', $sprinklesDirFragment . '/' . \UserFrosting\TEMPLATE_DIR_NAME);
-         */
     }
 
     /**
@@ -92,17 +56,14 @@ class SprinkleManager
      */
     public function addResources()
     {
+        /**
+         * @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator
+         */
+        $locator = $this->ci->locator;
+
         // For each sprinkle, register its resources and then run its initializer
         foreach ($this->sprinkles as $sprinkleName => $sprinkle) {
-            $this->addResource('config', $sprinkleName);
-            $this->addResource('assets', $sprinkleName);
-            $this->addResource('extra', $sprinkleName);
-            $this->addResource('factories', $sprinkleName);
-            $this->addResource('locale', $sprinkleName);
-            $this->addResource('routes', $sprinkleName);
-            $this->addResource('schema', $sprinkleName);
-            $this->addResource('sprinkles', $sprinkleName);
-            $this->addResource('templates', $sprinkleName);
+            $locator->registerLocation($sprinkleName, $this->sprinklesPath . $sprinkleName);
         }
     }
 
@@ -111,7 +72,7 @@ class SprinkleManager
      *
      * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
      * Otherwise, returns null.
-     * @param $name The name of the Sprinkle to initialize.
+     * @param string $name The name of the Sprinkle to initialize.
      */
     public function bootSprinkle($name)
     {

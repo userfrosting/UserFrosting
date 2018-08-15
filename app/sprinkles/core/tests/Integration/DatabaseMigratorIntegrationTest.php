@@ -56,7 +56,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
 
         // Get the repository and locator instances
         $this->repository = new DatabaseMigrationRepository($this->ci->db, $this->migrationTable);
-        $this->locator = new MigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
+        $this->locator = new MigrationLocatorStub($this->ci->locator);
 
         // Get the migrator instance and setup right connection
         $this->migrator = new Migrator($this->ci->db, $this->repository, $this->locator);
@@ -172,7 +172,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testChangeRepositoryAndDeprecatedClass()
     {
         // Change the repository so we can test with the DeprecatedMigrationLocatorStub
-        $locator = new DeprecatedMigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
+        $locator = new DeprecatedMigrationLocatorStub($this->ci->locator);
         $this->migrator->setLocator($locator);
 
         // Run up. Should also run the seeder
@@ -191,7 +191,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testWithInvalidClass()
     {
         // Change the repository so we can test with the InvalidMigrationLocatorStub
-        $locator = new InvalidMigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
+        $locator = new InvalidMigrationLocatorStub($this->ci->locator);
         $this->migrator->setLocator($locator);
 
         // Expect a `BadClassNameException` exception
@@ -204,7 +204,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testDependableMigrations()
     {
         // Change the repository so we can test with the DependableMigrationLocatorStub
-        $locator = new DependableMigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
+        $locator = new DependableMigrationLocatorStub($this->ci->locator);
         $this->migrator->setLocator($locator);
 
         // Run up
@@ -228,7 +228,7 @@ class DatabaseMigratorIntegrationTest extends TestCase
         $this->assertTrue($this->schema->hasTable('password_resets'));
 
         // Change the repository so we can run up the `two` migrations
-        $locator = new FlightsTableMigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
+        $locator = new FlightsTableMigrationLocatorStub($this->ci->locator);
         $this->migrator->setLocator($locator);
 
         // Run up again
@@ -244,12 +244,59 @@ class DatabaseMigratorIntegrationTest extends TestCase
     public function testUnfulfillableMigrations()
     {
         // Change the repository so we can test with the DeprecatedStub
-        $locator = new UnfulfillableMigrationLocatorStub($this->ci->sprinkleManager, new Filesystem);
+        $locator = new UnfulfillableMigrationLocatorStub($this->ci->locator);
         $this->migrator->setLocator($locator);
 
         // Should have an exception for unfulfilled migrations
         $this->expectException(\Exception::class);
         $migrated = $this->migrator->run();
+    }
+
+    public function testSpecificMigrationCanBeRollback()
+    {
+        // Change the repository so we can test with the DependableMigrationLocatorStub
+        $locator = new DependableMigrationLocatorStub($this->ci->locator);
+        $this->migrator->setLocator($locator);
+
+        // Run up
+        $migrated = $this->migrator->run();
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertTrue($this->schema->hasTable('flights'));
+
+        // Rollback only the Flights table. Should work as no other depends on it
+        $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\two\\CreateFlightsTable';
+        $rolledBack = $this->migrator->rollbackMigration($migration);
+        $this->assertCount(1, $rolledBack);
+        $this->assertEquals([$migration], $rolledBack);
+
+        // Look at actual db for tables. Flight should be gone, but other still there
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertFalse($this->schema->hasTable('flights'));
+    }
+
+    public function testSpecificMigrationRollbackWithDependencies()
+    {
+        // Change the repository so we can test with the DependableMigrationLocatorStub
+        $locator = new DependableMigrationLocatorStub($this->ci->locator);
+        $this->migrator->setLocator($locator);
+
+        // Run up
+        $migrated = $this->migrator->run();
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertTrue($this->schema->hasTable('flights'));
+
+        // Rollback only the user table. Should fail as the flight table depends on it
+        $migration = '\\UserFrosting\\Tests\\Integration\\Migrations\\one\\CreateUsersTable';
+        $this->expectException(\Exception::class);
+        $rolledBack = $this->migrator->rollbackMigration($migration);
+
+        // Look at actual db for tables. Should be no changes
+        $this->assertTrue($this->schema->hasTable('users'));
+        $this->assertTrue($this->schema->hasTable('password_resets'));
+        $this->assertTrue($this->schema->hasTable('flights'));
     }
 }
 

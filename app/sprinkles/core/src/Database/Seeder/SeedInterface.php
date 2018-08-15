@@ -12,7 +12,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Seeder;
  *
  * @author Louis Charette
  */
-interface SeederInterface
+interface SeedInterface
 {
     public function run();
 }

@@ -7,9 +7,12 @@
  */
 namespace UserFrosting\System\Bakery;
 
-use Symfony\Component\Console\Application;
-use UserFrosting\System\UserFrosting;
 use Illuminate\Support\Str;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use UserFrosting\System\UserFrosting;
+use UserFrosting\UniformResourceLocator\Resource;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * Base class for UserFrosting Bakery CLI tools.
@@ -27,6 +30,11 @@ class Bakery
      *    @var \Interop\Container\ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
+
+    /**
+     * @var string $scheme The resource locator scheme
+     */
+    protected $scheme = 'bakery://';
 
     /**
      *    Constructor
@@ -72,89 +80,73 @@ class Bakery
      */
     protected function loadCommands()
     {
-        // Get base Bakery command
-        $commands = $this->getBakeryCommands();
+        /**
+        * @var ResourceLocator $locator
+        */
+        $locator = $this->ci->locator;
 
-        // Get the sprinkles commands
-        $sprinkles = $this->ci->sprinkleManager->getSprinkleNames();
-        foreach ($sprinkles as $sprinkle) {
-            $commands = $commands->merge($this->getSprinkleCommands($sprinkle));
-        }
+        // Get Bakery command resources
+        $commandResources = $locator->listResources($this->scheme);
 
         // Add commands to the App
-        $commands->each(function($command) {
+        foreach ($commandResources as $commandResource) {
+
+            // Translate the resource to a class
+            $command = $this->getResourceClass($commandResource);
+
+            // Get command instance
             $instance = new $command();
+
+            // Class must be an instance of symfony command
+            if (!$instance instanceof Command) {
+                throw new \Exception("Bakery command class must be an instance of `" . Command::class . "`");
+            }
+
+            // Add command to the Console app
             $instance->setContainer($this->ci);
             $this->app->add($instance);
-        });
+        };
     }
 
     /**
-     *    Return the list of available commands for a specific sprinkle
-     *    Sprinkles commands should be located in `src/Bakery/`
+     * Transform a Bakery Command Resource into a classpath
      *
-     *    @param  string $sprinkle The sprinkle name
-     *    @return \Illuminate\Support\Collection A collection of commands
+     * @param  Resource $file The command resource
+     * @return string The command class path
      */
-    protected function getSprinkleCommands($sprinkle)
+    protected function getResourceClass(Resource $file)
     {
-        // Find all the migration files
-        $path = $this->commandDirectoryPath($sprinkle);
-        $files = glob($path . "*.php");
-        $commands = collect($files);
+        // Process sprinkle and system commands
+        if (!is_null($location = $file->getLocation())) {
 
-        // Transform the path into a class names
-        $commands->transform(function ($file) use ($sprinkle, $path) {
-            $className = basename($file, '.php');
-            $sprinkleName = Str::studly($sprinkle);
-            $className = "\\UserFrosting\\Sprinkle\\".$sprinkleName."\\Bakery\\".$className;
-            return $className;
-        });
+            // Format the sprinkle name for the namespace
+            $sprinkleName = $file->getLocation()->getName();
+            $sprinkleName = Str::studly($sprinkleName);
 
-        return $commands;
+            // Getting the classpath
+            $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
+            $className = str_replace('/', '\\', $basePath) . $file->getFilename();
+            $classPath = "\\UserFrosting\\Sprinkle\\$sprinkleName\\Bakery\\$className";
+
+        } else {
+            // Getting the classpath
+            $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
+            $className = str_replace('/', '\\', $basePath) . $file->getFilename();
+            $classPath = "\\UserFrosting\\System\\Bakery\\Command\\$className";
+        }
+
+        // Make sure class exist
+        if (!class_exists($classPath)) {
+            throw new \Exception("Bakery command found in `{$file->getAbsolutePath()}`, but class `$classPath` doesn't exist. Make sure the class has the correct namespace.");
+        }
+
+        return $classPath;
     }
 
     /**
-     *    Return the list of available commands in system/Bakery/Command/
+     * Write the base `sprinkles.json` file if none exist.
      *
-     *    @return \Illuminate\Support\Collection A collection of commands
-     */
-    protected function getBakeryCommands()
-    {
-        // Find all the migration files
-        $files = glob(\UserFrosting\APP_DIR . "/system/Bakery/Command/" . "*.php");
-        $commands = collect($files);
-
-        // Transform the path into a class names
-        $commands->transform(function ($file) {
-            $className = basename($file, '.php');
-            $className = "\\UserFrosting\\System\\Bakery\\Command\\".$className;
-            return $className;
-        });
-
-        return $commands;
-    }
-
-    /**
-     *    Returns the path of the Bakery commands directory.
-     *
-     *    @param  string $sprinkleName The sprinkle name
-     *    @return string The sprinkle bakery command directory path
-     */
-    protected function commandDirectoryPath($sprinkleName)
-    {
-        return \UserFrosting\SPRINKLES_DIR .
-               \UserFrosting\DS .
-               $sprinkleName .
-               \UserFrosting\DS .
-               \UserFrosting\SRC_DIR_NAME .
-               "/Bakery/";
-    }
-
-    /**
-     *    Write the base `sprinkles.json` file if none exist.
-     *
-     *    @return string The sprinkle model file
+     * @return string The sprinkle model file
      */
     protected function setupBaseSprinkleList()
     {

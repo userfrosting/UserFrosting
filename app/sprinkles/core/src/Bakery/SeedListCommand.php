@@ -7,10 +7,9 @@
  */
 namespace UserFrosting\Sprinkle\Core\Bakery;
 
-use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UserFrosting\Sprinkle\Core\Database\Seeder\SeederLocator;
+use UserFrosting\Sprinkle\Core\Database\Seeder\Seeder;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -37,8 +36,8 @@ class SeedListCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io->title("Database Seeds List");
-        $locator = new SeederLocator($this->ci->sprinkleManager, new Filesystem);
-        $seeds = $locator->getSeeders();
-        $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds->toArray());
+        $seeder = new Seeder($this->ci);
+        $seeds = $seeder->getSeeds();
+        $this->io->table(['Name', 'Namespace', 'Sprinkle'], $seeds);
     }
 }

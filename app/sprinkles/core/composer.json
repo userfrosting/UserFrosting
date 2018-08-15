@@ -24,6 +24,13 @@
             "name": "Srinivas Nukala"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "https://github.com/userfrosting/UniformResourceLocator",
+            "no-api": true
+        }
+    ],
     "require": {
         "doctrine/dbal": "^2.5",
         "filp/whoops": "^2.1",
@@ -40,16 +47,20 @@
         "slim/twig-view": "^1.2",
         "symfony/http-foundation": "*",
         "twig/twig": "^1.18",
-        "userfrosting/assets": ">=5",
-        "userfrosting/config": "~4.1.0",
+        "userfrosting/assets": "dev-feature-locator",
+        "userfrosting/config": "dev-feature-locator",
         "userfrosting/cache": "~4.1.0",
         "userfrosting/fortress": "~4.1.1",
         "userfrosting/i18n": "~4.1.0",
+        "userfrosting/uniformresourcelocator": "dev-develop",
         "userfrosting/session": "~4.1.0",
         "userfrosting/support": "~4.1.1",
         "vlucas/phpdotenv": "^2"
     },
     "autoload": {
+        "files" : [
+            "defines.php"
+        ],
         "psr-4": {
             "UserFrosting\\Sprinkle\\Core\\": "src/"
         }

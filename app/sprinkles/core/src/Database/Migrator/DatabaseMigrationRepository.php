@@ -80,6 +80,17 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
+     * Get details about a specific migration
+     *
+     * @param  string $migration The migration class
+     * @return \stdClass The migration info
+     */
+    public function getMigration($migration)
+    {
+        return $this->table()->where('migration', $migration)->first();
+    }
+
+    /**
      * Get the last migration batch in reserve order they were ran (last one first)
      *
      * @return array

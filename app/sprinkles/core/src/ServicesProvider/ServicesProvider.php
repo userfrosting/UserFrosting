@@ -35,7 +35,6 @@ use UserFrosting\Cache\RedisStore;
 use UserFrosting\Config\ConfigPathBuilder;
 use UserFrosting\I18n\LocalePathBuilder;
 use UserFrosting\Assets\Assets;
-use UserFrosting\Assets\PathTransformer\PrefixTransformer;
 use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
 use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
 use UserFrosting\I18n\MessageTranslator;
@@ -104,27 +103,9 @@ class ServicesProvider
             $config = $c->config;
             $locator = $c->locator;
 
-            // Hacky way to clean up locator paths.
-            $locatorPaths = [];
-            foreach ($locator->getPaths('assets') as $pathSet) {
-                foreach ($pathSet as $path) {
-                    $locatorPaths[] = $path;
-                }
-            }
-
             $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
 
-            $sprinkles = $c->sprinkleManager->getSprinkleNames();
-
-            $prefixTransformer = new PrefixTransformer();
-            $prefixTransformer->define(\UserFrosting\BOWER_ASSET_DIR, 'vendor-bower');
-            $prefixTransformer->define(\UserFrosting\NPM_ASSET_DIR, 'vendor-npm');
-
-            foreach ($sprinkles as $sprinkle) {
-                $prefixTransformer->define(\UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME, \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle);
-            }
-
-            $assets = new Assets($locator, 'assets', $baseUrl, $prefixTransformer);
+            $assets = new Assets($locator, 'assets', $baseUrl);
 
             return new AssetLoader($assets);
         };
@@ -139,28 +120,11 @@ class ServicesProvider
             $config = $c->config;
             $locator = $c->locator;
 
-            // Hacky way to clean up locator paths.
-            $locatorPaths = [];
-            foreach ($locator->getPaths('assets') as $pathSet) {
-                foreach ($pathSet as $path) {
-                    $locatorPaths[] = $path;
-                }
-            }
-
             // Load asset schema
             if ($config['assets.use_raw']) {
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
 
-                $sprinkles = $c->sprinkleManager->getSprinkleNames();
-
-                $prefixTransformer = new PrefixTransformer();
-                $prefixTransformer->define(\UserFrosting\BOWER_ASSET_DIR, 'vendor-bower');
-                $prefixTransformer->define(\UserFrosting\NPM_ASSET_DIR, 'vendor-npm');
-
-                foreach ($sprinkles as $sprinkle) {
-                    $prefixTransformer->define(\UserFrosting\APP_DIR_NAME . \UserFrosting\DS . \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle . \UserFrosting\DS . \UserFrosting\ASSET_DIR_NAME, \UserFrosting\SPRINKLES_DIR_NAME . \UserFrosting\DS . $sprinkle);
-                }
-                $assets = new Assets($locator, 'assets', $baseUrl, $prefixTransformer);
+                $assets = new Assets($locator, 'assets', $baseUrl);
 
                 // Load raw asset bundles for each Sprinkle.
 
@@ -281,8 +245,8 @@ class ServicesProvider
 
             // Reset 'assets' scheme in locator if specified in config. (must be done here thanks to prevent circular dependency)
             if (!$config['assets.use_raw']) {
-                $c->locator->resetScheme('assets');
-                $c->locator->addPath('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME);
+                $c->locator->removeStream('assets');
+                $c->locator->registerStream('assets', '', \UserFrosting\PUBLIC_DIR_NAME . '/' . \UserFrosting\ASSET_DIR_NAME, true);
             }
 
             return $config;
@@ -429,7 +393,7 @@ class ServicesProvider
         $container['factory'] = function ($c) {
 
             // Get the path of all of the sprinkle's factories
-            $factoriesPath = $c->locator->findResources('factories://', true, true);
+            $factoriesPath = $c->locator->findResources('factories://', true);
 
             // Create a new Factory Muffin instance
             $fm = new FactoryMuffin();
@@ -542,7 +506,7 @@ class ServicesProvider
             $migrator = new Migrator(
                 $c->db,
                 new DatabaseMigrationRepository($c->db, $c->config['migrations.repository_table']),
-                new MigrationLocator($c->sprinkleManager, new Filesystem)
+                new MigrationLocator($c->locator)
             );
 
             // Make sure repository exist
