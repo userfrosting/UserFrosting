@@ -2,7 +2,7 @@
 
 UserFrosting includes support for Vagrant. This allows you to run UserFrosting without the need to set up your own local web server with traditional WAMP/MAMP stacks. It also provides a consistent environment between developers for writing and debugging code changes more productively.
 
-UserFrosting uses the [Laravel/Homestead](https://laravel.com/docs/5.6/homestead) Vagrant box. It runs a Linux server with Ubuntu 14.04, PHP 5.6, Nginx, SQLite3, MySQL, and a whole lot more (complete specs below).
+UserFrosting uses the [Laravel/Homestead](https://laravel.com/docs/5.6/homestead) Vagrant box. It runs a Linux server with Ubuntu 16.04, PHP 7.1, Nginx, SQLite3, MySQL, and a whole lot more (complete specs below).
 
 ## Get Started
 
@@ -52,7 +52,7 @@ $ vagrant destroy
 
 > Note: destroying the vagrant server will remove all traces of the VM from your computer, reclaiming any disk space used by it. However, it also means the next time you vagrant up, you will be creating a brand new VM with a fresh install of UserFrosting and a new database.
 
-## Customising the UserFrosting configuration
+## Customizing the UserFrosting configuration
 
 By default, UserFrosting is pre-configured to install with a MySQL database. You can, however, switch to PostegreSQL or SQLite3 by editing the `install-config.yml` file in the vagrant directory. The next time you run `vagrant up` (or `vagrant provision`) it will be installed under the new configuration.
 
@@ -98,9 +98,9 @@ $ mysql -uhomestead -psecret UserFrosting < /home/vagrant/userfrosting/userfrost
 
 ### Included Software
 
-* Ubuntu 14.04
+* Ubuntu 16.04
 * Git
-* PHP 5.6
+* PHP 7.1
 * HHVM
 * Nginx
 * MySQL
