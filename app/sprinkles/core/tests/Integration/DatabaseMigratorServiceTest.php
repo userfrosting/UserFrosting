@@ -7,6 +7,7 @@
  */
 namespace UserFrosting\Tests\Integration;
 
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -16,6 +17,19 @@ use UserFrosting\Tests\TestCase;
  */
 class DatabaseMigratorServiceTest extends TestCase
 {
+    use TestDatabase;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        // Setup test database
+        $this->setupTestDatabase();
+    }
+
     public function testMigratorService()
     {
         $this->assertInstanceOf('UserFrosting\Sprinkle\Core\Database\Migrator\Migrator', $this->ci->migrator);
