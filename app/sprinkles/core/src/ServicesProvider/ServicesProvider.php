@@ -145,7 +145,6 @@ class ServicesProvider
             } else {
                 $baseUrl = $config['site.uri.public'] . '/' . $config['assets.compiled.path'];
                 $assets = new Assets($locator, 'assets', $baseUrl);
-                $assets->overrideBasePath($locator->getBase() . '/public/assets');
 
                 // Load compiled asset bundle.
                 $assets->addAssetBundles(new CompiledAssetBundles($locator("build://" . $config['assets.compiled.schema'], true, true)));
