@@ -24,13 +24,6 @@
             "name": "Srinivas Nukala"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://github.com/userfrosting/UniformResourceLocator",
-            "no-api": true
-        }
-    ],
     "require": {
         "doctrine/dbal": "^2.5",
         "filp/whoops": "^2.1",
