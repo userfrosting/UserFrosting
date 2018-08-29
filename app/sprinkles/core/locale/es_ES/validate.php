@@ -24,8 +24,8 @@ return [
         "NO_LEAD_WS" => "El valor de <strong> {{label}} </strong> no puede comenzar con espacios, pestañas u otros espacios en blanco.",
         "NO_TRAIL_WS" => "El valor de <strong> {{label}} </strong> no puede finalizar con espacios, pestañas u otros espacios en blanco.",
         "RANGE" => "El valor de <strong> {{label}} </strong> debe estar entre {{min}} y {{max}}.",
-        "REQUIRED" => "Especifique un valor para <strong> {{label}} </strong>.",
-        "PHONE" => "El numero proporcionado para el télefono es invalido.",
+        "REQUIRED" => "Especifica un valor para <strong> {{label}} </strong>.",
+        "PHONE" => "El número proporcionado para el télefono es inválido.",
         "SPRUNJE" => [
             "BAD_FILTER" => "<strong> {{name}} </strong> no es un filtro válido para este Sprunje.",
             "BAD_LIST" => "<strong> {{name}} </strong> no es una lista válida para este Sprunje.",
