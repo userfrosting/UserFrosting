@@ -152,7 +152,7 @@
                     'fa'    => 'فارسی'
                 ],
                 // This can be a comma-separated list, to load multiple fallback locales
-                'default' => 'es_ES'
+                'default' => 'en_US'
             ],
             'title'     =>      'UserFrosting',
             // Global ufTable settings
