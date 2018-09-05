@@ -250,6 +250,7 @@ class WhoopsRenderer extends ErrorRenderer
             "has_frames"     => !!count($frames),
             "handler"        => $this,
             "handlers"       => [$this],
+            "prettify"       => true,
 
             "active_frames_tab" => count($frames) && $frames->offsetGet(0)->isApplication() ?  'application' : 'all',
             "has_frames_tabs"   => $this->getApplicationPaths(),
