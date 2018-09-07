@@ -17,38 +17,38 @@ return [
 
         "ACCESS_DENIED" => "Hmm, parece que no tienes permiso para hacer eso.",
 
-        "DISABLED" => "Esta cuenta se ha inhabilitado. Por favor contáctenos para más información.",
+        "DISABLED" => "Esta cuenta se ha inhabilitado. Por favor contáctanos para más información.",
 
         "EMAIL_UPDATED" => "Correo electrónico de la cuenta actualizado",
 
-        "INVALID" => "Esta cuenta no existe. Puede haber sido eliminado. Por favor contáctenos para más información.",
+        "INVALID" => "Esta cuenta no existe. Puede haber sido eliminado. Por favor contáctanos para más información.",
 
-        "MASTER_NOT_EXISTS" => "No puede registrar una cuenta hasta que se haya creado la cuenta principal.",
+        "MASTER_NOT_EXISTS" => "No puedes registrar una cuenta hasta que se haya creado la cuenta principal.",
         "MY" => "Mi Perfil",
 
         "SESSION_COMPROMISED" => [
-            "@TRANSLATION"  => "Su sesión ha sido comprometida. Debe desconectarse de todos los dispositivos y, a continuación, volver a iniciar sesión y asegurarse de que sus datos no han sido manipulados.",
-            "TITLE"         => "Es posible que su cuenta se haya visto comprometida.",
-            "TEXT"          => "Alguien puede haber utilizado su información de acceso para acceder a esta página. Para su seguridad, todas las sesiones se cerraron. <a href=\"{{url}}\"> ingrese </a> y compruebe si su actividad es sospechosa en su cuenta. También puede cambiar su contraseña."
+            "@TRANSLATION"  => "Tu sesión ha sido comprometida. Debes desconectarse de todos los dispositivos y, a continuación, volver a iniciar sesión y asegurarte de que sus datos no han sido manipulados.",
+            "TITLE"         => "Es posible que tu cuenta se haya visto comprometida.",
+            "TEXT"          => "Alguien puede haber utilizado tu información de acceso para acceder a esta página. Para tu seguridad, todas las sesiones se cerraron. <a href=\"{{url}}\"> ingrese </a> y comprueba si tu actividad es sospechosa en tu cuenta. También puedes cambiar su contraseña."
         ],
-        "SESSION_EXPIRED" => "Su sesión ha caducado. Inicie sesión nuevamente.",
+        "SESSION_EXPIRED" => "Tu sesión ha caducado. Inicie sesión nuevamente.",
 
         "SETTINGS" => [
             "@TRANSLATION" => "Configuraciones de la cuenta",
-            "DESCRIPTION" => "Actualice la configuración de su cuenta, incluido el correo electrónico, el nombre y la contraseña.",
+            "DESCRIPTION" => "Actualiza la configuración de su cuenta, incluido el correo electrónico, el nombre y la contraseña.",
             "UPDATED" => "Configuración de la cuenta actualizada"
         ],
 
         "TOOLS" => "Herramientas de la cuenta",
 
-        "UNVERIFIED" => "Tu cuenta aún no se ha verificado. Revise sus correos electrónicos / carpeta de spam para obtener instrucciones sobre la activación de la cuenta.",
+        "UNVERIFIED" => "Tu cuenta aún no se ha verificado. Revisa sus correos electrónicos / carpeta de spam para obtener instrucciones sobre la activación de la cuenta.",
 
         "VERIFICATION" => [
             "NEW_LINK_SENT" => "Hemos enviado por correo electrónico un nuevo enlace de verificación a {{email}}. Comprueba tu bandeja de entrada y las carpetas de spam para este correo electrónico.",
             "RESEND" => "Reenviar correo electrónico de verificación",
-            "COMPLETE" => "Ha verificado correctamente su cuenta. Ahora puede iniciar sesión.",
-            "EMAIL" => "Ingrese la dirección de correo electrónico que utilizó para registrarse y su correo electrónico de verificación será enviado de nuevo.",
-            "PAGE" => "Vuelva a enviar el correo electrónico de verificación de su nueva cuenta.",
+            "COMPLETE" => "Has verificado correctamente su cuenta. Ahora puedes iniciar sesión.",
+            "EMAIL" => "Ingresa la dirección de correo electrónico que utilizaste para registrarte y tu correo electrónico de verificación será enviado de nuevo.",
+            "PAGE" => "Vuelve a enviar el correo electrónico de verificación de tu nueva cuenta.",
             "SEND" => "Reenviar correo de verificación",
             "TOKEN_NOT_FOUND" => "El token de verificación no existe / La cuenta ya está verificada",
         ]
@@ -57,7 +57,7 @@ return [
     "EMAIL" => [
         "INVALID" => "No hay cuenta para <strong> {{email}} </strong>.",
         "IN_USE" => "El correo electrónico <strong> {{email}} </strong> ya está en uso.",
-        "VERIFICATION_REQUIRED" => "Correo electrónico (se requiere verificación - ¡use una dirección real!)"
+        "VERIFICATION_REQUIRED" => "Correo electrónico (se requiere verificación - ¡usa una dirección real!)"
     ],
 
     "EMAIL_OR_USERNAME" => "Nombre de usuario o dirección de correo electrónico",
@@ -69,14 +69,14 @@ return [
     "LAST_NAME" => "Apellidos",
 
     "LOCALE" => [
-        "ACCOUNT" => "El idioma y la configuración regional para utilizar en su cuenta",
+        "ACCOUNT" => "El idioma y la configuración regional para utilizar en tu cuenta",
         "INVALID" => "<strong>{{locale}}</strong> no es un idioma válido."
     ],
 
     "LOGIN" => [
         "@TRANSLATION" => "Acceder",
-        "ALREADY_COMPLETE" => "¡Ya se ha autentificado!",
-        "SOCIAL" => "O ingrese con",
+        "ALREADY_COMPLETE" => "¡Ya te has autentificado!",
+        "SOCIAL" => "O ingresa con",
         "REQUIRED" => "Lo sentimos, debes iniciar sesión para acceder a este recurso."
     ],
 
@@ -88,8 +88,8 @@ return [
 
     "PAGE" => [
         "LOGIN" => [
-            "DESCRIPTION" => "Inicie sesión en su cuenta de {{site_name}} o regístrese para obtener una nueva cuenta.",
-            "SUBTITLE" => "Regístrese gratis o inicie sesión con una cuenta existente.",
+            "DESCRIPTION" => "Inicia sesión en tu cuenta de {{site_name}} o regístrate para obtener una nueva cuenta.",
+            "SUBTITLE" => "Regístrate gratis o inicia sesión con una cuenta existente.",
             "TITLE" => "¡Empecemos!",
         ]
     ],
@@ -106,33 +106,33 @@ return [
         "CONFIRM_NEW_HELP" => "Sólo se requiere si se selecciona una nueva contraseña",
         "CREATE" => [
             "@TRANSLATION"  => "Crear contraseña",
-            "PAGE"          => "Elija una contraseña para su nueva cuenta.",
+            "PAGE"          => "Elije una contraseña para su nueva cuenta.",
             "SET"           => "Establecer contraseña e iniciar sesión"
         ],
         "CURRENT" => "Contraseña actual",
-        "CURRENT_EXPLAIN" => "Debe confirmar su contraseña actual para realizar cambios",
+        "CURRENT_EXPLAIN" => "Debes confirmar tu contraseña actual para realizar cambios",
 
         "FORGOTTEN" => "Contraseña olvidada",
         "FORGET" => [
             "@TRANSLATION" => "Olvidé mi contraseña",
 
             "COULD_NOT_UPDATE" => "No se pudo actualizar la contraseña.",
-            "EMAIL" => "Introduce la dirección de correo electrónico que utilizaste para registrarte. Se le enviará por correo electrónico un enlace con las instrucciones para restablecer su contraseña.",
+            "EMAIL" => "Introduce la dirección de correo electrónico que utilizaste para registrarte. Se te enviará por correo electrónico un enlace con las instrucciones para restablecer tu contraseña.",
             "EMAIL_SEND" => "Contraseña de correo electrónico Restablecer enlace",
             "INVALID" => "No se pudo encontrar esta solicitud de restablecimiento de contraseña o ha caducado. Intenta <a href=\"{{url}}\"> volver a enviar tu solicitud <a>.",
-            "PAGE" => "Obtenga un enlace para restablecer su contraseña.",
+            "PAGE" => "Obtén un enlace para restablecer tu contraseña.",
             "REQUEST_CANNED" => "Se ha cancelado la solicitud de contraseña perdida.",
             "REQUEST_SENT" => "Se ha enviado un enlace de restablecimiento de contraseña a <strong> {{email}} </strong>."
         ],
 
         "RESET" => [
             "@TRANSLATION" => "Restablecer la contraseña",
-            "CHOOSE" => "Por favor, elija una nueva contraseña para continuar.",
+            "CHOOSE" => "Por favor, elije una nueva contraseña para continuar.",
             "PAGE" => "Elige una nueva contraseña para tu cuenta.",
             "SEND" => "Establecer nueva contraseña e iniciar sesión"
         ],
 
-        "HASH_FAILED" => "El hash de la contraseña ha fallado. Póngase en contacto con un administrador del sitio.",
+        "HASH_FAILED" => "El hash de la contraseña ha fallado. Ponte en contacto con un administrador del sitio.",
         "INVALID" => "La contraseña actual no coincide con la que tenemos registrada",
         "NEW" => "Nueva contraseña",
         "NOTHING_TO_UPDATE" => "No se puede actualizar con la misma contraseña",
@@ -149,16 +149,16 @@ return [
     "REGISTER" => "Registro",
     "REGISTER_ME" => "Inscríbeme",
     "REGISTRATION" => [
-        "BROKEN" => "Lo sentimos, hay un problema con nuestro proceso de registro de cuenta. Póngase en contacto con nosotros directamente para obtener ayuda.",
-        "COMPLETE_TYPE1" => "Se ha registrado exitosamente. Ahora puede iniciar sesión.",
-        "COMPLETE_TYPE2" => "Se ha registrado exitosamente. Se ha enviado un enlace para activar tu cuenta a <strong> {{email}} </strong>. No podrá iniciar sesión hasta que complete este paso.",
+        "BROKEN" => "Lo sentimos, hay un problema con nuestro proceso de registro de cuenta. Ponte en contacto con nosotros directamente para obtener ayuda.",
+        "COMPLETE_TYPE1" => "Te has registrado exitosamente. Ahora puedes iniciar sesión.",
+        "COMPLETE_TYPE2" => "Te has registrado exitosamente. Se ha enviado un enlace para activar tu cuenta a <strong> {{email}} </strong>. No podrás iniciar sesión hasta que complete este paso.",
         "DISABLED" => "Lo sentimos, el registro de cuenta se ha deshabilitado.",
-        "LOGOUT" => "Lo siento, no puede registrarse para una cuenta mientras está conectado. Por favor, cierra la sesión primero.",
+        "LOGOUT" => "Lo siento, no puedes registrarte para una cuenta mientras está conectado. Por favor, cierra la sesión primero.",
         "WELCOME" => "El registro es rápido y sencillo."
     ],
    
     "REMEMBER_ME" => "¡Recuérdame!",
-    "REMEMBER_ME_ON_COMPUTER" => "Recuérdeme en este ordenador (no se recomienda para ordenadores públicos)",
+    "REMEMBER_ME_ON_COMPUTER" => "Recuérdame en este ordenador (no se recomienda para ordenadores públicos)",
 
     "SIGNIN" => "Iniciar sesión",
     "SIGNIN_OR_REGISTER" => "Ingresa o Registro",

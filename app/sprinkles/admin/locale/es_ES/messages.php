@@ -27,14 +27,14 @@ return [
 
     "CACHE" => [
         "CLEAR" => "Limpiar cache",
-        "CLEAR_CONFIRM" => "¿Está seguro de que desea borrar la caché del sitio?",
+        "CLEAR_CONFIRM" => "¿Estás seguro de que deseas borrar la caché del sitio?",
         "CLEAR_CONFIRM_YES" => "Sí, borrar caché",
         "CLEARED" => "¡Cache borrado correctamente!"
     ],
 
     "DASHBOARD" => "Tablero",
     "NO_FEATURES_YET" => "No parece que se hayan configurado funciones para esta cuenta ... todavía. Tal vez no se han implementado todavía, o tal vez alguien se olvidó de darle acceso. De cualquier manera, ¡estamos encantados de tenerte a bordo!",
-    "DELETE_MASTER" => "¡No puede eliminar la cuenta principal!",
+    "DELETE_MASTER" => "¡No puedes eliminar la cuenta principal!",
     "DELETION_SUCCESSFUL" => "El usuario <strong> {{user_name}} </strong> se ha eliminado correctamente.",
     "DETAILS_UPDATED" => "Detalles de la cuenta actualizados para el usuario <strong> {{user_name}} </strong>",
     "DISABLE_MASTER" => "¡No puedes deshabilitar la cuenta principal!",
@@ -47,9 +47,9 @@ return [
         1 => "Grupo",
         2 => "Grupos",
 
-        "CREATE" => "Crea un grupo",
+        "CREATE" => "Crear un grupo",
         "CREATION_SUCCESSFUL" => "Grupo creado correctamente <strong> {{name}} </strong>",
-        "DELETE" => "Delete group",
+        "DELETE" => "Borrar un grupo",
         "DELETE_CONFIRM" => "¿Seguro que quieres eliminar el grupo <strong> {{name}} </strong>?",
         "DELETE_DEFAULT" => "No puedes eliminar el grupo <strong> {{name}} </strong> porque es el grupo predeterminado para los usuarios recién registrados.",
         "DELETE_YES" => "Sí, eliminar grupo",
@@ -60,9 +60,9 @@ return [
         "INFO_PAGE" => "Página de información de grupo para {{name}}",
         "MANAGE"        => "Administrar grupo",
         "NAME" => "Nombre del grupo",
-        "NAME_EXPLAIN" => "Introduzca un nombre para el grupo",
+        "NAME_EXPLAIN" => "Introduce un nombre para el grupo",
         "NOT_EMPTY" => "No puedes hacerlo porque todavía hay usuarios asociados con el grupo <strong> {{name}} </strong>.",
-        "PAGE_DESCRIPTION" => "Un listado de los grupos para su sitio. Proporciona herramientas de administración para editar y eliminar grupos.",
+        "PAGE_DESCRIPTION" => "Un listado de los grupos para tu sitio. Proporciona herramientas de administración para editar y eliminar grupos.",
         "SUMMARY" => "Resumen del grupo",
         "UPDATE" => "Detalles actualizados para el grupo <strong> {{name}} </strong>"
     ],
@@ -82,8 +82,8 @@ return [
         "ID" => "ID de permiso",
         "INFO_PAGE" => "Página de autor del permiso de '{{name}}'",
         "MANAGE" => "Administrar permisos",
-        "NOTE_READ_ONLY" => "<strong> Tenga en cuenta: </strong> los permisos se consideran \"parte del código\" y no se pueden modificar a través de la interfaz. Para agregar, eliminar o modificar permisos, los mantenedores del sitio necesitarán usar una <a href=\"https://learn.userfrosting.com/database/extended-the-database\" target=\"about:_blank\"> migración de la base de datos . </a>",
-        "PAGE_DESCRIPTION" => "Una lista de los permisos para su sitio. Proporciona herramientas de administración para editar y eliminar permisos.",
+        "NOTE_READ_ONLY" => "<strong> Ten en cuenta: </strong> los permisos se consideran \"parte del código\" y no se pueden modificar a través de la interfaz. Para agregar, eliminar o modificar permisos, los mantenedores del sitio necesitarán usar una <a href=\"https://learn.userfrosting.com/database/extended-the-database\" target=\"about:_blank\"> migración de la base de datos . </a>",
+        "PAGE_DESCRIPTION" => "Una lista de los permisos para tu sitio. Proporciona herramientas de administración para editar y eliminar permisos.",
         "SUMMARY" => "Resumen del permiso",
         "UPDATE" => "Actualizar permisos",
         "VIA_ROLES" => "Tiene permiso para los roles"
@@ -106,9 +106,9 @@ return [
         "INFO_PAGE" => "Página de información de funciones de {{name}}",
         "MANAGE" => "Administrar roles",
         "NAME" => "Nombre",
-        "NAME_EXPLAIN" => "Ingrese un nombre para el rol",
+        "NAME_EXPLAIN" => "Ingresa un nombre para el rol",
         "NAME_IN_USE" => "Ya existe un rol denominado <strong> {{name}} </strong>",
-        "PAGE_DESCRIPTION" => "Una lista de las funciones de su sitio. Proporciona herramientas de administración para editar y eliminar roles.",
+        "PAGE_DESCRIPTION" => "Una lista de las funciones de tu sitio. Proporciona herramientas de administración para editar y eliminar roles.",
         "PERMISSIONS_UPDATED" => "Permisos actualizados para el rol <strong> {{name}} </strong>",
         "SUMMARY" => "Resumen del rol",
         "UPDATED" => "Detalles actualizados para el rol <strong> {{name}} </strong>"
@@ -137,21 +137,21 @@ return [
         "ADMIN" => [
             "CHANGE_PASSWORD" => "Cambiar contraseña de usuario",
             "SEND_PASSWORD_LINK" => "Enviar al usuario un enlace que les permita elegir su propia contraseña",
-            "SET_PASSWORD" => "Establezca la contraseña del usuario como"
+            "SET_PASSWORD" => "Establece la contraseña del usuario como"
         ],
 
         "ACTIVATE" => "Activar usuario",
         "CREATE" => "Crear usuario",
         "CREATED" => "Se ha creado correctamente el usuario <strong> {{user_name}} </strong>",
         "DELETE" => "Borrar usuario",
-        "DELETE_CONFIRM" => "¿Seguro que desea eliminar el usuario <strong> {{name}} </strong>?",
+        "DELETE_CONFIRM" => "¿Seguro que deseas eliminar el usuario <strong> {{name}} </strong>?",
         "DELETE_YES" => "Sí, eliminar usuario",
         "DISABLE" => "Deshabilitar usuario",
         "EDIT" => "Editar usuario",
         "ENABLE" => "Habilitar usuario",
         "INFO_PAGE" => "Página de información de usuario de {{name}}",
         "LATEST" => "Usuarios más recientes",
-        "PAGE_DESCRIPTION" => "Una lista de los usuarios para su sitio. Proporciona herramientas de administración que incluyen la capacidad de editar detalles de usuario, activar manualmente usuarios, habilitar / deshabilitar usuarios y más.",
+        "PAGE_DESCRIPTION" => "Una lista de los usuarios para tu sitio. Proporciona herramientas de administración que incluyen la capacidad de editar detalles de usuario, activar manualmente usuarios, habilitar / deshabilitar usuarios y más.",
         "SUMMARY" => "Resumen de la cuenta",
         "VIEW_ALL" => "Ver todos los usuarios",
         "WITH_PERMISSION" => "Usuarios con este permiso"
