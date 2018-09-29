@@ -633,7 +633,7 @@ class ServicesProvider
          * Also adds the UserFrosting core Twig extension, which provides additional functions, filters, global variables, etc.
          */
         $container['view'] = function ($c) {
-            $templatePaths = $c->locator->findResources('templates://', true, true);
+            $templatePaths = $c->locator->findResources('templates://', true, false);
 
             $view = new Twig($templatePaths);
 
