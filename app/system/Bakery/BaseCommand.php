@@ -24,7 +24,7 @@ use Interop\Container\ContainerInterface;
 abstract class BaseCommand extends Command
 {
     /**
-     *    @var @Symfony\Component\Console\Style\SymfonyStyle
+     *    @var \Symfony\Component\Console\Style\SymfonyStyle
      *    See http://symfony.com/doc/current/console/style.html
      */
     protected $io;
