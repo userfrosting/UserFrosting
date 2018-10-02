@@ -48,7 +48,7 @@
         </form>
 
         <a href="{{site.uri.public}}/account/forgot-password">{{translate('PASSWORD.FORGET')}}</a><br>
-        {% if site.registration.require_email_verification %}
+        {% if site.registration.require_email_verification and site.registration.enabled %}
             <a href="{{site.uri.public}}/account/resend-verification">{{translate('ACCOUNT.VERIFICATION.RESEND')}}</a><br>
         {% endif %}
         {% if site.registration.enabled %}
