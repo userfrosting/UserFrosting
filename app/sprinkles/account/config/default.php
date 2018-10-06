@@ -51,7 +51,7 @@
                 'enable_email' => true
             ],
             'registration' => [
-                'enabled' => true,
+                'enabled' => true, //if this set to false, you probably want to also set require_email_verification to false as well to disable the link on the signup page
                 'captcha' => true,
                 'require_email_verification' => true,
                 'user_defaults' => [
