@@ -14,15 +14,17 @@ app/.env
 composer.lock
 composer.phar
 
-# Ignore log, cache, and sessions directories
+# Ignore log, cache, sessions and storage directories
 app/cache/*
 app/logs/*
 app/sessions/*
+app/storage/*
 
-# Unignore log, cache, and sessions .gitkeeps
+# Unignore log, cache, sessions and storage .gitkeeps
 !app/cache/.gitkeep
 !app/logs/.gitkeep
 !app/sessions/.gitkeep
+!app/storage/.gitkeep
 
 # Ignore bower vendor assets
 /app/sprinkles/*/assets/vendor/

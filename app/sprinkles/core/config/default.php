@@ -79,6 +79,40 @@
             'smtp' => false,
             'twig' => false
         ],
+        'filesystems' => [
+            'default' => getenv('FILESYSTEM_DRIVER') ?: 'local',
+            'cloud' => getenv('FILESYSTEM_CLOUD') ?: 's3',
+
+            'disks' => [
+               'local' => [
+                   'driver' => 'local',
+                   'root' => \UserFrosting\STORAGE_DIR // Default to `app/storage/`
+               ],
+               'public' => [
+                   'driver' => 'local',
+                   'root' => \UserFrosting\STORAGE_PUBLIC_DIR, // Access to files stores in /public
+                   'url' => '',//getenv('APP_URL').'/storage',
+                   'visibility' => 'public',
+               ],
+               // https://aws.amazon.com/en/blogs/security/wheres-my-secret-access-key/
+               's3' => [
+                   'driver' => 's3',
+                   'key' => getenv('AWS_ACCESS_KEY_ID') ?: '',
+                   'secret' => getenv('AWS_SECRET_ACCESS_KEY') ?: '',
+                   'region' => getenv('AWS_DEFAULT_REGION') ?: '', // http://docs.aws.amazon.com/general/latest/gr/rande.html
+                   'bucket' => getenv('AWS_BUCKET') ?: '',
+                   'url' => getenv('AWS_URL') ?: '',
+               ],
+               /*'google' => [ // Google Drive Adapter
+                   // See https://developers.google.com/drive/api/v3/enable-sdk
+                   'driver' => 'gdrive',
+                   'clientID' => getenv('GOOGLE_CLIENT_ID') ?: '', // [app client id].apps.googleusercontent.com
+                   'clientSecret' => getenv('GOOGLE_CLIENT_SECRET') ?: '',
+                   'refreshToken' => getenv('GOOGLE_REFRESH_TOKEN') ?: '',
+                   'rootPath' => getenv('GOOGLE_ROOT_PATH') ?: ''
+               ]*/
+           ],
+        ],
         'mail'    => [
             'mailer'     => 'smtp',     // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
             'host'       => getenv('SMTP_HOST') ?: null,
