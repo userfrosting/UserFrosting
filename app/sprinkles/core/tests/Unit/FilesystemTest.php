@@ -21,6 +21,8 @@ class FilesystemTest extends TestCase
     /** @var string Testing storage path **/
     private $testDir;
 
+    private $testDisk = 'testing';
+
     /**
      * Setup TestDatabase
      */
@@ -29,7 +31,7 @@ class FilesystemTest extends TestCase
         // Boot parent TestCase, which will set up the database and connections for us.
         parent::setUp();
 
-        $this->testDir = $this->ci->config['filesystems.disks.testing.root'];
+        $this->testDir = $this->ci->config["filesystems.disks.{$this->testDisk}.root"];
     }
 
     /**
@@ -38,7 +40,7 @@ class FilesystemTest extends TestCase
     public function testService()
     {
         // Force this test to use the testing disk
-        $this->ci->config['filesystems.default'] = 'testing';
+        $this->ci->config['filesystems.default'] = $this->testDisk;
 
         // Filesystem service will return an instance of FilesystemManger
         $filesystem = $this->ci->filesystem;
@@ -46,10 +48,10 @@ class FilesystemTest extends TestCase
 
         // Main aspect of our FilesystemManager is to adapt our config structure
         // to Laravel class we'll make sure here the forced config actually works
-        $this->assertEquals('testing', $filesystem->getDefaultDriver());
+        $this->assertEquals($this->testDisk, $filesystem->getDefaultDriver());
 
         // The disk won't return a Manager, but an Adapter.
-        $disk = $filesystem->disk('testing');
+        $disk = $filesystem->disk($this->testDisk);
         $this->assertInstanceOf(FilesystemAdapter::class, $disk);
 
         return $disk;
@@ -91,13 +93,13 @@ class FilesystemTest extends TestCase
      * @param  FilesystemAdapter $files
      * @depends testService
      */
-    /*public function testUrl(FilesystemAdapter $files)
+    public function testUrl(FilesystemAdapter $files)
     {
         // Test the URL
         $this->assertTrue($files->put('file.txt', 'Blah!'));
         $url = $files->url('file.txt');
-        $this->assertEquals('http://localhost/storage/file.txt', $url);
+        $this->assertEquals('files/testing/file.txt', $url);
         $this->assertTrue($files->delete('file.txt'));
         $this->assertFileNotExists($this->testDir.'/file.txt');
-    }*/
+    }
 }
