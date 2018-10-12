@@ -7,10 +7,12 @@
  */
 namespace UserFrosting\Sprinkle\Core\Tests\Unit;
 
-use UserFrosting\Tests\TestCase;
 use Illuminate\Filesystem\FilesystemAdapter;
+use League\Flysystem\Adapter\Local as LocalAdapter;
+use League\Flysystem\Filesystem;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
+use UserFrosting\Tests\TestCase;
 
 /**
  * FilesystemTest class.
@@ -103,5 +105,35 @@ class FilesystemTest extends TestCase
         $this->assertEquals('files/testing/file.txt', $url);
         $this->assertTrue($files->delete('file.txt'));
         $this->assertFileNotExists($this->testDir.'/file.txt');
+    }
+
+    /**
+     * Test to make sure we can still add custom adapter
+     */
+    public function testNonExistingAdapter()
+    {
+        $filesystemManager = $this->ci->filesystem;
+
+        // InvalidArgumentException
+        $this->expectException("InvalidArgumentException");
+        $filesystemManager->disk('testingDriver');
+    }
+
+    /**
+     * @depends testNonExistingAdapter
+     */
+    public function testAddingAdapter()
+    {
+        $filesystemManager = $this->ci->filesystem;
+
+        $filesystemManager->extend('localTest', function ($configService, $config) {
+            return new Filesystem(new LocalAdapter($config['root']));
+        });
+
+        $disk = $filesystemManager->disk('testingDriver');
+        $this->assertInstanceOf(FilesystemAdapter::class, $disk);
+
+        // Make sure the path was set correctly
+        $this->assertEquals(\UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testingDriver' . \UserFrosting\DS, $disk->path(''));
     }
 }
