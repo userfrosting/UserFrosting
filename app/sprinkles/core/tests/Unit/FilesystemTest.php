@@ -80,6 +80,8 @@ class FilesystemTest extends TestCase
     /**
      * @param  FilesystemAdapter $files
      * @depends testService
+     * NOTE : The `download` method was introduced in Laravel 5.5.
+     * We'll need to enable this once we can upgrade to newer version of Laravel
      */
     /*public function testDownload(FilesystemAdapter $files)
     {
