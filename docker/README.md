@@ -5,10 +5,10 @@ First, install [Docker Compose](https://docs.docker.com/compose/install/).
 Second, initialize a new UserFrosting project:
 
 1. Copy `app/sprinkles/sprinkles.example.json` to `app/sprinkles/sprinkles.json`
-2. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
+-- 2. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
    permissions should be properly secured in a production environment!)
-2. Run `docker-compose run composer install` to install all composer modules.
-3. Run `docker-compose run node npm install` to install all npm modules.
+2. Run `sudo docker-compose run composer install` to install all composer modules.
+3. Run `sudo docker-compose run node npm install` to install all npm modules.
 
 Now you can start up the entire Nginx + PHP + MySQL stack using docker with:
 
