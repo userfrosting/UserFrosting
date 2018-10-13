@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
-
 use Slim\App;
 use Slim\Container;
 
@@ -21,7 +20,7 @@ use Slim\Container;
  *
  * @author Jose Vasconcellos
  */
-class Routes extends BaseCommand
+class RouteListCommand extends BaseCommand
 {
     /**
      * @var string Path to the build/ directory
@@ -33,7 +32,7 @@ class Routes extends BaseCommand
      */
     protected function configure()
     {
-       $this->setName("routes")
+       $this->setName("route:list")
              ->setDescription("Dumps all routes.");
     }
 
@@ -50,7 +49,6 @@ class Routes extends BaseCommand
 
         $this->io->title("Generate routes");
         $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
-        $routeDirCount=count($routePaths);
         $routeCount=0;
         foreach ($routePaths as $path) {
             $routeFiles = glob($path . '/*.php');
