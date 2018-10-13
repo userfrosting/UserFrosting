@@ -97,6 +97,7 @@ This project exists thanks to all the people who contribute. If you're intereste
 - Louis Charette (@lcharette) - French
 - Karuhut Komol (@popiazaza) - Thai
 - Pietro Marangon (@Pe46dro) - Italian
+- Christian la Forgia (@optiroot) - Italian
 - Abdullah Seba (@abdullahseba) - Arabic
 - Bruno Silva (@brunomnsilva) - Portuguese
 - @BruceGui - Chinese

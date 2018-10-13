@@ -119,6 +119,7 @@ class DatabaseTests extends TestCase
         $this->schema($this->schemaName)->drop('tasks');
         $this->schema($this->schemaName)->drop('locations');
         $this->schema($this->schemaName)->drop('assignments');
+        $this->schema($this->schemaName)->drop('jobs');
 
         Relation::morphMap([], false);
     }
@@ -656,6 +657,35 @@ class DatabaseTests extends TestCase
         ], $paginatedPermissions->get()->toArray());
 
         $this->assertEquals(2, $paginatedPermissions->count());
+    }
+
+    /**
+     * Test the ability of a BelongsToManyThrough relationship to retrieve and count paginated queries,
+     * when we need to reference a virtual/computed column (for example in a sort).
+     */
+    public function testBelongsToManyThroughPaginatedWithOrderByAggregateColumn()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+        $user->roles()->attach([1,2]);
+
+        // If the paginated query is being ordered correctly by including the `roles_count` computed column,
+        // Then `uri_spit_acid` should appear first. If not, then the results will not be ordered and the `uri_harvest`
+        // result will be returned, in accordance with the default database order.
+        $paginatedPermissions = $user->permissions()->withCount('roles')->orderBy('roles_count', 'desc')->take(1)->offset(0);
+
+        $this->assertEquals([
+            [
+                'id' => 2,
+                'slug' => 'uri_spit_acid',
+                'roles_count' => 3,
+                'pivot' => [
+                    'user_id' => 1,
+                    'permission_id' => 2
+                ]
+            ]
+        ], $paginatedPermissions->get()->toArray());
     }
 
     /**

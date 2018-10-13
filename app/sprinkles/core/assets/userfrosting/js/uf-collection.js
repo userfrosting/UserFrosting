@@ -237,10 +237,10 @@
         /**
          * Delete a row from the collection.
          */
-         _deleteRow: function(row) {
-             row.remove();
-             this.$element.trigger('rowDelete.ufCollection');
-         },
+        _deleteRow: function(row) {
+            row.remove();
+            this.$element.trigger('rowDelete.ufCollection', row);
+        },
          /**
          * Add delete and touch bindings for a row, increment the internal row counter, and fire the rowAdd event
          */

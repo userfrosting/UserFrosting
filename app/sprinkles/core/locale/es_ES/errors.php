@@ -25,14 +25,14 @@ return [
             "DESCRIPTION" => "Parece que no podemos encontrar lo que buscas.",
             "DETAIL" => "Intentamos encontrar tu página ...",
             "EXPLAIN" => "No pudimos encontrar la página que buscabas.",
-            "RETURN" => 'De cualquier manera, haga clic en <a href="{{url}}"> aquí </a> para volver a la página principal.'
+            "RETURN" => 'De cualquier manera, haz clic en <a href="{{url}}"> aquí </a> para volver a la página principal.'
         ],
         
         "CONFIG" => [
             "TITLE" => "¡Problema de configuración del Servidor!",
             "DESCRIPTION" => "Algunos requisitos de configuración de Servidor no se han cumplido.",
             "DETAIL" => "Algo no está bien aquí.",
-            "RETURN" => 'Corrija los siguientes errores, luego <a href="{{url}}"> recargue </a>.'
+            "RETURN" => 'Corrije los siguientes errores, luego <a href="{{url}}"> recargue </a>.'
         ],
         
         "DESCRIPTION" => "Hemos sentido una gran perturbación en la Fuerza.",
@@ -40,11 +40,11 @@ return [
 
         "ENCOUNTERED" => "Uhhh ... sucedió algo. No sabemos qué.",
 
-        "MAIL" => "Error fatal al intentar enviar correo, póngase en contacto con el administrador del servidor. Si usted es el administrador, compruebe el log de errores.",
+        "MAIL" => "Error fatal al intentar enviar correo, ponte en contacto con el administrador del servidor. Si tú eres el administrador, comprueba el log de errores.",
 
-        "RETURN" => 'Haga clic en <a href="{{url}}"> aquí </a> para volver a la página principal.',
+        "RETURN" => 'Haz clic en <a href="{{url}}"> aquí </a> para volver a la página principal.',
 
-        "SERVER" => "¡Vaya, parece que nuestro servidor pudo haber metido la pata. Si eres un administrador, comprueba los registros de errores de PHP o el log de UserFrosting.",
+        "SERVER" => "¡Vaya! Parece que nuestro servidor pudo haber metido la pata. Si eres un administrador, comprueba los registros de errores de PHP o el log de UserFrosting.",
 
         "TITLE" => "Perturbación en la Fuerza",
     ]
