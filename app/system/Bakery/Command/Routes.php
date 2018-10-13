@@ -49,25 +49,25 @@ class Routes extends BaseCommand
         $app = $this->app;
 
         $this->io->title("Generate routes");
-		$routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
-		$routeDirCount=count($routePaths);
-		$routeCount=0;
+        $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
+        $routeDirCount=count($routePaths);
+        $routeCount=0;
         foreach ($routePaths as $path) {
             $routeFiles = glob($path . '/*.php');
             foreach ($routeFiles as $routeFile) {
-				$routeCount += 1;
-				//$this->io->writeln("<info>$routeFile</info>");
+                $routeCount += 1;
+                //$this->io->writeln("<info>$routeFile</info>");
                 require_once $routeFile;
             }
         }
 
-		$allRoutes = $app->getContainer()->get('router')->getRoutes();
-		foreach ($allRoutes as $route) {
-			$p = $route->getPattern();
-			foreach ($route->getMethods() as $m)
-				$this->io->writeln($m.' '.$p);
-		}
+        $allRoutes = $app->getContainer()->get('router')->getRoutes();
+        foreach ($allRoutes as $route) {
+            $p = $route->getPattern();
+            foreach ($route->getMethods() as $m)
+                $this->io->writeln($m.' '.$p);
+        }
 
-		$this->io->success("Routes generated from {$routeCount} files!");
+        $this->io->success("Routes generated from {$routeCount} files!");
     }
 }
