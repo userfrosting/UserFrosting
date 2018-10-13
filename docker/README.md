@@ -4,10 +4,10 @@ First, install [Docker Compose](https://docs.docker.com/compose/install/).
 
 Second, initialize a new UserFrosting project:
 
-1. Copy `app/sprinkles/sprinkles.example.json` to `app/sprinkles/sprinkles.json`
+1. Copy `app/sprinkles.example.json` to `app/sprinkles.json`
 2. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
    permissions should be properly secured in a production environment!) 
-   or run `chown -R 33 app/` (Changes the user to the www-data user in of image, more information [here](https://serversforhackers.com/c/dckr-file-permissions) )
+   or run `sudo chown -R 33 app/` (Changes the user to the www-data user in of image, more information [here](https://serversforhackers.com/c/dckr-file-permissions) )
 2. Run `sudo docker-compose run composer install` to install all composer modules.
 3. Run `sudo docker-compose run node npm install` to install all npm modules.
 
