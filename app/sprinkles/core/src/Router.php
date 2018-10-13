@@ -7,16 +7,8 @@
  */
 namespace UserFrosting\Sprinkle\Core;
 
-use FastRoute\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
-use RuntimeException;
-use Psr\Http\Message\ServerRequestInterface;
-use FastRoute\RouteCollector;
-use FastRoute\RouteParser;
-use FastRoute\RouteParser\Std as StdParser;
-use FastRoute\DataGenerator;
-use Slim\Interfaces\RouteGroupInterface;
 use Slim\Interfaces\RouterInterface;
 use Slim\Interfaces\RouteInterface;
 
@@ -29,7 +21,7 @@ use Slim\Interfaces\RouteInterface;
 class Router extends \Slim\Router implements RouterInterface
 {
 
-    /*
+    /**
      * @var string[] a reverse lookup of route identifiers, indexed by route signature
      */
     protected $identifiers;
@@ -82,13 +74,12 @@ class Router extends \Slim\Router implements RouterInterface
     /**
      * Delete the cache file
      *
-     * @access public
      * @return bool true/false if operation is successfull
      */
     public function clearCache()
     {
         // Get Filesystem instance
-        $fs = new FileSystem;
+        $fs = new Filesystem;
 
         // Make sure file exist and delete it
         if ($fs->exists($this->cacheFile)) {
