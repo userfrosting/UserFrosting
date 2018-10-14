@@ -47,6 +47,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## v4.1.20
+- Added `route:list` command to list all registered routes ([#903](https://github.com/userfrosting/UserFrosting/pull/903); Thanks @apple314159 !)
+- Added warning in configuration file regarding disabling registration and email verification ([#900](https://github.com/userfrosting/UserFrosting/pull/900); Thanks @linkhousemedia !)
+
 ## v4.1.19
 - Prevent setup to run again if already configured when using `bake`
 - Fix `Unique::getPaginatedQuery` to call to `addSelect` instead of `select` during the pre-paginated query
