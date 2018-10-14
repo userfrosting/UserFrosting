@@ -104,16 +104,19 @@ class Core extends Sprinkle
 
     /**
      * Add CSRF middleware.
+     *
+     * @param Event $event
      */
     public function onAddGlobalMiddleware(Event $event)
     {
         $request = $this->ci->request;
         $path = $request->getUri()->getPath();
-        $method = $request->getMethod();
+        $method = ($request->getMethod()) ?: 'GET';
 
         // Normalize path to always have a leading slash
         $path = '/' . ltrim($path, '/');
-        // Normalize method to uppercase
+
+        // Normalize method to uppercase.
         $method = strtoupper($method);
 
         $csrfBlacklist = $this->ci->config['csrf.blacklist'];

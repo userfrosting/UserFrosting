@@ -7,7 +7,6 @@
  */
 namespace UserFrosting\Tests;
 
-use Slim\App;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use UserFrosting\System\UserFrosting;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
@@ -20,13 +19,6 @@ use UserFrosting\Tests\DatabaseTransactions;
  */
 class TestCase extends BaseTestCase
 {
-    /**
-     * The Slim application instance.
-     *
-     * @var \Slim\App
-     */
-    protected $app;
-
     /**
      * The global container object, which holds all your services.
      *
@@ -62,7 +54,7 @@ class TestCase extends BaseTestCase
      */
     protected function setUp()
     {
-        if (!$this->app) {
+        if (!$this->ci) {
             $this->refreshApplication();
         }
 
@@ -78,6 +70,7 @@ class TestCase extends BaseTestCase
     /**
      * Boot the testing helper traits.
      *
+     * @deprecated 
      * @return void
      */
     protected function setUpTraits()
@@ -103,17 +96,11 @@ class TestCase extends BaseTestCase
         // no way to override environment vars that have already been set.
         putenv('UF_MODE=testing');
 
-        // Setup the sprinkles
-        $uf = new UserFrosting();
-
-        // Set argument as false, we are using the CLI
-        $uf->setupSprinkles(false);
+        // Setup the base UF app
+        $uf = new UserFrosting(true);
 
         // Get the container
         $this->ci = $uf->getContainer();
-
-        // Next, we'll instantiate the application.  Note that the application is required for the SprinkleManager to set up routes.
-        $this->app = new App($this->ci);
     }
 
     /**
@@ -123,12 +110,11 @@ class TestCase extends BaseTestCase
      */
     protected function tearDown()
     {
-        if ($this->app) {
+        if ($this->ci) {
             foreach ($this->beforeApplicationDestroyedCallbacks as $callback) {
                 call_user_func($callback);
             }
 
-            $this->app = null;
             $this->ci = null;
         }
 
@@ -154,14 +140,14 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     *    Asserts that collections are equivalent.
+     * Asserts that collections are equivalent.
      *
-     *    @param  array $expected
-     *    @param  array $actual
-     *    @param  string $key [description]
-     *    @param  string $message [description]
-     *    @throws \PHPUnit_Framework_AssertionFailedError
-     *    @return void
+     * @param  array $expected
+     * @param  array $actual
+     * @param  string $key [description]
+     * @param  string $message [description]
+     * @throws \PHPUnit_Framework_AssertionFailedError
+     * @return void
      */
     public static function assertCollectionsSame($expected, $actual, $key = 'id', $message = '')
     {
@@ -204,10 +190,10 @@ class TestCase extends BaseTestCase
      */
 
     /**
-     *    Cast an item to an array if it has a toArray() method.
+     * Cast an item to an array if it has a toArray() method.
      *
-     *    @param  object $item
-     *    @return mixed
+     * @param  object $item
+     * @return mixed
      */
     protected static function castToComparable($item)
     {
@@ -215,10 +201,10 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     *    Remove all relations on a collection of models.
+     * Remove all relations on a collection of models.
      *
-     *    @param  array $models
-     *    @return void
+     * @param  array $models
+     * @return void
      */
     protected static function ignoreRelations($models)
     {
@@ -228,10 +214,10 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     *    cloneObjectArray
+     * cloneObjectArray
      *
-     *    @param  array $original
-     *    @return array
+     * @param  array $original
+     * @return array
      */
     protected function cloneObjectArray($original)
     {

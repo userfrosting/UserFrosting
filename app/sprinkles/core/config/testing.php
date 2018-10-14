@@ -11,6 +11,14 @@
                 'default' => 'array',
             ]
         ],
+        /**
+         * Disable CSRF in the testing env.
+         */
+        'csrf' => [
+            'blacklist' => [
+                '^/' => ['GET']
+            ]
+        ],
         'db' => [
             'test_integration' => [
                 'driver'    => 'sqlite',

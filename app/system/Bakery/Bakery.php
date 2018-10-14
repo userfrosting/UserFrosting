@@ -51,10 +51,7 @@ class Bakery
         $this->app = new Application("UserFrosting Bakery", \UserFrosting\VERSION);
 
         // Setup the sprinkles
-        $uf = new UserFrosting();
-
-        // Set argument as false, we are using the CLI
-        $uf->setupSprinkles(false);
+        $uf = new UserFrosting(true);
 
         // Get the container
         $this->ci = $uf->getContainer();
