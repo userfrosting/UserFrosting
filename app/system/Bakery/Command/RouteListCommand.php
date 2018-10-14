@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 use Slim\App;
-use Slim\Container;
 
 /**
  * Generate a list of a projects routes.
@@ -47,7 +46,7 @@ class RouteListCommand extends BaseCommand
         $this->app = new App($this->ci);
         $app = $this->app;
 
-        $this->io->title("Generate routes");
+        $this->io->title("Registered Routes");
         $routePaths = array_reverse($this->ci->locator->findResources('routes://', true, true));
         $routeCount=0;
         foreach ($routePaths as $path) {
@@ -66,6 +65,6 @@ class RouteListCommand extends BaseCommand
                 $this->io->writeln($m.' '.$p);
         }
 
-        $this->io->success("Routes generated from {$routeCount} files!");
+        $this->io->success("Route list generated from {$routeCount} files!");
     }
 }
