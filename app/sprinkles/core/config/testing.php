@@ -6,6 +6,9 @@
      */
 
     return [
+        /**
+         * Don't use persistant caching in tests
+         */
         'cache' => [
             'illuminate' => [
                 'default' => 'array',
@@ -19,12 +22,18 @@
                 '^/' => ['GET']
             ]
         ],
+        /**
+         * Use in memory db for testing
+         */
         'db' => [
             'test_integration' => [
                 'driver'    => 'sqlite',
                 'database'  => ':memory:',
             ]
         ],
+        /**
+         * Don'T display error detail in test. Return the non formatted errors
+         */
         'settings' => [
             'displayErrorDetails' => false
         ]
