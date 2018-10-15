@@ -104,13 +104,9 @@ class Router extends \Slim\Router implements RouterInterface
 
         $ci = $app->getContainer();
 
-        // TODO :: Use the new locator instead of `findRessources`
-        $routePaths = array_reverse($ci->locator->findResources('routes://', true, true));
-        foreach ($routePaths as $path) {
-            $routeFiles = glob($path . '/*.php');
-            foreach ($routeFiles as $routeFile) {
-                require $routeFile;
-            }
+        $routeFiles = array_reverse($ci->locator->listResources('routes://', true));
+        foreach ($routeFiles as $routeFile) {
+            require $routeFile;
         }
     }
 }
