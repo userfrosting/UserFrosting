@@ -3,11 +3,9 @@
 First, install [Docker Compose](https://docs.docker.com/compose/install/).
 
 Second, initialize a new UserFrosting project:
-
-1. Run `cp app/sprinkles.example.json app/sprinkles.json`
-2. Run `chmod 777 app/{logs,cache,sessions}` to fix file permissions for web server. (NOTE: File
-   permissions should be properly secured in a production environment!)   
-   or run `sudo chown -R 33 app/{logs,cache,sessions}` (Changes the user to the www-data user of the image, more information [here](https://serversforhackers.com/c/dckr-file-permissions) )
+1. Clone the repository `git clone https://github.com/userfrosting/UserFrosting.git .` and change into that directory `cd userfrosting`
+1. Run `cp app/sprinkles.example.json app/sprinkles.json` or upload your own (also upload your sprinkles if you have some)
+2. Run `sudo chown -R 33 app/{logs,cache,sessions}` (Changes the user to the www-data user of the image, more information [here](https://serversforhackers.com/c/dckr-file-permissions) )
 2. Run `sudo docker-compose run composer install` to install all composer modules.
 3. Run `sudo docker-compose run node npm install` to install all npm modules.
 
@@ -15,7 +13,7 @@ Now you can start up the entire Nginx + PHP + MySQL stack using docker with:
 
     $ sudo docker-compose up -d
 
-On the first run you need to init the database (Be sure to execute this in the same directory, `${PWD##*/}` is a statement to get your current working directorys name):
+On the first run you need to init the database (Be sure to execute this in the same directory, `${PWD##*/}` is a statement to get your current working directorys name. Docker uses it to name your container):
 
     $ sudo docker exec -it -u www-data ${PWD##*/}_php_1 bash -c 'php bakery migrate'
     
@@ -41,7 +39,8 @@ As you might guessed you will have to run
     $ sudo docker exec -it -u www-data userfrosting_php_1 bash -c 'php bakery migrate'
     
 again if you want to migrate tables.
-You can change `php bakery migrate` to other `bakery` commands as well.  
+You can change `php bakery migrate` to other `bakery` commands as well.
+Be aware that the userfrosting container doesn't know about npm!  
 Similary for composer:
 
     $ sudo docker-compose run composer update
