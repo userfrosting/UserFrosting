@@ -29,6 +29,8 @@ class ServicesProvider
     {
         /**
          * Set up the event dispatcher, required by Sprinkles to hook into the UF lifecycle.
+         *
+         * @return \RocketTheme\Toolbox\Event\EventDispatcher
          */
         $container['eventDispatcher'] = function ($c) {
             return new EventDispatcher();
@@ -36,8 +38,9 @@ class ServicesProvider
 
         /**
          * Path/file locator service.
-         *
+         * 
          * Register custom streams for the application, and add paths for app-level streams.
+         *
          * @return \UserFrosting\UniformResourceLocator\ResourceLocator
          */
         $container['locator'] = function ($c) {
@@ -70,10 +73,11 @@ class ServicesProvider
 
         /**
          * Set up sprinkle manager service.
+         *
+         * @return \UserFrosting\System\Sprinkle\SprinkleManager
          */
         $container['sprinkleManager'] = function ($c) {
-            $sprinkleManager = new SprinkleManager($c);
-            return $sprinkleManager;
+            return new SprinkleManager($c);
         };
     }
 }

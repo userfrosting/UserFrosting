@@ -75,6 +75,9 @@ class ServicesProvider
          * Flash messaging service.
          *
          * Persists error/success messages between requests in the session.
+         *
+         * @throws \Exception If alert storage handler is not supported
+         * @return \UserFrosting\Sprinkle\Core\Alert\AlertStream
          */
         $container['alerts'] = function ($c) {
             $config = $c->config;
@@ -94,6 +97,8 @@ class ServicesProvider
          * Loads assets from a specified relative location.
          * Assets are Javascript, CSS, image, and other files used by your site.
          * This implementation is a temporary hack until Assets can be refactored.
+         *
+         * @return \UserFrosting\Assets\AssetLoader
          */
         $container['assetLoader'] = function ($c) {
             $config = $c->config;
@@ -111,6 +116,8 @@ class ServicesProvider
          *
          * Loads raw or compiled asset information from your bundle.config.json schema file.
          * Assets are Javascript, CSS, image, and other files used by your site.
+         *
+         * @return \UserFrosting\Assets\Assets
          */
         $container['assets'] = function ($c) {
             $config = $c->config;
@@ -152,6 +159,7 @@ class ServicesProvider
         /**
          * Cache service.
          *
+         * @throws \Exception If cache handler is not supported
          * @return \Illuminate\Cache\Repository
          */
         $container['cache'] = function ($c) {
@@ -180,16 +188,19 @@ class ServicesProvider
          * Middleware to check environment.
          *
          * @todo We should cache the results of this, the first time that it succeeds.
+         *
+         * @return \UserFrosting\Sprinkle\Core\Util\CheckEnvironment
          */
         $container['checkEnvironment'] = function ($c) {
-            $checkEnvironment = new CheckEnvironment($c->view, $c->locator, $c->cache);
-            return $checkEnvironment;
+            return new CheckEnvironment($c->view, $c->locator, $c->cache);
         };
 
         /**
          * Class mapper.
          *
          * Creates an abstraction on top of class names to allow extending them in sprinkles.
+         *
+         * @return \UserFrosting\Sprinkle\Core\Util\ClassMapper
          */
         $container['classMapper'] = function ($c) {
             $classMapper = new ClassMapper();
@@ -203,6 +214,8 @@ class ServicesProvider
          * Site config service (separate from Slim settings).
          *
          * Will attempt to automatically determine which config file(s) to use based on the value of the UF_MODE environment variable.
+         *
+         * @return \UserFrosting\Support\Repository\Repository
          */
         $container['config'] = function ($c) {
             // Grab any relevant dotenv variables from the .env file
@@ -251,6 +264,8 @@ class ServicesProvider
          * Initialize CSRF guard middleware.
          *
          * @see https://github.com/slimphp/Slim-Csrf
+         * @throws BadRequestException
+         * @return \Slim\Csrf\Guard
          */
         $container['csrf'] = function ($c) {
             $csrfKey = $c->config['session.keys.csrf'];
@@ -280,6 +295,7 @@ class ServicesProvider
          * Initialize Eloquent Capsule, which provides the database layer for UF.
          *
          * @todo construct the individual objects rather than using the facade
+         * @return \Illuminate\Database\Capsule\Manager
          */
         $container['db'] = function ($c) {
             $config = $c->config;
@@ -324,6 +340,8 @@ class ServicesProvider
          * Debug logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'debug' log stack.
+         *
+         * @return \Monolog\Logger
          */
         $container['debugLogger'] = function ($c) {
             $logger = new Logger('debug');
@@ -342,6 +360,8 @@ class ServicesProvider
 
         /**
          * Custom error-handler for recoverable errors.
+         *
+         * @return \UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager
          */
         $container['errorHandler'] = function ($c) {
             $settings = $c->settings;
@@ -364,6 +384,8 @@ class ServicesProvider
          * Error logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'error' log stack.
+         *
+         * @return \Monolog\Logger
          */
         $container['errorLogger'] = function ($c) {
             $log = new Logger('errors');
@@ -384,6 +406,8 @@ class ServicesProvider
          * Factory service with FactoryMuffin.
          *
          * Provide access to factories for the rapid creation of objects for the purpose of testing
+         *
+         * @return \League\FactoryMuffin\FactoryMuffin
          */
         $container['factory'] = function ($c) {
 
@@ -404,6 +428,9 @@ class ServicesProvider
 
         /**
          * Builds search paths for locales in all Sprinkles.
+         *
+         * @throws \UnexpectedValueException
+         * @return \UserFrosting\I18n\LocalePathBuilder
          */
         $container['localePathBuilder'] = function ($c) {
             $config = $c->config;
@@ -460,6 +487,8 @@ class ServicesProvider
 
         /**
          * Mail service.
+         *
+         * @return \UserFrosting\Sprinkle\Core\Mail\Mailer
          */
         $container['mailer'] = function ($c) {
             $mailer = new Mailer($c->mailLogger, $c->config['mail']);
@@ -477,6 +506,8 @@ class ServicesProvider
          *
          * PHPMailer will use this to log SMTP activity.
          * Extend this service to push additional handlers onto the 'mail' log stack.
+         *
+         * @return \Monolog\Logger
          */
         $container['mailLogger'] = function ($c) {
             $log = new Logger('mail');
@@ -496,6 +527,8 @@ class ServicesProvider
          * Migrator service.
          *
          * This service handles database migration operations
+         *
+         * @return \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator
          */
         $container['migrator'] = function ($c) {
             $migrator = new Migrator(
@@ -515,6 +548,8 @@ class ServicesProvider
         /**
          * Error-handler for 404 errors.  Notice that we manually create a UserFrosting NotFoundException,
          * and a NotFoundExceptionHandler.  This lets us pass through to the UF error handling system.
+         *
+         * @return callable
          */
         $container['notFoundHandler'] = function ($c) {
             return function ($request, $response) use ($c) {
@@ -527,6 +562,8 @@ class ServicesProvider
         /**
          * Error-handler for PHP runtime errors.  Notice that we just pass this through to our general-purpose
          * error-handling service.
+         *
+         * @return \UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager
          */
         $container['phpErrorHandler'] = function ($c) {
             return $c->errorHandler;
@@ -536,6 +573,8 @@ class ServicesProvider
          * Laravel query logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'query' log stack.
+         *
+         * @return \Monolog\Logger
          */
         $container['queryLogger'] = function ($c) {
             $logger = new Logger('query');
@@ -554,6 +593,8 @@ class ServicesProvider
 
         /**
          * Override Slim's default router with the UF router.
+         *
+         * @return \UserFrosting\Sprinkle\Core\Router
          */
         $container['router'] = function ($c) {
             $routerCacheFile = false;
@@ -566,6 +607,9 @@ class ServicesProvider
 
         /**
          * Start the PHP session, with the name and parameters specified in the configuration file.
+         *
+         * @throws \Exception
+         * @return \UserFrosting\Session\Session
          */
         $container['session'] = function ($c) {
             $config = $c->config;
@@ -593,6 +637,8 @@ class ServicesProvider
          * Request throttler.
          *
          * Throttles (rate-limits) requests of a predefined type, with rules defined in site config.
+         *
+         * @return \UserFrosting\Sprinkle\Core\Throttle\Throttler
          */
         $container['throttler'] = function ($c) {
             $throttler = new Throttler($c->classMapper);
@@ -615,6 +661,8 @@ class ServicesProvider
 
         /**
          * Translation service, for translating message tokens.
+         *
+         * @return \UserFrosting\I18n\MessageTranslator
          */
         $container['translator'] = function ($c) {
             // Load the translations
@@ -631,6 +679,8 @@ class ServicesProvider
          * Set up Twig as the view, adding template paths for all sprinkles and the Slim Twig extension.
          *
          * Also adds the UserFrosting core Twig extension, which provides additional functions, filters, global variables, etc.
+         *
+         * @return \Slim\Views\Twig
          */
         $container['view'] = function ($c) {
             $templatePaths = $c->locator->findResources('templates://', true, false);

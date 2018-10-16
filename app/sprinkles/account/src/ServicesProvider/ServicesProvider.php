@@ -7,10 +7,8 @@
  */
 namespace UserFrosting\Sprinkle\Account\ServicesProvider;
 
-use Birke\Rememberme\Authenticator as RememberMe;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\ErrorLogHandler;
+use Interop\Container\ContainerInterface;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -25,7 +23,6 @@ use UserFrosting\Sprinkle\Account\Log\UserActivityProcessor;
 use UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository;
 use UserFrosting\Sprinkle\Account\Repository\VerificationRepository;
 use UserFrosting\Sprinkle\Account\Twig\AccountExtension;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Log\MixedFormatter;
 
 /**
@@ -38,12 +35,14 @@ class ServicesProvider
     /**
      * Register UserFrosting's account services.
      *
-     * @param Container $container A DI container implementing ArrayAccess and container-interop.
+     * @param ContainerInterface $container A DI container implementing ArrayAccess and container-interop.
      */
-    public function register($container)
+    public function register(ContainerInterface $container)
     {
         /**
          * Extend the asset manager service to see assets for the current user's theme.
+         *
+         * @return \UserFrosting\Assets\Assets
          */
         $container->extend('assets', function ($assets, $c) {
 
@@ -68,6 +67,8 @@ class ServicesProvider
          * Extend the 'classMapper' service to register model classes.
          *
          * Mappings added: User, Group, Role, Permission, Activity, PasswordReset, Verification
+         *
+         * @return \UserFrosting\Sprinkle\Core\Util\ClassMapper
          */
         $container->extend('classMapper', function ($classMapper, $c) {
             $classMapper->setClassMapping('user', 'UserFrosting\Sprinkle\Account\Database\Models\User');
@@ -84,6 +85,8 @@ class ServicesProvider
          * Extends the 'errorHandler' service with custom exception handlers.
          *
          * Custom handlers added: ForbiddenExceptionHandler
+         *
+         * @return \UserFrosting\Sprinkle\Core\Error\ExceptionHandlerManager
          */
         $container->extend('errorHandler', function ($handler, $c) {
             // Register the ForbiddenExceptionHandler.
@@ -98,6 +101,7 @@ class ServicesProvider
         /**
          * Extends the 'localePathBuilder' service, adding any locale files from the user theme.
          *
+         * @return \UserFrosting\I18n\LocalePathBuilder
          */
         $container->extend('localePathBuilder', function ($pathBuilder, $c) {
             // Add paths for user theme, if a user is logged in
@@ -125,6 +129,8 @@ class ServicesProvider
          * Extends the 'view' service with the AccountExtension for Twig.
          *
          * Adds account-specific functions, globals, filters, etc to Twig, and the path to templates for the user theme.
+         *
+         * @return \Slim\Views\Twig
          */
         $container->extend('view', function ($view, $c) {
             $twig = $view->getEnvironment();
@@ -159,6 +165,8 @@ class ServicesProvider
          * Authentication service.
          *
          * Supports logging in users, remembering their sessions, etc.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Authenticate\Authenticator
          */
         $container['authenticator'] = function ($c) {
             $classMapper = $c->classMapper;
@@ -178,6 +186,8 @@ class ServicesProvider
 
         /**
          * Sets up the AuthGuard middleware, used to limit access to authenticated users for certain routes.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Authenticate\AuthGuard
          */
         $container['authGuard'] = function ($c) {
             $authenticator = $c->authenticator;
@@ -188,6 +198,8 @@ class ServicesProvider
          * Authorization check logging with Monolog.
          *
          * Extend this service to push additional handlers onto the 'auth' log stack.
+         *
+         * @return \Monolog\Logger
          */
         $container['authLogger'] = function ($c) {
             $logger = new Logger('auth');
@@ -208,6 +220,8 @@ class ServicesProvider
          * Authorization service.
          *
          * Determines permissions for user actions.  Extend this service to add additional access condition callbacks.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager
          */
         $container['authorizer'] = function ($c) {
             $config = $c->config;
@@ -327,6 +341,8 @@ class ServicesProvider
 
         /**
          * Loads the User object for the currently logged-in user.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Database\Models\User
          */
         $container['currentUser'] = function ($c) {
             $authenticator = $c->authenticator;
@@ -334,6 +350,11 @@ class ServicesProvider
             return $authenticator->user();
         };
 
+        /**
+         * Password Hasher service
+         *
+         * @return \UserFrosting\Sprinkle\Account\Authenticate\Hasher
+         */
         $container['passwordHasher'] = function ($c) {
             $hasher = new Hasher();
             return $hasher;
@@ -341,6 +362,8 @@ class ServicesProvider
 
         /**
          * Returns a callback that forwards to dashboard if user is already logged in.
+         *
+         * @return callable
          */
         $container['redirect.onAlreadyLoggedIn'] = function ($c) {
             /**
@@ -361,6 +384,8 @@ class ServicesProvider
 
         /**
          * Returns a callback that handles setting the `UF-Redirect` header after a successful login.
+         *
+         * @return callable
          */
         $container['redirect.onLogin'] = function ($c) {
             /**
@@ -380,7 +405,7 @@ class ServicesProvider
                     return $determineRedirectOnLogin($response)->withStatus(200);
                 }
 
-                /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+                /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
                 $authorizer = $c->authorizer;
 
                 $currentUser = $c->authenticator->user();
@@ -395,6 +420,8 @@ class ServicesProvider
 
         /**
          * Repository for password reset requests.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Repository\PasswordResetRepository
          */
         $container['repoPasswordReset'] = function ($c) {
             $classMapper = $c->classMapper;
@@ -406,6 +433,8 @@ class ServicesProvider
 
         /**
          * Repository for verification requests.
+         *
+         * @return \UserFrosting\Sprinkle\Account\Repository\VerificationRepository
          */
         $container['repoVerification'] = function ($c) {
             $classMapper = $c->classMapper;
@@ -419,6 +448,8 @@ class ServicesProvider
          * Logger for logging the current user's activities to the database.
          *
          * Extend this service to push additional handlers onto the 'userActivity' log stack.
+         *
+         * @return \Monolog\Logger
          */
         $container['userActivityLogger'] = function ($c) {
             $classMapper = $c->classMapper;
