@@ -81,7 +81,6 @@ class Hasher
             $inputHash = $salt . sha1($salt . $password);
 
             return (hash_equals($inputHash, $hash) === true);
-
         } elseif ($hashType == 'legacy') {
             // Homegrown implementation (assuming that current install has been using a cost parameter of 12)
             // Used for manual implementation of bcrypt.

@@ -140,7 +140,7 @@ class User extends Model
             return $this->lastActivityTime('sign_in');
         } elseif ($name == 'avatar') {
             // Use Gravatar as the user avatar
-            $hash = md5(strtolower(trim( $this->email)));
+            $hash = md5(strtolower(trim($this->email)));
             return 'https://www.gravatar.com/avatar/' . $hash . '?d=mm';
         } else {
             return parent::__get($name);

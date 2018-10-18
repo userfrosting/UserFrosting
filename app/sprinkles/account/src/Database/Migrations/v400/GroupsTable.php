@@ -27,7 +27,7 @@ class GroupsTable extends Migration
     public function up()
     {
         if (!$this->schema->hasTable('groups')) {
-            $this->schema->create('groups', function(Blueprint $table) {
+            $this->schema->create('groups', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('slug');
                 $table->string('name');

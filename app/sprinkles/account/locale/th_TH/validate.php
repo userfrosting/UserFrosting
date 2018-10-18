@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "PASSWORD_MISMATCH" => "รหัสผ่านและรหัสผ่านยืนยันของคุณจะต้องตรงกัน"
     ]
 ];

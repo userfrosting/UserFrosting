@@ -48,7 +48,10 @@ trait HasRelationships
         $localKey = $localKey ?: $this->getKeyName();
 
         return new HasManySyncable(
-            $instance->newQuery(), $this, $instance->getTable().'.'.$foreignKey, $localKey
+            $instance->newQuery(),
+            $this,
+            $instance->getTable().'.'.$foreignKey,
+            $localKey
         );
     }
 
@@ -103,8 +106,7 @@ trait HasRelationships
         $secondRelatedKey = null,
         $throughRelation = null,
         $relation = null
-    )
-    {
+    ) {
         // If no relationship name was passed, we will pull backtraces to get the
         // name of the calling function. We will use that function name as the
         // title of this relation since that is a great convention to apply.
@@ -142,7 +144,13 @@ trait HasRelationships
 
         // Now we set up the relationship with the related model.
         $query = new BelongsToManyThrough(
-            $related->newQuery(), $this, $intermediateRelationship, $secondJoiningTable, $secondForeignKey, $secondRelatedKey, $relation
+            $related->newQuery(),
+            $this,
+            $intermediateRelationship,
+            $secondJoiningTable,
+            $secondForeignKey,
+            $secondRelatedKey,
+            $relation
         );
 
         return $query;
@@ -185,7 +193,12 @@ trait HasRelationships
         }
 
         return new BelongsToManyUnique(
-            $instance->newQuery(), $this, $table, $foreignKey, $relatedKey, $relation
+            $instance->newQuery(),
+            $this,
+            $table,
+            $foreignKey,
+            $relatedKey,
+            $relation
         );
     }
 
@@ -221,8 +234,14 @@ trait HasRelationships
         $table = $table ?: Str::plural($name);
 
         return new MorphToManyUnique(
-            $query, $this, $name, $table, $foreignKey,
-            $otherKey, $caller, $inverse
+            $query,
+            $this,
+            $name,
+            $table,
+            $foreignKey,
+            $otherKey,
+            $caller,
+            $inverse
         );
     }
 
@@ -266,7 +285,13 @@ trait HasRelationships
         }
 
         return new BelongsToManyConstrained(
-            $instance->newQuery(), $this, $constraintKey, $table, $foreignKey, $relatedKey, $relation
+            $instance->newQuery(),
+            $this,
+            $constraintKey,
+            $table,
+            $foreignKey,
+            $relatedKey,
+            $relation
         );
     }
 

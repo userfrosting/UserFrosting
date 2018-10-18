@@ -212,7 +212,7 @@ abstract class TokenRepository
     {
         do {
             $gen = md5(uniqid(mt_rand(), false));
-        } while($this->classMapper
+        } while ($this->classMapper
             ->staticMethod($this->modelIdentifier, 'where', 'hash', hash($this->algorithm, $gen))
             ->first());
         return $gen;

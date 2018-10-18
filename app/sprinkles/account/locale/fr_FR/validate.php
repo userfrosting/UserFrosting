@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "PASSWORD_MISMATCH" => "Votre mot de passe et votre mot de passe de confirmation doivent correspondre."
     ]
 ];

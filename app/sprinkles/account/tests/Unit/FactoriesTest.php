@@ -36,7 +36,7 @@ class FactoriesTest extends TestCase
     /**
      *    Test the user factory
      */
-    function testUserFactory()
+    public function testUserFactory()
     {
         $fm = $this->ci->factory;
 

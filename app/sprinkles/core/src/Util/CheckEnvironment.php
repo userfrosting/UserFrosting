@@ -13,7 +13,6 @@ use Illuminate\Cache\CacheManager;
 use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use Slim\Views\Twig;
 
-
 /**
  * Performs pre-flight tests on your server environment to check that it meets the requirements.
  *
@@ -104,17 +103,29 @@ class CheckEnvironment
     {
         $problemsFound = false;
 
-        if ($this->checkApache()) $problemsFound = true;
+        if ($this->checkApache()) {
+            $problemsFound = true;
+        }
 
-        if ($this->checkPhp()) $problemsFound = true;
+        if ($this->checkPhp()) {
+            $problemsFound = true;
+        }
 
-        if ($this->checkPdo()) $problemsFound = true;
+        if ($this->checkPdo()) {
+            $problemsFound = true;
+        }
 
-        if ($this->checkGd()) $problemsFound = true;
+        if ($this->checkGd()) {
+            $problemsFound = true;
+        }
 
-        if ($this->checkImageFunctions()) $problemsFound = true;
+        if ($this->checkImageFunctions()) {
+            $problemsFound = true;
+        }
 
-        if ($this->checkPermissions()) $problemsFound = true;
+        if ($this->checkPermissions()) {
+            $problemsFound = true;
+        }
 
         return $problemsFound;
     }
@@ -128,7 +139,6 @@ class CheckEnvironment
 
         // Perform some Apache checks.  We may also need to do this before any routing takes place.
         if (strpos(php_sapi_name(), 'apache') !== false) {
-
             $require_apache_modules = ['mod_rewrite'];
             $apache_modules = apache_get_modules();
 
@@ -248,7 +258,7 @@ class CheckEnvironment
     /**
      * Check that log, cache, and session directories are writable, and that other directories are set appropriately for the environment.
      */
-    function checkPermissions()
+    public function checkPermissions()
     {
         $problemsFound = false;
 

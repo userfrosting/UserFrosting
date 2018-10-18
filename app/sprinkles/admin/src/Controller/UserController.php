@@ -124,7 +124,7 @@ class UserController extends SimpleController
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the user
             $user = $classMapper->createInstance('user', $data);
 
@@ -214,7 +214,7 @@ class UserController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($user, $config) {
+        Capsule::transaction(function () use ($user, $config) {
 
             // Create a password reset and shoot off an email
             $passwordReset = $this->ci->repoPasswordReset->create($user, $config['password_reset.timeouts.reset']);
@@ -292,7 +292,7 @@ class UserController extends SimpleController
         $userName = $user->user_name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($user, $userName, $currentUser) {
+        Capsule::transaction(function () use ($user, $userName, $currentUser) {
             $user->delete();
             unset($user);
 
@@ -1155,7 +1155,7 @@ class UserController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $user, $currentUser) {
+        Capsule::transaction(function () use ($data, $user, $currentUser) {
             // Update the user and generate success messages
             foreach ($data as $name => $value) {
                 if ($value != $user->$name) {
@@ -1258,7 +1258,7 @@ class UserController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -1294,7 +1294,7 @@ class UserController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($fieldName, $fieldValue, $user, $currentUser) {
+        Capsule::transaction(function () use ($fieldName, $fieldValue, $user, $currentUser) {
             if ($fieldName == 'roles') {
                 $newRoles = collect($fieldValue)->pluck('role_id')->all();
                 $user->roles()->sync($newRoles);
@@ -1356,7 +1356,7 @@ class UserController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }

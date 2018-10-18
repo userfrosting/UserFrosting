@@ -97,7 +97,8 @@ class BelongsToManyConstrained extends BelongsToMany
                 // Only match children if their pivot key value matches that of the parent model
                 $items = $this->findMatchingPivots($dictionary[$key], $pivotValue);
                 $model->setRelation(
-                    $relation, $this->related->newCollection($items)
+                    $relation,
+                    $this->related->newCollection($items)
                 );
             }
         }

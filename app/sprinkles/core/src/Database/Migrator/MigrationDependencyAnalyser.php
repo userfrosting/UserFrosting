@@ -190,11 +190,12 @@ class MigrationDependencyAnalyser
      * @param  string $migration The migration class
      * @return array The dependency list
      */
-    protected function getMigrationDependencies($migration) {
+    protected function getMigrationDependencies($migration)
+    {
 
         // Make sure class exists
         if (!class_exists($migration)) {
-            throw new BadClassNameException("Unable to find the migration class '$migration'." );
+            throw new BadClassNameException("Unable to find the migration class '$migration'.");
         }
 
         // If the `dependencies` property exist and is static, use this one.
@@ -202,7 +203,7 @@ class MigrationDependencyAnalyser
         $reflectionClass = new ReflectionClass($migration);
         if ($reflectionClass->hasProperty('dependencies') && $reflectionClass->getProperty('dependencies')->isStatic()) {
             return $migration::$dependencies;
-        } else if (property_exists($migration, 'dependencies')) {
+        } elseif (property_exists($migration, 'dependencies')) {
             Debug::debug("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
             $instance = new $migration();
             return $instance->dependencies;

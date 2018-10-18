@@ -101,7 +101,7 @@ class GroupController extends SimpleController
 
         // All checks passed!  log events/activities and create group
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the group
             $group = $classMapper->createInstance('group', $data);
 
@@ -186,7 +186,7 @@ class GroupController extends SimpleController
         $groupName = $group->name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($group, $groupName, $currentUser) {
+        Capsule::transaction(function () use ($group, $groupName, $currentUser) {
             $group->delete();
             unset($group);
 
@@ -731,7 +731,7 @@ class GroupController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $group, $currentUser) {
+        Capsule::transaction(function () use ($data, $group, $currentUser) {
             // Update the group and generate success messages
             foreach ($data as $name => $value) {
                 if ($value != $group->$name) {
@@ -777,7 +777,7 @@ class GroupController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }

@@ -71,29 +71,29 @@ class DatabaseTests extends TestCase
             $table->integer('role_id')->unsigned();
         });
 
-        $this->schema($this->schemaName)->create('permissions', function($table) {
+        $this->schema($this->schemaName)->create('permissions', function ($table) {
             $table->increments('id');
             $table->string('slug');
         });
 
         // A user can be assigned to a specific task at a specific location
-        $this->schema($this->schemaName)->create('tasks', function($table) {
+        $this->schema($this->schemaName)->create('tasks', function ($table) {
             $table->increments('id');
             $table->string('name');
         });
 
-        $this->schema($this->schemaName)->create('locations', function($table) {
+        $this->schema($this->schemaName)->create('locations', function ($table) {
             $table->increments('id');
             $table->string('name');
         });
 
-        $this->schema($this->schemaName)->create('assignments', function($table) {
+        $this->schema($this->schemaName)->create('assignments', function ($table) {
             $table->integer('task_id')->unsigned();
             $table->integer('location_id')->unsigned();
             $table->morphs('assignable');
         });
 
-        $this->schema($this->schemaName)->create('jobs', function($table) {
+        $this->schema($this->schemaName)->create('jobs', function ($table) {
             $table->integer('user_id')->unsigned();
             $table->integer('location_id')->unsigned();
             $table->integer('role_id')->unsigned();
@@ -624,7 +624,7 @@ class DatabaseTests extends TestCase
                     'permission_id' => 4
                 ]
             ]
-        ],$usersWithPermissions[1]['permissions']);
+        ], $usersWithPermissions[1]['permissions']);
 
         // Test counting related models (withCount)
         $users = EloquentTestUser::withCount('permissions')->get();

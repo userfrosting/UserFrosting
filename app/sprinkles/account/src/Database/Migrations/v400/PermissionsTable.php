@@ -26,7 +26,7 @@ class PermissionsTable extends Migration
     /**
      * {@inheritdoc}
      */
-    static public $dependencies = [
+    public static $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\PermissionRolesTable'
     ];
@@ -37,7 +37,7 @@ class PermissionsTable extends Migration
     public function up()
     {
         if (!$this->schema->hasTable('permissions')) {
-            $this->schema->create('permissions', function(Blueprint $table) {
+            $this->schema->create('permissions', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('slug')->comment('A code that references a specific action or URI that an assignee of this permission has access to.');
                 $table->string('name');
@@ -53,7 +53,6 @@ class PermissionsTable extends Migration
 
         // Skip this if table is not empty
         if (Permission::count() == 0) {
-
             $defaultRoleIds = [
                 'user' => Role::where('slug', 'user')->first()->id,
                 'group-admin' => Role::where('slug', 'group-admin')->first()->id,

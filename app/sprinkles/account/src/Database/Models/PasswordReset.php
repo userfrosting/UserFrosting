@@ -65,7 +65,7 @@ class PasswordReset extends Model
 
     /**
      * Get the user associated with this reset request.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

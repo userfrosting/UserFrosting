@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "PASSWORD_MISMATCH" => "密码不一致.",
         "USERNAME" => "用户名必须以小写字母, 数字, '.', '-', 和 '_'组成."
     ]

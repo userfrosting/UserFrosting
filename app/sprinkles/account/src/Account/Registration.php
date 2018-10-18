@@ -106,7 +106,7 @@ class Registration
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        $user = Capsule::transaction(function() {
+        $user = Capsule::transaction(function () {
             // Log throttleable event
             $this->ci->throttler->logEvent('registration_attempt');
 

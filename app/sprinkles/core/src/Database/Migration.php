@@ -42,10 +42,14 @@ abstract class Migration
     /**
      * Method to apply changes to the database
      */
-    public function up() {}
+    public function up()
+    {
+    }
 
     /**
      * Method to revert changes applied by the `up` method
      */
-    public function down() {}
+    public function down()
+    {
+    }
 }

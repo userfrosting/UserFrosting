@@ -300,7 +300,8 @@ class DatabaseMigratorIntegrationTest extends TestCase
     }
 }
 
-class MigrationLocatorStub extends MigrationLocator {
+class MigrationLocatorStub extends MigrationLocator
+{
     public function getMigrations()
     {
         return [
@@ -310,7 +311,8 @@ class MigrationLocatorStub extends MigrationLocator {
     }
 }
 
-class FlightsTableMigrationLocatorStub extends MigrationLocator {
+class FlightsTableMigrationLocatorStub extends MigrationLocator
+{
     public function getMigrations()
     {
         return [
@@ -322,7 +324,8 @@ class FlightsTableMigrationLocatorStub extends MigrationLocator {
 /**
  *    This stub contain migration which file doesn't exists
  */
-class InvalidMigrationLocatorStub extends MigrationLocator {
+class InvalidMigrationLocatorStub extends MigrationLocator
+{
     public function getMigrations()
     {
         return [
@@ -336,7 +339,8 @@ class InvalidMigrationLocatorStub extends MigrationLocator {
  *    than the order the file are returned because of dependencies management.
  *    The `two` migration should be run last since it depends on the other two
  */
-class DependableMigrationLocatorStub extends MigrationLocator {
+class DependableMigrationLocatorStub extends MigrationLocator
+{
     public function getMigrations()
     {
         return [
@@ -351,7 +355,8 @@ class DependableMigrationLocatorStub extends MigrationLocator {
  *    This stub contain migration which order they need to be run is different
  *    than the order the file are returned because of dependencies management
  */
-class UnfulfillableMigrationLocatorStub extends MigrationLocator {
+class UnfulfillableMigrationLocatorStub extends MigrationLocator
+{
     public function getMigrations()
     {
         return [
@@ -366,7 +371,8 @@ class UnfulfillableMigrationLocatorStub extends MigrationLocator {
  *    This stub contain migration which order they need to be run is different
  *    than the order the file are returned because of dependencies management
  */
-class DeprecatedMigrationLocatorStub extends MigrationLocator {
+class DeprecatedMigrationLocatorStub extends MigrationLocator
+{
     public function getMigrations()
     {
         return [

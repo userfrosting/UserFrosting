@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "PASSWORD_MISMATCH" => "Tu contraseña y contraseña de confirmación deben coincidir.",
         "USERNAME" => "El nombre de usuario puede consistir sólo en letras minúsculas, números, '.', '-' y '_'."
     ]

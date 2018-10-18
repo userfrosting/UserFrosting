@@ -164,7 +164,7 @@ trait Unique
                             ? function () {
                                 //
                             }
-                            : $tertiaryCallback;
+        : $tertiaryCallback;
 
         return $this;
     }
@@ -195,7 +195,9 @@ trait Unique
     public function getRelationExistenceCountQuery(Builder $query, Builder $parentQuery)
     {
         return $this->getRelationExistenceQuery(
-            $query, $parentQuery, new Expression("count(distinct {$this->relatedKey})")
+            $query,
+            $parentQuery,
+            new Expression("count(distinct {$this->relatedKey})")
         );
     }
 
@@ -229,7 +231,8 @@ trait Unique
                 }
 
                 $model->setRelation(
-                    $relation, $items
+                    $relation,
+                    $items
                 );
             }
         }
@@ -546,7 +549,8 @@ trait Unique
                 $tertiaryModels = $dictionary[$key];
 
                 $model->setRelation(
-                    $this->tertiaryRelationName, $this->tertiaryRelated->newCollection($tertiaryModels)
+                    $this->tertiaryRelationName,
+                    $this->tertiaryRelated->newCollection($tertiaryModels)
                 );
             }
         }

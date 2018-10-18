@@ -13,7 +13,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "ARRAY" => "مقادیر <strong>{{label}}</strong> باید از یک آرایه باشند.",
         "BOOLEAN" => "مقدار <strong>{{label}}</strong> باید 1 یا 0 باشد.",
         "INTEGER" => "مقدار <strong>{{label}}</strong> باید یک عدد اینتجر باشد.",

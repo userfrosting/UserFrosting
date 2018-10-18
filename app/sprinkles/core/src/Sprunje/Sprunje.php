@@ -139,10 +139,10 @@ abstract class Sprunje
         $v->rule('regex', 'format', '/json|csv/i');
 
         // TODO: translated rules
-        if(!$v->validate()) {
+        if (!$v->validate()) {
             $e = new BadRequestException();
             foreach ($v->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }

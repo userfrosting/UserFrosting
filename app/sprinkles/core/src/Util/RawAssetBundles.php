@@ -18,7 +18,8 @@ use UserFrosting\Assets\Exception\InvalidBundlesFileException;
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
- class RawAssetBundles extends GulpBundleAssetsRawBundles {
+ class RawAssetBundles extends GulpBundleAssetsRawBundles
+ {
 
     /**
      * Extends the currently loaded bundles with another bundle schema.
@@ -29,30 +30,30 @@ use UserFrosting\Assets\Exception\InvalidBundlesFileException;
      * @throws \UserFrosting\Support\Exception\JsonException if file cannot be parsed as JSON.
      * @throws InvalidBundlesFileException if unexpected value encountered.
      */
-    public function extend($filePath)
-    {
-        if (!is_string($filePath)) {
-            throw new \InvalidArgumentException("\$filePath must of type string but was " . gettype($filePath));
-        }
+     public function extend($filePath)
+     {
+         if (!is_string($filePath)) {
+             throw new \InvalidArgumentException("\$filePath must of type string but was " . gettype($filePath));
+         }
 
-        // Read file
-        $bundlesFile = $this->readSchema($filePath);
+         // Read file
+         $bundlesFile = $this->readSchema($filePath);
 
-        // Process bundles
-        if (isset($bundlesFile->bundle)) {
-            foreach ($bundlesFile->bundle as $bundleName => $bundle) {
-                // Get collision setting.
-                $collisionRule = ($bundle->options->sprinkle->onCollision ?: 'replace');
+         // Process bundles
+         if (isset($bundlesFile->bundle)) {
+             foreach ($bundlesFile->bundle as $bundleName => $bundle) {
+                 // Get collision setting.
+                 $collisionRule = ($bundle->options->sprinkle->onCollision ?: 'replace');
 
-                // Handle CSS bundle if specified.
-                if (isset($bundle->styles)) {
-                    // Attempt to add CSS bundle
-                    try {
-                        $standardisedBundle = $this->standardiseBundle($bundle->styles);
-                        if (!array_key_exists($bundleName, $this->cssBundles)) {
-                            $this->cssBundles[$bundleName] = $standardisedBundle;
-                        } else {
-                            switch ($collisionRule) {
+                 // Handle CSS bundle if specified.
+                 if (isset($bundle->styles)) {
+                     // Attempt to add CSS bundle
+                     try {
+                         $standardisedBundle = $this->standardiseBundle($bundle->styles);
+                         if (!array_key_exists($bundleName, $this->cssBundles)) {
+                             $this->cssBundles[$bundleName] = $standardisedBundle;
+                         } else {
+                             switch ($collisionRule) {
                                 case 'replace':
                                     // Replaces the existing bundle.
                                     $this->cssBundles[$bundleName] = $standardisedBundle;
@@ -74,22 +75,21 @@ use UserFrosting\Assets\Exception\InvalidBundlesFileException;
                                     throw new \OutOfBoundsException("Invalid value '$collisionRule' provided for 'onCollision' key in bundle '$bundleName'.");
                                     break;
                             }
-                        }
-                    }
-                    catch (\Exception $e) {
-                        throw new InvalidBundlesFileException("Encountered issue processing styles property for '$bundleName' for file '$filePath'", 0, $e);
-                    }
-                }
+                         }
+                     } catch (\Exception $e) {
+                         throw new InvalidBundlesFileException("Encountered issue processing styles property for '$bundleName' for file '$filePath'", 0, $e);
+                     }
+                 }
 
-                // Handle JS bundle if specified.
-                if (isset($bundle->scripts)) {
-                    // Attempt to add JS bundle
-                    try {
-                        $standardisedBundle = $this->standardiseBundle($bundle->scripts);
-                        if (!array_key_exists($bundleName, $this->jsBundles)) {
-                            $this->jsBundles[$bundleName] = $standardisedBundle;
-                        } else {
-                            switch ($collisionRule) {
+                 // Handle JS bundle if specified.
+                 if (isset($bundle->scripts)) {
+                     // Attempt to add JS bundle
+                     try {
+                         $standardisedBundle = $this->standardiseBundle($bundle->scripts);
+                         if (!array_key_exists($bundleName, $this->jsBundles)) {
+                             $this->jsBundles[$bundleName] = $standardisedBundle;
+                         } else {
+                             switch ($collisionRule) {
                                 case 'replace':
                                     // Replaces the existing bundle.
                                     $this->jsBundles[$bundleName] = $standardisedBundle;
@@ -111,13 +111,12 @@ use UserFrosting\Assets\Exception\InvalidBundlesFileException;
                                     throw new \OutOfBoundsException("Invalid value '$collisionRule' provided for 'onCollision' key in bundle '$bundleName'.");
                                     break;
                             }
-                        }
-                    }
-                    catch (\Exception $e) {
-                        throw new InvalidBundlesFileException("Encountered issue processing scripts property for '$bundleName' for file '$filePath'", 0, $e);
-                    }
-                }
-            }
-        }
-    }
-}
+                         }
+                     } catch (\Exception $e) {
+                         throw new InvalidBundlesFileException("Encountered issue processing scripts property for '$bundleName' for file '$filePath'", 0, $e);
+                     }
+                 }
+             }
+         }
+     }
+ }

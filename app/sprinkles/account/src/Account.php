@@ -16,5 +16,4 @@ use UserFrosting\System\Sprinkle\Sprinkle;
  */
 class Account extends Sprinkle
 {
-
 }

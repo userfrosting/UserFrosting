@@ -16,8 +16,8 @@ return [
 
     "ABOUT" => "Acerca",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "Captcha",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "Captcha",
         "FAIL" => "Código captcha não introduzido corretamente.",
         "SPECIFY" => "Introduza o código captcha",
         "VERIFY" => "Verifique o código captcha"

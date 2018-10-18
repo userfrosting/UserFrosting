@@ -13,7 +13,7 @@ $app->get('/', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageIndex')
     ->add('checkEnvironment')
     ->setName('index');
 
-$app->get('/about','UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
+$app->get('/about', 'UserFrosting\Sprinkle\Core\Controller\CoreController:pageAbout')->add('checkEnvironment');
 
 $app->get('/alerts', 'UserFrosting\Sprinkle\Core\Controller\CoreController:jsonAlerts');
 

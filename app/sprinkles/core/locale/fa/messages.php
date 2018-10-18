@@ -17,8 +17,8 @@ return [
 
     "ABOUT" => "درباره",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "کد امنیتی",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "کد امنیتی",
         "FAIL" => "کد امنیتی درست نیست",
         "SPECIFY" => "کد امنیتی را وارد کنید",
         "VERIFY" => "کد امنیتی را بررسی کنید"

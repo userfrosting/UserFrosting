@@ -71,7 +71,7 @@ class Mailer
         }
 
         // Pass logger into phpMailer object
-        $this->phpMailer->Debugoutput = function($message, $level) {
+        $this->phpMailer->Debugoutput = function ($message, $level) {
             $this->logger->debug($message);
         };
     }
@@ -107,13 +107,13 @@ class Mailer
 
             // Add any CCs and BCCs
             if ($recipient->getCCs()) {
-                foreach($recipient->getCCs() as $cc) {
+                foreach ($recipient->getCCs() as $cc) {
                     $this->phpMailer->addCC($cc['email'], $cc['name']);
                 }
             }
     
             if ($recipient->getBCCs()) {
-                foreach($recipient->getBCCs() as $bcc) {
+                foreach ($recipient->getBCCs() as $bcc) {
                     $this->phpMailer->addBCC($bcc['email'], $bcc['name']);
                 }
             }
@@ -136,7 +136,7 @@ class Mailer
     }
 
     /**
-     * Send a MailMessage message, sending a separate email to each recipient. 
+     * Send a MailMessage message, sending a separate email to each recipient.
      *
      * If the message object supports message templates, this will render the template with the corresponding placeholder values for each recipient.
      * @param MailMessage $message
@@ -155,13 +155,13 @@ class Mailer
 
             // Add any CCs and BCCs
             if ($recipient->getCCs()) {
-                foreach($recipient->getCCs() as $cc) {
+                foreach ($recipient->getCCs() as $cc) {
                     $this->phpMailer->addCC($cc['email'], $cc['name']);
                 }
             }
     
             if ($recipient->getBCCs()) {
-                foreach($recipient->getBCCs() as $bcc) {
+                foreach ($recipient->getBCCs() as $bcc) {
                     $this->phpMailer->addBCC($bcc['email'], $bcc['name']);
                 }
             }

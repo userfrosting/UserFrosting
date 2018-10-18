@@ -85,7 +85,6 @@ class SetupDbCommand extends BaseCommand
             $config["db.default.database"] != $keys['DB_NAME'] ||
             $config["db.default.username"] != $keys['DB_USER'] ||
             $config["db.default.password"] != $keys['DB_PASSWORD']) {
-
             $this->io->warning("Current database configuration differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined.");
 
             if (!$this->io->confirm('Continue?', false)) {
@@ -161,7 +160,6 @@ class SetupDbCommand extends BaseCommand
 
         // Ask further questions based on driver
         if ($driver['driver'] == 'sqlite') {
-
             $name = ($args->getOption('db_name')) ?: $this->io->ask("Database name", $driver['defaultDBName']);
 
             return [
@@ -172,7 +170,6 @@ class SetupDbCommand extends BaseCommand
                 'username' => '',
                 'password' => ''
             ];
-
         } else {
             $defaultPort = $driver['defaultPort'];
 

@@ -25,7 +25,7 @@ class BelongsToManyThroughTest extends TestCase
         m::close();
     }
 
-    function testPaginatedQuery()
+    public function testPaginatedQuery()
     {
         // Creates a real BelongsToManyThrough object
         $relation = $this->getRelation();
@@ -87,7 +87,13 @@ class BelongsToManyThroughTest extends TestCase
 
         // Now we set up the relationship with the related model.
         return new BelongsToManyThrough(
-            $builder, $related, $intermediateRelationship, 'role_users', 'role_id', 'user_id', 'relation_name'
+            $builder,
+            $related,
+            $intermediateRelationship,
+            'role_users',
+            'role_id',
+            'user_id',
+            'relation_name'
         );
     }
 }

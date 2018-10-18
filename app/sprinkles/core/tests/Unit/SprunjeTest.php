@@ -25,7 +25,7 @@ class SprunjeTest extends TestCase
         m::close();
     }
 
-    function testSprunjeApplyFiltersDefault()
+    public function testSprunjeApplyFiltersDefault()
     {
         $sprunje = new SprunjeStub([
             'filters' => [
@@ -47,7 +47,7 @@ class SprunjeTest extends TestCase
         $sprunje->applyFilters($builder);
     }
 
-    function testSprunjeApplySortsDefault()
+    public function testSprunjeApplySortsDefault()
     {
         $sprunje = new SprunjeStub([
             'sorts' => [
@@ -59,7 +59,6 @@ class SprunjeTest extends TestCase
         $builder->shouldReceive('orderBy')->once()->with('species', 'asc');
         $sprunje->applySorts($builder);
     }
-
 }
 
 class SprunjeStub extends Sprunje
@@ -93,4 +92,3 @@ class SprunjeTestModelStub extends Model
 {
     protected $table = 'table';
 }
-

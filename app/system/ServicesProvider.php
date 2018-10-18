@@ -44,7 +44,6 @@ class ServicesProvider
          * @return \UserFrosting\UniformResourceLocator\ResourceLocator
          */
         $container['locator'] = function ($c) {
-
             $locator = new ResourceLocator(\UserFrosting\ROOT_DIR);
 
             // Register shared streams

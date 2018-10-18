@@ -68,7 +68,7 @@ class ClassMapper
     {
         // Check that class exists
         if (!class_exists($className)) {
-            throw new BadClassNameException("Unable to find the class '$className'." );
+            throw new BadClassNameException("Unable to find the class '$className'.");
         }
 
         $this->classMappings[$identifier] = $className;

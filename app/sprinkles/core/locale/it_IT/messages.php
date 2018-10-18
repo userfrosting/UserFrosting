@@ -18,8 +18,8 @@ return [
 
     "ABOUT" => "Su di noi",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "Captcha",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "Captcha",
         "FAIL" => "Captcha errato",
         "SPECIFY" => "Inserisci il captcha",
         "VERIFY" => "Verifica captcha"
@@ -107,7 +107,7 @@ return [
     "SEARCH"    => "Cerca",
     "SORT"      => "Ordina",
     "SUBMIT"    => "Invia",
-	"SUCCESS"   => "Successo",
+    "SUCCESS"   => "Successo",
     "PRINT"     => "Stampa",
     "REMOVE"    => "Rimuovi",
     "UNACTIVATED" => "Disattivato",

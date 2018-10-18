@@ -163,7 +163,6 @@ class ServicesProvider
          * @return \Illuminate\Cache\Repository
          */
         $container['cache'] = function ($c) {
-
             $config = $c->config;
 
             if ($config['cache.driver'] == 'file') {

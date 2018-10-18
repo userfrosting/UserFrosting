@@ -10,10 +10,10 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
  */
 class UnfulfillableTable extends Migration
 {
-     /**
-      * {@inheritdoc}
-      */
-    static public $dependencies = [
+    /**
+     * {@inheritdoc}
+     */
+    public static $dependencies = [
         '\UserFrosting\Tests\Integration\Migrations\NonExistingMigration'
     ];
 

@@ -92,7 +92,6 @@ class SetupSmtpCommand extends BaseCommand
         if ($config['mail.host'] != $keys['SMTP_HOST'] ||
             $config['mail.username'] != $keys['SMTP_USER'] ||
             $config['mail.password'] != $keys['SMTP_PASSWORD']) {
-
             $this->io->warning("Current SMTP configuration differ from the configuration defined in `{$this->envPath}`. Global system environment variables might be defined.");
 
             if (!$this->io->confirm('Continue?', false)) {

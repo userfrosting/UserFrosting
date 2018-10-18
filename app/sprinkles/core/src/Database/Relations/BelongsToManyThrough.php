@@ -92,7 +92,7 @@ class BelongsToManyThrough extends BelongsToMany
                             ? function () {
                                 //
                             }
-                            : $viaCallback;
+        : $viaCallback;
 
         return $this;
     }
@@ -120,7 +120,9 @@ class BelongsToManyThrough extends BelongsToMany
         $parentKeyName = $this->getParentKeyName();
 
         $this->query->where(
-            $parentKeyName, '=', $this->parent->getKey()
+            $parentKeyName,
+            '=',
+            $this->parent->getKey()
         );
 
         return $this;
@@ -161,7 +163,8 @@ class BelongsToManyThrough extends BelongsToMany
                 }
 
                 $model->setRelation(
-                    $relation, $items
+                    $relation,
+                    $items
                 );
             }
         }

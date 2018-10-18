@@ -14,5 +14,4 @@ namespace UserFrosting\Sprinkle\Core\Throttle;
  */
 class ThrottlerException extends \RuntimeException
 {
-
 }

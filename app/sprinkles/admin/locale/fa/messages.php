@@ -13,30 +13,30 @@
  */
 
 return [
-	"ACTIVITY" => [
-	        1 => "فعالیت",
-	        2 => "فعالیت ها",
+    "ACTIVITY" => [
+            1 => "فعالیت",
+            2 => "فعالیت ها",
 
-	       "LAST" => "آخرین فعالیت",
-	       "PAGE" => "لیستی از فعالیت های کاربر",
-	       "TIME" => "زمان فعالیت"
-	    ],
+           "LAST" => "آخرین فعالیت",
+           "PAGE" => "لیستی از فعالیت های کاربر",
+           "TIME" => "زمان فعالیت"
+        ],
 
-	    "CACHE" => [
-	        "CLEAR"             => "پاک سازی کش",
-	        "CLEAR_CONFIRM"     => "آیا مطمئن هستید که میخواهید کش سایت را پاک سازی کنید؟",
-	        "CLEAR_CONFIRM_YES" => "بله، کش پاک سازی شود",
-	        "CLEARED"           => "کش با موفقیت پاک سازی شد"
-	    ],
+        "CACHE" => [
+            "CLEAR"             => "پاک سازی کش",
+            "CLEAR_CONFIRM"     => "آیا مطمئن هستید که میخواهید کش سایت را پاک سازی کنید؟",
+            "CLEAR_CONFIRM_YES" => "بله، کش پاک سازی شود",
+            "CLEARED"           => "کش با موفقیت پاک سازی شد"
+        ],
 
-	    "DASHBOARD"             => "کارتابل",
-	    "DELETE_MASTER"         => "شما نمیتوانید کاربر اصلی را حذف کنید",
-	    "DELETION_SUCCESSFUL"   => "<strong>{{user_name}}</strong> با موفقیت حذف شد.",
-	    "DETAILS_UPDATED"       => "جزئیات <strong>{{user_name}}</strong> با موفقیت ذخیره شد.",
-	    "DISABLE_MASTER"        => "شما نمیتوانید کاربر اصلی را غیر فعال کنید.",
-	    "DISABLE_SUCCESSFUL"    => "حساب کاربری <strong>{{user_name}}</strong> با موفقیت غیر فعال شد.",
+        "DASHBOARD"             => "کارتابل",
+        "DELETE_MASTER"         => "شما نمیتوانید کاربر اصلی را حذف کنید",
+        "DELETION_SUCCESSFUL"   => "<strong>{{user_name}}</strong> با موفقیت حذف شد.",
+        "DETAILS_UPDATED"       => "جزئیات <strong>{{user_name}}</strong> با موفقیت ذخیره شد.",
+        "DISABLE_MASTER"        => "شما نمیتوانید کاربر اصلی را غیر فعال کنید.",
+        "DISABLE_SUCCESSFUL"    => "حساب کاربری <strong>{{user_name}}</strong> با موفقیت غیر فعال شد.",
 
-	    "ENABLE_SUCCESSFUL" => "حساب کاربری <strong>{{user_name}}</strong> با موفقیت فعال شد.",
+        "ENABLE_SUCCESSFUL" => "حساب کاربری <strong>{{user_name}}</strong> با موفقیت فعال شد.",
 
     "GROUP" => [
         1 => "گروه",

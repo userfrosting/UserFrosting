@@ -65,7 +65,7 @@ class Verification extends Model
 
     /**
      * Get the user associated with this verification request.
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

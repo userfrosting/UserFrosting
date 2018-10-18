@@ -65,7 +65,7 @@ class ShutdownHandler
         ];
 
         // Handle fatal errors and parse errors
-        if ($error !== NULL && in_array($error['type'], $fatalErrorTypes)) {
+        if ($error !== null && in_array($error['type'], $fatalErrorTypes)) {
 
             // Build the appropriate error message (debug or client)
             if ($this->displayErrorInfo) {
@@ -76,7 +76,7 @@ class ShutdownHandler
 
             // For CLI, just print the message and exit.
             if (php_sapi_name() === 'cli') {
-				exit($errorMessage . PHP_EOL);
+                exit($errorMessage . PHP_EOL);
             }
 
             // For all other environments, print a debug response for the requested data type

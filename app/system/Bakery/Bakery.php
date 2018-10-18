@@ -120,7 +120,6 @@ class Bakery
             $basePath = str_replace($file->getBasename(), '', $file->getBasePath());
             $className = str_replace('/', '\\', $basePath) . $file->getFilename();
             $classPath = "\\UserFrosting\\Sprinkle\\$sprinkleName\\Bakery\\$className";
-
         } else {
             // Getting the classpath
             $basePath = str_replace($file->getBasename(), '', $file->getBasePath());

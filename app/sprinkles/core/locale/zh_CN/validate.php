@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "ARRAY" => " <strong>{{label}}</strong> 的值必须在一个数组中.",
         "BOOLEAN" => " <strong>{{label}}</strong> 的值必须是 '0' 或 '1'.",
         "INTEGER" => " <strong>{{label}}</strong> 必须是整数.",

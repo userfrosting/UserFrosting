@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "PASSWORD_MISMATCH" => "Şifreniz ve onaylama şifreniz eşleşmiyor.",
         "USERNAME" => "Kullanıcı adınız sadece küçük harfler, sayılar, '.', '-', ve '_' içerebilir."
     ]

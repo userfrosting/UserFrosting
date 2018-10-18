@@ -24,7 +24,7 @@ class Util
      * @param bool $remove
      * @return mixed[]
      */
-    static public function extractFields(&$inputArray, $fieldArray, $remove = true)
+    public static function extractFields(&$inputArray, $fieldArray, $remove = true)
     {
         $result = [];
 
@@ -48,7 +48,7 @@ class Util
      * @param string $str
      * @return string
      */
-    static public function extractDigits($str)
+    public static function extractDigits($str)
     {
         return preg_replace('/[^0-9]/', '', $str);
     }
@@ -59,7 +59,7 @@ class Util
      * @param string $phone
      * @return string
      */
-    static public function formatPhoneNumber($phone)
+    public static function formatPhoneNumber($phone)
     {
         $num = static::extractDigits($phone);
 
@@ -81,23 +81,23 @@ class Util
      * @param array $arr
      * @return string
      */
-    static public function prettyPrintArray(array $arr)
+    public static function prettyPrintArray(array $arr)
     {
         $json = json_encode($arr);
         $result = '';
         $level = 0;
         $inQuotes = false;
         $inEscape = false;
-        $endsLineLevel = NULL;
+        $endsLineLevel = null;
         $jsonLength = strlen($json);
 
         for ($i = 0; $i < $jsonLength; $i++) {
             $char = $json[$i];
-            $newLineLevel = NULL;
+            $newLineLevel = null;
             $post = '';
-            if ($endsLineLevel !== NULL) {
+            if ($endsLineLevel !== null) {
                 $newLineLevel = $endsLineLevel;
-                $endsLineLevel = NULL;
+                $endsLineLevel = null;
             }
             if ($inEscape) {
                 $inEscape = false;
@@ -107,13 +107,14 @@ class Util
                 switch ($char) {
                     case '}': case ']':
                         $level--;
-                        $endsLineLevel = NULL;
+                        $endsLineLevel = null;
                         $newLineLevel = $level;
                         break;
 
                     case '{': case '[':
                         $level++;
 
+                        // no break
                     case ',':
                         $endsLineLevel = $level;
                         break;
@@ -125,15 +126,15 @@ class Util
                     case ' ': case '\t': case '\n': case '\r':
                         $char = '';
                         $endsLineLevel = $newLineLevel;
-                        $newLineLevel = NULL;
+                        $newLineLevel = null;
                         break;
                 }
             } elseif ($char === '\\') {
                 $inEscape = true;
             }
 
-            if ($newLineLevel !== NULL) {
-                $result .= '<br>'.str_repeat( '&nbsp;&nbsp;', $newLineLevel);
+            if ($newLineLevel !== null) {
+                $result .= '<br>'.str_repeat('&nbsp;&nbsp;', $newLineLevel);
             }
 
             $result .= $char.$post;
@@ -151,7 +152,7 @@ class Util
      * @param string $separator
      * @return string
      */
-    static public function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-')
+    public static function randomPhrase($numAdjectives, $maxLength = 9999999, $maxTries = 10, $separator = '-')
     {
         $adjectives = include('extra://adjectives.php');
         $nouns = include('extra://nouns.php');

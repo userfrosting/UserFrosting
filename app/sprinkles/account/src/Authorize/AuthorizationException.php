@@ -19,5 +19,4 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AuthorizationException extends ForbiddenException
 {
-
 }

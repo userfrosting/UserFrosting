@@ -17,10 +17,10 @@ namespace UserFrosting\Sprinkle\Core\Database\Models;
  * @property string request_data
  */
 class Throttle extends Model
-{    
+{
     /**
      * @var string The name of the table for the current model.
-     */ 
+     */
     protected $table = "throttles";
 
     protected $fillable = [
@@ -31,6 +31,6 @@ class Throttle extends Model
 
     /**
      * @var bool Enable timestamps for Throttles.
-     */ 
-    public $timestamps = true;    
+     */
+    public $timestamps = true;
 }

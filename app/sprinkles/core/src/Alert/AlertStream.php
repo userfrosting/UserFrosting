@@ -83,7 +83,7 @@ abstract class AlertStream
      */
     public function addMessageTranslated($type, $messageId, $placeholders = array())
     {
-        if (!$this->messageTranslator){
+        if (!$this->messageTranslator) {
             throw new \RuntimeException("No translator has been set!  Please call MessageStream::setTranslator first.");
         }
 
@@ -113,7 +113,7 @@ abstract class AlertStream
     public function addValidationErrors(ServerSideValidator $validator)
     {
         foreach ($validator->errors() as $idx => $field) {
-            foreach($field as $eidx => $error) {
+            foreach ($field as $eidx => $error) {
                 $this->addMessage("danger", $error);
             }
         }

@@ -391,7 +391,6 @@ class Migrator
         } else {
             $callback();
         }
-
     }
 
     /**
@@ -438,7 +437,7 @@ class Migrator
     public function resolve($migrationClass)
     {
         if (!class_exists($migrationClass)) {
-            throw new BadClassNameException("Unable to find the migration class '$migrationClass'." );
+            throw new BadClassNameException("Unable to find the migration class '$migrationClass'.");
         }
 
         return new $migrationClass($this->getSchemaBuilder());

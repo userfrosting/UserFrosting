@@ -110,7 +110,7 @@ class MigrationLocatorTest extends TestCase
     /**
      *    Test MigratonLocator against the real thing, no Mockery
      */
-    function testActualInstance()
+    public function testActualInstance()
     {
         // Get sprinkle manager and make sure `core` is returned
         $this->assertContains('core', $this->ci->sprinkleManager->getSprinkleNames());

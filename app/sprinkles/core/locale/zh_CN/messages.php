@@ -16,8 +16,8 @@ return [
 
     "ABOUT" => "关于",
 
-	"CAPTCHA" => [
-	    "@TRANSLATION" => "验证码",
+    "CAPTCHA" => [
+        "@TRANSLATION" => "验证码",
         "FAIL" => "Y验证码输入错误.",
         "SPECIFY" => "输入验证码",
         "VERIFY" => "验证"

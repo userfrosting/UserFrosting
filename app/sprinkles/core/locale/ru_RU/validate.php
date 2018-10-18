@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "ARRAY" => "Значения для <strong>{{label}}</strong> должны быть элементами массива.",
         "BOOLEAN" => "Значение <strong>{{label}}</strong> должно быть '0' или '1'.",
         "INTEGER" => "Значение <strong>{{label}}</strong> должно быть целым.",

@@ -71,7 +71,7 @@ class AccountController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException('Missing or malformed request data!');
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -224,7 +224,7 @@ class AccountController extends SimpleController
 
         // All checks passed!  log events/activities, update user, and send email
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
+        Capsule::transaction(function () use ($classMapper, $data, $throttler, $throttleData, $config) {
 
             // Log throttleable event
             $throttler->logEvent('password_reset_request', $throttleData);
@@ -977,7 +977,7 @@ class AccountController extends SimpleController
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $throttler, $throttleData, $config) {
+        Capsule::transaction(function () use ($classMapper, $data, $throttler, $throttleData, $config) {
             // Log throttleable event
             $throttler->logEvent('verification_request', $throttleData);
 

@@ -603,7 +603,7 @@ class WhoopsRenderer extends ErrorRenderer
         }
 
         if (is_string($this->editor) && isset($this->editors[$this->editor]) && !is_callable($this->editors[$this->editor])) {
-           return [
+            return [
                 'ajax' => false,
                 'url' => $this->editors[$this->editor],
             ];
@@ -700,7 +700,7 @@ class WhoopsRenderer extends ErrorRenderer
         $blacklisted = $this->blacklist[$superGlobalName];
 
         $values = $superGlobal;
-        foreach($blacklisted as $key) {
+        foreach ($blacklisted as $key) {
             if (isset($superGlobal[$key])) {
                 $values[$key] = str_repeat('*', strlen($superGlobal[$key]));
             }

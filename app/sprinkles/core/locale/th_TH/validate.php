@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "ARRAY" => "ค่าของ <strong>{{label}}</strong> จะต้องเป็น Array",
         "BOOLEAN" => "ค่าของ <strong>{{label}}</strong> จะต้องเป็น '0' หรือ '1'",
         "INTEGER" => "ค่าของ <strong>{{label}}</strong> จะต้องเป็นตัวเลข",

@@ -101,7 +101,7 @@ class RoleController extends SimpleController
 
         // All checks passed!  log events/activities and create role
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($classMapper, $data, $ms, $config, $currentUser) {
+        Capsule::transaction(function () use ($classMapper, $data, $ms, $config, $currentUser) {
             // Create the role
             $role = $classMapper->createInstance('role', $data);
 
@@ -185,7 +185,7 @@ class RoleController extends SimpleController
         $roleName = $role->name;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($role, $roleName, $currentUser) {
+        Capsule::transaction(function () use ($role, $roleName, $currentUser) {
             $role->delete();
             unset($role);
 
@@ -837,10 +837,10 @@ class RoleController extends SimpleController
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($data, $role, $currentUser) {
+        Capsule::transaction(function () use ($data, $role, $currentUser) {
             // Update the role and generate success messages
             foreach ($data as $name => $value) {
-                if ($value != $role->$name){
+                if ($value != $role->$name) {
                     $role->$name = $value;
                 }
             }
@@ -932,7 +932,7 @@ class RoleController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }
@@ -946,7 +946,7 @@ class RoleController extends SimpleController
         $ms = $this->ci->alerts;
 
         // Begin transaction - DB will be rolled back if an exception occurs
-        Capsule::transaction( function() use ($fieldName, $fieldValue, $role, $currentUser) {
+        Capsule::transaction(function () use ($fieldName, $fieldValue, $role, $currentUser) {
             if ($fieldName == 'permissions') {
                 $newPermissions = collect($fieldValue)->pluck('permission_id')->all();
                 $role->permissions()->sync($newPermissions);
@@ -998,7 +998,7 @@ class RoleController extends SimpleController
             // TODO: encapsulate the communication of error messages from ServerSideValidator to the BadRequestException
             $e = new BadRequestException();
             foreach ($validator->errors() as $idx => $field) {
-                foreach($field as $eidx => $error) {
+                foreach ($field as $eidx => $error) {
                     $e->addUserMessage($error);
                 }
             }

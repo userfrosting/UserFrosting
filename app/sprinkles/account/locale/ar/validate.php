@@ -12,7 +12,7 @@
  */
 
 return [
-	"VALIDATE" => [
+    "VALIDATE" => [
         "PASSWORD_MISMATCH" => "يجب أن تكون كلمة المرور وكلمة المرور التأكيدية نفس"
     ]
 ];
