@@ -7,9 +7,12 @@
  */
 namespace UserFrosting\Sprinkle\Core\Util;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Slim\Http\Body;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Illuminate\Cache\CacheManager;
+use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
+use Slim\Views\Twig;
+
 
 /**
  * Performs pre-flight tests on your server environment to check that it meets the requirements.
@@ -19,7 +22,7 @@ use Slim\Http\Body;
 class CheckEnvironment
 {
     /**
-     * @var \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator Locator service for stream resources.
+     * @var UniformResourceLocator Locator service for stream resources.
      */
     protected $locator;
 
@@ -34,22 +37,23 @@ class CheckEnvironment
     protected $resultsSuccess = [];
 
     /**
-     * @var \Slim\Views\Twig The view object, needed for rendering error page.
+     * @var Twig The view object, needed for rendering error page.
      */
     protected $view;
 
     /**
-     * @var \Illuminate\Cache\CacheManager Cache service for cache access.
+     * @var CacheManager Cache service for cache access.
      */
     protected $cache;
 
     /**
      * Constructor.
      *
-     * @param $view \Slim\Views\Twig The view object, needed for rendering error page.
-     * @param $locator \RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator Locator service for stream resources.
+     * @param Twig $view The view object, needed for rendering error page.
+     * @param UniformResourceLocator $locator Locator service for stream resources.
+     * @param CacheManager $cache Cache manager
      */
-    public function __construct($view, $locator, $cache)
+    public function __construct(Twig $view, UniformResourceLocator $locator, $cache)
     {
         $this->view = $view;
         $this->locator = $locator;
@@ -59,13 +63,12 @@ class CheckEnvironment
     /**
      * Invoke the CheckEnvironment middleware, performing all pre-flight checks and returning an error page if problems were found.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
-     *
+     * @param  Request  $request  PSR7 request
+     * @param  Response $response PSR7 response
+     * @param  callable $next     Next middleware
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function __invoke($request, $response, $next)
+    public function __invoke(Request $request, Response $response, $next)
     {
         $problemsFound = false;
 

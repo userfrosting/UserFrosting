@@ -17,9 +17,9 @@ namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 interface MigrationLocatorInterface
 {
     /**
-     *    Loop all the available sprinkles and return a list of their migrations
+     * Loop all the available sprinkles and return a list of their migrations
      *
-     *    @return array A list of all the migration files found for every sprinkle
+     * @return array A list of all the migration files found for every sprinkle
      */
     public function getMigrations();
 }

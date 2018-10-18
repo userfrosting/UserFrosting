@@ -7,6 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Util;
 
+use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Sprinkle\Core\Util\Util as CoreUtil;
 
 /**
@@ -20,8 +21,13 @@ class Util
 {
     /**
      * Generate a random, unique username from a list of adjectives and nouns.
+     *
+     * @param  ClassMapper  $classMapper
+     * @param  int  $maxLength
+     * @param  int  $maxTries
+     * @return string
      */
-    static public function randomUniqueUsername($classMapper, $maxLength, $maxTries = 10)
+    public static function randomUniqueUsername(ClassMapper $classMapper, $maxLength, $maxTries = 10)
     {
         for ($n = 1; $n <= 3; $n++) {
             for ($m = 0; $m < 10; $m++) {
@@ -35,5 +41,4 @@ class Util
 
         return '';
     }
-
 }

@@ -19,8 +19,6 @@ class DatabaseTests extends TestCase
 
     /**
      * Setup our fake ci
-     *
-     * @return void
      */
     public function setUp()
     {

@@ -7,23 +7,11 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
-use Carbon\Carbon;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\NotFoundException;
-use UserFrosting\Fortress\RequestDataTransformer;
-use UserFrosting\Fortress\RequestSchema;
-use UserFrosting\Fortress\ServerSideValidator;
-use UserFrosting\Fortress\Adapter\JqueryValidationAdapter;
-use UserFrosting\Sprinkle\Account\Database\Models\Permission;
-use UserFrosting\Sprinkle\Account\Database\Models\Role;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
-use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Support\Exception\HttpException;
 
 /**
  * Controller class for permission-related requests, including listing permissions, CRUD for permissions, etc.
@@ -36,14 +24,20 @@ class PermissionController extends SimpleController
      * Returns info for a single permission.
      *
      * This page requires authentication.
+     *
      * Request type: GET
+     * @throws ForbiddenException If user is not authozied to access page
+     * @throws NotFoundException If permission is not found
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function getInfo($request, $response, $args)
+    public function getInfo(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -53,7 +47,7 @@ class PermissionController extends SimpleController
 
         $permissionId = $args['id'];
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
@@ -76,17 +70,22 @@ class PermissionController extends SimpleController
      *
      * Generates a list of permissions, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
+     *
      * Request type: GET
+     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function getList($request, $response, $args)
+    public function getList(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -94,7 +93,7 @@ class PermissionController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $sprunje = $classMapper->createInstance('permission_sprunje', $classMapper, $params);
@@ -109,17 +108,22 @@ class PermissionController extends SimpleController
      *
      * Generates a list of users, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
+     *
      * Request type: GET
+     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function getUsers($request, $response, $args)
+    public function getUsers(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -127,7 +131,7 @@ class PermissionController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $params['permission_id'] = $args['id'];
@@ -148,14 +152,20 @@ class PermissionController extends SimpleController
      * Note that permissions cannot be modified through the interface.  This is because
      * permissions are tighly coupled to the code and should only be modified by developers.
      * This page requires authentication.
+     *
      * Request type: GET
+     * @throws ForbiddenException If user is not authozied to access page
+     * @throws NotFoundException If permission is not found
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function pageInfo($request, $response, $args)
+    public function pageInfo(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -165,7 +175,7 @@ class PermissionController extends SimpleController
 
         $permissionId = $args['id'];
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $permission = $classMapper->staticMethod('permission', 'find', $permissionId);
@@ -186,14 +196,19 @@ class PermissionController extends SimpleController
      * This page renders a table of permissions, with dropdown menus for admin actions for each permission.
      * Actions typically include: edit permission, delete permission.
      * This page requires authentication.
+     *
      * Request type: GET
+     * @throws ForbiddenException If user is not authozied to access page
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function pageList($request, $response, $args)
+    public function pageList(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page

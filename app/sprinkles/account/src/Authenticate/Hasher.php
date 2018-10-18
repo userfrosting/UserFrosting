@@ -7,6 +7,8 @@
  */
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
+use UserFrosting\Sprinkle\Account\Util\HashFailedException;
+
 /**
  * Password hashing and validation class
  *
@@ -43,10 +45,10 @@ class Hasher
     /**
      * Hashes a plaintext password using bcrypt.
      *
+     * @throws HashFailedException
      * @param string $password the plaintext password.
      * @param array  $options
      * @return string the hashed password.
-     * @throws HashFailedException
      */
     public function hash($password, array $options = [])
     {
@@ -67,7 +69,7 @@ class Hasher
      * @param string $password The plaintext password to verify.
      * @param string $hash The hash to compare against.
      * @param array  $options
-     * @return boolean True if the password matches, false otherwise.
+     * @return bool  True if the password matches, false otherwise.
      */
     public function verify($password, $hash, array $options = [])
     {

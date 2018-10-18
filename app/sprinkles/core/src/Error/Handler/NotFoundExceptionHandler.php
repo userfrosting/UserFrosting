@@ -7,9 +7,8 @@
  */
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
+use Psr\Http\Message\ResponseInterface;
 use UserFrosting\Sprinkle\Core\Error\Handler\HttpExceptionHandler;
-use UserFrosting\Support\Exception\HttpException;
-use UserFrosting\Support\Message\UserMessage;
 
 /**
  * Handler for NotFoundExceptions.
@@ -21,7 +20,7 @@ class NotFoundExceptionHandler extends HttpExceptionHandler
     /**
      * Custom handling for NotFoundExceptions.  Always render a generic response!
      *
-     * @return Response
+     * @return ResponseInterface
      */
     public function handle()
     {

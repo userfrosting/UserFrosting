@@ -17,7 +17,7 @@ use UserFrosting\Sprinkle\Core\Log\DatabaseHandler;
 class UserActivityDatabaseHandler extends DatabaseHandler
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function write(array $record)
     {

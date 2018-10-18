@@ -19,14 +19,14 @@ use UserFrosting\Sprinkle\Core\Database\Seeder\SeedInterface;
 abstract class BaseSeed implements SeedInterface
 {
     /**
-     *    @var ContainerInterface $ci
+     * @var ContainerInterface $ci
      */
     protected $ci;
 
     /**
-     *    Constructor
+     * Constructor
      *
-     *    @param ContainerInterface $ci
+     * @param ContainerInterface $ci
      */
     public function __construct(ContainerInterface $ci)
     {
@@ -34,9 +34,7 @@ abstract class BaseSeed implements SeedInterface
     }
 
     /**
-     *    Function used to execute the seed
-     *
-     *    @return void
+     * Function used to execute the seed
      */
     abstract public function run();
 }

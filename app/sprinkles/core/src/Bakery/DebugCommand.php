@@ -9,8 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\DatabaseTest;
 
@@ -24,7 +22,7 @@ class DebugCommand extends BaseCommand
     use DatabaseTest;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -34,7 +32,7 @@ class DebugCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -63,8 +61,6 @@ class DebugCommand extends BaseCommand
     /**
      * Check the minimum version of php.
      * This is done by composer itself, but we do it again for good mesure
-     *
-     * @return void
      */
     protected function checkPhpVersion()
     {
@@ -77,8 +73,6 @@ class DebugCommand extends BaseCommand
 
     /**
      * Check the minimum version requirement of Node installed
-     *
-     * @return void
      */
     protected function checkNodeVersion()
     {
@@ -93,8 +87,6 @@ class DebugCommand extends BaseCommand
 
     /**
      * Check the minimum version requirement for Npm
-     *
-     * @return void
      */
     protected function checkNpmVersion()
     {
@@ -110,8 +102,6 @@ class DebugCommand extends BaseCommand
     /**
      * List all sprinkles defined in the Sprinkles schema file,
      * making sure this file exist at the same time
-     *
-     * @return void
      */
     protected function listSprinkles()
     {
@@ -137,8 +127,6 @@ class DebugCommand extends BaseCommand
     /**
      * Check the database connexion and setup the `.env` file if we can't
      * connect and there's no one found.
-     *
-     * @return void
      */
     protected function checkDatabase()
     {
@@ -157,8 +145,6 @@ class DebugCommand extends BaseCommand
 
     /**
      * Display database config as for debug purposes
-     *
-     * @return void
      */
     protected function showConfig()
     {

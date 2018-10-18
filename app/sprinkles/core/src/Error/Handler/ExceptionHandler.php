@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Core\Error\Handler;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use UserFrosting\Sprinkle\Core\Error\Renderer\HtmlRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\JsonRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\PlainTextRenderer;
 use UserFrosting\Sprinkle\Core\Error\Renderer\WhoopsRenderer;
@@ -43,12 +42,12 @@ class ExceptionHandler implements ExceptionHandlerInterface
     protected $response;
 
     /**
-     * @var Throwable
+     * @var \Throwable
      */
     protected $exception;
 
     /**
-     * @var ErrorRendererInterface
+     * @var \UserFrosting\Sprinkle\Core\Error\Renderer\ErrorRendererInterface
      */
     protected $renderer = null;
 
@@ -76,14 +75,14 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * @param ContainerInterface     $ci
      * @param ServerRequestInterface $request   The most recent Request object
      * @param ResponseInterface      $response  The most recent Response object
-     * @param Throwable              $exception The caught Exception object
+     * @param \Throwable             $exception The caught Exception object
      * @param bool                   $displayErrorDetails
      */
     public function __construct(
         ContainerInterface $ci,
         ServerRequestInterface $request,
         ResponseInterface $response,
-        $exception,
+        \Throwable $exception,
         $displayErrorDetails = false
     ) {
         $this->ci = $ci;
@@ -165,8 +164,6 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /**
      * Write to the error log
-     *
-     * @return void
      */
     public function writeToErrorLog()
     {
@@ -178,8 +175,6 @@ class ExceptionHandler implements ExceptionHandlerInterface
 
     /**
      * Write user-friendly error messages to the alert message stream.
-     *
-     * @return void
      */
     public function writeAlerts()
     {
@@ -194,9 +189,8 @@ class ExceptionHandler implements ExceptionHandlerInterface
      * Determine which renderer to use based on content type
      * Overloaded $renderer from calling class takes precedence over all
      *
-     * @return ErrorRendererInterface
-     *
      * @throws \RuntimeException
+     * @return \UserFrosting\Sprinkle\Core\Error\Renderer\ErrorRendererInterface
      */
     protected function determineRenderer()
     {
@@ -265,8 +259,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
     /**
      * Monolog logging for errors
      *
-     * @param $message
-     * @return void
+     * @param string $message
      */
     protected function logError($message)
     {

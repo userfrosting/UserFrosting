@@ -31,7 +31,7 @@ class RouteListCommand extends BaseCommand
     protected $headers = ['Method', 'URI', 'Name', 'Action'];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -45,7 +45,7 @@ class RouteListCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

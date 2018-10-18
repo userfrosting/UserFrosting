@@ -39,7 +39,7 @@ class StaticMailMessage extends MailMessage
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function renderBody($params = [])
     {
@@ -47,7 +47,7 @@ class StaticMailMessage extends MailMessage
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function renderSubject($params = [])
     {

@@ -7,7 +7,6 @@
  */
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -42,15 +41,22 @@ class Verification extends Model
     public $timestamps = true;
 
     /**
-     * Stores the raw (unhashed) token when created, so that it can be emailed out to the user.  NOT persisted.
+     * @var string Stores the raw (unhashed) token when created, so that it can be emailed out to the user.  NOT persisted.
      */
     protected $token;
 
+    /**
+     * @return string
+     */
     public function getToken()
     {
         return $this->token;
     }
 
+    /**
+     * @param string $value
+     * @return self
+     */
     public function setToken($value)
     {
         $this->token = $value;
@@ -59,10 +65,12 @@ class Verification extends Model
 
     /**
      * Get the user associated with this verification request.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsTo($classMapper->getClassMapping('user'), 'user_id');

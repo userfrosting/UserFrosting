@@ -7,7 +7,6 @@
  */
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -61,7 +60,7 @@ class Group extends Model
      */
     public function users()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->hasMany($classMapper->getClassMapping('user'), 'group_id');

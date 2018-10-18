@@ -40,7 +40,6 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
      *
      * @param  Capsule  $db
      * @param  string  $table
-     * @return void
      */
     public function __construct(Capsule $db, $table = "migrations")
     {
@@ -108,7 +107,6 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
      * @param  string  $file
      * @param  int     $batch
      * @param  string  $sprinkle
-     * @return void
      */
     public function log($file, $batch, $sprinkle = "")
     {
@@ -121,7 +119,6 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
      * Remove a migration from the log.
      *
      * @param  string  $migration
-     * @return void
      */
     public function delete($migration)
     {
@@ -150,8 +147,6 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
 
     /**
      * Create the migration repository data store.
-     *
-     * @return void
      */
     public function createRepository()
     {
@@ -167,9 +162,7 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
-     *    Delete the migration repository data store
-     *
-     *    @return void
+     * Delete the migration repository data store
      */
     public function deleteRepository()
     {
@@ -217,9 +210,9 @@ class DatabaseMigrationRepository implements MigrationRepositoryInterface
     }
 
     /**
-     *    Set the information source to gather data.
+     * Set the information source to gather data.
      *
-     *    @param string $name The source name
+     * @param string $name The source name
      */
     public function setSource($name)
     {

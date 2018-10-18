@@ -8,8 +8,7 @@
 namespace UserFrosting\Sprinkle\Account\Twig;
 
 use Interop\Container\ContainerInterface;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
-use Slim\Http\Uri;
+use UserFrosting\Support\Repository\Repository as Config;
 
 /**
  * Extends Twig functionality for the Account sprinkle.
@@ -18,10 +17,19 @@ use Slim\Http\Uri;
  */
 class AccountExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
-
+    /**
+     * @var ContainerInterface
+     */
     protected $services;
+
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @param ContainerInterface $services
+     */
     public function __construct(ContainerInterface $services)
     {
         $this->services = $services;

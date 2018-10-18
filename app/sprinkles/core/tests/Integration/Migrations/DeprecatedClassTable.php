@@ -9,8 +9,6 @@ class DeprecatedClassTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -23,8 +21,6 @@ class DeprecatedClassTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
@@ -33,8 +29,6 @@ class DeprecatedClassTable extends Migration
 
     /**
      * Seed the database.
-     *
-     * @return void
      */
     public function seed()
     {

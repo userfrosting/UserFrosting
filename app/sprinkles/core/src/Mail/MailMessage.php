@@ -44,6 +44,7 @@ abstract class MailMessage
     /**
      * Gets the fully rendered text of the message body.
      *
+     * @param array $params
      * @return string
      */
     abstract public function renderBody($params = []);
@@ -51,6 +52,7 @@ abstract class MailMessage
     /**
      * Gets the fully rendered text of the message subject.
      *
+     * @param array $params
      * @return string
      */
     abstract public function renderSubject($params = []);

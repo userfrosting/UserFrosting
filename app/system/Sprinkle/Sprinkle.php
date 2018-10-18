@@ -9,7 +9,6 @@ namespace UserFrosting\System\Sprinkle;
 
 use Interop\Container\ContainerInterface;
 use RocketTheme\Toolbox\Event\EventSubscriberInterface;
-use Slim\App;
 
 /**
  * Sprinkle class

@@ -9,7 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\System\Bakery\ConfirmableTrait;
@@ -25,7 +24,7 @@ class MigrateCommand extends BaseCommand
     use ConfirmableTrait;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -39,7 +38,7 @@ class MigrateCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -74,10 +73,10 @@ class MigrateCommand extends BaseCommand
     }
 
     /**
-     *    Setup migrator and the shared options between other command
+     * Setup migrator and the shared options between other command
      *
-     *    @param  InputInterface $input
-     *    @return \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator The migrator instance
+     * @param  InputInterface $input
+     * @return \UserFrosting\Sprinkle\Core\Database\Migrator\Migrator The migrator instance
      */
     protected function setupMigrator(InputInterface $input)
     {

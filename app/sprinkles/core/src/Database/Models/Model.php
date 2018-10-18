@@ -7,8 +7,10 @@
  */
 namespace UserFrosting\Sprinkle\Core\Database\Models;
 
+use Interop\Container\ContainerInterface;
 use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
+use UserFrosting\Sprinkle\Core\Database\Builder ;
 use UserFrosting\Sprinkle\Core\Database\Models\Concerns\HasRelationships;
 
 /**
@@ -97,12 +99,12 @@ abstract class Model extends LaravelModel
     /**
      * Overrides Laravel's base Model to return our custom Eloquent builder object.
      *
-     * @param  \UserFrosting\Sprinkles\Core\Database\Builder  $query
-     * @return \UserFrosting\Sprinkles\Core\Database\EloquentBuilder
+     * @param  Builder  $query
+     * @return \UserFrosting\Sprinkle\Core\Database\EloquentBuilder
      */
     public function newEloquentBuilder($query)
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $classMapper->createInstance(
@@ -114,11 +116,11 @@ abstract class Model extends LaravelModel
     /**
      * Overrides Laravel's base Model to return our custom query builder object.
      *
-     * @return \UserFrosting\Sprinkles\Core\Database\Builder
+     * @return Builder
      */
     protected function newBaseQueryBuilder()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         $connection = $this->getConnection();
@@ -147,6 +149,7 @@ abstract class Model extends LaravelModel
      *
      * @deprecated since 4.1.8 setFetchMode is no longer available as of Laravel 5.4.
      * @link https://github.com/laravel/framework/issues/17728
+     * @return Builder
      */
     public static function queryBuilder()
     {

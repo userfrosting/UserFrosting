@@ -8,8 +8,6 @@ class RouterTest extends TestCase
 {
     /**
      * Test router integration in Tests
-     *
-     * @return void
      */
     public function testBasicTest()
     {

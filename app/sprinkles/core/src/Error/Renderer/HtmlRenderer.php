@@ -57,10 +57,10 @@ class HtmlRenderer extends ErrorRenderer
     /**
      * Render a summary of the exception.
      *
-     * @param Exception $exception
+     * @param \Exception $exception
      * @return string
      */
-    public function renderException($exception)
+    public function renderException(\Exception $exception)
     {
         $html = sprintf('<div><strong>Type:</strong> %s</div>', get_class($exception));
 
@@ -134,7 +134,6 @@ class HtmlRenderer extends ErrorRenderer
      * Render HTML representation of a table of data.
      *
      * @param mixed[] $data the array of data to render.
-     *
      * @return string
      */
     protected function renderTable($data)

@@ -7,8 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -38,7 +37,7 @@ class PermissionSprunje extends Sprunje
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
@@ -50,9 +49,9 @@ class PermissionSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
-    protected function filterInfo($query, $value)
+    protected function filterInfo(Builder $query, $value)
     {
         return $this->filterProperties($query, $value);
     }
@@ -62,9 +61,9 @@ class PermissionSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
-    protected function filterProperties($query, $value)
+    protected function filterProperties(Builder $query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
@@ -83,9 +82,9 @@ class PermissionSprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return $this
+     * @return self
      */
-    protected function sortProperties($query, $direction)
+    protected function sortProperties(Builder $query, $direction)
     {
         $query->orderBy('slug', $direction);
         return $this;

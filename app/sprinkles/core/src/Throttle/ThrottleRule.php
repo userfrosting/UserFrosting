@@ -7,6 +7,8 @@
  */
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
+use Carbon\Carbon;
+
 /**
  * ThrottleRule Class
  *
@@ -45,10 +47,10 @@ class ThrottleRule
     /**
      * Get the current delay on this rule for a particular number of event counts.
      *
-     * @param Carbon\Carbon $lastEventTime The timestamp for the last countable event.
+     * @param Carbon $lastEventTime The timestamp for the last countable event.
      * @param int $count The total number of events which have occurred in an interval.
      */
-    public function getDelay($lastEventTime, $count)
+    public function getDelay(Carbon $lastEventTime, $count)
     {
         // Zero occurrences always maps to a delay of 0 seconds.
         if ($count == 0) {
@@ -103,7 +105,7 @@ class ThrottleRule
     /**
      * Sets the current mapping of attempts (int) to delays (seconds).
      *
-     * @param int[] A mapping of minimum observation counts (x) to delays (y), in seconds.
+     * @param int[] $delays A mapping of minimum observation counts (x) to delays (y), in seconds.
      */
     public function setDelays($delays)
     {
@@ -117,7 +119,7 @@ class ThrottleRule
     /**
      * Sets the current throttling interval (seconds).
      *
-     * @param int The amount of time, in seconds, to look back in determining attempts to consider.
+     * @param int $interval The amount of time, in seconds, to look back in determining attempts to consider.
      */
     public function setInterval($interval)
     {
@@ -129,7 +131,7 @@ class ThrottleRule
     /**
      * Sets the current throttling method ('ip' or 'data').
      *
-     * @param string Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling.
+     * @param string $method Set to 'ip' for ip-based throttling, 'data' for request-data-based throttling.
      */
     public function setMethod($method)
     {

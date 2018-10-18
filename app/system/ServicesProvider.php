@@ -38,7 +38,7 @@ class ServicesProvider
 
         /**
          * Path/file locator service.
-         * 
+         *
          * Register custom streams for the application, and add paths for app-level streams.
          *
          * @return \UserFrosting\UniformResourceLocator\ResourceLocator

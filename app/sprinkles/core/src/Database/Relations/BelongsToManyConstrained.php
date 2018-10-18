@@ -18,12 +18,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *
  * @deprecated since 4.1.6
  * @author Alex Weissman (https://alexanderweissman.com)
- * @link https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
+ * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
  */
 class BelongsToManyConstrained extends BelongsToMany
 {
     /**
-     * @var The pivot foreign key on which to constrain the result sets for this relation.
+     * @var string The pivot foreign key on which to constrain the result sets for this relation.
      */
     protected $constraintKey;
 
@@ -37,7 +37,6 @@ class BelongsToManyConstrained extends BelongsToMany
      * @param  string  $foreignKey
      * @param  string  $relatedKey
      * @param  string  $relationName
-     * @return void
      */
     public function __construct(Builder $query, Model $parent, $constraintKey, $table, $foreignKey, $relatedKey, $relationName = null)
     {
@@ -49,12 +48,11 @@ class BelongsToManyConstrained extends BelongsToMany
      * Set the constraints for an eager load of the relation.
      *
      * @param  array  $models
-     * @return void
      */
     public function addEagerConstraints(array $models)
     {
         // To make the query more efficient, we only bother querying related models if their pivot key value
-        // matches the pivot key value of one of the parent models. 
+        // matches the pivot key value of one of the parent models.
         $pivotKeys = $this->getPivotKeys($models, $this->constraintKey);
         $this->query->whereIn($this->getQualifiedForeignKeyName(), $this->getKeys($models))
             ->whereIn($this->constraintKey, $pivotKeys);
@@ -62,6 +60,10 @@ class BelongsToManyConstrained extends BelongsToMany
 
     /**
      * Gets a list of unique pivot key values from an array of models.
+     *
+     * @param array $models
+     * @param string $pivotKey
+     * @return array
      */
     protected function getPivotKeys(array $models, $pivotKey)
     {
@@ -76,7 +78,7 @@ class BelongsToManyConstrained extends BelongsToMany
      * Match the eagerly loaded results to their parents, constraining the results by matching the values of $constraintKey
      * in the parent object to the child objects.
      *
-     * @link Called in https://github.com/laravel/framework/blob/2f4135d8db5ded851d1f4f611124c53b768a3c08/src/Illuminate/Database/Eloquent/Builder.php
+     * @see Called in https://github.com/laravel/framework/blob/2f4135d8db5ded851d1f4f611124c53b768a3c08/src/Illuminate/Database/Eloquent/Builder.php
      * @param  array   $models
      * @param  \Illuminate\Database\Eloquent\Collection  $results
      * @param  string  $relation
@@ -106,6 +108,7 @@ class BelongsToManyConstrained extends BelongsToMany
     /**
      * Filter an array of models, only taking models whose $constraintKey value matches $pivotValue.
      *
+     * @param array $items
      * @param mixed $pivotValue
      * @return array
      */

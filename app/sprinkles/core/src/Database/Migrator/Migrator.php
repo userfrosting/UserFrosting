@@ -125,7 +125,6 @@ class Migrator
      *
      * @param  array $migrations An array of migrations classes names to be run (unsorted, unvalidated)
      * @param  array $options The options for the current operation [step, pretend]
-     * @return void
      */
     protected function runPending(array $migrations, array $options = [])
     {
@@ -158,7 +157,6 @@ class Migrator
      * @param  string $migrationClass The migration class name
      * @param  int $batch The current bacth number
      * @param  bool $pretend If this operation should be pretended / faked
-     * @return void
      */
     protected function runUp($migrationClass, $batch, $pretend)
     {
@@ -352,7 +350,6 @@ class Migrator
      *
      * @param  string $migrationClass The migration class name
      * @param  bool $pretend Is the operation should be pretended
-     * @return void
      */
     protected function runDown($migrationClass, $pretend)
     {
@@ -380,7 +377,6 @@ class Migrator
      *
      * @param  object $migration The migration instance
      * @param  string $method The method used [up, down]
-     * @return void
      */
     protected function runMigration($migration, $method)
     {
@@ -403,7 +399,6 @@ class Migrator
      *
      * @param  object $migration The migration instance
      * @param  string $method The method used [up, down]
-     * @return void
      */
     protected function pretendToRun($migration, $method)
     {
@@ -553,7 +548,6 @@ class Migrator
      * Raise a note event for the migrator.
      *
      * @param  string  $message The message
-     * @return void
      */
     protected function note($message)
     {

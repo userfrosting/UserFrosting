@@ -24,7 +24,7 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 class PermissionsTable extends Migration
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     static public $dependencies = [
         '\UserFrosting\Sprinkle\Account\Database\Migrations\v400\RolesTable',
@@ -32,7 +32,7 @@ class PermissionsTable extends Migration
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function up()
     {
@@ -245,7 +245,7 @@ class PermissionsTable extends Migration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function down()
     {

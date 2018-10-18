@@ -20,7 +20,7 @@ class AuthCompromisedExceptionHandler extends HttpExceptionHandler
     /**
      * Render a generic, user-friendly response without sensitive debugging information.
      *
-     * @return ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface
      */
     public function renderGenericResponse()
     {

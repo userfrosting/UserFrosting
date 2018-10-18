@@ -7,6 +7,8 @@
  */
 namespace UserFrosting\Sprinkle\Core\Mail;
 
+use Slim\Views\Twig;
+
 /**
  * MailMessage Class
  *
@@ -22,7 +24,7 @@ class TwigMailMessage extends MailMessage
     protected $params;
 
     /**
-     * @var Twig_Template The Twig template object, to source the content for this message.
+     * @var \Twig_Template The Twig template object, to source the content for this message.
      */
     protected $template;
 
@@ -34,10 +36,10 @@ class TwigMailMessage extends MailMessage
     /**
      * Create a new TwigMailMessage instance.
      *
-     * @param Slim\Views\Twig $view The Twig view object used to render mail templates.
+     * @param Twig $view The Twig view object used to render mail templates.
      * @param string $filename optional Set the Twig template to use for this message.
      */
-    public function __construct($view, $filename = null)
+    public function __construct(Twig $view, $filename = null)
     {
         $this->view = $view;
 
@@ -63,7 +65,7 @@ class TwigMailMessage extends MailMessage
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function renderSubject($params = [])
     {
@@ -72,7 +74,7 @@ class TwigMailMessage extends MailMessage
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function renderBody($params = [])
     {
@@ -83,9 +85,9 @@ class TwigMailMessage extends MailMessage
     /**
      * Sets the Twig template object for this message.
      *
-     * @param Twig_Template $template The Twig template object, to source the content for this message.
+     * @param \Twig_Template $template The Twig template object, to source the content for this message.
      */
-    public function setTemplate($template)
+    public function setTemplate(\Twig_Template $template)
     {
         $this->template = $template;
         return $this;

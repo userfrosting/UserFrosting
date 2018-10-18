@@ -7,8 +7,6 @@
  */
 namespace UserFrosting\System\Bakery;
 
-use Closure;
-
 /**
  * Confirmable Trait. Include method used to confirm action
  *
@@ -20,6 +18,7 @@ trait ConfirmableTrait
      * Confirm before proceeding with the action.
      * This method only asks for confirmation in production.
      *
+     * @param  bool $force
      * @param  string  $warning
      * @param  \Closure|bool|null  $callback
      * @return bool
@@ -30,7 +29,7 @@ trait ConfirmableTrait
         $callback = is_null($callback) ? $this->getDefaultConfirmCallback() : $callback;
 
         // Process callback to determine if we should ask for confirmation
-        $shouldConfirm = $callback instanceof Closure ? call_user_func($callback) : $callback;
+        $shouldConfirm = $callback instanceof \Closure ? call_user_func($callback) : $callback;
 
         if ($shouldConfirm & !$force) {
 

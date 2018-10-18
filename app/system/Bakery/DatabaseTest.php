@@ -16,11 +16,9 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  */
 trait DatabaseTest
 {
-
     /**
      * Function to test the db connexion.
      *
-     * @access protected
      * @return bool True if success
      */
     protected function testDB()

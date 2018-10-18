@@ -18,12 +18,12 @@ use UserFrosting\Sprinkle\Account\Facades\Password;
 class PasswordResetRepository extends TokenRepository
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $modelIdentifier = 'password_reset';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function updateUser($user, $args)
     {

@@ -53,7 +53,7 @@ class Registration
     protected $defaultRoles = [];
 
     /**
-     *    @var array $requiredProperties The minimum info required to register a new user
+     * @var array $requiredProperties The minimum info required to register a new user
      */
     protected $requiredProperties = [
         'user_name',
@@ -78,9 +78,9 @@ class Registration
     }
 
     /**
-     *    Register a new user
+     * Register a new user
      *
-     *    @return \UserFrosting\Sprinkle\Account\Database\Models\User The created user
+     * @return \UserFrosting\Sprinkle\Account\Database\Models\User The created user
      */
     public function register()
     {
@@ -203,11 +203,9 @@ class Registration
 
     /**
      * Hash the user password in the userdata array
-     * @return void
      */
     protected function hashPassword()
     {
-        // Hash password
         $this->userdata['password'] = Password::hash($this->userdata['password']);
     }
 
@@ -226,7 +224,6 @@ class Registration
      * Send verification email for specified user
      *
      * @param  User $user The user to send the email for
-     * @return void
      */
     protected function sendVerificationEmail(User $user)
     {

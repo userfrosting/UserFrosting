@@ -44,8 +44,6 @@ class ShutdownHandler
 
     /**
      * Register this class with the shutdown handler.
-     *
-     * @return void
      */
     public function register()
     {
@@ -146,7 +144,7 @@ class ShutdownHandler
     /**
      * Build an HTML error page from an error string.
      *
-     * @param string $errorMessage
+     * @param string $message
      * @return string
      */
     protected function buildHtmlErrorPage($message)

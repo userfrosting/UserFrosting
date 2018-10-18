@@ -49,8 +49,6 @@ class TestCase extends BaseTestCase
 
     /**
      * Setup the test environment.
-     *
-     * @return void
      */
     protected function setUp()
     {
@@ -70,8 +68,7 @@ class TestCase extends BaseTestCase
     /**
      * Boot the testing helper traits.
      *
-     * @deprecated 
-     * @return void
+     * @deprecated
      */
     protected function setUpTraits()
     {
@@ -85,8 +82,6 @@ class TestCase extends BaseTestCase
 
     /**
      * Refresh the application instance.
-     *
-     * @return void
      */
     protected function refreshApplication()
     {
@@ -105,8 +100,6 @@ class TestCase extends BaseTestCase
 
     /**
      * Clean up the testing environment before the next test.
-     *
-     * @return void
      */
     protected function tearDown()
     {
@@ -128,7 +121,6 @@ class TestCase extends BaseTestCase
      * Register a callback to be run after the application is created.
      *
      * @param  callable  $callback
-     * @return void
      */
     public function afterApplicationCreated(callable $callback)
     {
@@ -147,7 +139,6 @@ class TestCase extends BaseTestCase
      * @param  string $key [description]
      * @param  string $message [description]
      * @throws \PHPUnit_Framework_AssertionFailedError
-     * @return void
      */
     public static function assertCollectionsSame($expected, $actual, $key = 'id', $message = '')
     {
@@ -178,7 +169,6 @@ class TestCase extends BaseTestCase
      * Register a callback to be run before the application is destroyed.
      *
      * @param  callable  $callback
-     * @return void
      */
     protected function beforeApplicationDestroyed(callable $callback)
     {
@@ -204,7 +194,6 @@ class TestCase extends BaseTestCase
      * Remove all relations on a collection of models.
      *
      * @param  array $models
-     * @return void
      */
     protected static function ignoreRelations($models)
     {

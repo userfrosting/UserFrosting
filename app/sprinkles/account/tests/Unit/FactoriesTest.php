@@ -35,7 +35,6 @@ class FactoriesTest extends TestCase
 
     /**
      *    Test the user factory
-     *    @return void 
      */
     function testUserFactory()
     {

@@ -8,7 +8,7 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 class CreateFlightsTable extends Migration
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static $dependencies = [
         '\UserFrosting\Tests\Integration\Migrations\one\CreateUsersTable',
@@ -17,8 +17,6 @@ class CreateFlightsTable extends Migration
 
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -30,8 +28,6 @@ class CreateFlightsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

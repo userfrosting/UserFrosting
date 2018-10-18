@@ -29,7 +29,7 @@ class SetupDbCommand extends BaseCommand
     protected $envPath = \UserFrosting\APP_DIR. '/.env';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -46,7 +46,7 @@ class SetupDbCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

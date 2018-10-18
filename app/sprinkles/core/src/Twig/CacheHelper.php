@@ -36,7 +36,6 @@ class CacheHelper
     /**
      * Function that delete the Twig cache directory content
      *
-     * @access public
      * @return bool true/false if operation is successfull
      */
     public function clearCache()
@@ -45,7 +44,7 @@ class CacheHelper
         $path = $this->ci->locator->findResource('cache://twig', true, true);
 
         // Get Filesystem instance
-        $fs = new FileSystem;
+        $fs = new Filesystem;
 
         // Make sure directory exist and delete it
         if ($fs->exists($path)) {

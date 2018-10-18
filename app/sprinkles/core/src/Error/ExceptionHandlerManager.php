@@ -10,7 +10,6 @@ namespace UserFrosting\Sprinkle\Core\Error;
 use Interop\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use UserFrosting\Sprinkle\Core\Handler\ExceptionHandlerInterface;
 
 /**
  * Default UserFrosting application error handler
@@ -39,7 +38,7 @@ class ExceptionHandlerManager
      * Constructor
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
-     * @param boolean $displayErrorDetails Set to true to display full details
+     * @param bool $displayErrorDetails Set to true to display full details
      */
     public function __construct(ContainerInterface $ci, $displayErrorDetails = false)
     {
@@ -52,11 +51,10 @@ class ExceptionHandlerManager
      *
      * @param ServerRequestInterface $request   The most recent Request object
      * @param ResponseInterface      $response  The most recent Response object
-     * @param Throwable              $exception The caught Exception object
-     *
+     * @param \Throwable             $exception The caught Exception object
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $exception)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Throwable $exception)
     {
         // Default exception handler class
         $handlerClass = '\UserFrosting\Sprinkle\Core\Error\Handler\ExceptionHandler';
@@ -80,7 +78,7 @@ class ExceptionHandlerManager
      *
      * @param string $exceptionClass The fully qualified class name of the exception to handle.
      * @param string $handlerClass The fully qualified class name of the assigned handler.
-     * @throws InvalidArgumentException If the registered handler fails to implement ExceptionHandlerInterface
+     * @throws \InvalidArgumentException If the registered handler fails to implement ExceptionHandlerInterface
      */
     public function registerHandler($exceptionClass, $handlerClass)
     {

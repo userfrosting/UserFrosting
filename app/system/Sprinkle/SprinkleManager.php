@@ -73,6 +73,7 @@ class SprinkleManager
      * Creates an object of a subclass of UserFrosting\System\Sprinkle\Sprinkle if defined for the sprinkle (converting to StudlyCase).
      * Otherwise, returns null.
      * @param string $name The name of the Sprinkle to initialize.
+     * @return mixed Sprinkle class instance or null if no such class exist
      */
     public function bootSprinkle($name)
     {
@@ -112,7 +113,7 @@ class SprinkleManager
      * Initialize a list of Sprinkles, instantiating their boot classes (if they exist),
      * and subscribing them to the event dispatcher.
      *
-     * @param string[] $baseSprinkleNames
+     * @param string[] $sprinkleNames
      */
     public function init($sprinkleNames)
     {
@@ -143,7 +144,8 @@ class SprinkleManager
      * Return if a Sprinkle is available
      * Can be used by other Sprinkles to test if their dependencies are met
      *
-     * @param $name The name of the Sprinkle
+     * @param string $name The name of the Sprinkle
+     * @return bool
      */
     public function isAvailable($name)
     {
@@ -163,6 +165,8 @@ class SprinkleManager
 
     /**
      * Register services for a specified Sprinkle.
+     *
+     * @param string $name
      */
     public function registerServices($name)
     {

@@ -10,6 +10,7 @@ namespace UserFrosting\Sprinkle\Account\Authenticate;
 use Birke\Rememberme\Authenticator as RememberMe;
 use Birke\Rememberme\Storage\PDOStorage as RememberMePDO;
 use Birke\Rememberme\Triplet as RememberMeTriplet;
+use Illuminate\Cache\Repository as Cache;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Session\Session;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountDisabledException;
@@ -21,6 +22,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsExcep
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
+use UserFrosting\Support\Repository\Repository as Config;
 
 /**
  * Handles authentication tasks.
@@ -83,9 +85,9 @@ class Authenticator
      * @param ClassMapper $classMapper Maps generic class identifiers to specific class names.
      * @param Session $session The session wrapper object that will store the user's id.
      * @param Config $config Config object that contains authentication settings.
-     * @param mixed $cache Cache service instance
+     * @param Cache $cache Cache service instance
      */
-    public function __construct(ClassMapper $classMapper, Session $session, $config, $cache)
+    public function __construct(ClassMapper $classMapper, Session $session, Config $config, Cache $cache)
     {
         $this->classMapper = $classMapper;
         $this->session = $session;
@@ -123,6 +125,15 @@ class Authenticator
      * Attempts to authenticate a user based on a supplied identity and password.
      *
      * If successful, the user's id is stored in session.
+     *
+     * @throws InvalidCredentialsException
+     * @throws AccountDisabledException
+     * @throws AccountNotVerifiedException
+     * @param  string  $identityColumn
+     * @param  string  $identityValue
+     * @param  string  $password
+     * @param  bool    $rememberMe
+     * @return User
      */
     public function attempt($identityColumn, $identityValue, $password, $rememberMe = false)
     {
@@ -311,8 +322,8 @@ class Authenticator
     /**
      * Attempt to log in the client from their rememberMe token (in their cookie).
      *
-     * @return User|bool If successful, the User object of the remembered user.  Otherwise, return false.
      * @throws AuthCompromisedException The client attempted to log in with an invalid rememberMe token.
+     * @return User|bool If successful, the User object of the remembered user.  Otherwise, return false.
      */
     protected function loginRememberedUser()
     {
@@ -338,8 +349,8 @@ class Authenticator
     /**
      * Attempt to log in the client from the session.
      *
-     * @return User|null If successful, the User object of the user in session.  Otherwise, return null.
      * @throws AuthExpiredException The client attempted to use an expired rememberMe token.
+     * @return User|null If successful, the User object of the user in session.  Otherwise, return null.
      */
     protected function loginSessionUser()
     {
@@ -407,10 +418,10 @@ class Authenticator
     }
 
     /**
-     *    Flush the cache associated with a session id
+     * Flush the cache associated with a session id
      *
-     *    @param  string $id The session id
-     *    @return bool
+     * @param  string $id The session id
+     * @return bool
      */
     public function flushSessionCache($id)
     {

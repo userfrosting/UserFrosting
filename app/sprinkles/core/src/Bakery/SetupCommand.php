@@ -20,7 +20,7 @@ use UserFrosting\System\Bakery\BaseCommand;
 class SetupCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -30,7 +30,7 @@ class SetupCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

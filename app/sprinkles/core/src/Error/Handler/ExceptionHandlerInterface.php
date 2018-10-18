@@ -18,15 +18,37 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface ExceptionHandlerInterface
 {
-    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false);
+    /**
+     * @param ContainerInterface     $ci
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     * @param \Exception             $exception
+     * @param bool                   $displayErrorDetails
+     */
+    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, \Exception $exception, $displayErrorDetails = false);
 
+    /**
+     * @return ResponseInterface
+     */
     public function handle();
 
+    /**
+     * @return ResponseInterface
+     */
     public function renderDebugResponse();
 
+    /**
+     * @return ResponseInterface
+     */
     public function renderGenericResponse();
 
+    /**
+     * Write to the error log
+     */
     public function writeToErrorLog();
 
+    /**
+     * Write user-friendly error messages to the alert message stream.
+     */
     public function writeAlerts();
 }

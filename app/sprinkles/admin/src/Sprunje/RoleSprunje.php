@@ -7,8 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -38,7 +37,7 @@ class RoleSprunje extends Sprunje
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
@@ -50,9 +49,9 @@ class RoleSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
-    protected function filterInfo($query, $value)
+    protected function filterInfo(Builder $query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);

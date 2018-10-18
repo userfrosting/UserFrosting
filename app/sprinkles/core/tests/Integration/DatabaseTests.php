@@ -9,12 +9,13 @@ use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 class DatabaseTests extends TestCase
 {
+    /**
+     * @var string
+     */
     protected $schemaName = 'test_integration';
 
     /**
      * Setup the database schema.
-     *
-     * @return void
      */
     public function setUp()
     {
@@ -27,6 +28,9 @@ class DatabaseTests extends TestCase
         $this->createSchema();
     }
 
+    /**
+     * createSchema
+     */
     protected function createSchema()
     {
         $this->schema($this->schemaName)->create('users', function (Blueprint $table) {
@@ -99,8 +103,6 @@ class DatabaseTests extends TestCase
 
     /**
      * Tear down the database schema.
-     *
-     * @return void
      */
     public function tearDown()
     {
@@ -240,6 +242,9 @@ class DatabaseTests extends TestCase
         ], $phones);
     }
 
+    /**
+     * testBelongsToManyUnique
+     */
     public function testBelongsToManyUnique()
     {
         $user = EloquentTestUser::create(['name' => 'David']);
@@ -275,6 +280,9 @@ class DatabaseTests extends TestCase
         $this->assertEquals($expectedRoles, $users->toArray()[0]['job_roles']);
     }
 
+    /**
+     * testMorphsToManyUnique
+     */
     public function testMorphsToManyUnique()
     {
         $user = EloquentTestUser::create(['name' => 'David']);
@@ -311,6 +319,9 @@ class DatabaseTests extends TestCase
         $this->assertEquals($expectedTasks, $users->toArray()[0]['assignment_tasks']);
     }
 
+    /**
+     * testMorphsToManyUniqueWithTertiary
+     */
     public function testMorphsToManyUniqueWithTertiary()
     {
         $user = EloquentTestUser::create(['name' => 'David']);
@@ -375,6 +386,9 @@ class DatabaseTests extends TestCase
         $this->assertEquals($expectedTasks, $users->toArray()[0]['tasks']);
     }
 
+    /**
+     * testBelongsToManyUniqueWithTertiary
+     */
     public function testBelongsToManyUniqueWithTertiary()
     {
         $user = EloquentTestUser::create(['name' => 'David']);
@@ -444,6 +458,9 @@ class DatabaseTests extends TestCase
         $this->assertEquals($expectedJobs, $users->toArray()[0]['jobs']);
     }
 
+    /**
+     * testBelongsToManyUniqueWithTertiaryEagerLoad
+     */
     public function testBelongsToManyUniqueWithTertiaryEagerLoad()
     {
         $user1 = EloquentTestUser::create(['name' => 'David']);
@@ -715,6 +732,9 @@ class DatabaseTests extends TestCase
         $this->assertBelongsToManyThroughForAlex($usersWithPermissions[1]['permissions']);
     }
 
+    /**
+     * testQueryExclude
+     */
     public function testQueryExclude()
     {
         $this->generateRoles();
@@ -727,7 +747,9 @@ class DatabaseTests extends TestCase
         ], $job->toArray());
     }
 
-
+    /**
+     * testQueryExcludeOnJoinedTable
+     */
     public function testQueryExcludeOnJoinedTable()
     {
         $this->generateRolesWithPermissions();
@@ -771,6 +793,9 @@ class DatabaseTests extends TestCase
         ], $users->toArray());
     }
 
+    /**
+     * testQueryExcludeUseQualifiedNamesOnJoinedTable
+     */
     public function testQueryExcludeUseQualifiedNamesOnJoinedTable()
     {
         $this->generateRolesWithPermissions();
@@ -810,6 +835,9 @@ class DatabaseTests extends TestCase
         ], $users->toArray());
     }
 
+    /**
+     * testQueryExcludeWildcard
+     */
     public function testQueryExcludeWildcard()
     {
         $this->generateRoles();
@@ -859,6 +887,9 @@ class DatabaseTests extends TestCase
         return $this->connection($connection)->getSchemaBuilder();
     }
 
+    /**
+     * generateRoles
+     */
     protected function generateRoles()
     {
         return [
@@ -879,6 +910,9 @@ class DatabaseTests extends TestCase
         ];
     }
 
+    /**
+     * generatePermissions
+     */
     protected function generatePermissions()
     {
         return [
@@ -904,6 +938,9 @@ class DatabaseTests extends TestCase
         ];
     }
 
+    /**
+     * generateRolesWithPermissions
+     */
     protected function generateRolesWithPermissions()
     {
         $roles = $this->generateRoles();
@@ -918,6 +955,9 @@ class DatabaseTests extends TestCase
         return $roles;
     }
 
+    /**
+     * generateJobs
+     */
     protected function generateJobs()
     {
 
@@ -960,6 +1000,9 @@ class DatabaseTests extends TestCase
         ];
     }
 
+    /**
+     * generateLocations
+     */
     protected function generateLocations()
     {
         return [
@@ -975,6 +1018,9 @@ class DatabaseTests extends TestCase
         ];
     }
 
+    /**
+     * generateTasks
+     */
     protected function generateTasks()
     {
         return [
@@ -995,6 +1041,9 @@ class DatabaseTests extends TestCase
         ];
     }
 
+    /**
+     * generateAssignments
+     */
     protected function generateAssignments()
     {
         return [
@@ -1031,6 +1080,10 @@ class DatabaseTests extends TestCase
         ];
     }
 
+    /**
+     * assertBelongsToManyThroughForDavid
+     * @param  array $permissions
+     */
     protected function assertBelongsToManyThroughForDavid($permissions)
     {
         // User should have effective permissions uri_harvest, uri_spit_acid, and uri_slash.
@@ -1078,6 +1131,10 @@ class DatabaseTests extends TestCase
         ], $permissions[2]['roles_via']);
     }
 
+    /**
+     * assertBelongsToManyThroughForAlex
+     * @param  array $permissions
+     */
     protected function assertBelongsToManyThroughForAlex($permissions)
     {
         // User should have effective permissions uri_spit_acid, uri_slash, and uri_royal_jelly.
@@ -1139,11 +1196,17 @@ class EloquentTestUser extends EloquentTestModel
     protected $table = 'users';
     protected $guarded = [];
 
+    /**
+     *
+     */
     public function emails()
     {
         return $this->hasMany('UserFrosting\Tests\Integration\EloquentTestEmail', 'user_id');
     }
 
+    /**
+     *
+     */
     public function phones()
     {
         return $this->morphMany('UserFrosting\Tests\Integration\EloquentTestPhone', 'phoneable');
@@ -1246,6 +1309,9 @@ class EloquentTestEmail extends EloquentTestModel
     protected $table = 'emails';
     protected $guarded = [];
 
+    /**
+     *
+     */
     public function user()
     {
         return $this->belongsTo('UserFrosting\Tests\Integration\EloquentTestUser', 'user_id');
@@ -1257,6 +1323,9 @@ class EloquentTestPhone extends EloquentTestModel
     protected $table = 'phones';
     protected $guarded = [];
 
+    /**
+     *
+     */
     public function phoneable()
     {
         return $this->morphTo();
@@ -1296,6 +1365,9 @@ class EloquentTestTask extends EloquentTestModel
     protected $table = 'tasks';
     protected $guarded = [];
 
+    /**
+     *
+     */
     public function locations()
     {
         return $this->belongsToMany(

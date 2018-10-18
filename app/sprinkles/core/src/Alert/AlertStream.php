@@ -8,6 +8,7 @@
 namespace UserFrosting\Sprinkle\Core\Alert;
 
 use UserFrosting\Fortress\ServerSideValidator;
+use UserFrosting\I18n\MessageTranslator;
 
 /**
  * AlertStream Class
@@ -19,33 +20,35 @@ use UserFrosting\Fortress\ServerSideValidator;
  */
 abstract class AlertStream
 {
-
     /**
      * @var string
      */
     protected $messagesKey;
 
     /**
-     * @var UserFrosting\I18n\MessageTranslator|null
+     * @var \UserFrosting\I18n\MessageTranslator|null
      */
     protected $messageTranslator = null;
 
     /**
      * Create a new message stream.
+     *
+     * @param string $messagesKey
+     * @param \UserFrosting\I18n\MessageTranslator|null $translator
      */
-    public function __construct($messagesKey, $translator = null)
+    public function __construct($messagesKey, MessageTranslator $translator = null)
     {
         $this->messagesKey = $messagesKey;
-
         $this->setTranslator($translator);
     }
 
     /**
      * Set the translator to be used for all message streams.  Must be done before `addMessageTranslated` can be used.
      *
-     * @param UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
+     * @param \UserFrosting\I18n\MessageTranslator $translator A MessageTranslator to be used to translate messages when added via `addMessageTranslated`.
+     * @return self
      */
-    public function setTranslator($translator)
+    public function setTranslator(MessageTranslator $translator)
     {
         $this->messageTranslator = $translator;
         return $this;
@@ -56,7 +59,7 @@ abstract class AlertStream
      *
      * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
      * @param string $message The message to be added to the message stream.
-     * @return MessageStream this MessageStream object.
+     * @return self this MessageStream object.
      */
     public function addMessage($type, $message)
     {
@@ -75,7 +78,8 @@ abstract class AlertStream
      * @param string $type The type of message, indicating how it will be styled when outputted.  Should be set to "success", "danger", "warning", or "info".
      * @param string $messageId The message id for the message to be added to the message stream.
      * @param array[string] $placeholders An optional hash of placeholder names => placeholder values to substitute into the translated message.
-     * @return MessageStream this MessageStream object.
+     * @throws \RuntimeException
+     * @return self this MessageStream object.
      */
     public function addMessageTranslated($type, $messageId, $placeholders = array())
     {
@@ -139,6 +143,8 @@ abstract class AlertStream
 
     /**
      * Save messages to the stream
+     *
+     * @param string $message
      */
     abstract protected function saveMessages($message);
 }

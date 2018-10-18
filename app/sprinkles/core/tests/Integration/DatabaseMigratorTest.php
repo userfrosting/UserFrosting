@@ -59,8 +59,6 @@ class DatabaseMigratorTest extends TestCase
 
     /**
      * Setup base mock and migrator instance.
-     *
-     * @return void
      */
     public function setUp()
     {

@@ -22,7 +22,7 @@ class JsonRenderer extends ErrorRenderer
     }
 
     /**
-     * @param $message
+     * @param string $message
      * @return string
      */
     public function formatExceptionPayload($message)

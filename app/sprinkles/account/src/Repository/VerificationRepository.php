@@ -16,12 +16,12 @@ namespace UserFrosting\Sprinkle\Account\Repository;
 class VerificationRepository extends TokenRepository
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $modelIdentifier = 'verification';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function updateUser($user, $args)
     {

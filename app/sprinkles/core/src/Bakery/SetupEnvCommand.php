@@ -32,7 +32,7 @@ class SetupEnvCommand extends BaseCommand
     protected $modeKey = 'UF_MODE';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -43,7 +43,7 @@ class SetupEnvCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

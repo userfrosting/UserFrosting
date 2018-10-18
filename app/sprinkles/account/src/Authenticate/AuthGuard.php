@@ -7,9 +7,8 @@
  */
 namespace UserFrosting\Sprinkle\Account\Authenticate;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Slim\Http\Body;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 
 /**
@@ -27,9 +26,9 @@ class AuthGuard
     /**
      * Constructor.
      *
-     * @param $authenticator Authenticator The current authentication object.
+     * @param Authenticator $authenticator The current authentication object.
      */
-    public function __construct($authenticator)
+    public function __construct(Authenticator $authenticator)
     {
         $this->authenticator = $authenticator;
     }
@@ -37,13 +36,12 @@ class AuthGuard
     /**
      * Invoke the AuthGuard middleware, throwing an exception if there is no authenticated user in the session.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $request  PSR7 request
-     * @param  \Psr\Http\Message\ResponseInterface      $response PSR7 response
-     * @param  callable                                 $next     Next middleware
-     *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param  Request  $request  PSR7 request
+     * @param  Response $response PSR7 response
+     * @param  callable $next     Next middleware
+     * @return Response
      */
-    public function __invoke($request, $response, $next)
+    public function __invoke(Request $request, Response $response, $next)
     {
         if (!$this->authenticator->check()) {
             throw new AuthExpiredException();

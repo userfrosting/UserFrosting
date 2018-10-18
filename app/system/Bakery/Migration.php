@@ -21,10 +21,10 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
 class Migration extends NewMigration
 {
     /**
-     *    Constructor
+     * Constructor
      *
-     *    @param Builder $schema The schema builder
-     *    @param SymfonyStyle $io The SymfonyStyle instance
+     * @param Builder|null $schema The schema builder
+     * @param SymfonyStyle|null $io The SymfonyStyle instance
      */
     public function __construct(Builder $schema = null, SymfonyStyle $io = null)
     {

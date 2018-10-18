@@ -32,6 +32,7 @@ class AuthorizationManager
      * Create a new AuthorizationManager object.
      *
      * @param ContainerInterface $ci The global container object, which holds all your services.
+     * @param array $callbacks
      */
     public function __construct(ContainerInterface $ci, array $callbacks = [])
     {
@@ -67,11 +68,11 @@ class AuthorizationManager
      *
      * Determine if this user has access to the given $slug under the given $params.
      *
-     * @param UserFrosting\Sprinkle\Account\Database\Models\User $user
+     * @param User $user
      * @param string $slug The permission slug to check for access.
-     * @param array $params[optional] An array of field names => values, specifying any additional data to provide the authorization module
+     * @param array $params An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.
-     * @return boolean True if the user has access, false otherwise.
+     * @return bool True if the user has access, false otherwise.
      */
     public function checkAccess(User $user, $slug, array $params = [])
     {
@@ -139,7 +140,7 @@ class AuthorizationManager
     /**
      * Remove extraneous information from the permission to reduce verbosity.
      *
-     * @param  array
+     * @param  array $permissions
      * @return array
      */
     protected function getPermissionsArrayDebugInfo($permissions)

@@ -35,7 +35,7 @@ abstract class BaseCommand extends Command
     protected $ci;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {

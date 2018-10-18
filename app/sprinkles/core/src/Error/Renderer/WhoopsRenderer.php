@@ -8,6 +8,8 @@
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
 use InvalidArgumentException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Symfony\Component\VarDumper\Cloner\AbstractCloner;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
@@ -112,9 +114,9 @@ class WhoopsRenderer extends ErrorRenderer
     private $templateHelper;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function __construct($request, $response, $exception, $displayErrorDetails = false)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception, $displayErrorDetails = false)
     {
         $this->request = $request;
         $this->response = $response;
@@ -160,7 +162,7 @@ class WhoopsRenderer extends ErrorRenderer
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function render()
     {
@@ -295,6 +297,7 @@ class WhoopsRenderer extends ErrorRenderer
      * Adds an entry to the list of tables displayed in the template.
      * The expected data is a simple associative array. Any nested arrays
      * will be flattened with print_r
+     *
      * @param string $label
      * @param array  $data
      */
@@ -335,8 +338,8 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * blacklist a sensitive value within one of the superglobal arrays.
      *
-     * @param $superGlobalName string the name of the superglobal array, e.g. '_GET'
-     * @param $key string the key within the superglobal
+     * @param string $superGlobalName The name of the superglobal array, e.g. '_GET'
+     * @param string $key The key within the superglobal
      */
     public function blacklist($superGlobalName, $key)
     {
@@ -347,6 +350,7 @@ class WhoopsRenderer extends ErrorRenderer
      * Returns all the extra data tables registered with this handler.
      * Optionally accepts a 'label' parameter, to only return the data
      * table under that label.
+     *
      * @param  string|null      $label
      * @return array[]|callable
      */
@@ -364,6 +368,7 @@ class WhoopsRenderer extends ErrorRenderer
      * Allows to disable all attempts to dynamically decide whether to
      * handle or return prematurely.
      * Set this to ensure that the handler will perform no matter what.
+     *
      * @param  bool|null $value
      * @return bool|null
      */
@@ -480,8 +485,7 @@ class WhoopsRenderer extends ErrorRenderer
     }
 
     /**
-     * @param  string $title
-     * @return void
+     * @param string $title
      */
     public function setPageTitle($title)
     {
@@ -501,9 +505,7 @@ class WhoopsRenderer extends ErrorRenderer
      * resources.
      *
      * @throws InvalidArgumentException If $path is not a valid directory
-     *
      * @param  string $path
-     * @return void
      */
     public function addResourcePath($path)
     {
@@ -519,8 +521,7 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * Adds a custom css file to be loaded.
      *
-     * @param  string $name
-     * @return void
+     * @param string $name
      */
     public function addCustomCss($name)
     {
@@ -537,7 +538,6 @@ class WhoopsRenderer extends ErrorRenderer
 
     /**
      * @deprecated
-     *
      * @return string
      */
     public function getResourcesPath()
@@ -550,9 +550,7 @@ class WhoopsRenderer extends ErrorRenderer
 
     /**
      * @deprecated
-     *
-     * @param  string $resourcesPath
-     * @return void
+     * @param string $resourcesPath
      */
     public function setResourcesPath($resourcesPath)
     {
@@ -657,7 +655,6 @@ class WhoopsRenderer extends ErrorRenderer
      * for all resources.
      *
      * @throws RuntimeException If resource cannot be found in any of the available paths
-     *
      * @param  string $resource
      * @return string
      */

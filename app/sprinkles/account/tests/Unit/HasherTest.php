@@ -12,11 +12,12 @@ use UserFrosting\Tests\TestCase;
 
 /**
  * Tests the password Hasher class.
- *
- * @extends TestCase
  */
 class HasherTest extends TestCase
 {
+    /**
+     * @var string
+     */
     protected $plainText = 'hodleth';
 
     /**
@@ -34,6 +35,9 @@ class HasherTest extends TestCase
      */
     protected $modernHash = '$2y$10$ucxLwloFso6wJoct1baBQefdrttws/taEYvavi6qoPsw/vd1u4Mha';
 
+    /**
+     * testGetHashType
+     */
     public function testGetHashType()
     {
         $hasher = new Hasher;
@@ -51,6 +55,9 @@ class HasherTest extends TestCase
         $this->assertEquals('sha1', $type);
     }
 
+    /**
+     * testVerify
+     */
     public function testVerify()
     {
         $hasher = new Hasher;
@@ -60,6 +67,9 @@ class HasherTest extends TestCase
         $this->assertTrue($hasher->verify($this->plainText, $this->userCakeHash));
     }
 
+    /**
+     * testVerifyReject
+     */
     public function testVerifyReject()
     {
         $hasher = new Hasher;

@@ -8,7 +8,6 @@
 namespace UserFrosting\Sprinkle\Account\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Account\Database\Models\Group;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
@@ -18,13 +17,12 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
  * Version 4.0.0
  *
  * See https://laravel.com/docs/5.4/migrations#tables
- * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class GroupsTable extends Migration
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function up()
     {
@@ -73,7 +71,7 @@ class GroupsTable extends Migration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function down()
     {

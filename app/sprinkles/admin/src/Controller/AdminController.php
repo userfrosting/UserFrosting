@@ -8,11 +8,9 @@
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
 use Carbon\Carbon;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
-use UserFrosting\Sprinkle\Account\Database\Models\Group;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
-use UserFrosting\Sprinkle\Account\Database\Models\Role;
-use UserFrosting\Sprinkle\Core\Database\Models\Version;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Support\Exception\ForbiddenException;
 
@@ -25,17 +23,18 @@ use UserFrosting\Support\Exception\ForbiddenException;
  */
 class AdminController extends SimpleController
 {
-
     /**
      * Renders the admin panel dashboard
-     *
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function pageDashboard($request, $response, $args)
+    public function pageDashboard(Request $request, Response $response, $args)
     {
-        //** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        //** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -43,7 +42,7 @@ class AdminController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         // Probably a better way to do this
@@ -57,10 +56,10 @@ class AdminController extends SimpleController
             return $item;
         });
 
-        /** @var Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
 
-        /** @var Config $config */
+        /** @var \Illuminate\Cache\Repository $cache */
         $cache = $this->ci->cache;
 
         // Get each sprinkle db version
@@ -96,13 +95,16 @@ class AdminController extends SimpleController
      *
      * This route requires authentication.
      * Request type: POST
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function clearCache($request, $response, $args)
+    public function clearCache(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -113,7 +115,7 @@ class AdminController extends SimpleController
         // Flush cache
         $this->ci->cache->flush();
 
-        /** @var MessageStream $ms */
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
         $ms->addMessageTranslated('success', 'CACHE.CLEARED');
@@ -127,13 +129,16 @@ class AdminController extends SimpleController
      * This does NOT render a complete page.  Instead, it renders the HTML for the modal, which can be embedded in other pages.
      * This page requires authentication.
      * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function getModalConfirmClearCache($request, $response, $args)
+    public function getModalConfirmClearCache(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page

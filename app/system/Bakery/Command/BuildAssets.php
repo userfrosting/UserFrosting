@@ -9,7 +9,6 @@ namespace UserFrosting\System\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 
@@ -27,7 +26,7 @@ class BuildAssets extends BaseCommand
     protected $buildPath;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -39,7 +38,7 @@ class BuildAssets extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -69,9 +68,6 @@ class BuildAssets extends BaseCommand
 
     /**
      * Install npm package
-     *
-     * @access protected
-     * @return void
      */
     protected function npmInstall()
     {
@@ -93,9 +89,6 @@ class BuildAssets extends BaseCommand
 
     /**
      * Perform UF Assets installation
-     *
-     * @access protected
-     * @return void
      */
     protected function assetsInstall()
     {
@@ -119,9 +112,6 @@ class BuildAssets extends BaseCommand
 
     /**
      * Build the production bundle.
-     *
-     * @access protected
-     * @return void
      */
     protected function buildAssets()
     {
@@ -162,9 +152,6 @@ class BuildAssets extends BaseCommand
     /**
      * Run the `uf-clean` command to delete installed assets, delete compiled
      * bundle config file and delete compiled assets
-     *
-     * @access protected
-     * @return void
      */
     protected function clean()
     {

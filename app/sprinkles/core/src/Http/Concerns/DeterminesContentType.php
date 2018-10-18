@@ -37,6 +37,7 @@ trait DeterminesContentType
      * as willdurand/negotiation for any other situation.
      *
      * @param ServerRequestInterface $request
+     * @param bool $ajaxDebug
      * @return string
      */
     protected function determineContentType(ServerRequestInterface $request, $ajaxDebug = false)

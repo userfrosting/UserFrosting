@@ -9,10 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Database\Models\Concerns;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyConstrained;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyThrough;
 use UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique;
@@ -38,7 +34,9 @@ trait HasRelationships
     /**
      * Overrides the default Eloquent hasMany relationship to return a HasManySyncable.
      *
-     * {@inheritDoc}
+     * @param  string  $related
+     * @param  string  $foreignKey
+     * @param  string  $localKey
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\HasManySyncable
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
@@ -57,7 +55,11 @@ trait HasRelationships
     /**
      * Overrides the default Eloquent morphMany relationship to return a MorphManySyncable.
      *
-     * {@inheritDoc}
+     * @param  string  $related
+     * @param  string  $name
+     * @param  string  $type
+     * @param  string  $id
+     * @param  string  $localKey
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\MorphManySyncable
      */
     public function morphMany($related, $name, $type = null, $id = null, $localKey = null)
@@ -150,7 +152,11 @@ trait HasRelationships
      * Define a unique many-to-many relationship.  Similar to a regular many-to-many relationship, but removes duplicate child objects.
      * Can also be used to implement ternary relationships.
      *
-     * {@inheritDoc}
+     * @param  string $related
+     * @param  string $table
+     * @param  string $foreignKey
+     * @param  string $relatedKey
+     * @param  string $relation
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\BelongsToManyUnique
      */
     public function belongsToManyUnique($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
@@ -186,7 +192,12 @@ trait HasRelationships
     /**
      * Define a unique morphs-to-many relationship.  Similar to a regular morphs-to-many relationship, but removes duplicate child objects.
      *
-     * {@inheritDoc}
+     * @param  string  $related
+     * @param  string  $name
+     * @param  string  $table
+     * @param  string  $foreignKey
+     * @param  string  $otherKey
+     * @param  bool $inverse
      * @return \UserFrosting\Sprinkle\Core\Database\Relations\MorphToManyUnique
      */
     public function morphToManyUnique($related, $name, $table = null, $foreignKey = null, $otherKey = null, $inverse = false)

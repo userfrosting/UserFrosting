@@ -32,7 +32,7 @@
             ]
         ],
         /**
-         * Don'T display error detail in test. Return the non formatted errors
+         * Don't display error detail in test. Return the non formatted errors
          */
         'settings' => [
             'displayErrorDetails' => false

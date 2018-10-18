@@ -20,7 +20,7 @@ namespace UserFrosting\Sprinkle\Core\Util;
 class ClassMapper
 {
     /**
-     * Mapping of generic class identifiers to specific class names.
+     * @var array Mapping of generic class identifiers to specific class names.
      */
     protected $classMappings = [];
 

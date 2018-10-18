@@ -9,14 +9,13 @@ class CreateUsersTable extends Migration
 {
     /**
      * {@inheritDoc}
+     * 
      * N.B.: Not using static here to test old deprecated behavior
      */
     public $dependencies = [];
 
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -32,8 +31,6 @@ class CreateUsersTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

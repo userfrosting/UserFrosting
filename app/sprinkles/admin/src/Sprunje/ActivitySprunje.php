@@ -7,8 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
 /**
@@ -49,9 +48,9 @@ class ActivitySprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
-    protected function filterUser($query, $value)
+    protected function filterUser(Builder $query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
@@ -70,9 +69,9 @@ class ActivitySprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return $this
+     * @return self
      */
-    protected function sortUser($query, $direction)
+    protected function sortUser(Builder $query, $direction)
     {
         $query->orderBy('users.last_name', $direction);
         return $this;

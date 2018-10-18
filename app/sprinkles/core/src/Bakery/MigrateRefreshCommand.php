@@ -9,7 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\Sprinkle\Core\Bakery\MigrateCommand;
 
@@ -22,7 +21,7 @@ use UserFrosting\Sprinkle\Core\Bakery\MigrateCommand;
 class MigrateRefreshCommand extends MigrateCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -34,7 +33,7 @@ class MigrateRefreshCommand extends MigrateCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

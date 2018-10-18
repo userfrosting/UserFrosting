@@ -8,20 +8,18 @@
 namespace UserFrosting\Sprinkle\Core\Database\Migrations\v400;
 
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Database\Migration;
 
 /**
  * Throttles table migration
  * Version 4.0.0
  *
- * @extends Migration
  * @author Alex Weissman (https://alexanderweissman.com)
  */
 class ThrottlesTable extends Migration
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function up()
     {
@@ -43,7 +41,7 @@ class ThrottlesTable extends Migration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function down()
     {

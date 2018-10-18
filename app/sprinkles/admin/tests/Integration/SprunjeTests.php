@@ -23,8 +23,6 @@ class SprunjeTests extends TestCase
 
     /**
      * Setup the database schema.
-     *
-     * @return void
      */
     public function setUp()
     {

@@ -18,7 +18,7 @@ use UserFrosting\Sprinkle\Core\Database\Relations\Concerns\Unique;
  * A BelongsToMany relationship that queries through an additional intermediate model.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
- * @link https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
+ * @see https://github.com/laravel/framework/blob/5.4/src/Illuminate/Database/Eloquent/Relations/BelongsToMany.php
  */
 class BelongsToManyThrough extends BelongsToMany
 {
@@ -41,7 +41,6 @@ class BelongsToManyThrough extends BelongsToMany
      * @param  string  $foreignKey
      * @param  string  $relatedKey
      * @param  string  $relationName
-     * @return void
      */
     public function __construct(Builder $query, Model $parent, Relation $intermediateRelation, $table, $foreignKey, $relatedKey, $relationName = null)
     {
@@ -78,7 +77,7 @@ class BelongsToManyThrough extends BelongsToMany
      *
      * @param string   $viaRelationName
      * @param callable $viaCallback
-     * @return $this
+     * @return self
      */
     public function withVia($viaRelationName = null, $viaCallback = null)
     {
@@ -102,7 +101,6 @@ class BelongsToManyThrough extends BelongsToMany
      * Set the constraints for an eager load of the relation.
      *
      * @param  array  $models
-     * @return void
      */
     public function addEagerConstraints(array $models)
     {
@@ -115,7 +113,7 @@ class BelongsToManyThrough extends BelongsToMany
     /**
      * Set the where clause for the relation query.
      *
-     * @return $this
+     * @return self
      */
     protected function addWhereConstraints()
     {
@@ -175,7 +173,6 @@ class BelongsToManyThrough extends BelongsToMany
      * Unset tertiary pivots on a collection or array of models.
      *
      * @param  \Illuminate\Database\Eloquent\Collection $models
-     * @return void
      */
     protected function unsetTertiaryPivots(Collection $models)
     {
@@ -188,7 +185,7 @@ class BelongsToManyThrough extends BelongsToMany
      * Set the join clause for the relation query.
      *
      * @param  \Illuminate\Database\Eloquent\Builder|null  $query
-     * @return $this
+     * @return self
      */
     protected function performJoin($query = null)
     {

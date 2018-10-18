@@ -11,7 +11,7 @@ use UserFrosting\Sprinkle\Core\Database\Migration;
 class UnfulfillableTable extends Migration
 {
      /**
-      * {@inheritDoc}
+      * {@inheritdoc}
       */
     static public $dependencies = [
         '\UserFrosting\Tests\Integration\Migrations\NonExistingMigration'
@@ -19,8 +19,6 @@ class UnfulfillableTable extends Migration
 
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -32,8 +30,6 @@ class UnfulfillableTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

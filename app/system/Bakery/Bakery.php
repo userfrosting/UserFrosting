@@ -22,12 +22,12 @@ use UserFrosting\UniformResourceLocator\ResourceLocator;
 class Bakery
 {
     /**
-     *    @var $app Symfony\Component\Console\Application
+     * @var \Symfony\Component\Console\Application $app
      */
     protected $app;
 
     /**
-     *    @var \Interop\Container\ContainerInterface The global container object, which holds all your services.
+     * @var \Interop\Container\ContainerInterface The global container object, which holds all your services.
      */
     protected $ci;
 
@@ -37,7 +37,7 @@ class Bakery
     protected $scheme = 'bakery://';
 
     /**
-     *    Constructor
+     * Constructor
      */
     public function __construct()
     {
@@ -61,9 +61,7 @@ class Bakery
     }
 
     /**
-     *    Run the Symfony Console App
-     *
-     *    @return void
+     * Run the Symfony Console App
      */
     public function run()
     {
@@ -71,9 +69,7 @@ class Bakery
     }
 
     /**
-     *    Return the list of available commands for a specific sprinkle
-     *
-     *    @return void
+     * Return the list of available commands for a specific sprinkle
      */
     protected function loadCommands()
     {

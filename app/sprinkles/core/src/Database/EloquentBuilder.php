@@ -22,7 +22,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
      * Add subselect queries to sum the relations.
      *
      * @param  mixed  $relations
-     * @return $this
+     * @return self
      */
     public function withSum($relations)
     {
@@ -35,7 +35,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
      * Add subselect queries to max the relations.
      *
      * @param  mixed  $relations
-     * @return $this
+     * @return self
      */
     public function withMax($relations)
     {
@@ -48,7 +48,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
      * Add subselect queries to min the relations.
      *
      * @param  mixed  $relations
-     * @return $this
+     * @return self
      */
     public function withMin($relations)
     {
@@ -61,7 +61,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
      * Add subselect queries to min the relations.
      *
      * @param  mixed  $relations
-     * @return $this
+     * @return self
      */
     public function withAvg($relations)
     {
@@ -75,7 +75,7 @@ class EloquentBuilder extends LaravelEloquentBuilder
      *
      * @param array $relations
      * @param string $function
-     * @return $this
+     * @return self
      */
     public function withAggregate($relations, $function = 'COUNT')
     {

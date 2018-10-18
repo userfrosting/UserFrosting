@@ -7,8 +7,6 @@
  */
 namespace UserFrosting\Sprinkle\Account\Log;
 
-use Monolog\Logger;
-
 /**
  * Monolog processor for constructing the user activity message.
  *
@@ -29,6 +27,10 @@ class UserActivityProcessor
         $this->userId = $userId;
     }
 
+    /**
+     * @param  array  $record
+     * @return array
+     */
     public function __invoke(array $record)
     {
         $additionalFields = [

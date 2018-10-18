@@ -31,8 +31,6 @@ class RegistrationTest extends TestCase
 
     /**
      * Setup the database schema.
-     *
-     * @return void
      */
     public function setUp()
     {

@@ -9,8 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 use UserFrosting\Sprinkle\Core\Twig\CacheHelper;
 
@@ -22,7 +20,7 @@ use UserFrosting\Sprinkle\Core\Twig\CacheHelper;
 class ClearCacheCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -31,7 +29,7 @@ class ClearCacheCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -61,8 +59,6 @@ class ClearCacheCommand extends BaseCommand
 
     /**
      * Flush the cached data from the cache service
-     *
-     * @return void
      */
     protected function clearIlluminateCache()
     {

@@ -20,10 +20,10 @@ use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser;
 class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
 {
     /**
-     *    Constructor
+     * Constructor
      *
-     *    @param array $installed The installed migrations
-     *    @param array $rollback The migrations to rollback
+     * @param array $installed The installed migrations
+     * @param array $rollback The migrations to rollback
      */
     public function __construct(array $installed = [], array $rollback = [])
     {
@@ -32,14 +32,14 @@ class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
     }
 
     /**
-     *    Received each installed migrations and determine if it depends on the
-     *    migrations we want to delete (rollback). It can if no other installed
-     *    migrations depends on it. In this context, fulfillable/unfulfillable
-     *    represent the same thing as "up" dependencies. fulfillable can be
-     *    rolledback, unfulfillable cannot.
+     * Received each installed migrations and determine if it depends on the
+     * migrations we want to delete (rollback). It can if no other installed
+     * migrations depends on it. In this context, fulfillable/unfulfillable
+     * represent the same thing as "up" dependencies. fulfillable can be
+     * rolledback, unfulfillable cannot.
      *
-     *    @param  string $migrationName The migration classname
-     *    @return bool True/False if the migration is fulfillable
+     * @param  string $migrationName The migration classname
+     * @return bool True/False if the migration is fulfillable
      */
     protected function validateClassDependencies($migrationName)
     {

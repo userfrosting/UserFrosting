@@ -11,7 +11,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use League\Csv\Writer;
 use Psr\Http\Message\ResponseInterface as Response;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Exception\BadRequestException;
 use Valitron\Validator;
@@ -26,7 +25,7 @@ use Valitron\Validator;
 abstract class Sprunje
 {
     /**
-     * @var UserFrosting\Sprinkle\Core\Util\ClassMapper
+     * @var ClassMapper
      */
     protected $classMapper;
 
@@ -164,7 +163,7 @@ abstract class Sprunje
      * Extend the query by providing a callback.
      *
      * @param callable $callback A callback which accepts and returns a Builder instance.
-     * @return $this
+     * @return self
      */
     public function extendQuery(callable $callback)
     {
@@ -175,8 +174,8 @@ abstract class Sprunje
     /**
      * Execute the query and build the results, and append them in the appropriate format to the response.
      *
-     * @param ResponseInterface $response
-     * @return ResponseInterface
+     * @param Response $response
+     * @return Response
      */
     public function toResponse(Response $response)
     {
@@ -221,7 +220,7 @@ abstract class Sprunje
     /**
      * Run the query and build a CSV object by flattening the resulting collection.  Ignores any pagination.
      *
-     * @return SplTempFileObject
+     * @return \SplTempFileObject
      */
     public function getCsv()
     {
@@ -345,7 +344,7 @@ abstract class Sprunje
      * Set the underlying QueryBuilder object.
      *
      * @param Builder $query
-     * @return $this
+     * @return self
      */
     public function setQuery($query)
     {
@@ -357,7 +356,7 @@ abstract class Sprunje
      * Apply any filters from the options, calling a custom filter callback when appropriate.
      *
      * @param Builder $query
-     * @return $this
+     * @return self
      */
     public function applyFilters($query)
     {
@@ -381,7 +380,7 @@ abstract class Sprunje
      * Apply any sorts from the options, calling a custom sorter callback when appropriate.
      *
      * @param Builder $query
-     * @return $this
+     * @return self
      */
     public function applySorts($query)
     {
@@ -410,7 +409,7 @@ abstract class Sprunje
      * Apply pagination based on the `page` and `size` options.
      *
      * @param Builder $query
-     * @return $this
+     * @return self
      */
     public function applyPagination($query)
     {
@@ -432,7 +431,7 @@ abstract class Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
     protected function filterAll($query, $value)
     {
@@ -454,7 +453,7 @@ abstract class Sprunje
      * @param Builder $query
      * @param string $name
      * @param mixed $value
-     * @return $this
+     * @return self
      */
     protected function buildFilterQuery($query, $name, $value)
     {
@@ -477,7 +476,7 @@ abstract class Sprunje
      * @param Builder $query
      * @param string $name
      * @param mixed $value
-     * @return $this
+     * @return self
      */
     protected function buildFilterDefaultFieldQuery($query, $name, $value)
     {
@@ -505,7 +504,7 @@ abstract class Sprunje
     /**
      * Set the initial query used by your Sprunje.
      *
-     * @return Builder|Relation|Model
+     * @return Builder|\Illuminate\Database\Eloquent\Relations\Relation|\UserFrosting\Sprinkle\Core\Database\Models\Model
      */
     abstract protected function baseQuery();
 

@@ -9,12 +9,10 @@ namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Monolog\Logger;
 use PhpParser\Lexer\Emulative as EmulativeLexer;
-use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\Parser as Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\Error as PhpParserException;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
 
 /**
@@ -65,6 +63,7 @@ class AccessConditionExpression
     /**
      * Create a new AccessConditionExpression object.
      *
+     * @param ParserNodeFunctionEvaluator $nodeVisitor
      * @param User $user A user object, which for convenience can be referenced as 'self' in access conditions.
      * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.

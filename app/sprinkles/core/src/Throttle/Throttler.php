@@ -8,6 +8,7 @@
 namespace UserFrosting\Sprinkle\Core\Throttle;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
 /**
@@ -18,7 +19,7 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 class Throttler
 {
     /**
-     * @var UserFrosting\Sprinkle\Core\Util\ClassMapper
+     * @var ClassMapper
      */
     protected $classMapper;
 
@@ -42,9 +43,9 @@ class Throttler
      * Add a throttling rule for a particular throttle event type.
      *
      * @param string $type The type of throttle event to check against.
-     * @param ThrottleRule $rule The rule to use when throttling this type of event.
+     * @param ThrottleRule|null $rule The rule to use when throttling this type of event.
      */
-    public function addThrottleRule($type, $rule)
+    public function addThrottleRule($type, ThrottleRule $rule = null)
     {
         if (!($rule instanceof ThrottleRule || ($rule === null))) {
             throw new ThrottlerException('$rule must be of type ThrottleRule (or null).');
@@ -160,11 +161,11 @@ class Throttler
     /**
      * Returns the current delay for a specified throttle rule.
      *
-     * @param  Throttle[] $events a Collection of throttle events.
+     * @param  Collection $events a Collection of throttle events.
      * @param  ThrottleRule $throttleRule a rule representing the strategy to use for throttling a particular type of event.
      * @return int seconds remaining until a particular event is permitted to be attempted again.
      */
-    protected function computeDelay($events, $throttleRule)
+    protected function computeDelay(Collection $events, ThrottleRule $throttleRule)
     {
         // If no matching events found, then there is no delay
         if (!$events->count()) {

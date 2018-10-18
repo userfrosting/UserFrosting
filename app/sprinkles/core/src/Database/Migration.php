@@ -12,13 +12,12 @@ use Illuminate\Database\Schema\Builder;
 /**
  * Abstract Migration class.
  *
- * @abstract
  * @author Louis Charette
  */
 abstract class Migration
 {
     /**
-     * @var Illuminate\Database\Schema\Builder $schema
+     * @var \Illuminate\Database\Schema\Builder $schema
      */
     protected $schema;
 
@@ -31,11 +30,9 @@ abstract class Migration
     //public static $dependencies = [];
 
     /**
-     * __construct function.
+     * Create a new migration instance
      *
-     * @access public
-     * @param Illuminate\Database\Schema\Builder $schema
-     * @return void
+     * @param \Illuminate\Database\Schema\Builder|null $schema
      */
     public function __construct(Builder $schema = null)
     {

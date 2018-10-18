@@ -48,10 +48,10 @@ class MigrationDependencyAnalyser
     protected $analysed = false;
 
     /**
-     *    Constructor
+     * Constructor
      *
-     *    @param array $pending The pending migrations
-     *    @param array $installed The installed migrations
+     * @param array $pending The pending migrations
+     * @param array $installed The installed migrations
      */
     public function __construct(array $pending = [], array $installed = [])
     {
@@ -60,9 +60,7 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     *    Analyse the dependencies
-     *
-     *    @return void
+     * Analyse the dependencies
      */
     public function analyse()
     {
@@ -80,16 +78,16 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     *    Validate if a migration is fulfillable.
-     *    N.B.: The key element here is the recursion while validating the
-     *    dependencies. This is very important as the order the migrations needs
-     *    to be run is defined by this recursion. By waiting for the dependency
-     *    to be marked as fulfillable to mark the parent as fulfillable, the
-     *    parent class will be automatocally placed after it's dependencies
-     *    in the `fullfillable` property.
+     * Validate if a migration is fulfillable.
+     * N.B.: The key element here is the recursion while validating the
+     * dependencies. This is very important as the order the migrations needs
+     * to be run is defined by this recursion. By waiting for the dependency
+     * to be marked as fulfillable to mark the parent as fulfillable, the
+     * parent class will be automatocally placed after it's dependencies
+     * in the `fullfillable` property.
      *
-     *    @param  string $migrationName The migration classname
-     *    @return bool True/False if the migration is fulfillable
+     * @param  string $migrationName The migration classname
+     * @return bool True/False if the migration is fulfillable
      */
     protected function validateClassDependencies($migrationName)
     {
@@ -134,9 +132,9 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     *    Return the fulfillable list. Analyse the stack if not done already
+     * Return the fulfillable list. Analyse the stack if not done already
      *
-     *    @return array
+     * @return array
      */
     public function getFulfillable()
     {
@@ -148,9 +146,9 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     *    Return the fulfillable list. Analyse the stack if not done already
+     * Return the fulfillable list. Analyse the stack if not done already
      *
-     *    @return array
+     * @return array
      */
     public function getUnfulfillable()
     {
@@ -162,10 +160,10 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     *    Mark a dependency as fulfillable. Removes it from the pending list and add it to the fulfillable list
+     * Mark a dependency as fulfillable. Removes it from the pending list and add it to the fulfillable list
      *
-     *    @param  string $migration The migration classname
-     *    @return bool True, it's fulfillable
+     * @param  string $migration The migration classname
+     * @return bool True, it's fulfillable
      */
     protected function markAsFulfillable($migration)
     {
@@ -174,10 +172,10 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     *    Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list
+     * Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list
      *
-     *    @param  string $migration The migration classname
-     *    @return bool False, it's not fullfillable
+     * @param  string $migration The migration classname
+     * @return bool False, it's not fullfillable
      */
     protected function markAsUnfulfillable($migration)
     {
@@ -186,11 +184,11 @@ class MigrationDependencyAnalyser
     }
 
     /**
-     *    Returns the migration dependency list
-     *    Also handles the old deprecated behaviour where dependencies where not in a static property
+     * Returns the migration dependency list
+     * Also handles the old deprecated behaviour where dependencies where not in a static property
      *
-     *    @param  string $migration The migration class
-     *    @return array The dependency list
+     * @param  string $migration The migration class
+     * @return array The dependency list
      */
     protected function getMigrationDependencies($migration) {
 

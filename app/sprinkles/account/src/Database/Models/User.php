@@ -8,6 +8,7 @@
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
@@ -109,6 +110,7 @@ class User extends Model
      * We add relations here so that Twig will be able to find them.
      * See http://stackoverflow.com/questions/29514081/cannot-access-eloquent-attributes-on-twig/35908957#35908957
      * Every property in __get must also be implemented here for Twig to recognize it.
+     *
      * @param string $name the name of the property to check.
      * @return bool true if the property is defined, false otherwise.
      */
@@ -128,8 +130,8 @@ class User extends Model
     /**
      * Get a property for this object.
      *
-     * @param string $name the name of the property to retrieve.
      * @throws \Exception the property does not exist for this object.
+     * @param string $name the name of the property to retrieve.
      * @return string the associated property.
      */
     public function __get($name)
@@ -445,11 +447,11 @@ class User extends Model
     /**
      * Query scope to get all users who have a specific role.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param int $roleId
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
-    public function scopeForRole($query, $roleId)
+    public function scopeForRole(Builder $query, $roleId)
     {
         return $query->join('role_users', function ($join) use ($roleId) {
             $join->on('role_users.user_id', 'users.id')
@@ -460,10 +462,10 @@ class User extends Model
     /**
      * Joins the user's most recent activity directly, so we can do things like sort, search, paginate, etc.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder $query
+     * @return Builder
      */
-    public function scopeJoinLastActivity($query)
+    public function scopeJoinLastActivity(Builder $query)
     {
         $query = $query->select('users.*');
 

@@ -15,6 +15,9 @@ use Slim\App;
  */
 class SlimAppEvent extends Event
 {
+    /**
+     * @var App
+     */
     protected $app;
 
     public function __construct(App $app)
@@ -22,6 +25,9 @@ class SlimAppEvent extends Event
         $this->app = $app;
     }
 
+    /**
+     * @return App
+     */
     public function getApp()
     {
         return $this->app;

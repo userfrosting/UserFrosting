@@ -7,7 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Eloquent\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -60,7 +60,7 @@ class Role extends Model
      */
     public static function getDefaultSlugs()
     {
-        /** @var UserFrosting\Config $config */
+        /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = static::$ci->config;
 
         return array_map('trim', array_keys($config['site.registration.user_defaults.roles'], true));
@@ -71,7 +71,7 @@ class Role extends Model
      */
     public function permissions()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsToMany($classMapper->getClassMapping('permission'), 'permission_roles', 'role_id', 'permission_id')->withTimestamps();
@@ -80,11 +80,11 @@ class Role extends Model
     /**
      * Query scope to get all roles assigned to a specific user.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Builder $query
      * @param int $userId
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
-    public function scopeForUser($query, $userId)
+    public function scopeForUser(Builder $query, $userId)
     {
         return $query->join('role_users', function ($join) use ($userId) {
             $join->on('role_users.role_id', 'roles.id')
@@ -97,7 +97,7 @@ class Role extends Model
      */
     public function users()
     {
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = static::$ci->classMapper;
 
         return $this->belongsToMany($classMapper->getClassMapping('user'), 'role_users', 'role_id', 'user_id');

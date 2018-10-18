@@ -21,7 +21,6 @@ use UserFrosting\Sprinkle\Core\Util\ClassMapper;
  */
 abstract class TokenRepository
 {
-
     /**
      * @var ClassMapper
      */
@@ -224,6 +223,7 @@ abstract class TokenRepository
      *
      * This method is called during complete(), and is a way for concrete implementations to modify the user.
      * @param User $user the user object to modify.
+     * @param mixed[] $args
      * @return mixed[] $args the list of parameters that were supplied to the call to `complete()`
      */
     abstract protected function updateUser($user, $args);

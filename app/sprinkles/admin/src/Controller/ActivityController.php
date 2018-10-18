@@ -7,15 +7,10 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Controller;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
 use UserFrosting\Sprinkle\Core\Controller\SimpleController;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
-use UserFrosting\Support\Exception\BadRequestException;
 use UserFrosting\Support\Exception\ForbiddenException;
-use UserFrosting\Support\Exception\HttpException;
 
 /**
  * Controller class for activity-related requests.
@@ -30,16 +25,19 @@ class ActivityController extends SimpleController
      * Generates a list of activities, optionally paginated, sorted and/or filtered.
      * This page requires authentication.
      * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function getList($request, $response, $args)
+    public function getList(Request $request, Response $response, $args)
     {
         // GET parameters
         $params = $request->getQueryParams();
 
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -47,7 +45,7 @@ class ActivityController extends SimpleController
             throw new ForbiddenException();
         }
 
-        /** @var UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
+        /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
         $classMapper = $this->ci->classMapper;
 
         $sprunje = $classMapper->createInstance('activity_sprunje', $classMapper, $params);
@@ -66,13 +64,16 @@ class ActivityController extends SimpleController
      * This page renders a table of user activities.
      * This page requires authentication.
      * Request type: GET
+     * @param  Request $request
+     * @param  Response $response
+     * @param  array $args
      */
-    public function pageList($request, $response, $args)
+    public function pageList(Request $request, Response $response, $args)
     {
-        /** @var UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
+        /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page

@@ -79,8 +79,8 @@ class CoreExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
             /**
              * Converts phone numbers to a standard format.
              *
-             * @param   String   $num   A unformatted phone number
-             * @return  String   Returns the formatted phone number
+             * @param   string   $num   A unformatted phone number
+             * @return  string   Returns the formatted phone number
              */
             new \Twig_SimpleFilter('phone', function ($num) {
                 return Util::formatPhoneNumber($num);

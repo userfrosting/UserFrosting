@@ -7,8 +7,14 @@
  */
 namespace UserFrosting\Sprinkle\Core\Error\Renderer;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Body;
 
+/**
+ * [abstract description]
+ * @var [type]
+ */
 abstract class ErrorRenderer implements ErrorRendererInterface
 {
     /**
@@ -22,7 +28,7 @@ abstract class ErrorRenderer implements ErrorRendererInterface
     protected $response;
 
     /**
-     * @var Exception
+     * @var \Exception
      */
     protected $exception;
 
@@ -39,10 +45,10 @@ abstract class ErrorRenderer implements ErrorRendererInterface
      *
      * @param ServerRequestInterface     $request   The most recent Request object
      * @param ResponseInterface          $response  The most recent Response object
-     * @param Exception                  $exception The caught Exception object
+     * @param \Exception                 $exception The caught Exception object
      * @param bool                       $displayErrorDetails
      */
-    public function __construct($request, $response, $exception, $displayErrorDetails = false)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception, $displayErrorDetails = false)
     {
         $this->request = $request;
         $this->response = $response;

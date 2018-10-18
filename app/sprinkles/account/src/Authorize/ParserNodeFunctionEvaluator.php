@@ -27,10 +27,12 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * @var array[callable] An array of callback functions to be used when evaluating a condition expression.
      */
     protected $callbacks;
+
     /**
      * @var \PhpParser\PrettyPrinter\Standard The PrettyPrinter object to use (initialized in the ctor)
      */
     protected $prettyPrinter;
+
     /**
      * @var array The parameters to be used when evaluating the methods in the condition expression, as an array.
      */
@@ -49,11 +51,11 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
     /**
      * Create a new ParserNodeFunctionEvaluator object.
      *
-     * @param array $params The parameters to be used when evaluating the methods in the condition expression, as an array.
+     * @param array $callbacks The parameters to be used when evaluating the methods in the condition expression, as an array.
      * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.
      */
-    public function __construct($callbacks, $logger, $debug = false)
+    public function __construct($callbacks, Logger $logger, $debug = false)
     {
         $this->callbacks = $callbacks;
         $this->prettyPrinter = new StandardPrettyPrinter;
@@ -140,6 +142,11 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
         }
     }
 
+    /**
+     * Set params
+     *
+     * @param array $params
+     */
     public function setParams($params)
     {
         $this->params = $params;
@@ -169,7 +176,7 @@ class ParserNodeFunctionEvaluator extends NodeVisitorAbstract
      * Resolve a parameter path (e.g. "user.id", "post", etc) into its value.
      *
      * @param string $path the name of the parameter to resolve, based on the parameters set in this object.
-     * @throws Exception the path could not be resolved.  Path is malformed or key does not exist.
+     * @throws \Exception the path could not be resolved.  Path is malformed or key does not exist.
      * @return mixed the value of the specified parameter.
      */
     private function resolveParamPath($path)

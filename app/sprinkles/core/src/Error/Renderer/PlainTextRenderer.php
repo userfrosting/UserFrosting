@@ -21,6 +21,10 @@ class PlainTextRenderer extends ErrorRenderer
         return $this->exception->getMessage();
     }
 
+    /**
+     * Format Exception Body
+     * @return string
+     */
     public function formatExceptionBody()
     {
         $e = $this->exception;

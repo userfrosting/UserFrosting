@@ -45,10 +45,10 @@ class AccountController extends SimpleController
      * Route: /account/check-username
      * Route Name: {none}
      * Request type: GET
+     * @throws BadRequestException
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function checkUsername(Request $request, Response $response, $args)
     {
@@ -118,7 +118,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function denyResetPassword(Request $request, Response $response, $args)
     {
@@ -179,7 +178,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function forgotPassword(Request $request, Response $response, $args)
     {
@@ -273,7 +271,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function getModalAccountTos(Request $request, Response $response, $args)
     {
@@ -290,7 +287,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function imageCaptcha(Request $request, Response $response, $args)
     {
@@ -321,7 +317,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function login(Request $request, Response $response, $args)
     {
@@ -416,7 +411,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function logout(Request $request, Response $response, $args)
     {
@@ -441,7 +435,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function pageForgotPassword(Request $request, Response $response, $args)
     {
@@ -470,10 +463,10 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: register
      * Request type: GET
+     * @throws NotFoundException If site registration is disabled
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function pageRegister(Request $request, Response $response, $args)
     {
@@ -529,7 +522,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function pageResendVerification(Request $request, Response $response, $args)
     {
@@ -558,7 +550,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function pageResetPassword(Request $request, Response $response, $args)
     {
@@ -592,7 +583,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function pageSetPassword(Request $request, Response $response, $args)
     {
@@ -624,10 +614,10 @@ class AccountController extends SimpleController
      * Route: /account/settings
      * Route Name: {none}
      * Request type: GET
+     * @throws ForbiddenException If user is not authozied to access page
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function pageSettings(Request $request, Response $response, $args)
     {
@@ -681,7 +671,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function pageSignIn(Request $request, Response $response, $args)
     {
@@ -726,7 +715,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function profile(Request $request, Response $response, $args)
     {
@@ -817,10 +805,10 @@ class AccountController extends SimpleController
      * Route: /account/register
      * Route Name: {none}
      * Request type: POST
+     * @throws SpammyRequestException
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function register(Request $request, Response $response, $args)
     {
@@ -943,7 +931,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function resendVerification(Request $request, Response $response, $args)
     {
@@ -1039,7 +1026,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function setPassword(Request $request, Response $response, $args)
     {
@@ -1115,7 +1101,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function settings(Request $request, Response $response, $args)
     {
@@ -1216,7 +1201,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function suggestUsername(Request $request, Response $response, $args)
     {
@@ -1250,7 +1234,6 @@ class AccountController extends SimpleController
      * @param  Request $request
      * @param  Response $response
      * @param  array $args
-     * @return void
      */
     public function verify(Request $request, Response $response, $args)
     {

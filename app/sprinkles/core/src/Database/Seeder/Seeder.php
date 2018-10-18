@@ -31,9 +31,9 @@ class Seeder
     protected $scheme = 'seeds://';
 
     /**
-     *    Class Constructor
+     * Class Constructor
      *
-     *    @param ContainerInterface $ci
+     * @param ContainerInterface $ci
      */
     public function __construct(ContainerInterface $ci)
     {
@@ -41,9 +41,9 @@ class Seeder
     }
 
     /**
-     *    Loop all the available sprinkles and return a list of their seeds
+     * Loop all the available sprinkles and return a list of their seeds
      *
-     *    @return array An array of all the seed classes found for every sprinkle
+     * @return array An array of all the seed classes found for every sprinkle
      */
     public function getSeeds()
     {
@@ -104,7 +104,6 @@ class Seeder
      * Execute a seed class
      *
      * @param  SeedInterface $seed The seed to execute
-     * @return void
      */
     public function executeSeed(SeedInterface $seed)
     {
@@ -117,7 +116,7 @@ class Seeder
      * @param  array $seedFiles List of seeds file
      * @return array
      */
-    protected function loadSeeders($seedFiles)
+    protected function loadSeeders(array $seedFiles)
     {
         $seeds = [];
         foreach ($seedFiles as $seedFile) {
@@ -127,10 +126,10 @@ class Seeder
     }
 
     /**
-     *    Return an array of seed details inclusing the classname and the sprinkle name
+     * Return an array of seed details inclusing the classname and the sprinkle name
      *
-     *    @param  Resource $file The seed file
-     *    @return array The details about a seed file [name, class, sprinkle]
+     * @param  Resource $file The seed file
+     * @return array The details about a seed file [name, class, sprinkle]
      */
     protected function getSeedDetails(Resource $file)
     {

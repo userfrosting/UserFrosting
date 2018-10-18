@@ -43,7 +43,7 @@ class SetupSmtpCommand extends BaseCommand
     const Setup_None = 'No email support';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -57,7 +57,7 @@ class SetupSmtpCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -44,7 +44,6 @@ interface MigrationRepositoryInterface
      *
      * @param  string  $file
      * @param  int     $batch
-     * @return void
      */
     public function log($file, $batch);
 
@@ -52,7 +51,6 @@ interface MigrationRepositoryInterface
      * Remove a migration from the log.
      *
      * @param  string  $migration
-     * @return void
      */
     public function delete($migration);
 
@@ -72,15 +70,11 @@ interface MigrationRepositoryInterface
 
     /**
      * Create the migration repository data store.
-     *
-     * @return void
      */
     public function createRepository();
 
     /**
-     *    Delete the migration repository data store
-     *
-     *    @return void
+     * Delete the migration repository data store
      */
     public function deleteRepository();
 

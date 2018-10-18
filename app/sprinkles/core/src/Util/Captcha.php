@@ -31,7 +31,7 @@ class Captcha
     protected $image;
 
     /**
-     * @var UserFrosting\Session\Session We use the session object so that the hashed captcha token will automatically appear in the session.
+     * @var Session We use the session object so that the hashed captcha token will automatically appear in the session.
      */
     protected $session;
 
@@ -42,8 +42,11 @@ class Captcha
 
     /**
      * Create a new captcha.
+     *
+     * @param Session $session
+     * @param string $key
      */
-    public function __construct($session, $key)
+    public function __construct(Session $session, $key)
     {
         $this->session = $session;
         $this->key = $key;
@@ -73,6 +76,8 @@ class Captcha
 
     /**
      * Returns the captcha code.
+     *
+     * @return string
      */
     public function getCaptcha()
     {
@@ -81,6 +86,8 @@ class Captcha
 
     /**
      * Returns the captcha image.
+     *
+     * @return string
      */
     public function getImage()
     {
@@ -89,9 +96,9 @@ class Captcha
 
     /**
      * Check that the specified code, when hashed, matches the code in the session.
-     *
      * Also, stores the specified code in the session with an md5 hash.
-     * @param string
+     *
+     * @param string $code
      * @return bool
      */
     public function verifyCode($code)
@@ -101,8 +108,9 @@ class Captcha
 
     /**
      * Generate the image for the current captcha.
-     *
      * This generates an image as a binary string.
+     *
+     * @return string
      */
     protected function generateImage()
     {

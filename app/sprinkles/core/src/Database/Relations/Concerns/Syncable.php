@@ -7,10 +7,6 @@
  */
 namespace UserFrosting\Sprinkle\Core\Database\Relations\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-
 /**
  * Implements the `sync` method for HasMany relationships.
  *
@@ -86,7 +82,7 @@ trait Syncable
                  ->where($relatedKeyName, $id)
                  ->update($row);
         }
-        
+
         $changes['updated'] = $this->castKeys($updateIds);
 
         // Insert the new rows
@@ -105,7 +101,6 @@ trait Syncable
         return $changes;
     }
 
-
     /**
      * Cast the given keys to integers if they are numeric and string otherwise.
      *
@@ -118,7 +113,7 @@ trait Syncable
             return $this->castKey($v);
         }, $keys);
     }
-    
+
     /**
      * Cast the given key to an integer if it is numeric.
      *

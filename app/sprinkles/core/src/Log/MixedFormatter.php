@@ -23,9 +23,9 @@ class MixedFormatter extends LineFormatter
     /**
      * Return the JSON representation of a value
      *
+     * @throws \RuntimeException if encoding fails and errors are not ignored
      * @param  mixed             $data
      * @param  bool              $ignoreErrors
-     * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string
      */
     protected function toJson($data, $ignoreErrors = false)

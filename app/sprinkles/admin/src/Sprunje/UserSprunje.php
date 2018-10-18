@@ -7,8 +7,7 @@
  */
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-use UserFrosting\Sprinkle\Core\Facades\Debug;
+use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Facades\Translator;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
 
@@ -44,7 +43,7 @@ class UserSprunje extends Sprunje
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function baseQuery()
     {
@@ -59,9 +58,9 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
-    protected function filterLastActivity($query, $value)
+    protected function filterLastActivity(Builder $query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
@@ -78,9 +77,9 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
-    protected function filterName($query, $value)
+    protected function filterName(Builder $query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
@@ -99,9 +98,9 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param mixed $value
-     * @return $this
+     * @return self
      */
-    protected function filterStatus($query, $value)
+    protected function filterStatus(Builder $query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
@@ -149,9 +148,9 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return $this
+     * @return self
      */
-    protected function sortLastActivity($query, $direction)
+    protected function sortLastActivity(Builder $query, $direction)
     {
         $query->orderBy('activities.occurred_at', $direction);
         return $this;
@@ -162,9 +161,9 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return $this
+     * @return self
      */
-    protected function sortName($query, $direction)
+    protected function sortName(Builder $query, $direction)
     {
         $query->orderBy('last_name', $direction);
         return $this;
@@ -175,9 +174,9 @@ class UserSprunje extends Sprunje
      *
      * @param Builder $query
      * @param string $direction
-     * @return $this
+     * @return self
      */
-    protected function sortStatus($query, $direction)
+    protected function sortStatus(Builder $query, $direction)
     {
         $query->orderBy('flag_enabled', $direction)->orderBy('flag_verified', $direction);
         return $this;

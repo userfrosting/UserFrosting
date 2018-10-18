@@ -19,7 +19,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class EnvironmentInfo
 {
     /**
-     * @var ContainerInterface The DI container for your application.
+     * @var \Interop\Container\ContainerInterface The DI container for your application.
      */
     public static $ci;
 
@@ -37,13 +37,13 @@ class EnvironmentInfo
 
         try {
             $results['type'] = $pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $results['type'] = "Unknown";
         }
 
         try {
             $results['version'] = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $results['version'] = "";
         }
 

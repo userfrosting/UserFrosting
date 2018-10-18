@@ -9,7 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\Sprinkle\Core\Bakery\MigrateCommand;
 
@@ -22,7 +21,7 @@ use UserFrosting\Sprinkle\Core\Bakery\MigrateCommand;
 class MigrateResetCommand extends MigrateCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -35,7 +34,7 @@ class MigrateResetCommand extends MigrateCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -50,9 +49,9 @@ class MigrateResetCommand extends MigrateCommand
     }
 
     /**
-     *    Reset the whole database to an empty state by rolling back all migrations
+     * Reset the whole database to an empty state by rolling back all migrations
      *
-     *    @param InputInterface $input
+     * @param InputInterface $input
      */
     protected function performReset(InputInterface $input)
     {
@@ -90,9 +89,9 @@ class MigrateResetCommand extends MigrateCommand
     }
 
     /**
-     *    Hard reset the whole database to an empty state by dropping all tables
+     * Hard reset the whole database to an empty state by dropping all tables
      *
-     *    @param InputInterface $input
+     * @param InputInterface $input
      */
     protected function performHardReset(InputInterface $input)
     {

@@ -22,8 +22,6 @@ trait RefreshDatabase
 
     /**
      * Define hooks to migrate the database before and after each test.
-     *
-     * @return void
      */
     public function refreshDatabase()
     {
@@ -45,8 +43,6 @@ trait RefreshDatabase
 
     /**
      * Refresh the in-memory database.
-     *
-     * @return void
      */
     protected function refreshInMemoryDatabase()
     {
@@ -55,8 +51,6 @@ trait RefreshDatabase
 
     /**
      * Refresh a conventional test database.
-     *
-     * @return void
      */
     protected function refreshTestDatabase()
     {
@@ -74,8 +68,6 @@ trait RefreshDatabase
 
     /**
      * Handle database transactions on the specified connections.
-     *
-     * @return void
      */
     protected function beginDatabaseTransaction()
     {

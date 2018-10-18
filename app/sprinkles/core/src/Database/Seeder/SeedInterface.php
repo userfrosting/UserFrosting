@@ -14,5 +14,8 @@ namespace UserFrosting\Sprinkle\Core\Database\Seeder;
  */
 interface SeedInterface
 {
+    /**
+     * Run the seed
+     */
     public function run();
 }

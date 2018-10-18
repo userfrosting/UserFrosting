@@ -8,6 +8,7 @@
 namespace UserFrosting\Sprinkle\Core\Error\Handler;
 
 use UserFrosting\Support\Exception\HttpException;
+use UserFrosting\Support\Message\UserMessage;
 
 /**
  * Handler for HttpExceptions.
@@ -18,8 +19,6 @@ class HttpExceptionHandler extends ExceptionHandler
 {
     /**
      * For HttpExceptions, only write to the error log if the status code is 500
-     *
-     * @return void
      */
     public function writeToErrorLog()
     {

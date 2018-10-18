@@ -9,8 +9,6 @@ namespace UserFrosting\Sprinkle\Core\Bakery;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -27,7 +25,7 @@ class BakeCommand extends BaseCommand
     protected $buildPath;
 
     /**
-     * @var string $ufArt The UserFrosting ASCII art.
+     * @var string The UserFrosting ASCII art.
      */
     public $title = "
  _   _              ______             _   _
@@ -40,7 +38,7 @@ class BakeCommand extends BaseCommand
                                                    |___/";
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -50,7 +48,7 @@ class BakeCommand extends BaseCommand
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
