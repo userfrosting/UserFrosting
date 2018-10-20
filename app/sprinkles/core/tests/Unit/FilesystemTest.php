@@ -12,6 +12,7 @@ use League\Flysystem\Adapter\Local as LocalAdapter;
 use League\Flysystem\Filesystem;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
+use UserFrosting\Sprinkle\Core\Facades\Storage;
 use UserFrosting\Tests\TestCase;
 
 /**
@@ -23,6 +24,7 @@ class FilesystemTest extends TestCase
     /** @var string Testing storage path **/
     private $testDir;
 
+    /** @var string Test disk name **/
     private $testDisk = 'testing';
 
     /**
@@ -57,6 +59,14 @@ class FilesystemTest extends TestCase
         $this->assertInstanceOf(FilesystemAdapter::class, $disk);
 
         return $disk;
+    }
+
+    /**
+     * @depends testService
+     */
+    public function testFacade()
+    {
+        $this->assertInstanceOf(FilesystemAdapter::class, Storage::disk($this->testDisk));
     }
 
     /**
