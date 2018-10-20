@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added arguments to the `create-admin` and `setup` Bakery commands so it can be used in a non-interactive way (#808)
 - Added tests for migrator and it's components
 - Added tests for `migrate` Bakery command and sub-commands
+- Added new `filesystem` service
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
