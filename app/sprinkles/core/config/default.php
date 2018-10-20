@@ -79,6 +79,59 @@
             'smtp' => false,
             'twig' => false
         ],
+
+        /**
+        * ----------------------------------------------------------------------
+        *  Filesystem Configuration
+        * ----------------------------------------------------------------------
+        *
+        * You may configure as many filesystem "disks" as you wish, and you
+        * may even configure multiple disks of the same driver. You may also
+        * select the default filesystem disk that should be used by UserFrosting.
+        *
+        * Supported Drivers for disk: "local", "ftp", "sftp", "s3", "rackspace"
+        */
+        'filesystems' => [
+            'default' => getenv('FILESYSTEM_DRIVER') ?: 'local',
+            'cloud' => getenv('FILESYSTEM_CLOUD') ?: 's3',
+
+            'disks' => [
+                /**
+                 * Default storage disk. Default path is `app/storage/`. All
+                 * files are accessible throught the FilesystemManager, but not
+                 * publicly accessible throught an URL. Can still be downloaded
+                 * using the `download` method in a custom controller
+                 */
+                'local' => [
+                    'driver' => 'local',
+                    'root' => \UserFrosting\STORAGE_DIR
+                ],
+                /**
+                * Public files are directly accessible throught the webserver for
+                * better performances, but at the expanse of all files being public.
+                * Direct access from http://{url}/files/, physically located in `/public/files`
+                * Great storage disk for assets (images, avatar, etc).
+                */
+                'public' => [
+                    'driver' => 'local',
+                    'root' => \UserFrosting\STORAGE_PUBLIC_DIR,
+                    'url' => 'files/'
+                ],
+                /**
+                 * Amazon S3 Bucket Config. Config should go in .env file. For help, see :
+                 * https://aws.amazon.com/en/blogs/security/wheres-my-secret-access-key/
+                 */
+                's3' => [
+                    'driver' => 's3',
+                    'key' => getenv('AWS_ACCESS_KEY_ID') ?: '',
+                    'secret' => getenv('AWS_SECRET_ACCESS_KEY') ?: '',
+                    'region' => getenv('AWS_DEFAULT_REGION') ?: '', // See : http://docs.aws.amazon.com/general/latest/gr/rande.html
+                    'bucket' => getenv('AWS_BUCKET') ?: '',
+                    'url' => getenv('AWS_URL') ?: '',
+                ],
+           ],
+        ],
+
         'mail'    => [
             'mailer'     => 'smtp',     // Set to one of 'smtp', 'mail', 'qmail', 'sendmail'
             'host'       => getenv('SMTP_HOST') ?: null,

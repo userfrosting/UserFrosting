@@ -36,5 +36,18 @@
          */
         'settings' => [
             'displayErrorDetails' => false
-        ]
+        ],
+        'filesystems' => [
+            'disks' => [
+                'testing' => [
+                    'driver' => 'local',
+                    'root' => \UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testing',
+                    'url' => 'files/testing/',
+                ],
+                'testingDriver' => [
+                    'driver' => 'localTest',
+                    'root' => \UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testingDriver'
+                ],
+           ]
+       ]
     ];

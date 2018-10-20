@@ -45,6 +45,7 @@ use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
+use \UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
 use UserFrosting\Sprinkle\Core\Router;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
@@ -423,6 +424,14 @@ class ServicesProvider
             Faker::setLocale('en_EN');
 
             return $fm;
+        };
+
+        /**
+         * Filesystem Service
+         * @return \UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager
+         */
+        $container['filesystem'] = function ($c) {
+            return new FilesystemManager($c->config);
         };
 
         /**
