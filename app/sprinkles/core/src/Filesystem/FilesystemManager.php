@@ -61,7 +61,7 @@ class FilesystemManager extends LaravelFilesystemManager
      *
      * @throws \InvalidArgumentException
      */
-    // N.B.: Introduce after laravel 5.4
+    // N.B.: Introduced after laravel 5.4
     /*protected function createCacheStore($config)
     {
         if ($config === true) {
