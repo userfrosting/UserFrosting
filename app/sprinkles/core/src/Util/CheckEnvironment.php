@@ -10,8 +10,8 @@ namespace UserFrosting\Sprinkle\Core\Util;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Illuminate\Cache\CacheManager;
-use RocketTheme\Toolbox\ResourceLocator\UniformResourceLocator;
 use Slim\Views\Twig;
+use UserFrosting\UniformResourceLocator\ResourceLocator;
 
 /**
  * Performs pre-flight tests on your server environment to check that it meets the requirements.
@@ -21,7 +21,7 @@ use Slim\Views\Twig;
 class CheckEnvironment
 {
     /**
-     * @var UniformResourceLocator Locator service for stream resources.
+     * @var ResourceLocator Locator service for stream resources.
      */
     protected $locator;
 
@@ -49,10 +49,10 @@ class CheckEnvironment
      * Constructor.
      *
      * @param Twig $view The view object, needed for rendering error page.
-     * @param UniformResourceLocator $locator Locator service for stream resources.
+     * @param ResourceLocator $locator Locator service for stream resources.
      * @param CacheManager $cache Cache manager
      */
-    public function __construct(Twig $view, UniformResourceLocator $locator, $cache)
+    public function __construct(Twig $view, ResourceLocator $locator, $cache)
     {
         $this->view = $view;
         $this->locator = $locator;
