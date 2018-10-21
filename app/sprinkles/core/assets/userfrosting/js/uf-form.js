@@ -31,29 +31,31 @@
  * 
  * @todo Implement proper fallback for when `set` function isn't supported by FormData.
  */
-;(function($, window, document, undefined) {
-	'use strict';
+;
+(function ($, window, document, undefined) {
+    'use strict';
 
     // Define plugin name and defaults.
     var pluginName = 'ufForm',
         defaults = {
             validators: {
-                'rules'   : {},
+                'rules': {},
                 'messages': {}
             },
-            submittingText      : "<i class='fa fa-spinner fa-spin'></i>",
+            submittingText: "<i class='fa fa-spinner fa-spin'></i>",
             beforeSubmitCallback: null,
-            binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
-            keyupDelay          : 0,
+            binaryCheckboxes: true, // submit checked/unchecked checkboxes as 0/1 values
+            keyupDelay: 0,
+            showAlertOnSuccess: false,
             DEBUG: false
         };
 
     // Constructor
-    function Plugin (element, options) {
+    function Plugin(element, options) {
         this.element = element[0];
         this.$element = $(this.element);
         var lateDefaults = {
-            encType  : (typeof this.$element.attr('enctype') !== 'undefined') ? this.$element.attr('enctype') : '',
+            encType: (typeof this.$element.attr('enctype') !== 'undefined') ? this.$element.attr('enctype') : '',
             msgTarget: this.$element.find('.js-form-alerts:first')
         };
         this.settings = $.extend(true, {}, defaults, lateDefaults, options);
@@ -70,10 +72,10 @@
 
         // Setup validator
         this.validator = this.$element.validate({
-            rules        : this.settings.validators.rules,
-            messages     : this.settings.validators.messages,
+            rules: this.settings.validators.rules,
+            messages: this.settings.validators.messages,
             submitHandler: $.proxy(this._submitHandler, this),
-            onkeyup      : $.proxy(this._onKeyUp, this)
+            onkeyup: $.proxy(this._onKeyUp, this)
         });
 
         return this;
@@ -84,7 +86,7 @@
     /**
      * Handles the form submission after successful client-side validation.
      */
-    Plugin.prototype._submitHandler = function(form, event) {
+    Plugin.prototype._submitHandler = function (form, event) {
         // Execute any "before submit" callback
         if (this.settings.beforeSubmitCallback) {
             this.settings.beforeSubmitCallback();
@@ -104,7 +106,7 @@
         var reqParams = {
             converters: {
                 // Override jQuery's strict JSON parsing
-                'text json': function(result) {
+                'text json': function (result) {
                     try {
                         // First try to use native browser parsing
                         if (typeof JSON === 'object' && typeof JSON.parse === 'function') {
@@ -113,9 +115,9 @@
                             return $.parseJSON(result);
                         }
                     } catch (e) {
-                       // statements to handle any exceptions
-                       console.warn('Could not parse expected JSON response.');
-                       return {};
+                        // statements to handle any exceptions
+                        console.warn('Could not parse expected JSON response.');
+                        return {};
                     }
                 }
             },
@@ -139,21 +141,30 @@
         // Submit the form via AJAX
         $.ajax(reqParams).then(
             // Submission successful
-            $.proxy(function(data, textStatus, jqXHR) {
+            $.proxy(function (data, textStatus, jqXHR) {
                 // Restore button text and re-enable submit button
                 if (submitButton) {
-                    submitButton.prop('disabled', false );
+                    submitButton.prop('disabled', false);
                     submitButton.html(submitButtonText);
                 }
-
                 this.$element.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
+                if (this.settings.showAlertOnSuccess) {
+                    // showing UF alerts on success also. 
+                    // This will show the Alerts from the Alert stream when the page is not reloaded after the ufForm submit succeeds,
+                    if (!this.settings.msgTarget.data('ufAlerts')) {
+                        this.settings.msgTarget.ufAlerts();
+                    } else {
+                        this.settings.msgTarget.ufAlerts('clear');
+                    }
+                    this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
+                }
                 return jqXHR;
             }, this),
             // Submission failed
-            $.proxy(function(jqXHR, textStatus, errorThrown) {
+            $.proxy(function (jqXHR, textStatus, errorThrown) {
                 // Restore button text and re-enable submit button
                 if (submitButton) {
-                    submitButton.prop('disabled', false );
+                    submitButton.prop('disabled', false);
                     submitButton.html(submitButtonText);
                 }
                 // Error messages
@@ -163,7 +174,7 @@
                     document.close();
                 } else {
                     if (this.settings.DEBUG) {
-                        console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText );
+                        console.log('Error (' + jqXHR.status + '): ' + jqXHR.responseText);
                     }
                     // Display errors on failure
                     // TODO: ufAlerts widget should have a 'destroy' method
@@ -186,21 +197,20 @@
     /**
      * Helper function for encoding data as urlencoded
      */
-    Plugin.prototype._urlencodeData = function(form) {
+    Plugin.prototype._urlencodeData = function (form) {
         // Serialize and post to the backend script in ajax mode
         var serializedData;
         if (this.settings.binaryCheckboxes) {
             serializedData = form.find(':input').not(':checkbox').serialize();
             // Get unchecked checkbox values, set them to 0
-            form.find('input[type=checkbox]:enabled').each(function() {
+            form.find('input[type=checkbox]:enabled').each(function () {
                 if ($(this).is(':checked')) {
                     serializedData += '&' + encodeURIComponent(this.name) + '=1';
                 } else {
                     serializedData += '&' + encodeURIComponent(this.name) + '=0';
                 }
             });
-        }
-        else {
+        } else {
             serializedData = form.find(':input').serialize();
         }
 
@@ -210,7 +220,7 @@
     /**
      * Helper function for encoding data as multipart/form-data
      */
-    Plugin.prototype._multipartData = function(form) {
+    Plugin.prototype._multipartData = function (form) {
         // Use FormData to wrap form contents.
         // https://developer.mozilla.org/en/docs/Web/API/FormData
         var formData = new FormData(form[0]);
@@ -222,7 +232,7 @@
             if (typeof formData.set !== 'function') {
                 this.settings.msgTarget.ufAlerts('push', 'danger', "Your browser is missing a required feature. This form will still attempt to submit, but if it fails, you'll need to use Chrome for desktop or FireFox for desktop.");
             } else {
-                checkboxes.each(function() {
+                checkboxes.each(function () {
                     if ($(this).is(':checked')) {
                         // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
                         formData.set(this.name, 1);
@@ -237,10 +247,10 @@
         return formData;
     };
 
-    Plugin.prototype._onKeyUp = function(element, event) {
+    Plugin.prototype._onKeyUp = function (element, event) {
         var validator = this.validator;
         // See http://stackoverflow.com/questions/41363409/jquery-validate-add-delay-to-keyup-validation
-        setTimeout(function() {
+        setTimeout(function () {
             // Avoid revalidate the field when pressing one of the following keys
             // Shift       => 16
             // Ctrl        => 17
@@ -260,16 +270,16 @@
                 38, 39, 40, 45, 144, 225
             ];
 
-            if ( event.which === 9 && validator.elementValue( element ) === '' || $.inArray( event.keyCode, excludedKeys ) !== -1 ) {
+            if (event.which === 9 && validator.elementValue(element) === '' || $.inArray(event.keyCode, excludedKeys) !== -1) {
                 return;
-            } else if ( element.name in validator.submitted || element.name in validator.invalid ) {
-                validator.element( element );
+            } else if (element.name in validator.submitted || element.name in validator.invalid) {
+                validator.element(element);
             }
         }, this.settings.keyupDelay);
     };
 
     // Handles instantiation and access to non-private methods.
-    $.fn[pluginName] = function(methodOrOptions) {
+    $.fn[pluginName] = function (methodOrOptions) {
         // Grab plugin instance
         var instance = $(this).data(pluginName);
         // If undefined or object, initalise plugin.
@@ -284,14 +294,12 @@
         else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
             // Ensure not a private function
             if (methodOrOptions.indexOf('_') !== 0) {
-                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+                return instance[methodOrOptions](Array.prototype.slice.call(arguments, 1));
+            } else {
+                console.warn('Method ' + methodOrOptions + ' is private!');
             }
-            else {
-                console.warn( 'Method ' +  methodOrOptions + ' is private!' );
-            }
-        }
-        else {
-            console.warn( 'Method ' +  methodOrOptions + ' does not exist.' );
+        } else {
+            console.warn('Method ' + methodOrOptions + ' does not exist.');
         }
     };
 })(jQuery, window, document);
