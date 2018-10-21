@@ -26,7 +26,7 @@
     ],
     "require": {
         "doctrine/dbal": "^2.5",
-        "filp/whoops": "^2.1",
+        "filp/whoops": "~2.2.0",
         "illuminate/cache": "5.4.*",
         "illuminate/database": "5.4.*",
         "illuminate/events": "5.4.*",

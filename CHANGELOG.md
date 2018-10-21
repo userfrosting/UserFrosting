@@ -48,6 +48,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## v4.1.21
+- Locked Whoops to version 2.2.1 until they fix that [`[internal]` issue](https://github.com/filp/whoops/issues/598).
+
 ## v4.1.20
 - Added `route:list` command to list all registered routes ([#903](https://github.com/userfrosting/UserFrosting/pull/903); Thanks @apple314159 !)
 - Added warning in configuration file regarding disabling registration and email verification ([#900](https://github.com/userfrosting/UserFrosting/pull/900); Thanks @linkhousemedia !)
