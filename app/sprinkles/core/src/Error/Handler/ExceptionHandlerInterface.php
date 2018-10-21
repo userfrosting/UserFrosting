@@ -22,10 +22,10 @@ interface ExceptionHandlerInterface
      * @param ContainerInterface     $ci
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
-     * @param \Exception             $exception
+     * @param \Throwable             $exception
      * @param bool                   $displayErrorDetails
      */
-    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, \Exception $exception, $displayErrorDetails = false);
+    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, \Throwable $exception, $displayErrorDetails = false);
 
     /**
      * @return ResponseInterface
