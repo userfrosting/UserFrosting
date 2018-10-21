@@ -51,7 +51,7 @@ class RoleSprunje extends Sprunje
      * @param mixed $value
      * @return self
      */
-    protected function filterInfo(Builder $query, $value)
+    protected function filterInfo($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);

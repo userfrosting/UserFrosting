@@ -74,7 +74,7 @@ class Permission extends Model
      * @param int $roleId
      * @return Builder
      */
-    public function scopeForRole(Builder $query, $roleId)
+    public function scopeForRole($query, $roleId)
     {
         return $query->join('permission_roles', function ($join) use ($roleId) {
             $join->on('permission_roles.permission_id', 'permissions.id')
@@ -89,7 +89,7 @@ class Permission extends Model
      * @param int $roleId
      * @return Builder
      */
-    public function scopeNotForRole(Builder $query, $roleId)
+    public function scopeNotForRole($query, $roleId)
     {
         return $query->join('permission_roles', function ($join) use ($roleId) {
             $join->on('permission_roles.permission_id', 'permissions.id')

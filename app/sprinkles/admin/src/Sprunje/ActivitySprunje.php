@@ -50,7 +50,7 @@ class ActivitySprunje extends Sprunje
      * @param mixed $value
      * @return self
      */
-    protected function filterUser(Builder $query, $value)
+    protected function filterUser($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
@@ -71,7 +71,7 @@ class ActivitySprunje extends Sprunje
      * @param string $direction
      * @return self
      */
-    protected function sortUser(Builder $query, $direction)
+    protected function sortUser($query, $direction)
     {
         $query->orderBy('users.last_name', $direction);
         return $this;

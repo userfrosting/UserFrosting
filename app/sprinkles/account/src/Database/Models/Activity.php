@@ -8,7 +8,7 @@
 namespace UserFrosting\Sprinkle\Account\Database\Models;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 
 /**
@@ -42,7 +42,7 @@ class Activity extends Model
      *
      * @param Builder $query
      */
-    public function scopeJoinUser(Builder $query)
+    public function scopeJoinUser($query)
     {
         $query = $query->select('activities.*');
 
@@ -57,7 +57,7 @@ class Activity extends Model
      * @param Builder $query
      * @return Builder
      */
-    public function scopeMostRecentEvents(Builder $query)
+    public function scopeMostRecentEvents($query)
     {
         return $query->select('user_id', 'event_type', Capsule::raw('MAX(occurred_at) as occurred_at'))
             ->groupBy('user_id')

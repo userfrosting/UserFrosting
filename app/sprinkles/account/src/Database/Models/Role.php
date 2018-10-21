@@ -84,7 +84,7 @@ class Role extends Model
      * @param int $userId
      * @return Builder
      */
-    public function scopeForUser(Builder $query, $userId)
+    public function scopeForUser($query, $userId)
     {
         return $query->join('role_users', function ($join) use ($userId) {
             $join->on('role_users.role_id', 'roles.id')

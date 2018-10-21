@@ -51,7 +51,7 @@ class PermissionSprunje extends Sprunje
      * @param mixed $value
      * @return self
      */
-    protected function filterInfo(Builder $query, $value)
+    protected function filterInfo($query, $value)
     {
         return $this->filterProperties($query, $value);
     }
@@ -63,7 +63,7 @@ class PermissionSprunje extends Sprunje
      * @param mixed $value
      * @return self
      */
-    protected function filterProperties(Builder $query, $value)
+    protected function filterProperties($query, $value)
     {
         // Split value on separator for OR queries
         $values = explode($this->orSeparator, $value);
@@ -84,7 +84,7 @@ class PermissionSprunje extends Sprunje
      * @param string $direction
      * @return self
      */
-    protected function sortProperties(Builder $query, $direction)
+    protected function sortProperties($query, $direction)
     {
         $query->orderBy('slug', $direction);
         return $this;

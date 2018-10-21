@@ -451,7 +451,7 @@ class User extends Model
      * @param int $roleId
      * @return Builder
      */
-    public function scopeForRole(Builder $query, $roleId)
+    public function scopeForRole($query, $roleId)
     {
         return $query->join('role_users', function ($join) use ($roleId) {
             $join->on('role_users.user_id', 'users.id')
@@ -465,7 +465,7 @@ class User extends Model
      * @param Builder $query
      * @return Builder
      */
-    public function scopeJoinLastActivity(Builder $query)
+    public function scopeJoinLastActivity($query)
     {
         $query = $query->select('users.*');
 
