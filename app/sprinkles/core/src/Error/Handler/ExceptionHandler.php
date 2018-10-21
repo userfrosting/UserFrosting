@@ -82,7 +82,7 @@ class ExceptionHandler implements ExceptionHandlerInterface
         ContainerInterface $ci,
         ServerRequestInterface $request,
         ResponseInterface $response,
-        \Throwable $exception,
+        $exception,
         $displayErrorDetails = false
     ) {
         $this->ci = $ci;

@@ -116,7 +116,7 @@ class WhoopsRenderer extends ErrorRenderer
     /**
      * {@inheritdoc}
      */
-    public function __construct(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception, $displayErrorDetails = false)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false)
     {
         $this->request = $request;
         $this->response = $response;

@@ -28,7 +28,7 @@ abstract class ErrorRenderer implements ErrorRendererInterface
     protected $response;
 
     /**
-     * @var \Exception
+     * @var \Throwable
      */
     protected $exception;
 
@@ -45,10 +45,10 @@ abstract class ErrorRenderer implements ErrorRendererInterface
      *
      * @param ServerRequestInterface     $request   The most recent Request object
      * @param ResponseInterface          $response  The most recent Response object
-     * @param \Exception                 $exception The caught Exception object
+     * @param \Throwable                 $exception The caught Exception object
      * @param bool                       $displayErrorDetails
      */
-    public function __construct(ServerRequestInterface $request, ResponseInterface $response, \Exception $exception, $displayErrorDetails = false)
+    public function __construct(ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false)
     {
         $this->request = $request;
         $this->response = $response;

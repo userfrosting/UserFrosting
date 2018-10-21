@@ -25,7 +25,7 @@ interface ExceptionHandlerInterface
      * @param \Throwable             $exception
      * @param bool                   $displayErrorDetails
      */
-    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, \Throwable $exception, $displayErrorDetails = false);
+    public function __construct(ContainerInterface $ci, ServerRequestInterface $request, ResponseInterface $response, $exception, $displayErrorDetails = false);
 
     /**
      * @return ResponseInterface

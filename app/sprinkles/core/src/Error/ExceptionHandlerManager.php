@@ -54,7 +54,7 @@ class ExceptionHandlerManager
      * @param \Throwable             $exception The caught Exception object
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, \Throwable $exception)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $exception)
     {
         // Default exception handler class
         $handlerClass = '\UserFrosting\Sprinkle\Core\Error\Handler\ExceptionHandler';
