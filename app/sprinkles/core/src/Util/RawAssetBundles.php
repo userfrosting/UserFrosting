@@ -43,7 +43,7 @@ use UserFrosting\Assets\Exception\InvalidBundlesFileException;
          if (isset($bundlesFile->bundle)) {
              foreach ($bundlesFile->bundle as $bundleName => $bundle) {
                  // Get collision setting.
-                 $collisionRule = ($bundle->options->sprinkle->onCollision ?: 'replace');
+                 $collisionRule = isset($bundle->options->sprinkle->onCollision) ? $bundle->options->sprinkle->onCollision : 'replace';
 
                  // Handle CSS bundle if specified.
                  if (isset($bundle->styles)) {
