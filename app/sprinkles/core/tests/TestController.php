@@ -10,6 +10,8 @@ namespace UserFrosting\Sprinkle\Core\Tests;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
+use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 
 /**
  * Helper trait to handle Controller Test
@@ -19,6 +21,9 @@ use Slim\Http\Response;
  */
 trait TestController
 {
+    use TestDatabase;
+    use RefreshDatabase;
+
     /**
      * Force session to start to avoid PHPUnit headers already sent error
      * @see https://stackoverflow.com/a/23400885/445757
@@ -27,6 +32,10 @@ trait TestController
     {
         @session_start();
         parent::setUp();
+
+        // Setup test database
+        $this->setupTestDatabase();
+        $this->refreshDatabase();
     }
 
     /**
