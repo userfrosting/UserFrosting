@@ -18,6 +18,7 @@ use UserFrosting\Sprinkle\Core\Util\Util;
 use Whoops\Exception\Formatter;
 use Whoops\Exception\Inspector;
 use Whoops\Handler\PlainTextHandler;
+use Whoops\Handler\Handler;
 use Whoops\Util\Misc;
 use Whoops\Util\TemplateHelper;
 
@@ -169,7 +170,7 @@ class WhoopsRenderer extends ErrorRenderer
         if (!$this->handleUnconditionally()) {
             // Check conditions for outputting HTML:
             // @todo: Make this more robust
-            if (php_sapi_name() === 'cli') {
+            if (PHP_SAPI === 'cli') {
                 // Help users who have been relying on an internal test value
                 // fix their code to the proper method
                 if (isset($_ENV['whoops-test'])) {
@@ -186,6 +187,7 @@ class WhoopsRenderer extends ErrorRenderer
         $templateFile = $this->getResource("views/layout.html.php");
         $cssFile      = $this->getResource("css/whoops.base.css");
         $zeptoFile    = $this->getResource("js/zepto.min.js");
+        $prettifyFile = $this->getResource("js/prettify.min.js");
         $clipboard    = $this->getResource("js/clipboard.min.js");
         $jsFile       = $this->getResource("js/whoops.base.js");
 
@@ -196,24 +198,24 @@ class WhoopsRenderer extends ErrorRenderer
         $inspector = $this->getInspector();
         $frames    = $inspector->getFrames();
 
-        $code = $inspector->getException()->getCode();
-
-        if ($inspector->getException() instanceof \ErrorException) {
-            // ErrorExceptions wrap the php-error types within the "severity" property
-            $code = Misc::translateErrorCode($inspector->getException()->getSeverity());
-        }
-
         // Detect frames that belong to the application.
-        if ($this->applicationPaths) {
+        if ($this->getApplicationPaths()) {
             /* @var \Whoops\Exception\Frame $frame */
             foreach ($frames as $frame) {
-                foreach ($this->applicationPaths as $path) {
-                    if (substr($frame->getFile(), 0, strlen($path)) === $path) {
+                foreach ($this->getApplicationPaths() as $path) {
+                    if (strpos($frame->getFile(), $path) === 0) {
                         $frame->setApplication(true);
                         break;
                     }
                 }
             }
+        }
+
+        $code = $inspector->getException()->getCode();
+
+        if ($inspector->getException() instanceof \ErrorException) {
+            // ErrorExceptions wrap the php-error types within the "severity" property
+            $code = Misc::translateErrorCode($inspector->getException()->getSeverity());
         }
 
         // Nicely format the session object
@@ -227,6 +229,7 @@ class WhoopsRenderer extends ErrorRenderer
             // @todo: Asset compiler
             "stylesheet" => file_get_contents($cssFile),
             "zepto"      => file_get_contents($zeptoFile),
+            "prettify"   => file_get_contents($prettifyFile),
             "clipboard"  => file_get_contents($clipboard),
             "javascript" => file_get_contents($jsFile),
 
@@ -243,16 +246,19 @@ class WhoopsRenderer extends ErrorRenderer
             "frame_code"                 => $this->getResource("views/frame_code.html.php"),
             "env_details"                => $this->getResource("views/env_details.html.php"),
 
-            "title"          => $this->getPageTitle(),
-            "name"           => explode("\\", $inspector->getExceptionName()),
-            "message"        => $inspector->getException()->getMessage(),
-            "code"           => $code,
-            "plain_exception" => Formatter::formatExceptionPlain($inspector),
-            "frames"         => $frames,
-            "has_frames"     => !!count($frames),
-            "handler"        => $this,
-            "handlers"       => [$this],
-            "prettify"       => true,
+            "title"            => $this->getPageTitle(),
+            "name"             => explode("\\", $inspector->getExceptionName()),
+            "message"          => $inspector->getExceptionMessage(),
+            "previousMessages" => $inspector->getPreviousExceptionMessages(),
+            "docref_url"       => $inspector->getExceptionDocrefUrl(),
+            "code"             => $code,
+            "previousCodes"    => $inspector->getPreviousExceptionCodes(),
+            "plain_exception"  => Formatter::formatExceptionPlain($inspector),
+            "frames"           => $frames,
+            "has_frames"       => !!count($frames),
+            "handler"          => $this,
+            "handlers"         => [$this],
+            "prettify"         => true,
 
             "active_frames_tab" => count($frames) && $frames->offsetGet(0)->isApplication() ?  'application' : 'all',
             "has_frames_tabs"   => $this->getApplicationPaths(),
