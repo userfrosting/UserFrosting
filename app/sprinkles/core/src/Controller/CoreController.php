@@ -99,7 +99,7 @@ class CoreController extends SimpleController
         /** @var \UserFrosting\Assets\AssetLoader $assetLoader */
         $assetLoader = $this->ci->assetLoader;
 
-        if (!$assetLoader->loadAsset($args['url'])) {
+        if (!isset($args['url']) || !$assetLoader->loadAsset($args['url'])) {
             throw new NotFoundException;
         }
 
