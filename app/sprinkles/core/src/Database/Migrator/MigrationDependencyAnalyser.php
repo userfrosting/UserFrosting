@@ -9,6 +9,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use ReflectionClass;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
+use UserFrosting\Sprinkle\Core\Facades\Config;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
@@ -204,7 +205,9 @@ class MigrationDependencyAnalyser
         if ($reflectionClass->hasProperty('dependencies') && $reflectionClass->getProperty('dependencies')->isStatic()) {
             return $migration::$dependencies;
         } elseif (property_exists($migration, 'dependencies')) {
-            Debug::debug("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
+            if (Config::get('debug.deprecation')) {
+                Debug::warning("`$migration` uses a non static `dependencies` property. Please change the `dependencies` property to a static property.");
+            }
             $instance = new $migration();
             return $instance->dependencies;
         } else {

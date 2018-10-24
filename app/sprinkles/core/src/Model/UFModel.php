@@ -20,7 +20,7 @@ abstract class UFModel extends Model
 {
     public function __construct(array $attributes = [])
     {
-        Debug::debug("UFModel has been deprecated and will be removed in future versions.  Please move your model " . static::class . " to Database/Models/ and have it extend the base Database/Models/Model class.");
+        Debug::warning("UFModel has been deprecated and will be removed in future versions.  Please move your model " . static::class . " to Database/Models/ and have it extend the base Database/Models/Model class.");
 
         parent::__construct($attributes);
     }

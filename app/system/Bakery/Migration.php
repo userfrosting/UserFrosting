@@ -10,6 +10,7 @@ namespace UserFrosting\System\Bakery;
 use Illuminate\Database\Schema\Builder;
 use UserFrosting\Sprinkle\Core\Database\Migration as NewMigration;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use UserFrosting\Sprinkle\Core\Facades\Config;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 
 /**
@@ -28,7 +29,9 @@ class Migration extends NewMigration
      */
     public function __construct(Builder $schema = null, SymfonyStyle $io = null)
     {
-        Debug::debug("`UserFrosting\System\Bakery\Migration` has been deprecated and will be removed in future versions.  Please have your `" . static::class . "` migration extend the base `UserFrosting\Sprinkle\Core\Database\Migration` class instead.");
+        if (Config::get('debug.deprecation')) {
+            Debug::warning("`UserFrosting\System\Bakery\Migration` has been deprecated and will be removed in future versions.  Please have your `" . static::class . "` migration extend the base `UserFrosting\Sprinkle\Core\Database\Migration` class instead.");
+        }
 
         parent::__construct($schema);
     }

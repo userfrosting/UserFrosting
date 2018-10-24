@@ -32,6 +32,12 @@
             ]
         ],
         /**
+         * Don't log deprecations in tests
+         */
+        'debug' => [
+            'deprecation' => false,
+        ],
+        /**
          * Don't display error detail in test. Return the non formatted errors
          */
         'settings' => [

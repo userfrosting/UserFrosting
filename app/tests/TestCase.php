@@ -75,7 +75,7 @@ class TestCase extends BaseTestCase
         $uses = array_flip(class_uses_recursive(static::class));
 
         if (isset($uses[DatabaseTransactions::class])) {
-            Debug::debug("`UserFrosting\Tests\DatabaseTransactions` has been deprecated and will be removed in future versions.  Please use `UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` class instead.");
+            Debug::warning("`UserFrosting\Tests\DatabaseTransactions` has been deprecated and will be removed in future versions.  Please use `UserFrosting\Sprinkle\Core\Tests\DatabaseTransactions` class instead.");
             $this->beginDatabaseTransaction();
         }
     }

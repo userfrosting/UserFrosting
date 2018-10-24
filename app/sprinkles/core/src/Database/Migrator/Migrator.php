@@ -13,6 +13,7 @@ use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocatorInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser as Analyser;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRollbackDependencyAnalyser as RollbackAnalyser;
+use UserFrosting\Sprinkle\Core\Facades\Config;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Util\BadClassNameException;
 
@@ -185,7 +186,9 @@ class Migrator
          * @deprecated Since 4.2.0. Use a seeder instead
          */
         if (method_exists($migration, 'seed')) {
-            Debug::debug("Migration `seed` method has been deprecated and will be removed in future versions. Please use a Seeder instead.");
+            if (Config::get('debug.deprecation')) {
+                Debug::warning("Migration `seed` method has been deprecated and will be removed in future versions. Please use a Seeder instead.");
+            }
             $this->runMigration($migration, 'seed');
             $this->note("<info>Seeded:</info>  {$migrationClass}");
         }

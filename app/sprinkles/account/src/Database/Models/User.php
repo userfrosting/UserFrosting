@@ -361,15 +361,15 @@ class User extends Model
 
         if ($passwordType != 'modern') {
             if (!isset($params['password'])) {
-                Debug::debug('Notice: Unhashed password must be supplied to update to modern password hashing.');
+                Debug::notice('Notice: Unhashed password must be supplied to update to modern password hashing.');
             } else {
                 // Hash the user's password and update
                 $passwordHash = Password::hash($params['password']);
                 if ($passwordHash === null) {
-                    Debug::debug('Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.  Are you running PHP >= 5.3.7?');
+                    Debug::notice('Notice: outdated password hash could not be updated because the new hashing algorithm is not supported.');
                 } else {
                     $this->password = $passwordHash;
-                    Debug::debug('Notice: outdated password hash has been automatically updated to modern hashing.');
+                    Debug::notice('Notice: outdated password hash has been automatically updated to modern hashing.');
                 }
             }
         }

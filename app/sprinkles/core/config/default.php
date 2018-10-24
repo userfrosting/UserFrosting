@@ -75,6 +75,7 @@
             ]
         ],
         'debug' => [
+            'deprecation' => true,
             'queries' => false,
             'smtp' => false,
             'twig' => false
