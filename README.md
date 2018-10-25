@@ -37,7 +37,7 @@ Please see our [installation guide](https://learn.userfrosting.com/installation)
 
 ## Troubleshooting
 
-If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com) or try our [forums](https://forums.userfrosting.com).
+If you are having trouble installing UserFrosting, please [join us in chat](https://chat.userfrosting.com) or try our [forums](https://forums.userfrosting.com) and we will reply you ASAP.
 
 If you are generally confused about the structure and layout of the code, or it doesn't look like the kind of PHP code that you're used to, please [start from the beginning](https://learn.userfrosting.com/background).  
 
