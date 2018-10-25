@@ -15,14 +15,6 @@
             ]
         ],
         /**
-         * Disable CSRF in the testing env.
-         */
-        'csrf' => [
-            'blacklist' => [
-                '^/' => ['GET']
-            ]
-        ],
-        /**
          * Use in memory db for testing
          */
         'db' => [

@@ -3,16 +3,13 @@
 namespace UserFrosting\Tests\Integration\Seeder;
 
 use UserFrosting\Sprinkle\Core\Controller\CoreController;
-use UserFrosting\Sprinkle\Core\Tests\TestController;
-use UserFrosting\Tests\TestCase;
+use UserFrosting\Sprinkle\Core\Tests\ControllerTestCase;
 
 /**
- *
+ * Tests CoreController
  */
-class CoreControllerTest extends TestCase
+class CoreControllerTest extends ControllerTestCase
 {
-    use TestController;
-
     /**
      * @return CoreController
      */

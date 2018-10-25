@@ -12,28 +12,25 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
+use UserFrosting\Tests\TestCase;
 
 /**
- * Helper trait to handle Controller Test
+ * Special TestCase for Controller Tests
  *
  * @see https://akrabat.com/testing-slim-framework-actions/
  * @author Louis Charette
  */
-trait TestController
+class ControllerTestCase extends TestCase
 {
     use TestDatabase;
     use RefreshDatabase;
 
     /**
-     * Force session to start to avoid PHPUnit headers already sent error
-     * @see https://stackoverflow.com/a/23400885/445757
+     * Setup test database for controller tests
      */
     public function setUp()
     {
-        @session_start();
         parent::setUp();
-
-        // Setup test database
         $this->setupTestDatabase();
         $this->refreshDatabase();
     }
