@@ -34,7 +34,7 @@ class UserActivityProcessor
     public function __invoke(array $record)
     {
         $additionalFields = [
-            'ip_address'  => $_SERVER['REMOTE_ADDR'],
+            'ip_address'  => isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null,
             'user_id'     => $this->userId,
             'occurred_at' => $record['datetime'],
             'description' => $record['message']

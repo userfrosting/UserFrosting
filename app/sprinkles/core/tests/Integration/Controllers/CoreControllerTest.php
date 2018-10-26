@@ -1,6 +1,6 @@
 <?php
 
-namespace UserFrosting\Tests\Integration\Seeder;
+namespace UserFrosting\Sprinkle\Core\Tests;
 
 use UserFrosting\Sprinkle\Core\Controller\CoreController;
 use UserFrosting\Sprinkle\Core\Tests\ControllerTestCase;
