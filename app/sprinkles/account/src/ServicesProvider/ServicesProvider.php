@@ -46,19 +46,8 @@ class ServicesProvider
          */
         $container->extend('assets', function ($assets, $c) {
 
-            // Register paths for user theme, if a user is logged in
-            // We catch any authorization-related exceptions, so that error pages can be rendered.
-            try {
-                /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
-                $authenticator = $c->authenticator;
-                $currentUser = $c->currentUser;
-            } catch (\Exception $e) {
-                return $assets;
-            }
-
-            if ($authenticator->check()) {
-                // TODO $c->sprinkleManager->addResource('assets', $currentUser->theme);
-            }
+            // Force load the current user to add it's theme assets ressources
+            $currentUser = $c->currentUser;
 
             return $assets;
         });
@@ -147,14 +136,14 @@ class ServicesProvider
                 return $view;
             }
 
+            // Register user theme template with Twig Loader
             if ($authenticator->check()) {
-                $theme = $currentUser->theme;
-                // TODO $themePath = $c->sprinkleManager->addResource('templates', $theme);
+                $themePath = $c->locator->findResource("templates://", true, false);
                 if ($themePath) {
                     $loader = $twig->getLoader();
                     $loader->prependPath($themePath);
                     // Add namespaced path as well
-                    $loader->addPath($themePath, $theme);
+                    $loader->addPath($themePath, $currentUser->theme);
                 }
             }
 
@@ -346,8 +335,14 @@ class ServicesProvider
          */
         $container['currentUser'] = function ($c) {
             $authenticator = $c->authenticator;
+            $currentUser = $authenticator->user();
 
-            return $authenticator->user();
+            // Add user theme sprinkles ressources
+            if ($authenticator->check() && $currentUser->theme) {
+                $c->sprinkleManager->addSprinkleResources($currentUser->theme);
+            }
+
+            return $currentUser;
         };
 
         /**

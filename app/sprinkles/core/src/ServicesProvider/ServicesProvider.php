@@ -102,14 +102,7 @@ class ServicesProvider
          * @return \UserFrosting\Assets\AssetLoader
          */
         $container['assetLoader'] = function ($c) {
-            $config = $c->config;
-            $locator = $c->locator;
-
-            $baseUrl = $config['site.uri.public'] . '/' . $config['assets.raw.path'];
-
-            $assets = new Assets($locator, 'assets', $baseUrl);
-
-            return new AssetLoader($assets);
+            return new AssetLoader($c->assets);
         };
 
         /**

@@ -53,18 +53,24 @@ class SprinkleManager
 
     /**
      * Register resource streams for all base sprinkles.
+     * For each sprinkle, register its resources and then run its initializer
      */
     public function addResources()
     {
-        /**
-         * @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator
-         */
-        $locator = $this->ci->locator;
-
-        // For each sprinkle, register its resources and then run its initializer
         foreach ($this->sprinkles as $sprinkleName => $sprinkle) {
-            $locator->registerLocation($sprinkleName, $this->sprinklesPath . $sprinkleName);
+            $this->addSprinkleResources($sprinkleName);
         }
+    }
+
+    /**
+     * Register a sprinkle as a locator location
+     * @param string $sprinkleName
+     */
+    public function addSprinkleResources($sprinkleName)
+    {
+        /** @var \UserFrosting\UniformResourceLocator\ResourceLocator $locator */
+        $locator = $this->ci->locator;
+        $locator->registerLocation($sprinkleName, $this->sprinklesPath . $sprinkleName);
     }
 
     /**
