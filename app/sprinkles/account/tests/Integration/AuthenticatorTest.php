@@ -41,3 +41,4 @@ class AuthenticatorTest extends TestCase
         $this->assertInstanceOf(Authenticator::class, $authenticator);
         return $authenticator;
     }
+}
