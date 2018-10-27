@@ -73,6 +73,44 @@ class AdminControllerTest extends ControllerTestCase
     }
 
     /**
+     * Clear-cache controller method
+     * @depends testControllerConstructor
+     */
+    public function testClearCache()
+    {
+        // Admin user, WILL have access
+        $testUser = $this->createTestUser(true);
+        $this->setCurrentUser($testUser);
+
+        // Get controller
+        $controller = $this->getController();
+
+        // First, store something in cache
+        /** @var \Illuminate\Cache\Repository $cache **/
+        $cache = $this->ci->cache;
+        $value = rand(1, 100);
+        $cache->put('foo', $value, 20);
+        $this->assertSame($value, $cache->get('foo'));
+
+        $result = $controller->clearCache($this->getRequest(), $this->getResponse(), []);
+        $this->assertSame($result->getStatusCode(), 200);
+        $this->assertJson((string) $result->getBody());
+        $this->assertSame('[]', (string) $result->getBody());
+
+        // Cache should be gone
+        $this->assertNotSame($value, $cache->get('foo'));
+
+        // We can also check AlertStream Integration
+        /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
+        $ms = $this->ci->alerts;
+        $messages = $ms->getAndClearMessages();
+        $expectedMessage = end($messages)["message"];
+
+        $actualMessage = $this->ci->translator->translate('CACHE.CLEARED');
+        $this->assertSame($expectedMessage, $actualMessage);
+    }
+
+    /**
      * @return AdminController
      */
     private function getController()

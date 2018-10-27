@@ -120,7 +120,7 @@ class AdminController extends SimpleController
 
         $ms->addMessageTranslated('success', 'CACHE.CLEARED');
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
