@@ -4,6 +4,7 @@ namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
@@ -15,6 +16,7 @@ class AuthorizationManagerTest extends TestCase
 {
     use TestDatabase;
     use RefreshDatabase;
+    use withTestUser;
 
     /**
      * Setup the test database.
