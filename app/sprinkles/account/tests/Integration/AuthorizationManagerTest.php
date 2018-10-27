@@ -3,7 +3,6 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
@@ -30,12 +29,18 @@ class AuthorizationManagerTest extends TestCase
         $this->refreshDatabase();
     }
 
+    public function tearDown()
+    {
+        // N.B.: This shouldn't be necessary with the NullSessionProvier !
+        $this->logoutCurrentUser();
+    }
+
     /**
      * @return AuthorizationManager
      */
     public function testConstructor()
     {
-        $manager = new AuthorizationManager($this->ci, []);
+        $manager = $this->getManager();
         $this->assertInstanceOf(AuthorizationManager::class, $manager);
         return $manager;
     }
@@ -80,5 +85,68 @@ class AuthorizationManagerTest extends TestCase
     public function testCheckAccess_withBadUserType(AuthorizationManager $manager)
     {
         $this->assertFalse($manager->checkAccess(123, 'foo'));
+    }
+
+    /**
+     * Test the service. Will have the predefined callbacks
+     */
+    public function testService()
+    {
+        $this->assertInstanceOf(AuthorizationManager::class, $this->ci->authorizer);
+    }
+
+    /**
+     * @depends testService
+     */
+    public function testCheckAccess_withGuestUser()
+    {
+        $user = $this->createTestUser();
+        $manager = $this->ci->authorizer;
+        $this->assertFalse($manager->checkAccess($user, 'foo'));
+    }
+
+    /**
+     * @depends testService
+     */
+    public function testCheckAccess_withNormalUser()
+    {
+        $user = $this->createTestUser(false, true);
+        $manager = $this->ci->authorizer;
+        $this->assertFalse($manager->checkAccess($user, 'foo'));
+        $this->assertFalse($manager->checkAccess($this->ci->currentUser, 'foo'));
+    }
+
+    /**
+     * @depends testService
+     */
+    public function testCheckAccess_withMasterUser()
+    {
+        $user = $this->createTestUser(true, true);
+        $manager = $this->ci->authorizer;
+        $this->assertTrue($manager->checkAccess($user, 'foo'));
+        $this->assertTrue($manager->checkAccess($this->ci->currentUser, 'foo'));
+    }
+
+    /**
+     * @depends testCheckAccess_withNormalUser
+     */
+    public function testCheckAccess_withNormalUserWithPermission()
+    {
+        // Create a non admin user and give him the 'foo' permission
+        $user = $this->createTestUser();
+        $this->giveUserTestPermission($user, 'foo');
+        $this->setCurrentUser($user);
+
+        $manager = $this->ci->authorizer;
+        $this->assertTrue($manager->checkAccess($user, 'foo'));
+        $this->assertTrue($manager->checkAccess($this->ci->currentUser, 'foo'));
+    }
+
+    /**
+     * @return AuthorizationManager
+     */
+    protected function getManager()
+    {
+        return new AuthorizationManager($this->ci, []);
     }
 }
