@@ -31,56 +31,58 @@
  *
  * @todo Implement proper fallback for when `set` function isn't supported by FormData.
  */
-;(function($, window, document, undefined) {
-	'use strict';
+;
+(function ($, window, document, undefined) {
+    'use strict';
 
     // Define plugin name and defaults.
     var pluginName = 'ufForm',
         defaults = {
             DEBUG: false,
-            site                : site, // global site variables
-            submittingText      : "<i class='fa fa-spinner fa-spin'></i>",
+            site: site, // global site variables
+            submittingText: "<i class='fa fa-spinner fa-spin'></i>",
             beforeSubmitCallback: null,
-            binaryCheckboxes    : true,     // submit checked/unchecked checkboxes as 0/1 values
-            keyupDelay          : 0,
+            binaryCheckboxes: true, // submit checked/unchecked checkboxes as 0/1 values
+            keyupDelay: 0,
+            showAlertOnSuccess: false,
             // These are options that will be passed to jQuery Validate
             // See https://jqueryvalidation.org/validate/#-validate()
             validator: {
-                rules        : {},
-                messages     : {}
+                rules: {},
+                messages: {}
             },
             // Deprecated
             validators: {
-                rules        : {},
-                messages     : {}
+                rules: {},
+                messages: {}
             }
         };
 
     // Constructor
-    function Plugin (element, options) {
+    function Plugin(element, options) {
         this.element = element[0];
         this.$element = $(this.element);
 
         var lateDefaults = {
-            submitButton : this.$element.find('button[type=submit]'),
-            msgTarget    : this.$element.find('.js-form-alerts:first'),
+            submitButton: this.$element.find('button[type=submit]'),
+            msgTarget: this.$element.find('.js-form-alerts:first'),
             // These are options that will be passed to jQuery Validate
             // See https://jqueryvalidation.org/validate/#-validate()
-            validator    : {
+            validator: {
                 submitHandler: $.proxy(this.defaultSubmitHandler, this),
-                onkeyup      : $.proxy(this._onKeyUp, this)
+                onkeyup: $.proxy(this._onKeyUp, this)
             },
-            ajax         : {
+            ajax: {
                 // Override jQuery's strict JSON parsing
-                converters : {
+                converters: {
                     'text json': $.proxy(this._defaultResponseParser, this)
                 },
                 // Response type
-                dataType   : this._debugAjax ? 'html' : 'json',
+                dataType: this._debugAjax ? 'html' : 'json',
                 // Disable the submit button before sending the request
-                beforeSend : $.proxy(this.disableSubmit, this),
+                beforeSend: $.proxy(this.disableSubmit, this),
                 // enable the submit button once the request completes
-                complete   : $.proxy(this.enableSubmit, this)
+                complete: $.proxy(this.enableSubmit, this)
             }
         };
 
@@ -115,7 +117,7 @@
     /**
      * Set "loading" text for submit button, if it exists, and disable button
      */
-    Plugin.prototype.disableSubmit = function() {
+    Plugin.prototype.disableSubmit = function () {
         var submitButton = this.settings.submitButton;
         // Do nothing, if the button is already disabled
         if (submitButton.prop('disabled')) {
@@ -138,7 +140,7 @@
      *
      * @return this
      */
-    Plugin.prototype.enableSubmit = function() {
+    Plugin.prototype.enableSubmit = function () {
         var submitButton = this.settings.submitButton;
 
         // Do nothing, if the button is already enabled
@@ -162,7 +164,7 @@
      * @param {Element} form
      * @param {Event}   event
      */
-    Plugin.prototype.defaultSubmitHandler = function(form, event) {
+    Plugin.prototype.defaultSubmitHandler = function (form, event) {
         // Execute any "before submit" callback
         if (this.settings.beforeSubmitCallback) {
             this.settings.beforeSubmitCallback();
@@ -180,7 +182,7 @@
      * @param   {object} reqParams
      * @returns {Deferred}
      */
-    Plugin.prototype.submitForm = function(reqParams) {
+    Plugin.prototype.submitForm = function (reqParams) {
         return $.ajax(reqParams).then(
             // Submission successful
             $.proxy(this._defaultSuccess, this),
@@ -197,8 +199,19 @@
      * @param {jqXHR}  jqXHR
      * @return {jqXHR}
      */
-    Plugin.prototype._defaultSuccess = function(data, textStatus, jqXHR) {
+    Plugin.prototype._defaultSuccess = function (data, textStatus, jqXHR) {
         this.$element.trigger('submitSuccess.ufForm', [data, textStatus, jqXHR]);
+        if (this.settings.showAlertOnSuccess) {
+            // showing UF alerts on success also. 
+            // This will show the Alerts from the Alert stream when the page is not reloaded after the ufForm submit succeeds,
+            if (!this.settings.msgTarget.data('ufAlerts')) {
+                this.settings.msgTarget.ufAlerts();
+            } else {
+                this.settings.msgTarget.ufAlerts('clear');
+            }
+
+            this.settings.msgTarget.ufAlerts('fetch').ufAlerts('render');
+        }
         return jqXHR;
     };
 
@@ -210,7 +223,7 @@
      * @param {string} errorThrown
      * @return {jqXHR}
      */
-    Plugin.prototype._defaultError = function(jqXHR, textStatus, errorThrown) {
+    Plugin.prototype._defaultError = function (jqXHR, textStatus, errorThrown) {
         // Error messages
         if (this._debugAjax && jqXHR.responseText) {
             this.$element.trigger('submitError.ufForm', [jqXHR, textStatus, errorThrown]);
@@ -242,7 +255,7 @@
      * @param {string} result
      * @return {object}
      */
-    Plugin.prototype._defaultResponseParser = function(result) {
+    Plugin.prototype._defaultResponseParser = function (result) {
         try {
             // First try to use native browser parsing
             if (typeof JSON === 'object' && typeof JSON.parse === 'function') {
@@ -251,9 +264,9 @@
                 return $.parseJSON(result);
             }
         } catch (e) {
-           // statements to handle any exceptions
-           console.warn('Could not parse expected JSON response.');
-           return {};
+            // statements to handle any exceptions
+            console.warn('Could not parse expected JSON response.');
+            return {};
         }
     };
 
@@ -265,14 +278,13 @@
      * @param {object}  ajaxParams
      * @return {object}
      */
-    Plugin.prototype.prepareRequestData = function(form, ajaxParams) {
+    Plugin.prototype.prepareRequestData = function (form, ajaxParams) {
         // Set ajax type and url from form method and action, if not otherwise set.
         var ajaxDefaults = {
-            type        : this.$element.attr('method'),
-            url         : this.$element.attr('action'),
-            contentType : (typeof this.$element.attr('enctype') === 'undefined') ?
-                            'application/x-www-form-urlencoded; charset=UTF-8' :
-                            this.$element.attr('enctype')
+            type: this.$element.attr('method'),
+            url: this.$element.attr('action'),
+            contentType: (typeof this.$element.attr('enctype') === 'undefined') ?
+                'application/x-www-form-urlencoded; charset=UTF-8' : this.$element.attr('enctype')
         };
 
         ajaxParams = $.extend(true, {}, ajaxDefaults, ajaxParams);
@@ -300,21 +312,20 @@
      * @param {Element} form
      * @return {string}
      */
-    Plugin.prototype._urlencodeData = function(form) {
+    Plugin.prototype._urlencodeData = function (form) {
         // Serialize and post to the backend script in ajax mode
         var serializedData;
         if (this.settings.binaryCheckboxes) {
             serializedData = $(form).find(':input').not(':checkbox').serialize();
             // Get unchecked checkbox values, set them to 0
-            $(form).find('input[type=checkbox]:enabled').each(function() {
+            $(form).find('input[type=checkbox]:enabled').each(function () {
                 if ($(this).is(':checked')) {
                     serializedData += '&' + encodeURIComponent(this.name) + '=1';
                 } else {
                     serializedData += '&' + encodeURIComponent(this.name) + '=0';
                 }
             });
-        }
-        else {
+        } else {
             serializedData = $(form).find(':input').serialize();
         }
 
@@ -327,7 +338,7 @@
      * @param {Element} form
      * @return {FormData}
      */
-    Plugin.prototype._multipartData = function(form) {
+    Plugin.prototype._multipartData = function (form) {
         // Use FormData to wrap form contents.
         // https://developer.mozilla.org/en/docs/Web/API/FormData
         var formData = new FormData(form);
@@ -339,7 +350,7 @@
             if (typeof formData.set !== 'function') {
                 this.settings.msgTarget.ufAlerts('push', 'danger', "Your browser is missing a required feature. This form will still attempt to submit, but if it fails, you'll need to use Chrome for desktop or FireFox for desktop.");
             } else {
-                checkboxes.each(function() {
+                checkboxes.each(function () {
                     if ($(this).is(':checked')) {
                         // this replaces checkbox value with 1 (as we're using binaryCheckboxes).
                         formData.set(this.name, 1);
@@ -360,10 +371,10 @@
      * @param {Element} form
      * @param {Event}   event
      */
-    Plugin.prototype._onKeyUp = function(element, event) {
+    Plugin.prototype._onKeyUp = function (element, event) {
         var validator = this.validator;
         // See http://stackoverflow.com/questions/41363409/jquery-validate-add-delay-to-keyup-validation
-        setTimeout(function() {
+        setTimeout(function () {
             // Avoid revalidate the field when pressing one of the following keys
             // Shift       => 16
             // Ctrl        => 17
@@ -383,16 +394,16 @@
                 38, 39, 40, 45, 144, 225
             ];
 
-            if ( event.which === 9 && validator.elementValue( element ) === '' || $.inArray( event.keyCode, excludedKeys ) !== -1 ) {
+            if (event.which === 9 && validator.elementValue(element) === '' || $.inArray(event.keyCode, excludedKeys) !== -1) {
                 return;
-            } else if ( element.name in validator.submitted || element.name in validator.invalid ) {
-                validator.element( element );
+            } else if (element.name in validator.submitted || element.name in validator.invalid) {
+                validator.element(element);
             }
         }, this.settings.keyupDelay);
     };
 
     // Handles instantiation and access to non-private methods.
-    $.fn[pluginName] = function(methodOrOptions) {
+    $.fn[pluginName] = function (methodOrOptions) {
         // Grab plugin instance
         var instance = $(this).data(pluginName);
         // If undefined or object, initalise plugin.
@@ -407,14 +418,12 @@
         else if (typeof methodOrOptions === 'string' && typeof instance[methodOrOptions] === 'function') {
             // Ensure not a private function
             if (methodOrOptions.indexOf('_') !== 0) {
-                return instance[methodOrOptions]( Array.prototype.slice.call(arguments, 1));
+                return instance[methodOrOptions](Array.prototype.slice.call(arguments, 1));
+            } else {
+                console.warn('Method ' + methodOrOptions + ' is private!');
             }
-            else {
-                console.warn( 'Method ' +  methodOrOptions + ' is private!' );
-            }
-        }
-        else {
-            console.warn( 'Method ' +  methodOrOptions + ' does not exist.' );
+        } else {
+            console.warn('Method ' + methodOrOptions + ' does not exist.');
         }
     };
 })(jQuery, window, document);
