@@ -45,8 +45,9 @@ use UserFrosting\Sprinkle\Core\Alert\SessionAlertStream;
 use UserFrosting\Sprinkle\Core\Database\Migrator\Migrator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocator;
 use UserFrosting\Sprinkle\Core\Database\Migrator\DatabaseMigrationRepository;
-use \UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
+use UserFrosting\Sprinkle\Core\Filesystem\FilesystemManager;
 use UserFrosting\Sprinkle\Core\Router;
+use UserFrosting\Sprinkle\Core\Session\NullSessionHandler;
 use UserFrosting\Sprinkle\Core\Throttle\Throttler;
 use UserFrosting\Sprinkle\Core\Throttle\ThrottleRule;
 use UserFrosting\Sprinkle\Core\Twig\CoreExtension;
@@ -623,6 +624,8 @@ class ServicesProvider
                 $connection = $c->db->connection();
                 // Table must exist, otherwise an exception will be thrown
                 $handler = new DatabaseSessionHandler($connection, $config['session.database.table'], $config['session.minutes']);
+            } elseif ($config['session.handler'] == 'array') {
+                $handler = new NullSessionHandler;
             } else {
                 throw new \Exception("Bad session handler type '{$config['session.handler']}' specified in configuration file.");
             }

@@ -157,7 +157,7 @@
             'public_relative'   => dirname($_SERVER['SCRIPT_NAME'])      // The location of `index.php` relative to the document root.  Use for sites installed in subdirectories of your web server's document root.
         ],
         'session' => [
-            'handler'       => 'file', //file or database
+            'handler'       => 'file', //file, database or array
             // Config values for when using db-based sessions
             'database'      => [
                 'table' => 'sessions'

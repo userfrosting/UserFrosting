@@ -36,13 +36,13 @@ trait withTestUser
 
     /**
      * Create a test user with no settings/permissions for a controller test
-     * @param bool $isAdmin Does this user have root access? Will bypass all permissions
+     * @param bool $isMaster Does this user have root access? Will bypass all permissions
      * @param bool $login Login this user, setting him as the currentUser
      * @return User
      */
-    protected function createTestUser($isAdmin = false, $login = false)
+    protected function createTestUser($isMaster = false, $login = false)
     {
-        if ($isAdmin) {
+        if ($isMaster) {
             $user_id = $this->ci->config['reserved_user_ids.master'];
         } else {
             $user_id = rand(0, 1222);

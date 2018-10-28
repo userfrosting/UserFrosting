@@ -35,6 +35,15 @@
         'settings' => [
             'displayErrorDetails' => false
         ],
+        /**
+         * Disable native sessions in tests
+         */
+        'session' => [
+            'handler' => 'array'
+        ],
+        /**
+         * Use testning filesystem for tests
+         */
         'filesystems' => [
             'disks' => [
                 'testing' => [
