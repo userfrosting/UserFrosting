@@ -35,6 +35,7 @@ class DatabaseTests extends TestCase
 
     public function tearDown()
     {
+        parent::tearDown();
         m::close();
     }
 

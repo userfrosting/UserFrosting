@@ -19,6 +19,7 @@ class MigrationLocatorTest extends TestCase
 {
     public function tearDown()
     {
+        parent::tearDown();
         m::close();
     }
 

@@ -17,6 +17,7 @@ class BakeryMigrateResetCommandTest extends TestCase
 {
     public function tearDown()
     {
+        parent::tearDown();
         m::close();
     }
 

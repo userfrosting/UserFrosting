@@ -26,6 +26,7 @@ class RegistrationTest extends TestCase
 
     public function tearDown()
     {
+        parent::tearDown();
         m::close();
     }
 

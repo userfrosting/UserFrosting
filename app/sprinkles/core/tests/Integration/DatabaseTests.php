@@ -119,6 +119,8 @@ class DatabaseTests extends TestCase
         $this->schema($this->schemaName)->drop('jobs');
 
         Relation::morphMap([], false);
+
+        parent::tearDown();
     }
 
     /**
