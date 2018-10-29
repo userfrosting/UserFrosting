@@ -29,12 +29,6 @@ class AuthorizationManagerTest extends TestCase
         $this->refreshDatabase();
     }
 
-    public function tearDown()
-    {
-        // N.B.: This shouldn't be necessary with the NullSessionProvier !
-        $this->logoutCurrentUser();
-    }
-
     /**
      * @return AuthorizationManager
      */
@@ -135,7 +129,7 @@ class AuthorizationManagerTest extends TestCase
         // Create a non admin user and give him the 'foo' permission
         $user = $this->createTestUser();
         $this->giveUserTestPermission($user, 'foo');
-        $this->setCurrentUser($user);
+        $this->loginUser($user);
 
         $manager = $this->ci->authorizer;
         $this->assertTrue($manager->checkAccess($user, 'foo'));

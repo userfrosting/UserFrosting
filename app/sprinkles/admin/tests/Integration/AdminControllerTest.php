@@ -13,12 +13,6 @@ class AdminControllerTest extends ControllerTestCase
 {
     use withTestUser;
 
-    public function tearDown()
-    {
-        // N.B.: This shouldn't be necessary with the NullSessionProvier !
-        $this->logoutCurrentUser();
-    }
-
     /**
      * @return AdminController
      */
@@ -47,11 +41,10 @@ class AdminControllerTest extends ControllerTestCase
     {
         // Non admin user, won't have access
         $testUser = $this->createTestUser();
-        $this->setCurrentUser($testUser);
+        $this->loginUser($testUser);
 
         // Get controller
         $controller = $this->getController();
-
         $controller->pageDashboard($this->getRequest(), $this->getResponse(), []);
     }
 
@@ -62,7 +55,7 @@ class AdminControllerTest extends ControllerTestCase
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true);
-        $this->setCurrentUser($testUser);
+        $this->loginUser($testUser);
 
         // Get controller
         $controller = $this->getController();
@@ -80,7 +73,7 @@ class AdminControllerTest extends ControllerTestCase
     {
         // Admin user, WILL have access
         $testUser = $this->createTestUser(true);
-        $this->setCurrentUser($testUser);
+        $this->loginUser($testUser);
 
         // Get controller
         $controller = $this->getController();

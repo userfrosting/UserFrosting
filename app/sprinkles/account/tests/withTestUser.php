@@ -20,10 +20,15 @@ trait withTestUser
     /**
      * @param User $user
      */
-    protected function setCurrentUser(User $user)
+    protected function loginUser(User $user)
     {
         $this->ci->currentUser = $user;
         $this->ci->authenticator->login($user);
+
+        // Log user out when we're done with testing to prevent session persistence
+        $this->beforeApplicationDestroyed(function () use ($user) {
+            $this->logoutCurrentUser($user);
+        });
     }
 
     /**
@@ -52,7 +57,7 @@ trait withTestUser
         $user = $fm->create(User::class, ["id" => $user_id]);
 
         if ($login) {
-            $this->setCurrentUser($user);
+            $this->loginUser($user);
         }
 
         return $user;
