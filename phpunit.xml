@@ -19,4 +19,15 @@
     <php>
         <env name="UF_MODE" value="testing"/>
     </php>
+    <filter>
+      <whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
+          <directory suffix=".php">app/</directory>
+          <file>public/index.php</file>
+          <exclude>
+            <directory suffix=".php">app/vendor/</directory>
+            <directory suffix=".php">app/tests/</directory>
+            <directory suffix=".php">app/sprinkles/*/tests/</directory>
+          </exclude>
+      </whitelist>
+    </filter>
 </phpunit>

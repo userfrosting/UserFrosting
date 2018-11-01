@@ -9,6 +9,7 @@ namespace UserFrosting\System\Bakery\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use UserFrosting\System\Bakery\BaseCommand;
 
 /**
@@ -30,6 +31,7 @@ class Test extends BaseCommand
     protected function configure()
     {
         $this->setName("test")
+             ->addOption("coverage", "c", InputOption::VALUE_NONE, "Generate code coverage report in HTML format. Will be saved in _meta/coverage")
              ->setDescription("Run tests")
              ->setHelp("Run php unit tests");
     }
@@ -45,6 +47,11 @@ class Test extends BaseCommand
         $command = \UserFrosting\VENDOR_DIR . "/bin/phpunit --colors=always";
         if ($output->isVerbose() || $output->isVeryVerbose()) {
             $command .= " -v";
+        }
+
+        // Add coverage report
+        if ($input->getOption('coverage')) {
+            $command .= " --coverage-html _meta/coverage";
         }
 
         // Execute
