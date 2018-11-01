@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Fixed
+- Corrected Docker `README.md` to refer to updated `sprinkles.json` and `sprinkles.example.json` locations.
+- Replaced `libpng12-dev` which has been dropped since Ubuntu 16.04 with `libpng-dev` in PHP `Dockerfile`.
+
 ## v4.1.21
 - Locked Whoops to version 2.2.1 until they fix that [`[internal]` issue](https://github.com/filp/whoops/issues/598).
 
