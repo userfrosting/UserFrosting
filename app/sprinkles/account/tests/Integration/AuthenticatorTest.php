@@ -3,8 +3,9 @@
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
 use UserFrosting\Sprinkle\Account\Authenticate\Authenticator;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
+use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Tests\TestCase;
@@ -37,15 +38,13 @@ class AuthenticatorTest extends TestCase
      */
     public function testConstructor()
     {
-        $authenticator = new Authenticator($this->ci->classMapper, $this->ci->session, $this->ci->config, $this->ci->cache);
+        $authenticator = $this->getAuthenticator();
         $this->assertInstanceOf(Authenticator::class, $authenticator);
         return $authenticator;
     }
 
     /**
      * @depends testConstructor
-     * @covers Authenticator::login
-     * @covers Authenticator::logout
      * @param Authenticator $authenticator
      */
     public function testLogin(Authenticator $authenticator)
@@ -126,5 +125,255 @@ class AuthenticatorTest extends TestCase
         $testUser->flag_enabled = false;
         $testUser->save();
         $this->invokeMethod($authenticator, 'validateUserAccount', [$testUser->id]);
+    }
+
+    /**
+     * @depends testConstructor
+     * @covers Authenticator::login
+     * @covers Authenticator::loginRememberedUser
+     * @param Authenticator $authenticator
+     */
+    /*public function testLoginWithRememberMe(Authenticator $authenticator)
+    {
+        // Create a test user
+        $testUser = $this->createTestUser();
+
+        // Test session to avoid false positive
+        $key = $this->ci->config['session.keys.current_user_id'];
+        $this->assertNull($this->ci->session[$key]);
+        $this->assertNotSame($testUser->id, $this->ci->session[$key]);
+
+        $authenticator->login($testUser, true);
+
+        // Test session to see if user was logged in
+        $this->assertNotNull($this->ci->session[$key]);
+        $this->assertSame($testUser->id, $this->ci->session[$key]);
+
+        // We'll manually delete the session,
+        //$this->ci->session[$key] == null; // $this->session->destroy();
+
+        // Go througt the loginRememberedUser process
+        $user = $authenticator->user(); //$this->invokeMethod($authenticator, 'loginRememberedUser');
+        Debug::debug("USER ===> ");
+        Debug::debug($user);
+        $this->assertSame($testUser->id, $user->id);
+        $this->assertSame($testUser->id, $this->ci->session[$key]);
+
+        // Must logout to avoid test issue
+        $authenticator->logout();
+    }*/
+
+    /**
+     * @depends testConstructor
+     * @depends testLogin
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withUserName(Authenticator $authenticator)
+    {
+        // Create a test user
+        $testUser = $this->createTestUser();
+
+        // Faker doesn't hash the password. Let's do that now
+        $unhashed = $testUser->password;
+        $testUser->password = Password::hash($testUser->password);
+        $testUser->save();
+
+        // Attempt to log him in
+        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $unhashed, false);
+        $this->assertSame($testUser->id, $currentUser->id);
+        $this->assertFalse($authenticator->viaRemember());
+
+        // Must logout to avoid test issue
+        $authenticator->logout();
+    }
+
+    /**
+     * @depends testConstructor
+     * @depends testAttempt_withUserName
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withEmail(Authenticator $authenticator)
+    {
+        // Faker doesn't hash the password. Let's do that now
+        $password = 'FooBar';
+
+        // Create a test user
+        $testUser = $this->createTestUser(false, false, ['password' => Password::hash($password)]);
+
+        // Attempt to log him in
+        $currentUser = $authenticator->attempt('email', $testUser->email, $password, false);
+        $this->assertSame($testUser->id, $currentUser->id);
+        $this->assertFalse($authenticator->viaRemember());
+
+        // Must logout to avoid test issue
+        $authenticator->logout();
+    }
+
+    /**
+     * @depends testConstructor
+     * @depends testAttempt_withUserName
+     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withNoUser(Authenticator $authenticator)
+    {
+        $currentUser = $authenticator->attempt('user_name', 'fooBar', 'barFoo', false);
+    }
+
+    /**
+     * @depends testConstructor
+     * @depends testAttempt_withUserName
+     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withNoPassword(Authenticator $authenticator)
+    {
+        $testUser = $this->createTestUser(false, false, ['password' => '']);
+        $currentUser = $authenticator->attempt('email', $testUser->email, 'fooBar', false);
+    }
+
+    /**
+     * @depends testConstructor
+     * @depends testAttempt_withUserName
+     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountDisabledException
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withFlagEnabledFalse(Authenticator $authenticator)
+    {
+        $password = 'FooBar';
+        $testUser = $this->createTestUser(false, false, [
+            'password' => Password::hash($password),
+            'flag_enabled' => 0
+        ]);
+
+        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
+    }
+
+    /**
+     * @depends testConstructor
+     * @depends testAttempt_withUserName
+     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedException
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withFlagVerifiedFalse(Authenticator $authenticator)
+    {
+        $password = 'FooBar';
+        $testUser = $this->createTestUser(false, false, [
+            'password' => Password::hash($password),
+            'flag_verified' => 0
+        ]);
+
+        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
+    }
+
+    /**
+     * @depends testConstructor
+     * @depends testAttempt_withUserName
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withFlagVerifiedFalseNoEmailVerification(Authenticator $authenticator)
+    {
+        // Force email verification to false
+        $this->ci->config['site.registration.require_email_verification'] = false;
+
+        // Forcing config requires to recreate the authentificator
+        $authenticator = $this->getAuthenticator();
+
+        $password = 'FooBar';
+        $testUser = $this->createTestUser(false, false, [
+            'password' => Password::hash($password),
+            'flag_verified' => 0
+        ]);
+
+        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, $password, false);
+        $this->assertSame($testUser->id, $currentUser->id);
+        $this->assertFalse($authenticator->viaRemember());
+
+        // Must logout to avoid test issue
+        $authenticator->logout();
+    }
+
+    /**
+     * @depends testConstructor
+     * @depends testAttempt_withUserName
+     * @expectedException \UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException
+     * @param Authenticator $authenticator
+     */
+    public function testAttempt_withBadPassword(Authenticator $authenticator)
+    {
+        $password = 'FooBar';
+        $testUser = $this->createTestUser(false, false, [
+            'password' => Password::hash($password)
+        ]);
+
+        $currentUser = $authenticator->attempt('user_name', $testUser->user_name, 'BarFoo', false);
+    }
+
+    /**
+     * @depends testConstructor
+     * @param Authenticator $authenticator
+     */
+    public function testCheckWithNoUser(Authenticator $authenticator)
+    {
+        // We don't have a user by default
+        $this->assertFalse($authenticator->check());
+        $this->assertTrue($authenticator->guest());
+    }
+
+    /**
+     * @depends testConstructor
+     */
+    public function testCheckWithLoggedInUser()
+    {
+        $testUser = $this->createTestUser(false, true);
+        $authenticator = $this->getAuthenticator();
+
+        $this->assertTrue($authenticator->check());
+        $this->assertFalse($authenticator->guest());
+        $this->assertSame($testUser->id, $authenticator->user()->id);
+    }
+
+    /**
+     * @depends testConstructor
+     * @param Authenticator $authenticator
+     */
+    /*public function testLoginRememberedUser(Authenticator $authenticator)
+    {
+        //TODO
+    }*/
+
+    /**
+     * @depends testConstructor
+     * @param Authenticator $authenticator
+     */
+    /*public function testLoginSessionUser(Authenticator $authenticator)
+    {
+        //TODO
+    }*/
+
+    /**
+     * @depends testConstructor
+     * @param Authenticator $authenticator
+     */
+    /*public function testValidateRememberMeCookie(Authenticator $authenticator)
+    {
+        //TODO
+    }*/
+
+    /**
+     * @depends testConstructor
+     * @param Authenticator $authenticator
+     */
+    /*public function testFlushSessionCache(Authenticator $authenticator)
+    {
+        //TODO
+    }*/
+
+    /**
+     * @return Authenticator
+     */
+    protected function getAuthenticator()
+    {
+        return new Authenticator($this->ci->classMapper, $this->ci->session, $this->ci->config, $this->ci->cache);
     }
 }

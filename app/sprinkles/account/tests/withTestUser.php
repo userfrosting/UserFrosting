@@ -43,9 +43,10 @@ trait withTestUser
      * Create a test user with no settings/permissions for a controller test
      * @param bool $isMaster Does this user have root access? Will bypass all permissions
      * @param bool $login Login this user, setting him as the currentUser
+     * @param array $params User account params
      * @return User
      */
-    protected function createTestUser($isMaster = false, $login = false)
+    protected function createTestUser($isMaster = false, $login = false, array $params = [])
     {
         if ($isMaster) {
             $user_id = $this->ci->config['reserved_user_ids.master'];
@@ -53,8 +54,10 @@ trait withTestUser
             $user_id = rand(0, 1222);
         }
 
+        $params = array_merge(["id" => $user_id], $params);
+
         $fm = $this->ci->factory;
-        $user = $fm->create(User::class, ["id" => $user_id]);
+        $user = $fm->create(User::class, $params);
 
         if ($login) {
             $this->loginUser($user);
