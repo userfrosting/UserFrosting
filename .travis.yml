@@ -33,7 +33,7 @@ before_script:
 
 script:
   # run unit tests
-  - composer test
+  - app/vendor/bin/phpunit
 
 after_failure:
   - cat app/log/userfrosting.log

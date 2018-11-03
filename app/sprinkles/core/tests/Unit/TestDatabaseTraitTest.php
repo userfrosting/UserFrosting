@@ -31,8 +31,8 @@ class TestDatabaseTraitTest extends TestCase
      */
     public function testTrait()
     {
-        // Use the test_integration for this test
+        // Use the testing db for this test
         $connection = $this->ci->db->getConnection();
-        $this->assertEquals('test_integration', $connection->getName());
+        $this->assertEquals($this->ci->config['testing.dbConnection'], $connection->getName());
     }
 }

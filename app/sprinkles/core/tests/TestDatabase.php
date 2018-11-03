@@ -19,6 +19,7 @@ trait TestDatabase
      */
     public function setupTestDatabase()
     {
-        $this->ci->db->getDatabaseManager()->setDefaultConnection('test_integration');
+        $connection = $this->ci->config['testing.dbConnection'];
+        $this->ci->db->getDatabaseManager()->setDefaultConnection($connection);
     }
 }

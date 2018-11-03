@@ -15,7 +15,7 @@
             ]
         ],
         /**
-         * Use in memory db for testing
+         * Define in memory db for testing
          */
         'db' => [
             'test_integration' => [
@@ -28,18 +28,6 @@
          */
         'debug' => [
             'deprecation' => false,
-        ],
-        /**
-         * Don't display error detail in test. Return the non formatted errors
-         */
-        'settings' => [
-            'displayErrorDetails' => false
-        ],
-        /**
-         * Disable native sessions in tests
-         */
-        'session' => [
-            'handler' => 'array'
         ],
         /**
          * Use testning filesystem for tests
@@ -55,6 +43,24 @@
                     'driver' => 'localTest',
                     'root' => \UserFrosting\STORAGE_DIR . \UserFrosting\DS . 'testingDriver'
                 ],
-           ]
-       ]
+            ]
+        ],
+        /**
+         * Don't display error detail in test. Return the non formatted errors
+         */
+        'settings' => [
+            'displayErrorDetails' => false
+        ],
+        /**
+         * Disable native sessions in tests
+         */
+        'session' => [
+            'handler' => 'array'
+        ],
+        /**
+         * Database to use when using the TestDatabase Trait
+         */
+        'testing' => [
+            'dbConnection' => getenv('TEST_DB') ?: 'test_integration'
+        ]
     ];
