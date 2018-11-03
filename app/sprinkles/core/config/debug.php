@@ -13,9 +13,10 @@
             'twig' => false
         ],
         'debug' => [
-            'twig' => true,
-            'auth' => true,
-            'smtp' => true
+            'deprecation' => true,
+            'queries' => true,
+            'smtp' => true,
+            'twig' => true
         ],
         // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
         'settings' => [

@@ -82,6 +82,7 @@ class SetupEnvCommand extends BaseCommand
             $newEnvMode = $this->io->choice("Environment Mode", [
                 'default',
                 'production',
+                'debug',
                 'Other...'
             ], 'default');
         }

@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added tests for migrator and it's components
 - Added tests for `migrate` Bakery command and sub-commands
 - Added new `filesystem` service ([#869](https://github.com/userfrosting/UserFrosting/pull/869))
-- Added new `Seeder` and `seed` Bakery command
+- Added new `Seeder` and `seed` Bakery command ([#653](https://github.com/userfrosting/UserFrosting/pull/653))
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Rewrite `AssetLoader` to act as a wrapper for `Assets`
 - Improved `route:list` Bakery command
 - Rewritten the `locator` service so it's better suited for sprinkle system
+- `dev` environment changed to `debug`.
 
 ### Fix
 - Sprinkle without a `template/` folder won't cause error anymore
