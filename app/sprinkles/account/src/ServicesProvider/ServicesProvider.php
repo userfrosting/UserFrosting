@@ -373,7 +373,7 @@ class ServicesProvider
             return function (Request $request, Response $response, array $args) use ($c) {
                 $redirect = $c->router->pathFor('dashboard');
 
-                return $response->withRedirect($redirect, 302);
+                return $response->withRedirect($redirect);
             };
         };
 

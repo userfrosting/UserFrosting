@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added tests for migrator and it's components
 - Added tests for `migrate` Bakery command and sub-commands
 - Added new `filesystem` service ([#869](https://github.com/userfrosting/UserFrosting/pull/869))
-- Added new `Seeder` and `seed` Bakery command ([#653](https://github.com/userfrosting/UserFrosting/pull/653))
+- Added new `Seeder` and `seed` Bakery command
 
 ### Changed
 - Moved `migrate` Bakery command and sub-commands to the `Core` sprinkle
@@ -34,11 +34,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Rewrite `AssetLoader` to act as a wrapper for `Assets`
 - Improved `route:list` Bakery command
 - Rewritten the `locator` service so it's better suited for sprinkle system
-- `dev` environment changed to `debug`.
+- `dev` environment changed to `debug`  ([#653](https://github.com/userfrosting/UserFrosting/pull/653))
 
 ### Fix
 - Sprinkle without a `template/` folder won't cause error anymore
 - Fixed routes not available in Tests [and Bakery] ([#854](https://github.com/userfrosting/UserFrosting/pull/854))
+- redirect failing in UserController::pageInfo when user not found ([#888](https://github.com/userfrosting/UserFrosting/pull/888))
 
 ### Deprecated
 - Migrations should now extends `UserFrosting\Sprinkle\Core\Database\Migration` instead of `UserFrosting\System\Bakery\Migration`

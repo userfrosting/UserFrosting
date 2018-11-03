@@ -909,7 +909,7 @@ class UserController extends SimpleController
         // If the user no longer exists, forward to main user listing page
         if (!$user) {
             $usersPage = $this->ci->router->pathFor('uri_users');
-            return $response->withRedirect($usersPage, 404);
+            return $response->withRedirect($usersPage);
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */

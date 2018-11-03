@@ -143,15 +143,14 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            // 400 code + redirect is perfectly fine, according to user Dilaz in #laravel
-            return $response->withRedirect($loginPage, 400);
+            return $response->withRedirect($loginPage);
         }
 
         $passwordReset = $this->ci->repoPasswordReset->cancel($data['token']);
 
         if (!$passwordReset) {
             $ms->addMessageTranslated('danger', 'PASSWORD.FORGET.INVALID');
-            return $response->withRedirect($loginPage, 400);
+            return $response->withRedirect($loginPage);
         }
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_CANNED');
@@ -1262,15 +1261,14 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            // 400 code + redirect is perfectly fine, according to user Dilaz in #laravel
-            return $response->withRedirect($loginPage, 400);
+            return $response->withRedirect($loginPage);
         }
 
         $verification = $this->ci->repoVerification->complete($data['token']);
 
         if (!$verification) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.VERIFICATION.TOKEN_NOT_FOUND');
-            return $response->withRedirect($loginPage, 400);
+            return $response->withRedirect($loginPage);
         }
 
         $ms->addMessageTranslated('success', 'ACCOUNT.VERIFICATION.COMPLETE');

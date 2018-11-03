@@ -652,7 +652,7 @@ class RoleController extends SimpleController
         // If the role no longer exists, forward to main role listing page
         if (!$role) {
             $redirectPage = $this->ci->router->pathFor('uri_roles');
-            return $response->withRedirect($redirectPage, 404);
+            return $response->withRedirect($redirectPage);
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
