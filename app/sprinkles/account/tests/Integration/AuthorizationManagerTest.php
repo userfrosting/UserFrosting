@@ -97,6 +97,19 @@ class AuthorizationManagerTest extends TestCase
     }
 
     /**
+     * By default, `checkAccess` is null. Test to make sure we don't break the
+     * "current user is guest" thing 
+     * @depends testCheckAccess_withNullUser
+     */
+    public function testCheckAccess_withNullCurrentUser()
+    {
+        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with("No user defined. Access denied.");
+        $user = $this->ci->currentUser;
+        $this->assertNull($user);
+        $this->assertFalse($this->getManager()->checkAccess($user, 'foo'));
+    }
+
+    /**
      * @depends testConstructor
      */
     public function testCheckAccess_withNormalUser()
@@ -109,6 +122,24 @@ class AuthorizationManagerTest extends TestCase
         $authLogger->shouldReceive('debug')->times(2);
 
         $this->assertFalse($this->getManager()->checkAccess($user, 'foo'));
+    }
+
+    /**
+     * Once logged in, `currentUser` will not be null
+     * @depends testCheckAccess_withNormalUser
+     */
+    public function testCheckAccess_withCurrentUser()
+    {
+        $user = $this->createTestUser(false, true);
+        $this->assertNotNull($this->ci->currentUser);
+        $this->assertSame($user, $this->ci->currentUser);
+
+        // Setup authLogger expectations
+        $authLogger = $this->getMockAuthLogger();
+        $authLogger->shouldReceive('debug')->once()->with("No matching permissions found. Access denied.");
+        $authLogger->shouldReceive('debug')->times(2);
+
+        $this->assertFalse($this->getManager()->checkAccess($this->ci->currentUser, 'foo'));
     }
 
     /**

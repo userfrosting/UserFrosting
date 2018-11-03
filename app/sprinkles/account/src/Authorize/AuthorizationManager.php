@@ -91,15 +91,6 @@ class AuthorizationManager
             $this->ci->authLogger->debug("Checking authorization for user {$user->id} ('{$user->user_name}') on permission '$slug'...");
         }
 
-        // TODO : This doesn't make sense. The argument $user shouldn't be impacted by the user doing the request
-        // See : https://github.com/userfrosting/UserFrosting/issues/736#issuecomment-313525283
-        /*if ($this->ci->authenticator->guest()) {
-            if ($debug) {
-                $this->ci->authLogger->debug("User is not logged in. Access denied.");
-            }
-            return false;
-        }*/
-
         // The master (root) account has access to everything.
         // Need to use loose comparison for now, because some DBs return `id` as a string.
         if ($user->id == $this->ci->config['reserved_user_ids.master']) {
