@@ -399,7 +399,7 @@ class Authenticator
     protected function validateUserAccount($userId)
     {
         if ($userId) {
-            $user = $this->classMapper->staticMethod('user', 'find', $userId);
+            $user = $this->classMapper->staticMethod('user', 'find', (int) $userId);
 
             // If the user doesn't exist any more, throw an exception.
             if (!$user) {
