@@ -2,6 +2,7 @@
 
 namespace UserFrosting\Sprinkle\Account\Tests\Integration;
 
+use Mockery as m;
 use UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager;
 use UserFrosting\Sprinkle\Account\Tests\withTestUser;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
@@ -29,6 +30,12 @@ class AuthorizationManagerTest extends TestCase
         $this->refreshDatabase();
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        m::close();
+    }
+
     /**
      * @return AuthorizationManager
      */
@@ -53,6 +60,14 @@ class AuthorizationManagerTest extends TestCase
     }
 
     /**
+     * Test the service. Will have the predefined callbacks
+     */
+    public function testService()
+    {
+        $this->assertInstanceOf(AuthorizationManager::class, $this->ci->authorizer);
+    }
+
+    /**
      * @depends testConstructor
      * @expectedException \ArgumentCountError
      * @param  AuthorizationManager $manager
@@ -65,60 +80,51 @@ class AuthorizationManagerTest extends TestCase
 
     /**
      * @depends testConstructor
-     * @param  AuthorizationManager $manager
      */
-    public function testCheckAccess_withNullUser(AuthorizationManager $manager)
+    public function testCheckAccess_withNullUser()
     {
-        $this->assertFalse($manager->checkAccess(null, 'foo'));
+        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with("No user defined. Access denied.");
+        $this->assertFalse($this->getManager()->checkAccess(null, 'foo'));
     }
 
     /**
      * @depends testConstructor
-     * @param  AuthorizationManager $manager
      */
-    public function testCheckAccess_withBadUserType(AuthorizationManager $manager)
+    public function testCheckAccess_withBadUserType()
     {
-        $this->assertFalse($manager->checkAccess(123, 'foo'));
+        $this->getMockAuthLogger()->shouldReceive('debug')->once()->with("No user defined. Access denied.");
+        $this->assertFalse($this->getManager()->checkAccess(123, 'foo'));
     }
 
     /**
-     * Test the service. Will have the predefined callbacks
-     */
-    public function testService()
-    {
-        $this->assertInstanceOf(AuthorizationManager::class, $this->ci->authorizer);
-    }
-
-    /**
-     * @depends testService
-     */
-    public function testCheckAccess_withGuestUser()
-    {
-        $user = $this->createTestUser();
-        $manager = $this->ci->authorizer;
-        $this->assertFalse($manager->checkAccess($user, 'foo'));
-    }
-
-    /**
-     * @depends testService
+     * @depends testConstructor
      */
     public function testCheckAccess_withNormalUser()
     {
-        $user = $this->createTestUser(false, true);
-        $manager = $this->ci->authorizer;
-        $this->assertFalse($manager->checkAccess($user, 'foo'));
-        $this->assertFalse($manager->checkAccess($this->ci->currentUser, 'foo'));
+        $user = $this->createTestUser(false);
+
+        // Setup authLogger expectations
+        $authLogger = $this->getMockAuthLogger();
+        $authLogger->shouldReceive('debug')->once()->with("No matching permissions found. Access denied.");
+        $authLogger->shouldReceive('debug')->times(2);
+
+        $this->assertFalse($this->getManager()->checkAccess($user, 'foo'));
     }
 
     /**
      * @depends testService
+     * @depends testCheckAccess_withNormalUser
      */
     public function testCheckAccess_withMasterUser()
     {
-        $user = $this->createTestUser(true, true);
-        $manager = $this->ci->authorizer;
-        $this->assertTrue($manager->checkAccess($user, 'foo'));
-        $this->assertTrue($manager->checkAccess($this->ci->currentUser, 'foo'));
+        $user = $this->createTestUser(true);
+
+        // Setup authLogger expectations
+        $authLogger = $this->getMockAuthLogger();
+        $authLogger->shouldReceive('debug')->once()->with("User is the master (root) user. Access granted.");
+        $authLogger->shouldReceive('debug')->times(2);
+
+        $this->assertTrue($this->getManager()->checkAccess($user, 'foo'));
     }
 
     /**
@@ -129,11 +135,31 @@ class AuthorizationManagerTest extends TestCase
         // Create a non admin user and give him the 'foo' permission
         $user = $this->createTestUser();
         $this->giveUserTestPermission($user, 'foo');
-        $this->loginUser($user);
 
-        $manager = $this->ci->authorizer;
-        $this->assertTrue($manager->checkAccess($user, 'foo'));
-        $this->assertTrue($manager->checkAccess($this->ci->currentUser, 'foo'));
+        // Setup authLogger expectations
+        $authLogger = $this->getMockAuthLogger();
+        $authLogger->shouldReceive('debug')->once()->with("Evaluating callback 'always'...");
+        $authLogger->shouldReceive('debug')->once()->with("User passed conditions 'always()'. Access granted.");
+        $authLogger->shouldReceive('debug')->times(6);
+
+        $this->assertTrue($this->ci->authorizer->checkAccess($user, 'foo'));
+    }
+
+    /**
+     * @depends testCheckAccess_withNormalUserWithPermission
+     */
+    public function testCheckAccess_withNormalUserWithFailedPermission()
+    {
+        // Create a non admin user and give him the 'foo' permission
+        $user = $this->createTestUser();
+        $this->giveUserTestPermission($user, 'foo', 'is_master(self.id)');
+
+        // Setup authLogger expectations
+        $authLogger = $this->getMockAuthLogger();
+        $authLogger->shouldReceive('debug')->once()->with("User failed to pass any of the matched permissions. Access denied.");
+        $authLogger->shouldReceive('debug')->times(7);
+
+        $this->assertFalse($this->ci->authorizer->checkAccess($user, 'foo'));
     }
 
     /**
@@ -142,5 +168,17 @@ class AuthorizationManagerTest extends TestCase
     protected function getManager()
     {
         return new AuthorizationManager($this->ci, []);
+    }
+
+    /**
+     * We'll test using the `debug.auth` on and a mock authLogger to not get our
+     * dirty test into the real log
+     * @return \Monolog\Logger
+     */
+    protected function getMockAuthLogger()
+    {
+        $this->ci->config['debug.auth'] = true;
+        $this->ci->authLogger = m::mock('\Monolog\Logger');
+        return $this->ci->authLogger;
     }
 }

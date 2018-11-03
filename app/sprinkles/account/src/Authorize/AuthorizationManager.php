@@ -91,12 +91,14 @@ class AuthorizationManager
             $this->ci->authLogger->debug("Checking authorization for user {$user->id} ('{$user->user_name}') on permission '$slug'...");
         }
 
-        if ($this->ci->authenticator->guest()) {
+        // TODO : This doesn't make sense. The argument $user shouldn't be impacted by the user doing the request
+        // See : https://github.com/userfrosting/UserFrosting/issues/736#issuecomment-313525283
+        /*if ($this->ci->authenticator->guest()) {
             if ($debug) {
                 $this->ci->authLogger->debug("User is not logged in. Access denied.");
             }
             return false;
-        }
+        }*/
 
         // The master (root) account has access to everything.
         // Need to use loose comparison for now, because some DBs return `id` as a string.
@@ -112,7 +114,7 @@ class AuthorizationManager
 
         if (empty($permissions) || !isset($permissions[$slug])) {
             if ($debug) {
-                $this->ci->authLogger->debug("No matching permissions found.  Access denied.");
+                $this->ci->authLogger->debug("No matching permissions found. Access denied.");
             }
             return false;
         }
@@ -130,14 +132,14 @@ class AuthorizationManager
             $pass = $ace->evaluateCondition($permission->conditions, $params);
             if ($pass) {
                 if ($debug) {
-                    $this->ci->authLogger->debug("User passed conditions '{$permission->conditions}' .  Access granted.");
+                    $this->ci->authLogger->debug("User passed conditions '{$permission->conditions}'. Access granted.");
                 }
                 return true;
             }
         }
 
         if ($debug) {
-            $this->ci->authLogger->debug("User failed to pass any of the matched permissions.  Access denied.");
+            $this->ci->authLogger->debug("User failed to pass any of the matched permissions. Access denied.");
         }
 
         return false;
