@@ -239,7 +239,7 @@ class Authenticator
 
         // This removes all of the user's persistent logins from the database
         if ($complete) {
-            $this->storage->cleanAllTriplets($currentUserId);
+            $this->rememberMeStorage->cleanAllTriplets($currentUserId);
         }
 
         // Clear the rememberMe cookie

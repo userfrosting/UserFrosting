@@ -65,7 +65,7 @@ class AuthenticatorTest extends TestCase
         $this->assertSame($testUser->id, $this->ci->session[$key]);
 
         // Must logout to avoid test issue
-        $authenticator->logout();
+        $authenticator->logout(true);
 
         // We'll test the logout system works too while we're at it (and depend on it)
         $key = $this->ci->config['session.keys.current_user_id'];
@@ -332,42 +332,6 @@ class AuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->guest());
         $this->assertSame($testUser->id, $authenticator->user()->id);
     }
-
-    /**
-     * @depends testConstructor
-     * @param Authenticator $authenticator
-     */
-    /*public function testLoginRememberedUser(Authenticator $authenticator)
-    {
-        //TODO
-    }*/
-
-    /**
-     * @depends testConstructor
-     * @param Authenticator $authenticator
-     */
-    /*public function testLoginSessionUser(Authenticator $authenticator)
-    {
-        //TODO
-    }*/
-
-    /**
-     * @depends testConstructor
-     * @param Authenticator $authenticator
-     */
-    /*public function testValidateRememberMeCookie(Authenticator $authenticator)
-    {
-        //TODO
-    }*/
-
-    /**
-     * @depends testConstructor
-     * @param Authenticator $authenticator
-     */
-    /*public function testFlushSessionCache(Authenticator $authenticator)
-    {
-        //TODO
-    }*/
 
     /**
      * @return Authenticator
