@@ -65,7 +65,9 @@ class AuthenticatorTest extends TestCase
         $this->assertSame($testUser->id, $this->ci->session[$key]);
 
         // Must logout to avoid test issue
-        $authenticator->logout(true);
+        $authenticator->logout();
+        // $authenticator->logout(true); //<-- Doesn't work with SQLite. Doctrine\DBAL\Driver\PDOException: SQLSTATE[HY000]: General error: 5 database is locked
+        // Is required to test the `cleanAllTriplets` thing
 
         // We'll test the logout system works too while we're at it (and depend on it)
         $key = $this->ci->config['session.keys.current_user_id'];
