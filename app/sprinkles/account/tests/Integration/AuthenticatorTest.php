@@ -128,9 +128,20 @@ class AuthenticatorTest extends TestCase
     }
 
     /**
+     * The next test doesn't work with SQLite, as birke/rememberme doesn't look
+     * compatible with SQLite
+     *
+     * Exception :
+     * Doctrine\DBAL\Driver\PDOException: SQLSTATE[HY000]: General error: 1 no such function: NOW
+     * app/vendor/doctrine/dbal/lib/Doctrine/DBAL/Driver/PDOConnection.php:82
+     * app/vendor/birke/rememberme/src/Storage/PDOStorage.php:28
+     * app/vendor/birke/rememberme/src/Authenticator.php:107
+     * app/sprinkles/account/src/Authenticate/Authenticator.php:332
+     * app/tests/TestCase.php:182
+     * app/sprinkles/account/tests/Integration/AuthenticatorTest.php:161
+     */
+    /**
      * @depends testConstructor
-     * @covers Authenticator::login
-     * @covers Authenticator::loginRememberedUser
      * @param Authenticator $authenticator
      */
     /*public function testLoginWithRememberMe(Authenticator $authenticator)
@@ -150,14 +161,22 @@ class AuthenticatorTest extends TestCase
         $this->assertSame($testUser->id, $this->ci->session[$key]);
 
         // We'll manually delete the session,
-        //$this->ci->session[$key] == null; // $this->session->destroy();
+        $this->ci->session[$key] = null;
+        $this->assertNull($this->ci->session[$key]);
+        $this->assertNotSame($testUser->id, $this->ci->session[$key]);
 
         // Go througt the loginRememberedUser process
-        $user = $authenticator->user(); //$this->invokeMethod($authenticator, 'loginRememberedUser');
-        Debug::debug("USER ===> ");
-        Debug::debug($user);
+        // First, we'll simulate a page refresh by creating a new authenticator
+        $authenticator = $this->getAuthenticator();
+
+        $user = $authenticator->user();
+        //$user = $this->invokeMethod($authenticator, 'loginRememberedUser'); //<-- Use this to see the PDOException
+
+        // If loginRememberedUser returns a PDOException, `user` will return a null user
+        $this->assertNotNull($user);
         $this->assertSame($testUser->id, $user->id);
         $this->assertSame($testUser->id, $this->ci->session[$key]);
+        $this->assertTrue($authenticator->viaRemember());
 
         // Must logout to avoid test issue
         $authenticator->logout();
