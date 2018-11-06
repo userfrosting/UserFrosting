@@ -48,6 +48,7 @@
         ],
         // CSRF middleware settings (see https://github.com/slimphp/Slim-Csrf)
         'csrf' => [
+            'enabled'          => getenv('CSRF_ENABLED') ?: true,
             'name'             => 'csrf',
             'storage_limit'    => 200,
             'strength'         => 16,

@@ -9,6 +9,7 @@ namespace UserFrosting\Sprinkle\Core;
 
 use RocketTheme\Toolbox\Event\Event;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
+use UserFrosting\Sprinkle\Core\Middleware\CsrfMiddleware;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
@@ -109,31 +110,6 @@ class Core extends Sprinkle
      */
     public function onAddGlobalMiddleware(Event $event)
     {
-        $request = $this->ci->request;
-        $path = $request->getUri()->getPath();
-        $method = ($request->getMethod()) ?: 'GET';
-
-        // Normalize path to always have a leading slash
-        $path = '/' . ltrim($path, '/');
-
-        // Normalize method to uppercase.
-        $method = strtoupper($method);
-
-        $csrfBlacklist = $this->ci->config['csrf.blacklist'];
-        $isBlacklisted = false;
-
-        // Go through the blacklist and determine if the path and method match any of the blacklist entries.
-        foreach ($csrfBlacklist as $pattern => $methods) {
-            $methods = array_map('strtoupper', (array) $methods);
-            if (in_array($method, $methods) && $pattern != '' && preg_match('~' . $pattern . '~', $path)) {
-                $isBlacklisted = true;
-                break;
-            }
-        }
-
-        if (!$path || !$isBlacklisted) {
-            $app = $event->getApp();
-            $app->add($this->ci->csrf);
-        }
+        CsrfMiddleware::register($event->getApp(), $this->ci->request, $this->ci->csrf);
     }
 }
