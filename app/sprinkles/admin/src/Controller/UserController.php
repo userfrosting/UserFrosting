@@ -97,7 +97,7 @@ class UserController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
@@ -164,7 +164,7 @@ class UserController extends SimpleController
             $ms->addMessageTranslated('success', 'USER.CREATED', $data);
         });
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -236,7 +236,7 @@ class UserController extends SimpleController
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', [
             'email' => $user->email
         ]);
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -310,7 +310,7 @@ class UserController extends SimpleController
             'user_name' => $userName
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -1151,7 +1151,7 @@ class UserController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
@@ -1175,7 +1175,7 @@ class UserController extends SimpleController
         $ms->addMessageTranslated('success', 'DETAILS_UPDATED', [
             'user_name' => $user->user_name
         ]);
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -1331,7 +1331,7 @@ class UserController extends SimpleController
             ]);
         }
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**

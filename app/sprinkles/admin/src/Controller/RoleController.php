@@ -93,7 +93,7 @@ class RoleController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
@@ -117,7 +117,7 @@ class RoleController extends SimpleController
             $ms->addMessageTranslated('success', 'ROLE.CREATION_SUCCESSFUL', $data);
         });
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -203,7 +203,7 @@ class RoleController extends SimpleController
             'name' => $roleName
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -833,7 +833,7 @@ class RoleController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
@@ -858,7 +858,7 @@ class RoleController extends SimpleController
             'name' => $role->name
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -973,7 +973,7 @@ class RoleController extends SimpleController
             ]);
         }
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**

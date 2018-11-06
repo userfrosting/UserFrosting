@@ -93,7 +93,7 @@ class GroupController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
@@ -117,7 +117,7 @@ class GroupController extends SimpleController
             $ms->addMessageTranslated('success', 'GROUP.CREATION_SUCCESSFUL', $data);
         });
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -204,7 +204,7 @@ class GroupController extends SimpleController
             'name' => $groupName
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -727,7 +727,7 @@ class GroupController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Begin transaction - DB will be rolled back if an exception occurs
@@ -752,7 +752,7 @@ class GroupController extends SimpleController
             'name' => $group->name
         ]);
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**

@@ -84,7 +84,7 @@ class AccountController extends SimpleController
 
         // Throttle requests
         if ($delay > 0) {
-            return $response->withStatus(429);
+            return $response->withJson([], 429);
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -203,7 +203,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Throttle requests
@@ -218,7 +218,7 @@ class AccountController extends SimpleController
 
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', ['delay' => $delay]);
-            return $response->withStatus(429);
+            return $response->withJson([], 429);
         }
 
         // All checks passed!  log events/activities, update user, and send email
@@ -255,7 +255,7 @@ class AccountController extends SimpleController
         // TODO: create delay to prevent timing-based attacks
 
         $ms->addMessageTranslated('success', 'PASSWORD.FORGET.REQUEST_SENT', ['email' => $data['email']]);
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -331,7 +331,7 @@ class AccountController extends SimpleController
         // Return 200 success if user is already logged in
         if ($authenticator->check()) {
             $ms->addMessageTranslated('warning', 'LOGIN.ALREADY_COMPLETE');
-            return $response->withStatus(200);
+            return $response->withJson([], 200);
         }
 
         /** @var \UserFrosting\Support\Repository\Repository $config */
@@ -351,7 +351,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Determine whether we are trying to log in with an email address or a username
@@ -373,7 +373,7 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', [
                 'delay' => $delay
             ]);
-            return $response->withStatus(429);
+            return $response->withJson([], 429);
         }
 
         // Log throttleable event
@@ -383,7 +383,7 @@ class AccountController extends SimpleController
         // Note that we do this after logging throttle event, so this error counts towards throttling limit.
         if ($isEmail && !$config['site.login.enable_email']) {
             $ms->addMessageTranslated('danger', 'USER_OR_PASS_INVALID');
-            return $response->withStatus(403);
+            return $response->withJson([], 403);
         }
 
         // Try to authenticate the user.  Authenticator will throw an exception on failure.
@@ -731,7 +731,7 @@ class AccountController extends SimpleController
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
         if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.ACCESS_DENIED');
-            return $response->withStatus(403);
+            return $response->withJson([], 403);
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -767,7 +767,7 @@ class AccountController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Looks good, let's update with new values!
@@ -782,7 +782,7 @@ class AccountController extends SimpleController
         ]);
 
         $ms->addMessageTranslated('success', 'PROFILE.UPDATED');
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -832,13 +832,13 @@ class AccountController extends SimpleController
         // Security measure: do not allow registering new users until the master account has been created.
         if (!$classMapper->staticMethod('user', 'find', $config['reserved_user_ids.master'])) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.MASTER_NOT_EXISTS');
-            return $response->withStatus(403);
+            return $response->withJson([], 403);
         }
 
         // Check if registration is currently enabled
         if (!$config['site.registration.enabled']) {
             $ms->addMessageTranslated('danger', 'REGISTRATION.DISABLED');
-            return $response->withStatus(403);
+            return $response->withJson([], 403);
         }
 
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -847,7 +847,7 @@ class AccountController extends SimpleController
         // Prevent the user from registering if he/she is already logged in
         if ($authenticator->check()) {
             $ms->addMessageTranslated('danger', 'REGISTRATION.LOGOUT');
-            return $response->withStatus(403);
+            return $response->withJson([], 403);
         }
 
         // Load the request schema
@@ -872,7 +872,7 @@ class AccountController extends SimpleController
 
         // Throttle requests
         if ($delay > 0) {
-            return $response->withStatus(429);
+            return $response->withJson([], 429);
         }
 
         // Check captcha, if required
@@ -885,7 +885,7 @@ class AccountController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Remove captcha, password confirmation from object data after validation
@@ -911,7 +911,7 @@ class AccountController extends SimpleController
             $ms->addMessageTranslated('success', 'REGISTRATION.COMPLETE_TYPE1');
         }
 
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -957,7 +957,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Throttle requests
@@ -972,7 +972,7 @@ class AccountController extends SimpleController
 
         if ($delay > 0) {
             $ms->addMessageTranslated('danger', 'RATE_LIMIT_EXCEEDED', ['delay' => $delay]);
-            return $response->withStatus(429);
+            return $response->withJson([], 429);
         }
 
         // All checks passed!  log events/activities, create user, and send verification email (if required)
@@ -1006,7 +1006,7 @@ class AccountController extends SimpleController
         });
 
         $ms->addMessageTranslated('success', 'ACCOUNT.VERIFICATION.NEW_LINK_SENT', ['email' => $data['email']]);
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -1052,7 +1052,7 @@ class AccountController extends SimpleController
         $validator = new ServerSideValidator($schema, $this->ci->translator);
         if (!$validator->validate($data)) {
             $ms->addValidationErrors($validator);
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         $forgotPasswordPage = $this->ci->router->pathFor('forgot-password');
@@ -1064,7 +1064,7 @@ class AccountController extends SimpleController
 
         if (!$passwordReset) {
             $ms->addMessageTranslated('danger', 'PASSWORD.FORGET.INVALID', ['url' => $forgotPasswordPage]);
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         $ms->addMessageTranslated('success', 'PASSWORD.UPDATED');
@@ -1082,7 +1082,7 @@ class AccountController extends SimpleController
         $authenticator->login($user);
 
         $ms->addMessageTranslated('success', 'WELCOME', $user->export());
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
@@ -1117,7 +1117,7 @@ class AccountController extends SimpleController
         // See recipe "per-field access control" for dynamic fine-grained control over which properties a user can modify.
         if (!$authorizer->checkAccess($currentUser, 'update_account_settings')) {
             $ms->addMessageTranslated('danger', 'ACCOUNT.ACCESS_DENIED');
-            return $response->withStatus(403);
+            return $response->withJson([], 403);
         }
 
         /** @var \UserFrosting\Sprinkle\Core\Util\ClassMapper $classMapper */
@@ -1162,7 +1162,7 @@ class AccountController extends SimpleController
         }
 
         if ($error) {
-            return $response->withStatus(400);
+            return $response->withJson([], 400);
         }
 
         // Hash new password, if specified
@@ -1185,7 +1185,7 @@ class AccountController extends SimpleController
         ]);
 
         $ms->addMessageTranslated('success', 'ACCOUNT.SETTINGS.UPDATED');
-        return $response->withStatus(200);
+        return $response->withJson([], 200);
     }
 
     /**
