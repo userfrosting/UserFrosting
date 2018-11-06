@@ -331,7 +331,7 @@ class ServicesProvider
         /**
          * Loads the User object for the currently logged-in user.
          *
-         * @return \UserFrosting\Sprinkle\Account\Database\Models\User
+         * @return \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface
          */
         $container['currentUser'] = function ($c) {
             $authenticator = $c->authenticator;

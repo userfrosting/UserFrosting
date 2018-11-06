@@ -12,7 +12,7 @@ use UserFrosting\Tests\TestCase;
 use UserFrosting\Sprinkle\Core\Tests\TestDatabase;
 use UserFrosting\Sprinkle\Core\Tests\RefreshDatabase;
 use UserFrosting\Sprinkle\Account\Account\Registration;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Support\Exception\HttpException;
 
 /**
@@ -71,7 +71,7 @@ class RegistrationTest extends TestCase
         $user = $registration->register();
 
         // Registration should return a valid user
-        $this->assertInstanceOf(User::class, $user);
+        $this->assertInstanceOf(UserInterface::class, $user);
         $this->assertEquals('FooBar', $user->user_name);
 
         // We try to register the same user again. Should throw an error

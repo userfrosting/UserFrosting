@@ -51,7 +51,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -151,7 +151,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -223,7 +223,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -271,7 +271,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -314,7 +314,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -373,7 +373,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var \UserFrosting\I18n\MessageTranslator $translator */
@@ -445,7 +445,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var \UserFrosting\I18n\MessageTranslator $translator */
@@ -512,7 +512,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit "permissions" field for this role
@@ -556,7 +556,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -610,7 +610,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -658,7 +658,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -728,7 +728,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -799,7 +799,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit submitted fields for this role
@@ -892,7 +892,7 @@ class RoleController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager $authorizer */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled resource - check that currentUser has permission to edit the specified field for this user

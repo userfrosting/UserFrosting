@@ -13,7 +13,7 @@ use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Mail\EmailRecipient;
 use UserFrosting\Sprinkle\Core\Mail\TwigMailMessage;
 use UserFrosting\Support\Exception\HttpException;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
  * Handles user registration tasks.
@@ -80,7 +80,7 @@ class Registration
     /**
      * Register a new user
      *
-     * @return \UserFrosting\Sprinkle\Account\Database\Models\User The created user
+     * @return UserInterface The created user
      */
     public function register()
     {
@@ -223,9 +223,9 @@ class Registration
     /**
      * Send verification email for specified user
      *
-     * @param  User $user The user to send the email for
+     * @param  UserInterface $user The user to send the email for
      */
-    protected function sendVerificationEmail(User $user)
+    protected function sendVerificationEmail(UserInterface $user)
     {
         // Try to generate a new verification request
         $verification = $this->ci->repoVerification->create($user, $this->ci->config['verification.timeout']);

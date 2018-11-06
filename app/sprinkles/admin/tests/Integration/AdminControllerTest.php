@@ -27,7 +27,7 @@ class AdminControllerTest extends ControllerTestCase
      * @depends testControllerConstructor
      * @expectedException \UserFrosting\Support\Exception\ForbiddenException
      */
-    public function testPageDashboard_NullUser()
+    public function testPageDashboard_GuestUser()
     {
         $controller = $this->getController();
         $controller->pageDashboard($this->getRequest(), $this->getResponse(), []);
@@ -40,8 +40,7 @@ class AdminControllerTest extends ControllerTestCase
     public function testPageDashboard_ForbiddenException()
     {
         // Non admin user, won't have access
-        $testUser = $this->createTestUser();
-        $this->loginUser($testUser);
+        $testUser = $this->createTestUser(false, true);
 
         // Get controller
         $controller = $this->getController();
@@ -54,8 +53,7 @@ class AdminControllerTest extends ControllerTestCase
     public function testPageDashboard()
     {
         // Admin user, WILL have access
-        $testUser = $this->createTestUser(true);
-        $this->loginUser($testUser);
+        $testUser = $this->createTestUser(true, true);
 
         // Get controller
         $controller = $this->getController();
@@ -72,8 +70,7 @@ class AdminControllerTest extends ControllerTestCase
     public function testClearCache()
     {
         // Admin user, WILL have access
-        $testUser = $this->createTestUser(true);
-        $this->loginUser($testUser);
+        $testUser = $this->createTestUser(true, true);
 
         // Get controller
         $controller = $this->getController();

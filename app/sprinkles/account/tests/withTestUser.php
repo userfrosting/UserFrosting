@@ -8,6 +8,7 @@
 namespace UserFrosting\Sprinkle\Account\Tests;
 
 use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Database\Models\Permission;
 use UserFrosting\Sprinkle\Account\Database\Models\Role;
 
@@ -18,9 +19,9 @@ use UserFrosting\Sprinkle\Account\Database\Models\Role;
 trait withTestUser
 {
     /**
-     * @param User $user
+     * @param UserInterface $user
      */
-    protected function loginUser(User $user)
+    protected function loginUser(UserInterface $user)
     {
         $this->ci->currentUser = $user;
         $this->ci->authenticator->login($user);
@@ -68,12 +69,12 @@ trait withTestUser
 
     /**
      * Gives a user a new test permission
-     * @param  User $user
+     * @param  UserInterface $user
      * @param  string $slug
      * @param  string $conditions
      * @return Permission
      */
-    protected function giveUserTestPermission(User $user, $slug, $conditions = "always()")
+    protected function giveUserTestPermission(UserInterface $user, $slug, $conditions = "always()")
     {
         /** @var \League\FactoryMuffin\FactoryMuffin $fm **/
         $fm = $this->ci->factory;
@@ -91,11 +92,11 @@ trait withTestUser
 
     /**
      * Add the test permission to a Role, then the role to the user
-     * @param  User       $user
-     * @param  Permission $permission
-     * @return Role       The intermidiate role
+     * @param  UserInterface $user
+     * @param  Permission    $permission
+     * @return Role          The intermidiate role
      */
-    protected function giveUserPermission(User $user, Permission $permission)
+    protected function giveUserPermission(UserInterface $user, Permission $permission)
     {
         /** @var \League\FactoryMuffin\FactoryMuffin $fm **/
         $fm = $this->ci->factory;

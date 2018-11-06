@@ -8,7 +8,7 @@
 namespace UserFrosting\Sprinkle\Account\Authorize;
 
 use Interop\Container\ContainerInterface;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
  * AuthorizationManager class.
@@ -68,7 +68,7 @@ class AuthorizationManager
      *
      * Determine if this user has access to the given $slug under the given $params.
      *
-     * @param User|null $user
+     * @param UserInterface|null $user
      * @param string $slug The permission slug to check for access.
      * @param array $params An array of field names => values, specifying any additional data to provide the authorization module
      * when determining whether or not this user has access.
@@ -78,7 +78,7 @@ class AuthorizationManager
     {
         $debug = $this->ci->config['debug.auth'];
 
-        if (is_null($user) || !($user instanceof User)) {
+        if (is_null($user) || !($user instanceof UserInterface)) {
             if ($debug) {
                 $this->ci->authLogger->debug("No user defined. Access denied.");
             }

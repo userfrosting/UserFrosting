@@ -8,7 +8,7 @@
 namespace UserFrosting\Sprinkle\Account\Repository;
 
 use Carbon\Carbon;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 
@@ -119,11 +119,11 @@ abstract class TokenRepository
     /**
      * Create a new token for a specified user.
      *
-     * @param User $user The user object to associate with this token.
+     * @param UserInterface $user The user object to associate with this token.
      * @param int $timeout The time, in seconds, after which this token should expire.
      * @return Model The model (PasswordReset, Verification, etc) object that stores the token.
      */
-    public function create(User $user, $timeout)
+    public function create(UserInterface $user, $timeout)
     {
         // Remove any previous tokens for this user
         $this->removeExisting($user);
@@ -155,11 +155,11 @@ abstract class TokenRepository
     /**
      * Determine if a specified user has an incomplete and unexpired token.
      *
-     * @param User $user The user object to look up.
+     * @param UserInterface $user The user object to look up.
      * @param int $token Optionally, try to match a specific token.
      * @return Model|false
      */
-    public function exists(User $user, $token = null)
+    public function exists(UserInterface $user, $token = null)
     {
         $model = $this->classMapper
             ->staticMethod($this->modelIdentifier, 'where', 'user_id', $user->id)
@@ -178,10 +178,10 @@ abstract class TokenRepository
     /**
      * Delete all existing tokens from the database for a particular user.
      *
-     * @param  User  $user
+     * @param  UserInterface  $user
      * @return int
      */
-    protected function removeExisting(User $user)
+    protected function removeExisting(UserInterface $user)
     {
         return $this->classMapper
             ->staticMethod($this->modelIdentifier, 'where', 'user_id', $user->id)
@@ -222,9 +222,9 @@ abstract class TokenRepository
      * Modify the user during the token completion process.
      *
      * This method is called during complete(), and is a way for concrete implementations to modify the user.
-     * @param User $user the user object to modify.
+     * @param UserInterface $user the user object to modify.
      * @param mixed[] $args
      * @return mixed[] $args the list of parameters that were supplied to the call to `complete()`
      */
-    abstract protected function updateUser($user, $args);
+    abstract protected function updateUser(UserInterface $user, $args);
 }

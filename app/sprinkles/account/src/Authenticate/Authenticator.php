@@ -19,7 +19,7 @@ use UserFrosting\Sprinkle\Account\Authenticate\Exception\AccountNotVerifiedExcep
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthCompromisedException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\AuthExpiredException;
 use UserFrosting\Sprinkle\Account\Authenticate\Exception\InvalidCredentialsException;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 use UserFrosting\Sprinkle\Account\Facades\Password;
 use UserFrosting\Sprinkle\Core\Util\ClassMapper;
 use UserFrosting\Support\Repository\Repository as Config;
@@ -68,7 +68,7 @@ class Authenticator
     protected $rememberMe;
 
     /**
-     * @var User
+     * @var UserInterface
      */
     protected $user;
 
@@ -133,7 +133,7 @@ class Authenticator
      * @param  string  $identityValue
      * @param  string  $password
      * @param  bool    $rememberMe
-     * @return User
+     * @return UserInterface
      */
     public function attempt($identityColumn, $identityValue, $password, $rememberMe = false)
     {
@@ -193,12 +193,12 @@ class Authenticator
      * Process an account login request.
      *
      * This method logs in the specified user, allowing the client to assume the user's identity for the duration of the session.
-     * @param User $user The user to log in.
+     * @param UserInterface $user The user to log in.
      * @param bool $rememberMe Set to true to make this a "persistent session", i.e. one that will re-login even after the session expires.
      * @todo Figure out a way to update the currentUser service to reflect the logged-in user *immediately* in the service provider.
      * As it stands, the currentUser service will still reflect a "guest user" for the remainder of the request.
      */
-    public function login($user, $rememberMe = false)
+    public function login(UserInterface $user, $rememberMe = false)
     {
         $oldId = session_id();
         $this->session->regenerateId(true);
@@ -272,7 +272,7 @@ class Authenticator
      * Try to get the currently authenticated user, returning a guest user if none was found.
      *
      * Tries to re-establish a session for "remember-me" users who have been logged out due to an expired session.
-     * @return User|null
+     * @return UserInterface|null
      * @throws AuthExpiredException
      * @throws AuthCompromisedException
      * @throws AccountInvalidException
@@ -323,7 +323,7 @@ class Authenticator
      * Attempt to log in the client from their rememberMe token (in their cookie).
      *
      * @throws AuthCompromisedException The client attempted to log in with an invalid rememberMe token.
-     * @return User|bool If successful, the User object of the remembered user.  Otherwise, return false.
+     * @return UserInterface|bool If successful, the User object of the remembered user.  Otherwise, return false.
      */
     protected function loginRememberedUser()
     {
@@ -350,7 +350,7 @@ class Authenticator
      * Attempt to log in the client from the session.
      *
      * @throws AuthExpiredException The client attempted to use an expired rememberMe token.
-     * @return User|null If successful, the User object of the user in session.  Otherwise, return null.
+     * @return UserInterface|null If successful, the User object of the user in session.  Otherwise, return null.
      */
     protected function loginSessionUser()
     {
@@ -392,7 +392,7 @@ class Authenticator
      *
      * Checks that the account is valid and enabled, throwing an exception if not.
      * @param int $userId
-     * @return User|null
+     * @return UserInterface|null
      * @throws AccountInvalidException
      * @throws AccountDisabledException
      */

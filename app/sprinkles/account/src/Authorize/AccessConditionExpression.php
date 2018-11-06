@@ -13,7 +13,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser as Parser;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 use PhpParser\Error as PhpParserException;
-use UserFrosting\Sprinkle\Account\Database\Models\User;
+use UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface;
 
 /**
  * AccessConditionExpression class
@@ -26,7 +26,7 @@ use UserFrosting\Sprinkle\Account\Database\Models\User;
 class AccessConditionExpression
 {
     /**
-     * @var User A user object, which for convenience can be referenced as 'self' in access conditions.
+     * @var UserInterface A user object, which for convenience can be referenced as 'self' in access conditions.
      */
     protected $user;
 
@@ -64,11 +64,11 @@ class AccessConditionExpression
      * Create a new AccessConditionExpression object.
      *
      * @param ParserNodeFunctionEvaluator $nodeVisitor
-     * @param User $user A user object, which for convenience can be referenced as 'self' in access conditions.
+     * @param UserInterface $user A user object, which for convenience can be referenced as 'self' in access conditions.
      * @param Logger $logger A Monolog logger, used to dump debugging info for authorization evaluations.
      * @param bool $debug Set to true if you want debugging information printed to the auth log.
      */
-    public function __construct(ParserNodeFunctionEvaluator $nodeVisitor, User $user, Logger $logger, $debug = false)
+    public function __construct(ParserNodeFunctionEvaluator $nodeVisitor, UserInterface $user, Logger $logger, $debug = false)
     {
         $this->nodeVisitor   = $nodeVisitor;
         $this->user          = $user;

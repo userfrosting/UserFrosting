@@ -41,6 +41,6 @@ class FactoriesTest extends TestCase
         $fm = $this->ci->factory;
 
         $user = $fm->create('UserFrosting\Sprinkle\Account\Database\Models\User');
-        $this->assertInstanceOf('UserFrosting\Sprinkle\Account\Database\Models\User', $user);
+        $this->assertInstanceOf('UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface', $user);
     }
 }

@@ -322,7 +322,7 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Core\Alert\AlertStream $ms */
         $ms = $this->ci->alerts;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         /** @var \UserFrosting\Sprinkle\Account\Authenticate\Authenticator $authenticator */
@@ -471,6 +471,7 @@ class AccountController extends SimpleController
     {
         /** @var \UserFrosting\Support\Repository\Repository $config */
         $config = $this->ci->config;
+
         /** @var \UserFrosting\I18n\LocalePathBuilder */
         $localePathBuilder = $this->ci->localePathBuilder;
 
@@ -623,7 +624,7 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access-controlled page
@@ -723,7 +724,7 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access control for entire resource - check that the current user has permission to modify themselves
@@ -1109,7 +1110,7 @@ class AccountController extends SimpleController
         /** @var \UserFrosting\Sprinkle\Account\Authorize\AuthorizationManager */
         $authorizer = $this->ci->authorizer;
 
-        /** @var \UserFrosting\Sprinkle\Account\Database\Models\User $currentUser */
+        /** @var \UserFrosting\Sprinkle\Account\Database\Models\Interfaces\UserInterface $currentUser */
         $currentUser = $this->ci->currentUser;
 
         // Access control for entire resource - check that the current user has permission to modify themselves
