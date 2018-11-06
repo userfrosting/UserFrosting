@@ -6,6 +6,7 @@ namespace UserFrosting;
 define('UserFrosting\VERSION', '4.2.0-alpha.1');
 define('UserFrosting\DS', '/');
 define('UserFrosting\PHP_MIN_VERSION', '5.6');
+define('UserFrosting\PHP_RECOMMENDED_VERSION', '7.1');
 define('UserFrosting\DEBUG_CONFIG', false);
 
 // Directories and Paths
