@@ -103,11 +103,8 @@ class ServicesProvider
                 return $pathBuilder;
             }
 
+            // Add user locale
             if ($authenticator->check()) {
-                // Add paths to locale files for user theme
-                // TODO $themePath = $c->sprinkleManager->addResource('locale', $currentUser->theme);
-
-                // Add user locale
                 $pathBuilder->addLocales($currentUser->locale);
             }
 

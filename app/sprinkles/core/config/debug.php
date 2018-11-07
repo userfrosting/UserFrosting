@@ -1,8 +1,7 @@
 <?php
 
     /**
-     * Default development config file for UserFrosting. Sets up UserFrosting for easier development.
-     *
+     * Debug development config file for UserFrosting. Sets every debug options on to help debug what's going wrong
      */
 
     return [
@@ -13,12 +12,11 @@
             'twig' => false
         ],
         'debug' => [
-            'deprecation' => true,
-            'queries' => true,
-            'smtp' => true,
-            'twig' => true
+            'deprecation'   => true,
+            'queries'       => true,
+            'smtp'          => true,
+            'twig'          => true
         ],
-        // Slim settings - see http://www.slimframework.com/docs/objects/application.html#slim-default-settings
         'settings' => [
             'displayErrorDetails' => true
         ],

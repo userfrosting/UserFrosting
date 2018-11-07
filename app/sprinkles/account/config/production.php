@@ -1,12 +1,19 @@
 <?php
 
     /**
-     * Account production config file for UserFrosting.  You may override/extend this in your site's configuration file to customize deploy settings.
+     * Account production config file for UserFrosting. You may override/extend this in your site's configuration file to customize deploy settings.
      *
      */
 
     return [
-        // See http://security.stackexchange.com/a/59550/74909 for the inspiration for our throttling system
+        /**
+        * ----------------------------------------------------------------------
+        * Throttles Configuration
+        * ----------------------------------------------------------------------
+        * Enable throttling in production mode.
+        * See http://security.stackexchange.com/a/59550/74909 for the
+        * inspiration for our throttling system
+        */
         'throttles' => [
             'check_username_request' => [
                 'method'   => 'ip',
