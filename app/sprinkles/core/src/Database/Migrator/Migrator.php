@@ -9,6 +9,7 @@ namespace UserFrosting\Sprinkle\Core\Database\Migrator;
 
 use Illuminate\Support\Arr;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use UserFrosting\Sprinkle\Core\Database\MigrationInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationLocatorInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationRepositoryInterface;
 use UserFrosting\Sprinkle\Core\Database\Migrator\MigrationDependencyAnalyser as Analyser;
@@ -99,8 +100,11 @@ class Migrator
 
         // Any migration without a fulfilled dependency will cause this script to throw an exception
         if ($unfulfillable = $analyser->getUnfulfillable()) {
-            $unfulfillableList = implode(", ", $unfulfillable);
-            throw new \Exception("Unfulfillable migrations found :: $unfulfillableList");
+            $messages = ["Unfulfillable migrations found :: "];
+            foreach ($unfulfillable as $migration => $dependency) {
+                $messages[] = "=> $migration (Missing dependency : $dependency)";
+            }
+            throw new \Exception(implode("\n", $messages));
         }
 
         // Run pending migration up
@@ -114,7 +118,7 @@ class Migrator
      * @param  array $ran The list of already ran migrations returned by the migration repository
      * @return array The list of pending migrations, ie the available migrations not ran yet
      */
-    public function pendingMigrations($available, $ran)
+    public function pendingMigrations(array $available, array $ran)
     {
         return collect($available)->reject(function ($migration) use ($ran) {
             return collect($ran)->contains($migration);
@@ -141,8 +145,8 @@ class Migrator
         // We now have an ordered array of migrations, we will spin through them and run the
         // migrations "up" so the changes are made to the databases. We'll then log
         // that the migration was run so we don't repeat it next time we execute.
-        foreach ($migrations as $migrationClass) {
-            $this->runUp($migrationClass, $batch, $pretend);
+        foreach ($migrations as $migrationClassName) {
+            $this->runUp($migrationClassName, $batch, $pretend);
 
             if ($step) {
                 $batch++;
@@ -155,16 +159,16 @@ class Migrator
     /**
      * Run "up" a migration class
      *
-     * @param  string $migrationClass The migration class name
+     * @param  string $migrationClassName The migration class name
      * @param  int $batch The current bacth number
      * @param  bool $pretend If this operation should be pretended / faked
      */
-    protected function runUp($migrationClass, $batch, $pretend)
+    protected function runUp($migrationClassName, $batch, $pretend)
     {
         // First we will resolve a "real" instance of the migration class from
         // the class name. Once we have the instances we can run the actual
         // command such as "up" or "down", or we can just simulate the action.
-        $migration = $this->resolve($migrationClass);
+        $migration = $this->resolve($migrationClassName);
 
         // Move into pretend mode if requested
         if ($pretend) {
@@ -177,9 +181,9 @@ class Migrator
         // Once we have run a migrations class, we will log that it was run in this
         // repository so that we don't try to run it next time we do a migration
         // in the application. A migration repository keeps the migrate order.
-        $this->repository->log($migrationClass, $batch);
+        $this->repository->log($migrationClassName, $batch);
 
-        $this->note("<info>Migrated:</info>  {$migrationClass}");
+        $this->note("<info>Migrated:</info>  {$migrationClassName}");
 
         /**
          * If the migration has a `seed` method, run it
@@ -190,7 +194,7 @@ class Migrator
                 Debug::warning("Migration `seed` method has been deprecated and will be removed in future versions. Please use a Seeder instead.");
             }
             $this->runMigration($migration, 'seed');
-            $this->note("<info>Seeded:</info>  {$migrationClass}");
+            $this->note("<info>Seeded:</info>  {$migrationClassName}");
         }
     }
 
@@ -219,25 +223,25 @@ class Migrator
     /**
      * Rollback a specific migration
      *
-     * @param  string $migration The Migration to rollback
+     * @param  string $migrationClassName The Migration to rollback
      * @param  array  $options
      * @return array  The list of rolledback migration classes
      */
-    public function rollbackMigration($migration, array $options = [])
+    public function rollbackMigration($migrationClassName, array $options = [])
     {
         $this->notes = [];
 
         // Get the migration detail from the repository
-        $migrationObject = $this->repository->getMigration($migration);
+        $migration = $this->repository->getMigration($migrationClassName);
 
         // Make sure the migration was found. If not, return same empty array
         // as the main rollback method
-        if (!$migrationObject) {
+        if (!$migration) {
             return [];
         }
 
         // Rollback the migration
-        return $this->rollbackMigrations([$migrationObject->migration], $options);
+        return $this->rollbackMigrations([$migration->migration], $options);
     }
 
     /**
@@ -308,7 +312,7 @@ class Migrator
      * @param  array $migrations The migrations classes to rollback
      * @throws \Exception If rollback can't be performed
      */
-    protected function checkRollbackDependencies($migrations)
+    protected function checkRollbackDependencies(array $migrations)
     {
         // Get ran migrations
         $ranMigrations = $this->repository->getMigrationsList();
@@ -318,8 +322,11 @@ class Migrator
 
         // Any rollback that creates an unfulfilled dependency will cause this script to throw an exception
         if ($unfulfillable = $analyser->getUnfulfillable()) {
-            $unfulfillableList = implode(", ", $unfulfillable);
-            throw new \Exception("Some migrations can't be rolled back since the following migrations depends on it :: $unfulfillableList");
+            $messages = ["Some migrations can't be rolled back since the other migrations depends on it :: "];
+            foreach ($unfulfillable as $migration => $dependency) {
+                $messages[] = "=> $dependency is a dependency of $migration";
+            }
+            throw new \Exception(implode("\n", $messages));
         }
     }
 
@@ -351,14 +358,14 @@ class Migrator
     /**
      * Run "down" a migration instance.
      *
-     * @param  string $migrationClass The migration class name
+     * @param  string $migrationClassName The migration class name
      * @param  bool $pretend Is the operation should be pretended
      */
-    protected function runDown($migrationClass, $pretend)
+    protected function runDown($migrationClassName, $pretend)
     {
         // We resolve an instance of the migration. Once we get an instance we can either run a
         // pretend execution of the migration or we can run the real migration.
-        $instance = $this->resolve($migrationClass);
+        $instance = $this->resolve($migrationClassName);
 
         if ($pretend) {
             return $this->pretendToRun($instance, 'down');
@@ -369,21 +376,22 @@ class Migrator
         // Once we have successfully run the migration "down" we will remove it from
         // the migration repository so it will be considered to have not been run
         // by the application then will be able to fire by any later operation.
-        $this->repository->delete($migrationClass);
+        $this->repository->delete($migrationClassName);
 
-        $this->note("<info>Rolled back:</info>  {$migrationClass}");
+        $this->note("<info>Rolled back:</info>  {$migrationClassName}");
     }
 
     /**
      * Run a migration inside a transaction if the database supports it.
      * Note : As of Laravel 5.4, only PostgresGrammar supports it
      *
-     * @param  object $migration The migration instance
+     * @param  MigrationInterface $migration The migration instance
      * @param  string $method The method used [up, down]
      */
-    protected function runMigration($migration, $method)
+    protected function runMigration(MigrationInterface $migration, $method)
     {
         $callback = function () use ($migration, $method) {
+            // We keep this for seed...
             if (method_exists($migration, $method)) {
                 $migration->{$method}();
             }
@@ -399,10 +407,10 @@ class Migrator
     /**
      * Pretend to run the migrations.
      *
-     * @param  object $migration The migration instance
+     * @param  MigrationInterface $migration The migration instance
      * @param  string $method The method used [up, down]
      */
-    protected function pretendToRun($migration, $method)
+    protected function pretendToRun(MigrationInterface $migration, $method)
     {
         $name = get_class($migration);
         $this->note("\n<info>$name</info>");
@@ -415,35 +423,39 @@ class Migrator
     /**
      * Get all of the queries that would be run for a migration.
      *
-     * @param  object $migration The migration instance
+     * @param  MigrationInterface $migration The migration instance
      * @param  string $method The method used [up, down]
      * @return array The queries executed by the processed schema
      */
-    protected function getQueries($migration, $method)
+    protected function getQueries(MigrationInterface $migration, $method)
     {
         // Get the connection instance
         $connection = $this->getConnection();
 
         return $connection->pretend(function () use ($migration, $method) {
-            if (method_exists($migration, $method)) {
-                $migration->{$method}();
-            }
+            $migration->{$method}();
         });
     }
 
     /**
      * Resolve a migration instance from it's class name.
      *
-     * @param  string $migrationClass The class name
-     * @return object The migration class instance
+     * @param  string $migrationClassName The class name
+     * @return MigrationInterface The migration class instance
      */
-    public function resolve($migrationClass)
+    public function resolve($migrationClassName)
     {
-        if (!class_exists($migrationClass)) {
-            throw new BadClassNameException("Unable to find the migration class '$migrationClass'.");
+        if (!class_exists($migrationClassName)) {
+            throw new BadClassNameException("Unable to find the migration class '$migrationClassName'.");
         }
 
-        return new $migrationClass($this->getSchemaBuilder());
+        $migration = new $migrationClassName($this->getSchemaBuilder());
+
+        if (!$migration instanceof MigrationInterface) {
+            throw new \Exception('Migration must be an instance of `'.MigrationInterface::class.'`');
+        }
+
+        return $migration;
     }
 
     /**

@@ -14,7 +14,7 @@ use Illuminate\Database\Schema\Builder;
  *
  * @author Louis Charette
  */
-abstract class Migration
+abstract class Migration implements MigrationInterface
 {
     /**
      * @var \Illuminate\Database\Schema\Builder $schema
@@ -37,19 +37,5 @@ abstract class Migration
     public function __construct(Builder $schema = null)
     {
         $this->schema = $schema;
-    }
-
-    /**
-     * Method to apply changes to the database
-     */
-    public function up()
-    {
-    }
-
-    /**
-     * Method to revert changes applied by the `up` method
-     */
-    public function down()
-    {
     }
 }

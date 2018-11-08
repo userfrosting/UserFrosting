@@ -124,7 +124,7 @@ class MigrationDependencyAnalyser
             // Check is the dependency is pending installation. If so, check for it's dependencies.
             // If the dependency is not fullfillable, then this one isn't either
             if (!$this->pending->contains($dependency) || !$this->validateClassDependencies($dependency)) {
-                return $this->markAsUnfulfillable($migrationName);
+                return $this->markAsUnfulfillable($migrationName, $dependency);
             }
         }
 
@@ -176,11 +176,16 @@ class MigrationDependencyAnalyser
      * Mark a dependency as unfulfillable. Removes it from the pending list and add it to the unfulfillable list
      *
      * @param  string $migration The migration classname
+     * @param  string|array $dependency The problematic dependecy
      * @return bool False, it's not fullfillable
      */
-    protected function markAsUnfulfillable($migration)
+    protected function markAsUnfulfillable($migration, $dependency)
     {
-        $this->unfulfillable->push($migration);
+        if (is_array($dependency)) {
+            $dependency = implode(", ", $dependency);
+        }
+
+        $this->unfulfillable->put($migration, $dependency);
         return false;
     }
 
@@ -201,6 +206,7 @@ class MigrationDependencyAnalyser
 
         // If the `dependencies` property exist and is static, use this one.
         // Otherwise, get a class instance and the non static property
+        // We can remove this one the non static property is removed
         $reflectionClass = new ReflectionClass($migration);
         if ($reflectionClass->hasProperty('dependencies') && $reflectionClass->getProperty('dependencies')->isStatic()) {
             return $migration::$dependencies;

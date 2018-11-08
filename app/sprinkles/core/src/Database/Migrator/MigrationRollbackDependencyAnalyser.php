@@ -65,8 +65,8 @@ class MigrationRollbackDependencyAnalyser extends MigrationDependencyAnalyser
 
         // If this migration has a dependencies for one of the migration to
         // rollback (installed), we can't perform the rollback
-        if (array_intersect($this->installed->toArray(), $dependencies)) {
-            return $this->markAsUnfulfillable($migrationName);
+        if ($missing = array_intersect($this->installed->toArray(), $dependencies)) {
+            return $this->markAsUnfulfillable($migrationName, $missing);
         }
 
         // If no dependencies returned false, it's fulfillable

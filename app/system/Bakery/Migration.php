@@ -19,7 +19,7 @@ use UserFrosting\Sprinkle\Core\Facades\Debug;
  * @deprecated since 4.2.0 Use `UserFrosting\Sprinkle\Core\Database\Migration` instead
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class Migration extends NewMigration
+abstract class Migration extends NewMigration
 {
     /**
      * Constructor

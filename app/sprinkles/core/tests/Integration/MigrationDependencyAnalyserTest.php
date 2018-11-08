@@ -75,7 +75,7 @@ class MigrationDependencyAnalyserTest extends TestCase
         ], $analyser->getFulfillable());
 
         $this->assertEquals([
-            '\\UserFrosting\\Tests\\Integration\\Migrations\\UnfulfillableTable'
+            '\\UserFrosting\\Tests\\Integration\\Migrations\\UnfulfillableTable' => '\UserFrosting\Tests\Integration\Migrations\NonExistingMigration'
         ], $analyser->getUnfulfillable());
     }
 }
