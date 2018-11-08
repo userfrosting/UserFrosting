@@ -22,7 +22,6 @@ use League\FactoryMuffin\Faker\Facade as Faker;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Slim\Csrf\Guard;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use UserFrosting\Assets\AssetLoader;
@@ -33,6 +32,7 @@ use UserFrosting\Config\ConfigPathBuilder;
 use UserFrosting\I18n\LocalePathBuilder;
 use UserFrosting\Assets\Assets;
 use UserFrosting\Assets\AssetBundles\GulpBundleAssetsCompiledBundles as CompiledAssetBundles;
+use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Util\RawAssetBundles;
 use UserFrosting\I18n\MessageTranslator;
 use UserFrosting\Session\Session;
@@ -262,27 +262,7 @@ class ServicesProvider
          * @return \Slim\Csrf\Guard
          */
         $container['csrf'] = function ($c) {
-            $csrfKey = $c->config['session.keys.csrf'];
-
-            // Workaround so that we can pass storage into CSRF guard.
-            // If we tried to directly pass the indexed portion of `session` (for example, $c->session['site.csrf']),
-            // we would get an 'Indirect modification of overloaded element of UserFrosting\Session\Session' error.
-            // If we tried to assign an array and use that, PHP would only modify the local variable, and not the session.
-            // Since ArrayObject is an object, PHP will modify the object itself, allowing it to persist in the session.
-            if (!$c->session->has($csrfKey)) {
-                $c->session[$csrfKey] = new \ArrayObject();
-            }
-            $csrfStorage = $c->session[$csrfKey];
-
-            $onFailure = function ($request, $response, $next) {
-                $e = new BadRequestException("The CSRF code was invalid or not provided.");
-                $e->addUserMessage('CSRF_MISSING');
-                throw $e;
-
-                return $next($request, $response);
-            };
-
-            return new Guard($c->config['csrf.name'], $csrfStorage, $onFailure, $c->config['csrf.storage_limit'], $c->config['csrf.strength'], $c->config['csrf.persistent_token']);
+            return SlimCsrfProvider::setupService($c);
         };
 
         /**

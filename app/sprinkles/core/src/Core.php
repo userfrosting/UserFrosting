@@ -8,8 +8,8 @@
 namespace UserFrosting\Sprinkle\Core;
 
 use RocketTheme\Toolbox\Event\Event;
+use UserFrosting\Sprinkle\Core\Csrf\SlimCsrfProvider;
 use UserFrosting\Sprinkle\Core\Database\Models\Model;
-use UserFrosting\Sprinkle\Core\Middleware\CsrfMiddleware;
 use UserFrosting\Sprinkle\Core\Util\EnvironmentInfo;
 use UserFrosting\Sprinkle\Core\Util\ShutdownHandler;
 use UserFrosting\System\Sprinkle\Sprinkle;
@@ -110,6 +110,6 @@ class Core extends Sprinkle
      */
     public function onAddGlobalMiddleware(Event $event)
     {
-        CsrfMiddleware::register($event->getApp(), $this->ci->request, $this->ci->csrf);
+        SlimCsrfProvider::registerMiddleware($event->getApp(), $this->ci->request, $this->ci->csrf);
     }
 }
