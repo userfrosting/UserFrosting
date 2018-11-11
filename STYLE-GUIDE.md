@@ -19,7 +19,7 @@ In addition:
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
  ```
- 
+
 ### Classes
 
 - All classes MUST be prefaced with a documentation block containing a description and the author(s) of that class.  You SHOULD add other descriptive properties as well.
@@ -32,7 +32,7 @@ In addition:
 - Front controller (Slim) routes should be alphabetized, first by route type and then by route URL.  If you have route groups, those should come first and be alphabetized as well.
 
 ### Variables
- 
+
  - All class member variables and local variables MUST be declared in `camelCase`.
 
 ### Arrays
@@ -40,5 +40,11 @@ In addition:
  - Array keys MUST be defined using `snake_case`.  This is so they can be referenced in Twig and other templating languages.
  - Array keys MUST NOT contain `.`.  This is because `.` is a reserved operator in Laravel and Twig's [dot syntax](https://medium.com/@assertchris/dot-notation-3fd3e42edc61).
  - Multidimensional arrays SHOULD be referenced using dot syntax whenever possible.  So, instead of doing `$myArray['person1']['email']`, you should use `$myArray['person1.email']` if your array structure supports it.
- 
+
+### Tools
+
+[php-cs-fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) can be used to automatically fix styling. See [Contributing](.github/CONTRIBUTING.md) for more info.
+
 ### Twig Templates
+
+[TODO]

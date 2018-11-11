@@ -123,7 +123,18 @@ To build the API documentation, install [ApiGen](http://www.apigen.org/) globall
 
 from inside your dev directory.
 
+## Automatically fixing coding style with PHP-CS-Fixer
+
+[PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) can be used to automatically fix PHP code styling. UserFrosting provides a project specific configuration file ([`.php_cs`](.php_cs)) with a set of rules reflecting our [style guidelines](../STYLE-GUIDE.md). This tool should be used before submitting any code change to assure the style guidelines are met. Every sprinkles will also be parsed by the fixer.
+
+PHP-CS-Fixer is automatically loaded by Composer and can be used from the UserFrosting root directory :
+
+```
+app/vendor/bin/php-cs-fixer fix
+```
+
 ## Useful tools
 
-If you are using Atom, be sure to checkout theses useful packages :  
- - [Docblockr](https://atom.io/packages/docblockr) (Used to generate [documentation block](https://github.com/userfrosting/UserFrosting/blob/master/STYLE-GUIDE.md#documentation))
+If you are using **Atom**, be sure to checkout theses useful packages :  
+ - [Docblockr](https://atom.io/packages/docblockr) : Used to generate [documentation block](https://github.com/userfrosting/UserFrosting/blob/master/STYLE-GUIDE.md#documentation).
+ - [php-ide-serenata](https://atom.io/packages/php-ide-serenata) : Integrates [Serenata](https://gitlab.com/Serenata/Serenata) as PHP IDE, providing autocompletion, code navigation, refactoring, signature help, linting and annotations.
